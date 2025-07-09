@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://brian910cpr.github.io/910cpr-class-landers/sitemap.xml
