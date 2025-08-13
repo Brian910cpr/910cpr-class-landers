@@ -1,0 +1,22 @@
+name: Build landers
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: "12 4 * * *"   # run daily 04:12 UTC
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/build-landers.mjs
+      - name: Commit & push changes
+        run: |
+          git config user.name "automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "auto: rebuild landers" || echo "no changes"
+          git push
