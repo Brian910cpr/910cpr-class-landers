@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Which CPR class do I need? | 910CPR</title>
+  <meta name="description" content="Find the right CPR class (BLS, ACLS, PALS, Heartsaver). Instructor-led with same-day eCard." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/assets/base.css">
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;line-height:1.5;padding:24px;max-width:980px;margin:auto}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-block:16px}
+    .card{border:1px solid #e5e7eb;border-radius:14px;padding:16px}
+    .card h3{margin:0 0 8px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#111;color:#fff;text-decoration:none}
+    .muted{color:#6b7280}
+  </style>
+</head>
+<body>
+  <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <strong>910CPR</strong>
+    <a class="btn" href="tel:+19103955193">Call/Text (910) 395-5193</a>
+  </header>
+
+  <h1>Which CPR class do I need?</h1>
+  <p class="muted" id="near"></p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>BLS (Healthcare)</h3>
+      <p>Nurses, CNAs, techs, EMTs/Paramedics, medical/dental staff.</p>
+      <a class="btn" href="https://courses.910cpr.com/courses/bls.html">See BLS dates</a>
+    </div>
+    <div class="card">
+      <h3>ACLS</h3>
+      <p>Advanced care for adult cardiac events. Required for many hospital roles.</p>
+      <a class="btn" href="https://courses.910cpr.com/courses/acls.html">See ACLS dates</a>
+    </div>
+    <div class="card">
+      <h3>PALS</h3>
+      <p>Pediatric advanced life support for providers working with children.</p>
+      <a class="btn" href="https://courses.910cpr.com/courses/pals.html">See PALS dates</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Heartsaver / First Aid & AED</h3>
+    <p>Teachers, coaches, childcare, fitness, workplace safety.</p>
+    <a class="btn" href="https://coastalcprtraining.enrollware.com/schedule#ct305700">See Heartsaver dates</a>
+  </div>
+
+  <section style="margin-top:24px">
+    <h2>Group training at your site</h2>
+    <p>We come to you. OSHA/industry compliant.</p>
+    <a class="btn" href="/group-training.html">Request a quote</a>
+  </section>
+
+  <script>
+    // Show "Near: X" if Worker sent which-class?near=foo
+    const p = new URLSearchParams(location.search).get('near');
+    if (p) document.getElementById('near').textContent = `Showing options for: ${p}`;
+  </script>
+</body>
+</html>
