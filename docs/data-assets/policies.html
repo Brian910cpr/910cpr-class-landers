@@ -1,154 +1,115 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Policies | 910CPR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Terms & Conditions, Refund & Rescheduling Policy, and Privacy Policy for 910CPR.">
-  <link rel="canonical" href="https://www.910cpr.com/policies">
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<title>Policies | 910CPR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Terms & Conditions, Refund & Rescheduling Policy, and Privacy Policy for 910CPR.">
+<link rel="canonical" href="https://www.910cpr.com/policies">
 
-  <!-- GA4 (910CPR) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PBWBK7KR"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-45PBWBK7KR', {
-      linker: { domains: ['hovn.app','www.hovn.app','910cpr.com','www.910cpr.com'] }
-    });
-  </script>
+<!-- GA4 (910CPR) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-45PBWBK7KR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-45PBWBK7KR', { linker: { domains: ['hovn.app','www.hovn.app','910cpr.com','www.910cpr.com'] } });
+</script>
 
-  <style>
-    body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#0f172a;background:#f7fbff}
-    a{color:#0ea5e9;text-decoration:none}a:hover{text-decoration:underline}
-    .wrap{max-width:900px;margin:0 auto;padding:20px}
-    .lead{color:#475569}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;margin:14px 0}
-    .chip-nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;padding:8px 0}
-    .chip-nav a{display:inline-block;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;color:#0f172a;font-weight:600;text-decoration:none}
-    .chip-nav a:hover{background:#0ea5e9;color:#fff;border-color:#0ea5e9;text-decoration:none}
-    @media (min-width: 900px){.chip-nav{justify-content:space-between}}
-  </style>
 
-  <!-- WebPage metadata -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebPage",
-    "name":"Policies",
-    "url":"https://www.910cpr.com/policies",
-    "datePublished":"2025-06-13",
-    "dateModified":"2025-06-13",
-    "about":[
-      {"@type":"CreativeWork","name":"Terms & Conditions of Enrollment"},
-      {"@type":"CreativeWork","name":"Refund & Rescheduling Policy"},
-      {"@type":"CreativeWork","name":"Privacy Policy"}
-    ]
-  }
-  </script>
+<style>
+:root{--bg:#f7fbff;--ink:#0f172a;--muted:#475569;--brand:#0ea5e9;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:var(--brand);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
 
-  <!-- Site Navigation (six chips for consistency) -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"ItemList",
-    "itemListElement":[
-      {"@type":"SiteNavigationElement","name":"BLS","url":"https://www.910cpr.com/bls"},
-      {"@type":"SiteNavigationElement","name":"ACLS","url":"https://www.910cpr.com/acls"},
-      {"@type":"SiteNavigationElement","name":"PALS","url":"https://www.910cpr.com/pals"},
-      {"@type":"SiteNavigationElement","name":"CPR/AED/First Aid","url":"https://www.910cpr.com/cpr-first-aid"},
-      {"@type":"SiteNavigationElement","name":"Wilmington-area","url":"https://www.910cpr.com/wilmington"},
-      {"@type":"SiteNavigationElement","name":"Burgaw-area","url":"https://www.910cpr.com/burgaw"}
-    ]
-  }
-  </script>
-</head>
-<body>
-  <header>
-    <div class="wrap">
-      <nav class="chip-nav">
-        <a href="/bls">BLS</a>
-        <a href="/acls">ACLS</a>
-        <a href="/pals">PALS</a>
-        <a href="/cpr-first-aid">CPR/AED/First Aid</a>
-        <a href="/wilmington">Wilmington-area</a>
-        <a href="/burgaw">Burgaw-area</a>
-      </nav>
-    </div>
-  </header>
+/* Header with logo + chip buttons */
+.headerbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand img{height:44px;display:block}
+.chip-nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chip-nav a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;color:#0f172a;font-weight:600;text-decoration:none}
+.chip-nav a:hover{background:#0ea5e9;color:#fff;border-color:#0ea5e9;text-decoration:none}
+.chip-icon{width:18px;height:18px;border-radius:3px;object-fit:cover}
 
-  <main class="wrap">
-    <h1>Policies</h1>
-    <p class="lead">Clear, plain-English policies so you know exactly what to expect.</p>
+/* Card grid + media cards */
+.tile{background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:16px}
+.tile-media{display:flex;gap:12px;align-items:flex-start}
+.tile-img{width:84px;height:84px;flex:0 0 auto;object-fit:cover;border-radius:10px}
+.btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--brand);color:#fff;font-weight:700}
+.fine{color:var(--muted);font-size:13px}
+footer{margin-top:28px;border-top:1px solid #e5e7eb}
+</style>
 
-    <nav>
-      <a href="#terms">Terms & Conditions</a> ·
-      <a href="#refunds">Refund & Rescheduling</a> ·
-      <a href="#privacy">Privacy</a>
-    </nav>
+</head><body>
 
-    <section id="terms" class="card">
-      <h2>Terms & Conditions of Enrollment</h2>
-      <p><strong>Effective:</strong> 6/11/2025</p>
-      <ul>
-        <li><strong>Eligibility:</strong> Choose the correct class for your job or program (AHA, ARC, HSI). Ask us if unsure.</li>
-        <li><strong>Payment:</strong> Due at registration.</li>
-        <li><strong>Manuals:</strong> You must have the required course manual before, during, and after class.</li>
-        <li><strong>Online/Blended:</strong> Bring your completion certificate to the skills session.</li>
-        <li><strong>Completion:</strong> Attend all sections, pass any tests, and demonstrate skills competency.</li>
-        <li><strong>Physical ability:</strong> Be prepared to kneel and perform compressions on the floor; request accommodations in advance.</li>
-        <li><strong>Cards:</strong> Issued by AHA/ARC/HSI after successful completion; typically emailed within 1–5 business days (allow up to 20).</li>
-        <li><strong>Conduct:</strong> We may remove disruptive/unsafe participants without refund.</li>
-        <li><strong>Jurisdiction:</strong> North Carolina (New Hanover County).</li>
-      </ul>
-    </section>
+<header class="wrap headerbar">
+  <nav class="chip-nav">
+    <a href="/docs/landers/chips/bls"><img class="chip-icon" src="/docs/images/Class_Images/AHARHS.png" alt="">BLS</a>
+    <a href="/docs/landers/chips/acls"><img class="chip-icon" src="/docs/images/_AHA.jpg" alt="">ACLS</a>
+    <a href="/docs/landers/chips/pals"><img class="chip-icon" src="/docs/images/_AHA.jpg" alt="">PALS</a>
+    <a href="/docs/landers/chips/cpr-first-aid"><img class="chip-icon" src="/docs/images/Class_Images/AHARHS.png" alt="">CPR/AED/First Aid</a>
+    <a href="/docs/landers/chips/wilmington-area"><img class="chip-icon" src="/docs/images/Class_Images/AHARHS.png" alt="">Wilmington-area</a>
+    <a href="/docs/landers/chips/burgaw-area"><img class="chip-icon" src="/docs/images/Class_Images/AHARHS.png" alt="">Burgaw-area</a>
+  </nav>
+  <div class="brand"><img src="/docs/images/910CPR_Fat.jpg" alt="910CPR logo"></div>
+</header>
 
-    <section id="refunds" class="card">
-      <h2>Refund & Rescheduling Policy</h2>
-      <p><strong>Effective:</strong> 6/11/2025</p>
-      <ul>
-        <li><strong>Refunds:</strong> Cancel ≥72 hours before class for a full refund. No refunds for no-shows/late arrivals or missing required docs.</li>
-        <li><strong>Reschedule:</strong> One free reschedule with ≥24 hours' notice; take within 30 days.</li>
-        <li><strong>Provider changes:</strong> If we cancel (weather, low enrollment, emergency), choose a full refund or transfer.</li>
-        <li><strong>Online codes:</strong> Non-refundable once issued.</li>
-        <li><strong>Groups/Onsite:</strong> May have additional terms in your agreement.</li>
-      </ul>
-    </section>
+<main class="wrap">
+  <h1>Policies</h1>
+  <p class="fine">Clear, plain-English policies so you know exactly what to expect.</p>
 
-    <section id="privacy" class="card">
-      <h2>Privacy Policy</h2>
-      <p><strong>Effective:</strong> 6/11/2025</p>
-      <ul>
-        <li><strong>We collect:</strong> Name, email, phone, class details, certification preferences, payment confirmations, and (for blended) completion certificates.</li>
-        <li><strong>We use it to:</strong> Register you, issue eCards (AHA/ARC/HSI), send confirmations/reminders, and provide support.</li>
-        <li><strong>We protect it:</strong> We don’t sell your data. Shared only as needed to issue certification or as required by law.</li>
-        <li><strong>Retention:</strong> Records kept at least 3 years or as required.</li>
-        <li><strong>Your rights:</strong> Request a copy or correction at <a href="mailto:info@910CPR.com">info@910CPR.com</a>.</li>
-        <li><strong>Cookies:</strong> We may use basic analytics cookies; no sensitive info stored.</li>
-      </ul>
-    </section>
+  <section class="tile" id="terms">
+    <h2>Terms &amp; Conditions of Enrollment</h2>
+    <p><strong>Effective:</strong> 6/11/2025</p>
+    <ul>
+      <li><strong>Eligibility:</strong> Choose the correct class for your job or program (AHA, ARC, HSI). Ask us if unsure.</li>
+      <li><strong>Payment:</strong> Due at registration.</li>
+      <li><strong>Manuals:</strong> You must have the required course manual before, during, and after class.</li>
+      <li><strong>Online/Blended:</strong> Bring your completion certificate to the skills session.</li>
+      <li><strong>Completion:</strong> Attend all sections, pass any tests, and demonstrate skills competency.</li>
+      <li><strong>Physical ability:</strong> Be prepared to kneel and perform compressions on the floor; request accommodations in advance.</li>
+      <li><strong>Cards:</strong> Issued by AHA/ARC/HSI after successful completion; typically emailed within 1–5 business days (allow up to 20).</li>
+      <li><strong>Conduct:</strong> We may remove disruptive/unsafe participants without refund.</li>
+      <li><strong>Jurisdiction:</strong> North Carolina (New Hanover County).</li>
+    </ul>
+  </section>
 
-    <section class="card">
-      <h2>Contact</h2>
-      <p>
-        910CPR LLC — (910) 395-5193 — <a href="mailto:info@910CPR.com">info@910CPR.com</a><br>
-        Wilmington: 4018 Shipyard Blvd Unit #2, Wilmington, NC 28403<br>
-        Burgaw: 111 S Wright Street, Burgaw, NC 28425
-      </p>
-    </section>
-  </main>
+  <section class="tile" id="refunds">
+    <h2>Refund &amp; Rescheduling Policy</h2>
+    <p><strong>Effective:</strong> 6/11/2025</p>
+    <ul>
+      <li><strong>Refunds:</strong> Cancel ≥72 hours before class for a full refund. No refunds for no-shows/late arrivals or missing required docs.</li>
+      <li><strong>Reschedule:</strong> One free reschedule with ≥24 hours' notice; take within 30 days.</li>
+      <li><strong>Provider changes:</strong> If we cancel (weather, low enrollment, emergency), choose a full refund or transfer.</li>
+      <li><strong>Online codes:</strong> Non-refundable once issued.</li>
+      <li><strong>Groups/Onsite:</strong> May have additional terms in your agreement.</li>
+    </ul>
+  </section>
 
-  <footer>
-    <div class="wrap">
-      <nav class="chip-nav">
-        <a href="/bls">BLS</a>
-        <a href="/acls">ACLS</a>
-        <a href="/pals">PALS</a>
-        <a href="/cpr-first-aid">CPR/AED/First Aid</a>
-        <a href="/wilmington">Wilmington-area</a>
-        <a href="/burgaw">Burgaw-area</a>
-      </nav>
-    </div>
-  </footer>
-</body>
-</html>
+  <section class="tile" id="privacy">
+    <h2>Privacy Policy</h2>
+    <p><strong>Effective:</strong> 6/11/2025</p>
+    <ul>
+      <li><strong>We collect:</strong> Name, email, phone, class details, certification preferences, payment confirmations, and (for blended) completion certificates.</li>
+      <li><strong>We use it to:</strong> Register you, issue eCards (AHA/ARC/HSI), send confirmations/reminders, and provide support.</li>
+      <li><strong>We protect it:</strong> We don’t sell your data. Shared only as needed to issue certification or as required by law.</li>
+      <li><strong>Retention:</strong> Records kept at least 3 years or as required.</li>
+      <li><strong>Your rights:</strong> Request a copy or correction at <a href="mailto:info@910CPR.com">info@910CPR.com</a>.</li>
+      <li><strong>Cookies:</strong> We may use basic analytics cookies; no sensitive info stored.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap headerbar">
+  <nav class="chip-nav">
+    <a href="/docs/landers/chips/bls"><img class="chip-icon" src="/docs/images/Class_Images/AHARHS.png" alt="">BLS</a>
+    <a href="/docs/landers/chips/acls"><img class="chip-icon" src="/docs/images/_AHA.jpg" alt="">ACLS</a>
+    <a href="/docs/landers/chips/pals"><img class="chip-icon" src="/docs/images/_AHA.jpg" alt="">PALS</a>
+    <a href="/docs/landers/chips/cpr-first-aid"><img class="chip-icon" src="/docs/images/Class_Images/AHARHS.png" alt="">CPR/AED/First Aid</a>
+    <a href="/docs/landers/chips/wilmington-area"><img class="chip-icon" src="/docs/images/Class_Images/AHARHS.png" alt="">Wilmington-area</a>
+    <a href="/docs/landers/chips/burgaw-area"><img class="chip-icon" src="/docs/images/Class_Images/AHARHS.png" alt="">Burgaw-area</a>
+  </nav>
+  <div class="brand"><img src="/docs/images/910CPR_Fat.jpg" alt="910CPR logo"></div>
+</footer>
+
+</body></html>
