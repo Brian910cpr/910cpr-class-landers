@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>910 CPR | Training for Teams & Individuals</title>
+  <meta name="description" content="CPR, BLS, ACLS/PALS & First Aid training for individuals and companies across the Coastal Carolinas. Reliable schedules, on‑site options, and fast proof of certification." />
+  <link rel="preconnect" href="https://www.hovn.app" />
+  <style>
+    :root{
+      --brand:#E11D48; /* accent */
+      --text:#0f172a; /* slate-900 */
+      --muted:#475569; /* slate-600 */
+      --bg1:#f8fafc; /* slate-50 */
+      --bg2:#ffffff; /* white */
+      --gradient-start:#f1f5f9; /* slate-100 */
+      --gradient-end:#dbeafe;   /* blue-100 */
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text);
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:24px;}
+    .card{
+      background:var(--bg2);
+      border-radius:20px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+      padding: clamp(18px, 2.5vw, 28px);
+      display:grid; grid-template-columns: 1.4fr 1fr; gap:24px;
+    }
+    @media (max-width: 900px){ .card{grid-template-columns: 1fr;} }
+    .hero h1{font-size: clamp(28px, 3.2vw, 40px); margin:0 0 8px;}
+    .hero p{margin:0; color:var(--muted)}
+    .badges{display:flex; gap:14px; flex-wrap:wrap; margin:14px 0 18px}
+    .badge{background:#f1f5f9; color:#0f172a; border:1px solid #e2e8f0; padding:6px 10px; border-radius:999px; font-size:12px;}
+    .ctas{display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 0}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px; border:1px solid transparent; text-decoration:none; font-weight:600}
+    .btn-primary{background:var(--brand); color:#fff;}
+    .btn-ghost{background:transparent; color:var(--text); border-color:#e2e8f0}
+    .btn:hover{transform: translateY(-1px); box-shadow:0 6px 20px rgba(225,29,72,0.15)}
+    .illus{display:flex; align-items:center; justify-content:flex-end}
+    .illus img{max-width: 420px; width:100%; height:auto; border-radius:18px}
+
+    /* Section styling */
+    section{margin-top:28px}
+    h2{font-size: clamp(22px, 2.4vw, 28px); margin:0 0 10px}
+    .cols{display:grid; grid-template-columns: 1fr 1fr; gap:18px}
+    @media (max-width: 900px){ .cols{grid-template-columns:1fr} }
+    .box{background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:16px}
+    .list{padding-left:18px; margin:8px 0}
+    .list li{margin:8px 0}
+
+    /* Schedule embed */
+    .schedule{background:#fff; border:1px solid #e2e8f0; border-radius:16px; overflow:hidden}
+    .schedule-header{display:flex; justify-content:space-between; align-items:center; gap:8px; padding:12px 14px; background:#f8fafc; border-bottom:1px solid #e2e8f0}
+    .schedule-body{display:block}
+    iframe{width:100%; min-height:1200px; border:0}
+
+    /* Footer */
+    footer{margin:28px 0 8px; color:var(--muted); font-size:14px; text-align:center}
+
+    /* Utility */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+      /* Split phone buttons to equal halves */
+    .ctas .split{display:flex; gap:10px; align-items:stretch}
+    .ctas .split .btn{flex:1; justify-content:center}
+    @media (max-width:520px){ .ctas .split{width:100%} }
+      /* Social follow icons */
+    .social-row{display:flex;justify-content:center;gap:12px;margin-top:8px}
+    .social-row .social{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid #e2e8f0;border-radius:999px;text-decoration:none}
+    .social-row .social svg{width:18px;height:18px;fill:var(--text)}
+      /* Icon sizing for CTA buttons */
+    .btn .icon{width:18px;height:18px;display:inline-block}
+      /* Tooltip / popover for quick facts */
+    .tip-wrap{display:inline-block; position:relative; margin-left:6px}
+    .tip-trigger{background:#f1f5f9; border:1px solid #e2e8f0; color:var(--text); width:20px; height:20px; border-radius:999px; font-size:12px; line-height:18px; text-align:center; cursor:pointer; padding:0}
+    .tip-bubble{position:absolute; z-index:30; top:125%; left:0; max-width:320px; background:#0f172a; color:#fff; border-radius:10px; padding:10px 12px; font-size:12px; line-height:1.35; box-shadow:0 10px 30px rgba(2,6,23,0.25); opacity:0; transform:translateY(-4px); pointer-events:none; transition:opacity .15s ease, transform .15s ease}
+    .tip-wrap.open .tip-bubble{opacity:1; transform:translateY(0); pointer-events:auto}
+    .tip-bubble a{color:#93c5fd; text-decoration:none}
+    .tip-bubble a:hover{text-decoration:underline}
+      /* Icon sizing for CTA buttons */
+    .btn .icon{width:18px;height:18px;display:inline-block}
+    .btn.icon-only{width:40px;height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+  </style>
+</head>
+<body>
+  <!-- HOVN catch‑all used for this page ("fallout" link): -->
+  <!-- https://www.hovn.app/910cpr/courses?agencies=aha&courses=cln3t7nru000wjqbj7lq5jg07,cln3t7nru000ujqbjzze1so77,cm2nhito3000108jv0eq7c2zt,cm2nhguz9000008jvds139xp3,cln3t7nrv000yjqbjr71fi6qw,cm33hyg56000008l2g2nhhdmz,cm351ev6f000008k09eyfb9lc -->
+
+  <div class="wrap">
+    <div class="card">
+      <div class="hero">
+        <h1>910 CPR — Reliable CPR, BLS, ACLS/PALS & First Aid Training</h1>
+        <p>Fast scheduling, on-site options, and same-day proof of completion. Built for individuals and corporate teams.</p>
+        <div class="badges">
+          <span class="badge">★ <strong><!-- REVIEW_AVG -->4.9</strong> avg • <strong><!-- REVIEW_COUNT -->500+</strong> Google reviews</span>
+          <span class="badge">Instructors avg. <!-- STAFF_YEARS_AVG -->15+ years experience</span>
+          <span class="badge">Dependable schedules — we don’t cancel on you</span>
+        </div>
+        <div class="ctas">
+          <a class="btn btn-primary" id="cta-schedule" href="#schedule">See Upcoming Classes</a>
+          <a class="btn btn-ghost" id="cta-group" href="mailto:info@910cpr.com?subject=Group%20Training%20Inquiry">Group / On‑Site Training</a>
+          $1
+            <a class="btn btn-ghost icon-only" id="whatsapp-btn" href="https://wa.me/19103955193?text=Hi%20910%20CPR%E2%80%94I%27d%20like%20help%20with%20class%20options." aria-label="Chat on WhatsApp">
+              <img class="icon" src="images/whatsapp.png" alt="" width="18" height="18" loading="lazy">
+            </a>
+        </div>
+        <div class="illus">
+        <img src="images/910CPR_wave.jpg" alt="CPR & First Aid training in the Coastal Carolinas" />
+      </div>
+    </div>
+
+    <!-- Why companies choose us -->
+    <section>
+      <h2>Why companies choose 910 CPR...</h2>
+      <div class="cols">
+        <div class="box">
+          <ul class="list">
+            <li><strong>Proven reliability:</strong> tight rescheduling policies and low cancellation rate (*ask for policy details).</li>
+            <li><strong>Documentation ready:</strong> fast rosters, digital cards, and completion letters for HR/Compliance.
+              <span class="tip-wrap">
+                <button class="tip-trigger" aria-expanded="false" aria-describedby="tip-docs" title="">i</button>
+                <span role="tooltip" id="tip-docs" class="tip-bubble">Same‑day proof of completion; digital cards delivered per issuing agency policy. Consolidated receipts and rosters available.</span>
+              </span>
+            </li>
+            <li><strong>Flexible delivery:</strong> Instructor‑Led, Blended, and Skills Checks to match your policy.
+              <span class="tip-wrap">
+                <button class="tip-trigger" aria-expanded="false" aria-describedby="tip-flex" title="">i</button>
+                <span role="tooltip" id="tip-flex" class="tip-bubble">On‑site group options, private sessions, and weekday/evening availability to fit team schedules.</span>
+              </span>
+            </li>
+            <li><strong>Procurement friendly:</strong> invoicing, POs, and consolidated receipts available.
+              <span class="tip-wrap">
+                <button class="tip-trigger" aria-expanded="false" aria-describedby="tip-procure" title="">i</button>
+                <span role="tooltip" id="tip-procure" class="tip-bubble">W‑9/COI on request; purchase orders accepted for approved accounts; vendor onboarding support.</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="box">
+          <ul class="list">
+            <li><strong>Experienced staff:</strong> instructors with an average of <!-- STAFF_YEARS_AVG -->15+ years (some 30+).
+              <span class="tip-wrap">
+                <button class="tip-trigger" aria-expanded="false" aria-describedby="tip-exp" title="">i</button>
+                <span role="tooltip" id="tip-exp" class="tip-bubble">Seasoned EMS, hospital, and education backgrounds; active instructor credentials. Average tenure 15+ years, several with 30+.</span>
+              </span>
+            </li>
+            <li><strong>Locations:</strong> Wilmington & Burgaw, plus on‑site at your facility.</li>
+            <li><strong>Scales to teams:</strong> seat blocks and private sessions for departments.</li>
+            <li><strong>Support that answers:</strong> Our AI receptionist screens robocalls and makes sure you get help even when we’re teaching. Say “Instructor, please” to be connected, or stay with the AI—it can handle most questions.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule (HOVN fallback) -->
+    <section id="schedule" class="schedule">
+      <div class="schedule-header">
+        <strong>Upcoming Classes</strong>
+        <a class="btn btn-ghost" id="hovn-direct" target="_blank" rel="noopener" href="https://www.hovn.app/910cpr/courses?agencies=aha&courses=cln3t7nru000wjqbj7lq5jg07,cln3t7nru000ujqbjzze1so77,cm2nhito3000108jv0eq7c2zt,cm2nhguz9000008jvds139xp3,cln3t7nrv000yjqbjr71fi6qw,cm33hyg56000008l2g2nhhdmz,cm351ev6f000008k09eyfb9lc">Open in New Tab</a>
+      </div>
+      
+      <div class="schedule-body" id="embed-wrap">
+        <!-- Try an iframe embed; if blocked by X-Frame-Options/CSP, show the fallback link. -->
+        <iframe id="hovn-embed" title="HOVN Courses — 910CPR"
+          src="https://www.hovn.app/910cpr/courses?agencies=aha&courses=cln3t7nru000wjqbj7lq5jg07,cln3t7nru000ujqbjzze1so77,cm2nhito3000108jv0eq7c2zt,cm2nhguz9000008jvds139xp3,cln3t7nrv000yjqbjr71fi6qw,cm33hyg56000008l2g2nhhdmz,cm351ev6f000008k09eyfb9lc"></iframe>
+      </div>
+    </section>
+
+    <!-- Social proof / testimonials placeholder -->
+    <section>
+      <h2>Trusted by hospitals, clinics, schools & contractors</h2>
+      <div class="box">
+        <p style="margin:0 0 10px; color:var(--muted)">“Clear, efficient, and professional.” — ICU Nurse</p>
+        <p style="margin:0 0 10px; color:var(--muted)">“Booked a private class for our crew—smooth from start to finish.” — Safety Manager</p>
+        <p style="margin:0; color:var(--muted)">Google Rating: <strong>4.9★</strong> across <strong>500+</strong> reviews.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 910 CPR • Training across the Coastal Carolinas • <a href="mailto:info@910cpr.com">info@910cpr.com</a></p>
+      <div class="social-row" aria-label="Share this page">
+        <a class="social share-link" data-net="facebook" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">
+          <img src="images/facebook.png" alt="Share on Facebook" width="18" height="18"/>
+        </a>
+        <a class="social share-link" data-net="x" href="#" target="_blank" rel="noopener" aria-label="Share on X">
+          <img src="images/twitter.png" alt="Share on X" width="18" height="18"/>
+        </a>
+        <a class="social share-link" data-net="linkedin" href="#" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+          <img src="images/linkedin.png" alt="Share on LinkedIn" width="18" height="18"/>
+        </a>
+        <a class="social share-link" data-net="whatsapp" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
+          <img src="images/whatsapp.png" alt="Share on WhatsApp" width="18" height="18"/>
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // If the iframe is blocked by CSP/X-Frame-Options, replace with a friendly fallback.
+    (function(){
+      var iframe = document.getElementById('hovn-embed');
+      var wrap = document.getElementById('embed-wrap');
+      var failed = false;
+      // Heuristic: if it hasn't loaded in ~3s, assume blocked and show fallback card.
+      var timer = setTimeout(function(){
+        if (failed) return;
+        failed = true;
+        wrap.innerHTML = '\n          <div style="padding:18px">\n            <p style="margin:0 0 10px">We\'re opening the live schedule in a new tab for you.</p>\n            <a class="btn btn-primary" style="display:inline-block" target="_blank" rel="noopener"\n               href="'+ document.getElementById('hovn-direct').href +'">Open 910 CPR Schedule</a>\n          </div>\n        ';
+      }, 3000);
+      iframe.addEventListener('load', function(){ clearTimeout(timer); });
+    })();
+  </script>
+
+  <!-- Basic Organization JSON-LD (fill real values when ready) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "910 CPR",
+    "url": "https://www.910cpr.com/",
+    "telephone": "+1-910-395-5193",
+    "sameAs": ["https://www.facebook.com/910CPR/", "https://www.instagram.com/910cprllc/", "https://x.com/CprCoastal", "https://www.yelp.com/writeareview/biz/910-cpr-wilmington", "https://www.linkedin.com/company/910cpr"],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "500"
+    }
+  }
+  </script>
+  
+
+  <!-- MyAIFrontDesk Callbot widget -->
+  <embeddable-voice id="1cf9bf8f-38da-437e-abfb-efa1ce9a02ff"></embeddable-voice>
+  <script src="https://cdn.247aireceptionist.com/call-embeddable-widget-v2.js"></script>
+
+  <script>
+    // Size the two phone buttons to match half the width of the Group / On‑Site Training button
+    (function(){
+      function resizeSplit(){
+        try{
+          var group = document.getElementById('cta-group');
+          var split = document.querySelector('.ctas .split');
+          if(!group || !split) return;
+          if (window.innerWidth < 520) {
+            split.style.width = '100%';
+            return;
+          }
+          var w = Math.round(group.getBoundingClientRect().width);
+          if (w && w > 0) split.style.width = w + 'px';
+        }catch(e){}
+      }
+      window.addEventListener('load', resizeSplit);
+      window.addEventListener('resize', resizeSplit);
+    })();
+  </script>
+
+  <!-- ShareThis (replace YOUR_PROPERTY_ID with the site property ID) -->
+  
+
+  <script>
+    // Lightweight tooltip behavior (click = toggle, ESC/blur = close, click outside = close)
+    (function(){
+      function closeAll(){ document.querySelectorAll('.tip-wrap.open').forEach(function(w){ w.classList.remove('open'); w.querySelector('.tip-trigger').setAttribute('aria-expanded','false'); }); }
+      document.addEventListener('click', function(e){
+        var t = e.target;
+        if (t.classList && t.classList.contains('tip-trigger')){
+          var wrap = t.closest('.tip-wrap');
+          var isOpen = wrap.classList.contains('open');
+          closeAll();
+          if (!isOpen){ wrap.classList.add('open'); t.setAttribute('aria-expanded','true'); }
+          e.stopPropagation();
+        } else if (!e.target.closest('.tip-wrap')){
+          closeAll();
+        }
+      });
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape'){ closeAll(); } });
+    })();
+  </script>
+
+  <script>
+    // Fallbacks so icons show in preview even if /images/ paths aren't available here
+    (function(){
+      // Footer social icons → swap to inline SVG letters if image fails
+      document.querySelectorAll('.social-row img').forEach(function(img){
+        img.addEventListener('error', function(){
+          var label = (img.alt || '').toUpperCase();
+          var text = label.indexOf('INSTAGRAM')===0 ? 'IG' : (label.indexOf('LINKEDIN')===0 ? 'IN' : (label.indexOf('FACEBOOK')===0 ? 'F' : (label.indexOf('X')===0 ? 'X' : '•')));
+          var svg = '
+<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px">
+  <circle cx="12" cy="12" r="10" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="12" y="16" text-anchor="middle" font-size="10" fill="#0f172a" font-family="Arial, sans-serif">'+ text +'</text>
+</svg>';
+          img.outerHTML = svg;
+        });
+      });
+      // CTA icons → hide icon if not available so the button text stays clean
+      ['call-btn','text-btn'].forEach(function(id){
+        var el = document.getElementById(id);
+        if (!el) return;
+        var icon = el.querySelector('img.icon');
+        if (!icon) return;
+        icon.addEventListener('error', function(){ icon.style.display = 'none'; });
+      });
+    })();
+  </script>
+
+  <script>
+    // Populate native share links (Facebook, X, LinkedIn, WhatsApp)
+    (function(){
+      try{
+        var u = encodeURIComponent(window.location.href);
+        var t = encodeURIComponent(document.title || '910 CPR');
+        var map = {
+          facebook: 'https://www.facebook.com/sharer/sharer.php?u='+u,
+          x: 'https://x.com/intent/post?url='+u+'&text='+t,
+          linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url='+u,
+          whatsapp: 'https://wa.me/?text='+t+'%20'+u
+        };
+        document.querySelectorAll('.share-link[data-net]').forEach(function(a){
+          var net = a.getAttribute('data-net');
+          if (map[net]) a.href = map[net];
+        });
+      }catch(e){}
+    })();
+  </script>
+
+  <script>
+    // Fallbacks so icons show in preview even if /images/ paths aren't available here
+    (function(){
+      document.querySelectorAll('.social-row img').forEach(function(img){
+        img.addEventListener('error', function(){
+          var label = (img.alt || '').toUpperCase();
+          var text = label.indexOf('FACEBOOK')===0 ? 'F' : (label.indexOf('LINKEDIN')===0 ? 'IN' : 'X');
+          var svg = '
+<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px">
+  <circle cx="12" cy="12" r="10" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="12" y="16" text-anchor="middle" font-size="10" fill="#0f172a" font-family="Arial, sans-serif">'+ text +'</text>
+</svg>';
+          img.outerHTML = svg;
+        });
+      });
+      ['call-btn','text-btn'].forEach(function(id){
+        var el = document.getElementById(id);
+        if (!el) return;
+        var icon = el.querySelector('img.icon');
+        if (!icon) return;
+        icon.addEventListener('error', function(){ icon.style.display = 'none'; });
+      });
+    })();
+  </script>
+
+</body>
+</html>
