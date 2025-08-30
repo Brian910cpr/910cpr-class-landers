@@ -42,7 +42,7 @@
     .btn-ghost{background:transparent; color:var(--text); border-color:#e2e8f0}
     .btn:hover{transform: translateY(-1px); box-shadow:0 6px 20px rgba(225,29,72,0.15)}
     .illus{display:flex; align-items:center; justify-content:flex-end}
-    .illus img{max-width: 420px; width:100%; height:auto; border-radius:18px}
+    .illus img{max-width:420px;width:100%;height:auto;max-height:260px;object-fit:contain;border-radius:18px}
 
     /* Section styling */
     section{margin-top:28px}
@@ -72,18 +72,11 @@
     .social-row{display:flex;justify-content:center;gap:12px;margin-top:8px}
     .social-row .social{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid #e2e8f0;border-radius:999px;text-decoration:none}
     .social-row .social svg{width:18px;height:18px;fill:var(--text)}
-      /* Icon sizing for CTA buttons */
-    .btn .icon{width:18px;height:18px;display:inline-block}
-      /* Tooltip / popover for quick facts */
-    .tip-wrap{display:inline-block; position:relative; margin-left:6px}
-    .tip-trigger{background:#f1f5f9; border:1px solid #e2e8f0; color:var(--text); width:20px; height:20px; border-radius:999px; font-size:12px; line-height:18px; text-align:center; cursor:pointer; padding:0}
-    .tip-bubble{position:absolute; z-index:30; top:125%; left:0; max-width:320px; background:#0f172a; color:#fff; border-radius:10px; padding:10px 12px; font-size:12px; line-height:1.35; box-shadow:0 10px 30px rgba(2,6,23,0.25); opacity:0; transform:translateY(-4px); pointer-events:none; transition:opacity .15s ease, transform .15s ease}
-    .tip-wrap.open .tip-bubble{opacity:1; transform:translateY(0); pointer-events:auto}
-    .tip-bubble a{color:#93c5fd; text-decoration:none}
-    .tip-bubble a:hover{text-decoration:underline}
-      /* Icon sizing for CTA buttons */
-    .btn .icon{width:18px;height:18px;display:inline-block}
-    .btn.icon-only{width:40px;height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+      .btn.icon-only{width:40px;height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+  /* Hero media frame to stabilize image sizing */
+    
+    
+  .btn .icon{width:18px;height:18px;display:inline-block;vertical-align:middle;object-fit:contain}
   </style>
 </head>
 <body>
@@ -103,13 +96,15 @@
         <div class="ctas">
           <a class="btn btn-primary" id="cta-schedule" href="#schedule">See Upcoming Classes</a>
           <a class="btn btn-ghost" id="cta-group" href="mailto:info@910cpr.com?subject=Group%20Training%20Inquiry">Group / On‑Site Training</a>
-          $1
+          <div class="split" role="group" aria-label="Call or text 910-395-5193">
+            <a class="btn btn-ghost" id="call-btn" href="tel:+19103955193" aria-label="Call Us at 910-395-5193"><img class="icon" src="images/Call-Now.png" alt="" width="18" height="18" loading="lazy"> Call Us</a>
+            <a class="btn btn-ghost" id="text-btn" href="sms:+19103955193" aria-label="Text Us at 910-395-5193"><img class="icon" src="images/Text-Now.png" alt="" width="18" height="18" loading="lazy"> Text Us</a>
+          </div>
             <a class="btn btn-ghost icon-only" id="whatsapp-btn" href="https://wa.me/19103955193?text=Hi%20910%20CPR%E2%80%94I%27d%20like%20help%20with%20class%20options." aria-label="Chat on WhatsApp">
               <img class="icon" src="images/whatsapp.png" alt="" width="18" height="18" loading="lazy">
             </a>
         </div>
-        <div class="illus">
-        <img src="images/910CPR_wave.jpg" alt="CPR & First Aid training in the Coastal Carolinas" />
+        <div class="illus"><img src="images/910CPR_wave.jpg" alt="CPR & First Aid training in the Coastal Carolinas" /></div>
       </div>
     </div>
 
@@ -199,114 +194,9 @@
     </footer>
   </div>
 
-  <script>
-    // If the iframe is blocked by CSP/X-Frame-Options, replace with a friendly fallback.
-    (function(){
-      var iframe = document.getElementById('hovn-embed');
-      var wrap = document.getElementById('embed-wrap');
-      var failed = false;
-      // Heuristic: if it hasn't loaded in ~3s, assume blocked and show fallback card.
-      var timer = setTimeout(function(){
-        if (failed) return;
-        failed = true;
-        wrap.innerHTML = '\n          <div style="padding:18px">\n            <p style="margin:0 0 10px">We\'re opening the live schedule in a new tab for you.</p>\n            <a class="btn btn-primary" style="display:inline-block" target="_blank" rel="noopener"\n               href="'+ document.getElementById('hovn-direct').href +'">Open 910 CPR Schedule</a>\n          </div>\n        ';
-      }, 3000);
-      iframe.addEventListener('load', function(){ clearTimeout(timer); });
-    })();
-  </script>
-
-  <!-- Basic Organization JSON-LD (fill real values when ready) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "910 CPR",
-    "url": "https://www.910cpr.com/",
-    "telephone": "+1-910-395-5193",
-    "sameAs": ["https://www.facebook.com/910CPR/", "https://www.instagram.com/910cprllc/", "https://x.com/CprCoastal", "https://www.yelp.com/writeareview/biz/910-cpr-wilmington", "https://www.linkedin.com/company/910cpr"],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "500"
-    }
-  }
-  </script>
   
 
-  <!-- MyAIFrontDesk Callbot widget -->
-  <embeddable-voice id="1cf9bf8f-38da-437e-abfb-efa1ce9a02ff"></embeddable-voice>
-  <script src="https://cdn.247aireceptionist.com/call-embeddable-widget-v2.js"></script>
-
-  <script>
-    // Size the two phone buttons to match half the width of the Group / On‑Site Training button
-    (function(){
-      function resizeSplit(){
-        try{
-          var group = document.getElementById('cta-group');
-          var split = document.querySelector('.ctas .split');
-          if(!group || !split) return;
-          if (window.innerWidth < 520) {
-            split.style.width = '100%';
-            return;
-          }
-          var w = Math.round(group.getBoundingClientRect().width);
-          if (w && w > 0) split.style.width = w + 'px';
-        }catch(e){}
-      }
-      window.addEventListener('load', resizeSplit);
-      window.addEventListener('resize', resizeSplit);
-    })();
-  </script>
-
-  <!-- ShareThis (replace YOUR_PROPERTY_ID with the site property ID) -->
   
-
-  <script>
-    // Lightweight tooltip behavior (click = toggle, ESC/blur = close, click outside = close)
-    (function(){
-      function closeAll(){ document.querySelectorAll('.tip-wrap.open').forEach(function(w){ w.classList.remove('open'); w.querySelector('.tip-trigger').setAttribute('aria-expanded','false'); }); }
-      document.addEventListener('click', function(e){
-        var t = e.target;
-        if (t.classList && t.classList.contains('tip-trigger')){
-          var wrap = t.closest('.tip-wrap');
-          var isOpen = wrap.classList.contains('open');
-          closeAll();
-          if (!isOpen){ wrap.classList.add('open'); t.setAttribute('aria-expanded','true'); }
-          e.stopPropagation();
-        } else if (!e.target.closest('.tip-wrap')){
-          closeAll();
-        }
-      });
-      document.addEventListener('keydown', function(e){ if (e.key === 'Escape'){ closeAll(); } });
-    })();
-  </script>
-
-  <script>
-    // Fallbacks so icons show in preview even if /images/ paths aren't available here
-    (function(){
-      // Footer social icons → swap to inline SVG letters if image fails
-      document.querySelectorAll('.social-row img').forEach(function(img){
-        img.addEventListener('error', function(){
-          var label = (img.alt || '').toUpperCase();
-          var text = label.indexOf('INSTAGRAM')===0 ? 'IG' : (label.indexOf('LINKEDIN')===0 ? 'IN' : (label.indexOf('FACEBOOK')===0 ? 'F' : (label.indexOf('X')===0 ? 'X' : '•')));
-          var svg = '
-<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px">
-  <circle cx="12" cy="12" r="10" fill="none" stroke="#e2e8f0" stroke-width="2"/>
-  <text x="12" y="16" text-anchor="middle" font-size="10" fill="#0f172a" font-family="Arial, sans-serif">'+ text +'</text>
-</svg>';
-          img.outerHTML = svg;
-        });
-      });
-      // CTA icons → hide icon if not available so the button text stays clean
-      ['call-btn','text-btn'].forEach(function(id){
-        var el = document.getElementById(id);
-        if (!el) return;
-        var icon = el.querySelector('img.icon');
-        if (!icon) return;
-        icon.addEventListener('error', function(){ icon.style.display = 'none'; });
-      });
-    })();
-  </script>
 
   <script>
     // Populate native share links (Facebook, X, LinkedIn, WhatsApp)
@@ -327,31 +217,7 @@
       }catch(e){}
     })();
   </script>
-
-  <script>
-    // Fallbacks so icons show in preview even if /images/ paths aren't available here
-    (function(){
-      document.querySelectorAll('.social-row img').forEach(function(img){
-        img.addEventListener('error', function(){
-          var label = (img.alt || '').toUpperCase();
-          var text = label.indexOf('FACEBOOK')===0 ? 'F' : (label.indexOf('LINKEDIN')===0 ? 'IN' : 'X');
-          var svg = '
-<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px">
-  <circle cx="12" cy="12" r="10" fill="none" stroke="#e2e8f0" stroke-width="2"/>
-  <text x="12" y="16" text-anchor="middle" font-size="10" fill="#0f172a" font-family="Arial, sans-serif">'+ text +'</text>
-</svg>';
-          img.outerHTML = svg;
-        });
-      });
-      ['call-btn','text-btn'].forEach(function(id){
-        var el = document.getElementById(id);
-        if (!el) return;
-        var icon = el.querySelector('img.icon');
-        if (!icon) return;
-        icon.addEventListener('error', function(){ icon.style.display = 'none'; });
-      });
-    })();
-  </script>
+  
 
 </body>
 </html>
