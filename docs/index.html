@@ -6,95 +6,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="910CPR offers AHA BLS, ACLS, PALS, and Heartsaver classes in Wilmington and Burgaw, NC. Same-day eCards, onsite groups, and fast scheduling.">
   <link rel="canonical" href="https://www.910cpr.com/">
+  
+<!-- GA4 (910CPR) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-45PBWBK7KR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-45PBWBK7KR', {
+    linker: { domains: ['hovn.app','www.hovn.app','coastalcprtraining.enrollware.com','910cpr.com','www.910cpr.com'] }
+  });
+</script>
 
-  <!-- GA4 (910CPR) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PBWBK7KR"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-45PBWBK7KR', {
-      linker: { domains: ['hovn.app','www.hovn.app','coastalcprtraining.enrollware.com','910cpr.com','www.910cpr.com'] }
-    });
-  </script>
+  
+<style>
+:root { --bg:#f7fbff; --ink:#0f172a; --muted:#475569; --brand:#0ea5e9; --card:#ffffff; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+header, footer{background:#fff;border-bottom:1px solid #e5e7eb}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+.chip-nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;padding:8px 0}
+.chip-nav a{display:inline-block;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;color:#0f172a;font-weight:600;text-decoration:none}
+.chip-nav a:hover{background:#0ea5e9;color:#fff;border-color:#0ea5e9;text-decoration:none}
+.btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--brand);color:#fff;font-weight:700}
+.btn.secondary{background:#fff;color:var(--brand);border:1px solid var(--brand)}
+.card{border:1px solid #e5e7eb;border-radius:12px;padding:14px;background:#fff;margin-top:12px}
+.fine{font-size:13px;color:var(--muted)}
+.hero{padding:28px 0}
+.hero h1{margin:0 0 10px;font-size:28px}
+.hero p{margin:0;color:var(--muted)}
+.chips{margin:18px 0 6px;display:flex;flex-wrap:wrap;gap:10px}
+.chip{display:inline-block;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:var(--card);font-weight:600}
+.chip:hover{background:#0ea5e9;color:#fff;border-color:#0ea5e9;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:14px}
+.tile{background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:14px}
+.tile h3{margin:0 0 8px;font-size:18px}
+.tile p{margin:0 0 10px;color:var(--muted)}
+footer{margin-top:28px;border-top:1px solid #e5e7eb}
+</style>
 
-  <style>
-    :root { --bg:#f7fbff; --ink:#0f172a; --muted:#475569; --brand:#0ea5e9; --card:#ffffff; }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial}
-    a{color:var(--brand);text-decoration:none}
-    a:hover{text-decoration:underline}
-    header, footer{background:#fff;border-bottom:1px solid #e5e7eb}
-    .wrap{max-width:1100px;margin:0 auto;padding:16px}
-
-    /* Button-like nav chips (header/footer) */
-    .chip-nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;padding:8px 0}
-    .chip-nav a{display:inline-block;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;color:#0f172a;font-weight:600;text-decoration:none}
-    .chip-nav a:hover{background:#0ea5e9;color:#fff;border-color:#0ea5e9;text-decoration:none}
-    @media (min-width: 900px){.chip-nav{justify-content:space-between}}
-
-    /* Hero “button factory” chips */
-    .hero{padding:28px 0}
-    .hero h1{margin:0 0 10px;font-size:28px}
-    .hero p{margin:0;color:var(--muted)}
-    .chips{margin:18px 0 6px;display:flex;flex-wrap:wrap;gap:10px}
-    .chip{display:inline-block;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;background:var(--card);font-weight:600}
-    .chip:hover{background:#0ea5e9;color:#fff;border-color:#0ea5e9;text-decoration:none}
-
-    /* CTA + tiles */
-    .cta{margin:22px 0;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:var(--card)}
-    .cta .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:14px}
-    .tile{background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:14px}
-    .tile h3{margin:0 0 8px;font-size:18px}
-    .tile p{margin:0 0 10px;color:var(--muted)}
-    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--brand);color:#fff;font-weight:700}
-    .btn.secondary{background:#fff;color:var(--brand);border:1px solid var(--brand)}
-    .fine{font-size:13px;color:var(--muted)}
-    footer{margin-top:28px;border-top:1px solid #e5e7eb}
-  </style>
-
-  <!-- Organization -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"Organization",
     "name":"910CPR",
     "url":"https://www.910cpr.com/",
-    "logo":"https://www.910cpr.com/images/910cpr_round.png",
-    "sameAs":[
-      "https://www.facebook.com/910CPR",
-      "https://www.linkedin.com/company/910cpr/"
-    ]
+    "logo":"https://www.910cpr.com/images/910cpr_round.png"
   }
   </script>
-
-  <!-- Site Navigation (six chips; URLs point to /docs/landers/chips paths) -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"ItemList",
     "itemListElement":[
-      {"@type":"SiteNavigationElement","name":"BLS","url":"https://www.910cpr.com/docs/landers/chips/bls"},
-      {"@type":"SiteNavigationElement","name":"ACLS","url":"https://www.910cpr.com/docs/landers/chips/alcs"},
-      {"@type":"SiteNavigationElement","name":"PALS","url":"https://www.910cpr.com/docs/landers/chips/pals"},
-      {"@type":"SiteNavigationElement","name":"CPR/AED/First Aid","url":"https://www.910cpr.com/docs/landers/chips/cpr-first-aid"},
-      {"@type":"SiteNavigationElement","name":"Wilmington-area","url":"https://www.910cpr.com/docs/landers/chips/wilmington-area"},
-      {"@type":"SiteNavigationElement","name":"Burgaw-area","url":"https://www.910cpr.com/docs/landers/chips/burgaw-area"}
+      {"@type":"SiteNavigationElement","name":"BLS","url":"https://www.910cpr.com/bls"},
+      {"@type":"SiteNavigationElement","name":"ACLS","url":"https://www.910cpr.com/acls"},
+      {"@type":"SiteNavigationElement","name":"PALS","url":"https://www.910cpr.com/pals"},
+      {"@type":"SiteNavigationElement","name":"CPR/AED/First Aid","url":"https://www.910cpr.com/cpr-first-aid"},
+      {"@type":"SiteNavigationElement","name":"Wilmington-area","url":"https://www.910cpr.com/wilmington"},
+      {"@type":"SiteNavigationElement","name":"Burgaw-area","url":"https://www.910cpr.com/burgaw"}
     ]
   }
   </script>
-
-  <!-- LocalBusiness (NAP for both locations; point to location landers) -->
   <script type="application/ld+json">
   [
     {
       "@context":"https://schema.org",
       "@type":"LocalBusiness",
       "name":"910CPR — Wilmington",
-      "url":"https://www.910cpr.com/docs/landers/chips/wilmington-area",
+      "url":"https://www.910cpr.com/wilmington",
       "telephone":"+1-910-395-5193",
-      "priceRange":"$$",
       "address":{
         "@type":"PostalAddress",
         "streetAddress":"4018 Shipyard Blvd Unit #2",
@@ -102,17 +85,14 @@
         "addressRegion":"NC",
         "postalCode":"28403",
         "addressCountry":"US"
-      },
-      "areaServed":"Wilmington NC",
-      "sameAs":["https://www.facebook.com/910CPR","https://www.linkedin.com/company/910cpr/"]
+      }
     },
     {
       "@context":"https://schema.org",
       "@type":"LocalBusiness",
       "name":"910CPR — Burgaw",
-      "url":"https://www.910cpr.com/docs/landers/chips/burgaw-area",
+      "url":"https://www.910cpr.com/burgaw",
       "telephone":"+1-910-395-5193",
-      "priceRange":"$$",
       "address":{
         "@type":"PostalAddress",
         "streetAddress":"111 S Wright Street",
@@ -120,59 +100,41 @@
         "addressRegion":"NC",
         "postalCode":"28425",
         "addressCountry":"US"
-      },
-      "areaServed":"Burgaw NC",
-      "sameAs":["https://www.facebook.com/910CPR","https://www.linkedin.com/company/910cpr/"]
+      }
     }
   ]
   </script>
 </head>
-
 <body>
-  <header>
-    <div class="wrap">
-      <nav class="chip-nav">
-        <a href="/docs/landers/chips/bls">BLS</a>
-        <a href="/docs/landers/chips/alcs">ACLS</a>
-        <a href="/docs/landers/chips/pals">PALS</a>
-        <a href="/docs/landers/chips/cpr-first-aid">CPR/AED/First Aid</a>
-        <a href="/docs/landers/chips/wilmington-area">Wilmington-area</a>
-        <a href="/docs/landers/chips/burgaw-area">Burgaw-area</a>
-      </nav>
-    </div>
-  </header>
+  <header><div class="wrap"><nav class="chip-nav">
+    <a href="/bls">BLS</a><a href="/acls">ACLS</a><a href="/pals">PALS</a><a href="/cpr-first-aid">CPR/AED/First Aid</a><a href="/wilmington">Wilmington-area</a><a href="/burgaw">Burgaw-area</a>
+  </nav></div></header>
 
   <main class="wrap">
     <section class="hero">
       <h1>CPR & BLS in Wilmington and Burgaw — Same-day eCards, real instructors</h1>
       <p>AHA BLS, ACLS, PALS, and Heartsaver. Fast scheduling, on-time classes, onsite groups.</p>
-
-      <!-- “Button factory” that mirrors the nav -->
       <div class="chips">
-        <a class="chip" href="/docs/landers/chips/bls">BLS</a>
-        <a class="chip" href="/docs/landers/chips/alcs">ACLS</a>
-        <a class="chip" href="/docs/landers/chips/pals">PALS</a>
-        <a class="chip" href="/docs/landers/chips/cpr-first-aid">CPR/AED/First Aid</a>
-        <a class="chip" href="/docs/landers/chips/wilmington-area">Wilmington-area</a>
-        <a class="chip" href="/docs/landers/chips/burgaw-area">Burgaw-area</a>
+        <a class="chip" href="/bls">BLS</a>
+        <a class="chip" href="/acls">ACLS</a>
+        <a class="chip" href="/pals">PALS</a>
+        <a class="chip" href="/cpr-first-aid">CPR/AED/First Aid</a>
+        <a class="chip" href="/wilmington">Wilmington-area</a>
+        <a class="chip" href="/burgaw">Burgaw-area</a>
       </div>
-
-      <!-- Primary funnel to HOVN course listing + location-filtered CTAs -->
-      <div class="cta">
+      <div class="card">
         <strong>Find a class now</strong><br>
-        <a class="btn" href="https://www.hovn.app/910cpr/courses" target="_blank" rel="noopener">View Full Schedule on HOVN</a>
-        <div class="btn-row">
-          <a class="btn secondary" href="https://www.hovn.app/910cpr/courses?regions=wilmington-nc" target="_blank" rel="noopener">Wilmington schedule</a>
-          <a class="btn secondary" href="https://www.hovn.app/910cpr/courses?regions=burgaw-nc" target="_blank" rel="noopener">Burgaw schedule</a>
+        <div class="chips" style="margin-top:10px">
+          <a class="chip" href="https://www.hovn.app/910cpr/courses" target="_blank" rel="noopener">Full schedule</a>
+          <a class="chip" href="https://www.hovn.app/910cpr/courses?regions=wilmington-nc" target="_blank" rel="noopener">Wilmington only</a>
+          <a class="chip" href="https://www.hovn.app/910cpr/courses?regions=burgaw-nc" target="_blank" rel="noopener">Burgaw only</a>
         </div>
         <div class="fine">If you need help choosing a class, call (910) 395-5193 or email info@910CPR.com.</div>
       </div>
     </section>
 
-    <!-- High-intent tiles linking to specific HOVN course pages + location tiles -->
     <section>
       <div class="grid">
-        <!-- Location tiles (new for consistency) -->
         <div class="tile">
           <h3>Wilmington — All Classes</h3>
           <p>Schedule filtered to Wilmington only.</p>
@@ -183,8 +145,6 @@
           <p>Schedule filtered to Burgaw only.</p>
           <a class="btn" href="https://www.hovn.app/910cpr/courses?regions=burgaw-nc" target="_blank" rel="noopener">View Burgaw</a>
         </div>
-
-        <!-- Course tiles -->
         <div class="tile">
           <h3>BLS Provider — In Person</h3>
           <p>For healthcare jobs and programs.</p>
@@ -213,66 +173,56 @@
       </div>
     </section>
 
-    <!-- Trust block -->
-    <section class="cta" aria-label="Trust and contact">
+    <section class="card" aria-label="Trust and contact">
       <strong>910CPR — Local & Verified</strong>
       <p class="fine">
         Wilmington: 4018 Shipyard Blvd Unit #2, Wilmington, NC 28403 •
         Burgaw: 111 S Wright St, Burgaw, NC 28425 •
         Phone: (910) 395-5193 •
         <a href="mailto:info@910CPR.com">info@910CPR.com</a> •
-        <a href="/docs/data-assets/policies.html">Policies</a>
+        <a href="/policies">Policies</a>
       </p>
     </section>
   </main>
 
-  <footer>
-    <div class="wrap">
-      <nav class="chip-nav">
-        <a href="/docs/landers/chips/bls">BLS</a>
-        <a href="/docs/landers/chips/alcs">ACLS</a>
-        <a href="/docs/landers/chips/pals">PALS</a>
-        <a href="/docs/landers/chips/cpr-first-aid">CPR/AED/First Aid</a>
-        <a href="/docs/landers/chips/wilmington-area">Wilmington-area</a>
-        <a href="/docs/landers/chips/burgaw-area">Burgaw-area</a>
-      </nav>
-      <p class="fine">
-        Wilmington: 4018 Shipyard Blvd Unit #2 • Burgaw: 111 S Wright St •
-        Call (910) 395-5193 • <a href="/docs/data-assets/policies.html">Policies</a>
-      </p>
-    </div>
-  </footer>
+  <footer><div class="wrap"><nav class="chip-nav">
+    <a href="/bls">BLS</a><a href="/acls">ACLS</a><a href="/pals">PALS</a><a href="/cpr-first-aid">CPR/AED/First Aid</a><a href="/wilmington">Wilmington-area</a><a href="/burgaw">Burgaw-area</a>
+  </nav>
+  <p class="fine">Wilmington: 4018 Shipyard Blvd Unit #2 • Burgaw: 111 S Wright St • Call (910) 395-5193 • <a href="/policies">Policies</a></p>
+  </div></footer>
 
-  <!-- Track outbound clicks to HOVN as a GA4 event and auto-add UTMs -->
-  <script>
-    function addUTMs(url){
-      try{
-        const u = new URL(url, location.href);
-        if(!u.searchParams.has('utm_source')){
-          u.searchParams.set('utm_source','910cpr');
-          u.searchParams.set('utm_medium','site');
-          u.searchParams.set('utm_campaign','booking');
-        }
-        return u.toString();
-      }catch(e){ return url; }
-    }
-    // Decorate all HOVN links on load
-    document.querySelectorAll('a[href*="hovn.app"]').forEach(a => { a.href = addUTMs(a.href); });
-    // Click tracking
-    document.addEventListener('click', function(e){
-      const a = e.target.closest('a');
-      if(!a) return;
-      if(/hovn\.app/i.test(a.href)){
-        if(typeof gtag === 'function'){
-          gtag('event','book_click',{
-            link_url: a.href,
-            page_location: location.href,
-            page_path: location.pathname,
-            page_title: document.title
-          });
-        }
+  
+<!-- Track outbound clicks to HOVN as a GA4 event and auto-add UTMs -->
+<script>
+  function addUTMs(url){
+    try{
+      const u = new URL(url, location.href);
+      if(!u.searchParams.has('utm_source')){
+        u.searchParams.set('utm_source','910cpr');
+        u.searchParams.set('utm_medium','site');
+        u.searchParams.set('utm_campaign','booking');
       }
-    }, {capture:true});
-  </script>
+      return u.toString();
+    }catch(e){ return url; }
+  }
+  // Decorate all HOVN links on load
+  document.querySelectorAll('a[href*="hovn.app"]').forEach(a => { a.href = addUTMs(a.href); });
+  // Click tracking
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('a');
+    if(!a) return;
+    if(/hovn\.app/i.test(a.href)){
+      if(typeof gtag === 'function'){
+        gtag('event','book_click',{
+          link_url: a.href,
+          page_location: location.href,
+          page_path: location.pathname,
+          page_title: document.title
+        });
+      }
+    }
+  }, {capture:true});
+</script>
+
 </body>
 </html>
