@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CPR, BLS, ACLS & PALS in Wilmington, Burgaw & Jacksonville | 910CPR</title>
-  <meta name="description" content="CPR, First Aid, BLS, ACLS, and PALS classes for medical, workplace, and families. Same-day cards, flexible scheduling. Wilmington • Burgaw • Jacksonville." />
+  <title>CPR, BLS, ACLS & PALS in Wilmington & Burgaw, NC | 910CPR</title>
+  <meta name="description" content="Local CPR, First Aid, BLS, ACLS, and PALS classes with same-day cards and flexible scheduling. Wilmington • Burgaw • Camp Lejeune area. We don’t cancel classes." />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.910cpr.com/" />
 
   <!-- Open Graph / Twitter -->
-  <meta property="og:title" content="910CPR | Fast, local CPR & BLS in Wilmington, Burgaw & Jacksonville" />
+  <meta property="og:title" content="910CPR | Fast, local CPR & BLS in Wilmington & Burgaw" />
   <meta property="og:description" content="Get certified fast: BLS, ACLS, PALS, CPR/First Aid. No-cancel policy. Same-day cards. Book now." />
   <meta property="og:image" content="https://brian910cpr.github.io/910cpr-class-landers/images/wilmington-bls-aha-logo.jpg" />
-  <meta property="og:url" content="https://www.910cpr.com" />
+  <meta property="og:url" content="https://www.910cpr.com/" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" href="https://brian910cpr.github.io/910cpr-class-landers/images/favicon.ico" type="image/x-icon" />
@@ -34,7 +35,7 @@
     header .brand img{height:44px;border-radius:12px}
     header h1{font-size:clamp(22px,3vw,34px);margin:0;line-height:1.15}
     header p{margin:6px 0 0;color:var(--muted)}
-    .row { width:100% }
+    .row{width:100%}
 
     .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     .chip{padding:8px 12px;background:#fff;border:1px solid #e2e8f0;border-radius:999px;font-size:14px;color:#0f172a;text-decoration:none}
@@ -55,7 +56,7 @@
 
     .logos{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0 0}
     .logos a{display:inline-block}
-    .logos img{height:22px;border-radius:6px}
+    .logos img{height:22px;border-radius:6px;object-fit:cover}
 
     .cta{display:flex;gap:10px;flex-wrap:wrap}
     .btn,a.btn{display:inline-block;text-decoration:none;border:none;cursor:pointer;white-space:nowrap;padding:10px 14px;border-radius:10px;font-weight:600;font-size:14px;background:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(31,116,255,.18)}
@@ -82,7 +83,6 @@
     .workplace-col .blurb{margin:0 0 12px;color:var(--muted);font-size:14px}
     @media (max-width:980px){.workplace-columns{grid-template-columns:1fr}}
     .wide-card{margin-top:22px}
-
     .subchips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
     .subchips .chip{font-size:13px;padding:6px 10px}
   </style>
@@ -94,21 +94,18 @@
         <img src="https://brian910cpr.github.io/910cpr-class-landers/images/910CPR_Fat.jpg" alt="910CPR logo" />
         <div class="row">
           <h1>CPR, First Aid, BLS, ACLS & PALS — Done Right and On Time</h1>
-          <p>Wilmington • Burgaw • Jacksonville (Camp Lejeune area). Same-day cards. We don’t cancel classes.</p>
+          <p>Wilmington • Burgaw • Camp Lejeune area. Same-day cards. We don’t cancel classes.</p>
 
-          <!-- Primary audience chips -->
-          <div class="chips" aria-label="Audiences">
-            <a class="chip" href="#medical">Medical (BLS/ACLS/PALS)</a>
-            <a class="chip" href="#workplaces">Workplaces (OSHA-acceptable)</a>
-            <a class="chip" href="#families">Parents & Families</a>
-          </div>
-
-          <!-- Location chips for SEO + UX (no admin links) -->
-          <div class="kicker">Serving these locations</div>
-          <div class="chips" aria-label="Locations">
+          <!-- ONE chip row exactly as requested -->
+          <div class="chips" aria-label="Navigation chips">
+            <a class="chip" href="#medical">MEDICAL</a>
+            <a class="chip" href="#industry">Industry &amp; Construction</a>
+            <a class="chip" href="#childcare">Child &amp; Senior Care</a>
+            <a class="chip" href="#uscg">USCG / DAN (Maritime &amp; Diving)</a>
+            <a class="chip" href="#families">Parents &amp; Families</a>
             <span class="chip">Wilmington, NC</span>
             <span class="chip">Burgaw, NC</span>
-            <span class="chip">Jacksonville / Camp Lejeune, NC</span>
+            <span class="chip">NC</span>
             <span class="chip">On-site at your facility</span>
           </div>
         </div>
@@ -117,7 +114,7 @@
 
     <!-- Section: Medical Professionals -->
     <h2 id="medical" class="section-title">For Medical Professionals</h2>
-    <p class="section-kicker">Pick a course type; the next few real dates show below. Clicking a date opens a public listing for that course family.</p>
+    <p class="section-kicker">Pick a course type; the next few real dates show below. Clicking a date opens that specific session.</p>
 
     <div class="grid">
       <!-- BLS -->
@@ -126,13 +123,11 @@
         <h3>Basic Life Support (BLS)</h3>
         <p>Choose fast in-person or HeartCode + skills. Ideal for hospital staff, nurses, techs, and students.</p>
 
-        <!-- Periscope populated by JSON -->
         <div class="dates-preview" aria-label="Upcoming BLS dates">
           <div class="dates-label">Next sessions:</div>
           <ul class="dates-list" id="dates-bls"></ul>
         </div>
         <div class="dates-mobile">
-          <!-- Public, safe AHA family page -->
           <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi">See upcoming BLS dates</a>
         </div>
 
@@ -141,19 +136,17 @@
           <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbspdt0r0003l10487vrqq7m">AHA Online + Skills</a>
         </div>
 
-        <!-- Clickable alternate cert logos -->
         <div class="logos" aria-label="Certifying bodies">
           <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi" title="AHA BLS">
-            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA" />
+            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA — BLS Provider" />
           </a>
-          <a href="https://www.hovn.app/910cpr/courses/hsi-adult-child-infant-cpr-aed/o/cmbsr16do000ql104hibylerl" title="HSI Adult/Child/Infant CPR AED (In-Person)">
-            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/HSI.jpg" alt="HSI" />
+          <a href="https://www.hovn.app/910cpr/courses/arc-bls-provider-blended/o/cmbsqvf2b0009jz044x3hd29t" title="ARC BLS (Blended)">
+            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/ARC.jpg" alt="ARC — BLS Blended" />
           </a>
         </div>
         <p class="hint">
           Also available:
-          <a href="https://www.hovn.app/910cpr/courses/arc-bls-provider-blended/o/cmbsqvf2b0009jz044x3hd29t">ARC BLS Blended</a> ·
-          <a href="https://www.hovn.app/910cpr/courses/hsi-adult-child-infant-cpr-aed/o/cmbsr16do000ql104hibylerl">HSI Adult/Child/Infant CPR AED</a>
+          <a href="https://www.hovn.app/910cpr/courses/arc-bls-provider-blended/o/cmbsqvf2b0009jz044x3hd29t">ARC BLS Blended</a>
         </p>
       </section>
 
@@ -177,7 +170,7 @@
         </div>
         <div class="logos">
           <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsp7c00000gl104okmnr584" title="AHA ACLS">
-            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA" />
+            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA — ACLS" />
           </a>
         </div>
       </section>
@@ -202,22 +195,22 @@
         </div>
         <div class="logos">
           <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsqfffj0008l704107vl40j" title="AHA PALS">
-            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA" />
+            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA — PALS" />
           </a>
         </div>
       </section>
 
-      <!-- HSI Blended BLS + First Aid — ALSO SHOWN IN MEDICAL -->
+      <!-- HSI Blended BLS + First Aid — ALSO SHOWN BELOW IN WORKPLACE -->
       <section class="card col-12">
         <span class="badge">Healthcare + Workplace Hybrid</span>
-        <h3>BLS & First Aid — Online + Skills (HSI)</h3>
+        <h3>BLS &amp; First Aid — Online + Skills (HSI)</h3>
         <p>Cover both BLS and First Aid with a blended path that fits real schedules. Popular for cross-role staff.</p>
         <div class="cta">
           <a class="btn" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsrd2hn000cjz04tv5klzoj">HSI — See Times</a>
         </div>
         <div class="logos">
           <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsrd2hn000cjz04tv5klzoj" title="HSI BLS & First Aid (Blended)">
-            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/HSI.jpg" alt="HSI" />
+            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/HSI.jpg" alt="HSI — BLS & First Aid (Blended)" />
           </a>
         </div>
       </section>
@@ -242,9 +235,8 @@
           <h3>First Aid / CPR / AED — In Person</h3>
           <p>Practical, on-site friendly course that ticks OSHA compliance boxes.</p>
           <div class="cta">
-            <!-- Cert-specific public links -->
             <a class="btn" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbu9fujf0000l704lt2iau0p">AHA — See Times</a>
-            <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsra514000dl704dzvd2aex">ARC — See Times</a>
+            <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsra514000dl704dzvd2aex">HSI — See Times</a>
           </div>
         </section>
 
@@ -281,7 +273,7 @@
           <p>Confidence for staff caring for infants, children, and seniors.</p>
           <div class="cta">
             <a class="btn" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbu9fujf0000l704lt2iau0p">AHA — See Times</a>
-            <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsra514000dl704dzvd2aex">ARC — See Times</a>
+            <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsra514000dl704dzvd2aex">HSI — See Times</a>
           </div>
         </section>
 
@@ -308,7 +300,7 @@
           <p>On-deck readiness with practical, scenario-based training.</p>
           <div class="cta">
             <a class="btn" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbu9fujf0000l704lt2iau0p">AHA — See Times</a>
-            <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsra514000dl704dzvd2aex">ARC — See Times</a>
+            <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsra514000dl704dzvd2aex">HSI — See Times</a>
           </div>
         </section>
 
@@ -325,7 +317,7 @@
       </div>
     </div>
 
-    <!-- HSI blended BLS+FA shown once for Workplace (full width) -->
+    <!-- HSI blended BLS+FA (Workplace full width) -->
     <section class="card wide-card">
       <span class="badge">Healthcare + Workplace Hybrid</span>
       <h3>BLS &amp; First Aid — Online + Skills (HSI)</h3>
@@ -335,7 +327,7 @@
       </div>
       <div class="logos">
         <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsrd2hn000cjz04tv5klzoj" title="HSI BLS & First Aid (Blended)">
-          <img src="https://brian910cpr.github.io/910cpr-class-landers/images/HSI.jpg" alt="HSI" />
+          <img src="https://brian910cpr.github.io/910cpr-class-landers/images/HSI.jpg" alt="HSI — BLS & First Aid (Blended)" />
         </a>
       </div>
     </section>
@@ -352,7 +344,7 @@
         </div>
         <div class="logos">
           <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbspsqd30002l80492sowlxz" title="AHA Family & Friends">
-            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA" />
+            <img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA — Family & Friends CPR" />
           </a>
         </div>
       </section>
@@ -373,40 +365,86 @@
     <footer>© 910CPR LLC — Wilmington &amp; Burgaw, NC • (910) 395-5193 • info@910cpr.com</footer>
   </div>
 
-  <!-- Structured data (adds areaServed for local SEO) -->
+  <!-- Structured data (Organization + LocalBusiness + Breadcrumb + FAQ) -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"Organization",
     "name":"910CPR",
-    "url":"https://www.910cpr.com",
+    "url":"https://www.910cpr.com/",
     "logo":"https://brian910cpr.github.io/910cpr-class-landers/images/910CPR_Fat.jpg",
     "sameAs":[
       "https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi",
-      "https://www.hovn.app/910cpr/courses/arc-bls-provider",
-      "https://www.hovn.app/910cpr/courses/hsi-adult-child-infant-cpr-aed"
+      "https://www.hovn.app/910cpr/courses/arc-bls-provider-blended/o/cmbsqvf2b0009jz044x3hd29t",
+      "https://www.hovn.app/service-providers/910cpr/offerings/cmbsrd2hn000cjz04tv5klzoj"
     ],
-    "address":{"@type":"PostalAddress","addressLocality":"Wilmington","addressRegion":"NC","addressCountry":"US"},
-    "areaServed":[{"@type":"City","name":"Wilmington"},{"@type":"City","name":"Burgaw"},{"@type":"City","name":"Jacksonville"}]
+    "areaServed":[{"@type":"City","name":"Wilmington"},{"@type":"City","name":"Burgaw"}],
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "telephone": "+1-910-395-5193",
+      "contactType": "customer service",
+      "areaServed": "US-NC"
+    }]
   }
   </script>
 
-  <!-- Periscope loader: reads periscope_small.json and renders condensed chips.
-       Per-chip + "See all" now use PUBLIC course/offerings pages (no admin URLs). -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"LocalBusiness",
+    "name":"910CPR",
+    "telephone":"+1-910-395-5193",
+    "email":"info@910cpr.com",
+    "address":{"@type":"PostalAddress","addressLocality":"Wilmington","addressRegion":"NC","addressCountry":"US"},
+    "areaServed":["Wilmington NC","Burgaw NC","Camp Lejeune area"],
+    "url":"https://www.910cpr.com/",
+    "sameAs":[
+      "https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi"
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Home","item":"https://www.910cpr.com/"},
+      {"@type":"ListItem","position":2,"name":"Medical"},
+      {"@type":"ListItem","position":3,"name":"Workplaces"},
+      {"@type":"ListItem","position":4,"name":"Parents & Families"}
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"Do you issue same-day certification cards?","acceptedAnswer":{"@type":"Answer","text":"Yes. We provide same-day cards for our classes."}},
+      {"@type":"Question","name":"Do classes get canceled?","acceptedAnswer":{"@type":"Answer","text":"We maintain a no-cancel policy; we run small classes when others won’t."}},
+      {"@type":"Question","name":"Which class should I take for a hospital job?","acceptedAnswer":{"@type":"Answer","text":"Medical roles typically require AHA BLS for Providers. Advanced roles may require ACLS and/or PALS."}},
+      {"@type":"Question","name":"Do you train on-site for companies?","acceptedAnswer":{"@type":"Answer","text":"Yes. We offer on-site training for workplaces across Wilmington, Burgaw, and the Camp Lejeune area."}}
+    ]
+  }
+  </script>
+
+  <!-- Periscope loader: reads periscope_small.json (placed next to this file) and renders date chips
+       Clicking a chip goes straight to that specific session. "See all" uses the public family page. -->
   <script>
-    // Public “family” pages to send chips to (fallbacks)
     const URL_BLS_PUBLIC  = "https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi";
     const URL_ACLS_PUBLIC = "https://www.hovn.app/service-providers/910cpr/offerings/cmbsp7c00000gl104okmnr584";
     const URL_PALS_PUBLIC = "https://www.hovn.app/service-providers/910cpr/offerings/cmbsqfffj0008l704107vl40j";
 
-    function renderDates(listId, items, seeAllHref, perChipHref){
+    function renderDates(listId, items, seeAllHref){
       const ul = document.getElementById(listId);
       if (!ul) return;
       ul.innerHTML = '';
       (items || []).forEach(it => {
         const li = document.createElement('li');
         const a = document.createElement('a');
-        a.href = perChipHref || it.first || '#';
+        a.href = it.first || seeAllHref || '#';
         a.textContent = it.label;
         li.appendChild(a);
         ul.appendChild(li);
@@ -414,7 +452,7 @@
       const more = document.createElement('li');
       more.className = 'more';
       const moreA = document.createElement('a');
-      moreA.href = seeAllHref;
+      moreA.href = seeAllHref || '#';
       moreA.textContent = 'See all →';
       more.appendChild(moreA);
       ul.appendChild(more);
@@ -423,11 +461,11 @@
     fetch('periscope_small.json')
       .then(r => r.json())
       .then(DATA => {
-        renderDates('dates-bls',  DATA.BLS,  URL_BLS_PUBLIC,  URL_BLS_PUBLIC);
-        renderDates('dates-acls', DATA.ACLS, URL_ACLS_PUBLIC, URL_ACLS_PUBLIC);
-        renderDates('dates-pals', DATA.PALS, URL_PALS_PUBLIC, URL_PALS_PUBLIC);
+        renderDates('dates-bls',  DATA.BLS,  URL_BLS_PUBLIC);
+        renderDates('dates-acls', DATA.ACLS, URL_ACLS_PUBLIC);
+        renderDates('dates-pals', DATA.PALS, URL_PALS_PUBLIC);
       })
-      .catch(()=>{ /* leave just the "See all" links visible if JSON not found */ });
+      .catch(()=>{ /* If JSON not found, only the “See all” links will show on mobile */ });
   </script>
 </body>
 </html>
