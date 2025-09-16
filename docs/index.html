@@ -21,114 +21,70 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-45PBWBK7KR');
+    gtag('js', new Date()); gtag('config', 'G-45PBWBK7KR');
   </script>
 
   <style>
-    :root {
-      --brand: #1f74ff;
-      --brand-dark: #1454b8;
-      --ink: #0f172a;
-      --muted: #475569;
-      --shadow: 0 10px 30px rgba(2,12,27,0.06);
-      --radius: 16px;
-    }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color: var(--ink);
-      background: linear-gradient(180deg, #ffffff 0%, #eef6ff 100%);
-    }
-    .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
-    header {
-      border-radius: 20px;
-      padding: 28px;
-      background: linear-gradient(135deg, #ffffff 0%, #eaf2ff 60%, #e5f6ff 100%);
-      box-shadow: var(--shadow);
-      display: flex; gap: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap;
-    }
-    header .brand { display: flex; align-items: center; gap: 14px; }
-    header .brand img { height: 44px; border-radius: 12px; }
-    header h1 { font-size: clamp(22px, 3vw, 34px); margin: 0; line-height: 1.15; }
-    header p { margin: 6px 0 0; color: var(--muted); }
-    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-    .chip {
-      padding: 8px 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 999px;
-      font-size: 14px; color: #0f172a;
-    }
+    :root { --brand:#1f74ff; --brand-dark:#1454b8; --ink:#0f172a; --muted:#475569; --shadow:0 10px 30px rgba(2,12,27,.06); --radius:16px; }
+    *{box-sizing:border-box} html,body{margin:0;padding:0}
+    body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Apple Color Emoji","Segoe UI Emoji";color:var(--ink);background:linear-gradient(180deg,#fff 0%,#eef6ff 100%)}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    header{border-radius:20px;padding:28px;background:linear-gradient(135deg,#fff 0%,#eaf2ff 60%,#e5f6ff 100%);box-shadow:var(--shadow);display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    header .brand{display:flex;align-items:center;gap:14px}
+    header .brand img{height:44px;border-radius:12px}
+    header h1{font-size:clamp(22px,3vw,34px);margin:0;line-height:1.15}
+    header p{margin:6px 0 0;color:var(--muted)}
+    .row { width:100% }
 
-    .section-title { margin: 28px 0 10px; font-size: clamp(18px, 2.6vw, 24px); }
-    .section-kicker { margin: 2px 0 16px; color: var(--muted); font-size: 14px; }
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .chip{padding:8px 12px;background:#fff;border:1px solid #e2e8f0;border-radius:999px;font-size:14px;color:#0f172a;text-decoration:none}
+    .chip:hover{border-color:#cfe0ff}
+    .kicker{font-size:12px;color:#64748b;margin-top:12px}
 
-    .grid { display: grid; gap: 22px; margin-top: 10px; grid-template-columns: repeat(12, 1fr); }
-    .col-12 { grid-column: span 12; }
-    .col-8  { grid-column: span 8; }
-    .col-6  { grid-column: span 6; }
-    .col-4  { grid-column: span 4; }
-    @media (max-width: 980px) { .col-8, .col-6, .col-4 { grid-column: span 12; } }
+    .section-title{margin:28px 0 10px;font-size:clamp(18px,2.6vw,24px)}
+    .section-kicker{margin:2px 0 16px;color:var(--muted);font-size:14px}
 
-    .card {
-      background: #fff; border: 1px solid #e6ebf2; border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 20px; position: relative; overflow: hidden;
-    }
-    .card h3 { margin: 0 0 6px; font-size: clamp(18px, 2.4vw, 22px); }
-    .card p { margin: 6px 0 14px; color: var(--muted); }
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #0f172a;
-      background: #f1f5ff; padding: 6px 10px; border-radius: 999px; border: 1px solid #dbe6ff;
-    }
+    .grid{display:grid;gap:22px;margin-top:10px;grid-template-columns:repeat(12,1fr)}
+    .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-6{grid-column:span 6}.col-4{grid-column:span 4}
+    @media (max-width:980px){.col-8,.col-6,.col-4{grid-column:span 12}}
 
-    .logos { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 10px 0 0; }
-    .logos a { display: inline-block; }
-    .logos img { height: 22px; border-radius: 6px; }
+    .card{background:#fff;border:1px solid #e6ebf2;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;position:relative;overflow:hidden}
+    .card h3{margin:0 0 6px;font-size:clamp(18px,2.4vw,22px)}
+    .card p{margin:6px 0 14px;color:var(--muted)}
+    .badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;background:#f1f5ff;padding:6px 10px;border-radius:999px;border:1px solid #dbe6ff}
 
-    .cta { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn, a.btn {
-      display: inline-block; text-decoration: none; border: none; cursor: pointer; white-space: nowrap;
-      padding: 10px 14px; border-radius: 10px; font-weight: 600; font-size: 14px;
-      background: var(--brand); color: #fff; box-shadow: 0 6px 16px rgba(31,116,255,.18);
-    }
-    .btn:hover { background: var(--brand-dark); }
-    .btn.ghost { background: transparent; color: var(--brand); border: 1px solid #cfe0ff; }
+    .logos{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0 0}
+    .logos a{display:inline-block}
+    .logos img{height:22px;border-radius:6px}
 
-    .trust {
-      background: #ffffff; border: 1px solid #e6ebf2; border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 18px;
-    }
-    footer { margin: 26px 0 10px; color: #475569; font-size: 13px; text-align: center; }
+    .cta{display:flex;gap:10px;flex-wrap:wrap}
+    .btn,a.btn{display:inline-block;text-decoration:none;border:none;cursor:pointer;white-space:nowrap;padding:10px 14px;border-radius:10px;font-weight:600;font-size:14px;background:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(31,116,255,.18)}
+    .btn:hover{background:var(--brand-dark)}
+    .btn.ghost{background:transparent;color:var(--brand);border:1px solid #cfe0ff}
+
+    .trust{background:#fff;border:1px solid #e6ebf2;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    footer{margin:26px 0 10px;color:#475569;font-size:13px;text-align:center}
 
     /* Periscope dates — desktop list, mobile link */
-    .dates-preview { margin: 10px 0 12px; }
-    .dates-label { font-size: 12px; color: #475569; margin-bottom: 6px; }
-    .dates-list {
-      list-style: none; margin: 0; padding: 0;
-      display: flex; gap: 8px; flex-wrap: wrap;
-    }
-    .dates-list li {
-      font-size: 13px; line-height: 1; white-space: nowrap;
-      background: #f8fbff; border: 1px solid #dbe6ff; border-radius: 999px; padding: 6px 10px;
-    }
-    .dates-list li.more { background: #ffffff; }
-    .dates-list a { color: #1f74ff; text-decoration: none; }
-    .dates-list a:hover { text-decoration: underline; }
-    .dates-mobile { display: none; }
-    @media (max-width: 680px) { .dates-preview { display: none; } .dates-mobile { display: block; margin: 8px 0 12px; } }
+    .dates-preview{margin:10px 0 12px}
+    .dates-label{font-size:12px;color:#475569;margin-bottom:6px}
+    .dates-list{list-style:none;margin:0;padding:0;display:flex;gap:8px;flex-wrap:wrap}
+    .dates-list li{font-size:13px;line-height:1;white-space:nowrap;background:#f8fbff;border:1px solid #dbe6ff;border-radius:999px;padding:6px 10px}
+    .dates-list li.more{background:#ffffff}
+    .dates-list a{color:#1f74ff;text-decoration:none}
+    .dates-list a:hover{text-decoration:underline}
+    .dates-mobile{display:none}
+    @media (max-width:680px){.dates-preview{display:none}.dates-mobile{display:block;margin:8px 0 12px}}
 
     /* Workplace: 3-column buckets */
-    .workplace-columns {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
-      margin-top: 8px;
-    }
-    .workplace-col .col-head { margin: 0 0 6px; font-size: clamp(16px, 2.2vw, 20px); }
-    .workplace-col .blurb { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
-    @media (max-width: 980px) {
-      .workplace-columns { grid-template-columns: 1fr; }
-    }
-    .wide-card { margin-top: 22px; }
+    .workplace-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px}
+    .workplace-col .col-head{margin:0 0 6px;font-size:clamp(16px,2.2vw,20px)}
+    .workplace-col .blurb{margin:0 0 12px;color:var(--muted);font-size:14px}
+    @media (max-width:980px){.workplace-columns{grid-template-columns:1fr}}
+    .wide-card{margin-top:22px}
+
+    .subchips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+    .subchips .chip{font-size:13px;padding:6px 10px}
   </style>
 </head>
 <body>
@@ -136,21 +92,32 @@
     <header>
       <div class="brand">
         <img src="https://brian910cpr.github.io/910cpr-class-landers/images/910CPR_Fat.jpg" alt="910CPR logo" />
-        <div>
+        <div class="row">
           <h1>CPR, First Aid, BLS, ACLS & PALS — Done Right and On Time</h1>
           <p>Wilmington • Burgaw • Jacksonville (Camp Lejeune area). Same-day cards. We don’t cancel classes.</p>
-          <div class="chips">
-            <span class="chip">Medical (BLS/ACLS/PALS)</span>
-            <span class="chip">Workplaces (OSHA-acceptable First Aid/CPR/AED)</span>
-            <span class="chip">Parents & Families (Friends & Family)</span>
+
+          <!-- Primary audience chips -->
+          <div class="chips" aria-label="Audiences">
+            <a class="chip" href="#medical">Medical (BLS/ACLS/PALS)</a>
+            <a class="chip" href="#workplaces">Workplaces (OSHA-acceptable)</a>
+            <a class="chip" href="#families">Parents & Families</a>
+          </div>
+
+          <!-- Location chips for SEO + UX (no admin links) -->
+          <div class="kicker">Serving these locations</div>
+          <div class="chips" aria-label="Locations">
+            <span class="chip">Wilmington, NC</span>
+            <span class="chip">Burgaw, NC</span>
+            <span class="chip">Jacksonville / Camp Lejeune, NC</span>
+            <span class="chip">On-site at your facility</span>
           </div>
         </div>
       </div>
     </header>
 
     <!-- Section: Medical Professionals -->
-    <h2 class="section-title">For Medical Professionals</h2>
-    <p class="section-kicker">Choose your course type below to view full schedules and available times.</p>
+    <h2 id="medical" class="section-title">For Medical Professionals</h2>
+    <p class="section-kicker">Pick a course type; the next few real dates show below. Clicking a date opens a public listing for that course family.</p>
 
     <div class="grid">
       <!-- BLS -->
@@ -159,19 +126,13 @@
         <h3>Basic Life Support (BLS)</h3>
         <p>Choose fast in-person or HeartCode + skills. Ideal for hospital staff, nurses, techs, and students.</p>
 
-        <!-- Periscope of upcoming AHA BLS Instructor-Led dates (from your CSV) -->
+        <!-- Periscope populated by JSON -->
         <div class="dates-preview" aria-label="Upcoming BLS dates">
           <div class="dates-label">Next sessions:</div>
-          <ul class="dates-list">
-            <li><a href="https://www.hovn.app/service-providers/910cpr/sessions/cmepbzvzd000kjr04qnpzmzip">Sep 17, 9:00 AM • Burgaw</a></li>
-            <li><a href="https://www.hovn.app/service-providers/910cpr/sessions/cmepabh4n0004l5046ys298ez">Sep 17, 9:00 AM • Burgaw</a></li>
-            <li><a href="https://www.hovn.app/service-providers/910cpr/sessions/cmep6cwtp001qjs04u7aic8zb">Sep 17, 9:15 AM • Wilmington</a></li>
-            <li><a href="https://www.hovn.app/service-providers/910cpr/sessions/cmep69ma00008l504s7wfm0dw">Sep 17, 9:15 AM • Wilmington</a></li>
-            <li><a href="https://www.hovn.app/service-providers/910cpr/sessions/cmffgq0bd000glh04164f4xe2">Sep 17, 12:30 PM • Burgaw</a></li>
-            <li class="more"><a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi">See all →</a></li>
-          </ul>
+          <ul class="dates-list" id="dates-bls"></ul>
         </div>
         <div class="dates-mobile">
+          <!-- Public, safe AHA family page -->
           <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi">See upcoming BLS dates</a>
         </div>
 
@@ -185,15 +146,19 @@
           <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi" title="AHA BLS">
             <img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA" />
           </a>
-          <!-- TODO: replace '#' with your ARC BLS offering URL -->
-          <a href="#" title="ARC BLS">
+          <a href="https://www.hovn.app/910cpr/courses/arc-bls-provider/o/cmf1tf5900004le045jljveui" title="ARC BLS (In-Person)">
             <img src="https://brian910cpr.github.io/910cpr-class-landers/images/ARC.jpg" alt="American Red Cross" />
           </a>
-          <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsrd2hn000cjz04tv5klzoj" title="HSI BLS & First Aid (Blended)">
+          <a href="https://www.hovn.app/910cpr/courses/hsi-adult-child-infant-cpr-aed/o/cmbsr16do000ql104hibylerl" title="HSI Adult/Child/Infant CPR AED (In-Person)">
             <img src="https://brian910cpr.github.io/910cpr-class-landers/images/HSI.jpg" alt="HSI" />
           </a>
         </div>
-        <p class="hint">Also available: ARC BLS (link above), HSI BLS & First Aid (blended).</p>
+        <p class="hint">
+          Also available:
+          <a href="https://www.hovn.app/910cpr/courses/arc-bls-provider/o/cmf1tf5900004le045jljveui">ARC BLS In-Person</a> ·
+          <a href="https://www.hovn.app/910cpr/courses/arc-bls-provider-blended/o/cmbsqvf2b0009jz044x3hd29t">ARC BLS Blended</a> ·
+          <a href="https://www.hovn.app/910cpr/courses/hsi-adult-child-infant-cpr-aed/o/cmbsr16do000ql104hibylerl">HSI Adult/Child/Infant CPR AED</a>
+        </p>
       </section>
 
       <!-- ACLS -->
@@ -201,6 +166,15 @@
         <span class="badge">Advanced Cardiovascular Life Support</span>
         <h3>ACLS</h3>
         <p>Initial or renewal. Pick in-person or HeartCode + skills to fit your schedule and learning style.</p>
+
+        <div class="dates-preview" aria-label="Upcoming ACLS dates">
+          <div class="dates-label">Next sessions:</div>
+          <ul class="dates-list" id="dates-acls"></ul>
+        </div>
+        <div class="dates-mobile">
+          <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsp7c00000gl104okmnr584">See upcoming ACLS dates</a>
+        </div>
+
         <div class="cta">
           <a class="btn" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsp7c00000gl104okmnr584">AHA In-Person — See Times</a>
           <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsp2hn10000l7049iut1ptb">AHA Online + Skills</a>
@@ -217,6 +191,15 @@
         <span class="badge">Pediatric Advanced Life Support</span>
         <h3>PALS</h3>
         <p>Initial or renewal. Get the pediatric resuscitation credential your facility requires.</p>
+
+        <div class="dates-preview" aria-label="Upcoming PALS dates">
+          <div class="dates-label">Next sessions:</div>
+          <ul class="dates-list" id="dates-pals"></ul>
+        </div>
+        <div class="dates-mobile">
+          <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsqfffj0008l704107vl40j">See upcoming PALS dates</a>
+        </div>
+
         <div class="cta">
           <a class="btn" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsqfffj0008l704107vl40j">AHA In-Person — See Times</a>
           <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsqds5y0007l704ulqoywl5">AHA Online + Skills</a>
@@ -245,11 +228,16 @@
     </div>
 
     <!-- Section: Workplaces (3-column buckets) -->
-    <h2 class="section-title">For Workplaces (OSHA-Acceptable)</h2>
+    <h2 id="workplaces" class="section-title">For Workplaces (OSHA-Acceptable)</h2>
+    <div class="subchips" aria-label="Workplace focus">
+      <a class="chip" href="#industry">Industry &amp; Construction</a>
+      <a class="chip" href="#childcare">Child &amp; Senior Care</a>
+      <a class="chip" href="#uscg">USCG / DAN</a>
+    </div>
 
     <div class="workplace-columns">
       <!-- Column 1: Industry & Construction -->
-      <div class="workplace-col">
+      <div class="workplace-col" id="industry">
         <h3 class="col-head">Industry &amp; Construction</h3>
         <p class="blurb">Meets OSHA site requirements for contractors, builders, and general industry crews.</p>
 
@@ -258,12 +246,9 @@
           <h3>First Aid / CPR / AED — In Person</h3>
           <p>Practical, on-site friendly course that ticks OSHA compliance boxes.</p>
           <div class="cta">
+            <!-- Cert-specific public links -->
             <a class="btn" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbu9fujf0000l704lt2iau0p">AHA — See Times</a>
             <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsra514000dl704dzvd2aex">ARC — See Times</a>
-          </div>
-          <div class="logos">
-            <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbu9fujf0000l704lt2iau0p" title="AHA FA/CPR/AED"><img src="https://brian910cpr.github.io/910cpr-class-landers/images/AHA.jpg" alt="AHA" /></a>
-            <a href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsra514000dl704dzvd2aex" title="ARC FA/CPR/AED"><img src="https://brian910cpr.github.io/910cpr-class-landers/images/ARC.jpg" alt="ARC" /></a>
           </div>
         </section>
 
@@ -283,14 +268,14 @@
           <h3>CPR / AED — In Person</h3>
           <p>Short, focused CPR/AED credential for field teams and visitors.</p>
           <div class="cta">
-            <a class="btn" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsph6zy0006l104dvnasgaj">AHA — See Times</a>
-            <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsqxdbm0006jz04fwo6s5kp">HSI — See Times</a>
+            <a class="btn" href="https://www.hovn.app/910cpr/courses/hsi-adult-child-infant-cpr-aed/o/cmbsr16do000ql104hibylerl">HSI — See Times</a>
+            <a class="btn ghost" href="https://www.hovn.app/service-providers/910cpr/offerings/cmbsph6zy0006l104dvnasgaj">AHA — See Times</a>
           </div>
         </section>
       </div>
 
       <!-- Column 2: Child & Senior Care -->
-      <div class="workplace-col">
+      <div class="workplace-col" id="childcare">
         <h3 class="col-head">Child &amp; Senior Care</h3>
         <p class="blurb">Meets childcare licensing and senior care standards. Tailored for daycare and elder care settings.</p>
 
@@ -317,7 +302,7 @@
       </div>
 
       <!-- Column 3: USCG / DAN -->
-      <div class="workplace-col">
+      <div class="workplace-col" id="uscg">
         <h3 class="col-head">USCG / DAN (Maritime &amp; Diving)</h3>
         <p class="blurb">Recognized First Aid &amp; CPR credentials aligned with USCG and DAN expectations for crews and dive teams.</p>
 
@@ -360,7 +345,7 @@
     </section>
 
     <!-- Section: Parents & Families -->
-    <h2 class="section-title">For Parents &amp; Families</h2>
+    <h2 id="families" class="section-title">For Parents &amp; Families</h2>
     <div class="grid">
       <section class="card col-6">
         <span class="badge">Non-certification workshop</span>
@@ -377,7 +362,6 @@
       </section>
     </div>
 
-    <!-- Trust / Why 910CPR -->
     <div class="grid">
       <section class="trust col-12">
         <h4>Why 910CPR</h4>
@@ -390,12 +374,10 @@
       </section>
     </div>
 
-    <footer>
-      © 910CPR LLC — Wilmington &amp; Burgaw, NC • (910) 395-5193 • info@910cpr.com
-    </footer>
+    <footer>© 910CPR LLC — Wilmington &amp; Burgaw, NC • (910) 395-5193 • info@910cpr.com</footer>
   </div>
 
-  <!-- Structured data (Organization + Course sample) -->
+  <!-- Structured data (adds areaServed for local SEO) -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -404,18 +386,52 @@
     "url":"https://www.910cpr.com",
     "logo":"https://brian910cpr.github.io/910cpr-class-landers/images/910CPR_Fat.jpg",
     "sameAs":[
-      "https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi"
+      "https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi",
+      "https://www.hovn.app/910cpr/courses/arc-bls-provider/o/cmf1tf5900004le045jljveui",
+      "https://www.hovn.app/910cpr/courses/hsi-adult-child-infant-cpr-aed/o/cmbsr16do000ql104hibylerl"
     ],
-    "address":{"@type":"PostalAddress","addressLocality":"Wilmington","addressRegion":"NC","addressCountry":"US"}
+    "address":{"@type":"PostalAddress","addressLocality":"Wilmington","addressRegion":"NC","addressCountry":"US"},
+    "areaServed":[{"@type":"City","name":"Wilmington"},{"@type":"City","name":"Burgaw"},{"@type":"City","name":"Jacksonville"}]
   }
   </script>
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Course",
-    "name":"Basic Life Support (BLS)",
-    "provider":{"@type":"Organization","name":"910CPR","sameAs":"https://www.910cpr.com"}
-  }
+
+  <!-- Periscope loader: reads periscope_small.json and renders condensed chips.
+       Per-chip + "See all" now use PUBLIC course/offerings pages (no admin URLs). -->
+  <script>
+    // Public “family” pages to send chips to (fallbacks)
+    const URL_BLS_PUBLIC  = "https://www.hovn.app/service-providers/910cpr/offerings/cmbspeu5q0005l104e1p7b2qi";
+    const URL_ACLS_PUBLIC = "https://www.hovn.app/service-providers/910cpr/offerings/cmbsp7c00000gl104okmnr584";
+    const URL_PALS_PUBLIC = "https://www.hovn.app/service-providers/910cpr/offerings/cmbsqfffj0008l704107vl40j";
+
+    function renderDates(listId, items, seeAllHref, perChipHref){
+      const ul = document.getElementById(listId);
+      if (!ul) return;
+      ul.innerHTML = '';
+      (items || []).forEach(it => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = perChipHref || it.first || '#';
+        a.textContent = it.label;
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      const more = document.createElement('li');
+      more.className = 'more';
+      const moreA = document.createElement('a');
+      moreA.href = seeAllHref;
+      moreA.textContent = 'See all →';
+      more.appendChild(moreA);
+      ul.appendChild(more);
+    }
+
+    fetch('periscope_small.json')
+      .then(r => r.json())
+      .then(DATA => {
+        renderDates('dates-bls',  DATA.BLS,  URL_BLS_PUBLIC,  URL_BLS_PUBLIC);
+        renderDates('dates-acls', DATA.ACLS, URL_ACLS_PUBLIC, URL_ACLS_PUBLIC);
+        renderDates('dates-pals', DATA.PALS, URL_PALS_PUBLIC, URL_PALS_PUBLIC);
+      })
+      .catch(()=>{ /* leave just the "See all" links visible if JSON not found */ });
   </script>
 </body>
 </html>
