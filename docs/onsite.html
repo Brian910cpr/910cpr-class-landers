@@ -7,6 +7,8 @@
   <meta name="description" content="Request on-site CPR, First Aid, and BLS training for your team in Wilmington, Burgaw, and the Camp Lejeune area. Same-day cards, flexible scheduling." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://www.910cpr.com/onsite.html" />
+
+  <!-- Open Graph / Twitter -->
   <meta property="og:title" content="On-Site CPR / First Aid Training Request | 910CPR" />
   <meta property="og:description" content="On-site CPR, First Aid, and BLS for workplaces. We come to you. Wilmington • Burgaw • Camp Lejeune area." />
   <meta property="og:image" content="https://brian910cpr.github.io/910cpr-class-landers/images/wilmington-bls-aha-logo.jpg" />
@@ -14,7 +16,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="https://brian910cpr.github.io/910cpr-class-landers/images/favicon.ico" type="image/x-icon" />
 
-  <!-- GA4 (same as index) -->
+  <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PBWBK7KR"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);} gtag('js',new Date()); gtag('config','G-45PBWBK7KR');</script>
 
@@ -23,6 +25,7 @@
     *{box-sizing:border-box} html,body{margin:0;padding:0}
     body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Apple Color Emoji","Segoe UI Emoji";color:var(--ink);background:linear-gradient(180deg,#fff 0%,#eef6ff 100%)}
     .wrap{max-width:1100px;margin:0 auto;padding:24px}
+
     header{border-radius:20px;padding:28px;background:linear-gradient(135deg,#fff 0%,#eaf2ff 60%,#e5f6ff 100%);box-shadow:var(--shadow);display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
     header .brand{display:flex;align-items:center;gap:14px}
     header .brand img{height:44px;border-radius:12px}
@@ -35,11 +38,11 @@
     .chip:hover{border-color:#cfe0ff}
     .chip[aria-current="page"]{background:var(--brand);color:#fff;border-color:transparent}
 
+    /* Section header (matches index) */
     .section-title{
       position:relative;display:block;font-size:clamp(22px,3vw,28px);
       margin:26px 0 10px;padding:12px 16px 12px 56px;border-radius:14px;
-      background:var(--tone-50,#fff7ed);border:1px solid var(--tone-200,#fde7c7);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.6)
+      background:#fff7ed;border:1px solid #fde7c7;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)
     }
     .section-title::before{
       content:"🏢";position:absolute;left:14px;top:50%;transform:translateY(-50%);
@@ -48,18 +51,24 @@
     }
     .section-kicker{margin:6px 0 16px 56px;color:var(--muted);font-size:14px}
 
+    /* Grid + spans (FIX) */
     .grid{display:grid;gap:22px;margin-top:12px;grid-template-columns:repeat(12,1fr)}
-    .col-12{grid-column:span 12}.col-6{grid-column:span 6}
-    @media (max-width:980px){.col-6{grid-column:span 12}}
+    .col-12{grid-column:span 12}
+    .col-6{grid-column:span 6}
+    .col-8{grid-column:span 8}
+    .col-4{grid-column:span 4}
+    @media (max-width:980px){.col-8,.col-4,.col-6{grid-column:span 12}}
 
     .card{background:#fff;border:1px solid #e6ebf2;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
     .card h3{margin:0 0 6px;font-size:clamp(18px,2.4vw,22px)}
     .card p{margin:6px 0 14px;color:var(--muted)}
     .badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;background:#f1f5ff;padding:6px 10px;border-radius:999px;border:1px solid #dbe6ff}
+
     .btn,a.btn{display:inline-block;text-decoration:none;border:none;cursor:pointer;white-space:nowrap;padding:10px 14px;border-radius:10px;font-weight:600;font-size:14px;background:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(31,116,255,.18)}
     .btn:hover{background:var(--brand-dark)}
     .btn.ghost{background:transparent;color:var(--brand);border:1px solid #cfe0ff}
 
+    /* Form */
     form{background:#fff;border:1px solid #e6ebf2;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;display:grid;gap:14px}
     label{font-weight:600;font-size:14px}
     input,select,textarea{width:100%;padding:10px 12px;border:1px solid #dfe5ee;border-radius:10px;font-size:14px}
@@ -69,6 +78,7 @@
     .checks{display:flex;flex-wrap:wrap;gap:10px}
     .checks label{font-weight:500}
     .muted{color:#64748b;font-size:13px}
+
     footer{margin:26px 0 10px;color:#475569;font-size:13px;text-align:center}
   </style>
 </head>
@@ -100,9 +110,10 @@
     <p class="section-kicker">Share a few details — we’ll reply quickly with scheduling options and pricing.</p>
 
     <div class="grid">
+      <!-- LEFT: FORM (8/12) -->
       <section class="col-8">
         <form method="POST" action="mailto:info@910cpr.com" enctype="text/plain">
-          <!-- Honeypot (spam guard) -->
+          <!-- Honeypot -->
           <input type="text" name="website" style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off" aria-hidden="true"/>
 
           <div class="row-2">
@@ -187,6 +198,7 @@
         </form>
       </section>
 
+      <!-- RIGHT: RAIL (4/12) -->
       <aside class="col-4">
         <section class="card">
           <span class="badge">Why on-site with 910CPR</span>
@@ -215,8 +227,8 @@
         <h3 style="margin:0 0 10px">How it works</h3>
         <ol style="margin:0; padding-left:18px; color:#475569">
           <li>Tell us your headcount, location, and timeframe.</li>
-          <li>We propose 1-2 schedule options (and blended options if helpful).</li>
-          <li>We come to you or host at our classroom. Cards issued upon payment.</li>
+          <li>We propose 1–2 schedule options (and blended options if helpful).</li>
+          <li>We come to you or host at our classroom. Cards issued same day.</li>
         </ol>
       </section>
     </div>
@@ -224,7 +236,7 @@
     <footer>© 910CPR LLC — Wilmington &amp; Burgaw, NC • (910) 395-5193 • info@910cpr.com</footer>
   </div>
 
-  <!-- Breadcrumbs (SEO) -->
+  <!-- SEO: Breadcrumbs -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -236,7 +248,7 @@
   }
   </script>
 
-  <!-- ContactPage + Service (SEO) -->
+  <!-- SEO: ContactPage + Service -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -244,7 +256,6 @@
     "name":"On-Site CPR / First Aid Training Request",
     "url":"https://www.910cpr.com/onsite.html",
     "about":{"@type":"Organization","name":"910CPR"},
-    "contactOption":"TollFree",
     "contactType":"customer service",
     "areaServed":["Wilmington NC","Burgaw NC","Camp Lejeune area"]
   }
