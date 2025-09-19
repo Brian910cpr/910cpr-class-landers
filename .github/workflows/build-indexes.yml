@@ -1,39 +1,41 @@
-name: Build job/course indexes + sitemap
+name: Build site indexes
+
 on:
   push:
-    paths:
-      - 'landers/job/**'
-      - 'courses/**'
-      - 'ooh_jobs.csv'
-      - 'gen_job_landers.py'
-      - 'build_indexes.py'
+    branches: [ "main" ]
+    paths-ignore:
+      - 'docs/sitemap.xml'
+      - 'docs/robots.txt'
+      - '.github/workflows/**'
   schedule:
-    - cron: '0 5 * * *'
-  workflow_dispatch: {}
+    - cron: '17 3 * * *'
+
+concurrency:
+  group: site-build
+  cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: '3.x' }
-      - name: Generate job landers (if CSV present)
-        run: python gen_job_landers.py || true
-      - name: Build indexes, sitemap, robots
-        run: python build_indexes.py
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
         with:
-          branch: chore/auto-indexes
-          title: "chore(ci): auto-build job/course indexes & sitemap"
-          commit-message: "chore(ci): auto-build indexes & sitemap"
-          add-paths: |
-            job/index.html
-            courses/index.html
-            sitemap.xml
-            robots.txt
-            landers/job/**
+          python-version: '3.11'
+      - name: Generate job landers (optional if CSV present)
+        run: |
+          python scripts/gen_job_landers.py || true
+      - name: Build indexes
+        run: |
+          python scripts/build_indexes.py
+      - name: Commit changes (if any)
+        run: |
+          git config user.name "site-bot"
+          git config user.email "site-bot@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "ci: rebuild sitemap/robots/indexes"
+      - name: Push
+        run: git push
