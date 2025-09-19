@@ -1,22 +1,28 @@
+
 import os, re, sys, time, json
 from pathlib import Path
 from urllib.parse import urljoin
 
+# ===== CONFIG =====
 SITE_BASE = "https://www.910cpr.com/"  # trailing slash required
 
+# Resolve /docs no matter where we run from
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 PERISCOPE = DOCS / "periscope_full.json"
 SITEMAP = DOCS / "sitemap.xml"
 ROBOTS = DOCS / "robots.txt"
 
+# Where generated pages normally live
 COURSES_DIR = DOCS / "courses"
 JOB_LANDERS_SRC = DOCS / "landers" / "job"
 JOB_INDEX_OUT = DOCS / "job" / "index.html"
 
+# Periscope schema (homepage widget safety)
 PRIMARY_KEYS = {"course_family","start","city","url"}
 ALT_KEYS     = {"course","start_iso","city","enroll_url"}  # auto-convert
 
+# ===== UTIL =====
 def fail(msg):
     print(f"[build_indexes] ERROR: {msg}")
     sys.exit(1)
@@ -26,29 +32,38 @@ def read_html_title(path: Path) -> str:
         txt = path.read_text(encoding="utf-8", errors="ignore")
         m = re.search(r"<title>(.*?)</title>", txt, re.IGNORECASE | re.DOTALL)
         if m:
-            import re as _re
-            return _re.sub(r"\s+", " ", m.group(1)).strip()
+            return re.sub(r"\s+", " ", m.group(1)).strip()
     except Exception:
         pass
-    return path.stem.replace('-', ' ').title()
+    # Fallback to filename
+    return path.stem.replace("-", " ").title()
 
 def rel_url_to_site(rel: str) -> str:
+    # Pretty URLs:
+    #  - index.html at root -> /
+    #  - any /path/index.html -> /path/
     if rel == "index.html":
         return SITE_BASE
+    if rel.endswith("/index.html"):
+        return urljoin(SITE_BASE, rel[:-10])  # strip trailing "index.html"
     return urljoin(SITE_BASE, rel)
 
 def lastmod_of(path: Path) -> str:
     return time.strftime("%Y-%m-%d", time.gmtime(path.stat().st_mtime))
 
+# ===== PERISCOPE SAFETY =====
 def normalize_periscope_item(row):
+    # Accept either the homepage shape or an alternate and normalize to homepage shape.
     if PRIMARY_KEYS.issubset(row.keys()):
-        return {
+        out = {
             "course_family": row["course_family"],
             "start": row["start"],
             "city": row["city"],
             "url": row["url"],
-            **({"label": row.get("label")} if "label" in row else {})
         }
+        if "label" in row and row["label"]:
+            out["label"] = row["label"]
+        return out
     if ALT_KEYS.issubset(row.keys()):
         course = (row.get("course") or "").upper()
         if "BLS" in course: fam = "BLS"
@@ -56,13 +71,15 @@ def normalize_periscope_item(row):
         elif "PALS" in course: fam = "PALS"
         elif "FIRST AID" in course or "FA" in course: fam = "FA"
         else: fam = "BLS"
-        return {
+        out = {
             "course_family": fam,
             "start": row["start_iso"],
             "city": row["city"],
             "url": row["enroll_url"],
-            **({"label": row.get("label")} if "label" in row else {})
         }
+        if "label" in row and row["label"]:
+            out["label"] = row["label"]
+        return out
     raise ValueError("periscope item missing required keys")
 
 def validate_periscope():
@@ -83,6 +100,7 @@ def validate_periscope():
     except Exception as e:
         fail(f"periscope_full.json invalid JSON: {e}")
 
+# ===== INDEX PAGES (HIDE WHEN EMPTY) =====
 def write_course_index():
     if not COURSES_DIR.exists():
         print("[build_indexes] NOTE: /docs/courses not found; skipping course index")
@@ -94,7 +112,14 @@ def write_course_index():
         title = read_html_title(p)
         href = "/courses/" + p.name
         items.append((title, href, lastmod_of(p)))
+
     index_path = COURSES_DIR / "index.html"
+    if not items:
+        if index_path.exists():
+            index_path.unlink()
+            print("[build_indexes] removed empty /docs/courses/index.html")
+        return
+
     html = [
         "<!doctype html><html lang='en'><head><meta charset='utf-8'>",
         "<title>Courses | 910CPR</title>",
@@ -118,10 +143,17 @@ def write_job_index():
         if p.name.lower() == "index.html":
             continue
         title = read_html_title(p)
-        rel = p.relative_to(DOCS).as_posix()
+        rel = p.relative_to(DOCS).as_posix()     # landers/job/xxx.html
         href = "/" + rel
         items.append((title, href, lastmod_of(p)))
+
     out = JOB_INDEX_OUT
+    if not items:
+        if out.exists():
+            out.unlink()
+            print("[build_indexes] removed empty /docs/job/index.html")
+        return
+
     html = [
         "<!doctype html><html lang='en'><head><meta charset='utf-8'>",
         "<title>Jobs & Occupations | 910CPR</title>",
@@ -136,27 +168,48 @@ def write_job_index():
     out.write_text("\n".join(html), encoding="utf-8")
     print(f"[build_indexes] wrote {out} ({len(items)} items)")
 
+# ===== SITEMAP + ROBOTS =====
 def discover_pages():
     pages = []
     for p in DOCS.rglob("*.html"):
-        parts = p.relative_to(DOCS).parts
-        if any(part.startswith(".") for part in parts):
+        rel_parts = p.relative_to(DOCS).parts
+        # skip hidden dirs/files
+        if any(part.startswith(".") for part in rel_parts):
             continue
+        # exclude 404 from sitemap
         if p.name.lower() == "404.html":
             continue
         rel = p.relative_to(DOCS).as_posix()
         url = rel_url_to_site(rel)
         pages.append((url, lastmod_of(p)))
+
+    # ensure homepage entry if index.html exists
     if (DOCS / "index.html").exists():
         pages.append((SITE_BASE, lastmod_of(DOCS / "index.html")))
-    # de-dupe, sort
-    seen = {}
+
+    # de-dupe to latest lastmod and sort
+    latest = {}
     for url, lm in pages:
-        seen[url] = lm
-    return sorted(seen.items(), key=lambda x: x[0])
+        latest[url] = max(latest.get(url, "0000-00-00"), lm)
+    pages = sorted(latest.items(), key=lambda x: x[0])
+    return pages
+
+def bump_folder_lastmod(pages):
+    # For any folder URLs like /courses/ or /job/ set lastmod to the newest child page
+    newest_child = {}
+    for url, lm in pages:
+        if url.endswith(".html"):
+            folder = url.rsplit("/", 1)[0] + "/"
+            newest_child[folder] = max(newest_child.get(folder, "0000-00-00"), lm)
+    bumped = []
+    for url, lm in pages:
+        if url.endswith("/"):
+            lm = max(lm, newest_child.get(url, lm))
+        bumped.append((url, lm))
+    return bumped
 
 def write_sitemap(pages):
-    lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+    lines = ['<?xml version="1.0" encoding="UTF-8?>',
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for url, lm in pages:
         lines.append("  <url>")
@@ -174,18 +227,31 @@ def write_robots():
     )
     print(f"[build_indexes] wrote {ROBOTS}")
 
+# ===== MAIN =====
 def main():
     if not DOCS.exists():
         fail("docs/ not found")
+
+    # Friendly warnings for expected core pages
     for must in ["index.html", "policies.html", "404.html"]:
         if not (DOCS / must).exists():
             print(f"[build_indexes] WARN: /docs/{must} not found (not fatal)")
+
+    # Safety net for homepage widget
     validate_periscope()
+
+    # Generate index pages (only when there are items)
     write_course_index()
     write_job_index()
+
+    # Global discover => sitemap
     pages = discover_pages()
+    pages = bump_folder_lastmod(pages)
     write_sitemap(pages)
+
+    # Robots
     write_robots()
+
     print(f"[build_indexes] done: {len(pages)} pages in sitemap")
 
 if __name__ == "__main__":
