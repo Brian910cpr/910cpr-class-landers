@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import csv
 import json
@@ -8,14 +7,13 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-# --- Paths (repo root inferred from this file) ---
+# Paths
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 DATA_OUT = DOCS / "data"
 PERISCOPE_JSON = DOCS / "periscope_full.json"
 SESSIONS_HTML = DOCS / "sessions" / "index.html"
 
-# --- Helpers ---
 def coalesce(row, *keys):
     for k in keys:
         v = row.get(k, "")
@@ -38,7 +36,7 @@ def parse_start(row) -> str:
     iso = coalesce(row, "start", "start_iso", "start_at", "start_time_iso", "Start", "START")
     if iso:
         iso = iso.replace(" ", "T")
-        m = re.match(r"^(\d{4}-\d{2}-\d2T\d{2}:\d{2})", iso)  # keep YYYY-MM-DDTHH:MM
+        m = re.match(r"^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})", iso)
         return m.group(1) if m else iso
 
     d = coalesce(row, "date", "Date", "session_date")
@@ -55,7 +53,7 @@ def parse_start(row) -> str:
         except Exception:
             pass
     if not dd:
-        dd = d  # last resort: pass-through
+        dd = d  # last resort
 
     # normalize time
     t_norm = t.strip().lower().replace(" ", "")
@@ -73,17 +71,16 @@ def parse_start(row) -> str:
 def label_for(start_iso: str, city: str) -> str:
     try:
         dt = datetime.strptime(start_iso[:16], "%Y-%m-%dT%H:%M")
-        # cross-platform 12h w/o leading zero
-        hm = dt.strftime("%I:%M%p").lstrip("0")  # "01:00PM" -> "1:00PM"
+        hm = dt.strftime("%I:%M%p").lstrip("0")
         hm = hm.lower().replace(":00", "").replace("am", "a").replace("pm", "p")
-        return f"{dt.strftime('%b %d')}, {hm} \u2022 {city}"
+        return f"{dt.strftime('%b %d')}, {hm} - {city}"
     except Exception:
-        return f"{start_iso} \u2022 {city}" if start_iso else city
+        return f"{start_iso} - {city}" if start_iso else city
 
 def row_to_item(row: dict) -> dict:
     start = parse_start(row)
     city = coalesce(row, "city", "City", "location_city", "LocationCity", "location")
-    url = coalesce(row, "url", "enroll_url", "EnrollURL", "link", "Link", "hovn_url")
+    url  = coalesce(row, "url", "enroll_url", "EnrollURL", "link", "Link", "hovn_url")
     course = coalesce(row, "course_family", "course", "Course", "title", "Title")
     fam = coalesce(row, "course_family") or guess_course_family(course)
     item = {"course_family": fam, "start": start, "city": city, "url": url}
@@ -113,7 +110,7 @@ def main():
 
     rows = list(load_csv(src))
     items = [row_to_item(r) for r in rows if r]
-    items = [x for x in items if x.get("start")]  # drop empties
+    items = [x for x in items if x.get("start")]
 
     # sort by start time
     def key_iso(x):
@@ -125,7 +122,7 @@ def main():
 
     items.sort(key=key_iso)
 
-    # 1) periscope_full.json (homepage chips)
+    # 1) periscope_full.json
     DOCS.mkdir(parents=True, exist_ok=True)
     PERISCOPE_JSON.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[sessions_to_periscope] wrote {PERISCOPE_JSON} ({len(items)} items)")
@@ -141,10 +138,10 @@ def main():
     lis = []
     for it in items:
         href = it.get("url") or "#"
-        lab = it.get("label", it["start"])
-        fam = it.get("course_family", "")
+        lab  = it.get("label", it["start"])
+        fam  = it.get("course_family", "")
         city = it.get("city", "")
-        lis.append(f"<li><a href='{href}'>{lab}</a> <small style='color:#666'>&nbsp;[{fam} — {city}]</small></li>")
+        lis.append(f"<li><a href='{href}'>{lab}</a> <small style='color:#666'>&nbsp;[{fam} - {city}]</small></li>")
     html = [
         "<!doctype html><meta charset='utf-8'>",
         "<title>Sessions | 910CPR</title>",
