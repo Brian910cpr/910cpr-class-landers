@@ -1,17 +1,15 @@
-# .github/workflows/build-from-sessions.yml
 name: Build from sessions.csv
 
 on:
   push:
     branches: [ main ]
     paths:
-      - "sessions.csv"
-      - "data/sessions.csv"
-      - "scripts/**"
-      - "docs/**"
-      - ".github/workflows/**"
+      - "sessions.csv"          # root CSV
+      - "data/sessions.csv"     # (optional) alt path
+      - "scripts/**"            # if scripts change, rebuild
+      - ".github/workflows/build-from-sessions.yml"
   schedule:
-    - cron: "0 6 * * *"   # daily safety rebuild
+    - cron: "0 6 * * *"         # daily safety rebuild (06:00 UTC)
   workflow_dispatch: {}
 
 permissions:
@@ -23,6 +21,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.actor != 'github-actions[bot]'   # prevent loops on bot commits
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -45,8 +44,7 @@ jobs:
           fi
 
       - name: Rebuild sitemap/robots (+ indexes)
-        run: |
-          python scripts/build_indexes.py
+        run: python scripts/build_indexes.py
 
       - name: Commit changes to /docs
         shell: bash
