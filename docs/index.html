@@ -1,284 +1,154 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>CPR, First Aid, BLS, ACLS & PALS — Done Right and On Time | 910CPR</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content="Live CPR/AED & First Aid classes in Wilmington & Burgaw. BLS, ACLS, PALS for healthcare; OSHA-acceptable workplace options; pediatric/family courses. Enroll online." />
-<link rel="canonical" href="https://www.910cpr.com/" />
-<!-- Put in <head> -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"LocalBusiness",
-  "name":"910CPR",
-  "url":"https://www.910cpr.com/",
-  "telephone":"+1-910-395-5193",
-  "areaServed":["Wilmington NC","Burgaw NC"]
-}
-</script>
+  <meta charset="utf-8" />
+  <title>CPR, First Aid, BLS, ACLS & PALS — Done Right and On Time | 910CPR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Live CPR/AED & First Aid classes in Wilmington & Burgaw. BLS, ACLS, PALS for healthcare; OSHA-acceptable workplace options; pediatric/family courses. Enroll online." />
+  <link rel="canonical" href="https://www.910cpr.com/" />
 
-
-
-<style>
-  /* ---------- Brand ---------- */
-  :root{
-    --brand:#2563eb;          /* primary blue */
-    --brand-600:#1d4ed8;
-    --brand-50:#eef2ff;
-    --accent:#ef4444;         /* subtle red accent */
-    --bg:#f8fafc;
-    --text:#0f172a;
-    --muted:#64748b;
-    --card:#ffffff;
-    --line:#e5e7eb;
-    --chip-bg:#f1f5f9;
-    --chip-b:#e2e8f0;
-    --ok-bg:#ecfdf5; --ok-b:#d1fae5;
+  <!-- Schema -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"LocalBusiness",
+    "name":"910CPR",
+    "url":"https://www.910cpr.com/",
+    "telephone":"+1-910-395-5193",
+    "areaServed":["Wilmington NC","Burgaw NC"]
   }
-  :root[data-theme="dark"]{
-    --bg:#0b1220;
-    --text:#e5e7eb;
-    --muted:#9aa4af;
-    --card:#0f172a;
-    --line:#1f2937;
-    --chip-bg:#0b1220;
-    --chip-b:#1f2937;
-    --brand:#60a5fa;
-    --brand-600:#3b82f6;
-    --brand-50:#0b1220;
-    --ok-bg:#052e1f; --ok-b:#064e3b;
-  }
+  </script>
 
-  html,body{margin:0;background:var(--bg);color:var(--text);
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-  .wrap{max-width:1100px;margin:0 auto;padding:22px}
+  <style>
+    /* ---------- Brand ---------- */
+    :root{
+      --brand:#2563eb;          /* primary blue */
+      --brand-600:#1d4ed8;
+      --brand-50:#eef2ff;
+      --accent:#ef4444;         /* subtle red accent */
+      --bg:#f8fafc;
+      --text:#0f172a;
+      --muted:#64748b;
+      --card:#ffffff;
+      --line:#e5e7eb;
+      --chip-bg:#f1f5f9;
+      --chip-b:#e2e8f0;
+      --ok-bg:#ecfdf5; --ok-b:#d1fae5;
+    }
+    :root[data-theme="dark"]{
+      --bg:#0b1220;
+      --text:#e5e7eb;
+      --muted:#9aa4af;
+      --card:#0f172a;
+      --line:#1f2937;
+      --chip-bg:#0b1220;
+      --chip-b:#1f2937;
+      --brand:#60a5fa;
+      --brand-600:#3b82f6;
+      --brand-50:#0b1220;
+      --ok-bg:#052e1f; --ok-b:#064e3b;
+    }
 
-  a{color:inherit}
+    html,body{margin:0;background:var(--bg);color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
 
-  /* ---------- Header ---------- */
-  .brandbar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-  .logo{height:36px;width:auto;display:block}
-  h1{margin:.25rem 0;font-size:clamp(22px,4vw,30px)}
-  .sub{color:var(--muted);margin:.25rem 0 1rem}
+    a{color:inherit}
 
-  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
-  .chip, .chip-btn{
-    display:inline-block;padding:7px 12px;border-radius:9999px;
-    background:var(--chip-bg);border:1px solid var(--chip-b);
-    text-decoration:none;color:inherit;font-weight:700;font-size:13px;
-    cursor:pointer;user-select:none
-  }
-  .chip.brand{background:var(--brand-50);border-color:var(--brand-600);color:var(--brand-600)}
-  .chip:hover,.chip-btn:hover{filter:brightness(.98)}
-  .chip.call{background:#10b9811a;border-color:#10b98144}
+    /* ---------- Header ---------- */
+    .brandbar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+    .logo{height:36px;width:auto;display:block}
+    h1{margin:.25rem 0;font-size:clamp(22px,4vw,30px)}
+    .sub{color:var(--muted);margin:.25rem 0 1rem}
 
-  /* ---------- Layout ---------- */
-  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-  .col-12{grid-column:span 12}
-  .col-6{grid-column:span 6}
-  .col-4{grid-column:span 4}
-  .col-3{grid-column:span 3}
-  @media(max-width:1020px){.col-6,.col-4,.col-3{grid-column:span 12}}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+    .chip, .chip-btn{
+      display:inline-block;padding:7px 12px;border-radius:9999px;
+      background:var(--chip-bg);border:1px solid var(--chip-b);
+      text-decoration:none;color:inherit;font-weight:700;font-size:13px;
+      cursor:pointer;user-select:none
+    }
+    .chip.brand{background:var(--brand-50);border-color:var(--brand-600);color:var(--brand-600)}
+    .chip:hover,.chip-btn:hover{filter:brightness(.98)}
+    .chip.call{background:#10b9811a;border-color:#10b98144}
 
-  /* ---------- Cards ---------- */
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
-  .eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
-  .heart{color:var(--accent);font-weight:900}
-  .card-title{margin:8px 0 6px;font-size:18px}
-  .lede{color:#3f4753;margin:6px 0 16px;line-height:1.45}
-  :root[data-theme="dark"] .lede{color:#bcc4ce}
+    /* ---------- Layout ---------- */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .col-12{grid-column:span 12}
+    .col-6{grid-column:span 6}
+    .col-4{grid-column:span 4}
+    .col-3{grid-column:span 3}
+    @media(max-width:1020px){.col-6,.col-4,.col-3{grid-column:span 12}}
 
-  .pillbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-  .pill{display:inline-block;border:1px solid var(--brand-600);color:#fff;background:var(--brand-600);
-    padding:8px 12px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px}
-  .pill.alt{background:transparent;color:var(--brand-600)}
-  .pill.ghost{background:transparent;border-color:var(--line);color:inherit}
+    /* ---------- Cards ---------- */
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+    .eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+    .heart{color:var(--accent);font-weight:900}
+    .card-title{margin:8px 0 6px;font-size:18px}
+    .lede{color:#3f4753;margin:6px 0 16px;line-height:1.45}
+    :root[data-theme="dark"] .lede{color:#bcc4ce}
 
-  .next{margin:10px 0 6px;font-weight:800;font-size:13px}
-  .timechips{display:flex;gap:8px;flex-wrap:wrap}
-  .timechip{display:inline-block;border:1px solid var(--line);background:var(--bg);padding:6px 10px;border-radius:10px;font-size:13px;text-decoration:none}
+    .pillbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+    .pill{display:inline-block;border:1px solid var(--brand-600);color:#fff;background:var(--brand-600);
+      padding:8px 12px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px}
+    .pill.alt{background:transparent;color:var(--brand-600)}
+    .pill.ghost{background:transparent;border-color:var(--line);color:inherit}
 
-  .section-title{margin:26px 0 10px;font-size:clamp(18px,3.4vw,24px)}
-  .section-title > a{text-decoration:none}
-  .section-title > a:hover{text-decoration:underline;text-underline-offset:.18em}
+    .next{margin:10px 0 6px;font-weight:800;font-size:13px}
+    .timechips{display:flex;gap:8px;flex-wrap:wrap}
+    .timechip{display:inline-block;border:1px solid var(--line);background:var(--bg);padding:6px 10px;border-radius:10px;font-size:13px;text-decoration:none}
 
-  .callout{margin-top:12px;padding:12px 14px;border-radius:12px}
-  .callout.success{border:1px solid var(--ok-b);background:var(--ok-bg)}
-  .micro{color:var(--muted);font-size:13px}
+    .section-title{margin:26px 0 10px;font-size:clamp(18px,3.4vw,24px)}
+    .section-title > a{text-decoration:none}
+    .section-title > a:hover{text-decoration:underline;text-underline-offset:.18em}
 
-  footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
+    .callout{margin-top:12px;padding:12px 14px;border-radius:12px}
+    .callout.success{border:1px solid var(--ok-b);background:var(--ok-bg)}
+    .micro{color:var(--muted);font-size:13px}
 
-/* === Floating Call button (mobile only) === */
-.call-fab{position:fixed;right:16px;bottom:16px;z-index:1000}
-.call-fab a{
-  display:flex;align-items:center;gap:10px;text-decoration:none;
-  background:var(--brand-600);color:#fff;padding:12px 14px;
-  border-radius:9999px;border:1px solid rgba(0,0,0,.08);
-  box-shadow:0 8px 24px rgba(0,0,0,.18);
-  font-weight:800;font-size:14px;line-height:1;
-  padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
-  transform:translateY(6px);opacity:0;animation:fab-in .35s ease-out .2s forwards
-}
-:root[data-theme="dark"] .call-fab a{background:var(--brand);color:#0b1220}
-.call-fab svg{width:18px;height:18px;flex:0 0 18px;fill:currentColor}
-@media (min-width:840px){.call-fab{display:none}} /* hide on tablet/desktop */
-@keyframes fab-in{to{transform:none;opacity:1}}
-@media (prefers-reduced-motion:reduce){.call-fab a{animation:none;transform:none;opacity:1}}
+    footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
 
+    /* === Floating Call button (mobile only) === */
+    .call-fab{position:fixed;right:16px;bottom:16px;z-index:1000}
+    .call-fab a{
+      display:flex;align-items:center;gap:10px;text-decoration:none;
+      background:var(--brand-600);color:#fff;padding:12px 14px;
+      border-radius:9999px;border:1px solid rgba(0,0,0,.08);
+      box-shadow:0 8px 24px rgba(0,0,0,.18);
+      font-weight:800;font-size:14px;line-height:1;
+      padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
+      transform:translateY(6px);opacity:0;animation:fab-in .35s ease-out .2s forwards
+    }
+    :root[data-theme="dark"] .call-fab a{background:var(--brand);color:#0b1220}
+    .call-fab svg{width:18px;height:18px;flex:0 0 18px;fill:currentColor}
+    @media (min-width:840px){.call-fab{display:none}} /* hide on tablet/desktop */
+    @keyframes fab-in{to{transform:none;opacity:1}}
+    @media (prefers-reduced-motion:reduce){.call-fab a{animation:none;transform:none;opacity:1}}
+  </style>
 
-
-
-</style>
-
-<script>
-  /* Theme toggle with persistence */
-  (function(){
-    const KEY="theme";
-    const root=document.documentElement;
-    const initial=localStorage.getItem(KEY) || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
-    apply(initial);
-    window.toggleTheme=()=>apply(root.dataset.theme==="dark"?"light":"dark");
-    function apply(t){ root.dataset.theme=t; try{localStorage.setItem(KEY,t)}catch(e){} 
-      const b=document.getElementById("theme-toggle"); if(b){ b.textContent=t==="dark"?"Light":"Dark"; b.setAttribute("aria-pressed",String(t==="dark")); } }
-  })();
-</script>
-<script>
-  const FEED="/periscope_full.json";
-  const U = s => (s||'').toUpperCase();
-  const has = (s, re) => re.test(s||'');
-
-  function parseISO(s){
-    if(!s) return null;
-    // normalize “YYYY-MM-DD HH:MM” or “YYYY-MM-DDTHH:MM” → “YYYY-MM-DDTHH:MM:00”
-    const t = s.trim()
-      .replace(' ', 'T')
-      .replace(/T(\d{2}:\d{2})(?!:)/,'T$1:00');
-    const d = new Date(t);
-    return isNaN(d) ? null : d;
-  }
-
-  function chipText(it){
-    if (it.label) return it.label;
-    const d=parseISO(it.start); if(!d) return (it.start||'') + (it.city?(' — '+it.city):'');
-    const mo=d.toLocaleString(undefined,{month:'short'});
-    const day=String(d.getDate()).padStart(2,'0');
-    let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
-    const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
-    return `${mo} ${day}, ${hm} — ${it.city||''}`;
-  }
-
-  function setChips(elId, items){
-    const box=document.getElementById(elId);
-    if(!box) return;
-    box.innerHTML = items.length
-      ? items.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipText(it)}</a>`).join('')
-      : '<span class="micro">New dates posting—check back soon.</span>';
-  }
-
-  // Seed placeholders so the UI isn’t blank if fetch is slow/fails
-  ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
-
-  function upcoming(filter, limit=6){
-    return fetch(FEED).then(r=>r.json()).then(all=>{
-      const now=new Date();
-      return all.filter(filter)
-        .map(x=>({...x,_d:parseISO(x.start)}))
-        .filter(x=>x._d && x._d>=now)
-        .sort((a,b)=>a._d-b._d)
-        .slice(0,limit);
-    });
-  }
-
-  // Filters
-  const isBLS  = it => U(it.course_family)==='BLS';
-  const isACLS = it => U(it.course_family)==='ACLS';
-  const isPALS = it => U(it.course_family)==='PALS';
-
-  const looksFA = it => U(it.course_family)==='FA' || has((it.title||'')+(it.certification||''),/FIRST AID|HEARTSAVER|WORKPLACE/i);
-  const isAHA   = it => has(it.agency,/AHA|HEARTSAVER/i) || has((it.title||'')+(it.certification||''),/HEARTSAVER/i);
-  const isHSI   = it => has(it.agency,/HSI/i) || has((it.title||'')+(it.certification||''),/HSI/i);
-
-  const faAhaAny = it => looksFA(it) && isAHA(it);  // AHA in-person + blended
-  const faHSI    = it => looksFA(it) && isHSI(it);  // HSI blended
-
-  Promise.all([
-    upcoming(isBLS, 4).then(v=>setChips('times-bls', v)),
-    upcoming(isACLS,4).then(v=>setChips('times-acls',v)),
-    upcoming(isPALS,4).then(v=>setChips('times-pals',v)),
-    upcoming(faAhaAny,10).then(v=>setChips('wk-aha-list', v)),
-    upcoming(faHSI,   10).then(v=>setChips('wk-hsi-list', v)),
-  ]).catch(err=>{
-    console.error(err);
-    ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
-  });
-</script>
-<script>
-  function setChips(elId, items){
-    const box=document.getElementById(elId);
-    if(!box) return;
-    box.innerHTML = items.length
-      ? items.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipText(it)}</a>`).join('')
-      : '<span class="micro">New dates posting—check back soon.</span>';
-  }
-
-  // seed placeholders so the page never looks empty
-  ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
-
-  function upcoming(filter, limit=6){
-    return fetch(FEED).then(r=>r.json()).then(all=>{
-      const now=new Date();
-      return all.filter(filter)
-        .map(x=>({...x,_d:parseISO(x.start)}))
-        .filter(x=>x._d && x._d>=now)
-        .sort((a,b)=>a._d-b._d)
-        .slice(0,limit);
-    });
-  }
-
-  // filters (unchanged)
-  const isBLS  = it => U(it.course_family)==='BLS';
-  const isACLS = it => U(it.course_family)==='ACLS';
-  const isPALS = it => U(it.course_family)==='PALS';
-  const looksFA = it => U(it.course_family)==='FA' || has((it.title||'')+(it.certification||''),/FIRST AID|HEARTSAVER|WORKPLACE/i);
-  const isAHA   = it => has(it.agency,/AHA|HEARTSAVER/i) || has((it.title||'')+(it.certification||''),/HEARTSAVER/i);
-  const isHSI   = it => has(it.agency,/HSI/i) || has((it.title||'')+(it.certification||''),/HSI/i);
-  const faAhaAny = it => looksFA(it) && isAHA(it);
-  const faHSI    = it => looksFA(it) && isHSI(it);
-
-  Promise.all([
-    upcoming(isBLS, 4).then(v=>setChips('times-bls', v)),
-    upcoming(isACLS,4).then(v=>setChips('times-acls',v)),
-    upcoming(isPALS,4).then(v=>setChips('times-pals',v)),
-    upcoming(faAhaAny,10).then(v=>setChips('wk-aha-list', v)),
-    upcoming(faHSI,   10).then(v=>setChips('wk-hsi-list', v)),
-  ]).catch(err=>{
-    console.error(err);
-    ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
-  });
-</script>
-<script defer>
-  // 1) Accessibility: announce time updates
-  ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list']
-    .forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('aria-live','polite'); });
-
-  // 2) Security: add noopener to any future new-tab links
-  document.querySelectorAll('a[target="_blank"]:not([rel])')
-    .forEach(a => a.setAttribute('rel','noopener'));
-
-  // 3) GA clarity: tag header phone link (if not already)
-  const headerPhone = Array.from(document.querySelectorAll('a[href^="tel:"]'))
-    .find(a => a.textContent.includes('(910) 395-5193') && !a.id);
-  if (headerPhone) headerPhone.id = 'header-phone';
-</script>
-
+  <!-- Theme toggle (persisted) -->
+  <script>
+    (function(){
+      const KEY="theme";
+      const root=document.documentElement;
+      const initial=localStorage.getItem(KEY) || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+      apply(initial);
+      window.toggleTheme=()=>apply(root.dataset.theme==="dark"?"light":"dark");
+      function apply(t){
+        root.dataset.theme=t;
+        try{localStorage.setItem(KEY,t)}catch(e){}
+        const b=document.getElementById("theme-toggle");
+        if(b){ b.textContent=t==="dark"?"Light":"Dark"; b.setAttribute("aria-pressed",String(t==="dark")); }
+      }
+    })();
+  </script>
 </head>
 <body>
   <div class="wrap">
 
     <!-- Brand row -->
     <div class="brandbar">
-      <img class="logo" src="\images\910CPR_Fat.jpg" alt="910CPR" onerror="this.onerror=null;this.src='\images\910CPR_Fat.jpg'">
+      <img class="logo" src="/data-assets/logo-910cpr.svg" alt="910CPR" onerror="this.onerror=null;this.src='/images/910CPR_Fat.jpg'">
       <div>
         <h1>CPR, First Aid, BLS, ACLS &amp; PALS — Done Right and On Time</h1>
         <div class="sub">Wilmington • Burgaw • Camp Lejeune area. Same-day cards. We don’t cancel classes.</div>
@@ -315,7 +185,7 @@
           <a class="pill alt" href="/courses/medical/?q=HeartCode">AHA Online + Skills</a>
         </div>
         <div class="next">Next sessions</div>
-        <div class="timechips" id="times-bls"></div>
+        <div class="timechips" id="times-bls" aria-live="polite"></div>
       </section>
 
       <!-- ACLS -->
@@ -328,7 +198,7 @@
           <a class="pill alt" href="/courses/medical/?q=ACLS%20HeartCode">AHA Online + Skills</a>
         </div>
         <div class="next">Next sessions</div>
-        <div class="timechips" id="times-acls"></div>
+        <div class="timechips" id="times-acls" aria-live="polite"></div>
       </section>
 
       <!-- PALS -->
@@ -341,7 +211,7 @@
           <a class="pill alt" href="/courses/medical/?q=PALS%20HeartCode">AHA Online + Skills</a>
         </div>
         <div class="next">Next sessions</div>
-        <div class="timechips" id="times-pals"></div>
+        <div class="timechips" id="times-pals" aria-live="polite"></div>
       </section>
     </div>
 
@@ -363,106 +233,105 @@
       </div>
     </section>
 
-   <!-- WORKPLACES: 3 tiles + 1 dates panel -->
-<h2 id="workplaces" class="section-title" style="margin-top:26px">
-  <a href="/courses/workplaces/">For Workplaces (OSHA-Acceptable)</a>
-</h2>
-<p class="lede">OSHA-friendly <strong>CPR/AED &amp; First Aid</strong> for crews and teams. Heartsaver &amp; HSI options, on-site or at our classrooms. Flexible schedules and group rates.</p>
+    <!-- WORKPLACES: 3 tiles + 1 dates panel -->
+    <h2 id="workplaces" class="section-title" style="margin-top:26px">
+      <a href="/courses/workplaces/">For Workplaces (OSHA-Acceptable)</a>
+    </h2>
+    <p class="lede">OSHA-friendly <strong>CPR/AED &amp; First Aid</strong> for crews and teams. Heartsaver &amp; HSI options, on-site or at our classrooms. Flexible schedules and group rates.</p>
 
-<div class="grid" role="region" aria-labelledby="workplaces">
-  <!-- Industry & Construction -->
-  <div class="col-3">
-    <h3 class="card-title">Industry &amp; Construction</h3>
+    <div class="grid" role="region" aria-labelledby="workplaces">
+      <!-- Industry & Construction -->
+      <div class="col-3">
+        <h3 class="card-title">Industry &amp; Construction</h3>
 
-    <section class="card">
-      <span class="eyebrow">Heartsaver (AHA)</span>
-      <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
-      <p class="lede">Practical, on-site friendly course that ticks OSHA compliance boxes.</p>
-      <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
-    </section>
+        <section class="card">
+          <span class="eyebrow">Heartsaver (AHA)</span>
+          <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
+          <p class="lede">Practical, on-site friendly course that ticks OSHA compliance boxes.</p>
+          <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
+        </section>
 
-    <section class="card">
-      <span class="eyebrow">Heartsaver (AHA) — Blended</span>
-      <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
-      <p class="lede">Fast blended format; same OSHA acceptance.</p>
-      <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
-    </section>
+        <section class="card">
+          <span class="eyebrow">Heartsaver (AHA) — Blended</span>
+          <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
+          <p class="lede">Fast blended format; same OSHA acceptance.</p>
+          <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
+        </section>
 
-    <section class="card">
-      <span class="eyebrow">Workforce Safety</span>
-      <h4 class="card-title">OSHA 10 / OSHA 30</h4>
-      <p class="lede">Entry-level and supervisor credentials. Online options (English/Spanish). Construction or General Industry.</p>
-      <div class="pillbar">
-        <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2010">OSHA 10 — Info</a>
-        <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2030">OSHA 30 — Info</a>
-        <a class="pill" href="tel:+19103955193">Call for details</a>
+        <section class="card">
+          <span class="eyebrow">Workforce Safety</span>
+          <h4 class="card-title">OSHA 10 / OSHA 30</h4>
+          <p class="lede">Entry-level and supervisor credentials. Online options (English/Spanish). Construction or General Industry.</p>
+          <div class="pillbar">
+            <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2010">OSHA 10 — Info</a>
+            <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2030">OSHA 30 — Info</a>
+            <a class="pill" href="tel:+19103955193">Call for details</a>
+          </div>
+        </section>
       </div>
-    </section>
-  </div>
 
-  <!-- Child & Senior Care -->
-  <div class="col-3">
-    <h3 class="card-title">Child &amp; Senior Care</h3>
+      <!-- Child & Senior Care -->
+      <div class="col-3">
+        <h3 class="card-title">Child &amp; Senior Care</h3>
 
-    <section class="card">
-      <span class="eyebrow">Heartsaver (AHA)</span>
-      <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
-      <p class="lede">Scenario-based training for childcare, schools, and elder-care teams.</p>
-      <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
-    </section>
+        <section class="card">
+          <span class="eyebrow">Heartsaver (AHA)</span>
+          <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
+          <p class="lede">Scenario-based training for childcare, schools, and elder-care teams.</p>
+          <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
+        </section>
 
-    <section class="card">
-      <span class="eyebrow">Heartsaver (AHA) — Blended</span>
-      <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
-      <p class="lede">Blended format reduces downtime while meeting program requirements.</p>
-      <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
-    </section>
+        <section class="card">
+          <span class="eyebrow">Heartsaver (AHA) — Blended</span>
+          <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
+          <p class="lede">Blended format reduces downtime while meeting program requirements.</p>
+          <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
+        </section>
 
-    <!-- HSI BLS/FA with live times -->
-    <section class="card">
-      <span class="eyebrow">HSI (blended)</span>
-      <h4 class="card-title">BLS &amp; First Aid — Online + Skills</h4>
-      <p class="lede">Covers BLS + First Aid in one session—one registration & one digital record.</p>
-      <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a></div>
-      <div class="next">Next sessions</div>
-      <div class="timechips" id="hsi-list" aria-live="polite"></div>
-    </section>
-  </div>
-
-  <!-- USCG / DAN -->
-  <div class="col-3">
-    <h3 class="card-title">USCG / DAN (Maritime &amp; Diving)</h3>
-
-    <section class="card">
-      <span class="eyebrow">Heartsaver (AHA)</span>
-      <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
-      <p class="lede">On-deck readiness with practical, scenario-based training.</p>
-      <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
-    </section>
-
-    <section class="card">
-      <span class="eyebrow">Heartsaver (AHA) — Blended</span>
-      <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
-      <p class="lede">Great for rotating watches and irregular schedules.</p>
-      <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
-    </section>
-  </div>
-
-  <!-- Dates panel (AHA only) -->
-  <aside class="col-3">
-    <section class="card" aria-labelledby="wk-next">
-      <h3 id="wk-next" class="card-title">Next workplace dates</h3>
-
-      <div class="eyebrow" style="margin:6px 0 8px">CPR/AED + First Aid (AHA)</div>
-      <div class="timechips" id="wk-aha-list" aria-live="polite"></div>
-      <div class="pillbar">
-        <a class="chip brand" href="/courses/workplaces/?q=Heartsaver&city=Wilmington">See all — Wilmington</a>
-        <a class="chip brand" href="/courses/workplaces/?q=Heartsaver&city=Burgaw">See all — Burgaw</a>
+        <!-- HSI BLS/FA with live times -->
+        <section class="card">
+          <span class="eyebrow">HSI (blended)</span>
+          <h4 class="card-title">BLS &amp; First Aid — Online + Skills</h4>
+          <p class="lede">Covers BLS + First Aid in one session—one registration & one digital record.</p>
+          <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a></div>
+          <div class="next">Next sessions</div>
+          <div class="timechips" id="hsi-list" aria-live="polite"></div>
+        </section>
       </div>
-    </section>
-  </aside>
-</div>
 
+      <!-- USCG / DAN -->
+      <div class="col-3">
+        <h3 class="card-title">USCG / DAN (Maritime &amp; Diving)</h3>
+
+        <section class="card">
+          <span class="eyebrow">Heartsaver (AHA)</span>
+          <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
+          <p class="lede">On-deck readiness with practical, scenario-based training.</p>
+          <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
+        </section>
+
+        <section class="card">
+          <span class="eyebrow">Heartsaver (AHA) — Blended</span>
+          <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
+          <p class="lede">Great for rotating watches and irregular schedules.</p>
+          <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
+        </section>
+      </div>
+
+      <!-- Dates panel (AHA only) -->
+      <aside class="col-3">
+        <section class="card" aria-labelledby="wk-next">
+          <h3 id="wk-next" class="card-title">Next workplace dates</h3>
+
+          <div class="eyebrow" style="margin:6px 0 8px">CPR/AED + First Aid (AHA)</div>
+          <div class="timechips" id="wk-aha-list" aria-live="polite"></div>
+          <div class="pillbar">
+            <a class="chip brand" href="/courses/workplaces/?q=Heartsaver&city=Wilmington">See all — Wilmington</a>
+            <a class="chip brand" href="/courses/workplaces/?q=Heartsaver&city=Burgaw">See all — Burgaw</a>
+          </div>
+        </section>
+      </aside>
+    </div>
 
     <!-- PARENTS / FAMILY & FRIENDS -->
     <h2 id="families" class="section-title" style="margin-top:26px">
@@ -480,121 +349,119 @@
         </div>
       </section>
     </div>
-<!-- Floating "Call Now" button -->
-<div class="call-fab" aria-label="Call 910-395-5193">
-  <a href="tel:+19103955193" id="fab-call">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.02l-2.2 2.2z"/>
-    </svg>
-    <span>Call (910) 395-5193</span>
-  </a>
-</div>
 
     <footer>© 910CPR — Live schedule pulls from HOVN. Questions? <a href="tel:+19103955193">Call or text (910) 395-5193</a>.</footer>
   </div>
 
-<script>
-  // keep FEED, parseISO, chipText, setChips, upcoming, and the BLS/ACLS/PALS filters above
+  <!-- Floating "Call Now" button -->
+  <div class="call-fab" aria-label="Call 910-395-5193">
+    <a href="tel:+19103955193" id="fab-call">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.02l-2.2 2.2z"/>
+      </svg>
+      <span>Call (910) 395-5193</span>
+    </a>
+  </div>
 
-  // ===== REPLACE from here (Workplace filters) =====
-  const T = it => `${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''}`.toUpperCase();
+  <!-- Consolidated schedule + helpers -->
+  <script defer>
+    // ---------- Feed + helpers ----------
+    const FEED = "/periscope_full.json";
+    const U = s => (s||'').toUpperCase();
+    const TXT = it => `${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''}`;
+    const TUP = it => TXT(it).toUpperCase();
 
-  // Anything that looks like workplace First Aid/CPR (be generous)
-  const looksFA = it => {
-    const t = T(it);
-    return (String(it.course_family||'').toUpperCase()==='FA')
-        || /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/.test(t)
-        || /BLS.*FIRST\s*AID|FIRST\s*AID.*BLS/.test(t); // catches “BLS with Adult First Aid”
-  };
+    function parseISO(s){
+      if(!s) return null;
+      const t = s.trim().replace(' ','T').replace(/T(\d{2}:\d{2})(?!:)/,'T$1:00');
+      const d = new Date(t);
+      return isNaN(d) ? null : d;
+    }
 
-  const isAHA         = it => /AHA|HEARTSAVER/.test(T(it));
-  const isHSIprovider = it => /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/.test(T(it));
-  const mentionsBlended = it => /BLENDED/.test(T(it));
-  const blsWithFa       = it => /BLS.*FIRST\s*AID|FIRST\s*AID.*BLS/.test(T(it));
+    function chipText(it){
+      if (it.label) return it.label;
+      const d = parseISO(it.start);
+      if(!d) return (it.start||'') + (it.city?(' — '+it.city):'');
+      const mo = d.toLocaleString(undefined,{month:'short'});
+      const day = String(d.getDate()).padStart(2,'0');
+      let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
+      const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
+      return `${mo} ${day}, ${hm} — ${it.city||''}`;
+    }
 
-  // AHA FA (any format)
-  const faAhaAny = it => looksFA(it) && isAHA(it);
+    function setChips(elId, items){
+      const box=document.getElementById(elId);
+      if(!box) return;
+      box.innerHTML = items.length
+        ? items.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipText(it)}</a>`).join('')
+        : '<span class="micro">New dates posting—check back soon.</span>';
+    }
 
-  // HSI BLS + First Aid (blended) — match both provider name and the combined BLS/FA phrasing
-  const faHSI = it => (looksFA(it) || blsWithFa(it)) && (isHSIprovider(it) || blsWithFa(it)) && (mentionsBlended(it) || isHSIprovider(it));
+    // Seed placeholders so UI isn’t blank if fetch is slow/fails
+    ['times-bls','times-acls','times-pals','wk-aha-list','hsi-list'].forEach(id=>setChips(id, []));
 
-  Promise.all([
-    upcoming(isBLS,  4).then(v => setChips('times-bls',  v)),
-    upcoming(isACLS, 4).then(v => setChips('times-acls', v)),
-    upcoming(isPALS, 4).then(v => setChips('times-pals', v)),
-    upcoming(faAhaAny,10).then(v => setChips('wk-aha-list', v)),
-    upcoming(faHSI,  12).then(v => setChips('hsi-list',   v))
-  ]).catch(console.error);
-</script>
+    function upcoming(filter, limit=6){
+      return fetch(FEED).then(r=>r.json()).then(all=>{
+        const now=new Date();
+        return all.filter(filter)
+          .map(x=>({...x,_d:parseISO(x.start)}))
+          .filter(x=>x._d && x._d>=now)
+          .sort((a,b)=>a._d-b._d)
+          .slice(0,limit);
+      });
+    }
 
+    // ---------- Filters ----------
+    // Medical
+    const isBLS  = it => U(it.course_family)==='BLS'  || /(^|[^A-Z])BLS([^A-Z]|$)/.test(TUP(it));
+    const isACLS = it => U(it.course_family)==='ACLS' || /(^|[^A-Z])ACLS([^A-Z]|$)/.test(TUP(it));
+    const isPALS = it => U(it.course_family)==='PALS' || /(^|[^A-Z])PALS([^A-Z]|$)/.test(TUP(it));
 
-<script>
-  // ... keep parseISO/chipText/upcoming/setChips above ...
+    // Workplace (robust for FA/HSI/AHA wording)
+    const looksFA = it =>
+      U(it.course_family)==='FA' ||
+      /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) ||
+      /BLS.*FIRST\s*AID|FIRST\s*AID.*BLS/i.test(TXT(it)); // “BLS with Adult First Aid …”
 
-  const F = s => (s||'').toUpperCase();
-  const TXT = it => `${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''}`;
+    const isAHA = it => /AHA|HEARTSAVER/i.test(TXT(it));
+    const isHSI = it => /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(TXT(it));
 
-  // Medical
-  const isBLS  = it => F(it.course_family)==='BLS';
-  const isACLS = it => F(it.course_family)==='ACLS';
-  const isPALS = it => F(it.course_family)==='PALS';
+    const faAhaAny = it => looksFA(it) && isAHA(it);   // AHA FA (any format)
+    const faHSI    = it => looksFA(it) && isHSI(it);   // HSI BLS + FA (blended)
 
-  // Workplace (more tolerant)
-  const looksFA = it =>
-    ['FA','WORKPLACE','HSI','HEARTSAVER'].includes(F(it.course_family)) ||
-    /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it));
+    // ---------- Run ----------
+    Promise.all([
+      upcoming(isBLS,  4).then(v => setChips('times-bls',  v)),
+      upcoming(isACLS, 4).then(v => setChips('times-acls', v)),
+      upcoming(isPALS, 4).then(v => setChips('times-pals', v)),
+      upcoming(faAhaAny,10).then(v => setChips('wk-aha-list', v)),
+      upcoming(faHSI,  12).then(v => setChips('hsi-list',   v)),
+    ]).catch(console.error);
 
-  const isAHA = it =>
-    /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(TXT(it));
+    // ---------- A11y + hygiene ----------
+    ['times-bls','times-acls','times-pals','wk-aha-list','hsi-list']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('aria-live','polite'); });
 
-  const isHSI = it =>
-    /(^|[^A-Z])HSI([^A-Z]|$)/i.test(TXT(it));
+    document.querySelectorAll('a[target="_blank"]:not([rel])')
+      .forEach(a => a.setAttribute('rel','noopener'));
+  </script>
 
-  const faAhaAny = it => looksFA(it) && isAHA(it);  // AHA (IP or blended)
-  const faHSI    = it => looksFA(it) && isHSI(it);  // HSI blended
-
-  Promise.all([
-    upcoming(isBLS, 6).then(v=>setChips('times-bls', v)),
-    upcoming(isACLS,6).then(v=>setChips('times-acls',v)),
-    upcoming(isPALS,6).then(v=>setChips('times-pals',v)),
-    upcoming(faAhaAny,10).then(v=>setChips('wk-aha-list', v)),
-  ]).catch(err=>{
-    console.error(err);
-    ['times-bls','times-acls','times-pals','wk-aha-list'].forEach(id=>setChips(id, []));
-  });
-</script>
-<script>
-  // if not already present:
-  const F=s=> (s||'').toUpperCase();
-  const TXT=it=>`${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''}`;
-  const looksFA = it =>
-    ['FA','WORKPLACE','HSI','HEARTSAVER'].includes(F(it.course_family)) ||
-    /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it));
-  const isHSI = it => /(^|[^A-Z])HSI([^A-Z]|$)/i.test(TXT(it));
-  const faHSI = it => looksFA(it) && isHSI(it);
-
-  // add this alongside your BLS/ACLS/PALS/AHA calls:
-  upcoming(faHSI, 10).then(v => setChips('hsi-list', v));
-</script>
-
-
-<script>
-  // Track tel: clicks (works for the floater and any tel links on the page)
-  document.querySelectorAll('a[href^="tel:"]').forEach(a=>{
-    a.addEventListener('click', ()=>{
-      try{
-        if (window.gtag) gtag('event','click_phone',{
-          event_category:'engagement',
-          event_label: a.id || 'tel_link',
-          value:'910-395-5193'
-        });
-        if (window.dataLayer) window.dataLayer.push({
-          event:'click_phone', phone:'910-395-5193', placement: a.id || 'tel_link'
-        });
-      }catch(e){}
+  <!-- Track tel: clicks (floater + any tel link) -->
+  <script>
+    document.querySelectorAll('a[href^="tel:"]').forEach(a=>{
+      a.addEventListener('click', ()=>{
+        try{
+          if (window.gtag) gtag('event','click_phone',{
+            event_category:'engagement',
+            event_label: a.id || 'tel_link',
+            value:'910-395-5193'
+          });
+          if (window.dataLayer) window.dataLayer.push({
+            event:'click_phone', phone:'910-395-5193', placement: a.id || 'tel_link'
+          });
+        }catch(e){}
+      });
     });
-  });
-</script>
-
+  </script>
 </body>
 </html>
