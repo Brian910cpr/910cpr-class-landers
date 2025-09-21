@@ -456,6 +456,15 @@
         </div>
       </section>
     </div>
+<!-- Floating "Call Now" button -->
+<div class="call-fab" aria-label="Call 910-395-5193">
+  <a href="tel:+19103955193" id="fab-call">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.02l-2.2 2.2z"/>
+    </svg>
+    <span>Call (910) 395-5193</span>
+  </a>
+</div>
 
     <footer>© 910CPR — Live schedule pulls from HOVN. Questions? <a href="tel:+19103955193">Call or text (910) 395-5193</a>.</footer>
   </div>
@@ -515,15 +524,44 @@
       upcoming(faHSI,    10).then(v=>setChips('wk-hsi-list', v)),
     ]).catch(console.error);
   </script>
-<!-- Floating "Call Now" button -->
-<div class="call-fab" aria-label="Call 910-395-5193">
-  <a href="tel:+19103955193" id="fab-call">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.02l-2.2 2.2z"/>
-    </svg>
-    <span>Call (910) 395-5193</span>
-  </a>
-</div>
+
+<script>
+  // ... keep parseISO/chipText/upcoming/setChips above ...
+
+  const F = s => (s||'').toUpperCase();
+  const TXT = it => `${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''}`;
+
+  // Medical
+  const isBLS  = it => F(it.course_family)==='BLS';
+  const isACLS = it => F(it.course_family)==='ACLS';
+  const isPALS = it => F(it.course_family)==='PALS';
+
+  // Workplace (more tolerant)
+  const looksFA = it =>
+    ['FA','WORKPLACE','HSI','HEARTSAVER'].includes(F(it.course_family)) ||
+    /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it));
+
+  const isAHA = it =>
+    /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(TXT(it));
+
+  const isHSI = it =>
+    /(^|[^A-Z])HSI([^A-Z]|$)/i.test(TXT(it));
+
+  const faAhaAny = it => looksFA(it) && isAHA(it);  // AHA (IP or blended)
+  const faHSI    = it => looksFA(it) && isHSI(it);  // HSI blended
+
+  Promise.all([
+    upcoming(isBLS, 4).then(v=>setChips('times-bls', v)),
+    upcoming(isACLS,4).then(v=>setChips('times-acls',v)),
+    upcoming(isPALS,4).then(v=>setChips('times-pals',v)),
+    upcoming(faAhaAny,10).then(v=>setChips('wk-aha-list', v)),
+    upcoming(faHSI,   10).then(v=>setChips('wk-hsi-list', v)),
+  ]).catch(err=>{
+    console.error(err);
+    ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
+  });
+</script>
+
 
 <script>
   // Track tel: clicks (works for the floater and any tel links on the page)
