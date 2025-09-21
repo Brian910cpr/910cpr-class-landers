@@ -372,13 +372,66 @@
       throw new Error("All feed locations failed.");
     }
 
-    function parseISO(s){
-      if(!s) return null;
-      const raw = String(s).trim();
-      const d0 = new Date(raw); if(!isNaN(d0)) return d0;
-      const fb = new Date(raw.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00"));
-      return isNaN(fb) ? null : fb;
+    <script>
+/* === Replace your existing parseISO + debug helper with this === */
+function parseISO(s){
+  if(!s) return null;
+  const raw = String(s).trim();
+
+  // 1) Native/ISO first
+  const d0 = new Date(raw);
+  if(!isNaN(d0)) return d0;
+
+  // 2) "YYYY-MM-DD HH:MM"
+  if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(raw)) {
+    const d1 = new Date(raw.replace(" ","T")+":00");
+    if(!isNaN(d1)) return d1;
+  }
+
+  // 3) "YYYY-MM-DD h:mm AM/PM [TZ]" (TZ optional)
+  //    Ex: 2025-03-12 9:00 AM EST
+  const m = raw.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}):(\d{2})\s*([AP]M)\s*([A-Z]{2,4})?$/i);
+  if (m) {
+    let [, ymd, hh, mm, ap, tz] = m;
+    let H = parseInt(hh,10);
+    if (ap.toUpperCase()==="PM" && H !== 12) H += 12;
+    if (ap.toUpperCase()==="AM" && H === 12) H = 0;
+
+    // Minimal TZ map (extend if your feed uses more)
+    const tzMap = {
+      EDT:"-04:00", EST:"-05:00",
+      CDT:"-05:00", CST:"-06:00",
+      PDT:"-07:00", PST:"-08:00"
+    };
+    const offset = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
+
+    const iso = `${ymd}T${String(H).padStart(2,"0")}:${mm}:00${offset}`;
+    const d2 = new Date(iso);
+    if(!isNaN(d2)) return d2;
+  }
+
+  // 4) Best-effort fallback: add 'T' and seconds if missing
+  const fb = new Date(raw.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00"));
+  return isNaN(fb) ? null : fb;
+}
+
+/* Optional: expose tiny debuggers in the console */
+window.__debug_feed = async () => {
+  const feed = await (window.__FEED__ ? Promise.resolve(window.__FEED__) : (async()=>{
+    // use same loader your script uses
+    const candidates=["periscope_full.json","./periscope_full.json","/periscope_full.json"];
+    for (const u of candidates){
+      const r = await fetch(u, {cache:"no-store"});
+      if(r.ok){ return r.json(); }
     }
+    return [];
+  })());
+  console.log("feed items:", feed.length);
+  console.table(feed.slice(0,10).map(x=>({start:x.start, parsed: parseISO(x.start)})));
+  return feed;
+};
+</script>
+
 
     function chipText(it){
       if (it.label) return it.label;
