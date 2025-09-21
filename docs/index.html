@@ -372,29 +372,25 @@
     <div class="grid" role="region" aria-labelledby="workplaces">
       <div class="col-3">
         <h3 class="card-title">Industry &amp; Construction</h3>
-        <section class="card">
-          <span class="eyebrow">Heartsaver (AHA)</span>
-          <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
-          <p class="lede">Practical, on-site friendly course that ticks OSHA compliance boxes.</p>
-          <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
-        </section>
-        <section class="card">
-          <span class="eyebrow">Heartsaver (AHA) — Blended</span>
-          <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
-          <p class="lede">Fast blended format; same OSHA acceptance.</p>
-          <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
-        </section>
-<section class="card">
-  <span class="eyebrow">Workforce Safety</span>
-  <h4 class="card-title">OSHA 10 / OSHA 30</h4>
-  <p class="lede">Entry-level and supervisor safety credentials. Fully online. English and Spanish Options.</p>
-  <div class="pillbar">
-    <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2010">OSHA 10 — Info</a>
-    <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2030">OSHA 30 — Info</a>
-    <a class="pill" href="tel:+19103955193">Ask for next date</a>
+          <section class="card">
+            <span class="eyebrow">Heartsaver (AHA)</span>
+            <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
+            <p class="lede">Practical, on-site friendly course that ticks OSHA compliance boxes.</p>
+            <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
+          </section>
+         <section class="card">
+            <span class="eyebrow">Heartsaver (AHA) — Blended</span>
+            <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
+            <p class="lede">Fast blended format; same OSHA acceptance.</p>
+            <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
+         </section>
+         <section class="card">
+            <span class="eyebrow">Workforce Safety</span>
+            <h4 class="card-title">OSHA 10 / OSHA 30</h4>
+            <p class="lede">Entry-level and supervisor safety credentials. Fully online. English and Spanish Options. onstruction or Industy focus.</p>
+            <div class="pillbar"><a class="pill ghost" href="/courses/workplaces/?q=OSHA%2010">OSHA 10/30 — Info</a><a class="pill" href="tel:+19103955193">...or Call for details</a>
   </div>
-</section>
-
+         </section>
       </div>
 
       <div class="col-3">
@@ -411,16 +407,13 @@
           <p class="lede">Blended format reduces downtime while meeting program requirements.</p>
           <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
         </section>
+        <section class="card">
+          <span class="eyebrow">HSI (blended)</span>
+          <h4 class="card-title">BLS &amp; First Aid — Online + Skills</h4>
+          <p class="lede">Covers BLS + First Aid in one session—one registration and one digital record. Great for autism centers & mixed roles.</p>
+          <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a></div>
+        </section>
       </div>
-<section class="card">
-  <span class="eyebrow">HSI (blended)</span>
-  <h4 class="card-title">BLS &amp; First Aid — Online + Skills</h4>
-  <p class="lede">Covers BLS + First Aid in one session—one registration and one digital record. Great for autism centers & mixed roles.</p>
-  <div class="pillbar">
-    <a class="pill alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a>
-  </div>
-</section>
-</div>
 
       <div class="col-3">
         <h3 class="card-title">USCG / DAN (Maritime &amp; Diving)</h3>
@@ -437,7 +430,7 @@
           <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
         </section>
       </div>
-
+    
       <!-- Dates panel (single source of truth for times) -->
 <aside class="col-3">
   <section class="card" aria-labelledby="wk-next">
@@ -573,6 +566,19 @@
     console.error(err);
     ['times-bls','times-acls','times-pals','wk-aha-list'].forEach(id=>setChips(id, []));
   });
+</script>
+<script>
+  // if not already present:
+  const F=s=> (s||'').toUpperCase();
+  const TXT=it=>`${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''}`;
+  const looksFA = it =>
+    ['FA','WORKPLACE','HSI','HEARTSAVER'].includes(F(it.course_family)) ||
+    /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it));
+  const isHSI = it => /(^|[^A-Z])HSI([^A-Z]|$)/i.test(TXT(it));
+  const faHSI = it => looksFA(it) && isHSI(it);
+
+  // add this alongside your BLS/ACLS/PALS/AHA calls:
+  upcoming(faHSI, 10).then(v => setChips('hsi-list', v));
 </script>
 
 
