@@ -257,7 +257,20 @@
     ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
   });
 </script>
+<script defer>
+  // 1) Accessibility: announce time updates
+  ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('aria-live','polite'); });
 
+  // 2) Security: add noopener to any future new-tab links
+  document.querySelectorAll('a[target="_blank"]:not([rel])')
+    .forEach(a => a.setAttribute('rel','noopener'));
+
+  // 3) GA clarity: tag header phone link (if not already)
+  const headerPhone = Array.from(document.querySelectorAll('a[href^="tel:"]'))
+    .find(a => a.textContent.includes('(910) 395-5193') && !a.id);
+  if (headerPhone) headerPhone.id = 'header-phone';
+</script>
 
 </head>
 <body>
