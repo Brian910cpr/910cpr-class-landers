@@ -1,0 +1,450 @@
+Folder PATH listing for volume 4THDD_Seagate_Barracuda
+Volume serial number is 7CE9-7594
+D:.
+|   404.html
+|   910cpr.config.json
+|   class-landers-summary.csv
+|   LICENSE
+|   py scriptssessions_to_periscope.bat
+|   README-910cpr-bulk.txt
+|   README.md
+|   run_build_indexes.bat
+|   session_to_parascrope BATCH.bat
+|   tree_now.txt
+|   
++---.github
+|   \---workflows
+|           build-from-sessions.yml
+|           
++---data
+|       910CPR_Lander_Workbook_Final.xlsx
+|       classes.json
+|       courses.json
+|       jobs.json
+|       
++---docs
+|   |   .nojekyll
+|   |   404.html
+|   |   CNAME
+|   |   index.html
+|   |   New Text Document.txt
+|   |   periscope_full.json
+|   |   policies.html
+|   |   robots.txt
+|   |   sessions.template.csv
+|   |   sessions_latest.csv
+|   |   sitemap.xml
+|   |   
+|   +---assets
+|   +---caregivers
+|   |       index.html
+|   |       
+|   +---cities
+|   +---classes
+|   |   +---acls
+|   |   +---bls
+|   |   \---pals
+|   +---courses
+|   +---data
+|   |       session-parse-report.txt
+|   |       session-times.json
+|   |       
+|   +---images
+|   |   |   910CPR_Fat.jpg
+|   |   |   910CPR_round.jpg
+|   |   |   910CPR_wave.jpg
+|   |   |   910CPR_wave.png
+|   |   |   ACLS_default.jpg
+|   |   |   aha-acls-provider-course-wilmington-nc.jpg
+|   |   |   aha-bls-cpr-training-wilmington-nc.jpg
+|   |   |   aha-cpr-instructor-course-training-north-carolina.jpg
+|   |   |   aha-heartsaver-cpr-training-jacksonville-nc.jpg
+|   |   |   aha-pals-training-for-hospitals-wilmington.jpg
+|   |   |   AHA.jpg
+|   |   |   american-heart-association-logo-cpr-training.jpg
+|   |   |   american-red-cross-cpr-training-logo.jpg
+|   |   |   arc-als-pals-training-for-nurses-nc.jpg
+|   |   |   arc-online-cpr-training-for-adults.jpg
+|   |   |   ARC.jpg
+|   |   |   BLS_default.jpg
+|   |   |   Call-Now.png
+|   |   |   default.jpg
+|   |   |   facebook.png
+|   |   |   favicon.ico
+|   |   |   favicon.png
+|   |   |   Heartsaver_default.png
+|   |   |   HSI - Copy.jpg
+|   |   |   hsi-cpr-training-burgaw.jpg
+|   |   |   hsi-first-aid-cpr-logo-training.jpg
+|   |   |   HSI.jpg
+|   |   |   HSI_FirstAidCPRAED.jpg
+|   |   |   insta.png
+|   |   |   linkedin.png
+|   |   |   PALS_default.png
+|   |   |   red-cross-bls-certification-wilmington-nc.jpg
+|   |   |   red-cross-bls-wilmington.jpg
+|   |   |   red-cross-first-aid-class-jacksonville-nc.jpg
+|   |   |   RedCross_BLS_default.jpg
+|   |   |   stripes.png
+|   |   |   Text-Now.png
+|   |   |   twitter.png
+|   |   |   whatsapp.png
+|   |   |   yelp.png
+|   |   |   
+|   |   +---Books
+|   |   |       ACLS Instructor Pin.png
+|   |   |       BLS Instructor Pin.png
+|   |   |       Cover_AHAACLS.jpg
+|   |   |       Cover_AHAASLS.png
+|   |   |       Cover_AHABLS.jpg
+|   |   |       Cover_AHAFF.jpg
+|   |   |       Cover_AHAHS_CPR_AED.png
+|   |   |       Cover_AHAHS_FA_CPR_AED.png
+|   |   |       Cover_AHAPALS.png
+|   |   |       Cover_AHAPEARS.jpg
+|   |   |       GROUP CPR-AED.png
+|   |   |       GROUP fa-cpr-aed-.jpg
+|   |   |       HC_BLS.png
+|   |   |       HC_PALS.png
+|   |   |       HC_Pedi FACPRAED.png
+|   |   |       Heartsaver Instructor Pin.png
+|   |   |       HSI_BLS_FA_BL.jpg
+|   |   |       instructor_pins.png
+|   |   |       InstruUltra.jpg
+|   |   |       PALS Instructor Pin.png
+|   |   |       
+|   |   +---CCC CLASS FORMS
+|   |   |       2020BLSSummary[1].pdf
+|   |   |       Accelerated HeartCode BLS Competency Agenda.pdf
+|   |   |       AHA Instructor Candidate Form.pdf
+|   |   |       AlgorithmACLS_CA_200402[1].pdf
+|   |   |       Instructor Candidate Workbook.pdf
+|   |   |       Instructor Monitoring Form.pdf
+|   |   |       
+|   |   +---Class_Images
+|   |   |   |   15-1405.jpg
+|   |   |   |   15-1425.jpg
+|   |   |   |   20-1102.png
+|   |   |   |   20-1103.jpg
+|   |   |   |   20-1105.jpg
+|   |   |   |   20-1106.png
+|   |   |   |   20-1107.jpg
+|   |   |   |   20-1119.png
+|   |   |   |   20-1123.jpg
+|   |   |   |   20-1124.jpg
+|   |   |   |   20-1126.jpg
+|   |   |   |   20-1401.jpg
+|   |   |   |   20-1402.jpg
+|   |   |   |   20-1404.jpg
+|   |   |   |   20-1414.jpg
+|   |   |   |   20-1417.jpg
+|   |   |   |   20-1418.jpg
+|   |   |   |   20-1419.jpg
+|   |   |   |   20-1440.jpg
+|   |   |   |   20-1456.jpg
+|   |   |   |   20-1470.png
+|   |   |   |   20-1471.png
+|   |   |   |   20-2352.jpg
+|   |   |   |   20-2803.png
+|   |   |   |   20-2812.png
+|   |   |   |   20-3100.jpg
+|   |   |   |   20-3101.jpg
+|   |   |   |   20-3103.jpg
+|   |   |   |   20-3114.jpg
+|   |   |   |   20-3117.jpg
+|   |   |   |   20-3138.jpg
+|   |   |   |   20-3553.png
+|   |   |   |   20-3554.jpg
+|   |   |   |   3pin.png
+|   |   |   |   419E5E17-3F14-4EB5-AF25-995EB198E2D0[1].jpeg
+|   |   |   |   71cfa611834b0ed57390f20b5a2085265e20a18a9051524b19eb9e69f3d18d2c-rimg-w1200-h600-gmir[1].jpg
+|   |   |   |   8c4417_9f745dae51ae49029c8a9cccd7de69df~mv2[1].png
+|   |   |   |   982ED96F-7F59-4DB7-A5A0-B91C4B151D50[1].jpeg
+|   |   |   |   ACLSHC.png
+|   |   |   |   AHAACLS.png
+|   |   |   |   AHAR.png
+|   |   |   |   AHARHS.png
+|   |   |   |   AHHS.png
+|   |   |   |   appointmentType-thumb-9812482[1].png
+|   |   |   |   appointmentType-thumb-9812510[1].png
+|   |   |   |   ARC-BLS-book.jpg
+|   |   |   |   ARCBLSBL.png
+|   |   |   |   ARCFACPRAED.png
+|   |   |   |   ASLS_Cover_900x600_new_optimized[1].jpg
+|   |   |   |   BL.png
+|   |   |   |   BLSS.png
+|   |   |   |   callme.png
+|   |   |   |   card-heartsaver-first-aid-v2[1].jpg
+|   |   |   |   cparccpr.png
+|   |   |   |   CPRAED.png
+|   |   |   |   EC-OSHA10CON.jpg
+|   |   |   |   EC-OSHA10CONSP.jpg
+|   |   |   |   EC-OSHA10GEN.jpg
+|   |   |   |   EC-OSHA10GENSP.jpg
+|   |   |   |   EC-OSHA30CON.jpg
+|   |   |   |   EC-OSHA30CONSP.jpg
+|   |   |   |   EC-OSHA30GEN.jpg
+|   |   |   |   EC-OSHA30GENSP.jpg
+|   |   |   |   ESXM_HS_FA_CPR_AED_300x300_96ppi[1].png
+|   |   |   |   fa-cpr-aed-.jpg
+|   |   |   |   FF.png
+|   |   |   |   HCBLS.png
+|   |   |   |   HCPALS.png
+|   |   |   |   heartsaver-total-course-imagese-1[1].png
+|   |   |   |   HSI_ACIFACPRAED.png
+|   |   |   |   HSI_BLS_FA_BL.jpg
+|   |   |   |   Iapin.png
+|   |   |   |   ibpin.png
+|   |   |   |   ihpin.png
+|   |   |   |   ILT.png
+|   |   |   |   In.jpg
+|   |   |   |   ippin.png
+|   |   |   |   kj-1485.png
+|   |   |   |   kj-1487.jpg
+|   |   |   |   kj-1489.png
+|   |   |   |   kj-1498.jpg
+|   |   |   |   OTNB.png
+|   |   |   |   Pre.jpg
+|   |   |   |   PreIn.jpg
+|   |   |   |   RC-BL-CPR.jpg
+|   |   |   |   STB_Poster.jpg
+|   |   |   |   thup.png
+|   |   |   |   USER_SCOPED_TEMP_DATA_orca-image-951419333[1].jpeg
+|   |   |   |   USER_SCOPED_TEMP_DATA_orca-image-951419333[1].jpg
+|   |   |   |   
+|   |   |   +---Pig Lab
+|   |   |   |       IMG_1303.jpg.jpeg
+|   |   |   |       RenderedI.jpg (1).jpeg
+|   |   |   |       RenderedI.jpg (2).jpeg
+|   |   |   |       RenderedI.jpg.jpeg
+|   |   |   |       
+|   |   |   \---STB
+|   |   |           STB_3MIN.jpg
+|   |   |           
+|   |   +---Client-Logos
+|   |   |       808860910.png
+|   |   |       AA.jpg
+|   |   |       ADR.png
+|   |   |       AGC.png
+|   |   |       al.png
+|   |   |       AnS.png
+|   |   |       ATI.png
+|   |   |       BA.png
+|   |   |       BalfourBe.png
+|   |   |       BCF.jpg
+|   |   |       BEA.png
+|   |   |       BES.png
+|   |   |       BFD.jpg
+|   |   |       BM.png
+|   |   |       BOM.png
+|   |   |       brethro.png
+|   |   |       bsh.png
+|   |   |       CCCare.jpg
+|   |   |       ccl.png
+|   |   |       cd.png
+|   |   |       CED.png
+|   |   |       cfcc.png
+|   |   |       ChCC.png
+|   |   |       CMC.png
+|   |   |       CoastalCarolina.png
+|   |   |       core.png
+|   |   |       crci.png
+|   |   |       CSC.png
+|   |   |       CVS.png
+|   |   |       cyc.png
+|   |   |       CYP.png
+|   |   |       DDS.png
+|   |   |       dp.png
+|   |   |       DTHAB.png
+|   |   |       EFCC.png
+|   |   |       eld.jpg
+|   |   |       eLearning25off.png
+|   |   |       EPGC.png
+|   |   |       F8IYC.png
+|   |   |       FFTC.png
+|   |   |       freya.jpg
+|   |   |       FSoW.jpg
+|   |   |       FUF.png
+|   |   |       GbC.png
+|   |   |       GDS.jpg
+|   |   |       GEO.png
+|   |   |       GRC.png
+|   |   |       HarTEt.png
+|   |   |       HCD.png
+|   |   |       Hct.png
+|   |   |       HFD.png
+|   |   |       HFO.jpg
+|   |   |       HIE.png
+|   |   |       HLD.png
+|   |   |       HomeDepot.png
+|   |   |       HR.jpg
+|   |   |       HRP.png
+|   |   |       HWMTL.png
+|   |   |       IBCF.png
+|   |   |       if.jpg
+|   |   |       JJS.png
+|   |   |       JLE.png
+|   |   |       JO.png
+|   |   |       KCar.png
+|   |   |       Logo-01.png
+|   |   |       Lowes.png
+|   |   |       LPD.png
+|   |   |       LWFCC.png
+|   |   |       m-l.png
+|   |   |       may-logo.png
+|   |   |       MedNorth.png
+|   |   |       Millmon.png
+|   |   |       MLC.png
+|   |   |       MMaid.jpg
+|   |   |       NBCC.png
+|   |   |       NCFD.png
+|   |   |       NCS.png
+|   |   |       nvt.png
+|   |   |       OLMC.png
+|   |   |       PBH.png
+|   |   |       PDEC.png
+|   |   |       PDS.png
+|   |   |       PNV_logo_RGB.jpg
+|   |   |       PP-.png
+|   |   |       PSG.png
+|   |   |       PVC.png
+|   |   |       PWH.jpg
+|   |   |       PWS.png
+|   |   |       REZ.jpg
+|   |   |       RFD.png
+|   |   |       rmg-logo[1].png
+|   |   |       rtbt.png
+|   |   |       Sams.png
+|   |   |       SAW.png
+|   |   |       SCD.png
+|   |   |       SCFD.png
+|   |   |       SEB.png
+|   |   |       slc.png
+|   |   |       smc.jpeg
+|   |   |       SNP.jpg
+|   |   |       SOCW.png
+|   |   |       SPS.png
+|   |   |       SSDC.jpg
+|   |   |       stripes.png
+|   |   |       svc.png
+|   |   |       Target.png
+|   |   |       TFD.png
+|   |   |       tff.png
+|   |   |       Walgreens.png
+|   |   |       Walmart.png
+|   |   |       Wect.png
+|   |   |       wmbf.png
+|   |   |       
+|   |   \---Support-Images
+|   |           12647068_221486281517909_6044793154318875949_n.png
+|   |           1471S.png
+|   |           1828336.png
+|   |           1828336[1].jpg
+|   |           208-2086571_google-five-star-rating.png
+|   |           5442052[1].jpg
+|   |           910CPR round __ PNG.png
+|   |           910CPR round __ tight_w_wave_w_blue cutout.jpg
+|   |           910CPR round___AHA SITE.png
+|   |           a-l.png
+|   |           acls_bls_pals_manuals_0[1].jpg
+|   |           acls______.png
+|   |           AED.png
+|   |           ahabs.jpg
+|   |           ARCLTP.png
+|   |           arrow.png
+|   |           BA.png
+|   |           blST.png
+|   |           bubb1.png
+|   |           bubb2.png
+|   |           bystanderAED_JPEG.jpg
+|   |           cal.jpg
+|   |           cardiac-science-g3-aed_3.jpg
+|   |           cardiac-science-g3-aed_3.png
+|   |           ccLOK.png
+|   |           cCr.png
+|   |           CERTIFICATION_BLS-Instructor.png
+|   |           clock.png
+|   |           CME.png
+|   |           CoastalCPR--PNG.png
+|   |           confused-frustrated.png
+|   |           CPRASAP.png
+|   |           DECORATION_AED-Checks.jpg
+|   |           DECORATION_AHA_4_cards_.jpg
+|   |           Decorative-line-clipart-free-images.png
+|   |           facebook-like-icon-png-transparent-11.jpg
+|   |           family-and-friends-CPR.jpg
+|   |           family-and-friends-CPRhhhh.png
+|   |           fancy-line-png-1.png
+|   |           FF-CPR-1.jpg
+|   |           gmapin.png
+|   |           GMB-reviews.png
+|   |           GS_laws.png
+|   |           Health_and_Safety_Institute_Logo.jpg
+|   |           heartsaver-basic-course-imagese.jpg
+|   |           heartsaver-total-course-images-2.jpg
+|   |           HSI.png
+|   |           HSINST-203.png
+|   |           instructor_pins.png
+|   |           Invoice LOGO.png
+|   |           Japan_road_sign_302.png
+|   |           JohnsHSFACPRAED.png
+|   |           Kid.jpg
+|   |           KJ1634HS_Adult_Course_Path_Grid-4.pdf
+|   |           Line-clip-art-graphics-free-clipart-images-2.jpg
+|   |           LOGO_AHA_authorized-training-site_SQUARE.jpg
+|   |           LOGO_AHA_Authorized_Training_Site_BANNER.png
+|   |           LOGO_AHA_SQUARE.png
+|   |           LOGO_ARC_Licensed_Training_Partner_BANNER.jpg
+|   |           LOGO_ARC_SQUARE.png
+|   |           LOGO_HSI_SQUARE.png
+|   |           LOGO_Stop-The-Bleed_Educational-Licensee_SQUARE.png
+|   |           nurse doing CPR.jpg
+|   |           PALS11-23.png
+|   |           Quote.png
+|   |           RCP Ff.png
+|   |           Scroll.png
+|   |           Shirt back -- White Rthym.png
+|   |           Shirt back png.png
+|   |           steps.png
+|   |           ucm_502266.png
+|   |           Untitled111__White.png
+|   |           Untitled=====.png
+|   |           wallace pd.jpg
+|   |           yelp-logo-png-5-star-17.png
+|   |           
+|   +---job
+|   |       index.html
+|   |       
+|   +---landers
+|   |   \---job
+|   +---medical
+|   |       index.html
+|   |       
+|   +---parents
+|   |       index.html
+|   |       
+|   +---sessions
+|   |       index.html
+|   |       
+|   +---uscg
+|   |       index.html
+|   |       
+|   \---workplaces
+|           index.html
+|           
++---scripts
+|       build-landers.mjs
+|       build_indexes.py
+|       build_pages.py
+|       enrich_ai.py
+|       fetch_hovn.py
+|       generate_sessions.py
+|       gen_job_landers.py
+|       normalize.py
+|       sessions_to_periscope.py
+|       session_template.html
+|       
+\---templates
+        course.html
+        session.html
+        

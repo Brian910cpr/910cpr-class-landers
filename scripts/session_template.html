@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>$PAGE_TITLE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="$META_DESCRIPTION" />
+  <link rel="canonical" href="$CANONICAL" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="$OG_TITLE" />
+  <meta property="og:description" content="$OG_DESC" />
+  <meta property="og:url" content="$OG_URL" />
+  <meta property="og:image" content="$OG_IMAGE" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="$OG_TITLE" />
+  <meta name="twitter:description" content="$OG_DESC" />
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=$GA4_ID"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config','$GA4_ID');</script>
+
+  <style>
+    :root{--brand:#2563eb;--brand-600:#1d4ed8;--bg:#f8fafc;--text:#0f172a;--muted:#64748b;--card:#fff;--line:#e5e7eb;}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .wrap{max-width:950px;margin:0 auto;padding:22px}
+    .eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:#fff;color:var(--muted)}
+    h1{margin:.25rem 0 .5rem;font-size:clamp(22px,4vw,30px)}
+    .lede{color:#3f4753;margin:6px 0 16px;line-height:1.5}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+    .pill{display:inline-block;border:1px solid var(--brand-600);color:#fff;background:var(--brand-600);padding:10px 14px;border-radius:12px;text-decoration:none;font-weight:800;font-size:14px}
+    .pill.ghost{background:transparent;border-color:var(--line);color:inherit}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{display:inline-block;border:1px solid var(--line);background:#fff;padding:6px 10px;border-radius:10px;font-size:13px;text-decoration:none}
+    .muted{color:var(--muted);font-size:13px}
+    .banner{border:1px solid #f59e0b;background:#fffbeb;padding:12px 14px;border-radius:12px;margin:10px 0}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .col-8{grid-column:span 8}.col-4{grid-column:span 4}
+    @media(max-width:900px){.col-8,.col-4{grid-column:span 12}}
+    footer{margin:28px 0;color:var(--muted);font-size:12px}
+  </style>
+
+  <script>
+    // Feed candidates for "next times"
+    const FEED_CANDIDATES=["periscope_full.json","./periscope_full.json","/periscope_full.json"];
+    async function loadFeed(){
+      for(const u of FEED_CANDIDATES){
+        try{const r=await fetch(u,{cache:"no-store"});if(!r.ok) throw new Error(r.status);const j=await r.json();return j}catch(e){}
+      }
+      return [];
+    }
+    function parseISO(s){
+      if(!s) return null;
+      const raw=String(s).trim();
+      let d=new Date(raw); if(!isNaN(d)) return d;
+      const m=raw.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00");
+      d=new Date(m); return isNaN(d)?null:d;
+    }
+    function chipText(it){
+      const d=parseISO(it.start); if(!d) return (it.start||"");
+      const mo=d.toLocaleString(undefined,{month:"short"}); const day=String(d.getDate()).padStart(2,"0");
+      let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
+      const hm=m?`${h}:${String(m).padStart(2,"0")}${ap}`:`${h}${ap}`;
+      return `${mo} ${day}, ${hm} — ${it.city||""}`;
+    }
+    function setChips(id,items){
+      const el=document.getElementById(id); if(!el) return;
+      el.innerHTML = items.length ? items.map(it=>`<a class="chip" href="${it.url||"#"}">${chipText(it)}</a>`).join("") : '<span class="muted">New dates posting—check back soon.</span>';
+    }
+    async function initSessionPage(){
+      // past banner
+      try{
+        const start=new Date("$DATETIME_ISO");
+        const now=new Date();
+        const banner=document.getElementById("past-banner");
+        if(start && now>start){ banner.style.display="block"; }
+      }catch(e){}
+      // next times
+      try{
+        const all=await loadFeed();
+        const now=new Date();
+        const fam="$COURSE_FAMILY".toUpperCase();
+        const city="$CITY".toUpperCase();
+        const filtered=all.filter(it=>{
+          const d=parseISO(it.start); if(!d || d<now) return false;
+          const t=(`${it.title||""} ${it.course||""} ${it.certification||""} ${it.agency||""}`).toUpperCase();
+          const hasFam = fam==="FA" ? /HEARTSAVER|FIRST\s*AID|WORKPLACE/.test(t) : t.includes(fam);
+          const sameCity = city ? (String(it.city||"").toUpperCase().includes(city)) : true;
+          return hasFam && sameCity;
+        }).sort((a,b)=> new Date(a.start)-new Date(b.start)).slice(0,6);
+        setChips("next-times", filtered);
+      }catch(e){
+        setChips("next-times", []);
+      }
+    }
+    document.addEventListener("DOMContentLoaded", initSessionPage);
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">$COURSE_FAMILY • 910CPR</div>
+    <h1>$COURSE_NAME — $CITY</h1>
+    <p class="lede">$LEDE</p>
+
+    <div id="past-banner" class="banner" style="display:none">
+      <strong>This class has passed.</strong> See upcoming times for $COURSE_NAME below or <a href="$PAST_BUTTON_URL">browse all options</a>.
+    </div>
+
+    <div class="grid">
+      <div class="col-8">
+        <div class="card">
+          <h2>About this class</h2>
+          <p class="muted">$DATE_HUMAN at $TIME_HUMAN • $VENUE • $ADDRESS, $CITY, $STATE $ZIP</p>
+          <div>$BODY_HTML</div>
+          <div style="margin-top:14px" class="chips">
+            <a class="pill" href="$REGISTER_URL">Register Now</a>
+            <a class="pill ghost" href="$PAST_BUTTON_URL">See all $COURSE_FAMILY options</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Looking for a different certification?</h2>
+          <div class="chips">
+            <a class="chip" href="/courses/medical/?q=BLS">BLS</a>
+            <a class="chip" href="/courses/medical/?q=ACLS">ACLS</a>
+            <a class="chip" href="/courses/medical/?q=PALS">PALS</a>
+            <a class="chip" href="/courses/workplaces/?q=Heartsaver">Heartsaver (AHA)</a>
+            <a class="chip" href="/courses/workplaces/?q=HSI">HSI: BLS + First Aid</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="col-4">
+        <div class="card">
+          <h3>Next available times</h3>
+          <div id="next-times" class="chips" aria-live="polite"><span class="muted">Loading…</span></div>
+        </div>
+        <div class="card">
+          <h3>Details</h3>
+          <div class="muted">
+            <div><strong>Price:</strong> $PRICE</div>
+            <div><strong>City:</strong> $CITY</div>
+            <div><strong>Venue:</strong> $VENUE</div>
+            <div><strong>When:</strong> $DATE_HUMAN @ $TIME_HUMAN</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>© 910CPR — Same-day cards • We don’t cancel classes.</footer>
+  </div>
+
+  <!-- Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationEvent",
+    "name": "$COURSE_NAME in $CITY",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "startDate": "$DATETIME_ISO",
+    "location": {
+      "@type": "Place",
+      "name": "$VENUE",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "$ADDRESS",
+        "addressLocality": "$CITY",
+        "addressRegion": "$STATE",
+        "postalCode": "$ZIP",
+        "addressCountry": "US"
+      }
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": "910CPR",
+      "url": "https://www.910cpr.com",
+      "telephone": "+1-910-395-5193"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "$REGISTER_URL",
+      "price": "$PRICE",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "validFrom": "$DATETIME_ISO"
+    },
+    "description": "$META_DESCRIPTION"
+  }
+  </script>
+</body>
+</html>
