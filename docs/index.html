@@ -20,139 +20,81 @@
   </script>
 
   <style>
-    /* ---------- Brand ---------- */
     :root{
-      --brand:#2563eb;          /* primary blue */
-      --brand-600:#1d4ed8;
-      --brand-50:#eef2ff;
-      --accent:#ef4444;         /* subtle red accent */
-      --bg:#f8fafc;
-      --text:#0f172a;
-      --muted:#64748b;
-      --card:#ffffff;
-      --line:#e5e7eb;
-      --chip-bg:#f1f5f9;
-      --chip-b:#e2e8f0;
+      --brand:#2563eb; --brand-600:#1d4ed8; --brand-50:#eef2ff;
+      --accent:#ef4444; --bg:#f8fafc; --text:#0f172a; --muted:#64748b;
+      --card:#ffffff; --line:#e5e7eb; --chip-bg:#f1f5f9; --chip-b:#e2e8f0;
       --ok-bg:#ecfdf5; --ok-b:#d1fae5;
     }
     :root[data-theme="dark"]{
-      --bg:#0b1220;
-      --text:#e5e7eb;
-      --muted:#9aa4af;
-      --card:#0f172a;
-      --line:#1f2937;
-      --chip-bg:#0b1220;
-      --chip-b:#1f2937;
-      --brand:#60a5fa;
-      --brand-600:#3b82f6;
-      --brand-50:#0b1220;
+      --bg:#0b1220; --text:#e5e7eb; --muted:#9aa4af; --card:#0f172a; --line:#1f2937;
+      --chip-bg:#0b1220; --chip-b:#1f2937; --brand:#60a5fa; --brand-600:#3b82f6; --brand-50:#0b1220;
       --ok-bg:#052e1f; --ok-b:#064e3b;
     }
-
-    html,body{margin:0;background:var(--bg);color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
     .wrap{max-width:1100px;margin:0 auto;padding:22px}
-
     a{color:inherit}
-
-    /* ---------- Header ---------- */
     .brandbar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
     .logo{height:36px;width:auto;display:block}
     h1{margin:.25rem 0;font-size:clamp(22px,4vw,30px)}
     .sub{color:var(--muted);margin:.25rem 0 1rem}
-
     .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
-    .chip, .chip-btn{
-      display:inline-block;padding:7px 12px;border-radius:9999px;
-      background:var(--chip-bg);border:1px solid var(--chip-b);
-      text-decoration:none;color:inherit;font-weight:700;font-size:13px;
-      cursor:pointer;user-select:none
-    }
+    .chip,.chip-btn{display:inline-block;padding:7px 12px;border-radius:9999px;background:var(--chip-bg);border:1px solid var(--chip-b);text-decoration:none;color:inherit;font-weight:700;font-size:13px;cursor:pointer;user-select:none}
     .chip.brand{background:var(--brand-50);border-color:var(--brand-600);color:var(--brand-600)}
     .chip:hover,.chip-btn:hover{filter:brightness(.98)}
     .chip.call{background:#10b9811a;border-color:#10b98144}
-
-    /* ---------- Layout ---------- */
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-    .col-12{grid-column:span 12}
-    .col-6{grid-column:span 6}
-    .col-4{grid-column:span 4}
-    .col-3{grid-column:span 3}
+    .col-12{grid-column:span 12}.col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
     @media(max-width:1020px){.col-6,.col-4,.col-3{grid-column:span 12}}
-
-    /* ---------- Cards ---------- */
     .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
     .eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
     .heart{color:var(--accent);font-weight:900}
     .card-title{margin:8px 0 6px;font-size:18px}
     .lede{color:#3f4753;margin:6px 0 16px;line-height:1.45}
     :root[data-theme="dark"] .lede{color:#bcc4ce}
-
     .pillbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-    .pill{display:inline-block;border:1px solid var(--brand-600);color:#fff;background:var(--brand-600);
-      padding:8px 12px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px}
+    .pill{display:inline-block;border:1px solid var(--brand-600);color:#fff;background:var(--brand-600);padding:8px 12px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px}
     .pill.alt{background:transparent;color:var(--brand-600)}
     .pill.ghost{background:transparent;border-color:var(--line);color:inherit}
-
     .next{margin:10px 0 6px;font-weight:800;font-size:13px}
     .timechips{display:flex;gap:8px;flex-wrap:wrap}
     .timechip{display:inline-block;border:1px solid var(--line);background:var(--bg);padding:6px 10px;border-radius:10px;font-size:13px;text-decoration:none}
-
     .section-title{margin:26px 0 10px;font-size:clamp(18px,3.4vw,24px)}
-    .section-title > a{text-decoration:none}
-    .section-title > a:hover{text-decoration:underline;text-underline-offset:.18em}
-
+    .section-title>a{text-decoration:none}.section-title>a:hover{text-decoration:underline;text-underline-offset:.18em}
     .callout{margin-top:12px;padding:12px 14px;border-radius:12px}
     .callout.success{border:1px solid var(--ok-b);background:var(--ok-bg)}
     .micro{color:var(--muted);font-size:13px}
-
     footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
-
     /* mini-3-col layout inside a card */
     .med-triad{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:10px}
     .tri{grid-column:span 4;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
     .tri h4{margin:0 0 8px;font-size:14px;letter-spacing:.2px}
     .tri .see{display:inline-block;margin-top:10px;font-weight:700;font-size:12px;text-decoration:none;color:var(--brand-600)}
     @media(max-width:1020px){.tri{grid-column:span 12}}
-
-    /* === Floating Call button (mobile only) === */
+    /* Floating Call button (mobile only) */
     .call-fab{position:fixed;right:16px;bottom:16px;z-index:1000}
-    .call-fab a{
-      display:flex;align-items:center;gap:10px;text-decoration:none;
-      background:var(--brand-600);color:#fff;padding:12px 14px;
-      border-radius:9999px;border:1px solid rgba(0,0,0,.08);
-      box-shadow:0 8px 24px rgba(0,0,0,.18);
-      font-weight:800;font-size:14px;line-height:1;
-      padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
-      transform:translateY(6px);opacity:0;animation:fab-in .35s ease-out .2s forwards
-    }
+    .call-fab a{display:flex;align-items:center;gap:10px;text-decoration:none;background:var(--brand-600);color:#fff;padding:12px 14px;border-radius:9999px;border:1px solid rgba(0,0,0,.08);box-shadow:0 8px 24px rgba(0,0,0,.18);font-weight:800;font-size:14px;line-height:1;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateY(6px);opacity:0;animation:fab-in .35s ease-out .2s forwards}
     :root[data-theme="dark"] .call-fab a{background:var(--brand);color:#0b1220}
     .call-fab svg{width:18px;height:18px;flex:0 0 18px;fill:currentColor}
-    @media (min-width:840px){.call-fab{display:none}} /* hide on tablet/desktop */
+    @media (min-width:840px){.call-fab{display:none}}
     @keyframes fab-in{to{transform:none;opacity:1}}
     @media (prefers-reduced-motion:reduce){.call-fab a{animation:none;transform:none;opacity:1}}
   </style>
 
-  <!-- Theme toggle (persisted) -->
+  <!-- Theme toggle -->
   <script>
     (function(){
-      const KEY="theme";
-      const root=document.documentElement;
+      const KEY="theme", root=document.documentElement;
       const initial=localStorage.getItem(KEY) || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
       apply(initial);
       window.toggleTheme=()=>apply(root.dataset.theme==="dark"?"light":"dark");
-      function apply(t){
-        root.dataset.theme=t;
-        try{localStorage.setItem(KEY,t)}catch(e){}
-        const b=document.getElementById("theme-toggle");
-        if(b){ b.textContent=t==="dark"?"Light":"Dark"; b.setAttribute("aria-pressed",String(t==="dark")); }
-      }
+      function apply(t){ root.dataset.theme=t; try{localStorage.setItem(KEY,t)}catch{} 
+        const b=document.getElementById("theme-toggle"); if(b){ b.textContent=t==="dark"?"Light":"Dark"; b.setAttribute("aria-pressed",String(t==="dark"));}}
     })();
   </script>
 </head>
 <body>
   <div class="wrap">
-
     <!-- Brand row -->
     <div class="brandbar">
       <img class="logo" src="/data-assets/logo-910cpr.svg" alt="910CPR" onerror="this.onerror=null;this.src='/images/910CPR_Fat.jpg'">
@@ -178,8 +120,7 @@
 
     <!-- MEDICAL -->
     <h2 id="medical" class="section-title"><a href="/courses/medical/">For Medical Professionals</a></h2>
-    <p class="lede"><strong>BLS, ACLS, and PALS</strong> for healthcare pros. Weekday &amp; evening options in Wilmington and Burgaw.
-      AHA/ARC aligned, small groups, same-day eCards.</p>
+    <p class="lede"><strong>BLS, ACLS, and PALS</strong> for healthcare pros. Weekday &amp; evening options in Wilmington and Burgaw. AHA/ARC aligned, small groups, same-day eCards.</p>
 
     <div class="grid" role="region" aria-labelledby="medical">
       <!-- BLS -->
@@ -187,21 +128,20 @@
         <span class="eyebrow"><span class="heart">❤</span> BLS for Providers</span>
         <h3 class="card-title">Basic Life Support (BLS)</h3>
         <p class="lede">Pick fast in-person or HeartCode + skills. Ideal for hospital staff, nurses, techs, and students.</p>
-
         <div class="med-triad">
           <div class="tri">
             <h4>In-Person Renewal</h4>
-            <div class="timechips" id="times-bls-ren" aria-live="polite"></div>
+            <div class="timechips" id="times-bls-ren"></div>
             <a class="see" href="/courses/medical/?q=BLS%20Renewal">See all BLS Renewal →</a>
           </div>
           <div class="tri">
             <h4>In-Person Initial</h4>
-            <div class="timechips" id="times-bls-init" aria-live="polite"></div>
+            <div class="timechips" id="times-bls-init"></div>
             <a class="see" href="/courses/medical/?q=BLS%20Provider">See all BLS Initial →</a>
           </div>
           <div class="tri">
             <h4>HeartCode BLS</h4>
-            <div class="timechips" id="times-bls-heart" aria-live="polite"></div>
+            <div class="timechips" id="times-bls-heart"></div>
             <a class="see" href="/courses/medical/?q=HeartCode%20BLS">See all HeartCode BLS →</a>
           </div>
         </div>
@@ -212,21 +152,20 @@
         <span class="eyebrow">Advanced Cardiovascular Life Support</span>
         <h3 class="card-title">ACLS</h3>
         <p class="lede">Initial or renewal—choose in-person or HeartCode + skills.</p>
-
         <div class="med-triad">
           <div class="tri">
             <h4>In-Person Renewal</h4>
-            <div class="timechips" id="times-acls-ren" aria-live="polite"></div>
+            <div class="timechips" id="times-acls-ren"></div>
             <a class="see" href="/courses/medical/?q=ACLS%20Renewal">See all ACLS Renewal →</a>
           </div>
           <div class="tri">
             <h4>In-Person Initial</h4>
-            <div class="timechips" id="times-acls-init" aria-live="polite"></div>
+            <div class="timechips" id="times-acls-init"></div>
             <a class="see" href="/courses/medical/?q=ACLS%20Provider">See all ACLS Initial →</a>
           </div>
           <div class="tri">
             <h4>HeartCode ACLS</h4>
-            <div class="timechips" id="times-acls-heart" aria-live="polite"></div>
+            <div class="timechips" id="times-acls-heart"></div>
             <a class="see" href="/courses/medical/?q=ACLS%20HeartCode">See all HeartCode ACLS →</a>
           </div>
         </div>
@@ -237,21 +176,20 @@
         <span class="eyebrow">Pediatric Advanced Life Support</span>
         <h3 class="card-title">PALS</h3>
         <p class="lede">Initial or renewal—pediatric resuscitation credential your facility needs.</p>
-
         <div class="med-triad">
           <div class="tri">
             <h4>In-Person Renewal</h4>
-            <div class="timechips" id="times-pals-ren" aria-live="polite"></div>
+            <div class="timechips" id="times-pals-ren"></div>
             <a class="see" href="/courses/medical/?q=PALS%20Renewal">See all PALS Renewal →</a>
           </div>
           <div class="tri">
             <h4>In-Person Initial</h4>
-            <div class="timechips" id="times-pals-init" aria-live="polite"></div>
+            <div class="timechips" id="times-pals-init"></div>
             <a class="see" href="/courses/medical/?q=PALS%20Provider">See all PALS Initial →</a>
           </div>
           <div class="tri">
             <h4>HeartCode PALS</h4>
-            <div class="timechips" id="times-pals-heart" aria-live="polite"></div>
+            <div class="timechips" id="times-pals-heart"></div>
             <a class="see" href="/courses/medical/?q=PALS%20HeartCode">See all HeartCode PALS →</a>
           </div>
         </div>
@@ -265,8 +203,7 @@
       <p class="lede">Cover both BLS and First Aid with a blended path that fits real schedules. Popular for cross-role staff.</p>
       <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a></div>
       <div class="callout success">
-        <strong>Great for Autism centers:</strong> different payers may require <em>BLS</em> or <em>First Aid</em>.
-        This HSI blended class covers <em>both</em> in one session—so you have <strong>one registration</strong> and <strong>one digital certification record</strong> for credentialing or audit.
+        <strong>Great for Autism centers:</strong> different payers may require <em>BLS</em> or <em>First Aid</em>. This HSI blended class covers <em>both</em> in one session—so you have <strong>one registration</strong> and <strong>one digital certification record</strong> for credentialing or audit.
         <ul style="margin:10px 0 0 18px;">
           <li>Online theory + short skills = minimal downtime</li>
           <li>OSHA-acceptable First Aid with healthcare-grade BLS content</li>
@@ -274,11 +211,9 @@
         </ul>
         <div class="micro"><em>Tip:</em> Acceptance can vary by payer/employer—bring your policy language and we’ll help match the right option.</div>
       </div>
-      <div class="next">Next HSI sessions</div>
-      <div class="timechips" id="hsi-list" aria-live="polite"></div>
     </section>
 
-    <!-- WORKPLACES: 3 tiles + 1 dates panel -->
+    <!-- WORKPLACES -->
     <h2 id="workplaces" class="section-title" style="margin-top:26px">
       <a href="/courses/workplaces/">For Workplaces (OSHA-Acceptable)</a>
     </h2>
@@ -288,21 +223,18 @@
       <!-- Industry & Construction -->
       <div class="col-3">
         <h3 class="card-title">Industry &amp; Construction</h3>
-
         <section class="card">
           <span class="eyebrow">Heartsaver (AHA)</span>
           <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
           <p class="lede">Practical, on-site friendly course that ticks OSHA compliance boxes.</p>
           <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
         </section>
-
         <section class="card">
           <span class="eyebrow">Heartsaver (AHA) — Blended</span>
           <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
           <p class="lede">Fast blended format; same OSHA acceptance.</p>
           <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
         </section>
-
         <section class="card">
           <span class="eyebrow">Workforce Safety</span>
           <h4 class="card-title">OSHA 10 / OSHA 30</h4>
@@ -318,33 +250,38 @@
       <!-- Child & Senior Care -->
       <div class="col-3">
         <h3 class="card-title">Child &amp; Senior Care</h3>
-
         <section class="card">
           <span class="eyebrow">Heartsaver (AHA)</span>
           <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
           <p class="lede">Scenario-based training for childcare, schools, and elder-care teams.</p>
           <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
         </section>
-
         <section class="card">
           <span class="eyebrow">Heartsaver (AHA) — Blended</span>
           <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
           <p class="lede">Blended format reduces downtime while meeting program requirements.</p>
           <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
         </section>
+        <!-- HSI BLS/FA with live times -->
+        <section class="card">
+          <span class="eyebrow">HSI (blended)</span>
+          <h4 class="card-title">BLS &amp; First Aid — Online + Skills</h4>
+          <p class="lede">Covers BLS + First Aid in one session—one registration & one digital record.</p>
+          <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a></div>
+          <div class="next">Next sessions</div>
+          <div class="timechips" id="hsi-list" aria-live="polite"></div>
+        </section>
       </div>
 
       <!-- USCG / DAN -->
       <div class="col-3">
         <h3 class="card-title">USCG / DAN (Maritime &amp; Diving)</h3>
-
         <section class="card">
           <span class="eyebrow">Heartsaver (AHA)</span>
           <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
           <p class="lede">On-deck readiness with practical, scenario-based training.</p>
           <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
         </section>
-
         <section class="card">
           <span class="eyebrow">Heartsaver (AHA) — Blended</span>
           <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
@@ -357,7 +294,6 @@
       <aside class="col-3">
         <section class="card" aria-labelledby="wk-next">
           <h3 id="wk-next" class="card-title">Next workplace dates</h3>
-
           <div class="eyebrow" style="margin:6px 0 8px">CPR/AED + First Aid (AHA)</div>
           <div class="timechips" id="wk-aha-list" aria-live="polite"></div>
           <div class="pillbar">
@@ -398,49 +334,54 @@
     </a>
   </div>
 
-  <!-- Schedule (single source of truth) -->
+  <!-- Schedule script (single source of truth) -->
   <script id="910cpr-schedule" defer>
   (() => {
-    // ---------- Config ----------
     const FEED = "/periscope_full.json";
-    const LIM_TRIAD = 3;   // per mini-column
-    const LIM_WORK  = 12;  // workplace lists
-
-    // ---------- Helpers ----------
     const U = s => (s||"").toUpperCase();
     const TXT = it => `${it.title||""} ${it.course||""} ${it.certification||""} ${it.agency||""} ${it.format||""}`;
 
-    // Parse: 2025-09-24 17:45 | 2025-09-24T17:45[:SS][Z|±HH:MM] | 2025-09-24 5:45 PM
+    // Robust date parser: ISO, "YYYY-MM-DD HH:MM", or "YYYY-MM-DD h:mm AM/PM [TZ]"
     function parseISO(s){
       if(!s) return null;
-      const t = s.trim();
+      const raw = String(s).trim();
 
-      // ISO-ish with optional seconds + tz
-      let m = t.match(/^(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?(Z|[+-]\d{2}:?\d{2})?$/);
-      if (m){
-        const hh = m[2]||"00", mm = m[3]||"00", ss = m[4]||"00";
-        const tz = m[5] ? (m[5].includes(":") ? m[5] : m[5].replace(/([+-]\d{2})(\d{2})/,"$1:$2")) : "";
-        return new Date(`${m[1]}T${hh}:${mm}:${ss}${tz}`);
+      // 1) Try native parse first
+      const d0 = new Date(raw);
+      if(!isNaN(d0)) return d0;
+
+      // 2) Normalize "YYYY-MM-DD HH:MM"
+      if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(raw)) {
+        const d1 = new Date(raw.replace(" ","T")+":00");
+        if(!isNaN(d1)) return d1;
       }
 
-      // 12-hour format with AM/PM
-      m = t.match(/^(\d{4}-\d{2}-\d{2})[ T]?(\d{1,2}):(\d{2})\s*([AP]M)$/i);
-      if (m){
-        let h = (+m[2]) % 12; if (/PM/i.test(m[4])) h += 12;
-        return new Date(`${m[1]}T${String(h).padStart(2,"0")}:${m[3]}:00`);
+      // 3) Handle "YYYY-MM-DD h:mm AM/PM (optional TZ abbr)"
+      const m = raw.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}):(\d{2})\s*([AP]M)\s*([A-Z]{2,4})?$/i);
+      if (m) {
+        let [, ymd, hh, mm, ap, tz] = m;
+        let H = parseInt(hh,10);
+        if (ap.toUpperCase()==="PM" && H !== 12) H += 12;
+        if (ap.toUpperCase()==="AM" && H === 12) H = 0;
+        const tzMap = { EDT:"-04:00", EST:"-05:00", CDT:"-05:00", CST:"-06:00", PDT:"-07:00", PST:"-08:00" };
+        const offset = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
+        const iso = `${ymd}T${String(H).padStart(2,"0")}:${mm}:00${offset}`;
+        const d2 = new Date(iso);
+        if(!isNaN(d2)) return d2;
       }
 
-      const d = new Date(t); // final fallback
-      return isNaN(d) ? null : d;
+      // 4) Last resort: try replacing first space with T and add seconds
+      const fallback = new Date(raw.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00"));
+      return isNaN(fallback) ? null : fallback;
     }
 
     function chipText(it){
       if (it.label) return it.label;
       const d = parseISO(it.start);
-      if(!d) return (it.start||"") + (it.city ? (" — "+it.city) : "");
+      if(!d) return (it.start||"") + (it.city?(" — "+it.city):"");
       const mo = d.toLocaleString(undefined,{month:"short"});
       const day = String(d.getDate()).padStart(2,"0");
-      let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
+      let h = d.getHours(), m = d.getMinutes(), ap = h>=12 ? "p":"a"; h=h%12||12;
       const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
       return `${mo} ${day}, ${hm} — ${it.city||""}`;
     }
@@ -453,7 +394,7 @@
         : '<span class="micro">New dates posting—check back soon.</span>';
     }
 
-    // Seed so it never looks empty while fetching
+    // Seed placeholders so UI isn’t blank
     [
       "times-bls-ren","times-bls-init","times-bls-heart",
       "times-acls-ren","times-acls-init","times-acls-heart",
@@ -461,23 +402,19 @@
       "wk-aha-list","hsi-list"
     ].forEach(id => setChips(id, []));
 
-    // Cache-busted fetch to avoid stale/empty JSON
-    const fetchFeed = () => fetch(FEED + "?_=" + Date.now(), {cache:"no-store"})
-      .then(r => r.json());
-
-    function upcoming(filter, limit){
-      return fetchFeed().then(all => {
+    function upcoming(filter, limit=6){
+      return fetch(FEED).then(r=>r.json()).then(all=>{
         const now = new Date();
         return all
           .map(x => ({...x, _d: parseISO(x.start)}))
           .filter(x => x._d && x._d >= now)
           .filter(filter)
-          .sort((a,b) => a._d - b._d)
-          .slice(0, limit);
+          .sort((a,b)=>a._d - b._d)
+          .slice(0,limit);
       }).catch(e => { console.error("[910CPR] feed error", e); return []; });
     }
 
-    // ---------- MEDICAL triads (text-robust) ----------
+    // -------- MEDICAL triads --------
     const familyFrom = it => {
       const t = U(TXT(it));
       if (/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/.test(t)) return "BLS";
@@ -495,6 +432,7 @@
       heart: it => familyFrom(it)===fam && isHeart(it),
     });
 
+    const LIM_TRIAD = 3;
     const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
 
     Promise.all([
@@ -511,30 +449,43 @@
       upcoming(PALS.heart, LIM_TRIAD).then(v => setChips("times-pals-heart", v)),
     ]).catch(console.error);
 
-    // ---------- WORKPLACE (AHA vs HSI) ----------
+    // -------- WORKPLACE lists --------
     const looksFA = it =>
       U(it.course_family)==="FA" ||
       /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) ||
       /BLS.*FIRST\s*AID|FIRST\s*AID.*BLS/i.test(TXT(it));
-
     const isAHA = it => /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(TXT(it));
     const isHSI = it => /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(TXT(it));
 
+    const LIM_WORK = 12;
     upcoming(it => looksFA(it) && isAHA(it), LIM_WORK).then(v => setChips("wk-aha-list", v));
-    upcoming(it => looksFA(it) && isHSI(it), LIM_WORK).then(v => setChips("hsi-list",   v));
+    upcoming(it => looksFA(it) && isHSI(it), LIM_WORK).then(v => setChips("hsi-list", v));
 
-    // Quick console check if needed:
-    window.__sched_debug = () =>
-      fetchFeed().then(all => {
-        const now=new Date();
-        const fut=all.filter(x => { const d=parseISO(x.start); return d && d>=now; });
-        console.log("future items:", fut.length);
-        return fut.slice(0,5);
-      });
+    // -------- tiny debugger you can run in Console --------
+    window.__debug_med = () => fetch(FEED).then(r=>r.json()).then(all=>{
+      const now=new Date();
+      const fut = all.map(x=>({...x,_d:parseISO(x.start)})).filter(x=>x._d && x._d>=now);
+      const sum = {
+        blsRen: fut.filter(BLS.ren).length,
+        blsInit:fut.filter(BLS.init).length,
+        blsHC:  fut.filter(BLS.heart).length,
+        aclsRen:fut.filter(ACLS.ren).length,
+        aclsInit:fut.filter(ACLS.init).length,
+        aclsHC: fut.filter(ACLS.heart).length,
+        palsRen:fut.filter(PALS.ren).length,
+        palsInit:fut.filter(PALS.init).length,
+        palsHC: fut.filter(PALS.heart).length,
+        ahaFA:  fut.filter(x=>looksFA(x)&&isAHA(x)).length,
+        hsiFA:  fut.filter(x=>looksFA(x)&&isHSI(x)).length,
+        totalFuture: fut.length
+      };
+      console.table(sum);
+      return sum;
+    });
   })();
   </script>
 
-  <!-- Track tel: clicks (floater + any tel link) -->
+  <!-- Track tel: clicks -->
   <script>
     document.querySelectorAll('a[href^="tel:"]').forEach(a=>{
       a.addEventListener('click', ()=>{
