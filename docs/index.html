@@ -144,14 +144,120 @@
   })();
 </script>
 <script>
-  // after gtag is loaded
-  document.querySelectorAll('a[href^="tel:"]').forEach(a=>{
-    a.addEventListener('click', ()=> {
-      if (window.gtag) gtag('event','click_phone',{value:'910-395-5193'});
-      if (window.dataLayer) dataLayer.push({event:'click_phone', phone:'910-395-5193'});
+  const FEED="/periscope_full.json";
+  const U = s => (s||'').toUpperCase();
+  const has = (s, re) => re.test(s||'');
+
+  function parseISO(s){
+    if(!s) return null;
+    // normalize “YYYY-MM-DD HH:MM” or “YYYY-MM-DDTHH:MM” → “YYYY-MM-DDTHH:MM:00”
+    const t = s.trim()
+      .replace(' ', 'T')
+      .replace(/T(\d{2}:\d{2})(?!:)/,'T$1:00');
+    const d = new Date(t);
+    return isNaN(d) ? null : d;
+  }
+
+  function chipText(it){
+    if (it.label) return it.label;
+    const d=parseISO(it.start); if(!d) return (it.start||'') + (it.city?(' — '+it.city):'');
+    const mo=d.toLocaleString(undefined,{month:'short'});
+    const day=String(d.getDate()).padStart(2,'0');
+    let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
+    const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
+    return `${mo} ${day}, ${hm} — ${it.city||''}`;
+  }
+
+  function setChips(elId, items){
+    const box=document.getElementById(elId);
+    if(!box) return;
+    box.innerHTML = items.length
+      ? items.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipText(it)}</a>`).join('')
+      : '<span class="micro">New dates posting—check back soon.</span>';
+  }
+
+  // Seed placeholders so the UI isn’t blank if fetch is slow/fails
+  ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
+
+  function upcoming(filter, limit=6){
+    return fetch(FEED).then(r=>r.json()).then(all=>{
+      const now=new Date();
+      return all.filter(filter)
+        .map(x=>({...x,_d:parseISO(x.start)}))
+        .filter(x=>x._d && x._d>=now)
+        .sort((a,b)=>a._d-b._d)
+        .slice(0,limit);
     });
+  }
+
+  // Filters
+  const isBLS  = it => U(it.course_family)==='BLS';
+  const isACLS = it => U(it.course_family)==='ACLS';
+  const isPALS = it => U(it.course_family)==='PALS';
+
+  const looksFA = it => U(it.course_family)==='FA' || has((it.title||'')+(it.certification||''),/FIRST AID|HEARTSAVER|WORKPLACE/i);
+  const isAHA   = it => has(it.agency,/AHA|HEARTSAVER/i) || has((it.title||'')+(it.certification||''),/HEARTSAVER/i);
+  const isHSI   = it => has(it.agency,/HSI/i) || has((it.title||'')+(it.certification||''),/HSI/i);
+
+  const faAhaAny = it => looksFA(it) && isAHA(it);  // AHA in-person + blended
+  const faHSI    = it => looksFA(it) && isHSI(it);  // HSI blended
+
+  Promise.all([
+    upcoming(isBLS, 4).then(v=>setChips('times-bls', v)),
+    upcoming(isACLS,4).then(v=>setChips('times-acls',v)),
+    upcoming(isPALS,4).then(v=>setChips('times-pals',v)),
+    upcoming(faAhaAny,10).then(v=>setChips('wk-aha-list', v)),
+    upcoming(faHSI,   10).then(v=>setChips('wk-hsi-list', v)),
+  ]).catch(err=>{
+    console.error(err);
+    ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
   });
 </script>
+<script>
+  function setChips(elId, items){
+    const box=document.getElementById(elId);
+    if(!box) return;
+    box.innerHTML = items.length
+      ? items.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipText(it)}</a>`).join('')
+      : '<span class="micro">New dates posting—check back soon.</span>';
+  }
+
+  // seed placeholders so the page never looks empty
+  ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
+
+  function upcoming(filter, limit=6){
+    return fetch(FEED).then(r=>r.json()).then(all=>{
+      const now=new Date();
+      return all.filter(filter)
+        .map(x=>({...x,_d:parseISO(x.start)}))
+        .filter(x=>x._d && x._d>=now)
+        .sort((a,b)=>a._d-b._d)
+        .slice(0,limit);
+    });
+  }
+
+  // filters (unchanged)
+  const isBLS  = it => U(it.course_family)==='BLS';
+  const isACLS = it => U(it.course_family)==='ACLS';
+  const isPALS = it => U(it.course_family)==='PALS';
+  const looksFA = it => U(it.course_family)==='FA' || has((it.title||'')+(it.certification||''),/FIRST AID|HEARTSAVER|WORKPLACE/i);
+  const isAHA   = it => has(it.agency,/AHA|HEARTSAVER/i) || has((it.title||'')+(it.certification||''),/HEARTSAVER/i);
+  const isHSI   = it => has(it.agency,/HSI/i) || has((it.title||'')+(it.certification||''),/HSI/i);
+  const faAhaAny = it => looksFA(it) && isAHA(it);
+  const faHSI    = it => looksFA(it) && isHSI(it);
+
+  Promise.all([
+    upcoming(isBLS, 4).then(v=>setChips('times-bls', v)),
+    upcoming(isACLS,4).then(v=>setChips('times-acls',v)),
+    upcoming(isPALS,4).then(v=>setChips('times-pals',v)),
+    upcoming(faAhaAny,10).then(v=>setChips('wk-aha-list', v)),
+    upcoming(faHSI,   10).then(v=>setChips('wk-hsi-list', v)),
+  ]).catch(err=>{
+    console.error(err);
+    ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
+  });
+</script>
+
 
 </head>
 <body>
