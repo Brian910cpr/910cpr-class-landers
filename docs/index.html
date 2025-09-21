@@ -6,6 +6,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content="Live CPR/AED & First Aid classes in Wilmington & Burgaw. BLS, ACLS, PALS for healthcare; OSHA-acceptable workplace options; pediatric/family courses. Enroll online." />
 <link rel="canonical" href="https://www.910cpr.com/" />
+<!-- Put in <head> -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"LocalBusiness",
+  "name":"910CPR",
+  "url":"https://www.910cpr.com/",
+  "telephone":"+1-910-395-5193",
+  "areaServed":["Wilmington NC","Burgaw NC"]
+}
+</script>
+
+
 
 <style>
   /* ---------- Brand ---------- */
@@ -109,6 +122,16 @@
       const b=document.getElementById("theme-toggle"); if(b){ b.textContent=t==="dark"?"Light":"Dark"; b.setAttribute("aria-pressed",String(t==="dark")); } }
   })();
 </script>
+<script>
+  // after gtag is loaded
+  document.querySelectorAll('a[href^="tel:"]').forEach(a=>{
+    a.addEventListener('click', ()=> {
+      if (window.gtag) gtag('event','click_phone',{value:'910-395-5193'});
+      if (window.dataLayer) dataLayer.push({event:'click_phone', phone:'910-395-5193'});
+    });
+  });
+</script>
+
 </head>
 <body>
   <div class="wrap">
