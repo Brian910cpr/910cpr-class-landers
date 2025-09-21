@@ -17,7 +17,7 @@
     --ok-bg:#ecfdf5; --ok-b:#d1fae5;
     --badge-bg:#16a34a14; --badge-b:#16a34a22; --badge-fg:#166534;
   }
-  /* ---------- Dark theme overrides ---------- */
+  /* ---------- Dark theme ---------- */
   :root[data-theme="dark"]{
     --bg:#0a0f1a; --text:#e5e7eb; --muted:#94a3b8;
     --chip-bg:#0f172a; --chip-b:#1f2937;
@@ -27,35 +27,29 @@
     --badge-bg:#16a34a26; --badge-b:#16a34a40; --badge-fg:#86efac;
   }
 
-  /* ---------- Base ---------- */
   html,body{margin:0;background:var(--bg);color:var(--text);
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
   .wrap{max-width:1100px;margin:0 auto;padding:22px}
   a{color:inherit}
 
-  /* ---------- Header ---------- */
   header h1{margin:.25rem 0 1rem;font-size:clamp(22px,4vw,30px)}
   header .sub{color:var(--muted);margin:.25rem 0 1rem}
   .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
-  .chip, .chip-btn{
-    display:inline-block;padding:8px 12px;border-radius:9999px;
-    background:var(--chip-bg);border:1px solid var(--chip-b);
-    text-decoration:none;color:inherit;font-weight:600;font-size:14px;
-    cursor:pointer; user-select:none;
-  }
+  .chip,.chip-btn{display:inline-block;padding:8px 12px;border-radius:9999px;
+    background:var(--chip-bg);border:1px solid var(--chip-b);text-decoration:none;
+    color:inherit;font-weight:600;font-size:14px;cursor:pointer;user-select:none}
   .chip-btn{background:var(--card)}
   .chip:hover,.chip-btn:hover{filter:brightness(.98)}
 
-  /* ---------- Sections & cards ---------- */
   h2.section-title{margin:24px 0 8px;font-size:clamp(18px,3.4vw,24px);display:inline-block}
-  h2.section-title>a, h2.section-title>a:visited{color:inherit;text-decoration:none}
+  h2.section-title>a{text-decoration:none}
   h2.section-title>a:hover{text-decoration:underline;text-underline-offset:.18em}
   .lede{color:#444;margin:6px 0 18px;line-height:1.45}
   :root[data-theme="dark"] .lede{color:#98a2b3}
 
   .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-  .col-6{grid-column:span 6} .col-12{grid-column:span 12}
-  @media(max-width:900px){.col-6{grid-column:span 12}}
+  .col-6{grid-column:span 6} .col-4{grid-column:span 4} .col-12{grid-column:span 12}
+  @media(max-width:900px){.col-6,.col-4{grid-column:span 12}}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
   .card-title{margin:0 0 6px;font-size:18px}
@@ -72,10 +66,8 @@
   .btn{display:inline-block;background:var(--btn);color:var(--btn-fg);
     padding:10px 12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;border:1px solid var(--btn-b)}
   .btn-alt{background:transparent;border:1px solid var(--line);color:inherit}
-
   .row{display:flex;gap:10px;flex-wrap:wrap}
 
-  /* Badge & callout */
   .badge{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:9999px;line-height:1.6}
   .badge-green{border:1px solid var(--badge-b);background:var(--badge-bg);color:var(--badge-fg);margin-left:8px}
   .callout{margin-top:10px;padding:12px 14px;border-radius:12px}
@@ -83,12 +75,11 @@
   .micro{color:#5b6470;margin:.25rem 0 .5rem}
   :root[data-theme="dark"] .micro{color:#9aa4af}
 
-  /* Footer */
   footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
 </style>
 
 <script>
-  // ---------- Theme toggle (persists) ----------
+  /* Theme toggle (persists) */
   (function(){
     const KEY="theme";
     const root=document.documentElement;
@@ -98,8 +89,8 @@
     function apply(t){
       root.dataset.theme=t;
       try{localStorage.setItem(KEY,t)}catch(e){}
-      const btn=document.getElementById("theme-toggle");
-      if(btn){ btn.setAttribute("aria-pressed", String(t==="dark")); btn.textContent = (t==="dark"?"Light":"Dark"); }
+      const b=document.getElementById("theme-toggle");
+      if(b){ b.setAttribute("aria-pressed",String(t==="dark")); b.textContent=(t==="dark"?"Light":"Dark"); }
     }
   })();
 </script>
@@ -111,7 +102,6 @@
       <h1>CPR, First Aid, BLS, ACLS &amp; PALS — Done Right and On Time</h1>
       <div class="sub">Wilmington • Burgaw • Camp Lejeune area. Same-day cards. We don’t cancel classes.</div>
 
-      <!-- Chips -->
       <div class="chips" aria-label="Navigation chips">
         <a class="chip" href="/courses/medical/">MEDICAL</a>
         <a class="chip" href="/courses/workplaces/">Industry &amp; Construction</a>
@@ -121,8 +111,7 @@
         <a class="chip" href="/courses/workplaces/?q=HSI">HSI — BLS + First Aid</a>
         <a class="chip" href="/courses/medical/?city=Wilmington">Wilmington, NC</a>
         <a class="chip" href="/courses/medical/?city=Burgaw">Burgaw, NC</a>
-        <!-- Phone + Dark toggle -->
-        <a class="chip" href="tel:+19103955193">Call / Text: (910) 395-5193</a>
+        <a class="chip" href="tel:+19107778825">Call / Text: (910) 777-8825</a>
         <button id="theme-toggle" class="chip-btn" type="button" onclick="toggleTheme()" aria-pressed="false">Dark</button>
       </div>
     </header>
@@ -183,20 +172,16 @@
         <span class="badge badge-green">Covers BLS + First Aid in one</span>
       </h3>
       <p class="muted">Cover both BLS and First Aid with a blended path that fits real schedules. Popular for cross-role staff.</p>
-      <div class="row">
-        <a class="btn btn-alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a>
-      </div>
-
+      <div class="row"><a class="btn btn-alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a></div>
       <div class="callout success">
-        <strong>Great for Autism centers:</strong>
-        different payers may require <em>BLS</em> or <em>First Aid</em>. This HSI blended class covers <em>both</em> in one session—so you have
-        <strong>one registration</strong> and <strong>one digital certification record</strong> to present at credentialing or audit.
+        <strong>Great for Autism centers:</strong> different payers may require <em>BLS</em> or <em>First Aid</em>.
+        This HSI blended class covers <em>both</em> in one session—so you have <strong>one registration</strong> and
+        <strong>one digital certification record</strong> for audits.
         <ul style="margin:10px 0 0 18px;">
           <li>Online theory + short skills = minimal downtime</li>
           <li>OSHA-acceptable First Aid with healthcare-grade BLS content</li>
           <li>Works across mixed roles (RBTs, BCBAs, therapists, admin)</li>
         </ul>
-        <div class="micro"><em>Tip:</em> Acceptance can vary by payer/employer—bring your policy language and we’ll help match the right option.</div>
       </div>
     </section>
 
@@ -206,49 +191,104 @@
     </h2>
     <p class="lede">OSHA-friendly <strong>CPR/AED &amp; First Aid</strong> for crews and teams. Heartsaver &amp; HSI options, on-site or at our classrooms. Flexible schedules and group rates.</p>
 
-    <div class="chips" aria-label="Workplace shortcuts">
-      <a class="chip" href="/courses/workplaces/?city=Wilmington">See all — Wilmington</a>
-      <a class="chip" href="/courses/workplaces/?city=Burgaw">See all — Burgaw</a>
-      <a class="chip" href="/courses/workplaces/?q=Heartsaver">Heartsaver</a>
-      <a class="chip" href="/courses/workplaces/?q=HSI">HSI (BLS + First Aid)</a>
+    <!-- Workplace tiles (3 columns, shared time chips per tile type) -->
+    <div class="grid" role="region" aria-labelledby="workplaces">
+      <!-- Column: Industry & Construction -->
+      <div class="col-4">
+        <h3 class="card-title">Industry &amp; Construction</h3>
+
+        <section class="card" aria-labelledby="wk-aha-ip">
+          <h4 id="wk-aha-ip" class="card-title">First Aid / CPR / AED — In Person</h4>
+          <p class="muted">Practical, on-site friendly option that ticks OSHA compliance boxes.</p>
+          <div class="next">Next sessions:</div>
+          <div id="times-fa-aha-ip" class="timechips"></div>
+          <a class="btn" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a>
+        </section>
+
+        <section class="card" aria-labelledby="wk-aha-bl">
+          <h4 id="wk-aha-bl" class="card-title">First Aid / CPR / AED — Online + Skills</h4>
+          <p class="muted">Fast blended format for minimal downtime; same OSHA acceptance.</p>
+          <div class="next">Next sessions:</div>
+          <div id="times-fa-aha-bl" class="timechips"></div>
+          <a class="btn btn-alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a>
+        </section>
+
+        <section class="card" aria-labelledby="wk-hsi-bl">
+          <h4 id="wk-hsi-bl" class="card-title">First Aid / CPR / AED — Online + Skills (HSI)</h4>
+          <p class="muted">One sitting covers both BLS + First Aid where policies allow.</p>
+          <div class="next">Next sessions:</div>
+          <div id="times-fa-hsi" class="timechips"></div>
+          <a class="btn btn-alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a>
+        </section>
+      </div>
+
+      <!-- Column: Child & Senior Care -->
+      <div class="col-4">
+        <h3 class="card-title">Child &amp; Senior Care</h3>
+
+        <section class="card">
+          <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
+          <p class="muted">Scenario-based training for childcare, schools, and elder care teams.</p>
+          <div class="next">Next sessions:</div>
+          <div class="timechips" data-clone="times-fa-aha-ip"></div>
+          <a class="btn" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a>
+        </section>
+
+        <section class="card">
+          <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
+          <p class="muted">Blended format reduces downtime while meeting program requirements.</p>
+          <div class="next">Next sessions:</div>
+          <div class="timechips" data-clone="times-fa-aha-bl"></div>
+          <a class="btn btn-alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a>
+        </section>
+      </div>
+
+      <!-- Column: USCG / DAN -->
+      <div class="col-4">
+        <h3 class="card-title">USCG / DAN (Maritime &amp; Diving)</h3>
+
+        <section class="card">
+          <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
+          <p class="muted">On-deck readiness with practical, scenario-based training.</p>
+          <div class="next">Next sessions:</div>
+          <div class="timechips" data-clone="times-fa-aha-ip"></div>
+          <a class="btn" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a>
+        </section>
+
+        <section class="card">
+          <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
+          <p class="muted">Great for rotating watches and irregular schedules.</p>
+          <div class="next">Next sessions:</div>
+          <div class="timechips" data-clone="times-fa-aha-bl"></div>
+          <a class="btn btn-alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a>
+        </section>
+      </div>
     </div>
 
-    <!-- Other audiences -->
-    <div class="grid" role="region" aria-label="Other audiences">
-      <div class="col-6">
-        <h3 class="card-title"><a href="/courses/caregivers/">Child &amp; Senior Care</a></h3>
-        <p class="muted">Pediatric CPR/AED &amp; First Aid for parents, babysitters, and caregivers. Infant/child scenarios; no prior experience needed.</p>
-      </div>
-      <div class="col-6">
-        <h3 class="card-title"><a href="/courses/uscg/">USCG / DAN (Maritime &amp; Diving)</a></h3>
-        <p class="muted">CPR/AED &amp; First Aid for maritime and diving. USCG-accepted options and DAN programs when available.</p>
-      </div>
-      <div class="col-12">
-        <h3 class="card-title"><a href="/courses/parents/">Parents &amp; Families</a></h3>
-        <p class="muted">Family-focused CPR/AED with pediatric emphasis—great for new parents and grandparents. Hands-on, friendly instruction.</p>
-      </div>
-    </div>
-
-    <footer>© 910CPR — Live schedule pulls from HOVN. Questions? <a href="tel:+9103955193">Call or text (910) 395-5193</a> and we’ll point you to the right class.</footer>
+    <footer>© 910CPR — Live schedule pulls from HOVN. Questions? <a href="tel:+19107778825">Call or text (910) 777-8825</a>.</footer>
   </div>
 
   <script>
-    // ------- Populate "Next sessions" from /periscope_full.json -------
+    // ------- Populate "Next sessions" chips from /periscope_full.json -------
     const FEED="/periscope_full.json";
 
+    const txt = s => (s||'').toUpperCase();
+    const has = (s, r) => r.test(s||'');
+
     function parseISO(s){ try{ return new Date(s.replace('T',' ') + ':00'); }catch(e){ return null; } }
-    function label(it){
+    function chipLabel(it){
       if (it.label) return it.label;
-      const d = parseISO(it.start); if(!d) return (it.start||'') + (it.city?(' - '+it.city):'');
+      const d = parseISO(it.start);
+      if(!d) return (it.start||'') + (it.city?(' - '+it.city):'');
       const mo = d.toLocaleString(undefined,{month:'short'}), day = String(d.getDate()).padStart(2,'0');
       let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
       const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
       return `${mo} ${day}, ${hm} - ${it.city||''}`;
     }
-    function upcoming(pred, limit=4){
+    function upcoming(filterFn, limit=4){
       return fetch(FEED).then(r=>r.json()).then(all=>{
         const now=new Date();
-        return all.filter(pred)
+        return all.filter(filterFn)
           .map(x=>({...x,_d:parseISO(x.start)}))
           .filter(x=>x._d && x._d>=now)
           .sort((a,b)=>a._d-b._d)
@@ -264,18 +304,39 @@
         const a=document.createElement('a');
         a.className='timechip';
         a.href=it.url||'#';
-        a.textContent=label(it);
+        a.textContent=chipLabel(it);
         box.appendChild(a);
       }
+      // clone to any tiles that reference this by data-clone
+      document.querySelectorAll(`.timechips[data-clone="${id}"]`).forEach(cl=>{
+        cl.innerHTML = box.innerHTML;
+      });
     }
-    const isBLS = it => (it.course_family||'').toUpperCase()==='BLS';
-    const isACLS= it => (it.course_family||'').toUpperCase()==='ACLS';
-    const isPALS= it => (it.course_family||'').toUpperCase()==='PALS';
 
+    // Medical
+    const isBLS  = it => txt(it.course_family)==='BLS';
+    const isACLS = it => txt(it.course_family)==='ACLS';
+    const isPALS = it => txt(it.course_family)==='PALS';
+
+    // Workplace filters
+    const isAHA = it => /AHA|HEARTSAVER/i.test(it.agency||'') || /HEARTSAVER/i.test((it.title||'')+(it.certification||''));
+    const looksBlended = it => /BLENDED|ONLINE|HEARTCODE/i.test((it.title||'')+(it.certification||''));
+    const isFA  = it => txt(it.course_family)==='FA' || /FIRST AID|HEARTSAVER|WORKPLACE/i.test((it.title||'')+(it.certification||''));
+    const isHSI = it => /HSI/i.test(it.agency||'') || /HSI/i.test((it.title||'')+(it.certification||''));
+
+    const faAhaInPerson = it => isFA(it) && isAHA(it) && !looksBlended(it);
+    const faAhaBlended  = it => isFA(it) && isAHA(it) &&  looksBlended(it);
+    const faHSI         = it => isFA(it) && isHSI(it);
+
+    // Mount everything
     Promise.all([
       upcoming(isBLS).then(v=>mount('times-bls', v)),
       upcoming(isACLS).then(v=>mount('times-acls', v)),
       upcoming(isPALS).then(v=>mount('times-pals', v)),
+
+      upcoming(faAhaInPerson).then(v=>mount('times-fa-aha-ip', v)),
+      upcoming(faAhaBlended).then(v=>mount('times-fa-aha-bl', v)),
+      upcoming(faHSI).then(v=>mount('times-fa-hsi', v)),
     ]).catch(console.error);
   </script>
 </body>
