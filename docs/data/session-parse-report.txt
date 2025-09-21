@@ -1,7 +1,7 @@
 Source CSV: /home/runner/work/910cpr-class-landers/910cpr-class-landers/sessions.csv
-Rows read: 806
+Rows read: 805
 Parsed items: 0
-Skipped rows: 806
+Skipped rows: 805
 
 [1] missing or unparsable date/time
   row: {"cuid": "cmep6gk5f003ojs040a32ks89", "date": "Sat Sep 20 2025 17:00:00 GMT-0400 (Eastern Daylight Time)", "agency": "AHA", "certification": "BLS Provider", "course": "BLS Provider - Heartcode", "format": "Blended", "location": ": ‎910CPR Wilmington Office", "location.city": "Wilmington", "location.state": "NC", "client": "No Client", "instructor": "Brian Ennis", "currentBookings": "0", "seats": "2", "status": "Active", "link": "https://www.hovn.app/service-providers/910cpr/sessions/cmep6gk5f003ojs040a32ks89"}
