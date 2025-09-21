@@ -336,98 +336,56 @@
   </div>
 
   <!-- Schedule script (single source of truth) -->
-  <script id="910cpr-schedule" defer>
+ <script id="910cpr-schedule" defer>
 (() => {
-  // -------- Paths (fix the 404) --------
-  // Use a RELATIVE path so it works from subfolders (GitHub Pages, previews, etc.)
-  const FEED_CANDIDATES = [
-    "periscope_full.json",                     // same folder as index.html
-    "./periscope_full.json",
-    // Final fallback: try absolute (works when deployed at domain root)
-    "/periscope_full.json"
-  ];
+  /* ... keep everything above as-is ... */
 
-  // Try candidates until one loads
-  async function loadFeed() {
-    for (const u of FEED_CANDIDATES) {
-      try {
-        const r = await fetch(u, { cache: "no-store" });
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const json = await r.json();
-        console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
-        return json;
-      } catch (e) {
-        console.warn("[910CPR] Feed failed:", u, e.message || e);
-      }
-    }
-    throw new Error("All feed locations failed (404).");
-  }
+  // ---- build a reliable link for each item ----
+  function buildSessionHref(it){
+    // (1) explicit session page or deep link if present
+    if (it.url) return it.url;
 
-  const U = s => (s||"").toUpperCase();
-  const TXT = it => `${it.title||""} ${it.course||""} ${it.certification||""} ${it.agency||""} ${it.format||""}`;
+    // (2) registration links (handle several field names)
+    const reg =
+      it.registration || it.reg_link || it.registration_link ||
+      it.register_url || it.reg_url || it.hovn_url || it.hovn_reg || "";
+    if (reg) return reg;
 
-  // Robust date parser: ISO, "YYYY-MM-DD HH:MM", or "YYYY-MM-DD h:mm AM/PM TZ"
-  function parseISO(s){
-    if(!s) return null;
-    const raw = String(s).trim();
-    const d0 = new Date(raw); if(!isNaN(d0)) return d0;
-    if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(raw)) {
-      const d1 = new Date(raw.replace(" ","T")+":00"); if(!isNaN(d1)) return d1;
-    }
-    const m = raw.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}):(\d{2})\s*([AP]M)\s*([A-Z]{2,4})?$/i);
-    if (m) {
-      let [, ymd, hh, mm, ap, tz] = m;
-      let H = parseInt(hh,10);
-      if (ap.toUpperCase()==="PM" && H !== 12) H += 12;
-      if (ap.toUpperCase()==="AM" && H === 12) H = 0;
-      const tzMap = { EDT:"-04:00", EST:"-05:00", CDT:"-05:00", CST:"-06:00", PDT:"-07:00", PST:"-08:00" };
-      const offset = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
-      const iso = `${ymd}T${String(H).padStart(2,"0")}:${mm}:00${offset}`;
-      const d2 = new Date(iso); if(!isNaN(d2)) return d2;
-    }
-    const fb = new Date(raw.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00"));
-    return isNaN(fb) ? null : fb;
-  }
-
-  function chipText(it){
-    if (it.label) return it.label;
+    // (3) derive a session page filename we generate in /classes/
     const d = parseISO(it.start);
-    if(!d) return (it.start||"") + (it.city?(" — "+it.city):"");
-    const mo = d.toLocaleString(undefined,{month:"short"});
-    const day = String(d.getDate()).padStart(2,"0");
-    let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
-    const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
-    return `${mo} ${day}, ${hm} — ${it.city||""}`;
+    const sid = it.id || it.session_id || it.hovn_id || it.ID;
+    if (d && sid){
+      const y  = d.getFullYear();
+      const mo = String(d.getMonth()+1).padStart(2,'0');
+      const da = String(d.getDate()).padStart(2,'0');
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mm = String(d.getMinutes()).padStart(2,'0');
+      const city = String(it.city || it.location || "")
+        .replace(/[^A-Za-z0-9]+/g,'-')
+        .replace(/^-+|-+$/g,'');
+      return `/classes/${y}-${mo}-${da}_${hh}-${mm}_${sid}_${city}.html`;
+    }
+
+    // (4) last resort: go to the category page
+    return '/courses/medical/';
   }
 
-function buildSessionHref(it){
-  // 1) direct URL if present
-  if (it.url) return it.url;
-
-  // 2) direct registration link if present (various possible keys)
-  const reg = it.registration || it.reg_link || it.registration_link || "";
-  if (reg) return reg;
-
-  // 3) derive a session page path: /classes/YYYY-MM-DD_HH-MM_ID_City.html
-  const d = parseISO(it.start);
-  const sid = it.id || it.session_id || it.hovn_id;
-  if (d && sid){
-    const y  = d.getFullYear();
-    const mo = String(d.getMonth()+1).padStart(2,'0');
-    const da = String(d.getDate()).padStart(2,'0');
-    const hh = String(d.getHours()).padStart(2,'0');
-    const mm = String(d.getMinutes()).padStart(2,'0');
-    const city = String(it.city || it.location || "")
-      .replace(/[^A-Za-z0-9]+/g,'-')
-      .replace(/^-+|-+$/g,'');
-    return `/classes/${y}-${mo}-${da}_${hh}-${mm}_${sid}_${city}.html`;
+  // ---- render clickable chips (now using buildSessionHref) ----
+  function setChips(id, items){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = items.length
+      ? items.map(it => {
+          const href = buildSessionHref(it);
+          const ext  = /^https?:\/\//i.test(href) ? ' target="_blank" rel="noopener"' : '';
+          return `<a class="timechip" href="${href}"${ext}>${chipText(it)}</a>`;
+        }).join("")
+      : '<span class="micro">New dates posting—check back soon.</span>';
   }
 
-  // 4) last resort
-  return '/courses/medical/';
-}
-
-
+  /* ... keep everything below as-is ... */
+})();
+</script>
   // Seed placeholders so UI isn’t blank
   [
     "times-bls-ren","times-bls-init","times-bls-heart",
