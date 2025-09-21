@@ -424,170 +424,101 @@
   </div>
 
   <!-- Consolidated schedule + helpers -->
-  <script defer>
-    // ---------- Feed + helpers ----------
-    const FEED = "/periscope_full.json";
-    const U = s => (s||'').toUpperCase();
-    const TXT = it => `${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''}`;
-    const TUP = it => TXT(it).toUpperCase();
+ <script id="910cpr-schedule" defer>
+(() => {
+  // ---------- Config ----------
+  const FEED = "/periscope_full.json";
+  const LIM_TRIAD = 3;     // per mini-column
+  const LIM_WORK  = 12;    // in the workplace lists
 
-    function parseISO(s){
-      if(!s) return null;
-      const t = s.trim().replace(' ','T').replace(/T(\d{2}:\d{2})(?!:)/,'T$1:00');
-      const d = new Date(t);
-      return isNaN(d) ? null : d;
-    }
-
-    function chipText(it){
-      if (it.label) return it.label;
-      const d = parseISO(it.start);
-      if(!d) return (it.start||'') + (it.city?(' — '+it.city):'');
-      const mo = d.toLocaleString(undefined,{month:'short'});
-      const day = String(d.getDate()).padStart(2,'0');
-      let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
-      const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
-      return `${mo} ${day}, ${hm} — ${it.city||''}`;
-    }
-
-    function setChips(elId, items){
-      const box=document.getElementById(elId);
-      if(!box) return;
-      box.innerHTML = items.length
-        ? items.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipText(it)}</a>`).join('')
-        : '<span class="micro">New dates posting—check back soon.</span>';
-    }
-
-    // Seed placeholders so UI isn’t blank if fetch is slow/fails
-    ['times-bls','times-acls','times-pals','wk-aha-list','hsi-list'].forEach(id=>setChips(id, []));
-
-    function upcoming(filter, limit=15){
-      return fetch(FEED).then(r=>r.json()).then(all=>{
-        const now=new Date();
-        return all.filter(filter)
-          .map(x=>({...x,_d:parseISO(x.start)}))
-          .filter(x=>x._d && x._d>=now)
-          .sort((a,b)=>a._d-b._d)
-          .slice(0,limit);
-      });
-    }
-<script>
-  // Helpers
-  const U = s => (s||'').toUpperCase();
-  const TXT = it => `${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''} ${it.format||''}`;
-
-  const isHeartcoded = it => /HEART\s*CODE|HEARTCODE|ONLINE\s*\+\s*SKILLS|SKILLS\s*ASSESSMENT/i.test(TXT(it));
-  const isRenewal    = it => /\bRENEW(AL)?\b|UPDATE\b/i.test(TXT(it));
-  const isBlended    = it => /BLENDED/i.test(TXT(it));
-
-  const fam = f => it => U(it.course_family)===f;
-
-  // Triad filters per family
-  const tri = f => ({
-    ren:   it => fam(f)(it) && isRenewal(it)        && !isHeartcoded(it),           // in-person renewal
-    init:  it => fam(f)(it) && !isRenewal(it)       && !isHeartcoded(it) && !isBlended(it), // in-person initial
-    heart: it => fam(f)(it) && isHeartcoded(it)                                          // heartcode
-  });
-
-  // Seed placeholders (so UI never looks empty)
-  ['times-bls-ren','times-bls-init','times-bls-heart',
-   'times-acls-ren','times-acls-init','times-acls-heart',
-   'times-pals-ren','times-pals-init','times-pals-heart'
+  // ---------- Helpers ----------
+  const U   = s => (s||"").toUpperCase();
+  const TXT = it => `${it.title||""} ${it.course||""} ${it.certification||""} ${it.agency||""} ${it.format||""}`;
+  function parseISO(s){
+    if(!s) return null;
+    const t = s.trim().replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00");
+    const d = new Date(t);
+    return isNaN(d) ? null : d;
+  }
+  function chipText(it){
+    if (it.label) return it.label;
+    const d = parseISO(it.start);
+    if(!d) return (it.start||"") + (it.city ? (" — "+it.city) : "");
+    const mo = d.toLocaleString(undefined,{month:"short"});
+    const day = String(d.getDate()).padStart(2,"0");
+    let h = d.getHours(), m = d.getMinutes(), ap = h>=12 ? "p":"a"; h=h%12||12;
+    const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
+    return `${mo} ${day}, ${hm} — ${it.city||""}`;
+  }
+  function setChips(id, items){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = items.length
+      ? items.map(it => `<a class="timechip" href="${it.url||"#"}">${chipText(it)}</a>`).join("")
+      : '<span class="micro">New dates posting—check back soon.</span>';
+  }
+  // Never show empty boxes while fetching
+  [
+    "times-bls-ren","times-bls-init","times-bls-heart",
+    "times-acls-ren","times-acls-init","times-acls-heart",
+    "times-pals-ren","times-pals-init","times-pals-heart",
+    "wk-aha-list","hsi-list"
   ].forEach(id => setChips(id, []));
 
-  const LIM = 3; // how many times per column
+  function upcoming(filter, limit){
+    return fetch(FEED).then(r=>r.json()).then(all=>{
+      const now = new Date();
+      const fut = all.map(x => ({...x, _d: parseISO(x.start)}))
+                     .filter(x => x._d && x._d >= now);
+      return fut.filter(filter).sort((a,b)=>a._d - b._d).slice(0, limit);
+    }).catch(e => { console.error("[910CPR] feed error", e); return []; });
+  }
 
-  const BLS = tri('BLS'), ACLS = tri('ACLS'), PALS = tri('PALS');
+  // ---------- Medical triads (robust text matching) ----------
+  const familyFrom = it => {
+    const t = U(TXT(it));
+    if (/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/.test(t)) return "BLS";
+    if (/(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/.test(t))     return "ACLS";
+    if (/(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/.test(t))  return "PALS";
+    return U(it.course_family||"") || null;
+  };
+  const isHeart    = it => /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/i.test(TXT(it));
+  const isRenew    = it => /\bRENEW(AL)?\b|RECERT|UPDATE\b/i.test(TXT(it));
+  const isInPerson = it => /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/i.test(TXT(it)) && !isHeart(it);
+
+  const tri = fam => ({
+    ren:   it => familyFrom(it)===fam && isRenew(it)        && !isHeart(it),
+    init:  it => familyFrom(it)===fam && !isRenew(it)       && isInPerson(it),
+    heart: it => familyFrom(it)===fam && isHeart(it),
+  });
+  const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
 
   Promise.all([
-    upcoming(BLS.ren,   LIM).then(v=>setChips('times-bls-ren',   v)),
-    upcoming(BLS.init,  LIM).then(v=>setChips('times-bls-init',  v)),
-    upcoming(BLS.heart, LIM).then(v=>setChips('times-bls-heart', v)),
+    upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
+    upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
+    upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
 
-    upcoming(ACLS.ren,   LIM).then(v=>setChips('times-acls-ren',   v)),
-    upcoming(ACLS.init,  LIM).then(v=>setChips('times-acls-init',  v)),
-    upcoming(ACLS.heart, LIM).then(v=>setChips('times-acls-heart', v)),
+    upcoming(ACLS.ren,   LIM_TRIAD).then(v => setChips("times-acls-ren",   v)),
+    upcoming(ACLS.init,  LIM_TRIAD).then(v => setChips("times-acls-init",  v)),
+    upcoming(ACLS.heart, LIM_TRIAD).then(v => setChips("times-acls-heart", v)),
 
-    upcoming(PALS.ren,   LIM).then(v=>setChips('times-pals-ren',   v)),
-    upcoming(PALS.init,  LIM).then(v=>setChips('times-pals-init',  v)),
-    upcoming(PALS.heart, LIM).then(v=>setChips('times-pals-heart', v)),
+    upcoming(PALS.ren,   LIM_TRIAD).then(v => setChips("times-pals-ren",   v)),
+    upcoming(PALS.init,  LIM_TRIAD).then(v => setChips("times-pals-init",  v)),
+    upcoming(PALS.heart, LIM_TRIAD).then(v => setChips("times-pals-heart", v)),
   ]).catch(console.error);
+
+  // ---------- Workplace lists ----------
+  const looksFA = it =>
+      U(it.course_family)==="FA" ||
+      /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) ||
+      /BLS.*FIRST\s*AID|FIRST\s*AID.*BLS/i.test(TXT(it)); // “BLS with Adult First Aid …”
+  const isAHA = it => /AHA|HEARTSAVER/i.test(TXT(it));
+  const isHSI = it => /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(TXT(it));
+
+  upcoming(it => looksFA(it) && isAHA(it), LIM_WORK).then(v => setChips("wk-aha-list", v));
+  upcoming(it => looksFA(it) && isHSI(it), LIM_WORK).then(v => setChips("hsi-list", v));
+})();
 </script>
-
-
-<script>
-// --- MEDICAL triads: robust matching by text ---
-const LIM = 3; // how many times per mini-column
-
-const T = it => `${(it.title||'')} ${(it.course||'')} ${(it.certification||'')} ${(it.agency||'')} ${(it.format||'')}`.toUpperCase();
-
-const familyFrom = it => {
-  const t = T(it);
-  if (/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/.test(t)) return 'BLS';
-  if (/(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIOVASCULAR/.test(t)) return 'ACLS';
-  if (/(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/.test(t)) return 'PALS';
-  return null;
-};
-
-const isHeart    = it => /HEART\s*CODE|HEARTCODE|SKILLS\s*ASSESSMENT|ONLINE.*SKILLS/i.test(T(it));
-const isRenew    = it => /\bRENEW(AL)?\b|UPDATE\b/i.test(T(it));
-const isInPerson = it => /INSTRUCTOR[-\s]?LED|IN\s*PERSON|CLASSROOM/i.test(T(it)) && !isHeart(it);
-
-// build triad filters for a family
-const tri = fam => ({
-  ren:   it => familyFrom(it)===fam && isRenew(it) && !isHeart(it),         // In-Person Renewal
-  init:  it => familyFrom(it)===fam && !isRenew(it) && isInPerson(it),       // In-Person Initial
-  heart: it => familyFrom(it)===fam && isHeart(it),                          // HeartCode (or Skills Assess.)
-});
-
-// seed placeholders so it never looks empty
-[
-  'times-bls-ren','times-bls-init','times-bls-heart',
-  'times-acls-ren','times-acls-init','times-acls-heart',
-  'times-pals-ren','times-pals-init','times-pals-heart'
-].forEach(id => setChips(id, []));
-
-const BLS  = tri('BLS');
-const ACLS = tri('ACLS');
-const PALS = tri('PALS');
-
-Promise.all([
-  // BLS
-  upcoming(BLS.ren,   LIM).then(v=>setChips('times-bls-ren',   v)),
-  upcoming(BLS.init,  LIM).then(v=>setChips('times-bls-init',  v)),
-  upcoming(BLS.heart, LIM).then(v=>setChips('times-bls-heart', v)),
-
-  // ACLS
-  upcoming(ACLS.ren,   LIM).then(v=>setChips('times-acls-ren',   v)),
-  upcoming(ACLS.init,  LIM).then(v=>setChips('times-acls-init',  v)),
-  upcoming(ACLS.heart, LIM).then(v=>setChips('times-acls-heart', v)),
-
-  // PALS
-  upcoming(PALS.ren,   LIM).then(v=>setChips('times-pals-ren',   v)),
-  upcoming(PALS.init,  LIM).then(v=>setChips('times-pals-init',  v)),
-  upcoming(PALS.heart, LIM).then(v=>setChips('times-pals-heart', v)),
-]).catch(console.error);
-
-// Optional quick debug: run `__debug_med()` in DevTools to see bucket counts
-window.__debug_med = () => fetch("/periscope_full.json").then(r=>r.json()).then(all=>{
-  const now=new Date();
-  const toDate = s => new Date((s||'').trim().replace(' ', 'T') + (/:..$/.test(s)?'':':00'));
-  const fut = all.filter(x => { const d=toDate(x.start); return d && d>=now; });
-  const b = {
-    blsRen:  fut.filter(BLS.ren).length,
-    blsInit: fut.filter(BLS.init).length,
-    blsHC:   fut.filter(BLS.heart).length,
-    aclsRen: fut.filter(ACLS.ren).length,
-    aclsInit:fut.filter(ACLS.init).length,
-    aclsHC:  fut.filter(ACLS.heart).length,
-    palsRen: fut.filter(PALS.ren).length,
-    palsInit:fut.filter(PALS.init).length,
-    palsHC:  fut.filter(PALS.heart).length,
-  };
-  console.table(b);
-});
-</script>
-
-
 
 
     // ---------- Filters ----------
