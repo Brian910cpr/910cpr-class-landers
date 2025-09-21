@@ -384,6 +384,17 @@
           <p class="lede">Fast blended format; same OSHA acceptance.</p>
           <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
         </section>
+<section class="card">
+  <span class="eyebrow">Workforce Safety</span>
+  <h4 class="card-title">OSHA 10 / OSHA 30</h4>
+  <p class="lede">Entry-level and supervisor safety credentials. Fully online. English and Spanish Options.</p>
+  <div class="pillbar">
+    <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2010">OSHA 10 — Info</a>
+    <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2030">OSHA 30 — Info</a>
+    <a class="pill" href="tel:+19103955193">Ask for next date</a>
+  </div>
+</section>
+
       </div>
 
       <div class="col-3">
@@ -409,18 +420,7 @@
     <a class="pill alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a>
   </div>
 </section>
-
-<section class="card">
-  <span class="eyebrow">Workforce Safety</span>
-  <h4 class="card-title">OSHA 10 / OSHA 30</h4>
-  <p class="lede">Entry-level and supervisor safety credentials. Public dates and on-site groups available.</p>
-  <div class="pillbar">
-    <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2010">OSHA 10 — Info</a>
-    <a class="pill ghost" href="/courses/workplaces/?q=OSHA%2030">OSHA 30 — Info</a>
-    <a class="pill" href="tel:+19103955193">Ask for next date</a>
-  </div>
-</section>
-
+</div>
 
       <div class="col-3">
         <h3 class="card-title">USCG / DAN (Maritime &amp; Diving)</h3>
@@ -565,14 +565,13 @@
   const faHSI    = it => looksFA(it) && isHSI(it);  // HSI blended
 
   Promise.all([
-    upcoming(isBLS, 4).then(v=>setChips('times-bls', v)),
-    upcoming(isACLS,4).then(v=>setChips('times-acls',v)),
-    upcoming(isPALS,4).then(v=>setChips('times-pals',v)),
+    upcoming(isBLS, 6).then(v=>setChips('times-bls', v)),
+    upcoming(isACLS,6).then(v=>setChips('times-acls',v)),
+    upcoming(isPALS,6).then(v=>setChips('times-pals',v)),
     upcoming(faAhaAny,10).then(v=>setChips('wk-aha-list', v)),
-    upcoming(faHSI,   10).then(v=>setChips('wk-hsi-list', v)),
   ]).catch(err=>{
     console.error(err);
-    ['times-bls','times-acls','times-pals','wk-aha-list','wk-hsi-list'].forEach(id=>setChips(id, []));
+    ['times-bls','times-acls','times-pals','wk-aha-list'].forEach(id=>setChips(id, []));
   });
 </script>
 
