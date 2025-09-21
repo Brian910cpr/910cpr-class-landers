@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Live CPR/AED & First Aid classes in Wilmington & Burgaw. BLS, ACLS, PALS for healthcare; OSHA-acceptable workplace options; pediatric/family courses. Enroll online." />
   <link rel="canonical" href="https://www.910cpr.com/" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232563eb'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='28' fill='white' font-family='Arial, sans-serif'%3E9%3C/text%3E%3C/svg%3E">
+
+  <!-- Favicon (inline, no 404s) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232563eb'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='28' fill='white' font-family='Arial, sans-serif'%3E9%3C/text%3E%3C/svg%3E">
 
   <!-- Schema -->
   <script type="application/ld+json">
@@ -98,7 +100,7 @@
   <div class="wrap">
     <!-- Brand row -->
     <div class="brandbar">
-<img class="logo" src="data-assets/logo-910cpr.svg" onerror="this.onerror=null;this.src='images/910CPR_Fat.jpg'">
+      <img class="logo" src="data-assets/logo-910cpr.svg" alt="910CPR" onerror="this.onerror=null;this.src='images/910CPR_Fat.jpg'">
       <div>
         <h1>CPR, First Aid, BLS, ACLS &amp; PALS — Done Right and On Time</h1>
         <div class="sub">Wilmington • Burgaw • Camp Lejeune area. Same-day cards. We don’t cancel classes.</div>
@@ -132,17 +134,17 @@
         <div class="med-triad">
           <div class="tri">
             <h4>In-Person Renewal</h4>
-            <div class="timechips" id="times-bls-ren"></div>
+            <div class="timechips" id="times-bls-ren" aria-live="polite"></div>
             <a class="see" href="/courses/medical/?q=BLS%20Renewal">See all BLS Renewal →</a>
           </div>
           <div class="tri">
             <h4>In-Person Initial</h4>
-            <div class="timechips" id="times-bls-init"></div>
+            <div class="timechips" id="times-bls-init" aria-live="polite"></div>
             <a class="see" href="/courses/medical/?q=BLS%20Provider">See all BLS Initial →</a>
           </div>
           <div class="tri">
             <h4>HeartCode BLS</h4>
-            <div class="timechips" id="times-bls-heart"></div>
+            <div class="timechips" id="times-bls-heart" aria-live="polite"></div>
             <a class="see" href="/courses/medical/?q=HeartCode%20BLS">See all HeartCode BLS →</a>
           </div>
         </div>
@@ -156,17 +158,17 @@
         <div class="med-triad">
           <div class="tri">
             <h4>In-Person Renewal</h4>
-            <div class="timechips" id="times-acls-ren"></div>
+            <div class="timechips" id="times-acls-ren" aria-live="polite"></div>
             <a class="see" href="/courses/medical/?q=ACLS%20Renewal">See all ACLS Renewal →</a>
           </div>
           <div class="tri">
             <h4>In-Person Initial</h4>
-            <div class="timechips" id="times-acls-init"></div>
+            <div class="timechips" id="times-acls-init" aria-live="polite"></div>
             <a class="see" href="/courses/medical/?q=ACLS%20Provider">See all ACLS Initial →</a>
           </div>
           <div class="tri">
             <h4>HeartCode ACLS</h4>
-            <div class="timechips" id="times-acls-heart"></div>
+            <div class="timechips" id="times-acls-heart" aria-live="polite"></div>
             <a class="see" href="/courses/medical/?q=ACLS%20HeartCode">See all HeartCode ACLS →</a>
           </div>
         </div>
@@ -180,17 +182,17 @@
         <div class="med-triad">
           <div class="tri">
             <h4>In-Person Renewal</h4>
-            <div class="timechips" id="times-pals-ren"></div>
+            <div class="timechips" id="times-pals-ren" aria-live="polite"></div>
             <a class="see" href="/courses/medical/?q=PALS%20Renewal">See all PALS Renewal →</a>
           </div>
           <div class="tri">
             <h4>In-Person Initial</h4>
-            <div class="timechips" id="times-pals-init"></div>
+            <div class="timechips" id="times-pals-init" aria-live="polite"></div>
             <a class="see" href="/courses/medical/?q=PALS%20Provider">See all PALS Initial →</a>
           </div>
           <div class="tri">
             <h4>HeartCode PALS</h4>
-            <div class="timechips" id="times-pals-heart"></div>
+            <div class="timechips" id="times-pals-heart" aria-live="polite"></div>
             <a class="see" href="/courses/medical/?q=PALS%20HeartCode">See all HeartCode PALS →</a>
           </div>
         </div>
@@ -204,7 +206,8 @@
       <p class="lede">Cover both BLS and First Aid with a blended path that fits real schedules. Popular for cross-role staff.</p>
       <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a></div>
       <div class="callout success">
-        <strong>Great for Autism centers:</strong> different payers may require <em>BLS</em> or <em>First Aid</em>. This HSI blended class covers <em>both</em> in one session—so you have <strong>one registration</strong> and <strong>one digital certification record</strong> for credentialing or audit.
+        <strong>Great for Autism centers:</strong> different payers may require <em>BLS</em> or <em>First Aid</em>.
+        This HSI blended class covers <em>both</em> in one session—so you have <strong>one registration</strong> and <strong>one digital certification record</strong> for credentialing or audit.
         <ul style="margin:10px 0 0 18px;">
           <li>Online theory + short skills = minimal downtime</li>
           <li>OSHA-acceptable First Aid with healthcare-grade BLS content</li>
@@ -336,132 +339,177 @@
   </div>
 
   <!-- Schedule script (single source of truth) -->
- <script id="910cpr-schedule" defer>
-(() => {
-  /* ... keep everything above as-is ... */
+  <script defer>
+  (() => {
+    // ===== Config =====
+    // How many dates to show in each mini-column (BLS/ACLS/PALS)
+    const LIM_TRIAD = 6;   // bump to 8/10 if you want longer rows
+    const LIM_WORK  = 12;
 
-  // ---- build a reliable link for each item ----
-  function buildSessionHref(it){
-    // (1) explicit session page or deep link if present
-    if (it.url) return it.url;
+    // Try relative first (works from /docs on GitHub Pages), then absolute
+    const FEED_CANDIDATES = [
+      "periscope_full.json",
+      "./periscope_full.json",
+      "/periscope_full.json"
+    ];
 
-    // (2) registration links (handle several field names)
-    const reg =
-      it.registration || it.reg_link || it.registration_link ||
-      it.register_url || it.reg_url || it.hovn_url || it.hovn_reg || "";
-    if (reg) return reg;
+    // ===== Helpers =====
+    const U   = s => (s||"").toUpperCase();
+    const TXT = it => `${it.title||""} ${it.course||""} ${it.certification||""} ${it.agency||""} ${it.format||""}`;
 
-    // (3) derive a session page filename we generate in /classes/
-    const d = parseISO(it.start);
-    const sid = it.id || it.session_id || it.hovn_id || it.ID;
-    if (d && sid){
-      const y  = d.getFullYear();
-      const mo = String(d.getMonth()+1).padStart(2,'0');
-      const da = String(d.getDate()).padStart(2,'0');
-      const hh = String(d.getHours()).padStart(2,'0');
-      const mm = String(d.getMinutes()).padStart(2,'0');
-      const city = String(it.city || it.location || "")
-        .replace(/[^A-Za-z0-9]+/g,'-')
-        .replace(/^-+|-+$/g,'');
-      return `/classes/${y}-${mo}-${da}_${hh}-${mm}_${sid}_${city}.html`;
+    async function loadFeed() {
+      for (const u of FEED_CANDIDATES) {
+        try {
+          const r = await fetch(u, { cache: "no-store" });
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          const json = await r.json();
+          console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
+          return json;
+        } catch (e) {
+          console.warn("[910CPR] Feed failed:", u, e.message || e);
+        }
+      }
+      throw new Error("All feed locations failed.");
     }
 
-    // (4) last resort: go to the category page
-    return '/courses/medical/';
-  }
+    function parseISO(s){
+      if(!s) return null;
+      const raw = String(s).trim();
+      const d0 = new Date(raw); if(!isNaN(d0)) return d0;
+      const fb = new Date(raw.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00"));
+      return isNaN(fb) ? null : fb;
+    }
 
-  // ---- render clickable chips (now using buildSessionHref) ----
-  function setChips(id, items){
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.innerHTML = items.length
-      ? items.map(it => {
-          const href = buildSessionHref(it);
-          const ext  = /^https?:\/\//i.test(href) ? ' target="_blank" rel="noopener"' : '';
-          return `<a class="timechip" href="${href}"${ext}>${chipText(it)}</a>`;
-        }).join("")
-      : '<span class="micro">New dates posting—check back soon.</span>';
-  }
+    function chipText(it){
+      if (it.label) return it.label;
+      const d = parseISO(it.start);
+      if(!d) return (it.start||"") + (it.city?(" — "+it.city):"");
+      const mo = d.toLocaleString(undefined,{month:"short"});
+      const day = String(d.getDate()).padStart(2,"0");
+      let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
+      const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
+      return `${mo} ${day}, ${hm} — ${it.city||""}`;
+    }
 
-  /* ... keep everything below as-is ... */
-})();
-</script>
-  // Seed placeholders so UI isn’t blank
-  [
-    "times-bls-ren","times-bls-init","times-bls-heart",
-    "times-acls-ren","times-acls-init","times-acls-heart",
-    "times-pals-ren","times-pals-init","times-pals-heart",
-    "wk-aha-list","hsi-list"
-  ].forEach(id => setChips(id, []));
+    function buildSessionHref(it){
+      // explicit links first
+      const direct = it.url || it.permalink || it.session_url; if (direct) return direct;
+      // registration deep links (several possible names)
+      const reg = it.registration || it.reg_link || it.registration_link || it.register_url || it.reg_url || it.hovn_url || it.hovn_reg;
+      if (reg) return reg;
+      // generate our static session page path if we have id+start
+      const d = parseISO(it.start);
+      const sid = it.id || it.session_id || it.hovn_id || it.ID;
+      if (d && sid){
+        const y  = d.getFullYear();
+        const mo = String(d.getMonth()+1).padStart(2,'0');
+        const da = String(d.getDate()).padStart(2,'0');
+        const hh = String(d.getHours()).padStart(2,'0');
+        const mm = String(d.getMinutes()).padStart(2,'0');
+        const city = String(it.city || it.location || "")
+          .replace(/[^A-Za-z0-9]+/g,'-')
+          .replace(/^-+|-+$/g,'');
+        return `./classes/${y}-${mo}-${da}_${hh}-${mm}_${sid}_${city}.html`;
+      }
+      // fallback: course hub
+      return '/courses/medical/';
+    }
 
-  async function upcoming(filter, limit=6){
-    if (!window.__FEED__) window.__FEED__ = await loadFeed();
-    const now = new Date();
-    return window.__FEED__
-      .map(x => ({...x, _d: parseISO(x.start)}))
-      .filter(x => x._d && x._d >= now)
-      .filter(filter)
-      .sort((a,b)=>a._d - b._d)
-      .slice(0,limit);
-  }
-
-  // -------- MEDICAL triads --------
-  const familyFrom = it => {
-    const t = U(TXT(it));
-    if (/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/.test(t)) return "BLS";
-    if (/(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/.test(t))     return "ACLS";
-    if (/(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/.test(t))  return "PALS";
-    return U(it.course_family||"") || null;
-  };
-  const isHeart    = it => /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/i.test(TXT(it));
-  const isRenew    = it => /\bRENEW(AL)?\b|RECERT|UPDATE\b/i.test(TXT(it));
-  const isInPerson = it => /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/i.test(TXT(it)) && !isHeart(it);
-
-  const tri = fam => ({
-    ren:   it => familyFrom(it)===fam && isRenew(it)        && !isHeart(it),
-    init:  it => familyFrom(it)===fam && !isRenew(it)       && isInPerson(it),
-    heart: it => familyFrom(it)===fam && isHeart(it),
-  });
-
-  const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
-  const LIM_TRIAD = 6, LIM_WORK = 12;
-
-  Promise.all([
-    upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
-    upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
-    upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
-    upcoming(ACLS.ren,  LIM_TRIAD).then(v => setChips("times-acls-ren",  v)),
-    upcoming(ACLS.init, LIM_TRIAD).then(v => setChips("times-acls-init", v)),
-    upcoming(ACLS.heart,LIM_TRIAD).then(v => setChips("times-acls-heart",v)),
-    upcoming(PALS.ren,  LIM_TRIAD).then(v => setChips("times-pals-ren",  v)),
-    upcoming(PALS.init, LIM_TRIAD).then(v => setChips("times-pals-init", v)),
-    upcoming(PALS.heart,LIM_TRIAD).then(v => setChips("times-pals-heart",v)),
-    // Workplace
-    upcoming(it => /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(TXT(it)), LIM_WORK)
-      .then(v => setChips("wk-aha-list", v)),
-    upcoming(it => /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(TXT(it)), LIM_WORK)
-      .then(v => setChips("hsi-list", v)),
-  ]).catch(err => {
-    console.error("[910CPR] schedule init failed:", err);
-    // show a clearer message when feed is missing
-    ["times-bls-ren","times-bls-init","times-bls-heart",
-     "times-acls-ren","times-acls-init","times-acls-heart",
-     "times-pals-ren","times-pals-init","times-pals-heart",
-     "wk-aha-list","hsi-list"
-    ].forEach(id => {
+    function setChips(id, items){
       const el = document.getElementById(id);
-      if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>';
-    });
-  });
+      if(!el) return;
+      el.innerHTML = items.length
+        ? items.map(it => {
+            const href = buildSessionHref(it);
+            const ext  = /^https?:\/\//i.test(href) ? ' target="_blank" rel="noopener"' : '';
+            return `<a class="timechip" href="${href}"${ext}>${chipText(it)}</a>`;
+          }).join("")
+        : '<span class="micro">New dates posting—check back soon.</span>';
+    }
 
-  // Tiny debugger you can run in the console:
-  window.__debug_med = async () => {
-    const feed = await (window.__FEED__ ? Promise.resolve(window.__FEED__) : loadFeed());
-    console.log("feed items:", feed.length);
-    return feed;
-  };
-})();
-</script>
+    // Seed placeholders so UI isn’t blank
+    [
+      "times-bls-ren","times-bls-init","times-bls-heart",
+      "times-acls-ren","times-acls-init","times-acls-heart",
+      "times-pals-ren","times-pals-init","times-pals-heart",
+      "wk-aha-list","hsi-list"
+    ].forEach(id => setChips(id, []));
+
+    async function upcoming(filter, limit=6){
+      if (!window.__FEED__) window.__FEED__ = await loadFeed();
+      const now = new Date();
+      return window.__FEED__
+        .map(x => ({...x, _d: parseISO(x.start)}))
+        .filter(x => x._d && x._d >= now)
+        .filter(filter)
+        .sort((a,b)=>a._d - b._d)
+        .slice(0,limit);
+    }
+
+    // ===== Filters for medical triads =====
+    const familyFrom = it => {
+      const t = U(TXT(it));
+      if (/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/.test(t)) return "BLS";
+      if (/(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/.test(t))     return "ACLS";
+      if (/(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/.test(t))  return "PALS";
+      return U(it.course_family||"") || null;
+    };
+    const isHeart    = it => /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/i.test(TXT(it));
+    const isRenew    = it => /\bRENEW(AL)?\b|RECERT|UPDATE\b/i.test(TXT(it));
+    const isInPerson = it => /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/i.test(TXT(it)) && !isHeart(it);
+
+    const tri = fam => ({
+      ren:   it => familyFrom(it)===fam && isRenew(it)        && !isHeart(it),
+      init:  it => familyFrom(it)===fam && !isRenew(it)       && isInPerson(it),
+      heart: it => familyFrom(it)===fam && isHeart(it),
+    });
+
+    const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
+
+    // ===== Workplace filters =====
+    const looksFA = it =>
+      U(it.course_family)==="FA" ||
+      /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) ||
+      /BLS.*FIRST\s*AID|FIRST\s*AID.*BLS/i.test(TXT(it));
+    const isAHA = it => /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(TXT(it));
+    const isHSI = it => /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(TXT(it));
+
+    // ===== Run =====
+    Promise.all([
+      // Medical triads
+      upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
+      upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
+      upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
+      upcoming(ACLS.ren,  LIM_TRIAD).then(v => setChips("times-acls-ren",  v)),
+      upcoming(ACLS.init, LIM_TRIAD).then(v => setChips("times-acls-init", v)),
+      upcoming(ACLS.heart,LIM_TRIAD).then(v => setChips("times-acls-heart",v)),
+      upcoming(PALS.ren,  LIM_TRIAD).then(v => setChips("times-pals-ren",  v)),
+      upcoming(PALS.init, LIM_TRIAD).then(v => setChips("times-pals-init", v)),
+      upcoming(PALS.heart,LIM_TRIAD).then(v => setChips("times-pals-heart",v)),
+
+      // Workplace lists
+      upcoming(it => looksFA(it) && isAHA(it), LIM_WORK).then(v => setChips("wk-aha-list", v)),
+      upcoming(it => looksFA(it) && isHSI(it), LIM_WORK).then(v => setChips("hsi-list",   v)),
+    ]).catch(err => {
+      console.error("[910CPR] schedule init failed:", err);
+      ["times-bls-ren","times-bls-init","times-bls-heart",
+       "times-acls-ren","times-acls-init","times-acls-heart",
+       "times-pals-ren","times-pals-init","times-pals-heart",
+       "wk-aha-list","hsi-list"
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>';
+      });
+    });
+
+    // Tiny debugger you can run in the console:
+    window.__debug_feed = async () => {
+      const feed = await (window.__FEED__ ? Promise.resolve(window.__FEED__) : loadFeed());
+      console.log("feed items:", feed.length, feed.slice(0,5));
+      return feed;
+    };
+  })();
+  </script>
 
   <!-- Track tel: clicks -->
   <script>
