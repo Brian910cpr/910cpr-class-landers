@@ -1,64 +1,108 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>CPR, First Aid, BLS, ACLS & PALS — Done Right and On Time | 910CPR</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Live CPR/AED & First Aid classes in Wilmington & Burgaw. BLS, ACLS, PALS for healthcare; OSHA-acceptable workplace options; pediatric/family courses. Enroll online." />
-  <link rel="canonical" href="https://www.910cpr.com/" />
-  <meta property="og:title" content="CPR, First Aid, BLS, ACLS & PALS — Done Right and On Time | 910CPR" />
-  <meta property="og:description" content="Live CPR/AED & First Aid classes in Wilmington & Burgaw. BLS, ACLS, PALS, workplace, and family options. Enroll online." />
-  <meta property="og:type" content="website" />
+<meta charset="utf-8" />
+<title>CPR, First Aid, BLS, ACLS & PALS — Done Right and On Time | 910CPR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Live CPR/AED & First Aid classes in Wilmington & Burgaw. BLS, ACLS, PALS for healthcare; OSHA-acceptable workplace options; pediatric/family courses. Enroll online." />
+<link rel="canonical" href="https://www.910cpr.com/" />
 
-  <style>
-    :root{
-      --text:#0f172a; --muted:#64748b; --chip:#eef2ff; --chip-b:#e2e8f0;
-      --card:#ffffff; --line:#e5e7eb; --btn:#111827; --btn-fg:#ffffff;
-      --badge-g:#16a34a14; --badge-gb:#16a34a22; --ok-bg:#ecfdf5; --ok-b:#d1fae5;
+<style>
+  /* ---------- Design tokens (light) ---------- */
+  :root{
+    --bg:#fafafa; --text:#0f172a; --muted:#64748b;
+    --chip-bg:#eef2ff; --chip-b:#e2e8f0;
+    --card:#ffffff; --line:#e5e7eb;
+    --btn:#111827; --btn-fg:#ffffff; --btn-b:#0b1220;
+    --ok-bg:#ecfdf5; --ok-b:#d1fae5;
+    --badge-bg:#16a34a14; --badge-b:#16a34a22; --badge-fg:#166534;
+  }
+  /* ---------- Dark theme overrides ---------- */
+  :root[data-theme="dark"]{
+    --bg:#0a0f1a; --text:#e5e7eb; --muted:#94a3b8;
+    --chip-bg:#0f172a; --chip-b:#1f2937;
+    --card:#0b1220; --line:#1f2937;
+    --btn:#e5e7eb; --btn-fg:#0b1220; --btn-b:#e5e7eb;
+    --ok-bg:#052e1f; --ok-b:#064e3b;
+    --badge-bg:#16a34a26; --badge-b:#16a34a40; --badge-fg:#86efac;
+  }
+
+  /* ---------- Base ---------- */
+  html,body{margin:0;background:var(--bg);color:var(--text);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px}
+  a{color:inherit}
+
+  /* ---------- Header ---------- */
+  header h1{margin:.25rem 0 1rem;font-size:clamp(22px,4vw,30px)}
+  header .sub{color:var(--muted);margin:.25rem 0 1rem}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+  .chip, .chip-btn{
+    display:inline-block;padding:8px 12px;border-radius:9999px;
+    background:var(--chip-bg);border:1px solid var(--chip-b);
+    text-decoration:none;color:inherit;font-weight:600;font-size:14px;
+    cursor:pointer; user-select:none;
+  }
+  .chip-btn{background:var(--card)}
+  .chip:hover,.chip-btn:hover{filter:brightness(.98)}
+
+  /* ---------- Sections & cards ---------- */
+  h2.section-title{margin:24px 0 8px;font-size:clamp(18px,3.4vw,24px);display:inline-block}
+  h2.section-title>a, h2.section-title>a:visited{color:inherit;text-decoration:none}
+  h2.section-title>a:hover{text-decoration:underline;text-underline-offset:.18em}
+  .lede{color:#444;margin:6px 0 18px;line-height:1.45}
+  :root[data-theme="dark"] .lede{color:#98a2b3}
+
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+  .col-6{grid-column:span 6} .col-12{grid-column:span 12}
+  @media(max-width:900px){.col-6{grid-column:span 12}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .card-title{margin:0 0 6px;font-size:18px}
+  .eyebrow{display:inline-block;font-size:12px;background:#f8fafc;border:1px solid #e2e8f0;color:#334155;padding:4px 8px;border-radius:9999px}
+  :root[data-theme="dark"] .eyebrow{background:#0f172a;border-color:#1f2937;color:#cbd5e1}
+  .muted{color:var(--muted);font-size:14px;line-height:1.45}
+
+  .next{margin:8px 0 6px;color:#111827;font-weight:600;font-size:13px}
+  :root[data-theme="dark"] .next{color:#e5e7eb}
+  .timechips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+  .timechip{display:inline-block;padding:6px 10px;border-radius:10px;border:1px solid #e2e8f0;background:#f8fafc;text-decoration:none;color:#0f172a;font-size:13px}
+  :root[data-theme="dark"] .timechip{border-color:#1f2937;background:#0f172a;color:#e5e7eb}
+
+  .btn{display:inline-block;background:var(--btn);color:var(--btn-fg);
+    padding:10px 12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;border:1px solid var(--btn-b)}
+  .btn-alt{background:transparent;border:1px solid var(--line);color:inherit}
+
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+
+  /* Badge & callout */
+  .badge{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:9999px;line-height:1.6}
+  .badge-green{border:1px solid var(--badge-b);background:var(--badge-bg);color:var(--badge-fg);margin-left:8px}
+  .callout{margin-top:10px;padding:12px 14px;border-radius:12px}
+  .callout.success{border:1px solid var(--ok-b);background:var(--ok-bg)}
+  .micro{color:#5b6470;margin:.25rem 0 .5rem}
+  :root[data-theme="dark"] .micro{color:#9aa4af}
+
+  /* Footer */
+  footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
+</style>
+
+<script>
+  // ---------- Theme toggle (persists) ----------
+  (function(){
+    const KEY="theme";
+    const root=document.documentElement;
+    const initial=localStorage.getItem(KEY) || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark":"light");
+    apply(initial);
+    window.toggleTheme=()=>apply(root.dataset.theme==="dark"?"light":"dark");
+    function apply(t){
+      root.dataset.theme=t;
+      try{localStorage.setItem(KEY,t)}catch(e){}
+      const btn=document.getElementById("theme-toggle");
+      if(btn){ btn.setAttribute("aria-pressed", String(t==="dark")); btn.textContent = (t==="dark"?"Light":"Dark"); }
     }
-    html,body{margin:0;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#fafafa}
-    .wrap{max-width:1100px;margin:0 auto;padding:22px}
-    header h1{margin:.25rem 0 1rem 0;font-size:clamp(22px,4vw,30px)}
-    header .sub{color:var(--muted);margin:.25rem 0 1rem}
-    /* Chips */
-    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
-    .chip{display:inline-block;padding:8px 12px;border-radius:9999px;background:var(--chip);border:1px solid var(--chip-b);text-decoration:none;color:inherit;font-weight:600;font-size:14px}
-    .chip:hover{filter:brightness(.98)}
-    /* Section titles */
-    h2.section-title{margin:24px 0 8px;font-size:clamp(18px,3.4vw,24px);display:inline-block}
-    h2.section-title>a,
-    h2.section-title>a:link,
-    h2.section-title>a:visited{color:inherit!important;text-decoration:none!important;display:inline-block}
-    h2.section-title>a:hover,
-    h2.section-title>a:focus-visible{text-decoration:underline;text-underline-offset:.18em}
-    .lede{color:#444;margin:6px 0 18px;line-height:1.45}
-    /* Columns + cards */
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-    .col-6{grid-column:span 6}
-    .col-12{grid-column:span 12}
-    @media(max-width:900px){.col-6{grid-column:span 12}}
-    .col-head{margin:8px 0 6px;font-size:18px}
-    .col-head a{color:inherit;text-decoration:none}
-    .col-head a:hover{text-decoration:underline}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
-    .card-title{margin:0 0 6px;font-size:18px}
-    .eyebrow{display:inline-block;font-size:12px;background:#f8fafc;border:1px solid #e2e8f0;color:#334155;padding:4px 8px;border-radius:9999px}
-    .muted{color:var(--muted);font-size:14px;line-height:1.45}
-    .next{margin:8px 0 6px;color:#111827;font-weight:600;font-size:13px}
-    .timechips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
-    .timechip{display:inline-block;padding:6px 10px;border-radius:10px;border:1px solid #e2e8f0;background:#f8fafc;text-decoration:none;color:#0f172a;font-size:13px}
-    .btn{display:inline-block;background:var(--btn);color:var(--btn-fg);padding:10px 12px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px}
-    .btn-alt{background:#fff;border:1px solid #e2e8f0;color:#111827}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    /* Badge + callout */
-    .badge{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:9999px;line-height:1.6}
-    .badge-green{border:1px solid var(--badge-gb);background:var(--badge-g);color:#166534;margin-left:8px}
-    .callout{margin-top:10px;padding:12px 14px;border-radius:12px}
-    .callout.success{border:1px solid var(--ok-b);background:var(--ok-bg)}
-    .micro{color:#5b6470;margin:.25rem 0 .5rem}
-    /* Footer */
-    footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
-  </style>
+  })();
+</script>
 </head>
 <body>
   <div class="wrap">
@@ -67,7 +111,7 @@
       <h1>CPR, First Aid, BLS, ACLS &amp; PALS — Done Right and On Time</h1>
       <div class="sub">Wilmington • Burgaw • Camp Lejeune area. Same-day cards. We don’t cancel classes.</div>
 
-      <!-- Chips (now linking to category pages) -->
+      <!-- Chips -->
       <div class="chips" aria-label="Navigation chips">
         <a class="chip" href="/courses/medical/">MEDICAL</a>
         <a class="chip" href="/courses/workplaces/">Industry &amp; Construction</a>
@@ -77,6 +121,9 @@
         <a class="chip" href="/courses/workplaces/?q=HSI">HSI — BLS + First Aid</a>
         <a class="chip" href="/courses/medical/?city=Wilmington">Wilmington, NC</a>
         <a class="chip" href="/courses/medical/?city=Burgaw">Burgaw, NC</a>
+        <!-- Phone + Dark toggle -->
+        <a class="chip" href="tel:+19107778825">Call / Text: (910) 777-8825</a>
+        <button id="theme-toggle" class="chip-btn" type="button" onclick="toggleTheme()" aria-pressed="false">Dark</button>
       </div>
     </header>
 
@@ -128,19 +175,18 @@
       </section>
     </div>
 
-    <!-- HSI blended card (cross-role) -->
+    <!-- HSI blended -->
     <section class="card" style="margin-top:18px" aria-labelledby="t-hsi">
       <span class="eyebrow">Healthcare + Workplace Hybrid</span>
       <h3 id="t-hsi" class="card-title">
         BLS &amp; First Aid — Online + Skills (HSI)
-        <span class="badge badge-green" title="Covers BLS + First Aid in one">Covers BLS + First Aid in one</span>
+        <span class="badge badge-green">Covers BLS + First Aid in one</span>
       </h3>
       <p class="muted">Cover both BLS and First Aid with a blended path that fits real schedules. Popular for cross-role staff.</p>
       <div class="row">
         <a class="btn btn-alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a>
       </div>
 
-      <!-- Autism center callout -->
       <div class="callout success">
         <strong>Great for Autism centers:</strong>
         different payers may require <em>BLS</em> or <em>First Aid</em>. This HSI blended class covers <em>both</em> in one session—so you have
@@ -160,7 +206,6 @@
     </h2>
     <p class="lede">OSHA-friendly <strong>CPR/AED &amp; First Aid</strong> for crews and teams. Heartsaver &amp; HSI options, on-site or at our classrooms. Flexible schedules and group rates.</p>
 
-    <!-- Sub-category shortcuts -->
     <div class="chips" aria-label="Workplace shortcuts">
       <a class="chip" href="/courses/workplaces/?city=Wilmington">See all — Wilmington</a>
       <a class="chip" href="/courses/workplaces/?city=Burgaw">See all — Burgaw</a>
@@ -168,78 +213,70 @@
       <a class="chip" href="/courses/workplaces/?q=HSI">HSI (BLS + First Aid)</a>
     </div>
 
-    <!-- CAREGIVERS / PARENTS / USCG -->
+    <!-- Other audiences -->
     <div class="grid" role="region" aria-label="Other audiences">
       <div class="col-6">
-        <h3 class="col-head"><a href="/courses/caregivers/">Child &amp; Senior Care</a></h3>
-        <p class="lede">Pediatric CPR/AED &amp; First Aid for parents, babysitters, and caregivers. Infant/child scenarios; no prior experience needed.</p>
+        <h3 class="card-title"><a href="/courses/caregivers/">Child &amp; Senior Care</a></h3>
+        <p class="muted">Pediatric CPR/AED &amp; First Aid for parents, babysitters, and caregivers. Infant/child scenarios; no prior experience needed.</p>
       </div>
       <div class="col-6">
-        <h3 class="col-head"><a href="/courses/uscg/">USCG / DAN (Maritime &amp; Diving)</a></h3>
-        <p class="lede">CPR/AED &amp; First Aid for maritime and diving. USCG-accepted options and DAN programs when available.</p>
+        <h3 class="card-title"><a href="/courses/uscg/">USCG / DAN (Maritime &amp; Diving)</a></h3>
+        <p class="muted">CPR/AED &amp; First Aid for maritime and diving. USCG-accepted options and DAN programs when available.</p>
       </div>
       <div class="col-12">
-        <h3 class="col-head"><a href="/courses/parents/">Parents &amp; Families</a></h3>
-        <p class="lede">Family-focused CPR/AED with pediatric emphasis—great for new parents and grandparents. Hands-on, friendly instruction.</p>
+        <h3 class="card-title"><a href="/courses/parents/">Parents &amp; Families</a></h3>
+        <p class="muted">Family-focused CPR/AED with pediatric emphasis—great for new parents and grandparents. Hands-on, friendly instruction.</p>
       </div>
     </div>
 
-    <footer>© 910CPR — Live schedule pulls from HOVN. Questions? Call/text and we’ll point you to the right class.</footer>
+    <footer>© 910CPR — Live schedule pulls from HOVN. Questions? <a href="tel:+19107778825">Call or text (910) 777-8825</a> and we’ll point you to the right class.</footer>
   </div>
 
   <script>
-  // ---- Lightweight population of "Next sessions" chips on main cards ----
-  const FEED = "/periscope_full.json";
+    // ------- Populate "Next sessions" from /periscope_full.json -------
+    const FEED="/periscope_full.json";
 
-  function parseISO(s){ try { return new Date(s.replace('T',' ') + ':00'); } catch(e){ return null; } }
-  function fmtLabel(it){
-    // Prefer server-provided label if present
-    if (it.label) return it.label;
-    const d = parseISO(it.start);
-    if (!d) return (it.start || '') + (it.city ? ' - ' + it.city : '');
-    const mo = d.toLocaleString(undefined,{month:'short'}), day = String(d.getDate()).padStart(2,'0');
-    let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
-    const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
-    return `${mo} ${day}, ${hm} - ${it.city||''}`;
-  }
-  function upcomingBy(pred, limit=4){
-    return fetch(FEED)
-      .then(r=>r.json())
-      .then(all=>{
-        const now = new Date();
-        return all
-          .filter(pred)
-          .map(x=>({...x, _d: parseISO(x.start)}))
-          .filter(x=>x._d && x._d >= now)
-          .sort((a,b)=>a._d - b._d)
-          .slice(0, limit);
-      });
-  }
-  function mountTimes(elId, items){
-    const box = document.getElementById(elId);
-    if (!box) return;
-    box.innerHTML = '';
-    if (!items.length){ box.innerHTML = '<span class="muted">New dates posting—check back soon.</span>'; return; }
-    for (const it of items){
-      const a = document.createElement('a');
-      a.className = 'timechip';
-      a.href = it.url || '#';
-      a.textContent = fmtLabel(it);
-      box.appendChild(a);
+    function parseISO(s){ try{ return new Date(s.replace('T',' ') + ':00'); }catch(e){ return null; } }
+    function label(it){
+      if (it.label) return it.label;
+      const d = parseISO(it.start); if(!d) return (it.start||'') + (it.city?(' - '+it.city):'');
+      const mo = d.toLocaleString(undefined,{month:'short'}), day = String(d.getDate()).padStart(2,'0');
+      let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
+      const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
+      return `${mo} ${day}, ${hm} - ${it.city||''}`;
     }
-  }
+    function upcoming(pred, limit=4){
+      return fetch(FEED).then(r=>r.json()).then(all=>{
+        const now=new Date();
+        return all.filter(pred)
+          .map(x=>({...x,_d:parseISO(x.start)}))
+          .filter(x=>x._d && x._d>=now)
+          .sort((a,b)=>a._d-b._d)
+          .slice(0,limit);
+      });
+    }
+    function mount(id, items){
+      const box=document.getElementById(id);
+      if(!box) return;
+      box.innerHTML='';
+      if(!items.length){ box.innerHTML='<span class="muted">New dates posting—check back soon.</span>'; return; }
+      for(const it of items){
+        const a=document.createElement('a');
+        a.className='timechip';
+        a.href=it.url||'#';
+        a.textContent=label(it);
+        box.appendChild(a);
+      }
+    }
+    const isBLS = it => (it.course_family||'').toUpperCase()==='BLS';
+    const isACLS= it => (it.course_family||'').toUpperCase()==='ACLS';
+    const isPALS= it => (it.course_family||'').toUpperCase()==='PALS';
 
-  // Predicates per card
-  const isBLS  = it => (it.course_family||'').toUpperCase()==='BLS';
-  const isACLS = it => (it.course_family||'').toUpperCase()==='ACLS';
-  const isPALS = it => (it.course_family||'').toUpperCase()==='PALS';
-  const isHSI  = it => (it.agency||'').toUpperCase()==='HSI' || /HSI/i.test(it.title||'') || /HSI/i.test(it.certification||'');
-
-  Promise.all([
-    upcomingBy(isBLS).then(v=>mountTimes('times-bls', v)),
-    upcomingBy(isACLS).then(v=>mountTimes('times-acls', v)),
-    upcomingBy(isPALS).then(v=>mountTimes('times-pals', v)),
-  ]).catch(console.error);
+    Promise.all([
+      upcoming(isBLS).then(v=>mount('times-bls', v)),
+      upcoming(isACLS).then(v=>mount('times-acls', v)),
+      upcoming(isPALS).then(v=>mount('times-pals', v)),
+    ]).catch(console.error);
   </script>
 </body>
 </html>
