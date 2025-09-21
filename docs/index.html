@@ -108,6 +108,14 @@
 
     footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
 
+/* mini-3-col layout inside a card */
+.med-triad{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:10px}
+.tri{grid-column:span 4;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+.tri h4{margin:0 0 8px;font-size:14px;letter-spacing:.2px}
+.tri .see{display:inline-block;margin-top:10px;font-weight:700;font-size:12px;text-decoration:none;color:var(--brand-600)}
+@media(max-width:1020px){.tri{grid-column:span 12}}
+
+
     /* === Floating Call button (mobile only) === */
     .call-fab{position:fixed;right:16px;bottom:16px;z-index:1000}
     .call-fab a{
@@ -175,45 +183,82 @@
       AHA/ARC aligned, small groups, same-day eCards.</p>
 
     <div class="grid" role="region" aria-labelledby="medical">
-      <!-- BLS -->
-      <section class="card col-6">
-        <span class="eyebrow"><span class="heart">❤</span> BLS for Providers</span>
-        <h3 class="card-title">Basic Life Support (BLS)</h3>
-        <p class="lede">Pick fast in-person or HeartCode + skills. Ideal for hospital staff, nurses, techs, and students.</p>
-        <div class="pillbar">
-          <a class="pill" href="/courses/medical/?q=BLS">AHA In-Person — See Times</a>
-          <a class="pill alt" href="/courses/medical/?q=HeartCode">AHA Online + Skills</a>
-        </div>
-        <div class="next">Next sessions</div>
-        <div class="timechips" id="times-bls" aria-live="polite"></div>
-      </section>
+  <!-- BLS -->
+  <section class="card col-12">
+    <span class="eyebrow"><span class="heart">❤</span> BLS for Providers</span>
+    <h3 class="card-title">Basic Life Support (BLS)</h3>
+    <p class="lede">Pick fast in-person or HeartCode + skills. Ideal for hospital staff, nurses, techs, and students.</p>
 
-      <!-- ACLS -->
-      <section class="card col-6">
-        <span class="eyebrow">Advanced Cardiovascular Life Support</span>
-        <h3 class="card-title">ACLS</h3>
-        <p class="lede">Initial or renewal. Choose in-person or HeartCode + skills to fit your schedule and learning style.</p>
-        <div class="pillbar">
-          <a class="pill" href="/courses/medical/?q=ACLS">AHA In-Person — See Times</a>
-          <a class="pill alt" href="/courses/medical/?q=ACLS%20HeartCode">AHA Online + Skills</a>
-        </div>
-        <div class="next">Next sessions</div>
-        <div class="timechips" id="times-acls" aria-live="polite"></div>
-      </section>
-
-      <!-- PALS -->
-      <section class="card col-12">
-        <span class="eyebrow">Pediatric Advanced Life Support</span>
-        <h3 class="card-title">PALS</h3>
-        <p class="lede">Initial or renewal. Get the pediatric resuscitation credential your facility requires.</p>
-        <div class="pillbar">
-          <a class="pill" href="/courses/medical/?q=PALS">AHA In-Person — See Times</a>
-          <a class="pill alt" href="/courses/medical/?q=PALS%20HeartCode">AHA Online + Skills</a>
-        </div>
-        <div class="next">Next sessions</div>
-        <div class="timechips" id="times-pals" aria-live="polite"></div>
-      </section>
+    <div class="med-triad">
+      <div class="tri">
+        <h4>In-Person Renewal</h4>
+        <div class="timechips" id="times-bls-ren"></div>
+        <a class="see" href="/courses/medical/?q=BLS%20Renewal">See all BLS Renewal →</a>
+      </div>
+      <div class="tri">
+        <h4>In-Person Initial</h4>
+        <div class="timechips" id="times-bls-init"></div>
+        <a class="see" href="/courses/medical/?q=BLS%20Provider">See all BLS Initial →</a>
+      </div>
+      <div class="tri">
+        <h4>HeartCode BLS</h4>
+        <div class="timechips" id="times-bls-heart"></div>
+        <a class="see" href="/courses/medical/?q=HeartCode%20BLS">See all HeartCode BLS →</a>
+      </div>
     </div>
+  </section>
+
+  <!-- ACLS -->
+  <section class="card col-12">
+    <span class="eyebrow">Advanced Cardiovascular Life Support</span>
+    <h3 class="card-title">ACLS</h3>
+    <p class="lede">Initial or renewal—choose in-person or HeartCode + skills.</p>
+
+    <div class="med-triad">
+      <div class="tri">
+        <h4>In-Person Renewal</h4>
+        <div class="timechips" id="times-acls-ren"></div>
+        <a class="see" href="/courses/medical/?q=ACLS%20Renewal">See all ACLS Renewal →</a>
+      </div>
+      <div class="tri">
+        <h4>In-Person Initial</h4>
+        <div class="timechips" id="times-acls-init"></div>
+        <a class="see" href="/courses/medical/?q=ACLS%20Provider">See all ACLS Initial →</a>
+      </div>
+      <div class="tri">
+        <h4>HeartCode ACLS</h4>
+        <div class="timechips" id="times-acls-heart"></div>
+        <a class="see" href="/courses/medical/?q=ACLS%20HeartCode">See all HeartCode ACLS →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PALS -->
+  <section class="card col-12">
+    <span class="eyebrow">Pediatric Advanced Life Support</span>
+    <h3 class="card-title">PALS</h3>
+    <p class="lede">Initial or renewal—pediatric resuscitation credential your facility needs.</p>
+
+    <div class="med-triad">
+      <div class="tri">
+        <h4>In-Person Renewal</h4>
+        <div class="timechips" id="times-pals-ren"></div>
+        <a class="see" href="/courses/medical/?q=PALS%20Renewal">See all PALS Renewal →</a>
+      </div>
+      <div class="tri">
+        <h4>In-Person Initial</h4>
+        <div class="timechips" id="times-pals-init"></div>
+        <a class="see" href="/courses/medical/?q=PALS%20Provider">See all PALS Initial →</a>
+      </div>
+      <div class="tri">
+        <h4>HeartCode PALS</h4>
+        <div class="timechips" id="times-pals-heart"></div>
+        <a class="see" href="/courses/medical/?q=PALS%20HeartCode">See all HeartCode PALS →</a>
+      </div>
+    </div>
+  </section>
+</div>
+
 
     <!-- HSI blended callout -->
     <section class="card" style="margin-top:16px">
