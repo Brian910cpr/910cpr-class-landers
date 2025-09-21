@@ -400,7 +400,7 @@
     // Seed placeholders so UI isn’t blank if fetch is slow/fails
     ['times-bls','times-acls','times-pals','wk-aha-list','hsi-list'].forEach(id=>setChips(id, []));
 
-    function upcoming(filter, limit=6){
+    function upcoming(filter, limit=15){
       return fetch(FEED).then(r=>r.json()).then(all=>{
         const now=new Date();
         return all.filter(filter)
