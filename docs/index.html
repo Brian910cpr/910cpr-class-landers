@@ -428,15 +428,6 @@ function buildSessionHref(it){
 }
 
 
-
-  function setChips(id, items){
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.innerHTML = items.length
-      ? items.map(it => `<a class="timechip" href="${it.url||"#"}">${chipText(it)}</a>`).join("")
-      : '<span class="micro">New dates posting—check back soon.</span>';
-  }
-
   // Seed placeholders so UI isn’t blank
   [
     "times-bls-ren","times-bls-init","times-bls-heart",
