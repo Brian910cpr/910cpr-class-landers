@@ -4,12 +4,12 @@ on:
   push:
     branches: [ main ]
     paths:
-      - "sessions.csv"          # root CSV
-      - "data/sessions.csv"     # (optional) alt path
-      - "scripts/**"            # if scripts change, rebuild
+      - "sessions.csv"
+      - "data/sessions.csv"
+      - "scripts/**"
       - ".github/workflows/build-from-sessions.yml"
   schedule:
-    - cron: "0 6 * * *"         # daily safety rebuild (06:00 UTC)
+    - cron: "0 6 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.actor != 'github-actions[bot]'   # prevent loops on bot commits
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,6 +43,16 @@ jobs:
             echo "No sessions.csv found; skipping periscope build."
           fi
 
+      - name: List docs changes and print report (if any)
+        shell: bash
+        run: |
+          echo "==== git status docs ===="
+          git status --porcelain docs || true
+          echo "==== tree docs ===="
+          find docs -maxdepth 2 -type f | sort || true
+          echo "==== report preview ===="
+          head -n 80 docs/data/session-parse-report.txt || true
+
       - name: Rebuild sitemap/robots (+ indexes)
         run: python scripts/build_indexes.py
 
@@ -59,3 +69,9 @@ jobs:
           else
             echo "No changes to commit."
           fi
+
+      - name: Upload built docs (artifact for inspection)
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-docs
+          path: docs
