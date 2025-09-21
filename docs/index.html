@@ -466,7 +466,7 @@ function buildSessionHref(it){
   });
 
   const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
-  const LIM_TRIAD = 3, LIM_WORK = 12;
+  const LIM_TRIAD = 6, LIM_WORK = 12;
 
   Promise.all([
     upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
