@@ -108,6 +108,27 @@
   .micro{color:var(--muted);font-size:13px}
 
   footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
+
+/* === Floating Call button (mobile only) === */
+.call-fab{position:fixed;right:16px;bottom:16px;z-index:1000}
+.call-fab a{
+  display:flex;align-items:center;gap:10px;text-decoration:none;
+  background:var(--brand-600);color:#fff;padding:12px 14px;
+  border-radius:9999px;border:1px solid rgba(0,0,0,.08);
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+  font-weight:800;font-size:14px;line-height:1;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
+  transform:translateY(6px);opacity:0;animation:fab-in .35s ease-out .2s forwards
+}
+:root[data-theme="dark"] .call-fab a{background:var(--brand);color:#0b1220}
+.call-fab svg{width:18px;height:18px;flex:0 0 18px;fill:currentColor}
+@media (min-width:840px){.call-fab{display:none}} /* hide on tablet/desktop */
+@keyframes fab-in{to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.call-fab a{animation:none;transform:none;opacity:1}}
+
+
+
+
 </style>
 
 <script>
@@ -375,5 +396,33 @@
       upcoming(faHSI,    10).then(v=>setChips('wk-hsi-list', v)),
     ]).catch(console.error);
   </script>
+<!-- Floating "Call Now" button -->
+<div class="call-fab" aria-label="Call 910-395-5193">
+  <a href="tel:+19103955193" id="fab-call">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.24 1.02l-2.2 2.2z"/>
+    </svg>
+    <span>Call (910) 395-5193</span>
+  </a>
+</div>
+
+<script>
+  // Track tel: clicks (works for the floater and any tel links on the page)
+  document.querySelectorAll('a[href^="tel:"]').forEach(a=>{
+    a.addEventListener('click', ()=>{
+      try{
+        if (window.gtag) gtag('event','click_phone',{
+          event_category:'engagement',
+          event_label: a.id || 'tel_link',
+          value:'910-395-5193'
+        });
+        if (window.dataLayer) window.dataLayer.push({
+          event:'click_phone', phone:'910-395-5193', placement: a.id || 'tel_link'
+        });
+      }catch(e){}
+    });
+  });
+</script>
+
 </body>
 </html>
