@@ -431,11 +431,11 @@
 
     // ---------- Run ----------
     Promise.all([
-      upcoming(isBLS,  4).then(v => setChips('times-bls',  v)),
-      upcoming(isACLS, 4).then(v => setChips('times-acls', v)),
-      upcoming(isPALS, 4).then(v => setChips('times-pals', v)),
-      upcoming(faAhaAny,10).then(v => setChips('wk-aha-list', v)),
-      upcoming(faHSI,  12).then(v => setChips('hsi-list',   v)),
+      upcoming(isBLS,  8).then(v => setChips('times-bls',  v)),
+      upcoming(isACLS, 8).then(v => setChips('times-acls', v)),
+      upcoming(isPALS, 8).then(v => setChips('times-pals', v)),
+      upcoming(faAhaAny,15).then(v => setChips('wk-aha-list', v)),
+      upcoming(faHSI,  15).then(v => setChips('hsi-list',   v)),
     ]).catch(console.error);
 
     // ---------- A11y + hygiene ----------
