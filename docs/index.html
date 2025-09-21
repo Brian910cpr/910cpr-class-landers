@@ -8,7 +8,6 @@
 <link rel="canonical" href="https://www.910cpr.com/" />
 
 <style>
-  /* ---------- Design tokens (light) ---------- */
   :root{
     --bg:#fafafa; --text:#0f172a; --muted:#64748b;
     --chip-bg:#eef2ff; --chip-b:#e2e8f0;
@@ -17,7 +16,6 @@
     --ok-bg:#ecfdf5; --ok-b:#d1fae5;
     --badge-bg:#16a34a14; --badge-b:#16a34a22; --badge-fg:#166534;
   }
-  /* ---------- Dark theme ---------- */
   :root[data-theme="dark"]{
     --bg:#0a0f1a; --text:#e5e7eb; --muted:#94a3b8;
     --chip-bg:#0f172a; --chip-b:#1f2937;
@@ -26,7 +24,6 @@
     --ok-bg:#052e1f; --ok-b:#064e3b;
     --badge-bg:#16a34a26; --badge-b:#16a34a40; --badge-fg:#86efac;
   }
-
   html,body{margin:0;background:var(--bg);color:var(--text);
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
   .wrap{max-width:1100px;margin:0 auto;padding:22px}
@@ -48,8 +45,8 @@
   :root[data-theme="dark"] .lede{color:#98a2b3}
 
   .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-  .col-6{grid-column:span 6} .col-4{grid-column:span 4} .col-12{grid-column:span 12}
-  @media(max-width:900px){.col-6,.col-4{grid-column:span 12}}
+  .col-6{grid-column:span 6} .col-4{grid-column:span 4} .col-3{grid-column:span 3} .col-12{grid-column:span 12}
+  @media(max-width:1000px){.col-6,.col-4,.col-3{grid-column:span 12}}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
   .card-title{margin:0 0 6px;font-size:18px}
@@ -79,7 +76,6 @@
 </style>
 
 <script>
-  /* Theme toggle (persists) */
   (function(){
     const KEY="theme";
     const root=document.documentElement;
@@ -124,10 +120,9 @@
       AHA/ARC aligned, small groups, same-day eCards.</p>
 
     <div class="grid" role="region" aria-labelledby="medical">
-      <!-- BLS -->
-      <section class="card col-6" aria-labelledby="t-bls">
+      <section class="card col-6">
         <span class="eyebrow">BLS for Providers</span>
-        <h3 id="t-bls" class="card-title">Basic Life Support (BLS)</h3>
+        <h3 class="card-title">Basic Life Support (BLS)</h3>
         <p class="muted">Choose fast in-person or HeartCode + skills. Ideal for hospital staff, nurses, techs, and students.</p>
         <div class="next">Next sessions:</div>
         <div class="timechips" id="times-bls"></div>
@@ -136,11 +131,9 @@
           <a class="btn btn-alt" href="/courses/medical/?q=HeartCode">AHA Online + Skills</a>
         </div>
       </section>
-
-      <!-- ACLS -->
-      <section class="card col-6" aria-labelledby="t-acls">
+      <section class="card col-6">
         <span class="eyebrow">Advanced Cardiovascular Life Support</span>
-        <h3 id="t-acls" class="card-title">ACLS</h3>
+        <h3 class="card-title">ACLS</h3>
         <p class="muted">Initial or renewal. Pick in-person or HeartCode + skills to fit your schedule and learning style.</p>
         <div class="next">Next sessions:</div>
         <div class="timechips" id="times-acls"></div>
@@ -149,11 +142,9 @@
           <a class="btn btn-alt" href="/courses/medical/?q=ACLS%20HeartCode">AHA Online + Skills</a>
         </div>
       </section>
-
-      <!-- PALS -->
-      <section class="card col-12" aria-labelledby="t-pals">
+      <section class="card col-12">
         <span class="eyebrow">Pediatric Advanced Life Support</span>
-        <h3 id="t-pals" class="card-title">PALS</h3>
+        <h3 class="card-title">PALS</h3>
         <p class="muted">Initial or renewal. Get the pediatric resuscitation credential your facility requires.</p>
         <div class="next">Next sessions:</div>
         <div class="timechips" id="times-pals"></div>
@@ -165,9 +156,9 @@
     </div>
 
     <!-- HSI blended -->
-    <section class="card" style="margin-top:18px" aria-labelledby="t-hsi">
+    <section class="card" style="margin-top:18px">
       <span class="eyebrow">Healthcare + Workplace Hybrid</span>
-      <h3 id="t-hsi" class="card-title">
+      <h3 class="card-title">
         BLS &amp; First Aid — Online + Skills (HSI)
         <span class="badge badge-green">Covers BLS + First Aid in one</span>
       </h3>
@@ -185,107 +176,99 @@
       </div>
     </section>
 
-    <!-- WORKPLACES -->
+    <!-- WORKPLACES (4 tiles: 3 content + 1 "Next workplace dates" panel) -->
     <h2 id="workplaces" class="section-title" style="margin-top:28px">
       <a href="/courses/workplaces/">For Workplaces (OSHA-Acceptable)</a>
     </h2>
     <p class="lede">OSHA-friendly <strong>CPR/AED &amp; First Aid</strong> for crews and teams. Heartsaver &amp; HSI options, on-site or at our classrooms. Flexible schedules and group rates.</p>
 
-    <!-- Workplace tiles (3 columns, shared time chips per tile type) -->
     <div class="grid" role="region" aria-labelledby="workplaces">
-      <!-- Column: Industry & Construction -->
-      <div class="col-4">
+      <!-- Column 1: Industry & Construction -->
+      <div class="col-3">
         <h3 class="card-title">Industry &amp; Construction</h3>
-
-        <section class="card" aria-labelledby="wk-aha-ip">
-          <h4 id="wk-aha-ip" class="card-title">First Aid / CPR / AED — In Person</h4>
-          <p class="muted">Practical, on-site friendly option that ticks OSHA compliance boxes.</p>
-          <div class="next">Next sessions:</div>
-          <div id="times-fa-aha-ip" class="timechips"></div>
-          <a class="btn" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a>
-        </section>
-
-        <section class="card" aria-labelledby="wk-aha-bl">
-          <h4 id="wk-aha-bl" class="card-title">First Aid / CPR / AED — Online + Skills</h4>
-          <p class="muted">Fast blended format for minimal downtime; same OSHA acceptance.</p>
-          <div class="next">Next sessions:</div>
-          <div id="times-fa-aha-bl" class="timechips"></div>
-          <a class="btn btn-alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a>
-        </section>
-
-        <section class="card" aria-labelledby="wk-hsi-bl">
-          <h4 id="wk-hsi-bl" class="card-title">First Aid / CPR / AED — Online + Skills (HSI)</h4>
-          <p class="muted">One sitting covers both BLS + First Aid where policies allow.</p>
-          <div class="next">Next sessions:</div>
-          <div id="times-fa-hsi" class="timechips"></div>
-          <a class="btn btn-alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a>
-        </section>
-      </div>
-
-      <!-- Column: Child & Senior Care -->
-      <div class="col-4">
-        <h3 class="card-title">Child &amp; Senior Care</h3>
-
         <section class="card">
           <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
-          <p class="muted">Scenario-based training for childcare, schools, and elder care teams.</p>
-          <div class="next">Next sessions:</div>
-          <div class="timechips" data-clone="times-fa-aha-ip"></div>
+          <p class="muted">Practical, on-site friendly option that ticks OSHA boxes.</p>
           <a class="btn" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a>
         </section>
-
         <section class="card">
           <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
-          <p class="muted">Blended format reduces downtime while meeting program requirements.</p>
-          <div class="next">Next sessions:</div>
-          <div class="timechips" data-clone="times-fa-aha-bl"></div>
+          <p class="muted">Blended format for minimal downtime; same OSHA acceptance.</p>
           <a class="btn btn-alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a>
         </section>
       </div>
 
-      <!-- Column: USCG / DAN -->
-      <div class="col-4">
-        <h3 class="card-title">USCG / DAN (Maritime &amp; Diving)</h3>
+      <!-- Column 2: Child & Senior Care -->
+      <div class="col-3">
+        <h3 class="card-title">Child &amp; Senior Care</h3>
+        <section class="card">
+          <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
+          <p class="muted">Scenario-based training for childcare, schools, elder care.</p>
+          <a class="btn" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a>
+        </section>
+        <section class="card">
+          <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
+          <p class="muted">Blended format; keeps programs running while staff certify.</p>
+          <a class="btn btn-alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a>
+        </section>
+      </div>
 
+      <!-- Column 3: USCG / DAN -->
+      <div class="col-3">
+        <h3 class="card-title">USCG / DAN (Maritime &amp; Diving)</h3>
         <section class="card">
           <h4 class="card-title">First Aid / CPR / AED — In Person</h4>
           <p class="muted">On-deck readiness with practical, scenario-based training.</p>
-          <div class="next">Next sessions:</div>
-          <div class="timechips" data-clone="times-fa-aha-ip"></div>
           <a class="btn" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a>
         </section>
-
         <section class="card">
           <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
           <p class="muted">Great for rotating watches and irregular schedules.</p>
-          <div class="next">Next sessions:</div>
-          <div class="timechips" data-clone="times-fa-aha-bl"></div>
           <a class="btn btn-alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a>
         </section>
       </div>
+
+      <!-- Column 4: Next workplace dates (single place for times) -->
+      <aside class="col-3">
+        <section class="card" aria-labelledby="wk-next">
+          <h3 id="wk-next" class="card-title">Next workplace dates</h3>
+
+          <div class="muted" style="font-weight:700;margin-top:8px">CPR/AED + First Aid</div>
+          <div class="timechips" id="wk-aha-list"></div>
+          <div class="row" style="margin-bottom:8px">
+            <a class="chip" href="/courses/workplaces/?q=Heartsaver&city=Wilmington">See all — Wilmington</a>
+            <a class="chip" href="/courses/workplaces/?q=Heartsaver&city=Burgaw">See all — Burgaw</a>
+          </div>
+
+          <div class="muted" style="font-weight:700;margin-top:10px">BLS &amp; First Aid (HSI blended)</div>
+          <div class="timechips" id="wk-hsi-list"></div>
+          <div class="row">
+            <a class="chip" href="/courses/workplaces/?q=HSI&city=Wilmington">See all — Wilmington</a>
+            <a class="chip" href="/courses/workplaces/?q=HSI&city=Burgaw">See all — Burgaw</a>
+          </div>
+        </section>
+      </aside>
     </div>
 
     <footer>© 910CPR — Live schedule pulls from HOVN. Questions? <a href="tel:+19107778825">Call or text (910) 777-8825</a>.</footer>
   </div>
 
   <script>
-    // ------- Populate "Next sessions" chips from /periscope_full.json -------
     const FEED="/periscope_full.json";
 
-    const txt = s => (s||'').toUpperCase();
-    const has = (s, r) => r.test(s||'');
-
+    const U = s => (s||"").toUpperCase();
     function parseISO(s){ try{ return new Date(s.replace('T',' ') + ':00'); }catch(e){ return null; } }
     function chipLabel(it){
       if (it.label) return it.label;
       const d = parseISO(it.start);
-      if(!d) return (it.start||'') + (it.city?(' - '+it.city):'');
-      const mo = d.toLocaleString(undefined,{month:'short'}), day = String(d.getDate()).padStart(2,'0');
+      if(!d) return (it.start||'') + (it.city?(' — '+it.city):'');
+      const mo = d.toLocaleString(undefined,{month:'short'});
+      const day = String(d.getDate()).padStart(2,'0');
       let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
       const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
-      return `${mo} ${day}, ${hm} - ${it.city||''}`;
+      return `${mo} ${day}, ${hm} — ${it.city||''}`;
     }
-    function upcoming(filterFn, limit=4){
+    function upcoming(filterFn, limit=8){
       return fetch(FEED).then(r=>r.json()).then(all=>{
         const now=new Date();
         return all.filter(filterFn)
@@ -295,7 +278,7 @@
           .slice(0,limit);
       });
     }
-    function mount(id, items){
+    function mountList(id, items){
       const box=document.getElementById(id);
       if(!box) return;
       box.innerHTML='';
@@ -307,36 +290,38 @@
         a.textContent=chipLabel(it);
         box.appendChild(a);
       }
-      // clone to any tiles that reference this by data-clone
-      document.querySelectorAll(`.timechips[data-clone="${id}"]`).forEach(cl=>{
-        cl.innerHTML = box.innerHTML;
-      });
     }
 
-    // Medical
-    const isBLS  = it => txt(it.course_family)==='BLS';
-    const isACLS = it => txt(it.course_family)==='ACLS';
-    const isPALS = it => txt(it.course_family)==='PALS';
+    // Medical tiles still show local times
+    const isBLS  = it => U(it.course_family)==='BLS';
+    const isACLS = it => U(it.course_family)==='ACLS';
+    const isPALS = it => U(it.course_family)==='PALS';
 
-    // Workplace filters
+    // Workplace groups (panel-only)
     const isAHA = it => /AHA|HEARTSAVER/i.test(it.agency||'') || /HEARTSAVER/i.test((it.title||'')+(it.certification||''));
     const looksBlended = it => /BLENDED|ONLINE|HEARTCODE/i.test((it.title||'')+(it.certification||''));
-    const isFA  = it => txt(it.course_family)==='FA' || /FIRST AID|HEARTSAVER|WORKPLACE/i.test((it.title||'')+(it.certification||''));
+    const isFA  = it => U(it.course_family)==='FA' || /FIRST AID|HEARTSAVER|WORKPLACE/i.test((it.title||'')+(it.certification||''));
     const isHSI = it => /HSI/i.test(it.agency||'') || /HSI/i.test((it.title||'')+(it.certification||''));
 
-    const faAhaInPerson = it => isFA(it) && isAHA(it) && !looksBlended(it);
-    const faAhaBlended  = it => isFA(it) && isAHA(it) &&  looksBlended(it);
-    const faHSI         = it => isFA(it) && isHSI(it);
+    const faAhaAny = it => isFA(it) && isAHA(it);     // AHA in-person + blended, all together
+    const faHSI    = it => isFA(it) && isHSI(it);     // HSI blended
 
-    // Mount everything
     Promise.all([
-      upcoming(isBLS).then(v=>mount('times-bls', v)),
-      upcoming(isACLS).then(v=>mount('times-acls', v)),
-      upcoming(isPALS).then(v=>mount('times-pals', v)),
+      upcoming(isBLS, 4).then(v=>{
+        const box=document.getElementById('times-bls');
+        if(box){ box.innerHTML = v.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipLabel(it)}</a>`).join('') || '<span class="muted">New dates posting—check back soon.</span>'; }
+      }),
+      upcoming(isACLS, 4).then(v=>{
+        const box=document.getElementById('times-acls');
+        if(box){ box.innerHTML = v.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipLabel(it)}</a>`).join('') || '<span class="muted">New dates posting—check back soon.</span>'; }
+      }),
+      upcoming(isPALS, 4).then(v=>{
+        const box=document.getElementById('times-pals');
+        if(box){ box.innerHTML = v.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipLabel(it)}</a>`).join('') || '<span class="muted">New dates posting—check back soon.</span>'; }
+      }),
 
-      upcoming(faAhaInPerson).then(v=>mount('times-fa-aha-ip', v)),
-      upcoming(faAhaBlended).then(v=>mount('times-fa-aha-bl', v)),
-      upcoming(faHSI).then(v=>mount('times-fa-hsi', v)),
+      upcoming(faAhaAny, 10).then(v=>mountList('wk-aha-list', v)),
+      upcoming(faHSI,    10).then(v=>mountList('wk-hsi-list', v)),
     ]).catch(console.error);
   </script>
 </body>
