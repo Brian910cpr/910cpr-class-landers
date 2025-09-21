@@ -494,60 +494,67 @@
   </div>
 
   <script>
-    /* ------------ Live “next sessions” ------------ */
-    const FEED="/periscope_full.json";
-    const U = s => (s||'').toUpperCase();
-    const has = (s, re) => re.test(s||'');
-    function parseISO(s){ try{ return new Date(s.replace('T',' ') + ':00'); }catch(e){ return null; } }
-    function chipText(it){
-      if (it.label) return it.label;
-      const d=parseISO(it.start); if(!d) return (it.start||'') + (it.city?(' — '+it.city):'');
-      const mo=d.toLocaleString(undefined,{month:'short'});
-      const day=String(d.getDate()).padStart(2,'0');
-      let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
-      const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
-      return `${mo} ${day}, ${hm} — ${it.city||''}`;
-    }
-    function upcoming(filter, limit=6){
-      return fetch(FEED).then(r=>r.json()).then(all=>{
-        const now=new Date();
-        return all.filter(filter)
-          .map(x=>({...x,_d:parseISO(x.start)}))
-          .filter(x=>x._d && x._d>=now)
-          .sort((a,b)=>a._d-b._d)
-          .slice(0,limit);
-      });
-    }
-    function setChips(elId, items){
-      const box=document.getElementById(elId);
-      if(!box) return;
-      box.innerHTML = items.length
-        ? items.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipText(it)}</a>`).join('')
-        : '<span class="micro">New dates posting—check back soon.</span>';
-    }
+  const FEED = "/periscope_full.json";
+  const U = s => (s||'').toUpperCase();
+  const MIX = it => `${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''}`;
 
-    /* Medical families */
-    const isBLS  = it => U(it.course_family)==='BLS';
-    const isACLS = it => U(it.course_family)==='ACLS';
-    const isPALS = it => U(it.course_family)==='PALS';
+  function parseISO(s){
+    if(!s) return null;
+    const t = s.trim().replace(' ', 'T').replace(/T(\d{2}:\d{2})(?!:)/,'T$1:00');
+    const d = new Date(t);
+    return isNaN(d) ? null : d;
+  }
+  function chipText(it){
+    if (it.label) return it.label;
+    const d = parseISO(it.start); if(!d) return (it.start||'') + (it.city?(' — '+it.city):'');
+    const mo = d.toLocaleString(undefined,{month:'short'});
+    const day = String(d.getDate()).padStart(2,'0');
+    let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'p':'a'; h=h%12||12;
+    const hm = m ? `${h}:${String(m).padStart(2,'0')}${ap}` : `${h}${ap}`;
+    return `${mo} ${day}, ${hm} — ${it.city||''}`;
+  }
+  function setChips(id, items){
+    const box = document.getElementById(id);
+    if (!box) return;
+    box.innerHTML = items.length
+      ? items.map(it=>`<a class="timechip" href="${it.url||'#'}">${chipText(it)}</a>`).join('')
+      : '<span class="micro">New dates posting—check back soon.</span>';
+  }
+  ['times-bls','times-acls','times-pals','wk-aha-list','hsi-list'].forEach(id=>setChips(id, []));
 
-    /* Workplace groupings for the right-hand panel */
-    const looksFA = it => U(it.course_family)==='FA' || has((it.title||'')+(it.certification||''),/FIRST AID|HEARTSAVER|WORKPLACE/i);
-    const isAHA   = it => has(it.agency,/AHA|HEARTSAVER/i) || has((it.title||'')+(it.certification||''),/HEARTSAVER/i);
-    const isHSI   = it => has(it.agency,/HSI/i) || has((it.title||'')+(it.certification||''),/HSI/i);
+  function upcoming(filter, limit=6){
+    return fetch(FEED).then(r=>r.json()).then(all=>{
+      const now=new Date();
+      return all.filter(filter)
+        .map(x=>({...x,_d:parseISO(x.start)}))
+        .filter(x=>x._d && x._d>=now)
+        .sort((a,b)=>a._d-b._d)
+        .slice(0,limit);
+    });
+  }
 
-    const faAhaAny = it => looksFA(it) && isAHA(it);  // both IP + blended
-    const faHSI    = it => looksFA(it) && isHSI(it);  // HSI blended
+  // Medical
+  const isBLS  = it => U(it.course_family)==='BLS';
+  const isACLS = it => U(it.course_family)==='ACLS';
+  const isPALS = it => U(it.course_family)==='PALS';
 
-    Promise.all([
-      upcoming(isBLS, 4).then(v=>setChips('times-bls', v)),
-      upcoming(isACLS,4).then(v=>setChips('times-acls',v)),
-      upcoming(isPALS,4).then(v=>setChips('times-pals',v)),
+  // Workplace
+  const looksFA = it => U(it.course_family)==='FA' ||
+    /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(MIX(it));
+  const isAHA = it => /AHA|HEARTSAVER/i.test(MIX(it));
+  const isHSI = it => /(^|[^A-Z])HSI([^A-Z]|$)/i.test(MIX(it));
 
-      upcoming(faAhaAny, 10).then(v=>setChips('wk-aha-list', v)),
-      upcoming(faHSI,    10).then(v=>setChips('wk-hsi-list', v)),
-    ]).catch(console.error);
-  </script>
+  const faAhaAny = it => looksFA(it) && isAHA(it);
+  const faHSI    = it => looksFA(it) && isHSI(it);
+
+  Promise.all([
+    upcoming(isBLS,  4).then(v=>setChips('times-bls', v)),
+    upcoming(isACLS, 4).then(v=>setChips('times-acls',v)),
+    upcoming(isPALS, 4).then(v=>setChips('times-pals',v)),
+    upcoming(faAhaAny,10).then(v=>setChips('wk-aha-list', v)),
+    upcoming(faHSI,   8).then(v=>setChips('hsi-list', v))
+  ]).catch(console.error);
+</script>
 
 <script>
   // ... keep parseISO/chipText/upcoming/setChips above ...
