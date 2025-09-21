@@ -400,6 +400,35 @@
     return `${mo} ${day}, ${hm} — ${it.city||""}`;
   }
 
+function buildSessionHref(it){
+  // 1) direct URL if present
+  if (it.url) return it.url;
+
+  // 2) direct registration link if present (various possible keys)
+  const reg = it.registration || it.reg_link || it.registration_link || "";
+  if (reg) return reg;
+
+  // 3) derive a session page path: /classes/YYYY-MM-DD_HH-MM_ID_City.html
+  const d = parseISO(it.start);
+  const sid = it.id || it.session_id || it.hovn_id;
+  if (d && sid){
+    const y  = d.getFullYear();
+    const mo = String(d.getMonth()+1).padStart(2,'0');
+    const da = String(d.getDate()).padStart(2,'0');
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    const city = String(it.city || it.location || "")
+      .replace(/[^A-Za-z0-9]+/g,'-')
+      .replace(/^-+|-+$/g,'');
+    return `/classes/${y}-${mo}-${da}_${hh}-${mm}_${sid}_${city}.html`;
+  }
+
+  // 4) last resort
+  return '/courses/medical/';
+}
+
+
+
   function setChips(id, items){
     const el = document.getElementById(id);
     if(!el) return;
