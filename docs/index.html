@@ -455,6 +455,48 @@
           .slice(0,limit);
       });
     }
+<script>
+  // Helpers
+  const U = s => (s||'').toUpperCase();
+  const TXT = it => `${it.title||''} ${it.course||''} ${it.certification||''} ${it.agency||''} ${it.format||''}`;
+
+  const isHeartcoded = it => /HEART\s*CODE|HEARTCODE|ONLINE\s*\+\s*SKILLS|SKILLS\s*ASSESSMENT/i.test(TXT(it));
+  const isRenewal    = it => /\bRENEW(AL)?\b|UPDATE\b/i.test(TXT(it));
+  const isBlended    = it => /BLENDED/i.test(TXT(it));
+
+  const fam = f => it => U(it.course_family)===f;
+
+  // Triad filters per family
+  const tri = f => ({
+    ren:   it => fam(f)(it) && isRenewal(it)        && !isHeartcoded(it),           // in-person renewal
+    init:  it => fam(f)(it) && !isRenewal(it)       && !isHeartcoded(it) && !isBlended(it), // in-person initial
+    heart: it => fam(f)(it) && isHeartcoded(it)                                          // heartcode
+  });
+
+  // Seed placeholders (so UI never looks empty)
+  ['times-bls-ren','times-bls-init','times-bls-heart',
+   'times-acls-ren','times-acls-init','times-acls-heart',
+   'times-pals-ren','times-pals-init','times-pals-heart'
+  ].forEach(id => setChips(id, []));
+
+  const LIM = 3; // how many times per column
+
+  const BLS = tri('BLS'), ACLS = tri('ACLS'), PALS = tri('PALS');
+
+  Promise.all([
+    upcoming(BLS.ren,   LIM).then(v=>setChips('times-bls-ren',   v)),
+    upcoming(BLS.init,  LIM).then(v=>setChips('times-bls-init',  v)),
+    upcoming(BLS.heart, LIM).then(v=>setChips('times-bls-heart', v)),
+
+    upcoming(ACLS.ren,   LIM).then(v=>setChips('times-acls-ren',   v)),
+    upcoming(ACLS.init,  LIM).then(v=>setChips('times-acls-init',  v)),
+    upcoming(ACLS.heart, LIM).then(v=>setChips('times-acls-heart', v)),
+
+    upcoming(PALS.ren,   LIM).then(v=>setChips('times-pals-ren',   v)),
+    upcoming(PALS.init,  LIM).then(v=>setChips('times-pals-init',  v)),
+    upcoming(PALS.heart, LIM).then(v=>setChips('times-pals-heart', v)),
+  ]).catch(console.error);
+</script>
 
     // ---------- Filters ----------
     // Medical
