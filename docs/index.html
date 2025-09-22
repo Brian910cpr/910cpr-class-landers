@@ -7,7 +7,7 @@
   <meta name="description" content="Live CPR/AED & First Aid classes in Wilmington & Burgaw. BLS, ACLS, PALS for healthcare; OSHA-acceptable workplace options; pediatric/family courses. Enroll online." />
   <link rel="canonical" href="https://www.910cpr.com/" />
 
-  <!-- Favicon (inline, no 404s) -->
+  <!-- Favicon (inline to avoid 404s) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232563eb'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='28' fill='white' font-family='Arial, sans-serif'%3E9%3C/text%3E%3C/svg%3E">
 
   <!-- Schema -->
@@ -19,7 +19,7 @@
     "url":"https://www.910cpr.com/",
     "telephone":"+1-910-395-5193",
     "areaServed":["Wilmington NC","Burgaw NC"]
-  }<script id="910cpr-schedule"
+  }
   </script>
 
   <style>
@@ -68,13 +68,11 @@
     .callout.success{border:1px solid var(--ok-b);background:var(--ok-bg)}
     .micro{color:var(--muted);font-size:13px}
     footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
-    /* mini-3-col layout inside a card */
     .med-triad{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:10px}
     .tri{grid-column:span 4;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
     .tri h4{margin:0 0 8px;font-size:14px;letter-spacing:.2px}
     .tri .see{display:inline-block;margin-top:10px;font-weight:700;font-size:12px;text-decoration:none;color:var(--brand-600)}
     @media(max-width:1020px){.tri{grid-column:span 12}}
-    /* Floating Call button (mobile only) */
     .call-fab{position:fixed;right:16px;bottom:16px;z-index:1000}
     .call-fab a{display:flex;align-items:center;gap:10px;text-decoration:none;background:var(--brand-600);color:#fff;padding:12px 14px;border-radius:9999px;border:1px solid rgba(0,0,0,.08);box-shadow:0 8px 24px rgba(0,0,0,.18);font-weight:800;font-size:14px;line-height:1;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateY(6px);opacity:0;animation:fab-in .35s ease-out .2s forwards}
     :root[data-theme="dark"] .call-fab a{background:var(--brand);color:#0b1220}
@@ -91,8 +89,12 @@
       const initial=localStorage.getItem(KEY) || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
       apply(initial);
       window.toggleTheme=()=>apply(root.dataset.theme==="dark"?"light":"dark");
-      function apply(t){ root.dataset.theme=t; try{localStorage.setItem(KEY,t)}catch{} 
-        const b=document.getElementById("theme-toggle"); if(b){ b.textContent=t==="dark"?"Light":"Dark"; b.setAttribute("aria-pressed",String(t==="dark"));}}
+      function apply(t){
+        root.dataset.theme=t;
+        try{localStorage.setItem(KEY,t)}catch{}
+        const b=document.getElementById("theme-toggle");
+        if(b){ b.textContent=t==="dark"?"Light":"Dark"; b.setAttribute("aria-pressed",String(t==="dark")); }
+      }
     })();
   </script>
 </head>
@@ -233,12 +235,14 @@
           <p class="lede">Practical, on-site friendly course that ticks OSHA compliance boxes.</p>
           <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
         </section>
+
         <section class="card">
           <span class="eyebrow">Heartsaver (AHA) — Blended</span>
           <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
           <p class="lede">Fast blended format; same OSHA acceptance.</p>
           <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
         </section>
+
         <section class="card">
           <span class="eyebrow">Workforce Safety</span>
           <h4 class="card-title">OSHA 10 / OSHA 30</h4>
@@ -260,12 +264,14 @@
           <p class="lede">Scenario-based training for childcare, schools, and elder-care teams.</p>
           <div class="pillbar"><a class="pill" href="/courses/workplaces/?q=Heartsaver">AHA — See Times</a></div>
         </section>
+
         <section class="card">
           <span class="eyebrow">Heartsaver (AHA) — Blended</span>
           <h4 class="card-title">First Aid / CPR / AED — Online + Skills</h4>
           <p class="lede">Blended format reduces downtime while meeting program requirements.</p>
           <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">AHA — See Times</a></div>
         </section>
+
         <!-- HSI BLS/FA with live times -->
         <section class="card">
           <span class="eyebrow">HSI (blended)</span>
@@ -338,346 +344,180 @@
     </a>
   </div>
 
-<script id="910cpr-schedule" defer>
-(() => {
-  // ---------- Feed locations (relative first) ----------
-  const FEED_CANDIDATES = [
-    "periscope_full.json",
-    "./periscope_full.json",
-    "/periscope_full.json"
-  ];
-  let FEED_PROMISE = null;
-
-  async function loadFeed() {
-    for (const u of FEED_CANDIDATES) {
-      try {
-        const r = await fetch(u, { cache: "no-store" });
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const json = await r.json();
-        console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
-        return json;
-      } catch (e) {
-        console.warn("[910CPR] Feed failed:", u, e.message || e);
+  <!-- Schedule (fixed: robust date parsing + single cached feed) -->
+  <script id="910cpr-schedule" defer>
+  (() => {
+    // ---------- Feed (prefer relative) ----------
+    const FEED_CANDIDATES = ["periscope_full.json","./periscope_full.json","/periscope_full.json"];
+    let FEED_PROMISE = null;
+    async function loadFeed(){
+      for(const u of FEED_CANDIDATES){
+        try{
+          const r = await fetch(u, {cache:"no-store"});
+          if(!r.ok) throw new Error(`HTTP ${r.status}`);
+          const json = await r.json();
+          console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
+          return json;
+        }catch(e){
+          console.warn("[910CPR] Feed failed:", u, e.message||e);
+        }
       }
+      throw new Error("All feed locations failed (404).");
     }
-    throw new Error("All feed locations failed (404).");
-  }
-  async function getFeed() {
-    if (!FEED_PROMISE) FEED_PROMISE = loadFeed();
-    return FEED_PROMISE;
-  }
+    async function getFeed(){ return FEED_PROMISE || (FEED_PROMISE = loadFeed()); }
 
-  // ---------- Helpers ----------
-  const U = s => (s||"").toUpperCase();
-  const TXT = it => `${it.title||""} ${it.course||""} ${it.certification||""} ${it.agency||""} ${it.format||""}`;
+    // ---------- Helpers ----------
+    const U = s => (s||"").toUpperCase();
+    const TXT = it => `${it.title||""} ${it.course||""} ${it.certification||""} ${it.agency||""} ${it.format||""}`;
 
-  // Very tolerant date parser: ISO, "YYYY-MM-DD HH:MM", with AM/PM, optional TZ letters (ET/EST/EDT/etc.)
-  function parseISO(s) {
-    if (!s) return null;
-    const raw = String(s).trim();
+    // Super-tolerant parser: ISO, Y-M-D H:MM (AM/PM + TZ ok), and US M/D/YYYY H:MM (AM/PM + TZ ok)
+    function parseISO(s){
+      if(!s) return null;
+      const raw = String(s).trim();
 
-    // 0) native first
-    let d = new Date(raw);
-    if (!isNaN(d)) return d;
+      // A) Native
+      let d = new Date(raw);
+      if(!isNaN(d)) return d;
 
-    // 1) Collapse multiple spaces and trim
-    const t = raw.replace(/\s+/g, " ").trim();
+      // B) Collapse spaces
+      const t = raw.replace(/\s+/g," ").trim();
 
-    // 2) General matcher: 2025-03-20 9:00 (AM|PM)? (TZ)?
-    let m = t.match(
-      /^(\d{4}-\d{2}-\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Z]{1,4})?$/i
-    );
-    if (m) {
-      let [, ymd, hh, mm, ss, ap, tz] = m;
-      let H = parseInt(hh, 10);
-      if (ap) {
-        ap = ap.toUpperCase();
-        if (ap === "PM" && H !== 12) H += 12;
-        if (ap === "AM" && H === 12) H = 0;
+      // C) YYYY-MM-DD HH:MM[:SS] [AM|PM] [TZ]
+      let m = t.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Z]{1,4})?$/i);
+      if(m){
+        let [, ymd, hh, mm, ss, ap, tz] = m;
+        let H = parseInt(hh,10);
+        if(ap){
+          ap = ap.toUpperCase();
+          if(ap==="PM" && H!==12) H+=12;
+          if(ap==="AM" && H===12) H=0;
+        }
+        const tzMap = { EDT:"-04:00", EST:"-05:00", ET:"-05:00", CDT:"-05:00", CST:"-06:00", PDT:"-07:00", PST:"-08:00" };
+        const off = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
+        const iso = `${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}${off}`;
+        d = new Date(iso);
+        if(!isNaN(d)) return d;
+        d = new Date(`${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}`);
+        if(!isNaN(d)) return d;
       }
-      const tzMap = {
-        EDT: "-04:00", EST: "-05:00", ET: "-05:00",
-        CDT: "-05:00", CST: "-06:00",
-        PDT: "-07:00", PST: "-08:00"
-      };
-      const off = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
-      const iso = `${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}${off}`;
-      d = new Date(iso);
-      if (!isNaN(d)) return d;
 
-      // Try without offset (local)
-      d = new Date(`${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}`);
-      if (!isNaN(d)) return d;
+      // D) US M/D/YYYY HH:MM [AM|PM] [TZ]
+      m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})\s*(AM|PM)?\s*([A-Z]{1,4})?$/i);
+      if(m){
+        let [, mo, da, yr, hh, mm, ap, tz] = m;
+        let H = parseInt(hh,10);
+        if(ap){
+          ap = ap.toUpperCase();
+          if(ap==="PM" && H!==12) H+=12;
+          if(ap==="AM" && H===12) H=0;
+        }
+        const y = parseInt(yr,10), M = parseInt(mo,10)-1, D = parseInt(da,10);
+        d = new Date(y, M, D, H, parseInt(mm,10), 0);
+        if(!isNaN(d)) return d;
+      }
+
+      // E) Fallback: replace space with T and add seconds
+      const fb = new Date(t.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00"));
+      return isNaN(fb) ? null : fb;
     }
 
-    // 3) Plain ISO without seconds
-    m = t.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}):(\d{2})$/);
-    if (m) {
-      const iso = `${m[1]}T${m[2]}:${m[3]}:00`;
-      d = new Date(iso);
-      if (!isNaN(d)) return d;
+    function chipText(it){
+      if (it.label) return it.label;
+      const d = parseISO(it.start);
+      if(!d) return (it.start||"") + (it.city?(" — "+it.city):"");
+      const mo = d.toLocaleString(undefined,{month:"short"});
+      const day = String(d.getDate()).padStart(2,"0");
+      let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
+      const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
+      return `${mo} ${day}, ${hm} — ${it.city||""}`;
     }
 
-    // 4) Remove trailing TZ letters and retry
-    const t2 = t.replace(/\s*[A-Z]{1,4}$/, "");
-    d = new Date(t2.replace(" ", "T"));
-    return isNaN(d) ? null : d;
-  }
+    function setChips(id, items){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.innerHTML = items.length
+        ? items.map(it => `<a class="timechip" href="${it.url||"#"}">${chipText(it)}</a>`).join("")
+        : '<span class="micro">New dates posting—check back soon.</span>';
+    }
 
-  function chipText(it){
-    if (it.label) return it.label;
-    const d = parseISO(it.start);
-    if (!d) return (it.start||"") + (it.city ? (" — "+it.city) : "");
-    const mo = d.toLocaleString(undefined,{month:"short"});
-    const day = String(d.getDate()).padStart(2,"0");
-    let h = d.getHours(), m = d.getMinutes(), ap = h>=12 ? "p":"a"; h=h%12||12;
-    const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
-    return `${mo} ${day}, ${hm} — ${it.city||""}`;
-  }
-
-  function setChips(id, items){
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.innerHTML = items.length
-      ? items.map(it => `<a class="timechip" href="${it.url||"#"}">${chipText(it)}</a>`).join("")
-      : '<span class="micro">New dates posting—check back soon.</span>';
-  }
-
-  // Seed placeholders so UI isn’t blank
-  [
-    "times-bls-ren","times-bls-init","times-bls-heart",
-    "times-acls-ren","times-acls-init","times-acls-heart",
-    "times-pals-ren","times-pals-init","times-pals-heart",
-    "wk-aha-list","hsi-list"
-  ].forEach(id => setChips(id, []));
-
-  async function upcoming(filter, limit=6){
-    const feed = await getFeed();
-    const now = new Date();
-    return feed
-      .map(x => ({...x, _d: parseISO(x.start)}))
-      .filter(x => x._d && x._d >= now)
-      .filter(filter)
-      .sort((a,b)=>a._d - b._d)
-      .slice(0,limit);
-  }
-
-  // ---------- Buckets ----------
-  const familyFrom = it => {
-    const t = U(TXT(it));
-    if (/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/.test(t)) return "BLS";
-    if (/(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/.test(t))     return "ACLS";
-    if (/(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/.test(t))  return "PALS";
-    return U(it.course_family||"") || null;
-  };
-  const isHeart    = it => /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/i.test(TXT(it));
-  const isRenew    = it => /\bRENEW(AL)?\b|RECERT|UPDATE\b/i.test(TXT(it));
-  const isInPerson = it => /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/i.test(TXT(it)) && !isHeart(it);
-
-  const tri = fam => ({
-    ren:   it => familyFrom(it)===fam && isRenew(it)        && !isHeart(it),
-    init:  it => familyFrom(it)===fam && !isRenew(it)       && isInPerson(it),
-    heart: it => familyFrom(it)===fam && isHeart(it),
-  });
-
-  const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
-  const LIM_TRIAD = 6, LIM_WORK = 12;
-
-  Promise.all([
-    upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
-    upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
-    upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
-
-    upcoming(ACLS.ren,  LIM_TRIAD).then(v => setChips("times-acls-ren",  v)),
-    upcoming(ACLS.init, LIM_TRIAD).then(v => setChips("times-acls-init", v)),
-    upcoming(ACLS.heart,LIM_TRIAD).then(v => setChips("times-acls-heart",v)),
-
-    upcoming(PALS.ren,  LIM_TRIAD).then(v => setChips("times-pals-ren",  v)),
-    upcoming(PALS.init, LIM_TRIAD).then(v => setChips("times-pals-init", v)),
-    upcoming(PALS.heart,LIM_TRIAD).then(v => setChips("times-pals-heart",v)),
-
-    // Workplace
-    upcoming(it => /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(TXT(it)), LIM_WORK)
-      .then(v => setChips("wk-aha-list", v)),
-    upcoming(it => /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(TXT(it)), LIM_WORK)
-      .then(v => setChips("hsi-list", v)),
-  ]).catch(err => {
-    console.error("[910CPR] schedule init failed:", err);
+    // Seed placeholders so UI isn’t blank
     [
       "times-bls-ren","times-bls-init","times-bls-heart",
       "times-acls-ren","times-acls-init","times-acls-heart",
       "times-pals-ren","times-pals-init","times-pals-heart",
       "wk-aha-list","hsi-list"
-    ].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>';
+    ].forEach(id => setChips(id, []));
+
+    async function upcoming(filter, limit=6){
+      const feed = await getFeed();
+      const now = new Date();
+      return feed
+        .map(x => ({...x, _d: parseISO(x.start)}))
+        .filter(x => x._d && x._d >= now)
+        .filter(filter)
+        .sort((a,b)=>a._d - b._d)
+        .slice(0,limit);
+    }
+
+    // ---------- Filters ----------
+    const familyFrom = it => {
+      const t = U(TXT(it));
+      if (/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/.test(t)) return "BLS";
+      if (/(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/.test(t))     return "ACLS";
+      if (/(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/.test(t))  return "PALS";
+      return U(it.course_family||"") || null;
+    };
+    const isHeart    = it => /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/i.test(TXT(it));
+    const isRenew    = it => /\bRENEW(AL)?\b|RECERT|UPDATE\b/i.test(TXT(it));
+    const isInPerson = it => /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/i.test(TXT(it)) && !isHeart(it);
+
+    const tri = fam => ({
+      ren:   it => familyFrom(it)===fam && isRenew(it)        && !isHeart(it),
+      init:  it => familyFrom(it)===fam && !isRenew(it)       && isInPerson(it),
+      heart: it => familyFrom(it)===fam && isHeart(it),
     });
-  });
 
-  // Quick console helper if we need to peek at the first few rows:
-  window.__debug_dates = async () => {
-    const feed = await getFeed();
-    return feed.slice(0,5).map(x => ({start:x.start, parsed: parseISO(x.start)}));
-  };
-})();
-</script>
+    const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
+    const LIM_TRIAD = 6, LIM_WORK = 12;
 
-<!-- Schedule (auto-detects date key + robust parsing + single cached feed) -->
-<script id="910cpr-schedule" defer>
-(() => {
-  const FEED_CANDIDATES = ["periscope_full.json", "./periscope_full.json", "/periscope_full.json"];
-  let FEED_PROMISE;
-  async function loadFeed() {
-    for (const u of FEED_CANDIDATES) {
-      try {
-        const r = await fetch(u, { cache: "no-store" });
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const json = await r.json();
-        console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
-        return json;
-      } catch (e) { console.warn("[910CPR] Feed failed:", u, e.message || e); }
-    }
-    throw new Error("All feed locations failed (404).");
-  }
-  async function getFeed(){ return FEED_PROMISE || (FEED_PROMISE = loadFeed()); }
+    Promise.all([
+      upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
+      upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
+      upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
 
-  const U = s => (s||"").toUpperCase();
-  function textOf(it){ return Object.values(it).filter(v => typeof v === "string").join(" "); }
-  function detectStartKey(sample){
-    if(!sample) return "start";
-    const keys = Object.keys(sample);
-    let k = keys.find(k => /^(start|start_time|startDate|startDatetime|start_at|datetime|date)$/i.test(k));
-    if (k) return k;
-    k = keys.find(k => /start/i.test(k));
-    return k || "start";
-  }
-  function detectUrl(it){ const k = Object.keys(it).find(k => /(url|href|link)/i.test(k)); return (k && it[k]) || ""; }
-  function detectCity(it){
-    const direct = it.city || it.City || it.location_city || it.LocationCity;
-    if (direct) return direct;
-    const loc = it.location || it.Location || "";
-    if (/WILM(INGTON)?/i.test(loc)) return "Wilmington";
-    if (/BURGAW/i.test(loc)) return "Burgaw";
-    const all = textOf(it);
-    if (/WILM(INGTON)?/i.test(all)) return "Wilmington";
-    if (/BURGAW/i.test(all)) return "Burgaw";
-    return "";
-  }
-  function parseISO(s){
-    if(!s) return null;
-    const raw = String(s).trim();
-    let d = new Date(raw);
-    if(!isNaN(d)) return d;
-    const t = raw.replace(/\s+/g," ").trim();
-    let m = t.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Z]{1,4})?$/i);
-    if(m){
-      let [, ymd, hh, mm, ss, ap, tz] = m;
-      let H = parseInt(hh,10);
-      if (ap){ ap = ap.toUpperCase(); if (ap==="PM"&&H!==12) H+=12; if (ap==="AM"&&H===12) H=0; }
-      const tzMap = { EDT:"-04:00", EST:"-05:00", ET:"-05:00", CDT:"-05:00", CST:"-06:00", PDT:"-07:00", PST:"-08:00" };
-      const off = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
-      d = new Date(`${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}${off}`); if(!isNaN(d)) return d;
-      d = new Date(`${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}`);      if(!isNaN(d)) return d;
-    }
-    m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})\s*(AM|PM)?\s*([A-Z]{1,4})?$/i);
-    if(m){
-      let [, mo, da, yr, hh, mm, ap] = m;
-      let H = parseInt(hh,10);
-      if (ap){ ap = ap.toUpperCase(); if (ap==="PM"&&H!==12) H+=12; if (ap==="AM"&&H===12) H=0; }
-      d = new Date(parseInt(yr,10), parseInt(mo,10)-1, parseInt(da,10), H, parseInt(mm,10), 0);
-      if(!isNaN(d)) return d;
-    }
-    const fb = new Date(t.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00"));
-    return isNaN(fb) ? null : fb;
-  }
-  function chipText(it){
-    const d = it._d;
-    if(!d) return (it.startRaw||"") + (it.city?(" — "+it.city):"");
-    const mo = d.toLocaleString(undefined,{month:"short"});
-    const day = String(d.getDate()).padStart(2,"0");
-    let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
-    const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
-    return `${mo} ${day}, ${hm} — ${it.city||""}`;
-  }
-  function setChips(id, items){
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.innerHTML = items.length
-      ? items.map(it => `<a class="timechip" href="${it.url||"#"}">${chipText(it)}</a>`).join("")
-      : '<span class="micro">New dates posting—check back soon.</span>';
-  }
+      upcoming(ACLS.ren,  LIM_TRIAD).then(v => setChips("times-acls-ren",  v)),
+      upcoming(ACLS.init, LIM_TRIAD).then(v => setChips("times-acls-init", v)),
+      upcoming(ACLS.heart,LIM_TRIAD).then(v => setChips("times-acls-heart",v)),
 
-  [
-    "times-bls-ren","times-bls-init","times-bls-heart",
-    "times-acls-ren","times-acls-init","times-acls-heart",
-    "times-pals-ren","times-pals-init","times-pals-heart",
-    "wk-aha-list","hsi-list"
-  ].forEach(id => setChips(id, []));
+      upcoming(PALS.ren,  LIM_TRIAD).then(v => setChips("times-pals-ren",  v)),
+      upcoming(PALS.init, LIM_TRIAD).then(v => setChips("times-pals-init", v)),
+      upcoming(PALS.heart,LIM_TRIAD).then(v => setChips("times-pals-heart",v)),
 
-  async function normalizedFeed(){
-    const raw = await getFeed();
-    const startKey = detectStartKey(raw[0]);
-    console.info("[910CPR] using start key:", startKey);
-    const norm = raw.map(it => {
-      const startRaw = it[startKey];
-      const _d = parseISO(startRaw);
-      return {...it, startRaw, _d, city: detectCity(it), url: detectUrl(it), _text: textOf(it)};
+      // Workplace
+      upcoming(it => /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(TXT(it)), LIM_WORK)
+        .then(v => setChips("wk-aha-list", v)),
+      upcoming(it => /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(TXT(it)), LIM_WORK)
+        .then(v => setChips("hsi-list", v)),
+    ]).catch(err => {
+      console.error("[910CPR] schedule init failed:", err);
+      [
+        "times-bls-ren","times-bls-init","times-bls-heart",
+        "times-acls-ren","times-acls-init","times-acls-heart",
+        "times-pals-ren","times-pals-init","times-pals-heart",
+        "wk-aha-list","hsi-list"
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>';
+      });
     });
-    const ok = norm.filter(x => x._d instanceof Date && !isNaN(x._d));
-    console.info(`[910CPR] parsed ${ok.length}/${norm.length} items with valid dates`);
-    return norm;
-  }
-  async function upcoming(filterFn, limit=6){
-    const feed = await normalizedFeed();
-    const now = new Date();
-    return feed.filter(x => x._d && x._d >= now).filter(filterFn).sort((a,b)=>a._d-b._d).slice(0,limit);
-  }
 
-  const has = (it, re) => re.test(U(it._text||""));
-  const familyFrom = it =>
-    has(it, /(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/) ? "BLS" :
-    has(it, /(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/)      ? "ACLS" :
-    has(it, /(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/)   ? "PALS" : null;
-
-  const isHeart    = it => has(it, /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/);
-  const isRenew    = it => has(it, /\bRENEW(AL)?\b|RECERT|UPDATE\b/);
-  const isInPerson = it => has(it, /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/) && !isHeart(it);
-  const tri = fam => ({ ren:it => familyFrom(it)===fam && isRenew(it) && !isHeart(it),
-                        init:it => familyFrom(it)===fam && !isRenew(it) && isInPerson(it),
-                        heart:it => familyFrom(it)===fam && isHeart(it) });
-  const BLS=tri("BLS"), ACLS=tri("ACLS"), PALS=tri("PALS");
-  const LIM_TRIAD=6, LIM_WORK=12;
-
-  Promise.all([
-    upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
-    upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
-    upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
-    upcoming(ACLS.ren,  LIM_TRIAD).then(v => setChips("times-acls-ren",  v)),
-    upcoming(ACLS.init, LIM_TRIAD).then(v => setChips("times-acls-init", v)),
-    upcoming(ACLS.heart,LIM_TRIAD).then(v => setChips("times-acls-heart",v)),
-    upcoming(PALS.ren,  LIM_TRIAD).then(v => setChips("times-pals-ren",  v)),
-    upcoming(PALS.init, LIM_TRIAD).then(v => setChips("times-pals-init", v)),
-    upcoming(PALS.heart,LIM_TRIAD).then(v => setChips("times-pals-heart",v)),
-    upcoming(it => has(it, /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/) && has(it, /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/), LIM_WORK)
-      .then(v => setChips("wk-aha-list", v)),
-    upcoming(it => has(it, /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/) && has(it, /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/), LIM_WORK)
-      .then(v => setChips("hsi-list", v)),
-  ]).catch(err => {
-    console.error("[910CPR] schedule init failed:", err);
-    ["times-bls-ren","times-bls-init","times-bls-heart","times-acls-ren","times-acls-init","times-acls-heart","times-pals-ren","times-pals-init","times-pals-heart","wk-aha-list","hsi-list"]
-      .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>'; });
-  });
-
-  // Dev helpers (run in DevTools)
-  window.__feed_sample = async () => { const raw = await getFeed(); return raw.slice(0,3); };
-  window.__date_probe  = async () => {
-    const raw = await getFeed();
-    const startKey = detectStartKey(raw[0]);
-    return raw.slice(0,8).map(x => ({ startKey, startRaw: x[startKey], parsed: String(parseISO(x[startKey])) }));
-  };
-})();
-</script>
-
+    // Quick sanity check: run in DevTools to see parse results
+    window.__debug_dates = async () => {
+      const feed = await getFeed();
+      return feed.slice(0,8).map(x => ({start:x.start, parsed:String(parseISO(x.start))}));
+    };
+  })();
+  </script>
 
   <!-- Track tel: clicks -->
   <script>
