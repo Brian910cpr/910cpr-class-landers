@@ -1,46 +1,152 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-sessions_to_periscope.py
-Read sessions CSV and emit periscope_full.json for the homepage.
-
-Keeps fields:
- title, course, certification, agency, format, start, end, city, url (registration_url), venue
-"""
+# scripts/sessions_to_periscope.py
 import sys, json
+from pathlib import Path
+
 import pandas as pd
 
-def main():
-    if len(sys.argv) != 3:
-        print("usage: sessions_to_periscope.py <sessions.csv> <periscope_full.json>")
+CANDS = {
+    "title": ["title", "Title", "Course Name", "Name", "Session", "Class"],
+    "course": ["course", "Course", "Course Type", "Program"],
+    "certification": ["certification", "Certification", "Credential"],
+    "agency": ["agency", "Agency", "Program Agency"],
+    "format": ["format", "Format", "Delivery", "Class Type"],
+
+    # primary start/end
+    "start": [
+        "start", "Start", "Start Date / Time", "Start Date", "StartDateTime",
+        "start_time", "Start Time", "DateTime", "datetime", "Date/Time",
+    ],
+    "end": [
+        "end", "End", "End Date / Time", "End Date", "EndDateTime",
+        "end_time", "End Time",
+    ],
+
+    # if start not found, try date + time combos
+    "dateonly": ["Date", "Class Date", "Session Date"],
+    "timeonly": ["Start Time", "Time", "Class Time", "StartTime"],
+
+    "city": [
+        "city", "City", "Location City", "Location_City", "Site City",
+    ],
+    "venue": [
+        "venue", "Venue", "Location", "Location Name", "Site", "Site Name",
+        "Address", "Location Address",
+    ],
+    "url": [
+        "url", "URL", "Href", "Link", "Registration", "Registration Link",
+        "Registration URL", "Enroll Link", "Signup", "Signup Link"
+    ],
+}
+
+def pick(df, names):
+    for n in names:
+        if n in df.columns:
+            return n
+    return None
+
+def parse_dt(val: str) -> str:
+    """Return ISO 'YYYY-MM-DD HH:MM' or '' when unparseable."""
+    if val is None:
+        return ""
+    s = str(val).strip()
+    if not s:
+        return ""
+    # Common “dumb” cleanups
+    s = s.replace(" at ", " ").replace("@", " ").replace("\u2013", "-").replace("\u2014", "-")
+    try:
+        dt = pd.to_datetime(s, errors="coerce", infer_datetime_format=True)
+        if pd.isna(dt):
+            return ""
+        # If timezone attached, convert to naive local-like string (no 'T')
+        return dt.strftime("%Y-%m-%d %H:%M")
+    except Exception:
+        return ""
+
+def main(inp_csv: str, out_json: str):
+    p_in = Path(inp_csv)
+    p_out = Path(out_json)
+    if not p_in.exists():
+        print(f"[periscope] ERROR: CSV not found: {p_in}")
         sys.exit(1)
 
-    csv_path, json_out = sys.argv[1], sys.argv[2]
-    df = pd.read_csv(csv_path)
+    # Load all as strings so we don’t lose formatting
+    df = pd.read_csv(p_in, dtype=str, keep_default_na=False).fillna("")
 
-    def pick(r, k, alt=""):
-        v = r.get(k, "")
-        return ("" if pd.isna(v) else str(v)) or alt
+    # Decide which columns we’ll use
+    m = {k: pick(df, CANDS[k]) for k in CANDS}
+    # Pretty log of what we found:
+    print("[periscope] column mapping:")
+    for k in ["title","course","certification","agency","format","start","end","dateonly","timeonly","city","venue","url"]:
+        print(f"  {k:13} -> {m.get(k)}")
 
-    out = []
+    rows = []
+    blanks_start = 0
+    blanks_url = 0
     for _, r in df.iterrows():
-        title = pick(r, "course_title")
-        out.append({
+        title = r.get(m["title"], "") if m["title"] else ""
+        course = r.get(m["course"], "") if m["course"] else ""
+        cert = r.get(m["certification"], "") if m["certification"] else ""
+        agency = r.get(m["agency"], "") if m["agency"] else ""
+        fmt = r.get(m["format"], "") if m["format"] else ""
+
+        start_raw = r.get(m["start"], "") if m["start"] else ""
+        end_raw = r.get(m["end"], "") if m["end"] else ""
+
+        # If no direct start, try Date + Start Time
+        if not start_raw and (m["dateonly"] and m["timeonly"]):
+            start_raw = f"{r.get(m['dateonly'], '')} {r.get(m['timeonly'], '')}"
+
+        start_iso = parse_dt(start_raw)
+        end_iso = parse_dt(end_raw)
+
+        city = r.get(m["city"], "") if m["city"] else ""
+        venue = r.get(m["venue"], "") if m["venue"] else ""
+
+        # fallbacks: infer city from venue/location text when empty
+        combined_loc = f"{venue} {city}".strip()
+        if not city:
+            u = combined_loc.upper()
+            if "WILM" in u:
+                city = "Wilmington"
+            elif "BURGAW" in u:
+                city = "Burgaw"
+
+        url = r.get(m["url"], "") if m["url"] else ""
+        if not url:
+            url = "#"
+
+        if not start_iso:
+            blanks_start += 1
+        if url == "#":
+            blanks_url += 1
+
+        rows.append({
             "title": title,
-            "course": title,  # keep both for compatibility
-            "certification": pick(r, "certification"),
-            "agency": pick(r, "agency"),
-            "format": pick(r, "format"),
-            "start": pick(r, "start"),
-            "end":   pick(r, "end"),
-            "city":  pick(r, "city"),
-            "venue": pick(r, "venue"),
-            "url":   pick(r, "registration_url") or "#",
+            "course": course,
+            "certification": cert,
+            "agency": agency,
+            "format": fmt,
+            "start": start_iso,     # <- homepage expects this
+            "end": end_iso,
+            "city": city,
+            "venue": venue,
+            "url": url,
         })
 
-    with open(json_out, "w", encoding="utf-8") as f:
-        json.dump(out, f, ensure_ascii=False)
-    print(f"[periscope] wrote {len(out)} items -> {json_out}")
+    # Save JSON (array, no BOM)
+    p_out.parent.mkdir(parents=True, exist_ok=True)
+    with p_out.open("w", encoding="utf-8") as f:
+        json.dump(rows, f, ensure_ascii=False)
+
+    print(f"[periscope] wrote {len(rows)} items -> {p_out}")
+    print(f"[periscope] empty starts: {blanks_start}  |  empty urls: {blanks_url}")
+
+    # show a small sample for sanity
+    for i, it in enumerate(rows[:5]):
+        print(f"[periscope] sample[{i}] start='{it['start']}' url='{it['url']}' city='{it['city']}' title='{it['title'][:50]}'")
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 3:
+        print("usage: python scripts/sessions_to_periscope.py <input_csv> <output_json>")
+        sys.exit(2)
+    main(sys.argv[1], sys.argv[2])
