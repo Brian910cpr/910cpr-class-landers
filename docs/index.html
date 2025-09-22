@@ -10,19 +10,19 @@
   <!-- Favicon (inline, no 404s) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232563eb'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='28' fill='white' font-family='Arial, sans-serif'%3E9%3C/text%3E%3C/svg%3E">
 
-  <!-- Schema -->
+  <!-- Schema (keep clean; no stray tags inside) -->
   <script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"LocalBusiness",
-  "name":"910CPR",
-  "url":"https://www.910cpr.com/",
-  "telephone":"+1-910-395-5193",
-  "areaServed": ["Wilmington NC","Burgaw NC"]
-}
-</script>
+  {
+    "@context":"https://schema.org",
+    "@type":"LocalBusiness",
+    "name":"910CPR",
+    "url":"https://www.910cpr.com/",
+    "telephone":"+1-910-395-5193",
+    "areaServed":["Wilmington NC","Burgaw NC"]
+  }
+  </script>
 
-<style>
+  <style>
     :root{
       --brand:#2563eb; --brand-600:#1d4ed8; --brand-50:#eef2ff;
       --accent:#ef4444; --bg:#f8fafc; --text:#0f172a; --muted:#64748b;
@@ -68,13 +68,11 @@
     .callout.success{border:1px solid var(--ok-b);background:var(--ok-bg)}
     .micro{color:var(--muted);font-size:13px}
     footer{margin:30px 0 10px;color:var(--muted);font-size:13px}
-    /* mini-3-col layout inside a card */
     .med-triad{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:10px}
     .tri{grid-column:span 4;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
     .tri h4{margin:0 0 8px;font-size:14px;letter-spacing:.2px}
     .tri .see{display:inline-block;margin-top:10px;font-weight:700;font-size:12px;text-decoration:none;color:var(--brand-600)}
     @media(max-width:1020px){.tri{grid-column:span 12}}
-    /* Floating Call button (mobile only) */
     .call-fab{position:fixed;right:16px;bottom:16px;z-index:1000}
     .call-fab a{display:flex;align-items:center;gap:10px;text-decoration:none;background:var(--brand-600);color:#fff;padding:12px 14px;border-radius:9999px;border:1px solid rgba(0,0,0,.08);box-shadow:0 8px 24px rgba(0,0,0,.18);font-weight:800;font-size:14px;line-height:1;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateY(6px);opacity:0;animation:fab-in .35s ease-out .2s forwards}
     :root[data-theme="dark"] .call-fab a{background:var(--brand);color:#0b1220}
@@ -91,7 +89,7 @@
       const initial=localStorage.getItem(KEY) || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
       apply(initial);
       window.toggleTheme=()=>apply(root.dataset.theme==="dark"?"light":"dark");
-      function apply(t){ root.dataset.theme=t; try{localStorage.setItem(KEY,t)}catch{} 
+      function apply(t){ root.dataset.theme=t; try{localStorage.setItem(KEY,t)}catch{}
         const b=document.getElementById("theme-toggle"); if(b){ b.textContent=t==="dark"?"Light":"Dark"; b.setAttribute("aria-pressed",String(t==="dark"));}}
     })();
   </script>
@@ -100,8 +98,7 @@
   <div class="wrap">
     <!-- Brand row -->
     <div class="brandbar">
-<img class="logo" src="data-assets/logo-910cpr.svg"
-     onerror="this.onerror=null;this.src='images/910CPR_Fat.jpg'" alt="910CPR">
+      <img class="logo" src="images/910CPR_Fat.jpg" alt="910CPR">
       <div>
         <h1>CPR, First Aid, BLS, ACLS &amp; PALS — Done Right and On Time</h1>
         <div class="sub">Wilmington • Burgaw • Camp Lejeune area. Same-day cards. We don’t cancel classes.</div>
@@ -207,8 +204,7 @@
       <p class="lede">Cover both BLS and First Aid with a blended path that fits real schedules. Popular for cross-role staff.</p>
       <div class="pillbar"><a class="pill alt" href="/courses/workplaces/?q=HSI">HSI — See Times</a></div>
       <div class="callout success">
-        <strong>Great for Autism centers:</strong> different payers may require <em>BLS</em> or <em>First Aid</em>.
-        This HSI blended class covers <em>both</em> in one session—so you have <strong>one registration</strong> and <strong>one digital certification record</strong> for credentialing or audit.
+        <strong>Great for Autism centers:</strong> different payers may require <em>BLS</em> or <em>First Aid</em>. This HSI blended class covers <em>both</em> in one session—so you have <strong>one registration</strong> and <strong>one digital certification record</strong> for credentialing or audit.
         <ul style="margin:10px 0 0 18px;">
           <li>Online theory + short skills = minimal downtime</li>
           <li>OSHA-acceptable First Aid with healthcare-grade BLS content</li>
@@ -339,249 +335,245 @@
     </a>
   </div>
 
-<script id="910cpr-schedule" defer>
-(() => {
-  // --- prevent double-run if accidentally included twice ---
-  if (window.__910cprScheduleLoaded) return;
-  window.__910cprScheduleLoaded = true;
+  <!-- Schedule (single, robust) -->
+  <script id="910cpr-schedule" defer>
+  (() => {
+    if (window.__910cprScheduleLoaded) return; // prevent double-run
+    window.__910cprScheduleLoaded = true;
 
-  // --- load feed (tries relative first so it works on GitHub Pages/subfolders) ---
-  const FEED_PATHS = ["periscope_full.json", "./periscope_full.json", "/periscope_full.json"];
-  let FEED_PROMISE = null;
-  async function getFeed() {
-    if (FEED_PROMISE) return FEED_PROMISE;
-    FEED_PROMISE = (async () => {
-      for (const u of FEED_PATHS) {
-        try {
-          const r = await fetch(u, { cache: "no-store" });
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          const json = await r.json();
-          console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
-          return json;
-        } catch (e) {
-          console.warn("[910CPR] Feed failed:", u, e?.message || e);
+    // Feed: try relative first so it works under subfolders
+    const FEED_PATHS = ["periscope_full.json","./periscope_full.json","/periscope_full.json"];
+    let FEED_PROMISE = null;
+    async function getFeed() {
+      if (FEED_PROMISE) return FEED_PROMISE;
+      FEED_PROMISE = (async () => {
+        for (const u of FEED_PATHS) {
+          try {
+            const r = await fetch(u, { cache:"no-store" });
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            const json = await r.json();
+            console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
+            return json;
+          } catch (e) {
+            console.warn("[910CPR] Feed failed:", u, e?.message || e);
+          }
+        }
+        throw new Error("All feed locations failed (404).");
+      })();
+      return FEED_PROMISE;
+    }
+
+    // ---------- helpers ----------
+    const U = s => (s||"").toUpperCase();
+    const textOf = it => Object.values(it).filter(v => typeof v === "string").join(" ");
+
+    function detectUrl(it) {
+      const k = Object.keys(it).find(k => /(url|href|link)/i.test(k));
+      return (k && it[k]) || "";
+    }
+    function detectCity(it, all) {
+      const direct = it.city || it.City || it.location_city || it.LocationCity;
+      if (direct) return direct;
+      const loc = it.location || it.Location || "";
+      if (/WILM(INGTON)?/i.test(loc)) return "Wilmington";
+      if (/BURGAW/i.test(loc)) return "Burgaw";
+      if (/WILM(INGTON)?/i.test(all)) return "Wilmington";
+      if (/BURGAW/i.test(all)) return "Burgaw";
+      return "";
+    }
+
+    // tolerant date parser
+    function parseFlexDate(input) {
+      if (input == null) return null;
+      let s = String(input).trim();
+      s = s.replace(/[–—].*$/, "").replace(/\s+at\s+/i, " ").replace("@", " ").replace(/\s+/g, " ").trim();
+
+      // Excel serial
+      if (/^\d+(\.\d+)?$/.test(s)) {
+        const n = Number(s);
+        if (n > 25569 && n < 70000) {
+          const d = new Date(Math.round((n - 25569) * 86400 * 1000));
+          if (!isNaN(d)) return d;
         }
       }
-      throw new Error("All feed locations failed (404).");
-    })();
-    return FEED_PROMISE;
-  }
 
-  // ---------- helpers ----------
-  const U = s => (s || "").toUpperCase();
-  const textOf = it => Object.values(it).filter(v => typeof v === "string").join(" ");
+      let d = new Date(s);
+      if (!isNaN(d)) return d;
 
-  function detectUrl(it) {
-    const k = Object.keys(it).find(k => /(url|href|link)/i.test(k));
-    return (k && it[k]) || "";
-  }
-  function detectCity(it, all) {
-    const direct = it.city || it.City || it.location_city || it.LocationCity;
-    if (direct) return direct;
-    const loc = it.location || it.Location || "";
-    if (/WILM(INGTON)?/i.test(loc)) return "Wilmington";
-    if (/BURGAW/i.test(loc)) return "Burgaw";
-    if (/WILM(INGTON)?/i.test(all)) return "Wilmington";
-    if (/BURGAW/i.test(all)) return "Burgaw";
-    return "";
-  }
+      let m = s.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Z]{1,4})?$/i);
+      if (m) {
+        let [, Y, M, D, h, mi, ss, ap, tz] = m;
+        let H = parseInt(h,10);
+        if (ap) { ap=ap.toUpperCase(); if (ap==="PM"&&H!==12) H+=12; if (ap==="AM"&&H===12) H=0; }
+        const tzMap={EDT:"-04:00",EST:"-05:00",ET:"-05:00",CDT:"-05:00",CST:"-06:00",PDT:"-07:00",PST:"-08:00"};
+        const off = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
+        d = new Date(`${Y}-${M}-${D}T${String(H).padStart(2,"0")}:${mi}:${ss||"00"}${off}`); if (!isNaN(d)) return d;
+        d = new Date(`${Y}-${M}-${D}T${String(H).padStart(2,"0")}:${mi}:${ss||"00"}`);      if (!isNaN(d)) return d;
+      }
 
-  // Ultra-tolerant date parser
-  function parseFlexDate(input) {
-    if (input == null) return null;
-    let s = String(input).trim();
-    s = s.replace(/[–—].*$/, "").replace(/\s+at\s+/i, " ").replace("@", " ").replace(/\s+/g, " ").trim();
-
-    // Excel serial number?
-    if (/^\d+(\.\d+)?$/.test(s)) {
-      const n = Number(s);
-      if (n > 25569 && n < 70000) {
-        const d = new Date(Math.round((n - 25569) * 86400 * 1000));
+      m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?:\s*(AM|PM))?)?(?:\s*[A-Z]{1,4})?$/i);
+      if (m) {
+        let [, mo, da, yr, h, mi, ap] = m;
+        let H = h ? parseInt(h,10) : 9;
+        if (ap) { ap=ap.toUpperCase(); if (ap==="PM"&&H!==12) H+=12; if (ap==="AM"&&H===12) H=0; }
+        d = new Date(parseInt(yr,10), parseInt(mo,10)-1, parseInt(da,10), H, mi ? parseInt(mi,10) : 0, 0);
         if (!isNaN(d)) return d;
       }
-    }
 
-    // Native
-    let d = new Date(s);
-    if (!isNaN(d)) return d;
-
-    // YYYY-MM-DD HH:MM[:SS] AM/PM TZ
-    let m = s.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Z]{1,4})?$/i);
-    if (m) {
-      let [, Y, M, D, h, mi, ss, ap, tz] = m;
-      let H = parseInt(h, 10);
-      if (ap) { ap = ap.toUpperCase(); if (ap==="PM" && H!==12) H+=12; if (ap==="AM" && H===12) H=0; }
-      const tzMap = { EDT:"-04:00", EST:"-05:00", ET:"-05:00", CDT:"-05:00", CST:"-06:00", PDT:"-07:00", PST:"-08:00" };
-      const off = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
-      d = new Date(`${Y}-${M}-${D}T${String(H).padStart(2,"0")}:${mi}:${ss||"00"}${off}`); if (!isNaN(d)) return d;
-      d = new Date(`${Y}-${M}-${D}T${String(H).padStart(2,"0")}:${mi}:${ss||"00"}`);      if (!isNaN(d)) return d;
-    }
-
-    // M/D/YYYY HH:MM AM/PM [TZ]
-    m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?:\s*(AM|PM))?)?(?:\s*[A-Z]{1,4})?$/i);
-    if (m) {
-      let [, mo, da, yr, h, mi, ap] = m;
-      let H = h ? parseInt(h,10) : 9;
-      if (ap) { ap = ap.toUpperCase(); if (ap==="PM" && H!==12) H+=12; if (ap==="AM" && H===12) H=0; }
-      d = new Date(parseInt(yr,10), parseInt(mo,10)-1, parseInt(da,10), H, mi ? parseInt(mi,10) : 0, 0);
-      if (!isNaN(d)) return d;
-    }
-
-    // Mon D, YYYY [H:MM AM/PM]
-    m = s.match(/^([A-Za-z]{3,})\s+(\d{1,2}),\s*(\d{4})(?:\s+(\d{1,2}):(\d{2})(?:\s*(AM|PM))?)?$/);
-    if (m) {
-      const MONTHS = "JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC".split(" ");
-      let [, mon, da, yr, h, mi, ap] = m;
-      let M = MONTHS.indexOf(mon.substring(0,3).toUpperCase());
-      let H = h ? parseInt(h,10) : 9;
-      if (ap) { ap = ap.toUpperCase(); if (ap==="PM" && H!==12) H+=12; if (ap==="AM" && H===12) H=0; }
-      d = new Date(parseInt(yr,10), M, parseInt(da,10), H, mi ? parseInt(mi,10) : 0, 0);
-      if (!isNaN(d)) return d;
-    }
-
-    // Pull ISO-ish core if embedded
-    m = s.match(/(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?/);
-    if (m) {
-      const iso = `${m[1]}T${m[2] ? String(m[2]).padStart(2,"0") : "09"}:${m[3] || "00"}:00`;
-      d = new Date(iso);
-      if (!isNaN(d)) return d;
-    }
-
-    return null;
-  }
-
-  // Try to find a date anywhere (if a clean start key fails)
-  function findDateInAnyField(it) {
-    for (const [k, v] of Object.entries(it)) {
-      if (typeof v === "string") {
-        const d = parseFlexDate(v);
-        if (d) return { dt: d, startRaw: v, startKey: k };
+      m = s.match(/(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?/);
+      if (m) {
+        const iso = `${m[1]}T${m[2] ? String(m[2]).padStart(2,"0") : "09"}:${m[3] || "00"}:00`;
+        d = new Date(iso);
+        if (!isNaN(d)) return d;
       }
-    }
-    return { dt: null, startRaw: "", startKey: "" };
-  }
-
-  function normalize(it) {
-    const all = textOf(it);
-    const keys = Object.keys(it);
-    const pref = [
-      "start","Start","start_time","startTime","StartTime",
-      "startDate","StartDate","startDateTime","StartDateTime",
-      "start_at","Start Date / Time","Start Date","Date","date","datetime"
-    ];
-    const key = pref.find(k => k in it) || keys.find(k => /start|date/i.test(k));
-    let startRaw = key ? it[key] : (it.start || it.date || "");
-    let parsed = parseFlexDate(startRaw);
-    let usedKey = key || (startRaw ? "guessed" : "");
-
-    if (!parsed) {
-      const found = findDateInAnyField(it);
-      parsed   = found.dt;
-      startRaw = found.startRaw || startRaw;
-      usedKey  = found.startKey || usedKey;
+      return null;
     }
 
-    const url  = detectUrl(it);
-    const city = detectCity(it, all);
-    return { dt: parsed, startRaw, startKey: usedKey, url, city, text: U(all) };
-  }
-
-  function chipLabel(n) {
-    if (!(n && n.dt instanceof Date && !isNaN(n.dt))) return "";
-    const d = n.dt;
-    const mo = d.toLocaleString(undefined, { month: "short" });
-    const day = String(d.getDate()).padStart(2, "0");
-    let h = d.getHours(), m = d.getMinutes(), ap = h >= 12 ? "p" : "a"; h = h % 12 || 12;
-    const hm = m ? `${h}:${String(m).padStart(2, "0")}${ap}` : `${h}${ap}`;
-    return `${mo} ${day}, ${hm}${n.city ? ` — ${n.city}` : ""}`;
-  }
-
-  // Keep label+URL paired so we never produce empty pills
-  function setChips(id, items) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const html = (items || [])
-      .map(n => ({ label: chipLabel(n), url: n.url || "#" }))
-      .filter(x => x.label)
-      .map(x => `<a class="timechip" href="${x.url}">${x.label}</a>`)
-      .join("");
-    el.innerHTML = html || '<span class="micro">New dates posting—check back soon.</span>';
-  }
-
-  // seed placeholders so UI isn’t blank during load
-  [
-    "times-bls-ren","times-bls-init","times-bls-heart",
-    "times-acls-ren","times-acls-init","times-acls-heart",
-    "times-pals-ren","times-pals-init","times-pals-heart",
-    "wk-aha-list","hsi-list"
-  ].forEach(id => setChips(id, []));
-
-  // Bucketing on normalized text
-  const has = (n, re) => re.test(n.text);
-  const family = (n) =>
-    has(n, /(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/) ? "BLS" :
-    has(n, /(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/)      ? "ACLS" :
-    has(n, /(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/)   ? "PALS" : null;
-
-  const isHeart    = n => has(n, /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/);
-  const isRenew    = n => has(n, /\bRENEW(AL)?\b|RECERT|UPDATE\b/);
-  const isInPerson = n => has(n, /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/) && !isHeart(n);
-
-  const tri = fam => ({
-    ren:   n => family(n)===fam && isRenew(n)  && !isHeart(n),
-    init:  n => family(n)===fam && !isRenew(n) && isInPerson(n),
-    heart: n => family(n)===fam && isHeart(n),
-  });
-
-  const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
-  const LIM_TRIAD = 6, LIM_WORK = 12;
-
-  async function upcoming(filterFn, limit) {
-    const raw  = await getFeed();
-    const norm = raw.map(normalize);
-    const now  = new Date();
-    const ok   = norm.filter(n => n.dt instanceof Date && !isNaN(n.dt));
-    console.info(`[910CPR] valid dates: ${ok.length}/${norm.length}`);
-    return ok.filter(n => n.dt >= now).filter(filterFn).sort((a,b)=>a.dt-b.dt).slice(0, limit);
-  }
-
-  Promise.all([
-    upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
-    upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
-    upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
-
-    upcoming(ACLS.ren,  LIM_TRIAD).then(v => setChips("times-acls-ren",  v)),
-    upcoming(ACLS.init, LIM_TRIAD).then(v => setChips("times-acls-init", v)),
-    upcoming(ACLS.heart,LIM_TRIAD).then(v => setChips("times-acls-heart",v)),
-
-    upcoming(PALS.ren,  LIM_TRIAD).then(v => setChips("times-pals-ren",  v)),
-    upcoming(PALS.init, LIM_TRIAD).then(v => setChips("times-pals-init", v)),
-    upcoming(PALS.heart,LIM_TRIAD).then(v => setChips("times-pals-heart",v)),
-
-    // Workplace
-    upcoming(n => has(n, /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/) && has(n, /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/), LIM_WORK)
-      .then(v => setChips("wk-aha-list", v)),
-    upcoming(n => has(n, /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/) && has(n, /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/), LIM_WORK)
-      .then(v => setChips("hsi-list", v)),
-  ]).catch(err => {
-    console.error("[910CPR] schedule init failed:", err);
-    ["times-bls-ren","times-bls-init","times-bls-heart","times-acls-ren","times-acls-init","times-acls-heart","times-pals-ren","times-pals-init","times-pals-heart","wk-aha-list","hsi-list"]
-      .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>'; });
-  });
-
-  // Dev helpers (run in DevTools)
-  window.__sched = {
-    sample: async () => (await getFeed()).slice(0, 8),
-    probe:  async () => {
-      const raw = await getFeed();
-      return raw.slice(0, 12).map(it => {
-        const n = normalize(it);
-        return { startKey: n.startKey, startRaw: n.startRaw, parsed: String(n.dt), city: n.city, url: n.url };
-      });
+    function findDateInAnyField(it) {
+      for (const [k, v] of Object.entries(it)) {
+        if (typeof v === "string") {
+          const d = parseFlexDate(v);
+          if (d) return { dt: d, startRaw: v, startKey: k };
+        }
+      }
+      return { dt: null, startRaw: "", startKey: "" };
     }
-  };
-})();
-</script>
+
+    function normalize(it) {
+      const all = textOf(it);
+      const keys = Object.keys(it);
+      const pref = [
+        "start","Start","start_time","startTime","StartTime",
+        "startDate","StartDate","startDateTime","StartDateTime",
+        "start_at","Start Date / Time","Start Date","Date","date","datetime"
+      ];
+      const key = pref.find(k => k in it) || keys.find(k => /start|date/i.test(k));
+      let startRaw = key ? it[key] : (it.start || it.date || "");
+      let parsed = parseFlexDate(startRaw);
+      let usedKey = key || (startRaw ? "guessed" : "");
+
+      if (!parsed) {
+        const found = findDateInAnyField(it);
+        parsed   = found.dt;
+        startRaw = found.startRaw || startRaw;
+        usedKey  = found.startKey || usedKey;
+      }
+
+      const url  = detectUrl(it);
+      const city = detectCity(it, all);
+      return { dt: parsed, startRaw, startKey: usedKey, url, city, text: U(all) };
+    }
+
+    function chipLabel(n) {
+      if (!(n && n.dt instanceof Date && !isNaN(n.dt))) return "";
+      const d = n.dt;
+      const mo = d.toLocaleString(undefined, { month: "short" });
+      const day = String(d.getDate()).padStart(2, "0");
+      let h = d.getHours(), m = d.getMinutes(), ap = h >= 12 ? "p" : "a"; h = h % 12 || 12;
+      const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
+      return `${mo} ${day}, ${hm}${n.city ? ` — ${n.city}` : ""}`;
+    }
+
+    function setChips(id, items) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const html = (items || [])
+        .map(n => ({ label: chipLabel(n), url: n.url || "#" }))
+        .filter(x => x.label)
+        .map(x => `<a class="timechip" href="${x.url}">${x.label}</a>`)
+        .join("");
+      el.innerHTML = html || '<span class="micro">New dates posting—check back soon.</span>';
+    }
+
+    // placeholders so UI isn't blank during load
+    [
+      "times-bls-ren","times-bls-init","times-bls-heart",
+      "times-acls-ren","times-acls-init","times-acls-heart",
+      "times-pals-ren","times-pals-init","times-pals-heart",
+      "wk-aha-list","hsi-list"
+    ].forEach(id => setChips(id, []));
+
+    const has = (n, re) => re.test(n.text);
+    const family = (n) =>
+      has(n, /(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/) ? "BLS" :
+      has(n, /(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/)      ? "ACLS" :
+      has(n, /(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/)   ? "PALS" : null;
+
+    const isHeart    = n => has(n, /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/);
+    const isRenew    = n => has(n, /\bRENEW(AL)?\b|RECERT|UPDATE\b/);
+    const isInPerson = n => has(n, /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/) && !isHeart(n);
+
+    const tri = fam => ({
+      ren:   n => family(n)===fam && isRenew(n)  && !isHeart(n),
+      init:  n => family(n)===fam && !isRenew(n) && isInPerson(n),
+      heart: n => family(n)===fam && isHeart(n),
+    });
+
+    const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
+    const LIM_TRIAD = 6, LIM_WORK = 12;
+
+    async function upcoming(filterFn, limit) {
+      const raw  = await getFeed();
+      const norm = raw.map(normalize);
+      const now  = new Date();
+      const ok   = norm.filter(n => n.dt instanceof Date && !isNaN(n.dt));
+      console.info(`[910CPR] valid dates: ${ok.length}/${norm.length}`);
+      return ok.filter(n => n.dt >= now).filter(filterFn).sort((a,b)=>a.dt-b.dt).slice(0, limit);
+    }
+
+    Promise.all([
+      upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
+      upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
+      upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
+
+      upcoming(ACLS.ren,  LIM_TRIAD).then(v => setChips("times-acls-ren",  v)),
+      upcoming(ACLS.init, LIM_TRIAD).then(v => setChips("times-acls-init", v)),
+      upcoming(ACLS.heart,LIM_TRIAD).then(v => setChips("times-acls-heart",v)),
+
+      upcoming(PALS.ren,  LIM_TRIAD).then(v => setChips("times-pals-ren",  v)),
+      upcoming(PALS.init, LIM_TRIAD).then(v => setChips("times-pals-init", v)),
+      upcoming(PALS.heart,LIM_TRIAD).then(v => setChips("times-pals-heart",v)),
+
+      // Workplace
+      upcoming(n => has(n, /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/) && has(n, /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/), LIM_WORK)
+        .then(v => setChips("wk-aha-list", v)),
+      upcoming(n => has(n, /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/) && has(n, /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/), LIM_WORK)
+        .then(v => setChips("hsi-list", v)),
+    ]).catch(err => {
+      console.error("[910CPR] schedule init failed:", err);
+      ["times-bls-ren","times-bls-init","times-bls-heart","times-acls-ren","times-acls-init","times-acls-heart","times-pals-ren","times-pals-init","times-pals-heart","wk-aha-list","hsi-list"]
+        .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>'; });
+    });
+
+    // Dev helpers (run in DevTools)
+    window.__sched = {
+      sample: async () => (await getFeed()).slice(0, 8),
+      probe:  async () => {
+        const raw = await getFeed();
+        return raw.slice(0, 12).map(it => {
+          const all = textOf(it);
+          const n   = (function normalizeQuick() {
+            const keys = Object.keys(it);
+            const pref = ["start","Start","start_time","startTime","StartTime","startDate","StartDate","startDateTime","StartDateTime","start_at","Start Date / Time","Start Date","Date","date","datetime"];
+            const key  = pref.find(k => k in it) || keys.find(k => /start|date/i.test(k));
+            let startRaw = key ? it[key] : (it.start || it.date || "");
+            let parsed   = parseFlexDate(startRaw);
+            if (!parsed) {
+              const found = (function fd(){
+                for (const [k, v] of Object.entries(it)) if (typeof v === "string") { const d = parseFlexDate(v); if (d) return { dt:d, key:k, raw:v }; }
+                return { dt:null, key:"", raw:"" };
+              })();
+              parsed   = found.dt || null;
+              startRaw = found.raw || startRaw;
+            }
+            return { dt: parsed, startRaw, url: detectUrl(it), city: detectCity(it, all) };
+          })();
+          return { startRaw: n.startRaw, parsed: String(n.dt), city: n.city, url: n.url };
+        });
+      }
+    };
+  })();
+  </script>
 
   <!-- Track tel: clicks -->
   <script>
