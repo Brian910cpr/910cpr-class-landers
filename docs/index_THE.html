@@ -340,191 +340,247 @@
 
 <script id="910cpr-schedule" defer>
 (() => {
-  // ---------------- Feed ----------------
-  const FEED_CANDIDATES = ["periscope_full.json","./periscope_full.json","/periscope_full.json"];
-  let FEED_PROMISE;
-  async function loadFeed(){
-    for(const u of FEED_CANDIDATES){
-      try{
-        const r = await fetch(u, {cache:"no-store"});
-        if(!r.ok) throw new Error(`HTTP ${r.status}`);
-        const j = await r.json();
-        console.info("[910CPR] Loaded feed:", u, `(${j.length} items)`);
-        return j;
-      }catch(e){ console.warn("[910CPR] Feed failed:", u, e.message||e); }
-    }
-    throw new Error("All feed locations failed (404).");
-  }
-  async function getFeed(){ return FEED_PROMISE || (FEED_PROMISE = loadFeed()); }
+  // --- prevent double-run if accidentally included twice ---
+  if (window.__910cprScheduleLoaded) return;
+  window.__910cprScheduleLoaded = true;
 
-  // ---------------- Helpers ----------------
-  const U = s => (s||"").toUpperCase();
+  // --- load feed (tries relative first so it works on GitHub Pages/subfolders) ---
+  const FEED_PATHS = ["periscope_full.json", "./periscope_full.json", "/periscope_full.json"];
+  let FEED_PROMISE = null;
+  async function getFeed() {
+    if (FEED_PROMISE) return FEED_PROMISE;
+    FEED_PROMISE = (async () => {
+      for (const u of FEED_PATHS) {
+        try {
+          const r = await fetch(u, { cache: "no-store" });
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          const json = await r.json();
+          console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
+          return json;
+        } catch (e) {
+          console.warn("[910CPR] Feed failed:", u, e?.message || e);
+        }
+      }
+      throw new Error("All feed locations failed (404).");
+    })();
+    return FEED_PROMISE;
+  }
+
+  // ---------- helpers ----------
+  const U = s => (s || "").toUpperCase();
   const textOf = it => Object.values(it).filter(v => typeof v === "string").join(" ");
-  const findUrl = it => { const k = Object.keys(it).find(k => /(url|href|link)/i.test(k)); return (k && it[k]) || ""; };
-  const findCity = it => {
+
+  function detectUrl(it) {
+    const k = Object.keys(it).find(k => /(url|href|link)/i.test(k));
+    return (k && it[k]) || "";
+  }
+  function detectCity(it, all) {
     const direct = it.city || it.City || it.location_city || it.LocationCity;
     if (direct) return direct;
     const loc = it.location || it.Location || "";
     if (/WILM(INGTON)?/i.test(loc)) return "Wilmington";
     if (/BURGAW/i.test(loc)) return "Burgaw";
-    const all = textOf(it);
     if (/WILM(INGTON)?/i.test(all)) return "Wilmington";
     if (/BURGAW/i.test(all)) return "Burgaw";
     return "";
-  };
+  }
 
-  // 1) very tolerant parser
-  function parseISO(s){
-    if(s == null) return null;
-    const raw = String(s).trim();
-    let d = new Date(raw);                            // native
-    if(!isNaN(d)) return d;
+  // Ultra-tolerant date parser
+  function parseFlexDate(input) {
+    if (input == null) return null;
+    let s = String(input).trim();
+    s = s.replace(/[–—].*$/, "").replace(/\s+at\s+/i, " ").replace("@", " ").replace(/\s+/g, " ").trim();
 
-    const t = raw.replace(/\s+/g," ").trim();
+    // Excel serial number?
+    if (/^\d+(\.\d+)?$/.test(s)) {
+      const n = Number(s);
+      if (n > 25569 && n < 70000) {
+        const d = new Date(Math.round((n - 25569) * 86400 * 1000));
+        if (!isNaN(d)) return d;
+      }
+    }
 
-    // YYYY-MM-DD HH:MM[:SS] [AM/PM] [TZ]
-    let m = t.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Z]{1,4})?$/i);
-    if(m){
-      let [, ymd, hh, mm, ss, ap, tz] = m;
-      let H = parseInt(hh,10);
-      if (ap){ ap = ap.toUpperCase(); if(ap==="PM"&&H!==12) H+=12; if(ap==="AM"&&H===12) H=0; }
+    // Native
+    let d = new Date(s);
+    if (!isNaN(d)) return d;
+
+    // YYYY-MM-DD HH:MM[:SS] AM/PM TZ
+    let m = s.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Z]{1,4})?$/i);
+    if (m) {
+      let [, Y, M, D, h, mi, ss, ap, tz] = m;
+      let H = parseInt(h, 10);
+      if (ap) { ap = ap.toUpperCase(); if (ap==="PM" && H!==12) H+=12; if (ap==="AM" && H===12) H=0; }
       const tzMap = { EDT:"-04:00", EST:"-05:00", ET:"-05:00", CDT:"-05:00", CST:"-06:00", PDT:"-07:00", PST:"-08:00" };
       const off = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
-      d = new Date(`${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}${off}`); if(!isNaN(d)) return d;
-      d = new Date(`${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}`);      if(!isNaN(d)) return d;
+      d = new Date(`${Y}-${M}-${D}T${String(H).padStart(2,"0")}:${mi}:${ss||"00"}${off}`); if (!isNaN(d)) return d;
+      d = new Date(`${Y}-${M}-${D}T${String(H).padStart(2,"0")}:${mi}:${ss||"00"}`);      if (!isNaN(d)) return d;
     }
 
-    // M/D/YYYY HH:MM [AM/PM]
-    m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
-    if(m){
-      let [, mo, da, yr, hh, mm, ap] = m;
-      let H = parseInt(hh,10);
-      if (ap){ ap = ap.toUpperCase(); if(ap==="PM"&&H!==12) H+=12; if(ap==="AM"&&H===12) H=0; }
-      d = new Date(parseInt(yr,10), parseInt(mo,10)-1, parseInt(da,10), H, parseInt(mm,10), 0);
-      if(!isNaN(d)) return d;
+    // M/D/YYYY HH:MM AM/PM [TZ]
+    m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?:\s*(AM|PM))?)?(?:\s*[A-Z]{1,4})?$/i);
+    if (m) {
+      let [, mo, da, yr, h, mi, ap] = m;
+      let H = h ? parseInt(h,10) : 9;
+      if (ap) { ap = ap.toUpperCase(); if (ap==="PM" && H!==12) H+=12; if (ap==="AM" && H===12) H=0; }
+      d = new Date(parseInt(yr,10), parseInt(mo,10)-1, parseInt(da,10), H, mi ? parseInt(mi,10) : 0, 0);
+      if (!isNaN(d)) return d;
     }
 
-    // fallback: “YYYY-MM-DD HH:MM” → add seconds
-    const fb = new Date(t.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00"));
-    return isNaN(fb) ? null : fb;
+    // Mon D, YYYY [H:MM AM/PM]
+    m = s.match(/^([A-Za-z]{3,})\s+(\d{1,2}),\s*(\d{4})(?:\s+(\d{1,2}):(\d{2})(?:\s*(AM|PM))?)?$/);
+    if (m) {
+      const MONTHS = "JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC".split(" ");
+      let [, mon, da, yr, h, mi, ap] = m;
+      let M = MONTHS.indexOf(mon.substring(0,3).toUpperCase());
+      let H = h ? parseInt(h,10) : 9;
+      if (ap) { ap = ap.toUpperCase(); if (ap==="PM" && H!==12) H+=12; if (ap==="AM" && H===12) H=0; }
+      d = new Date(parseInt(yr,10), M, parseInt(da,10), H, mi ? parseInt(mi,10) : 0, 0);
+      if (!isNaN(d)) return d;
+    }
+
+    // Pull ISO-ish core if embedded
+    m = s.match(/(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?/);
+    if (m) {
+      const iso = `${m[1]}T${m[2] ? String(m[2]).padStart(2,"0") : "09"}:${m[3] || "00"}:00`;
+      d = new Date(iso);
+      if (!isNaN(d)) return d;
+    }
+
+    return null;
   }
 
-  // 2) auto-detect which field contains a start date (try many)
-  function pickStart(it){
-    const candidates = [
-      "start","start_time","startTime","startDateTime","startDate","start_at","datetime","date",
-      "Start","StartTime","Start Date / Time","StartDate","Date"
-    ];
-    const keys = Array.from(new Set([...candidates, ...Object.keys(it).filter(k => /(start|date|time)/i.test(k))]));
-    for(const k of keys){
-      const v = it[k];
-      if (v == null) continue;
-      // numeric epoch?
-      if (typeof v === "number") {
-        const ms = v > 10**12 ? v : v*1000;
-        const d = new Date(ms);
-        if(!isNaN(d)) return {raw:v, date:d};
+  // Try to find a date anywhere (if a clean start key fails)
+  function findDateInAnyField(it) {
+    for (const [k, v] of Object.entries(it)) {
+      if (typeof v === "string") {
+        const d = parseFlexDate(v);
+        if (d) return { dt: d, startRaw: v, startKey: k };
       }
-      // string
-      const d = parseISO(v);
-      if(d) return {raw:v, date:d};
     }
-    return {raw: it.start ?? it.date ?? "", date:null};
+    return { dt: null, startRaw: "", startKey: "" };
   }
 
-  function chipText(it){
-    if (it._d instanceof Date && !isNaN(it._d)) {
-      const d = it._d;
-      const mo = d.toLocaleString(undefined,{month:"short"});
-      const day = String(d.getDate()).padStart(2,"0");
-      let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
-      const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
-      return `${mo} ${day}, ${hm} — ${it.city||""}`;
+  function normalize(it) {
+    const all = textOf(it);
+    const keys = Object.keys(it);
+    const pref = [
+      "start","Start","start_time","startTime","StartTime",
+      "startDate","StartDate","startDateTime","StartDateTime",
+      "start_at","Start Date / Time","Start Date","Date","date","datetime"
+    ];
+    const key = pref.find(k => k in it) || keys.find(k => /start|date/i.test(k));
+    let startRaw = key ? it[key] : (it.start || it.date || "");
+    let parsed = parseFlexDate(startRaw);
+    let usedKey = key || (startRaw ? "guessed" : "");
+
+    if (!parsed) {
+      const found = findDateInAnyField(it);
+      parsed   = found.dt;
+      startRaw = found.startRaw || startRaw;
+      usedKey  = found.startKey || usedKey;
     }
-    return `${it.startRaw||""}${it.city ? " — "+it.city : ""}`;  // fallback: raw text
+
+    const url  = detectUrl(it);
+    const city = detectCity(it, all);
+    return { dt: parsed, startRaw, startKey: usedKey, url, city, text: U(all) };
   }
 
-  function setChips(id, items){
+  function chipLabel(n) {
+    if (!(n && n.dt instanceof Date && !isNaN(n.dt))) return "";
+    const d = n.dt;
+    const mo = d.toLocaleString(undefined, { month: "short" });
+    const day = String(d.getDate()).padStart(2, "0");
+    let h = d.getHours(), m = d.getMinutes(), ap = h >= 12 ? "p" : "a"; h = h % 12 || 12;
+    const hm = m ? `${h}:${String(m).padStart(2, "0")}${ap}` : `${h}${ap}`;
+    return `${mo} ${day}, ${hm}${n.city ? ` — ${n.city}` : ""}`;
+  }
+
+  // Keep label+URL paired so we never produce empty pills
+  function setChips(id, items) {
     const el = document.getElementById(id);
-    if(!el) return;
-    el.innerHTML = items.length
-      ? items.map(it => `<a class="timechip" href="${it.url||"#"}">${chipText(it)}</a>`).join("")
-      : '<span class="micro">New dates posting—check back soon.</span>';
+    if (!el) return;
+    const html = (items || [])
+      .map(n => ({ label: chipLabel(n), url: n.url || "#" }))
+      .filter(x => x.label)
+      .map(x => `<a class="timechip" href="${x.url}">${x.label}</a>`)
+      .join("");
+    el.innerHTML = html || '<span class="micro">New dates posting—check back soon.</span>';
   }
 
-  // seed placeholders so it never looks empty
-  ["times-bls-ren","times-bls-init","times-bls-heart",
-   "times-acls-ren","times-acls-init","times-acls-heart",
-   "times-pals-ren","times-pals-init","times-pals-heart",
-   "wk-aha-list","hsi-list"].forEach(id => setChips(id, []));
+  // seed placeholders so UI isn’t blank during load
+  [
+    "times-bls-ren","times-bls-init","times-bls-heart",
+    "times-acls-ren","times-acls-init","times-acls-heart",
+    "times-pals-ren","times-pals-init","times-pals-heart",
+    "wk-aha-list","hsi-list"
+  ].forEach(id => setChips(id, []));
 
-  // normalize feed once
-  let HAS_VALID_DATES = false;
-  async function normalizedFeed(){
-    const raw = await getFeed();
-    const norm = raw.map(it => {
-      const {raw:startRaw, date:_d} = pickStart(it);
-      return {...it, startRaw, _d, city: findCity(it), url: findUrl(it), _text: textOf(it)};
-    });
-    const ok = norm.filter(x => x._d instanceof Date && !isNaN(x._d)).length;
-    HAS_VALID_DATES = ok > 0;
-    console.info(`[910CPR] valid dates: ${ok}/${norm.length}${HAS_VALID_DATES ? "" : " (FALLBACK: showing by feed order)"}`);
-    return norm;
+  // Bucketing on normalized text
+  const has = (n, re) => re.test(n.text);
+  const family = (n) =>
+    has(n, /(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/) ? "BLS" :
+    has(n, /(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/)      ? "ACLS" :
+    has(n, /(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/)   ? "PALS" : null;
+
+  const isHeart    = n => has(n, /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/);
+  const isRenew    = n => has(n, /\bRENEW(AL)?\b|RECERT|UPDATE\b/);
+  const isInPerson = n => has(n, /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/) && !isHeart(n);
+
+  const tri = fam => ({
+    ren:   n => family(n)===fam && isRenew(n)  && !isHeart(n),
+    init:  n => family(n)===fam && !isRenew(n) && isInPerson(n),
+    heart: n => family(n)===fam && isHeart(n),
+  });
+
+  const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
+  const LIM_TRIAD = 6, LIM_WORK = 12;
+
+  async function upcoming(filterFn, limit) {
+    const raw  = await getFeed();
+    const norm = raw.map(normalize);
+    const now  = new Date();
+    const ok   = norm.filter(n => n.dt instanceof Date && !isNaN(n.dt));
+    console.info(`[910CPR] valid dates: ${ok.length}/${norm.length}`);
+    return ok.filter(n => n.dt >= now).filter(filterFn).sort((a,b)=>a.dt-b.dt).slice(0, limit);
   }
 
-  // filters
-  const has = (it, re) => re.test(U(it._text||""));
-  const familyFrom = it =>
-    has(it, /(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/) ? "BLS" :
-    has(it, /(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/)      ? "ACLS" :
-    has(it, /(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/)   ? "PALS" : null;
-  const isHeart    = it => has(it, /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/);
-  const isRenew    = it => has(it, /\bRENEW(AL)?\b|RECERT|UPDATE\b/);
-  const isInPerson = it => has(it, /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/) && !isHeart(it);
-  const tri = fam => ({ ren:it => familyFrom(it)===fam && isRenew(it) && !isHeart(it),
-                        init:it => familyFrom(it)===fam && !isRenew(it) && isInPerson(it),
-                        heart:it => familyFrom(it)===fam && isHeart(it) });
-
-  const BLS=tri("BLS"), ACLS=tri("ACLS"), PALS=tri("PALS");
-
-  async function upcoming(filterFn, limit=6){
-    const feed = await normalizedFeed();
-    let list = feed.filter(filterFn);
-    if (HAS_VALID_DATES) {
-      const now = new Date();
-      list = list.filter(x => x._d && x._d >= now).sort((a,b)=>a._d - b._d);
-    } // else: keep feed order
-    return list.slice(0, limit);
-  }
-
-  const LIM_TRIAD=6, LIM_WORK=12;
   Promise.all([
     upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
     upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
     upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
-    upcoming(it => familyFrom(it)==="ACLS" && isRenew(it) && !isHeart(it), LIM_TRIAD).then(v => setChips("times-acls-ren", v)),
-    upcoming(it => familyFrom(it)==="ACLS" && !isRenew(it) && isInPerson(it), LIM_TRIAD).then(v => setChips("times-acls-init", v)),
-    upcoming(it => familyFrom(it)==="ACLS" && isHeart(it), LIM_TRIAD).then(v => setChips("times-acls-heart", v)),
-    upcoming(it => familyFrom(it)==="PALS" && isRenew(it) && !isHeart(it), LIM_TRIAD).then(v => setChips("times-pals-ren", v)),
-    upcoming(it => familyFrom(it)==="PALS" && !isRenew(it) && isInPerson(it), LIM_TRIAD).then(v => setChips("times-pals-init", v)),
-    upcoming(it => familyFrom(it)==="PALS" && isHeart(it), LIM_TRIAD).then(v => setChips("times-pals-heart", v)),
-    upcoming(it => has(it, /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/) && has(it, /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/), LIM_WORK).then(v => setChips("wk-aha-list", v)),
-    upcoming(it => has(it, /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/) && has(it, /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/), LIM_WORK).then(v => setChips("hsi-list", v)),
+
+    upcoming(ACLS.ren,  LIM_TRIAD).then(v => setChips("times-acls-ren",  v)),
+    upcoming(ACLS.init, LIM_TRIAD).then(v => setChips("times-acls-init", v)),
+    upcoming(ACLS.heart,LIM_TRIAD).then(v => setChips("times-acls-heart",v)),
+
+    upcoming(PALS.ren,  LIM_TRIAD).then(v => setChips("times-pals-ren",  v)),
+    upcoming(PALS.init, LIM_TRIAD).then(v => setChips("times-pals-init", v)),
+    upcoming(PALS.heart,LIM_TRIAD).then(v => setChips("times-pals-heart",v)),
+
+    // Workplace
+    upcoming(n => has(n, /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/) && has(n, /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/), LIM_WORK)
+      .then(v => setChips("wk-aha-list", v)),
+    upcoming(n => has(n, /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/) && has(n, /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/), LIM_WORK)
+      .then(v => setChips("hsi-list", v)),
   ]).catch(err => {
     console.error("[910CPR] schedule init failed:", err);
     ["times-bls-ren","times-bls-init","times-bls-heart","times-acls-ren","times-acls-init","times-acls-heart","times-pals-ren","times-pals-init","times-pals-heart","wk-aha-list","hsi-list"]
       .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>'; });
   });
 
-  // Dev: run in console if needed
-  window.__probe_keys = async () => {
-    const f = await getFeed(); const first = f[0]||{};
-    const tries = Object.keys(first).filter(k=>/(start|date|time)/i.test(k));
-    return {keys: tries, sample: tries.map(k=>({k, v:first[k]})).slice(0,10)};
+  // Dev helpers (run in DevTools)
+  window.__sched = {
+    sample: async () => (await getFeed()).slice(0, 8),
+    probe:  async () => {
+      const raw = await getFeed();
+      return raw.slice(0, 12).map(it => {
+        const n = normalize(it);
+        return { startKey: n.startKey, startRaw: n.startRaw, parsed: String(n.dt), city: n.city, url: n.url };
+      });
+    }
   };
 })();
 </script>
-
 
   <!-- Track tel: clicks -->
   <script>
