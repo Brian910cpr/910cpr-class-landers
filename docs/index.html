@@ -19,7 +19,7 @@
     "url":"https://www.910cpr.com/",
     "telephone":"+1-910-395-5193",
     "areaServed":["Wilmington NC","Burgaw NC"]
-  }
+  }<script id="910cpr-schedule"
   </script>
 
   <style>
@@ -338,102 +338,108 @@
     </a>
   </div>
 
-<!-- Schedule script (single source of truth) -->
-<script defer>
+<script id="910cpr-schedule" defer>
 (() => {
-  // ===== Config =====
-  const LIM_TRIAD = 8;   // how many dates to show in each BLS/ACLS/PALS column
-  const LIM_WORK  = 12;  // right-rail workplace lists
-
-  // Try relative first (works on GitHub Pages), then absolute
+  // ---------- Feed locations (relative first) ----------
   const FEED_CANDIDATES = [
     "periscope_full.json",
     "./periscope_full.json",
     "/periscope_full.json"
   ];
+  let FEED_PROMISE = null;
 
-  // ===== Helpers =====
-  const U = s => (s || "").toUpperCase();
-
-  // Gather ALL string fields into one big searchable string
-  function ALLTEXT(it) {
-    let out = "";
-    for (const k in it) {
-      const v = it[k];
-      if (typeof v === "string") out += " " + v;
+  async function loadFeed() {
+    for (const u of FEED_CANDIDATES) {
+      try {
+        const r = await fetch(u, { cache: "no-store" });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const json = await r.json();
+        console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
+        return json;
+      } catch (e) {
+        console.warn("[910CPR] Feed failed:", u, e.message || e);
+      }
     }
-    return U(out);
+    throw new Error("All feed locations failed (404).");
+  }
+  async function getFeed() {
+    if (!FEED_PROMISE) FEED_PROMISE = loadFeed();
+    return FEED_PROMISE;
   }
 
-  // Robust date parser (ISO, "YYYY-MM-DD HH:MM", "YYYY-MM-DD h:mm AM/PM TZ")
-  function parseISO(s){
-    if(!s) return null;
+  // ---------- Helpers ----------
+  const U = s => (s||"").toUpperCase();
+  const TXT = it => `${it.title||""} ${it.course||""} ${it.certification||""} ${it.agency||""} ${it.format||""}`;
+
+  // Very tolerant date parser: ISO, "YYYY-MM-DD HH:MM", with AM/PM, optional TZ letters (ET/EST/EDT/etc.)
+  function parseISO(s) {
+    if (!s) return null;
     const raw = String(s).trim();
 
-    const d0 = new Date(raw);
-    if(!isNaN(d0)) return d0;
+    // 0) native first
+    let d = new Date(raw);
+    if (!isNaN(d)) return d;
 
-    if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(raw)) {
-      const d1 = new Date(raw.replace(" ","T")+":00");
-      if(!isNaN(d1)) return d1;
-    }
+    // 1) Collapse multiple spaces and trim
+    const t = raw.replace(/\s+/g, " ").trim();
 
-    const m = raw.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}):(\d{2})\s*([AP]M)\s*([A-Z]{2,4})?$/i);
+    // 2) General matcher: 2025-03-20 9:00 (AM|PM)? (TZ)?
+    let m = t.match(
+      /^(\d{4}-\d{2}-\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Z]{1,4})?$/i
+    );
     if (m) {
-      let [, ymd, hh, mm, ap, tz] = m;
-      let H = parseInt(hh,10);
-      if (ap.toUpperCase()==="PM" && H !== 12) H += 12;
-      if (ap.toUpperCase()==="AM" && H === 12) H = 0;
-      const tzMap = { EDT:"-04:00", EST:"-05:00", CDT:"-05:00", CST:"-06:00", PDT:"-07:00", PST:"-08:00" };
-      const offset = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
-      const iso = `${ymd}T${String(H).padStart(2,"0")}:${mm}:00${offset}`;
-      const d2 = new Date(iso);
-      if(!isNaN(d2)) return d2;
+      let [, ymd, hh, mm, ss, ap, tz] = m;
+      let H = parseInt(hh, 10);
+      if (ap) {
+        ap = ap.toUpperCase();
+        if (ap === "PM" && H !== 12) H += 12;
+        if (ap === "AM" && H === 12) H = 0;
+      }
+      const tzMap = {
+        EDT: "-04:00", EST: "-05:00", ET: "-05:00",
+        CDT: "-05:00", CST: "-06:00",
+        PDT: "-07:00", PST: "-08:00"
+      };
+      const off = tz && tzMap[tz.toUpperCase()] ? tzMap[tz.toUpperCase()] : "";
+      const iso = `${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}${off}`;
+      d = new Date(iso);
+      if (!isNaN(d)) return d;
+
+      // Try without offset (local)
+      d = new Date(`${ymd}T${String(H).padStart(2,"0")}:${mm}:${ss||"00"}`);
+      if (!isNaN(d)) return d;
     }
 
-    const fb = new Date(raw.replace(" ","T").replace(/T(\d{2}:\d{2})(?!:)/,"T$1:00"));
-    return isNaN(fb) ? null : fb;
+    // 3) Plain ISO without seconds
+    m = t.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}):(\d{2})$/);
+    if (m) {
+      const iso = `${m[1]}T${m[2]}:${m[3]}:00`;
+      d = new Date(iso);
+      if (!isNaN(d)) return d;
+    }
+
+    // 4) Remove trailing TZ letters and retry
+    const t2 = t.replace(/\s*[A-Z]{1,4}$/, "");
+    d = new Date(t2.replace(" ", "T"));
+    return isNaN(d) ? null : d;
   }
 
   function chipText(it){
     if (it.label) return it.label;
     const d = parseISO(it.start);
-    if(!d) return (it.start||"") + (it.city?(" — "+it.city):"");
-    const mo  = d.toLocaleString(undefined,{month:"short"});
+    if (!d) return (it.start||"") + (it.city ? (" — "+it.city) : "");
+    const mo = d.toLocaleString(undefined,{month:"short"});
     const day = String(d.getDate()).padStart(2,"0");
-    let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
+    let h = d.getHours(), m = d.getMinutes(), ap = h>=12 ? "p":"a"; h=h%12||12;
     const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
     return `${mo} ${day}, ${hm} — ${it.city||""}`;
   }
 
-  // Build a click target (registration link > static session page > course hub)
-  function buildSessionHref(it){
-    const direct = it.url || it.permalink || it.session_url;
-    if (direct) return direct;
-
-    const reg = it.enroll_url || it.registration || it.reg_link || it.register_url || it.hovn_url;
-    if (reg) return reg;
-
-    const d = parseISO(it.start);
-    const sid = it.id || it.session_id || it.hovn_id || it.ID;
-    if (d && sid){
-      const y  = d.getFullYear();
-      const mo = String(d.getMonth()+1).padStart(2,'0');
-      const da = String(d.getDate()).padStart(2,'0');
-      const hh = String(d.getHours()).padStart(2,'0');
-      const mm = String(d.getMinutes()).padStart(2,'0');
-      const city = String(it.city || it.location || "")
-        .replace(/[^A-Za-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-      return `./classes/${y}-${mo}-${da}_${hh}-${mm}_${sid}_${city}.html`;
-    }
-    return '/courses/medical/';
-  }
-
   function setChips(id, items){
     const el = document.getElementById(id);
-    if(!el) return;
+    if (!el) return;
     el.innerHTML = items.length
-      ? items.map(it => `<a class="timechip" href="${buildSessionHref(it)}">${chipText(it)}</a>`).join("")
+      ? items.map(it => `<a class="timechip" href="${it.url||"#"}">${chipText(it)}</a>`).join("")
       : '<span class="micro">New dates posting—check back soon.</span>';
   }
 
@@ -445,50 +451,10 @@
     "wk-aha-list","hsi-list"
   ].forEach(id => setChips(id, []));
 
-  // Load & normalize the feed (critical fix)
-  async function loadFeed() {
-    for (const u of FEED_CANDIDATES) {
-      try {
-        const r = await fetch(u, { cache: "no-store" });
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const raw = await r.json();
-        const norm = raw.map(it => ({
-          ...it,
-          start: it.start || it.start_iso || it.startISO || it.datetime || it.date || "",
-          city:  it.city || it.location || it.venue_city || it.venue || "",
-          url:   it.url || it.enroll_url || it.registration || it.reg_link || ""
-        }));
-        console.info("[910CPR] Loaded feed:", u, `(${norm.length} items)`);
-        return norm;
-      } catch (e) {
-        console.warn("[910CPR] Feed failed:", u, e.message || e);
-      }
-    }
-    throw new Error("All feed locations failed (404).");
-  }
-
-  // Family & format detectors (scan ALL text for safety)
-  const famIs = (it, word) => ALLTEXT(it).includes(word);
-  const isBLS  = it => famIs(it, "BLS");
-  const isACLS = it => famIs(it, "ACLS");
-  const isPALS = it => famIs(it, "PALS");
-
-  const isHeart    = it => /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/i.test(ALLTEXT(it));
-  const isRenew    = it => /\bRENEW(AL)?\b|RECERT|UPDATE\b|REFRESHER\b/i.test(ALLTEXT(it));
-  const isInPerson = it => /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED|IN\-PERSON/i.test(ALLTEXT(it)) && !isHeart(it);
-
-  const tri = pred => ({
-    ren:   it => pred(it) && isRenew(it)        && !isHeart(it),
-    init:  it => pred(it) && !isRenew(it)       && (isInPerson(it) || !isHeart(it)),
-    heart: it => pred(it) && isHeart(it),
-  });
-
-  const BLS  = tri(isBLS), ACLS = tri(isACLS), PALS = tri(isPALS);
-
-  async function upcoming(filter, limit=LIM_TRIAD){
-    if (!window.__FEED__) window.__FEED__ = await loadFeed();
+  async function upcoming(filter, limit=6){
+    const feed = await getFeed();
     const now = new Date();
-    return window.__FEED__
+    return feed
       .map(x => ({...x, _d: parseISO(x.start)}))
       .filter(x => x._d && x._d >= now)
       .filter(filter)
@@ -496,42 +462,62 @@
       .slice(0,limit);
   }
 
-  // Populate all buckets + simple debug counters
+  // ---------- Buckets ----------
+  const familyFrom = it => {
+    const t = U(TXT(it));
+    if (/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/.test(t)) return "BLS";
+    if (/(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/.test(t))     return "ACLS";
+    if (/(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/.test(t))  return "PALS";
+    return U(it.course_family||"") || null;
+  };
+  const isHeart    = it => /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/i.test(TXT(it));
+  const isRenew    = it => /\bRENEW(AL)?\b|RECERT|UPDATE\b/i.test(TXT(it));
+  const isInPerson = it => /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/i.test(TXT(it)) && !isHeart(it);
+
+  const tri = fam => ({
+    ren:   it => familyFrom(it)===fam && isRenew(it)        && !isHeart(it),
+    init:  it => familyFrom(it)===fam && !isRenew(it)       && isInPerson(it),
+    heart: it => familyFrom(it)===fam && isHeart(it),
+  });
+
+  const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
+  const LIM_TRIAD = 6, LIM_WORK = 12;
+
   Promise.all([
-    upcoming(BLS.ren).then(v   => { console.info("BLS-ren", v.length);   setChips("times-bls-ren",   v); }),
-    upcoming(BLS.init).then(v  => { console.info("BLS-init", v.length);  setChips("times-bls-init",  v); }),
-    upcoming(BLS.heart).then(v => { console.info("BLS-heart", v.length); setChips("times-bls-heart", v); }),
+    upcoming(BLS.ren,   LIM_TRIAD).then(v => setChips("times-bls-ren",   v)),
+    upcoming(BLS.init,  LIM_TRIAD).then(v => setChips("times-bls-init",  v)),
+    upcoming(BLS.heart, LIM_TRIAD).then(v => setChips("times-bls-heart", v)),
 
-    upcoming(ACLS.ren).then(v   => { console.info("ACLS-ren", v.length);   setChips("times-acls-ren",   v); }),
-    upcoming(ACLS.init).then(v  => { console.info("ACLS-init", v.length);  setChips("times-acls-init",  v); }),
-    upcoming(ACLS.heart).then(v => { console.info("ACLS-heart", v.length); setChips("times-acls-heart", v); }),
+    upcoming(ACLS.ren,  LIM_TRIAD).then(v => setChips("times-acls-ren",  v)),
+    upcoming(ACLS.init, LIM_TRIAD).then(v => setChips("times-acls-init", v)),
+    upcoming(ACLS.heart,LIM_TRIAD).then(v => setChips("times-acls-heart",v)),
 
-    upcoming(PALS.ren).then(v   => { console.info("PALS-ren", v.length);   setChips("times-pals-ren",   v); }),
-    upcoming(PALS.init).then(v  => { console.info("PALS-init", v.length);  setChips("times-pals-init",  v); }),
-    upcoming(PALS.heart).then(v => { console.info("PALS-heart", v.length); setChips("times-pals-heart", v); }),
+    upcoming(PALS.ren,  LIM_TRIAD).then(v => setChips("times-pals-ren",  v)),
+    upcoming(PALS.init, LIM_TRIAD).then(v => setChips("times-pals-init", v)),
+    upcoming(PALS.heart,LIM_TRIAD).then(v => setChips("times-pals-heart",v)),
 
-    // Workplace (AHA + HSI)
-    upcoming(it => /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(ALLTEXT(it)) && /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(ALLTEXT(it)), LIM_WORK)
+    // Workplace
+    upcoming(it => /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(TXT(it)), LIM_WORK)
       .then(v => setChips("wk-aha-list", v)),
-    upcoming(it => /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/i.test(ALLTEXT(it)) && /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(ALLTEXT(it)), LIM_WORK)
+    upcoming(it => /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(TXT(it)), LIM_WORK)
       .then(v => setChips("hsi-list", v)),
   ]).catch(err => {
     console.error("[910CPR] schedule init failed:", err);
-    ["times-bls-ren","times-bls-init","times-bls-heart",
-     "times-acls-ren","times-acls-init","times-acls-heart",
-     "times-pals-ren","times-pals-init","times-pals-heart",
-     "wk-aha-list","hsi-list"
+    [
+      "times-bls-ren","times-bls-init","times-bls-heart",
+      "times-acls-ren","times-acls-init","times-acls-heart",
+      "times-pals-ren","times-pals-init","times-pals-heart",
+      "wk-aha-list","hsi-list"
     ].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>';
     });
   });
 
-  // Handy debugger
-  window.__debug_med = async () => {
-    const feed = await (window.__FEED__ ? Promise.resolve(window.__FEED__) : loadFeed());
-    console.log("feed items:", feed.length);
-    return feed.slice(0,10).map(x => ({start:x.start, parsed: parseISO(x.start), url: buildSessionHref(x)}));
+  // Quick console helper if we need to peek at the first few rows:
+  window.__debug_dates = async () => {
+    const feed = await getFeed();
+    return feed.slice(0,5).map(x => ({start:x.start, parsed: parseISO(x.start)}));
   };
 })();
 </script>
