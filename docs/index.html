@@ -342,8 +342,8 @@
 <script defer>
 (() => {
   // ===== Config =====
-  const LIM_TRIAD = 8;     // how many dates to show in each BLS/ACLS/PALS column
-  const LIM_WORK  = 12;    // right-rail workplace lists
+  const LIM_TRIAD = 8;   // how many dates to show in each BLS/ACLS/PALS column
+  const LIM_WORK  = 12;  // right-rail workplace lists
 
   // Try relative first (works on GitHub Pages), then absolute
   const FEED_CANDIDATES = [
@@ -353,10 +353,19 @@
   ];
 
   // ===== Helpers =====
-  const U   = s => (s||"").toUpperCase();
-  const TXT = it => `${it.title||""} ${it.course||""} ${it.certification||""} ${it.agency||""} ${it.format||""}`;
+  const U = s => (s || "").toUpperCase();
 
-  // Robust date parser (ISO, "YYYY-MM-DD HH:MM", or "YYYY-MM-DD h:mm AM/PM TZ")
+  // Gather ALL string fields into one big searchable string
+  function ALLTEXT(it) {
+    let out = "";
+    for (const k in it) {
+      const v = it[k];
+      if (typeof v === "string") out += " " + v;
+    }
+    return U(out);
+  }
+
+  // Robust date parser (ISO, "YYYY-MM-DD HH:MM", "YYYY-MM-DD h:mm AM/PM TZ")
   function parseISO(s){
     if(!s) return null;
     const raw = String(s).trim();
@@ -436,14 +445,13 @@
     "wk-aha-list","hsi-list"
   ].forEach(id => setChips(id, []));
 
-  // Load and NORMALIZE the feed (critical fix)
+  // Load & normalize the feed (critical fix)
   async function loadFeed() {
     for (const u of FEED_CANDIDATES) {
       try {
         const r = await fetch(u, { cache: "no-store" });
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const raw = await r.json();
-        // Normalize keys so downstream code can always use start/city/url
         const norm = raw.map(it => ({
           ...it,
           start: it.start || it.start_iso || it.startISO || it.datetime || it.date || "",
@@ -459,25 +467,23 @@
     throw new Error("All feed locations failed (404).");
   }
 
-  // Family & format detectors (BLS/ACLS/PALS, renewal/initial, heartcode)
-  const familyFrom = it => {
-    const t = U(TXT(it));
-    if (/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/.test(t)) return "BLS";
-    if (/(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/.test(t))     return "ACLS";
-    if (/(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/.test(t))  return "PALS";
-    return U(it.course_family||"") || null;
-  };
-  const isHeart    = it => /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/i.test(TXT(it));
-  const isRenew    = it => /\bRENEW(AL)?\b|RECERT|UPDATE\b/i.test(TXT(it));
-  const isInPerson = it => /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/i.test(TXT(it)) && !isHeart(it);
+  // Family & format detectors (scan ALL text for safety)
+  const famIs = (it, word) => ALLTEXT(it).includes(word);
+  const isBLS  = it => famIs(it, "BLS");
+  const isACLS = it => famIs(it, "ACLS");
+  const isPALS = it => famIs(it, "PALS");
 
-  const tri = fam => ({
-    ren:   it => familyFrom(it)===fam && isRenew(it)        && !isHeart(it),
-    init:  it => familyFrom(it)===fam && !isRenew(it)       && isInPerson(it),
-    heart: it => familyFrom(it)===fam && isHeart(it),
+  const isHeart    = it => /HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/i.test(ALLTEXT(it));
+  const isRenew    = it => /\bRENEW(AL)?\b|RECERT|UPDATE\b|REFRESHER\b/i.test(ALLTEXT(it));
+  const isInPerson = it => /IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED|IN\-PERSON/i.test(ALLTEXT(it)) && !isHeart(it);
+
+  const tri = pred => ({
+    ren:   it => pred(it) && isRenew(it)        && !isHeart(it),
+    init:  it => pred(it) && !isRenew(it)       && (isInPerson(it) || !isHeart(it)),
+    heart: it => pred(it) && isHeart(it),
   });
 
-  const BLS = tri("BLS"), ACLS = tri("ACLS"), PALS = tri("PALS");
+  const BLS  = tri(isBLS), ACLS = tri(isACLS), PALS = tri(isPALS);
 
   async function upcoming(filter, limit=LIM_TRIAD){
     if (!window.__FEED__) window.__FEED__ = await loadFeed();
@@ -490,24 +496,24 @@
       .slice(0,limit);
   }
 
-  // Populate all buckets
+  // Populate all buckets + simple debug counters
   Promise.all([
-    upcoming(BLS.ren).then(v   => setChips("times-bls-ren",   v)),
-    upcoming(BLS.init).then(v  => setChips("times-bls-init",  v)),
-    upcoming(BLS.heart).then(v => setChips("times-bls-heart", v)),
+    upcoming(BLS.ren).then(v   => { console.info("BLS-ren", v.length);   setChips("times-bls-ren",   v); }),
+    upcoming(BLS.init).then(v  => { console.info("BLS-init", v.length);  setChips("times-bls-init",  v); }),
+    upcoming(BLS.heart).then(v => { console.info("BLS-heart", v.length); setChips("times-bls-heart", v); }),
 
-    upcoming(ACLS.ren).then(v   => setChips("times-acls-ren",   v)),
-    upcoming(ACLS.init).then(v  => setChips("times-acls-init",  v)),
-    upcoming(ACLS.heart).then(v => setChips("times-acls-heart", v)),
+    upcoming(ACLS.ren).then(v   => { console.info("ACLS-ren", v.length);   setChips("times-acls-ren",   v); }),
+    upcoming(ACLS.init).then(v  => { console.info("ACLS-init", v.length);  setChips("times-acls-init",  v); }),
+    upcoming(ACLS.heart).then(v => { console.info("ACLS-heart", v.length); setChips("times-acls-heart", v); }),
 
-    upcoming(PALS.ren).then(v   => setChips("times-pals-ren",   v)),
-    upcoming(PALS.init).then(v  => setChips("times-pals-init",  v)),
-    upcoming(PALS.heart).then(v => setChips("times-pals-heart", v)),
+    upcoming(PALS.ren).then(v   => { console.info("PALS-ren", v.length);   setChips("times-pals-ren",   v); }),
+    upcoming(PALS.init).then(v  => { console.info("PALS-init", v.length);  setChips("times-pals-init",  v); }),
+    upcoming(PALS.heart).then(v => { console.info("PALS-heart", v.length); setChips("times-pals-heart", v); }),
 
-    // Workplace right-rail
-    upcoming(it => /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(TXT(it)), LIM_WORK)
+    // Workplace (AHA + HSI)
+    upcoming(it => /FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/i.test(ALLTEXT(it)) && /(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/i.test(ALLTEXT(it)), LIM_WORK)
       .then(v => setChips("wk-aha-list", v)),
-    upcoming(it => /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/i.test(TXT(it)) && /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(TXT(it)), LIM_WORK)
+    upcoming(it => /FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/i.test(ALLTEXT(it)) && /(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/i.test(ALLTEXT(it)), LIM_WORK)
       .then(v => setChips("hsi-list", v)),
   ]).catch(err => {
     console.error("[910CPR] schedule init failed:", err);
@@ -521,7 +527,7 @@
     });
   });
 
-  // Tiny debugger you can run in the console to verify parsing:
+  // Handy debugger
   window.__debug_med = async () => {
     const feed = await (window.__FEED__ ? Promise.resolve(window.__FEED__) : loadFeed());
     console.log("feed items:", feed.length);
