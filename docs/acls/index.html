@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Heartsaver First Aid/CPR/AED (AHA) — Workplaces | 910CPR</title>
+<title>ACLS — Advanced Cardiovascular Life Support (AHA) | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content="OSHA‑acceptable Heartsaver First Aid/CPR/AED for crews and teams. In‑person or blended (online + skills). Wilmington & Burgaw." />
-<link rel="canonical" href="https://www.910cpr.com/workplaces/" />
+<meta name="description" content="Advanced Cardiovascular Life Support (ACLS) — AHA‑aligned. In‑person initial & renewal, or HeartCode online + skills. Wilmington & Burgaw. Same‑day eCards." />
+<link rel="canonical" href="https://www.910cpr.com/acls/" />
 <style>
 :root{--brand:#2563eb;--brand-600:#1d4ed8;--bg:#f8fafc;--text:#0f172a;--muted:#64748b;--card:#ffffff;--line:#e5e7eb}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 .wrap{max-width:1100px;margin:0 auto;padding:22px}
 a{color:inherit}
 h1{margin:.25rem 0;font-size:clamp(22px,4vw,30px)}
+.sub{color:var(--muted);margin:.25rem 0 1rem}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px}
 .lede{color:#3f4753;margin:6px 0 12px;line-height:1.45}
 .timechips{display:flex;gap:8px;flex-wrap:wrap}
@@ -20,27 +21,36 @@ h1{margin:.25rem 0;font-size:clamp(22px,4vw,30px)}
 .eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
 </style>
 </head>
-<body data-lander="workplaces">
+<body data-lander="acls">
 <div class="wrap">
-<h1>Heartsaver First Aid/CPR/AED (AHA)</h1>
-<p class="lede">OSHA‑acceptable training for <strong>Industry, Construction, Schools, and Care teams</strong>. Choose a classroom session or a <em>blended</em> path (online + short skills appointment). Wilmington & Burgaw options weekly.</p>
+<h1>ACLS — Advanced Cardiovascular Life Support (AHA)</h1>
+<p class="lede">Team‑based resuscitation for adult cardiac emergencies. AHA‑aligned content with megacode practice. Same‑day eCards.</p>
 
 
-<section class="card" id="aha-inperson">
+<section class="card" id="initial">
 <span class="eyebrow">Option 1</span>
-<h2>In‑Person — Heartsaver (AHA)</h2>
-<p class="lede">Traditional classroom session covering First Aid, CPR, and AED use with practical scenarios.</p>
-<div class="timechips" id="wk-aha-inperson" aria-live="polite"></div>
-<a class="see" href="/courses/workplaces/?q=Heartsaver">See all AHA in‑person dates →</a>
+<h2>In‑Person Initial</h2>
+<p class="lede">Full ACLS provider training including rhythms, meds, and high‑performance team skills.</p>
+<div class="timechips" id="times-acls-init" aria-live="polite"></div>
+<a class="see" href="/courses/medical/?q=ACLS%20Provider">See all initial dates →</a>
 </section>
 
 
-<section class="card" id="aha-blended">
+<section class="card" id="renewal">
 <span class="eyebrow">Option 2</span>
-<h2>Blended — Heartsaver (AHA) Online + Skills</h2>
-<p class="lede">Do the theory online, then complete a short hands‑on skills appointment—same OSHA acceptance.</p>
-<div class="timechips" id="wk-aha-blended" aria-live="polite"></div>
-<a class="see" href="/courses/workplaces/?q=Heartsaver%20Blended">See all AHA blended dates →</a>
+<h2>In‑Person Renewal</h2>
+<p class="lede">Focused update for current providers with case‑based megacode and written/skills checks.</p>
+<div class="timechips" id="times-acls-ren" aria-live="polite"></div>
+<a class="see" href="/courses/medical/?q=ACLS%20Renewal">See all renewal dates →</a>
+</section>
+
+
+<section class="card" id="heartcode">
+<span class="eyebrow">Option 3</span>
+<h2>HeartCode ACLS (online + skills)</h2>
+<p class="lede">Finish AHA’s adaptive online module, then complete a short hands‑on skills appointment.</p>
+<div class="timechips" id="times-acls-heart" aria-live="polite"></div>
+<a class="see" href="/courses/medical/?q=ACLS%20HeartCode">See all HeartCode dates →</a>
 </section>
 </div>
 
@@ -53,12 +63,14 @@ const U=s=>(s||"").toUpperCase(), txt=it=>Object.values(it).filter(v=>typeof v==
 const norm=it=>{ const t=txt(it), k=['start','date','Date','StartDateTime','datetime'].find(k=>k in it)||'date'; const d=new Date(it[k]); const url=(Object.keys(it).find(k=>/(url|href|link)/i.test(k))||''), href=url?it[url]:''; const city=it.city||it['location.city']||(/WILM/i.test(t)?'Wilmington':/BURGAW/i.test(t)?'Burgaw':''); return {dt:isNaN(d)?null:d, url:href, city, text:U(t)} };
 const chip=n=>{ const d=n.dt; if(!(d instanceof Date)&&!isNaN(d)) return ""; const mo=d.toLocaleString(undefined,{month:"short"}); const day=String(d.getDate()).padStart(2,'0'); let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'p':'a'; h=h%12||12; const hm=m?`${h}:${String(m).padStart(2,'0')}${ap}`:`${h}${ap}`; return `${mo} ${day}, ${hm}${n.city?` — ${n.city}`:""}` };
 const set=(id,items)=>{ const el=document.getElementById(id); if(!el) return; const html=(items||[]).map(n=>({label:chip(n),url:n.url||"#"})).filter(x=>x.label).map(x=>`<a class="timechip" href="${x.url}">${x.label}</a>`).join(""); el.innerHTML= html || '<span class="micro">New dates posting—check back soon.</span>' };
-const has=(n,re)=>re.test(n.text); const IS_AHA=n=>has(n,/\bAHA\b|HEARTSAVER/); const IS_WORK=n=>has(n,/FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/);
-const blended=n=>has(n,/BLENDED|ONLINE.*SKILLS|HEARTCODE/); const classroom=n=>has(n,/IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/)&&!blended(n);
+const has=(n,re)=>re.test(n.text), fam=n=> has(n,/\bBLS\b|BASIC\s+LIFE\s+SUPPORT/)?'BLS': has(n,/\bACLS\b|ADVANCED\s+CARDIO/)?'ACLS': has(n,/\bPALS\b|PEDIATRIC\s+ADVANCED/)?'PALS':null;
+const heart=n=>has(n,/HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/), renew=n=>has(n,/\bRENEW(AL)?\b|RECERT|UPDATE\b/), cls=n=>has(n,/IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/)&&!heart(n);
 const LIM=15; async function up(f,lim){ const raw=await get(); const now=new Date(); const n=raw.map(norm).filter(x=>x.dt && x.dt>=now); return n.filter(f).sort((a,b)=>a.dt-b.dt).slice(0,lim) }
+const ACLS={ren:n=>fam(n)==='ACLS'&&renew(n)&&!heart(n), init:n=>fam(n)==='ACLS'&&!renew(n)&&cls(n), heart:n=>fam(n)==='ACLS'&&heart(n)};
 Promise.all([
-up(n=>IS_WORK(n)&&IS_AHA(n)&&classroom(n),LIM).then(v=>set('wk-aha-inperson',v)),
-up(n=>IS_WORK(n)&&IS_AHA(n)&&blended(n), LIM).then(v=>set('wk-aha-blended', v)),
+up(ACLS.init,LIM).then(v=>set('times-acls-init',v)),
+up(ACLS.ren, LIM).then(v=>set('times-acls-ren', v)),
+up(ACLS.heart,LIM).then(v=>set('times-acls-heart',v)),
 ]).catch(e=>console.error('[910CPR] schedule failed',e));
 })();
 </script>
