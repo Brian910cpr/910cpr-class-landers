@@ -1,68 +1,90 @@
-# periscope-simple 1.0 — use the CSV 'date' column to produce 'start'
-import sys, json
-from pathlib import Path
-import pandas as pd
+def parse_flex(value):
+    """
+    Ultra-tolerant date finder:
+      - Handles JS Date strings like 'Sat Sep 20 2025 17:00:00 GMT-0400 (Eastern Daylight Time)'
+      - Handles ISO, 'YYYY-MM-DD HH:MM', 'M/D/YYYY H:MM AM', 'Jan 5, 2026 9:00 AM'
+      - Understands Excel date serials like 45678 or 45678.5
+      - Ignores trailing text after a dash/em dash
+    Returns datetime or None.
+    """
+    if value is None: 
+        return None
+    s = to_str(value).strip()
+    if not s: 
+        return None
 
-def pick_series(df, *names):
-    for n in names:
-        if n in df.columns:
-            return df[n]
-    return pd.Series([""] * len(df))
+    # trim “ — details …” or “ – details …”
+    s = re.sub(r"\s*[–—-]\s*.*$", "", s)
+    s = s.replace("@", " ").replace(" at ", " ")
+    s = normalize_spaces(s)
 
-def to_str(x): return "" if x is None else str(x)
+    # --- 0) JS Date string: 'Sat Sep 20 2025 17:00:00 GMT-0400 (Eastern Daylight Time)'
+    m = re.match(r"^[A-Za-z]{3}\s+([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{2}):(\d{2})(?::(\d{2}))?\s+GMT([+-]\d{4})", s)
+    if m:
+        mon, da, yr, hh, mi, ss, _gmtoff = m.groups()
+        try:
+            M = MONTHS.index(mon[:3].upper()) + 1
+            H = int(hh); MI = int(mi); SS = int(ss or 0)
+            # The JS string shows local time already (e.g., EDT). Keep that time as-is.
+            return datetime(int(yr), M, int(da), H, MI, SS)
+        except Exception:
+            pass
 
-def main(inp_csv, out_json):
-    print("[periscope-simple] start")
-    df = pd.read_csv(inp_csv, dtype=str, keep_default_na=False).fillna("")
-    print("[periscope] columns:", list(df.columns))
+    # --- 1) Excel serial like 45782.5
+    if re.fullmatch(r"\d+(\.\d+)?", s) and is_excel_serial(s):
+        try:
+            return parse_excel_serial(s)
+        except Exception:
+            pass
 
-    if "date" not in df.columns:
-        print("[periscope] ERROR: 'date' column missing in CSV")
-        sys.exit(1)
+    # --- 2) Native ISO parse
+    try:
+        return datetime.fromisoformat(s)
+    except Exception:
+        pass
 
-    dt = pd.to_datetime(df["date"], errors="coerce", infer_datetime_format=True)
-    start = dt.dt.strftime("%Y-%m-%d %H:%M")
-    start = start.where(dt.notna(), "")
+    # --- 3) YYYY-MM-DD HH:MM[:SS] [AM/PM] [TZ letters]
+    m = re.match(r"^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Za-z]{1,4})?$", s, re.I)
+    if m:
+        Y, M, D, hh, mm, ss, ap, _tz = m.groups()
+        H = int(hh)
+        if ap:
+            ap = ap.upper()
+            if ap == "PM" and H != 12: H += 12
+            if ap == "AM" and H == 12: H = 0
+        return datetime(int(Y), int(M), int(D), H, int(mm), int(ss or 0))
 
-    title   = pick_series(df, "course", "title", "certification")
-    cert    = pick_series(df, "certification")
-    agency  = pick_series(df, "agency")
-    fmt     = pick_series(df, "format")
-    city    = pick_series(df, "location.city", "city")
-    venue   = pick_series(df, "location", "venue")
-    urlcol  = pick_series(df, "link", "url", "href")
+    # --- 4) M/D/YYYY [H:MM] [AM/PM]
+    m = re.match(r"^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\s+(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?)?$", s, re.I)
+    if m:
+        mo, da, yr, hh, mi, ap = m.groups()
+        H = int(hh) if hh else 9
+        if ap:
+            ap = ap.upper()
+            if ap == "PM" and H != 12: H += 12
+            if ap == "AM" and H == 12: H = 0
+        return datetime(int(yr), int(mo), int(da), H, int(mi or 0), 0)
 
-    rows = []
-    blanks = 0
-    for i in range(len(df)):
-        s = to_str(start.iloc[i])
-        if not s: blanks += 1
-        u = to_str(urlcol.iloc[i]) or "#"
-        rows.append({
-            "title": to_str(title.iloc[i]),
-            "course": to_str(title.iloc[i]),
-            "certification": to_str(cert.iloc[i]),
-            "agency": to_str(agency.iloc[i]),
-            "format": to_str(fmt.iloc[i]),
-            "start": s,
-            "end": "",
-            "city": to_str(city.iloc[i]),
-            "venue": to_str(venue.iloc[i]),
-            "url": u
-        })
+    # --- 5) Mon D, YYYY [H:MM] [AM/PM]
+    m = re.match(r"^([A-Za-z]{3,})\s+(\d{1,2}),\s*(\d{4})(?:\s+(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?)?$", s)
+    if m:
+        mon, da, yr, hh, mi, ap = m.groups()
+        try:
+            M = MONTHS.index(mon[:3].upper()) + 1
+            H = int(hh) if hh else 9
+            if ap:
+                ap = ap.upper()
+                if ap == "PM" and H != 12: H += 12
+                if ap == "AM" and H == 12: H = 0
+            return datetime(int(yr), M, int(da), H, int(mi or 0), 0)
+        except Exception:
+            pass
 
-    Path(out_json).parent.mkdir(parents=True, exist_ok=True)
-    with open(out_json, "w", encoding="utf-8") as f:
-        json.dump(rows, f, ensure_ascii=False)
+    # --- 6) Fallback: ISO-ish core like 2025-03-10 or 2025-03-10 9:00
+    m = re.search(r"(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?", s)
+    if m:
+        ymd, hh, mi = m.groups()
+        H = int(hh) if hh else 9
+        return datetime.fromisoformat(f"{ymd} {H:02d}:{(mi or '00')}")
 
-    print(f"[periscope] wrote {len(rows)} items -> {out_json}")
-    print(f"[periscope] empty starts: {blanks}")
-    for i in range(min(5, len(rows))):
-        r = rows[i]
-        print(f"[periscope] sample[{i}] start='{r['start']}' url='{r['url']}' city='{r['city']}' title='{r['title'][:60]}'")
-
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("usage: python scripts/sessions_to_periscope.py <input_csv> <output_json>")
-        sys.exit(2)
-    main(sys.argv[1], sys.argv[2])
+    return None
