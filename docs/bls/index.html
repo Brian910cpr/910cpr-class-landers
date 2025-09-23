@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>BLS — Basic Life Support (AHA) | 910CPR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Basic Life Support (BLS) for healthcare providers—AHA‑aligned. In‑person initial & renewal, or HeartCode online + skills. Wilmington & Burgaw. Same‑day eCards." />
+<link rel="canonical" href="https://www.910cpr.com/bls/" />
+<style>
+:root{--brand:#2563eb;--brand-600:#1d4ed8;--brand-50:#eef2ff;--accent:#ef4444;--bg:#f8fafc;--text:#0f172a;--muted:#64748b;--card:#ffffff;--line:#e5e7eb;--chip-bg:#f1f5f9;--chip-b:#e2e8f0;--ok-bg:#ecfdf5;--ok-b:#d1fae5}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:22px}
+a{color:inherit}
+.brandbar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+h1{margin:.25rem 0;font-size:clamp(22px,4vw,30px)}
+.sub{color:var(--muted);margin:.25rem 0 1rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px}
+.eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+.lede{color:#3f4753;margin:6px 0 12px;line-height:1.45}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.col-12{grid-column:span 12}.col-6{grid-column:span 6}
+@media(max-width:1020px){.col-6{grid-column:span 12}}
+.timechips{display:flex;gap:8px;flex-wrap:wrap}
+.timechip{display:inline-block;border:1px solid var(--line);background:var(--bg);padding:6px 10px;border-radius:10px;font-size:13px;text-decoration:none}
+.see{display:inline-block;margin-top:10px;font-weight:700;font-size:12px;text-decoration:none;color:var(--brand-600)}
+.micro{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body data-lander="bls">
+<div class="wrap">
+<div class="brandbar">
+<h1>Basic Life Support (BLS) — AHA</h1>
+</div>
+<p class="lede">The <strong>Basic Life Support (BLS)</strong> course is the baseline credential for hospital staff, clinic teams, techs, and students. Aligns to AHA guidelines; <strong>same‑day eCards</strong>. Offered in Wilmington & Burgaw.</p>
+
+
+<section class="card" id="initial">
+<span class="eyebrow">Option 1</span>
+<h2>In‑Person Initial</h2>
+<p class="lede">Complete BLS provider course in a single classroom session—perfect if your card is expired or you’re new to BLS.</p>
+<div class="timechips" id="times-bls-init" aria-live="polite"></div>
+<a class="see" href="/courses/medical/?q=BLS%20Provider">See all initial dates →</a>
+</section>
+
+
+<section class="card" id="renewal">
+<span class="eyebrow">Option 2</span>
+<h2>In‑Person Renewal</h2>
+<p class="lede">Fast skills‑focused renewal for current or recently expired providers. Bring your expiring credential if you have it.</p>
+<div class="timechips" id="times-bls-ren" aria-live="polite"></div>
+<a class="see" href="/courses/medical/?q=BLS%20Renewal">See all renewal dates →</a>
+</section>
+
+
+<section class="card" id="heartcode">
+<span class="eyebrow">Option 3</span>
+<h2>HeartCode BLS (online + skills)</h2>
+<p class="lede">Finish AHA’s online module at your pace, then book a short <em>skills session</em> with our instructors for your eCard.</p>
+<div class="timechips" id="times-bls-heart" aria-live="polite"></div>
+<a class="see" href="/courses/medical/?q=HeartCode%20BLS">See all HeartCode dates →</a>
+</section>
+</div>
+
+
+<!-- shared schedule loader -->
+<script id="910cpr-schedule" defer>
+(()=>{
+if (window.__910cprScheduleLoaded) return; window.__910cprScheduleLoaded=true;
+const FEED_PATHS=["/periscope_full.json","periscope_full.json","./periscope_full.json"]; let FEED_PROMISE=null;
+async function getFeed(){ if(FEED_PROMISE) return FEED_PROMISE; FEED_PROMISE=(async()=>{ for(const u of FEED_PATHS){ try{const r=await fetch(u,{cache:"no-store"}); if(!r.ok) throw new Error(); const j=await r.json(); console.info("[910CPR] Loaded feed:",u,`(${j.length} items)`); return j }catch(e){ console.warn("[910CPR] Feed failed:",u) } } throw new Error("feed 404") })(); return FEED_PROMISE }
+const U=s=>(s||"").toUpperCase(); const textOf=it=>Object.values(it).filter(v=>typeof v==="string").join(" ");
+function parseFlexDate(s){ if(!s) return null; const d=new Date(String(s).trim()); return isNaN(d)?null:d }
+function normalize(it){ const all=textOf(it), url=(Object.keys(it).find(k=>/(url|href|link)/i.test(k))||""), href=url?it[url]:""; const key=['start','Start','date','Date','datetime','DateTime','StartDateTime'].find(k=>k in it)||'date'; const dt=parseFlexDate(it[key]); const city=(it.city||it['location.city']||(/WILM/i.test(all)?'Wilmington':/BURGAW/i.test(all)?'Burgaw':'')); return {dt, url:href, city, text:U(all)} }
+function chip(n){ const d=n.dt; if(!(d instanceof Date)&&!isNaN(d)) return ""; const mo=d.toLocaleString(undefined,{month:"short"}); const day=String(d.getDate()).padStart(2,'0'); let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'p':'a'; h=h%12||12; const hm=m?`${h}:${String(m).padStart(2,'0')}${ap}`:`${h}${ap}`; return `${mo} ${day}, ${hm}${n.city?` — ${n.city}`:""}` }
+function setChips(id, items){ const el=document.getElementById(id); if(!el) return; const html=(items||[]).map(n=>({label:chip(n),url:n.url||"#"})).filter(x=>x.label).map(x=>`<a class="timechip" href="${x.url}">${x.label}</a>`).join(""); el.innerHTML= html || '<span class="micro">New dates posting—check back soon.</span>' }
+const has=(n,re)=>re.test(n.text); const fam=n=> has(n,/\bBLS\b|BASIC\s+LIFE\s+SUPPORT/)?'BLS': has(n,/\bACLS\b|ADVANCED\s+CARDIO/)?'ACLS': has(n,/\bPALS\b|PEDIATRIC\s+ADVANCED/)?'PALS':null;
+const isHeart=n=>has(n,/HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/); const isRenew=n=>has(n,/\bRENEW(AL)?\b|RECERT|UPDATE\b/); const isClass=n=>has(n,/IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/)&&!isHeart(n);
+const LANDER=document.body.dataset.lander||""; const LIM_TRIAD=LANDER?15:6; const LIM_WORK=LANDER?15:12;
+async function upcoming(filter,limit){ const raw=await getFeed(); const now=new Date(); const norm=raw.map(normalize).filter(n=>n.dt instanceof Date && !isNaN(n.dt) && n.dt>=now); return norm.filter(filter).sort((a,b)=>a.dt-b.dt).slice(0,limit) }
+const tri=f=>({ren:n=>fam(n)===f&&isRenew(n)&&!isHeart(n), init:n=>fam(n)===f&&!isRenew(n)&&isClass(n), heart:n=>fam(n)===f&&isHeart(n)});
+const BLS=tri('BLS');
+Promise.all([
+upcoming(BLS.init, LIM_TRIAD).then(v=>setChips('times-bls-init', v)),
+upcoming(BLS.ren, LIM_TRIAD).then(v=>setChips('times-bls-ren', v)),
+upcoming(BLS.heart, LIM_TRIAD).then(v=>setChips('times-bls-heart',v)),
+]).catch(e=>console.error('[910CPR] schedule failed',e));
+})();
+</script>
+</body>
+</html>
