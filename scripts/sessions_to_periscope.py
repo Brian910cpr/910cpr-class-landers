@@ -1,90 +1,101 @@
-def parse_flex(value):
-    """
-    Ultra-tolerant date finder:
-      - Handles JS Date strings like 'Sat Sep 20 2025 17:00:00 GMT-0400 (Eastern Daylight Time)'
-      - Handles ISO, 'YYYY-MM-DD HH:MM', 'M/D/YYYY H:MM AM', 'Jan 5, 2026 9:00 AM'
-      - Understands Excel date serials like 45678 or 45678.5
-      - Ignores trailing text after a dash/em dash
-    Returns datetime or None.
-    """
-    if value is None: 
-        return None
-    s = to_str(value).strip()
-    if not s: 
-        return None
+#!/usr/bin/env python3
+import argparse, json, re, os
+from datetime import datetime, timezone, timedelta
+import pandas as pd
 
-    # trim “ — details …” or “ – details …”
-    s = re.sub(r"\s*[–—-]\s*.*$", "", s)
-    s = s.replace("@", " ").replace(" at ", " ")
-    s = normalize_spaces(s)
+# Matches " ... GMT-0400 (Eastern Daylight Time)" or " ... GMT+0000"
+JS_TZ_RE = re.compile(r'\s+GMT([+-]\d{4})(?:\s*\(.*\))?\s*$')
 
-    # --- 0) JS Date string: 'Sat Sep 20 2025 17:00:00 GMT-0400 (Eastern Daylight Time)'
-    m = re.match(r"^[A-Za-z]{3}\s+([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{2}):(\d{2})(?::(\d{2}))?\s+GMT([+-]\d{4})", s)
+def _parse_js_date(s: str) -> str:
+    """
+    Parse strings like:
+      "Sat Sep 20 2025 17:00:00 GMT-0400 (Eastern Daylight Time)"
+    Return ISO8601 "2025-09-20T17:00:00-04:00" or "" if unparseable.
+    """
+    if not s or not isinstance(s, str):
+        return ""
+    s = s.strip()
+
+    # peel off numeric GMT offset and optional tz name
+    m = JS_TZ_RE.search(s)
+    tzinfo = None
     if m:
-        mon, da, yr, hh, mi, ss, _gmtoff = m.groups()
+        off = m.group(1)  # e.g. "-0400"
+        sign = 1 if off[0] == '+' else -1
+        hh = int(off[1:3])
+        mm = int(off[3:5])
+        tzinfo = timezone(sign * timedelta(hours=hh, minutes=mm))
+        core = s[:m.start()].strip()  # e.g. "Sat Sep 20 2025 17:00:00"
+    else:
+        core = re.sub(r'\s*\(.*\)\s*$', '', s)            # remove "(EDT)" if present
+        core = re.sub(r'\s+GMT[^\s]*$', '', core).strip() # remove trailing "GMT..."
+
+    # try a handful of common formats
+    for fmt in ("%a %b %d %Y %H:%M:%S",
+                "%a %b %d %Y %H:%M",
+                "%Y-%m-%d %H:%M:%S",
+                "%Y-%m-%dT%H:%M:%S",
+                "%m/%d/%Y %H:%M",
+                "%m/%d/%Y"):
         try:
-            M = MONTHS.index(mon[:3].upper()) + 1
-            H = int(hh); MI = int(mi); SS = int(ss or 0)
-            # The JS string shows local time already (e.g., EDT). Keep that time as-is.
-            return datetime(int(yr), M, int(da), H, MI, SS)
+            dt = datetime.strptime(core, fmt)
+            if tzinfo:
+                dt = dt.replace(tzinfo=tzinfo)
+            return dt.isoformat()
         except Exception:
             pass
 
-    # --- 1) Excel serial like 45782.5
-    if re.fullmatch(r"\d+(\.\d+)?", s) and is_excel_serial(s):
-        try:
-            return parse_excel_serial(s)
-        except Exception:
-            pass
-
-    # --- 2) Native ISO parse
+    # last-resort ISO-ish
     try:
-        return datetime.fromisoformat(s)
+        dt = datetime.fromisoformat(core)
+        if tzinfo and dt.tzinfo is None:
+            dt = dt.replace(tzinfo=tzinfo)
+        return dt.isoformat()
     except Exception:
-        pass
+        return ""
 
-    # --- 3) YYYY-MM-DD HH:MM[:SS] [AM/PM] [TZ letters]
-    m = re.match(r"^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*([A-Za-z]{1,4})?$", s, re.I)
-    if m:
-        Y, M, D, hh, mm, ss, ap, _tz = m.groups()
-        H = int(hh)
-        if ap:
-            ap = ap.upper()
-            if ap == "PM" and H != 12: H += 12
-            if ap == "AM" and H == 12: H = 0
-        return datetime(int(Y), int(M), int(D), H, int(mm), int(ss or 0))
+def build_periscope(csv_path: str):
+    """
+    Emit rows with keys: title, course, certification, agency, format,
+    start, end, city, venue, url
+    """
+    df = pd.read_csv(csv_path, dtype=str, keep_default_na=False, encoding="utf-8-sig")
+    out = []
+    for _, row in df.iterrows():
+        start = _parse_js_date(row.get("date", ""))  # your CSV has the JS-style date here
+        out.append({
+            "title": (row.get("course","") or "").strip(),
+            "course": (row.get("course","") or "").strip(),
+            "certification": (row.get("certification","") or "").strip(),
+            "agency": (row.get("agency","") or "").strip(),
+            "format": (row.get("format","") or "").strip(),
+            "start": start,
+            "end": "",
+            "city": (row.get("location.city","") or "").strip(),
+            "venue": (row.get("location","") or "").strip(),
+            "url": (row.get("link","") or "").strip() or "#",
+        })
+    return out
 
-    # --- 4) M/D/YYYY [H:MM] [AM/PM]
-    m = re.match(r"^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\s+(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?)?$", s, re.I)
-    if m:
-        mo, da, yr, hh, mi, ap = m.groups()
-        H = int(hh) if hh else 9
-        if ap:
-            ap = ap.upper()
-            if ap == "PM" and H != 12: H += 12
-            if ap == "AM" and H == 12: H = 0
-        return datetime(int(yr), int(mo), int(da), H, int(mi or 0), 0)
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("csv")
+    ap.add_argument("out")
+    ap.add_argument("--verbose", action="store_true")
+    args = ap.parse_args()
 
-    # --- 5) Mon D, YYYY [H:MM] [AM/PM]
-    m = re.match(r"^([A-Za-z]{3,})\s+(\d{1,2}),\s*(\d{4})(?:\s+(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?)?$", s)
-    if m:
-        mon, da, yr, hh, mi, ap = m.groups()
-        try:
-            M = MONTHS.index(mon[:3].upper()) + 1
-            H = int(hh) if hh else 9
-            if ap:
-                ap = ap.upper()
-                if ap == "PM" and H != 12: H += 12
-                if ap == "AM" and H == 12: H = 0
-            return datetime(int(yr), M, int(da), H, int(mi or 0), 0)
-        except Exception:
-            pass
+    rows = build_periscope(args.csv)
 
-    # --- 6) Fallback: ISO-ish core like 2025-03-10 or 2025-03-10 9:00
-    m = re.search(r"(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?", s)
-    if m:
-        ymd, hh, mi = m.groups()
-        H = int(hh) if hh else 9
-        return datetime.fromisoformat(f"{ymd} {H:02d}:{(mi or '00')}")
+    # atomic write (prevents empty/truncated JSON on crash)
+    tmp = args.out + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(rows, f, ensure_ascii=False)
+    os.replace(tmp, args.out)
 
-    return None
+    if args.verbose:
+        empty_starts = sum(1 for x in rows if not x.get("start"))
+        empty_urls   = sum(1 for x in rows if not x.get("url"))
+        print(f"[periscope] wrote {len(rows)} items -> {args.out}")
+        print(f"[periscope] empty starts: {empty_starts}  |  empty urls: {empty_urls}")
+        for i, x in enumerate(rows[:5]):
+            print(f"[periscope] sample[{i}] start='{x['start']}' url='{x['url']}' city='{x['city']}' title='{x['title']}'")
