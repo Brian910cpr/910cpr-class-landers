@@ -1,66 +1,146 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>Heartsaver First Aid/CPR/AED (AHA) — Workplaces | 910CPR</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content="OSHA‑acceptable Heartsaver First Aid/CPR/AED for crews and teams. In‑person or blended (online + skills). Wilmington & Burgaw." />
-<link rel="canonical" href="https://www.910cpr.com/workplaces/" />
-<style>
-:root{--brand:#2563eb;--brand-600:#1d4ed8;--bg:#f8fafc;--text:#0f172a;--muted:#64748b;--card:#ffffff;--line:#e5e7eb}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-.wrap{max-width:1100px;margin:0 auto;padding:22px}
-a{color:inherit}
-h1{margin:.25rem 0;font-size:clamp(22px,4vw,30px)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px}
-.lede{color:#3f4753;margin:6px 0 12px;line-height:1.45}
-.timechips{display:flex;gap:8px;flex-wrap:wrap}
-.timechip{display:inline-block;border:1px solid var(--line);background:var(--bg);padding:6px 10px;border-radius:10px;font-size:13px;text-decoration:none}
-.see{display:inline-block;margin-top:10px;font-weight:700;font-size:12px;text-decoration:none;color:var(--brand-600)}
-.eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
-</style>
+  <meta charset="utf-8" />
+  <title>Workplaces: OSHA-Acceptable CPR/AED & First Aid | 910CPR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://www.910cpr.com/courses/workplaces/" />
+  <meta name="description" content="Industry, construction, childcare, schools, elder-care. Heartsaver (AHA) and HSI blended options. On-site or at our classrooms." />
+
+  <style>
+    :root{ --brand:#2563eb; --brand-600:#1d4ed8; --brand-50:#eef2ff; --accent:#ef4444;
+      --bg:#f8fafc; --text:#0f172a; --muted:#64748b; --card:#ffffff; --line:#e5e7eb;
+      --chip-bg:#f1f5f9; --chip-b:#e2e8f0; --ok-bg:#ecfdf5; --ok-b:#d1fae5; }
+    :root[data-theme="dark"]{
+      --bg:#0b1220; --text:#e5e7eb; --muted:#9aa4af; --card:#0f172a; --line:#1f2937;
+      --chip-bg:#0b1220; --chip-b:#1f2937; --brand:#60a5fa; --brand-600:#3b82f6; --brand-50:#0b1220;
+      --ok-bg:#052e1f; --ok-b:#064e3b;
+    }
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    a{color:inherit}
+    .brandbar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+    .logo{height:36px;width:auto}
+    h1{margin:.25rem 0;font-size:clamp(22px,4vw,30px)}
+    .sub{color:var(--muted);margin:.25rem 0 1rem}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+    .chip{display:inline-block;padding:7px 12px;border-radius:9999px;background:var(--chip-bg);border:1px solid var(--chip-b);text-decoration:none;font-weight:700;font-size:13px}
+    .chip.brand{background:var(--brand-50);border-color:var(--brand-600);color:var(--brand-600)}
+    .chip-btn{cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .col-6{grid-column:span 6} .col-12{grid-column:span 12}
+    @media(max-width:1020px){.col-6{grid-column:span 12}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+    .eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+    .card-title{margin:8px 0 6px;font-size:20px}
+    .lede{color:#3f4753;margin:6px 0 16px;line-height:1.45}
+    :root[data-theme="dark"] .lede{color:#bcc4ce}
+    .timechips{display:flex;gap:8px;flex-wrap:wrap}
+    .timechip{display:inline-block;border:1px solid var(--line);background:var(--bg);padding:6px 10px;border-radius:10px;font-size:13px;text-decoration:none}
+    .micro{color:var(--muted);font-size:13px}
+    .pillbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+    .pill{display:inline-block;border:1px solid var(--brand-600);color:#fff;background:var(--brand-600);padding:8px 12px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px}
+    .pill.alt{background:transparent;color:var(--brand-600)}
+  </style>
+
+  <script>
+    (function(){
+      const KEY="theme", root=document.documentElement;
+      const initial=localStorage.getItem(KEY)|| (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+      apply(initial); window.toggleTheme=()=>apply(root.dataset.theme==="dark"?"light":"dark");
+      function apply(t){root.dataset.theme=t; try{localStorage.setItem(KEY,t)}catch{}}
+    })();
+  </script>
 </head>
-<body data-lander="workplaces">
-<div class="wrap">
-<h1>Heartsaver First Aid/CPR/AED (AHA)</h1>
-<p class="lede">OSHA‑acceptable training for <strong>Industry, Construction, Schools, and Care teams</strong>. Choose a classroom session or a <em>blended</em> path (online + short skills appointment). Wilmington & Burgaw options weekly.</p>
+<body>
+  <div class="wrap">
+    <div class="brandbar">
+      <img class="logo" src="/images/910CPR_Fat.jpg" alt="910CPR">
+      <div>
+        <h1>For Workplaces (OSHA-Acceptable)</h1>
+        <div class="sub">Industry, construction, childcare, schools, elder-care. On-site or at our classrooms.</div>
+      </div>
+    </div>
 
+    <div class="chips" aria-label="Site">
+      <a class="chip" href="/">Home</a>
+      <a class="chip" href="/courses/medical/">Medical</a>
+      <span class="chip brand">Workplaces</span>
+      <a class="chip" href="/courses/parents/">Parents & Families</a>
+      <button class="chip chip-btn" onclick="toggleTheme()">Toggle theme</button>
+    </div>
 
-<section class="card" id="aha-inperson">
-<span class="eyebrow">Option 1</span>
-<h2>In‑Person — Heartsaver (AHA)</h2>
-<p class="lede">Traditional classroom session covering First Aid, CPR, and AED use with practical scenarios.</p>
-<div class="timechips" id="wk-aha-inperson" aria-live="polite"></div>
-<a class="see" href="/courses/workplaces/?q=Heartsaver">See all AHA in‑person dates →</a>
-</section>
+    <div class="grid">
+      <!-- Heartsaver In-Person -->
+      <section class="card col-6">
+        <span class="eyebrow">Heartsaver (AHA)</span>
+        <h2 class="card-title">First Aid / CPR / AED — In-Person</h2>
+        <p class="lede">Practical, on-site friendly course that ticks OSHA compliance boxes.</p>
+        <div class="timechips" id="hs-inperson"></div>
+        <div class="pillbar">
+          <a class="pill alt" href="/courses/workplaces/?q=Heartsaver&city=Wilmington">See all — Wilmington</a>
+          <a class="pill alt" href="/courses/workplaces/?q=Heartsaver&city=Burgaw">See all — Burgaw</a>
+        </div>
+      </section>
 
+      <!-- Heartsaver Blended -->
+      <section class="card col-6">
+        <span class="eyebrow">Heartsaver (AHA) — Blended</span>
+        <h2 class="card-title">First Aid / CPR / AED — Online + Skills</h2>
+        <p class="lede">Blended format reduces downtime while meeting program requirements.</p>
+        <div class="timechips" id="hs-blended"></div>
+        <div class="pillbar">
+          <a class="pill alt" href="/courses/workplaces/?q=Heartsaver%20Blended">All Heartsaver Blended →</a>
+        </div>
+      </section>
 
-<section class="card" id="aha-blended">
-<span class="eyebrow">Option 2</span>
-<h2>Blended — Heartsaver (AHA) Online + Skills</h2>
-<p class="lede">Do the theory online, then complete a short hands‑on skills appointment—same OSHA acceptance.</p>
-<div class="timechips" id="wk-aha-blended" aria-live="polite"></div>
-<a class="see" href="/courses/workplaces/?q=Heartsaver%20Blended">See all AHA blended dates →</a>
-</section>
-</div>
+      <!-- HSI blended -->
+      <section class="card col-12">
+        <span class="eyebrow">HSI (blended)</span>
+        <h2 class="card-title">BLS & First Aid — Online + Skills</h2>
+        <p class="lede">Covers both BLS and First Aid in one session—one registration & one digital record. Great for mixed roles.</p>
+        <div class="timechips" id="hsi-blended"></div>
+        <div class="pillbar">
+          <a class="pill" href="/courses/workplaces/?q=HSI">HSI — See all times</a>
+          <a class="pill alt" href="tel:+19103955193">Group / on-site quote</a>
+        </div>
+      </section>
+    </div>
 
+    <p class="micro">© 910CPR — Schedule pulls live from HOVN.</p>
+  </div>
 
-<script id="910cpr-schedule" defer>
-(()=>{
-if (window.__910cprScheduleLoaded) return; window.__910cprScheduleLoaded=true;
-const FEED=["/periscope_full.json","periscope_full.json","./periscope_full.json"]; let P=null; async function get(){ if(P) return P; P=(async()=>{ for(const u of FEED){ try{const r=await fetch(u,{cache:"no-store"}); if(!r.ok) throw 0; const j=await r.json(); console.info("[910CPR] Loaded feed:",u,`(${j.length} items)`); return j }catch{} } throw 0 })(); return P }
-const U=s=>(s||"").toUpperCase(), txt=it=>Object.values(it).filter(v=>typeof v=="string").join(" ");
-const norm=it=>{ const t=txt(it), k=['start','date','Date','StartDateTime','datetime'].find(k=>k in it)||'date'; const d=new Date(it[k]); const url=(Object.keys(it).find(k=>/(url|href|link)/i.test(k))||''), href=url?it[url]:''; const city=it.city||it['location.city']||(/WILM/i.test(t)?'Wilmington':/BURGAW/i.test(t)?'Burgaw':''); return {dt:isNaN(d)?null:d, url:href, city, text:U(t)} };
-const chip=n=>{ const d=n.dt; if(!(d instanceof Date)&&!isNaN(d)) return ""; const mo=d.toLocaleString(undefined,{month:"short"}); const day=String(d.getDate()).padStart(2,'0'); let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'p':'a'; h=h%12||12; const hm=m?`${h}:${String(m).padStart(2,'0')}${ap}`:`${h}${ap}`; return `${mo} ${day}, ${hm}${n.city?` — ${n.city}`:""}` };
-const set=(id,items)=>{ const el=document.getElementById(id); if(!el) return; const html=(items||[]).map(n=>({label:chip(n),url:n.url||"#"})).filter(x=>x.label).map(x=>`<a class="timechip" href="${x.url}">${x.label}</a>`).join(""); el.innerHTML= html || '<span class="micro">New dates posting—check back soon.</span>' };
-const has=(n,re)=>re.test(n.text); const IS_AHA=n=>has(n,/\bAHA\b|HEARTSAVER/); const IS_WORK=n=>has(n,/FIRST\s*AID|WORKPLACE|CPR\s*\/?\s*AED/);
-const blended=n=>has(n,/BLENDED|ONLINE.*SKILLS|HEARTCODE/); const classroom=n=>has(n,/IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/)&&!blended(n);
-const LIM=15; async function up(f,lim){ const raw=await get(); const now=new Date(); const n=raw.map(norm).filter(x=>x.dt && x.dt>=now); return n.filter(f).sort((a,b)=>a.dt-b.dt).slice(0,lim) }
-Promise.all([
-up(n=>IS_WORK(n)&&IS_AHA(n)&&classroom(n),LIM).then(v=>set('wk-aha-inperson',v)),
-up(n=>IS_WORK(n)&&IS_AHA(n)&&blended(n), LIM).then(v=>set('wk-aha-blended', v)),
-]).catch(e=>console.error('[910CPR] schedule failed',e));
-})();
-</script>
+  <script>
+  (()=>{
+    if (window.__schedLoaded_work) return; window.__schedLoaded_work = true;
+    const FEED=["/periscope_full.json","../periscope_full.json","../../periscope_full.json","./periscope_full.json"];
+    async function getFeed(){ for(const u of FEED){ try{const r=await fetch(u,{cache:"no-store"}); if(r.ok) return r.json(); }catch{} } return []; }
+    const U=s=>(s||"").toUpperCase(); const textOf=o=>Object.values(o).filter(v=>typeof v==="string").join(" ");
+    const LIM=15;
+    function norm(it){ const dt=new Date(it.start||it.date||""); const ok=(dt instanceof Date)&&!isNaN(dt);
+      return {ok,dt,city:it.city||"",url:it.url||it.link||"#",text:U(textOf(it))}; }
+    const has=(n,re)=>re.test(n.text);
+    const isHeartsaver = n => has(n,/\bHEARTSAVER\b/);
+    const isHSI = n => has(n,/(^|[^A-Z])HSI([^A-Z]|$)|HEALTH\s*&\s*SAFETY\s*INSTITUTE/);
+    const isBlended = n => has(n,/\bBLENDED\b|ONLINE\s*\+\s*SKILLS|SKILLS\s*SESSION/);
+    const isInPerson = n => has(n,/IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/) && !isBlended(n);
+
+    function label(n){ const d=n.dt; const mo=d.toLocaleString(undefined,{month:"short"}); const day=String(d.getDate()).padStart(2,"0");
+      let h=d.getHours(),m=d.getMinutes(),ap=h>=12?"p":"a"; h=h%12||12; const hm=m?`${h}:${String(m).padStart(2,"0")}${ap}`:`${h}${ap}`;
+      return `${mo} ${day}, ${hm}${n.city?` — ${n.city}`:""}`;}
+    function setChips(id,items){ const el=document.getElementById(id); if(!el) return;
+      const html=items.map(n=>`<a class="timechip" href="${n.url}">${label(n)}</a>`).join("");
+      el.innerHTML = html || '<span class="micro">New dates posting—check back soon.</span>'; }
+
+    (async()=>{
+      const now=new Date();
+      const items=(await getFeed()).map(norm).filter(x=>x.ok && x.dt>=now).sort((a,b)=>a.dt-b.dt);
+
+      setChips("hs-inperson", items.filter(n => isHeartsaver(n)&&isInPerson(n)).slice(0,LIM));
+      setChips("hs-blended",  items.filter(n => isHeartsaver(n)&&isBlended(n)).slice(0,LIM));
+      setChips("hsi-blended", items.filter(n => isHSI(n)&&isBlended(n)).slice(0,LIM));
+    })();
+  })();
+  </script>
 </body>
 </html>
