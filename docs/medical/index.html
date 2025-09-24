@@ -2,105 +2,216 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="robots" content="noindex,follow" />
-  <title>910CPR — Placeholder</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232563eb'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='28' fill='white' font-family='Arial, sans-serif'%3E9%3C/text%3E%3C/svg%3E">
+  <title>Medical: BLS, ACLS, PALS — Live Classes | 910CPR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://www.910cpr.com/courses/medical/" />
+  <meta name="description" content="Medical credentials done right: BLS, ACLS, PALS. In-person Initial / Renewal and HeartCode + skills. Wilmington & Burgaw. Same-day eCards." />
+
   <style>
-    :root{--brand:#2563eb;--bg:#0b1220;--card:#0f172a;--line:#202938;--text:#e5e7eb;--muted:#9aa4af}
-    *{box-sizing:border-box} html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    .wrap{max-width:900px;margin:0 auto;padding:28px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:40px;height:40px}
+    :root{ --brand:#2563eb; --brand-600:#1d4ed8; --brand-50:#eef2ff; --accent:#ef4444;
+      --bg:#f8fafc; --text:#0f172a; --muted:#64748b; --card:#ffffff; --line:#e5e7eb;
+      --chip-bg:#f1f5f9; --chip-b:#e2e8f0; --ok-bg:#ecfdf5; --ok-b:#d1fae5; }
+    :root[data-theme="dark"]{
+      --bg:#0b1220; --text:#e5e7eb; --muted:#9aa4af; --card:#0f172a; --line:#1f2937;
+      --chip-bg:#0b1220; --chip-b:#1f2937; --brand:#60a5fa; --brand-600:#3b82f6; --brand-50:#0b1220;
+      --ok-bg:#052e1f; --ok-b:#064e3b;
+    }
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    a{color:inherit}
+    .brandbar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+    .logo{height:36px;width:auto}
     h1{margin:.25rem 0;font-size:clamp(22px,4vw,30px)}
-    .chip{display:inline-block;padding:7px 12px;border:1px solid #2b3550;border-radius:9999px;background:#0b1324;color:#a7b0c3;text-decoration:none;font-weight:700;font-size:13px;margin:6px 6px 0 0}
-    .card{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
-    .lede{color:#c8d0db;opacity:.9;margin:8px 0 14px;line-height:1.45}
-    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-    .btn{display:inline-block;font-weight:800;text-decoration:none;border-radius:12px;padding:10px 14px;border:1px solid #2b3550}
-    .btn.primary{background:var(--brand);color:#fff;border-color:transparent}
-    .btn.ghost{color:#d3daf0}
-    .muted{color:var(--muted);font-size:14px}
-    .list{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .pill{display:inline-block;padding:6px 10px;border-radius:10px;border:1px solid #2b3550;background:#0b1324;color:#d3daf0;font-size:13px;text-decoration:none}
-    footer{margin:28px 0 6px;color:#94a3b8;font-size:13px}
+    .sub{color:var(--muted);margin:.25rem 0 1rem}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+    .chip{display:inline-block;padding:7px 12px;border-radius:9999px;background:var(--chip-bg);border:1px solid var(--chip-b);text-decoration:none;font-weight:700;font-size:13px}
+    .chip.brand{background:var(--brand-50);border-color:var(--brand-600);color:var(--brand-600)}
+    .chip-btn{cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .col-12{grid-column:span 12}
+    .col-4{grid-column:span 4}
+    @media(max-width:1020px){.col-4{grid-column:span 12}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+    .eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+    .card-title{margin:8px 0 6px;font-size:20px}
+    .lede{color:#3f4753;margin:6px 0 16px;line-height:1.45}
+    :root[data-theme="dark"] .lede{color:#bcc4ce}
+    .tri-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:10px}
+    .tri{grid-column:span 4;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+    .tri h3{margin:0 0 6px;font-size:16px}
+    .timechips{display:flex;gap:8px;flex-wrap:wrap}
+    .timechip{display:inline-block;border:1px solid var(--line);background:var(--bg);padding:6px 10px;border-radius:10px;font-size:13px;text-decoration:none}
+    .see{display:inline-block;margin-top:10px;font-weight:700;font-size:12px;text-decoration:none;color:var(--brand-600)}
+    .micro{color:var(--muted);font-size:13px}
   </style>
+
+  <script>
+    (function(){
+      const KEY="theme", root=document.documentElement;
+      const initial=localStorage.getItem(KEY)|| (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+      apply(initial); window.toggleTheme=()=>apply(root.dataset.theme==="dark"?"light":"dark");
+      function apply(t){root.dataset.theme=t; try{localStorage.setItem(KEY,t)}catch{}}
+    })();
+  </script>
 </head>
 <body>
   <div class="wrap">
-    <div class="brand">
-      <!-- inline SVG logo (no external file needed) -->
-      <svg class="logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <circle cx="32" cy="32" r="30" fill="#2563eb"/>
-        <text x="32" y="42" text-anchor="middle" font-size="28" fill="#fff" font-family="Arial, sans-serif">9</text>
-      </svg>
+    <div class="brandbar">
+      <img class="logo" src="/images/910CPR_Fat.jpg" alt="910CPR">
       <div>
-        <h1 id="title">910CPR — Placeholder</h1>
-        <div class="muted" id="pathnote"></div>
+        <h1>For Medical Professionals: BLS • ACLS • PALS</h1>
+        <div class="sub">In-person Initial / Renewal, or HeartCode + skills. Wilmington & Burgaw. Same-day eCards.</div>
       </div>
     </div>
 
-    <div class="list">
-      <a class="chip" href="/">← Home</a>
-      <a class="chip" href="/courses/medical/">Medical</a>
+    <div class="chips" aria-label="Site">
+      <a class="chip" href="/">Home</a>
+      <span class="chip brand">Medical</span>
       <a class="chip" href="/courses/workplaces/">Workplaces</a>
-      <a class="chip" href="/courses/caregivers/">Child &amp; Senior Care</a>
-      <a class="chip" href="/courses/uscg/">USCG / DAN</a>
-      <a class="chip" href="/courses/parents/">Parents &amp; Families</a>
+      <a class="chip" href="/courses/parents/">Parents & Families</a>
+      <button class="chip chip-btn" onclick="toggleTheme()">Toggle theme</button>
     </div>
 
+    <!-- BLS -->
     <section class="card">
-      <h2 id="headline">This page is being prepared</h2>
-      <p class="lede" id="lede">
-        The full lander for this section is in progress. All links work, and your filters are captured below so you can reference or share them.
-      </p>
-
-      <div class="muted">Filters from URL:</div>
-      <div class="list" id="filters"><span class="muted">None</span></div>
-
-      <div class="btns">
-        <a class="btn primary" href="tel:+19103955193">Call / Text: (910) 395-5193</a>
-        <a class="btn ghost" href="/">Back to Index</a>
+      <span class="eyebrow"><a href="/bls/">BLS for Providers</a></span>
+      <h2 class="card-title"><a href="/bls/">Basic Life Support (BLS)</a></h2>
+      <p class="lede">Required for most clinical roles. Adult/child/infant CPR, AED, airway, and team dynamics. AHA/ARC aligned.</p>
+      <div class="tri-grid">
+        <div class="tri">
+          <h3><a href="/bls/#renewal">In-Person Renewal</a></h3>
+          <div class="timechips" id="bls-ren"></div>
+          <a class="see" href="/courses/medical/?q=BLS%20Renewal">See all BLS Renewal →</a>
+        </div>
+        <div class="tri">
+          <h3><a href="/bls/#initial">In-Person Initial</a></h3>
+          <div class="timechips" id="bls-init"></div>
+          <a class="see" href="/courses/medical/?q=BLS%20Provider">See all BLS Initial →</a>
+        </div>
+        <div class="tri">
+          <h3><a href="/bls/#heartcode">HeartCode / Blended</a></h3>
+          <div class="timechips" id="bls-heart"></div>
+          <a class="see" href="/courses/medical/?q=HeartCode%20BLS">See all HeartCode BLS →</a>
+        </div>
       </div>
     </section>
 
+    <!-- ACLS -->
     <section class="card">
-      <h3>What to do now</h3>
-      <ol class="muted" style="margin:6px 0 0 18px;line-height:1.6">
-        <li>Use the “Back to Index” button to browse live dates.</li>
-        <li>Or call/text and we’ll register you immediately.</li>
-        <li>Bookmark this URL—this page will switch to the full lander automatically when published.</li>
-      </ol>
+      <span class="eyebrow"><a href="/acls/">Advanced Cardiovascular Life Support</a></span>
+      <h2 class="card-title"><a href="/acls/">ACLS</a></h2>
+      <p class="lede">Cardiac arrest, rhythms & meds, airway basics, and team leadership for acute/critical care environments.</p>
+      <div class="tri-grid">
+        <div class="tri">
+          <h3><a href="/acls/#renewal">In-Person Renewal</a></h3>
+          <div class="timechips" id="acls-ren"></div>
+          <a class="see" href="/courses/medical/?q=ACLS%20Renewal">See all ACLS Renewal →</a>
+        </div>
+        <div class="tri">
+          <h3><a href="/acls/#initial">In-Person Initial</a></h3>
+          <div class="timechips" id="acls-init"></div>
+          <a class="see" href="/courses/medical/?q=ACLS%20Provider">See all ACLS Initial →</a>
+        </div>
+        <div class="tri">
+          <h3><a href="/acls/#heartcode">HeartCode / Blended</a></h3>
+          <div class="timechips" id="acls-heart"></div>
+          <a class="see" href="/courses/medical/?q=ACLS%20HeartCode">See all HeartCode ACLS →</a>
+        </div>
+      </div>
     </section>
 
-    <footer>© 910CPR</footer>
+    <!-- PALS -->
+    <section class="card">
+      <span class="eyebrow"><a href="/pals/">Pediatric Advanced Life Support</a></span>
+      <h2 class="card-title"><a href="/pals/">PALS</a></h2>
+      <p class="lede">Pediatric assessment triangle, respiratory/shock algorithms, resuscitation, rhythms, and meds for infants/children.</p>
+      <div class="tri-grid">
+        <div class="tri">
+          <h3><a href="/pals/#renewal">In-Person Renewal</a></h3>
+          <div class="timechips" id="pals-ren"></div>
+          <a class="see" href="/courses/medical/?q=PALS%20Renewal">See all PALS Renewal →</a>
+        </div>
+        <div class="tri">
+          <h3><a href="/pals/#initial">In-Person Initial</a></h3>
+          <div class="timechips" id="pals-init"></div>
+          <a class="see" href="/courses/medical/?q=PALS%20Provider">See all PALS Initial →</a>
+        </div>
+        <div class="tri">
+          <h3><a href="/pals/#heartcode">HeartCode / Blended</a></h3>
+          <div class="timechips" id="pals-heart"></div>
+          <a class="see" href="/courses/medical/?q=PALS%20HeartCode">See all HeartCode PALS →</a>
+        </div>
+      </div>
+    </section>
+
+    <p class="micro">© 910CPR — Schedule pulls live from HOVN.</p>
   </div>
 
   <script>
-    // Derive section from /courses/<slug>/...
-    const slug = (location.pathname.match(/\/courses\/([^/]+)/) || [,''])[1] || 'courses';
-    const names = {
-      medical:'For Medical Professionals',
-      workplaces:'For Workplaces (OSHA-Acceptable)',
-      caregivers:'Child & Senior Care',
-      uscg:'USCG / DAN (Maritime & Diving)',
-      parents:'For Parents & Families',
-      courses:'Courses'
-    };
-    document.getElementById('title').textContent = (names[slug]||names.courses) + ' — 910CPR';
-    document.title = (names[slug]||names.courses) + ' | 910CPR — Placeholder';
-    document.getElementById('headline').textContent = names[slug] || names.courses;
-    document.getElementById('pathnote').textContent = location.pathname + (location.search||'');
+  (()=>{
+    if (window.__schedLoaded_med) return; window.__schedLoaded_med = true;
+    const FEED=["/periscope_full.json","../periscope_full.json","../../periscope_full.json","./periscope_full.json"];
 
-    // Show any query filters (q, city, etc.)
-    const params = new URLSearchParams(location.search);
-    const filters = [];
-    for (const k of params.keys()) {
-      const v = params.getAll(k).join(', ');
-      if (v) filters.push(`${k}: ${v}`);
+    async function getFeed(){
+      for(const u of FEED){ try{ const r=await fetch(u,{cache:"no-store"}); if(r.ok){return r.json();} }catch{} }
+      return [];
     }
-    const box = document.getElementById('filters');
-    box.innerHTML = filters.length ? filters.map(t=>`<span class="pill">${t}</span>`).join('') : '<span class="muted">None</span>';
+    const U=s=>(s||"").toUpperCase();
+    const textOf=o=>Object.values(o).filter(v=>typeof v==="string").join(" ");
+    const LIM=15;
+
+    function norm(it){
+      const dt = new Date(it.start||it.date||"");
+      const ok = (dt instanceof Date)&&!isNaN(dt);
+      const city = it.city||it.City||"";
+      const url = it.url||it.link||"#";
+      return {ok,dt,city,url,text:U(textOf(it))};
+    }
+    const has=(n,re)=>re.test(n.text);
+    const family = n =>
+      has(n,/([^A-Z]|^)BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/)? "BLS" :
+      has(n,/([^A-Z]|^)ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/)? "ACLS" :
+      has(n,/([^A-Z]|^)PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/)? "PALS" : null;
+    const isHeart = n => has(n,/HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/);
+    const isRenew = n => has(n,/\bRENEW(AL)?\b|RECERT|UPDATE\b/);
+    const isInPer = n => has(n,/IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/) && !isHeart(n);
+
+    function label(n){
+      const d=n.dt; const mo=d.toLocaleString(undefined,{month:"short"}); const day=String(d.getDate()).padStart(2,"0");
+      let h=d.getHours(),m=d.getMinutes(),ap=h>=12?"p":"a"; h=h%12||12;
+      const hm = m?`${h}:${String(m).padStart(2,"0")}${ap}`:`${h}${ap}`;
+      return `${mo} ${day}, ${hm}${n.city?` — ${n.city}`:""}`;
+    }
+    function setChips(id,items){
+      const el=document.getElementById(id); if(!el) return;
+      const html=items.map(n=>`<a class="timechip" href="${n.url}">${label(n)}</a>`).join("");
+      el.innerHTML = html || '<span class="micro">New dates posting—check back soon.</span>';
+    }
+
+    function tri(fam){ return {
+      ren: n => family(n)===fam && isRenew(n)  && !isHeart(n),
+      init:n => family(n)===fam && !isRenew(n) && isInPer(n),
+      heart:n => family(n)===fam && isHeart(n)
+    };}
+
+    (async()=>{
+      const raw=await getFeed(); const now=new Date();
+      const items=raw.map(norm).filter(x=>x.ok && x.dt>=now).sort((a,b)=>a.dt-b.dt);
+      const BLS=tri("BLS"), ACLS=tri("ACLS"), PALS=tri("PALS");
+
+      setChips("bls-ren", items.filter(BLS.ren).slice(0,LIM));
+      setChips("bls-init",items.filter(BLS.init).slice(0,LIM));
+      setChips("bls-heart",items.filter(BLS.heart).slice(0,LIM));
+
+      setChips("acls-ren", items.filter(ACLS.ren).slice(0,LIM));
+      setChips("acls-init",items.filter(ACLS.init).slice(0,LIM));
+      setChips("acls-heart",items.filter(ACLS.heart).slice(0,LIM));
+
+      setChips("pals-ren", items.filter(PALS.ren).slice(0,LIM));
+      setChips("pals-init",items.filter(PALS.init).slice(0,LIM));
+      setChips("pals-heart",items.filter(PALS.heart).slice(0,LIM));
+    })();
+  })();
   </script>
 </body>
 </html>
