@@ -141,6 +141,120 @@
     </a>
   </div>
 
+
+
+<script id="910cpr-schedule" defer>
+(() => {
+  if (window.__910cprScheduleLoaded) return;
+  window.__910cprScheduleLoaded = true;
+
+  const FEED_PATHS = ["periscope_full.json","./periscope_full.json","/periscope_full.json"];
+  let FEED_PROMISE=null;
+  async function getFeed(){
+    if(FEED_PROMISE) return FEED_PROMISE;
+    FEED_PROMISE = (async()=>{
+      for(const u of FEED_PATHS){
+        try{
+          const r = await fetch(u,{cache:"no-store"});
+          if(!r.ok) throw new Error(`HTTP ${r.status}`);
+          const json = await r.json();
+          console.info("[910CPR] Loaded feed:", u, `(${json.length} items)`);
+          return json;
+        }catch(e){ console.warn("[910CPR] Feed failed:", u, e?.message||e); }
+      }
+      throw new Error("All feed locations failed (404).");
+    })();
+    return FEED_PROMISE;
+  }
+
+  const U = s => (s||"").toUpperCase();
+  const textOf = it => Object.values(it).filter(v => typeof v==="string").join(" ");
+
+  function parseFlexDate(input){
+    if (input==null) return null;
+    let s = String(input).trim();
+    let d = new Date(s);
+    if (!isNaN(d)) return d;
+
+    const t = s.replace(/\s+/g," ").trim();
+    let m = t.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?:\s+(\d{1,2}):(\d{2})(?:\s*(AM|PM))?)?/i);
+    if (m){
+      let [,mo,da,yr,h,mi,ap] = m;
+      let H = h ? parseInt(h,10) : 9;
+      if (ap){ ap=ap.toUpperCase(); if(ap==="PM"&&H!==12) H+=12; if(ap==="AM"&&H===12) H=0; }
+      d = new Date(parseInt(yr,10), parseInt(mo,10)-1, parseInt(da,10), H, mi?parseInt(mi,10):0, 0);
+      if (!isNaN(d)) return d;
+    }
+
+    m = t.match(/(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?/);
+    if (m){
+      const iso = `${m[1]}T${m[2] ? String(m[2]).padStart(2,"0") : "09"}:${m[3] || "00"}:00`;
+      d = new Date(iso);
+      if (!isNaN(d)) return d;
+    }
+    return null;
+  }
+
+  function chipLabel(n){
+    if (!(n && n.dt instanceof Date && !isNaN(n.dt))) return "";
+    const d=n.dt;
+    const mo=d.toLocaleString(undefined,{month:"short"});
+    const day=String(d.getDate()).padStart(2,"0");
+    let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
+    const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
+    return `${mo} ${day}, ${hm}${n.city ? ` — ${n.city}` : ""}`;
+  }
+
+  function setChips(id, items){
+    const el=document.getElementById(id);
+    if(!el) return;
+    const html=(items||[])
+      .map(n => ({label:chipLabel(n), url:n.url||"#"}))
+      .filter(x=>x.label)
+      .map(x=>`<a class="timechip" href="${x.url}">${x.label}</a>`)
+      .join("");
+    el.innerHTML = html || '<span class="micro">New dates posting—check back soon.</span>';
+  }
+
+  window.__sched = {
+    run: async (filters) => {
+      const raw = await getFeed();
+      const now = new Date();
+      const norm = raw.map(it => {
+        const start = it.start || it.Start || it.start_time || it.date || it.Date || "";
+        const dt = parseFlexDate(start);
+        const text = U(textOf(it));
+        const url = it.url || it.href || it.link || "#";
+        const city = it.city || it.City || "";
+        return {dt, text, url, city};
+      }).filter(n => n.dt instanceof Date && !isNaN(n.dt) && n.dt >= now);
+
+      const has = (n,re) => re.test(n.text);
+
+      const family = fam => (n) => (
+          fam==="BLS"  ? (has(n,/(^|[^A-Z])BLS([^A-Z]|$)|BASIC\s+LIFE\s+SUPPORT/)) :
+          fam==="ACLS" ? (has(n,/(^|[^A-Z])ACLS([^A-Z]|$)|ADVANCED\s+CARDIO/)) :
+          fam==="PALS" ? (has(n,/(^|[^A-Z])PALS([^A-Z]|$)|PEDIATRIC\s+ADVANCED/)) :
+          false
+      );
+
+      const isHeart    = n => has(n,/HEART\s*CODE|HEARTCODE|ONLINE.*SKILLS|SKILLS\s*ASSESSMENT/);
+      const isRenew    = n => has(n,/\bRENEW(AL)?\b|RECERT|UPDATE\b/);
+      const isInPerson = n => has(n,/IN\s*PERSON|CLASSROOM|INSTRUCTOR[-\s]?LED/) && !isHeart(n);
+
+      for (const f of (filters||[])){
+        const famFn = family(f.fam);
+        let pred = (n)=>famFn(n);
+        if (f.kind==="renewal")      pred = (n)=> famFn(n) && isRenew(n) && !isHeart(n);
+        else if (f.kind==="initial") pred = (n)=> famFn(n) && !isRenew(n) && isInPerson(n);
+        else if (f.kind==="heart")   pred = (n)=> famFn(n) && isHeart(n);
+        else if (f.kind==="workAHA") pred = (n)=> has(n,/FIRST\s*AID|HEARTSAVER|WORKPLACE|CPR\s*\/?\s*AED/) && has(n,/(^|[^A-Z])AHA([^A-Z]|$)|HEARTSAVER/);
+
+        const list = norm.filter(pred).sort((a,b)=>a.dt-b.dt).slice(0, f.limit||6);
+        setChips(f.id, list);
+      }
+    }
+  };
 <script id="910cpr-schedule" defer>
 (() => {
   if (window.__910cprScheduleLoaded) return;
@@ -266,5 +380,21 @@
       ]);
     })();
   </script>
+</body>
+</html>
+})();
+</script>
+
+  <script>
+    (function(){
+      const LIM = 15;
+      window.__sched.run([
+        {id:"times-acls-ren",   fam: + fam + , kind:"renewal", limit:LIM},
+        {id:"times-acls-init",  fam: + fam + , kind:"initial", limit:LIM},
+        {id:"times-acls-heart", fam: + fam + , kind:"heart",   limit:LIM}
+      ]);
+    })();
+  </script>
+
 </body>
 </html>
