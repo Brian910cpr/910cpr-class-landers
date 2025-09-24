@@ -70,6 +70,18 @@
       max-width: 100px;
     }
   </style>
+<!-- Theme toggle -->
+  <script>
+    (function(){
+      const KEY="theme", root=document.documentElement;
+      const initial=localStorage.getItem(KEY) || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+      apply(initial);
+      window.toggleTheme=()=>apply(root.dataset.theme==="dark"?"light":"dark");
+      function apply(t){ root.dataset.theme=t; try{localStorage.setItem(KEY,t)}catch{}
+        const b=document.getElementById("theme-toggle"); if(b){ b.textContent=t==="dark"?"Light":"Dark"; b.setAttribute("aria-pressed",String(t==="dark"));}}
+    })();
+  </script>
+
 </head>
 <body>
   <h1><img src="https://brian910cpr.github.io/910cpr-class-landers/images/910CPR_Fat.jpg" alt="910CPR Logo" style="height:40px; vertical-align:middle; margin-right:0.5rem;"> What class are you needing?</h1>
@@ -118,5 +130,16 @@
     <h3><b>Family & Friends CPR</b><br><small><i>(In-Person)</i></small></h3>
     <p>Non-certification course for parents, grandparents, and community members who want to learn basic CPR skills.</p>
   </div>
+
+  <script>
+    document.querySelectorAll('a[href^="tel:"]').forEach(a=>{
+      a.addEventListener('click', ()=>{
+        try{
+          if (window.gtag) gtag('event','click_phone',{event_category:'engagement',event_label:a.id||'tel_link',value:'910-395-5193'});
+          if (window.dataLayer) window.dataLayer.push({event:'click_phone', phone:'910-395-5193', placement:a.id||'tel_link'});
+        }catch(e){}
+      });
+    });
+  </script>
 </body>
 </html>
