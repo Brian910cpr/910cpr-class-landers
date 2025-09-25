@@ -16,3 +16,48 @@
     });
   });
 })();
+
+// BEGIN HOVN_VIEW_MORE
+(function(){
+  window.HOVN_BASE = window.HOVN_BASE || 'https://www.hovn.app/service-providers/910cpr/sessions';
+  function init(){
+    var cards = document.querySelectorAll('.card[data-collapsible="1"]');
+    cards.forEach(function(card){
+      if(card.dataset.controlsInit === '1') return;
+      card.dataset.controlsInit = '1';
+
+      var hovn = card.getAttribute('data-hovn') || window.HOVN_BASE;
+
+      var container = document.createElement('div');
+      container.className = 'card-controls';
+
+      var more = document.createElement('a');
+      more.className = 'view-more';
+      more.target = '_blank';
+      more.rel = 'noopener';
+      more.href = hovn;
+      more.textContent = 'View more dates';
+
+      var close = document.createElement('button');
+      close.className = 'close-card';
+      close.type = 'button';
+      close.textContent = 'Close';
+
+      close.addEventListener('click', function(){
+        card.classList.remove('open');
+      });
+
+      container.appendChild(more);
+      container.appendChild(close);
+
+      var body = card.querySelector('.card-body') || card;
+      body.appendChild(container);
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+// END HOVN_VIEW_MORE
