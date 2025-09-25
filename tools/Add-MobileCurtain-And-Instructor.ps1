@@ -3,16 +3,14 @@ param(
   [string]$Root = ".\docs",
   [switch]$DryRun,
   [switch]$GitCommit,
-  [string]$CommitMessage = "UX: mobile curtain + AHA instructor row + assets injection (fixed)"
+  [string]$CommitMessage = "UX: mobile curtain + AHA instructor row + assets injection (fixed regex)"
 )
 
 function Write-Change([string]$msg){ Write-Host $msg }
 
-# --- asset targets ---
 $cssPath = Join-Path $Root "assets\ux.css"
 $jsPath  = Join-Path $Root "assets\ux.js"
 
-# --- asset contents (double-quoted here-strings so they don't collide with outer writers) ---
 $cssContent = @"
 /* --- UX curtain / collapsible cards (mobile-first) --- */
 .card[data-collapsible="1"] { overflow: hidden; transition: max-height .25s ease; }
@@ -48,7 +46,7 @@ $jsContent = @"
 
 Write-Host "Root: $(Resolve-Path $Root)"
 
-# --- ensure assets directory / files ---
+# ensure assets
 $assetsDir = Join-Path $Root "assets"
 if($DryRun){
   if(-not (Test-Path $cssPath)){ Write-Change "[DRY] write $cssPath" }
@@ -65,31 +63,29 @@ if($DryRun){
   }
 }
 
-# --- gather lander index pages ---
-$indexes = Get-ChildItem $Root -Recurse -Filter index.html -File | Sort-Object FullName
-
-# robust relative path helper (works on pwsh 7+; falls back for Windows PowerShell)
+# helpers
 function Get-Rel([string]$fromDir, [string]$toPath){
+  # Compute a relative path WITHOUT requiring the target to exist
+  $fromFull = [IO.Path]::GetFullPath($fromDir)
+  $toFull = $toPath
+  try { $toFull = [IO.Path]::GetFullPath($toPath) } catch { }
   try {
-    return [IO.Path]::GetRelativePath($fromDir, $toPath).Replace('\','/')
+    return [IO.Path]::GetRelativePath($fromFull, $toFull).Replace('\','/')
   } catch {
-    $uriFrom = New-Object System.Uri((Resolve-Path $fromDir))
-    $uriTo   = New-Object System.Uri((Resolve-Path $toPath))
-    return $uriFrom.MakeRelativeUri($uriTo).ToString()
+    if($toFull.StartsWith($fromFull, [StringComparison]::OrdinalIgnoreCase)){
+      return $toFull.Substring($fromFull.Length).TrimStart('\','/').Replace('\','/')
+    }
+    return $toPath.Replace('\','/')
   }
 }
 
-# helper: inject <link> and <script> once
 function Inject-Assets([string]$filePath, [string]$html){
   $dir     = Split-Path -Parent $filePath
   $cssRel  = Get-Rel $dir (Join-Path $Root 'assets\ux.css')
   $jsRel   = Get-Rel $dir (Join-Path $Root 'assets\ux.js')
-
-  if($html -match '(?is)assets/ux\.css' -and $html -match '(?is)assets/ux\.js'){ return $html } # already linked
-
+  if($html -match '(?is)assets/ux\.css' -and $html -match '(?is)assets/ux\.js'){ return $html }
   $headInsert = "`r`n<link rel=""stylesheet"" href=""$cssRel"">`r`n<script defer src=""$jsRel""></script>`r`n"
   if($html -match '(?is)</head>'){
-    # safe single -replace
     $html = $html -replace '(?is)</head>', ($headInsert + '</head>')
   } else {
     $html = $headInsert + $html
@@ -97,22 +93,19 @@ function Inject-Assets([string]$filePath, [string]$html){
   return $html
 }
 
-# helper: mark homepage cards collapsible (only once)
-function Mark-Home-Collapsible([string]$filePath, [string]$html){
-  if($filePath -notmatch '[\\/]\Qdocs\E[\\/]index\.html$'){ return $html } # homepage only
-  if($html -match 'data-collapsible="1"'){ return $html }                  # already marked
-  # Add data-collapsible="1" to any element whose class contains 'card'
+function Mark-Home-Collapsible([string]$relPath, [string]$html){
+  # homepage only (docs/index.html)
+  if($relPath -ne 'index.html'){ return $html }
+  if($html -match 'data-collapsible="1"'){ return $html }
   $pattern = '(?is)<(div|article|section|figure)([^>]*\bclass="[^"]*\bcard\b[^"]*"[^>]*)>'
   $replacement = '<$1$2 data-collapsible="1">'
   return ($html -replace $pattern, $replacement)
 }
 
-# helper: append AHA Instructor card block to HSI lander (once)
-function Add-Instructor-Block([string]$filePath, [string]$html){
-  # only for HSI lander
-  if($filePath -notmatch '[\\/]\Qdocs\E[\\/]hsi[\\/]index\.html$'){ return $html }
-  if($html -match 'id="instructor-cards"'){ return $html } # already present
-
+function Add-Instructor-Block([string]$relPath, [string]$html){
+  # only HSI lander
+  if($relPath -ne 'hsi/index.html'){ return $html }
+  if($html -match 'id="instructor-cards"'){ return $html }
   $block = @"
 <section id="instructor-cards" class="section wide">
   <h2 class="title">Become an AHA Instructor</h2>
@@ -144,7 +137,6 @@ function Add-Instructor-Block([string]$filePath, [string]$html){
   </div>
 </section>
 "@
-
   if($html -match '(?is)</main>'){
     $html = $html -replace '(?is)</main>', ("  $block`r`n</main>")
   } else {
@@ -153,19 +145,24 @@ function Add-Instructor-Block([string]$filePath, [string]$html){
   return $html
 }
 
+# process files
+$rootFull = [IO.Path]::GetFullPath($Root)
+$indexes = Get-ChildItem $Root -Recurse -Filter index.html -File | Sort-Object FullName
 $modified = @()
+
 foreach($f in $indexes){
   $html0 = Get-Content $f.FullName -Raw
+  $fileFull = [IO.Path]::GetFullPath($f.FullName)
+  $rel = [IO.Path]::GetRelativePath($rootFull, $fileFull).Replace('\','/').ToLowerInvariant()
 
   $html1 = Inject-Assets $f.FullName $html0
-  $html1 = Mark-Home-Collapsible $f.FullName $html1
-  $html1 = Add-Instructor-Block $f.FullName $html1
+  $html1 = Mark-Home-Collapsible $rel $html1
+  $html1 = Add-Instructor-Block $rel $html1
 
   if($html1 -ne $html0){
     if($DryRun){
       Write-Change ("[DRY] Enhanced: " + $f.FullName)
     } else {
-      # backup once per run if not already created this run
       $bak = "$($f.FullName).bak"
       if(-not (Test-Path $bak)){ Set-Content $bak $html0 -Encoding UTF8 }
       Set-Content $f.FullName $html1 -Encoding UTF8
@@ -176,8 +173,7 @@ foreach($f in $indexes){
 }
 
 if(-not $DryRun){
-  if($modified.Count -eq 0){ Write-Host "Done. Modified 0 file(s)." }
-  else                     { Write-Host ("Done. Modified {0} file(s)." -f $modified.Count) }
+  Write-Host ("Done. Modified {0} file(s)." -f $modified.Count)
   if($GitCommit){
     git add -A
     git commit -m $CommitMessage
