@@ -7,3 +7,11 @@
   .card[data-collapsible="1"] { border-radius: 12px; }
   .card[data-collapsible="1"] .card-header { cursor: pointer; }
 }
+
+/* BEGIN HOVN_VIEW_MORE_CSS */
+.card .card-controls{display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.card .card-controls .view-more,
+.card .card-controls .close-card{padding:.5rem .75rem;border-radius:.5rem;text-decoration:none;border:1px solid currentColor;background:transparent;cursor:pointer;font:inherit}
+.card .card-controls .view-more{display:inline-block}
+@media (min-width:769px){.card .card-controls{display:none}}
+/* END HOVN_VIEW_MORE_CSS */
