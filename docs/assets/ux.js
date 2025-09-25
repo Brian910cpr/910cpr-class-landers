@@ -60,4 +60,24 @@
     init();
   }
 })();
+
+<script>
+(function(){
+  const KEY = "theme";
+  const doc = document.documentElement;
+
+  function set(t){
+    doc.setAttribute("data-theme", t);
+    try { localStorage.setItem(KEY, t); } catch(e){}
+  }
+
+  const saved   = (function(){try{ return localStorage.getItem(KEY) }catch(e){return null}})();
+  const prefers = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark":"light";
+  set(saved || prefers);
+
+  // expose a simple toggle
+  window.toggleTheme = () => set(doc.getAttribute("data-theme")==="dark" ? "light" : "dark");
+})();
+</script>
+
 // END HOVN_VIEW_MORE
