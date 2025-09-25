@@ -29,6 +29,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </header>
 
 <main class="container">
+<!-- audience chips -->
+<nav class="chipbar" aria-label="Audience shortcuts">
+  <a class="chip" href="/medical/index.html">Medical Professionals</a>
+  <a class="chip" href="/workplaces/index.html">Workplaces (OSHA-Acceptable)</a>
+  <a class="chip" href="/industry/index.html">Industry & Construction</a>
+  <a class="chip" href="/caregivers/index.html">Child &amp; Senior Care</a>
+  <a class="chip" href="/uscg/index.html">USCG / DAN (Maritime &amp; Diving)</a>
+  <a class="chip" href="/parents/index.html">Parents &amp; Families</a>
+</nav>
+<style>
+  .chipbar{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+  .chip{padding:.5rem .75rem;border-radius:999px;border:1px solid var(--border,#e5e7eb);text-decoration:none}
+  @media (prefers-color-scheme: dark){
+    .chip{border-color:#374151}
+  }
+</style>
   <h1>Instructor Certification Programs</h1>
   <p>Become an instructor: Heartsaver, BLS, ACLS, PALS. This page aggregates prerequisites, alignment, monitoring, and how to schedule your instructor course day.</p>
 
@@ -57,4 +73,5 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </footer>
 </body>
 </html>
+
 

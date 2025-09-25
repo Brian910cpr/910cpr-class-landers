@@ -1,0 +1,9 @@
+/* --- UX curtain / collapsible cards (mobile-first) --- */
+.card[data-collapsible="1"] { overflow: hidden; transition: max-height .25s ease; }
+.card[data-collapsible="1"] .card-details { display: block; }
+.card[data-collapsible="1"]:not(.open) .card-details { display: none; }
+
+@media (max-width: 768px) {
+  .card[data-collapsible="1"] { border-radius: 12px; }
+  .card[data-collapsible="1"] .card-header { cursor: pointer; }
+}
