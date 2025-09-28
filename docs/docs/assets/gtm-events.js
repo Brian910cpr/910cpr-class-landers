@@ -1,0 +1,1 @@
+<PASTE THE FULL gtm-events.js FROM ABOVE>
