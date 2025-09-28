@@ -1,0 +1,1 @@
+<PASTE THE ENTIRE /assets/schedule.js CONTENT FROM ABOVE HERE>

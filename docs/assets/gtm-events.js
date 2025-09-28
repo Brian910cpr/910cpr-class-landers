@@ -1,57 +1,117 @@
-window.dataLayer = window.dataLayer || [];
-function dl(event, props){ try{ dataLayer.push(Object.assign({event}, props||{})); }catch(e){} }
+/* /assets/gtm-events.js
+   Safe GTM helpers with event delegation (no brittle querySelectorAll quoting).
+   - Tracks: session link clicks, tel/mailto, outbound links, generic CTAs.
+   - Pushes to dataLayer only (no hard dependency on gtag).
+   - Zero-throw: wrapped in try/catch + guards.
+*/
+(() => {
+  try {
+    const dl = (window.dataLayer = window.dataLayer || []);
+    const ORIGIN = location.origin;
 
-document.addEventListener('DOMContentLoaded', function () {
-  var sessionLinks = Array.prototype.slice.call(document.querySelectorAll('a[href*=""\/sessions\/""]')).slice(0, 15);
-  if (sessionLinks.length) {
-    var items = sessionLinks.map(function(a){
-      var m = (a.href||'').match(/\/sessions\/([a-z0-9]+)/i);
-      return {
-        item_id:   (m && m[1]) || null,
-        item_name: ((a.dataset && (a.dataset.title||'')) || a.title || a.textContent || '').trim().slice(0,100),
-        item_list_name: 'Periscope Sessions',
-        item_category: (a.dataset && a.dataset.course) || null,
-        location_id: (a.dataset && a.dataset.city) || null
-      };
+    const push = (event, payload = {}) => {
+      try {
+        dl.push({ event, ...payload });
+      } catch (e) {
+        // swallow
+      }
+    };
+
+    // Tiny helpers
+    const closest = (el, sel) => (el?.closest ? el.closest(sel) : null);
+    const isSameOrigin = (href) => {
+      try {
+        const u = new URL(href, ORIGIN);
+        return u.origin === ORIGIN;
+      } catch {
+        return true;
+      }
+    };
+
+    // Event delegation (one listener)
+    document.addEventListener(
+      "click",
+      (ev) => {
+        const t = ev.target;
+
+        // 1) Session links: /sessions/…
+        const aSession = closest(t, "a[href^='/sessions/'], a[href^=\"/sessions/\"]");
+        if (aSession) {
+          const href = aSession.getAttribute("href") || "";
+          push("click_session_link", {
+            link_url: href,
+            link_text: (aSession.textContent || "").trim(),
+            link_id: aSession.id || "",
+            link_classes: aSession.className || "",
+          });
+          return;
+        }
+
+        // 2) tel:
+        const aTel = closest(t, "a[href^='tel:'], a[href^=\"tel:\"]");
+        if (aTel) {
+          push("click_phone", {
+            phone: (aTel.getAttribute("href") || "").replace(/^tel:/i, ""),
+            link_id: aTel.id || "",
+            placement: aTel.dataset?.placement || "",
+          });
+          return;
+        }
+
+        // 3) mailto:
+        const aMail = closest(t, "a[href^='mailto:'], a[href^=\"mailto:\"]");
+        if (aMail) {
+          push("click_email", {
+            email: (aMail.getAttribute("href") || "").replace(/^mailto:/i, ""),
+            link_text: (aMail.textContent || "").trim(),
+          });
+          return;
+        }
+
+        // 4) Outbound links (same tab or new tab), only http(s) and different origin
+        const aAny = closest(t, "a[href]");
+        if (aAny) {
+          const href = aAny.getAttribute("href") || "";
+          if (/^https?:/i.test(href) && !isSameOrigin(href)) {
+            push("click_outbound", {
+              link_url: href,
+              link_text: (aAny.textContent || "").trim(),
+              target: aAny.getAttribute("target") || "",
+            });
+            return;
+          }
+        }
+
+        // 5) Generic CTA buttons
+        const cta = closest(
+          t,
+          "[data-cta], .cta, .pill, .chip, button[aria-pressed], button[data-action]"
+        );
+        if (cta) {
+          push("click_cta", {
+            cta_text: (cta.textContent || "").trim(),
+            cta_id: cta.id || "",
+            cta_classes: cta.className || "",
+            cta_action: cta.getAttribute("data-action") || "",
+          });
+          return;
+        }
+      },
+      { passive: true, capture: true }
+    );
+
+    // Optional: fire a pageview-ish event (GTM can listen for this)
+    push("custom_page_loaded", {
+      path: location.pathname + location.search,
+      title: document.title,
     });
-    dl('view_item_list', { items: items });
+
+    // Dev breadcrumb (non-fatal)
+    try {
+      console.info("[gtm-events] initialized");
+    } catch {}
+  } catch (e) {
+    // never throw
+    try { console.warn("[gtm-events] init error:", e?.message || e); } catch {}
   }
-
-  document.addEventListener('click', function(e){
-    var el = e.target.closest && e.target.closest('a,button');
-    if (!el) return;
-
-    if (el.dataset && el.dataset.event) {
-      var payload = {};
-      for (var k in el.dataset) if (k !== 'event') payload[k] = el.dataset[k];
-      payload.link_text = (el.innerText||'').trim().slice(0,80);
-      payload.link_url  = el.href || null;
-      dl(el.dataset.event, payload);
-      return;
-    }
-
-    if (el.matches && el.matches('a[href*=""\/sessions\/""]')) {
-      var m = (el.href||'').match(/\/sessions\/([a-z0-9]+)/i);
-      dl('select_item', {
-        item_id: (m && m[1]) || null,
-        item_name: ((el.dataset && (el.dataset.title||'')) || el.title || el.textContent || '').trim().slice(0,100),
-        item_list_name: 'Periscope Sessions',
-        link_url: el.href
-      });
-      dl('book_click', { link_url: el.href });
-      return;
-    }
-
-    if (el.matches && el.matches('a[href^=""tel:""]'))   { dl('click_phone', { link_url: el.href }); return; }
-    if (el.matches && el.matches('a[href^=""mailto:""]')){ dl('click_email', { link_url: el.href }); return; }
-  });
-
-  var searchForm = document.querySelector('form[id*=""search""], form[action*=""search""]');
-  if (searchForm) {
-    searchForm.addEventListener('submit', function(){
-      var qInput = searchForm.querySelector('input[name=""q""], input[type=""search""]');
-      var q = (qInput && qInput.value) || '';
-      dl('search', { search_term: (q||'').toString().slice(0,100) });
-    });
-  }
-});
+})();
