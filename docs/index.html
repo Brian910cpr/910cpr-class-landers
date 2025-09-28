@@ -159,4 +159,7 @@
 <!-- Track tel: clicks --> 
 <script> document.querySelectorAll('a[href^="tel:"]').forEach(a=>{ a.addEventListener('click', ()=>{ try{ if (window.gtag) gtag('event','click_phone',{event_category:'engagement',event_label:a.id||'tel_link',value:'910-395-5193'}); if (window.dataLayer) window.dataLayer.push({event:'click_phone', phone:'910-395-5193', placement:a.id||'tel_link'}); }catch(e){} }); }); </script> 
 
-<!-- <script src="/assets/gtm-events.js" defer></script> <script src="assets/ux.js"></script> </body> </html> -->
+<script src="/assets/gtm-events.js" defer></script> <script src="assets/ux.js"></script>
+
+
+</body> </html>
