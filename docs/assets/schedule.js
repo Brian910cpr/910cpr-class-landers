@@ -1,4 +1,4 @@
-// /assets/schedule.js
+// /assets/schedule.js — PRODUCTION LOADER
 (() => {
   if (window.__910cprScheduleLoaded) return;
   window.__910cprScheduleLoaded = true;
@@ -7,7 +7,7 @@
     "periscope_full.json",
     "./periscope_full.json",
     "/periscope_full.json",
-    "/assets/periscope_full.json" // keep or remove; works as a fallback if you ever move it
+    "/assets/periscope_full.json"
   ];
 
   let FEED_PROMISE = null;
@@ -18,12 +18,12 @@
         try {
           const r = await fetch(u, { cache: "no-store" });
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          const ct = (r.headers.get("content-type") || "").toLowerCase();
+          if (!ct.includes("json")) console.warn("[sched] content-type:", ct);
           const json = await r.json();
-          console.info("[sched] feed ok:", u, json.length, "items");
+          console.info("[sched] feed ok:", u, Array.isArray(json) ? json.length : "n/a", "items");
           return json;
-        } catch (e) {
-          console.warn("[sched] feed fail:", u, e?.message || e);
-        }
+        } catch (e) { console.warn("[sched] feed fail:", u, e?.message || e); }
       }
       throw new Error("All feed paths failed");
     })();
@@ -133,11 +133,8 @@
       .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = '<span class="micro">Schedule temporarily unavailable.</span>'; });
   });
 
-  // Dev helper
-  window.__sched = {
-    probe: async () => {
-      try { const r = await getFeed(); console.log("[probe] items:", r.length); return r.slice(0, 6); }
-      catch(e){ console.error("[probe] err:", e); return null; }
-    }
-  };
+  window.__sched = { probe: async () => {
+    try { const r = await getFeed(); console.log("[probe] items:", Array.isArray(r) ? r.length : "n/a"); return Array.isArray(r) ? r.slice(0,6) : r; }
+    catch(e){ console.error("[probe] err:", e); return null; }
+  }};
 })();
