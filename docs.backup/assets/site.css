@@ -1,0 +1,56 @@
+/* === 910CPR Lander Theme v2 ============================= */
+/* Reset & base */
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+html,body{height:100%}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,"Apple Color Emoji","Segoe UI Emoji";line-height:1.45;background:#0b0f1a;color:#e9edf3}
+:root{
+  --bg:#0b0f1a; --bg-elev:#0f1626; --card:#121b2d; --line:#1e2a40;
+  --text:#e9edf3; --muted:#a8b3c7; --brand:#4f8cff; --brand-600:#3f78e6; --brand-700:#2f62c7;
+  --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444; --chip-bg:#10182a; --chip-b:#24334e;
+  --shadow: 0 10px 25px rgba(0,0,0,.35), 0 2px 6px rgba(0,0,0,.25);
+}
+.ui a{color:var(--brand);text-decoration:none}
+.ui a:hover{color:#8fb4ff}
+
+/* layout helpers */
+.wrap,.container{max-width:1120px;margin:0 auto;padding:24px}
+.section{padding:8px 0 24px}
+
+/* hero */
+.site-hero{position:relative;background:radial-gradient(1200px 500px at 15% -10%,#1a2640 0%,#0b0f1a 60%), linear-gradient(180deg,#0c1220 0%, #0b0f1a 100%);border-bottom:1px solid #0f1a2e}
+.site-hero h1{margin:.25rem 0 .3rem;font-weight:800;letter-spacing:.2px;font-size:clamp(22px,3.5vw,34px)}
+.site-hero .sub{color:var(--muted);margin:.25rem 0 1rem}
+
+/* chip bars */
+.chips,.chipbar{display:flex;flex-wrap:wrap;gap:.6rem}
+.chip,.pill{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.45rem .75rem;border-radius:999px;border:1px solid var(--chip-b);
+  background:linear-gradient(180deg,var(--chip-bg),#0d1524);color:#cfe0ff;box-shadow:0 1px 0 rgba(255,255,255,.05) inset
+}
+.chip.brand{background:linear-gradient(180deg,#15316a,#112752);border-color:#24407a;color:#e6f0ff}
+.chip.call{color:#a8f5c8;border-color:#1d3b2b;background:linear-gradient(180deg,#0c1f19,#0b1814)}
+.chip:hover{filter:brightness(1.08)}
+
+/* grid system */
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+.col-12{grid-column:span 12}.col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
+@media (max-width:1020px){.col-6,.col-4,.col-3{grid-column:span 12}}
+
+/* cards */
+.card{
+  background:linear-gradient(180deg,var(--card),#0f1627);
+  border:1px solid var(--line);
+  border-radius:16px;padding:16px 14px;box-shadow:var(--shadow)
+}
+.card-title{margin:8px 0 6px;font-size:19px;font-weight:800;letter-spacing:.2px}
+.lede{color:#c7d2e1;margin:4px 0 14px}
+
+/* mini sections inside cards */
+.tri{background:linear-gradient(180deg,#0b1324,#0b1220);border:1px solid #1a2742;border-radius:12px;padding:10px;margin-top:10px}
+.tri h4{margin:0 0 8px;font-size:14px;font-weight:700;color:#e3ecff}
+
+/* badges / labels */
+.eyebrow{
+  display:inline-flex;gap:6px;align-items:center;
+  font-size:12px;padding:4px 8px;border-radius:9999px;
+  border:1px solid #203254;backgroun
