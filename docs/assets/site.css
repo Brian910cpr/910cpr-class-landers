@@ -1,0 +1,31 @@
+:root{
+  --brand:#2563eb; --brand-600:#1d4ed8; --bg:#0b1220; --text:#e5e7eb;
+  --muted:#9aa4af; --card:#0f172a; --line:#1f2937; --chip-bg:#0b1220; --chip-b:#1f2937;
+  --ok-bg:#052e1f; --ok-b:#064e3b; --accent:#ef4444;
+}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+a{color:inherit}
+.wrap,.container{max-width:1100px;margin:0 auto;padding:22px}
+.chipbar{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem auto;max-width:1100px;padding:0 22px}
+.chip{display:inline-block;padding:.5rem .75rem;border-radius:999px;border:1px solid var(--chip-b);text-decoration:none}
+.chip.brand{background:#0f172a;border-color:var(--brand-600);color:#fff}
+.chip.call{background:#0f172a;border-color:#22c55e;color:#22c55e}
+.site-hero h1{margin:.1rem 0;font-size:clamp(22px,4vw,32px)}
+.sub{color:var(--muted);margin:.25rem 0 1rem}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.col-12{grid-column:span 12}.col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
+@media(max-width:1020px){.col-6,.col-4,.col-3{grid-column:span 12}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.eyebrow{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:9999px;border:1px solid var(--line);background:var(--bg);color:var(--muted)}
+.heart{color:var(--accent);font-weight:900}
+.card-title{margin:8px 0 6px;font-size:18px}
+.lede{color:#cdd3da;margin:6px 0 16px;line-height:1.45}
+.section-title{margin:26px 0 10px;font-size:clamp(18px,3.4vw,24px)}
+.section-title>a{text-decoration:none}
+.timechips{display:flex;gap:8px;flex-wrap:wrap}
+.timechip{display:inline-block;border:1px solid var(--line);background:var(--bg);padding:6px 10px;border-radius:10px;font-size:13px;text-decoration:none}
+.tri{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px}
+.tri h4{margin:0 0 8px;font-size:14px;letter-spacing:.2px}
+.see{display:inline-block;margin-top:10px;font-weight:700;font-size:12px;text-decoration:none;color:var(--brand-600)}
+.micro{color:var(--muted);font-size:13px}
