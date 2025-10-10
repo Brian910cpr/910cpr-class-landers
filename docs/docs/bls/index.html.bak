@@ -1,17 +1,9 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQ8DCBH');</script>
-<!-- End Google Tag Manager -->
-
   <meta charset="utf-8" />
-  <title>BLS â€” Basic Life Support â€” Live Classes | 910CPR</title>
-  <meta name="description" content="BLS â€” Basic Life Support in Wilmington & Burgaw. Initial, Renewal, and HeartCode/Blended options. Same-day eCards." />
+  <title>BLS — Basic Life Support — Live Classes | 910CPR</title>
+  <meta name="description" content="BLS — Basic Life Support in Wilmington & Burgaw. Initial, Renewal, and HeartCode/Blended options. Same-day eCards." />
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -90,16 +82,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ8DCBH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
   <div class="wrap">
     <div class="brandbar">
       <a href="/"><img class="logo" src="/images/910CPR_Fat.jpg" alt="910CPR"></a>
       <div>
-        <h1>BLS â€” Basic Life Support</h1>
-        <div class="sub">AHA/ARC aligned â€¢ Wilmington &amp; Burgaw â€¢ Small groups â€¢ Same-day eCards</div>
+        <h1>BLS — Basic Life Support</h1>
+        <div class="sub">AHA/ARC aligned • Wilmington &amp; Burgaw • Small groups • Same-day eCards</div>
       </div>
     </div>
 
@@ -112,8 +100,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
 
     <section class="card">
-      <h2 class="card-title">BLS â€” Basic Life Support</h2>
-      <p class="lede">Adult, child, and infant CPR/AED; airway and team dynamics. AHA/ARC aligned. Required across most hospitals and clinics. Sameâ€‘day eCard.</p>
+      <h2 class="card-title">BLS — Basic Life Support</h2>
+      <p class="lede">Adult, child, and infant CPR/AED; airway and team dynamics. AHA/ARC aligned. Required across most hospitals and clinics. Same‑day eCard.</p>
     </section>
 
     <h2 id="paths" class="section-title" style="margin-top:26px">Choose your path</h2>
@@ -141,7 +129,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </section>
     </div>
 
-    <footer>Â© 910CPR â€” Live schedule pulls from HOVN. Questions? <a href="tel:+19103955193">Call or text (910) 395-5193</a>.</footer>
+    <footer>© 910CPR — Live schedule pulls from HOVN. Questions? <a href="tel:+19103955193">Call or text (910) 395-5193</a>.</footer>
   </div>
 
   <div class="call-fab" aria-label="Call 910-395-5193">
@@ -212,7 +200,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     const day=String(d.getDate()).padStart(2,"0");
     let h=d.getHours(), m=d.getMinutes(), ap=h>=12?"p":"a"; h=h%12||12;
     const hm = m ? `${h}:${String(m).padStart(2,"0")}${ap}` : `${h}${ap}`;
-    return `${mo} ${day}, ${hm}${n.city ? ` â€” ${n.city}` : ""}`;
+    return `${mo} ${day}, ${hm}${n.city ? ` — ${n.city}` : ""}`;
   }
 
   function setChips(id, items){
@@ -223,7 +211,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .filter(x=>x.label)
       .map(x=>`<a class="timechip" href="${x.url}">${x.label}</a>`)
       .join("");
-    el.innerHTML = html || '<span class="micro">New dates postingâ€”check back soon.</span>';
+    el.innerHTML = html || '<span class="micro">New dates posting—check back soon.</span>';
   }
 
   window.__sched = {
@@ -280,4 +268,3 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
 </body>
 </html>
-

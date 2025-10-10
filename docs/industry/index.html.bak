@@ -1,12 +1,4 @@
-﻿<<header class="site-hero">
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQ8DCBH');</script>
-<!-- End Google Tag Manager -->
-
+<<header class="site-hero">
   <div class="container hero-container">
     <h1 class="page-title">CPR/AED & First Aid for Industrial Sites</h1>
   </div>
@@ -14,35 +6,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 !doctype html>
 <html lang="en">
 <head>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQ8DCBH');</script>
-<!-- End Google Tag Manager -->
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Industry & Construction â€¢ 910CPR</title>
+<title>Industry & Construction • 910CPR</title>
 <meta name="description" content="Industrial and construction-ready CPR/AED & First Aid solutions for sites and contractors.">
 <link rel="stylesheet" href="/assets/site.css">
 <link rel="stylesheet" href="../assets/ux.css" />
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ8DCBH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
 <header class="container">
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQ8DCBH');</script>
-<!-- End Google Tag Manager -->
-
   
   <p class="subtle">Industrial and construction-ready CPR/AED & First Aid solutions for sites and contractors.</p>
 </header>
@@ -120,12 +92,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </main>
 
 <footer class="container">
-  <p class="subtle">Â© 910CPR</p>
+  <p class="subtle">© 910CPR</p>
 </footer>
 <script src="../assets/ux.js"></script>
 </body>
 </html>
-
 
 
 
