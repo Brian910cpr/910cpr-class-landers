@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQ8DCBH');</script>
+<!-- End Google Tag Manager -->
+
+  <meta charset="UTF-8">
+  <title>910CPR Course Directory</title>
+  <meta name="description" content="Explore all CPR and First Aid certification classes offered by 910CPR.">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ8DCBH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <h1>Welcome to 910CPR Class Directory</h1>
+  <p>This is your main hub. Please choose a course, job role, or session to begin.</p>
+  <ul>
+    <li><a href="/courses/bls-inperson.html">BLS In-Person</a></li>
+    <li><a href="/jobs/emt.html">For EMTs</a></li>
+    <li><a href="/industries/healthcare.html">Healthcare Industry</a></li>
+  </ul>
+</body>
+</html>
+
