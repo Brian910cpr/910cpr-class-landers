@@ -71,6 +71,7 @@ window.dataLayer.push({
   ad_personalization: 'denied'
 });
 </script>
+<script type="application/ld+json">{"@type":"Event","offers":[{"url":"https://www.hovn.app/service-providers/910cpr/sessions/cmep7l77g005njr04m9oru5b6","availability":"https://schema.org/InStock","@type":"Offer"}],"startDate":"2025-11-01T11:45:00-04:00","organizer":{"url":"https://910cpr.com","name":"910 CPR","@type":"Organization"},"location":{"name":"910 CPR – Wilmington","address":{"addressRegion":"NC","addressLocality":"Wilmington","addressCountry":"US","@type":"PostalAddress"},"@type":"Place"},"url":"https://910cpr.com/classes/session_cmep7l77g005njr04m9oru5b6_wilmington.html","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","eventStatus":"https://schema.org/EventScheduled","name":"Heartsaver Pediatric First Aid CPR AED - Blended","@context":"https://schema.org"}</script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -137,5 +138,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </script>
 <script src="/assets/gtm-events.js" defer></script>
 </body></html>
+
+
 
 
