@@ -35,3 +35,9 @@ data/*.tsv
 
 # Verify
 type ".gitignore"
+# Large/binary bundles — keep out of git history
+*.zip
+*.7z
+*.rar
+*.iso
+tools/
