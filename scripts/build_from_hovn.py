@@ -1,22 +1,45 @@
 #!/usr/bin/env python3
-# build_from_hovn.py — generate docs/sessions/*.html from data/sessions.csv (HOVN export)
+# build_from_hovn.py — generate docs/sessions/*.html from data/sessions*.csv (HOVN export)
+# - Prefers the newest sessions*.csv in ./data (e.g., sessions.csv, sessions (1).csv, sessions2.csv)
+# - Env/CLI override still supported (HOVN_SESSIONS or positional path)
+# - Past sessions: noindex + banner + CTA to HOVN current schedule + course hub
+# - Future sessions: indexable + Register Now button
+# - Canonical URL set per page
 
-import csv, os, re, hashlib, random, datetime
+import csv, os, re, hashlib, random, datetime, sys, json, glob
 from pathlib import Path
+from html import escape
 
 REPO = Path(__file__).resolve().parents[1]
 DATA = REPO / "data"
 DOCS = REPO / "docs"
 SESS_DIR = DOCS / "sessions"
 
+def pick_latest_sessions_csv() -> Path | None:
+    """
+    Choose the newest sessions*.csv in ./data by last write time.
+    Matches: sessions.csv, sessions(1).csv, sessions (2).csv, sessions2.csv, etc.
+    """
+    patterns = ["sessions*.csv", "Sessions*.csv"]
+    candidates = []
+    for pat in patterns:
+        candidates.extend([Path(p) for p in glob.glob(str(DATA / pat))])
+    if not candidates:
+        return None
+    candidates = [c for c in candidates if c.is_file()]
+    candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+    return candidates[0] if candidates else None
+
 # Allow override via env var or CLI arg
 env_path = os.getenv("HOVN_SESSIONS")
-CSV_PATH = Path(env_path) if env_path else (DATA / "sessions.csv")
-import sys
 if len(sys.argv) > 1:
     CSV_PATH = Path(sys.argv[1])
+elif env_path:
+    CSV_PATH = Path(env_path)
+else:
+    CSV_PATH = pick_latest_sessions_csv() or (DATA / "sessions.csv")
 
-# Map text like "BLS Provider", "ACLS Provider", "PALS Provider - Heartcode", "Heartsaver ..."
+# Course mapping from free text
 COURSE_SLUG_MAP = {
     "bls":  ("aha-bls-provider", "aha"),
     "acls": ("aha-acls-provider", "aha"),
@@ -77,7 +100,7 @@ AUDIENCE_BLOCKS = {
     ]
 }
 
-def slugify(text, maxlen=None):
+def slugify(text: str, maxlen: int | None = None) -> str:
     text = (text or "").lower()
     text = re.sub(r"&", " and ", text)
     text = re.sub(r"[^a-z0-9]+", "-", text)
@@ -89,22 +112,21 @@ def slugify(text, maxlen=None):
         text = cut or text[:maxlen]
     return text
 
-def short_sid(sess_id, length=7):
+def short_sid(sess_id: str, length: int = 7) -> str:
     if not sess_id:
         return "s" + hashlib.md5(os.urandom(16)).hexdigest()[:length]
     h = hashlib.sha1(sess_id.encode("utf-8")).hexdigest()
     return "s" + h[:length]
 
-def parse_hovn_date(s):
+def parse_hovn_date(s: str) -> datetime.datetime:
     """
-    Accepts strings like:
+    HOVN date example:
     'Sat Oct 11 2025 08:30:00 GMT-0400 (Eastern Daylight Time)'
-    Strategy: drop the parenthetical, drop literal 'GMT', keep numeric offset.
+    Strategy: drop the parentheses, drop literal 'GMT', keep numeric offset.
     """
-    s = re.sub(r"\s*\(.*?\)\s*$", "", s)      # remove trailing " (Eastern Daylight Time)"
-    s = s.replace("GMT", "")                  # remove literal GMT
+    s = re.sub(r"\s*\(.*?\)\s*$", "", s)   # remove trailing " (Eastern ...)"
+    s = s.replace("GMT", "")                # remove literal GMT
     s = re.sub(r"\s{2,}", " ", s).strip()
-    # Example after cleanup: 'Sat Oct 11 2025 08:30:00 -0400'
     for fmt in ["%a %b %d %Y %H:%M:%S %z", "%a %b %d %Y %H:%M %z"]:
         try:
             return datetime.datetime.strptime(s, fmt)
@@ -112,78 +134,119 @@ def parse_hovn_date(s):
             pass
     raise ValueError(f"Unrecognized HOVN date: {s}")
 
-def map_course_slug(certification, course_text):
+def map_course_slug(certification: str, course_text: str) -> tuple[str, str]:
     text = f"{certification} {course_text}".lower()
-    # ordered checks: pals/acls/bls/heartsaver/first aid
-    if "pals" in text:
-        return COURSE_SLUG_MAP["pals"]
-    if "acls" in text:
-        return COURSE_SLUG_MAP["acls"]
-    if "bls" in text:
-        return COURSE_SLUG_MAP["bls"]
-    if "heartsaver" in text:
-        return COURSE_SLUG_MAP["heartsaver"]
-    if "first aid" in text:
-        return COURSE_SLUG_MAP["first aid"]
-    # fallback: generic
+    if "pals" in text: return COURSE_SLUG_MAP["pals"]
+    if "acls" in text: return COURSE_SLUG_MAP["acls"]
+    if "bls"  in text: return COURSE_SLUG_MAP["bls"]
+    if "heartsaver" in text: return COURSE_SLUG_MAP["heartsaver"]
+    if "first aid"  in text: return COURSE_SLUG_MAP["first aid"]
     return (slugify(certification or course_text, 32), "generic")
 
-def canonical_filename(start_dt, course_slug, city, state, sid_short):
-    date_part = start_dt.astimezone().strftime("%Y-%m-%d_%H-%M")  # localize to system tz for sort
+def canonical_filename(start_dt: datetime.datetime, course_slug: str, city: str, state: str, sid_short: str) -> str:
+    date_part = start_dt.astimezone().strftime("%Y-%m-%d_%H-%M")
     course_part = slugify(course_slug, 28)
     loc_part = slugify(f"{city}-{state}", 24)
     return f"{date_part}-{course_part}-{loc_part}_{sid_short}.html"
 
-def pick_phrase(blocks):
-    return random.choice(blocks) if blocks else ""
+def iso8601(dt: datetime.datetime) -> str:
+    return dt.astimezone().isoformat(timespec="minutes")
 
-def render_html(title, provider_key, city, state, start_dt, enroll_url, intro, audience, local, agency, fmt):
+def render_html(
+    title: str, provider_key: str, city: str, state: str, start_dt: datetime.datetime,
+    enroll_url: str, intro: str, audience: str, local: str, agency: str, fmt: str,
+    course_slug: str, is_past: bool
+) -> str:
     style = """
     body{font-family:system-ui,Arial,sans-serif;margin:0;background:linear-gradient(180deg,#fff,#eef6ff);}
     .wrap{max-width:980px;margin:0 auto;padding:24px 16px;}
     .card{background:#fff;border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.06);padding:18px 18px;}
     .btn{display:inline-block;padding:12px 16px;border-radius:10px;background:#0b63e6;color:#fff;text-decoration:none}
+    .btn.secondary{background:#334155}
+    .notice{border-left:6px solid #ef4444;background:#fff1f2;padding:12px 14px;border-radius:12px;margin:8px 0 14px}
     small{color:#4a5568}
+    .btnrow{display:flex;gap:8px;flex-wrap:wrap}
     """
     dt_local = start_dt.astimezone()
     dt_human = dt_local.strftime("%A, %B %d, %Y • %I:%M %p").lstrip("0").replace(" 0", " ")
     provider_label = "American Heart Association" if provider_key=="aha" else ("HSI" if provider_key=="hsi" else agency or "910CPR")
-    sub = f"{provider_label} • {fmt} • {city}, {state}"
+
+    meta_robots = "noindex,follow" if is_past else "index,follow"
+
+    json_ld = {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": title,
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "startDate": iso8601(dt_local),
+        "location": {
+            "@type": "Place",
+            "name": f"{city}, {state}",
+            "address": {"@type": "PostalAddress","addressLocality": city,"addressRegion": state,"addressCountry": "US"}
+        },
+        "organizer": {"@type": "Organization", "name": "910CPR"},
+        "offers": {"@type": "Offer", "url": enroll_url, "availability": "https://schema.org/InStock"}
+    }
+
+    hovn_schedule = "https://www.hovn.app/910cpr/schedule"
+    course_page = f"/courses/{course_slug}/"
+
+    past_html = f"""
+      <div class="notice"><strong>This class has passed.</strong>
+        <div class="btnrow" style="margin-top:8px">
+          <a class="btn" href="{escape(hovn_schedule)}">See today’s schedule on HOVN</a>
+          <a class="btn secondary" href="{escape(course_page)}">Upcoming {escape(title)} classes</a>
+        </div>
+      </div>
+    """ if is_past else ""
+
+    canonical = "__CANONICAL__"
+
     return f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} — {city}, {state}</title>
-<link rel="canonical" href="https://www.910cpr.com/sessions/">
-<meta name="robots" content="index,follow">
+<title>{escape(title)} — {escape(city)}, {escape(state)}</title>
+<link rel="canonical" href="{canonical}">
+<meta name="robots" content="{meta_robots}">
+<script type="application/ld+json">{json.dumps(json_ld, ensure_ascii=False)}</script>
 <style>{style}</style>
 </head>
 <body>
   <main class="wrap">
     <div class="card">
-      <h1>{title}</h1>
-      <p><small>{sub}</small></p>
-      <p><strong>{dt_human}</strong></p>
-      <p>{intro}</p>
-      <p>{audience}</p>
-      <p>{local}</p>
-      <p><a class="btn" href="{enroll_url}">Register Now</a></p>
-      <p><small>Need a different time? https://www.hovn.app/910cpr/schedule</small></p>
+      <h1>{escape(title)}</h1>
+      <p><small>{escape(provider_label)} • {escape(fmt)} • {escape(city)}, {escape(state)}</small></p>
+      <p><strong>{escape(dt_human)}</strong></p>
+
+      {past_html}
+
+      <p>{escape(intro)}</p>
+      <p>{escape(audience)}</p>
+      <p>{escape(local)}</p>
+
+      {"<p><a class='btn' href='" + escape(enroll_url) + "'>Register Now</a></p>" if not is_past else ""}
+      <p><small>Need a different time? {escape(hovn_schedule)}</small></p>
     </div>
   </main>
 </body></html>
 """
 
-def main():
+def main() -> None:
     random.seed(0x910)
     SESS_DIR.mkdir(parents=True, exist_ok=True)
-    if not CSV_PATH.exists():
-        raise SystemExit(f"Missing {CSV_PATH}")
 
-    with CSV_PATH.open("r", encoding="utf-8-sig", newline="") as f:
+    if not CSV_PATH or not Path(CSV_PATH).exists():
+        print(f"WARNING: No sessions CSV found. Looked in {DATA} for sessions*.csv.")
+        print(f"Tip: place your latest sessions CSV in {DATA} (e.g., 'sessions (3).csv').")
+        return
+
+    print(f"Using sessions CSV: {CSV_PATH}")
+    created = 0
+    with Path(CSV_PATH).open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
-        created = 0
         for row in reader:
-            # HOVN columns (from your sample):
+            # HOVN columns:
             # cuid,date,agency,certification,course,format,location,location.city,location.state,client,instructor,currentBookings,seats,status,link
             sess_id = (row.get("cuid") or "").strip()
             date_raw = (row.get("date") or "").strip()
@@ -209,16 +272,22 @@ def main():
             filename = canonical_filename(start_dt, course_slug, city, state, sid_short)
             out_path = SESS_DIR / filename
 
-            intro = pick_phrase(INTRO_BLOCKS.get(provider_key) or INTRO_BLOCKS["generic"])
-            audience = pick_phrase(AUDIENCE_BLOCKS.get(course_slug) or AUDIENCE_BLOCKS.get("aha-heartsaver-first-aid-cpr-aed", []))
-            local = pick_phrase(LOCAL_BLOCKS).format(city=city, state=state)
+            intro = random.choice(INTRO_BLOCKS.get(provider_key) or INTRO_BLOCKS["generic"])
+            audience = random.choice(AUDIENCE_BLOCKS.get(course_slug) or AUDIENCE_BLOCKS.get("aha-heartsaver-first-aid-cpr-aed", []))
+            local = random.choice(LOCAL_BLOCKS).format(city=city, state=state)
+
+            is_past = start_dt.astimezone() < datetime.datetime.now().astimezone()
 
             html = render_html(
                 title=title, provider_key=provider_key, city=city, state=state,
                 start_dt=start_dt, enroll_url=enroll_url,
                 intro=intro, audience=audience, local=local,
-                agency=agency, fmt=fmt
+                agency=agency, fmt=fmt, course_slug=course_slug, is_past=is_past
             )
+
+            canonical_url = f"https://www.910cpr.com/sessions/{out_path.name}"
+            html = html.replace("__CANONICAL__", canonical_url)
+
             out_path.write_text(html, encoding="utf-8")
             created += 1
 
