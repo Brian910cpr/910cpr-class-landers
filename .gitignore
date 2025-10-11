@@ -1,0 +1,37 @@
+# From repo root
+Set-Location "D:\Users\ten77\Documents\GitHub\910cpr-class-landers"
+
+@'
+# --- OS / Editor cruft ---
+.DS_Store
+Thumbs.db
+
+# --- Logs / Temp / Diagnostics ---
+*.log
+*.tmp
+_tmp/
+_temp/
+_diagnostics/
+
+# --- Archives moved by our scripts ---
+_legacy/
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# --- Data: keep CSVs, ignore other raw dumps ---
+data/*.xlsx
+data/*.xls
+data/*.json
+data/*.tsv
+
+# Keep our session CSVs so builds are reproducible
+!data/sessions.csv
+!data/sessions*.csv
+'@ | Set-Content ".gitignore" -Encoding UTF8
+
+# Verify
+type ".gitignore"

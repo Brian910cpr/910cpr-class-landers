@@ -1,11 +1,3 @@
-# From your repo root
-Set-Location "D:\Users\ten77\Documents\GitHub\910cpr-class-landers"
-
-# Make the Actions folder
-New-Item -ItemType Directory -Force ".github\workflows" | Out-Null
-
-# Create the workflow file
-@'
 name: Deploy Pages
 on:
   push:
@@ -50,8 +42,3 @@ jobs:
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
-'@ | Set-Content ".github\workflows\pages.yml" -Encoding UTF8
-
-# Quick verify
-cmd /c "tree /F /A .github"
-type ".github\workflows\pages.yml"
