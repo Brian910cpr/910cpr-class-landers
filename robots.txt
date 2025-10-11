@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.910cpr.com/sitemap.xml
+Sitemap: https://www.910cpr.com/sitemap-sessions.xml

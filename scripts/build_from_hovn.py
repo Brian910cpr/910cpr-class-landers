@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # build_from_hovn.py — generate docs/sessions/*.html from data/sessions*.csv (HOVN export)
-# - Prefers the newest sessions*.csv in ./data (e.g., sessions.csv, sessions (1).csv, sessions2.csv)
-# - Env/CLI override still supported (HOVN_SESSIONS or positional path)
-# - Past sessions: noindex + banner + CTA to HOVN current schedule + course hub
-# - Future sessions: indexable + Register Now button
-# - Canonical URL set per page
+# - Chooses newest sessions*.csv in ./data (or HOVN_SESSIONS / CLI path)
+# - Past sessions: noindex + "This class has passed" banner + CTAs to HOVN & course hub
+# - Future sessions: indexable + Register Now
+# - Canonical set per page
+# - --now / HOVN_NOW lets you test past/future behavior
+# - Dedup collider to reduce near-duplicates
+# - Writes docs/sessions.json (future only)
 
 import csv, os, re, hashlib, random, datetime, sys, json, glob
 from pathlib import Path
@@ -14,32 +16,44 @@ REPO = Path(__file__).resolve().parents[1]
 DATA = REPO / "data"
 DOCS = REPO / "docs"
 SESS_DIR = DOCS / "sessions"
+JSON_OUT = DOCS / "sessions.json"
 
 def pick_latest_sessions_csv() -> Path | None:
-    """
-    Choose the newest sessions*.csv in ./data by last write time.
-    Matches: sessions.csv, sessions(1).csv, sessions (2).csv, sessions2.csv, etc.
-    """
     patterns = ["sessions*.csv", "Sessions*.csv"]
     candidates = []
     for pat in patterns:
         candidates.extend([Path(p) for p in glob.glob(str(DATA / pat))])
-    if not candidates:
-        return None
     candidates = [c for c in candidates if c.is_file()]
     candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
     return candidates[0] if candidates else None
 
-# Allow override via env var or CLI arg
+# ---- config / CLI
 env_path = os.getenv("HOVN_SESSIONS")
-if len(sys.argv) > 1:
-    CSV_PATH = Path(sys.argv[1])
-elif env_path:
-    CSV_PATH = Path(env_path)
-else:
-    CSV_PATH = pick_latest_sessions_csv() or (DATA / "sessions.csv")
+CSV_PATH = Path(sys.argv[1]) if len(sys.argv) > 1 and not sys.argv[1].startswith("--") \
+    else (Path(env_path) if env_path else (pick_latest_sessions_csv() or (DATA / "sessions.csv")))
 
-# Course mapping from free text
+def parse_now_override() -> datetime.datetime | None:
+    # --now "YYYY-MM-DD HH:MM" or env HOVN_NOW
+    val = None
+    for i, a in enumerate(sys.argv):
+        if a == "--now" and i+1 < len(sys.argv):
+            val = sys.argv[i+1]
+            break
+    if not val:
+        val = os.getenv("HOVN_NOW")
+    if not val:
+        return None
+    try:
+        dt = datetime.datetime.strptime(val.strip(), "%Y-%m-%d %H:%M")
+        # assume local tz
+        return dt.astimezone()
+    except Exception:
+        print(f"WARNING: Unable to parse --now/HOVN_NOW '{val}'. Expected 'YYYY-MM-DD HH:MM'.")
+        return None
+
+NOW = parse_now_override() or datetime.datetime.now().astimezone()
+
+# ---- maps / text
 COURSE_SLUG_MAP = {
     "bls":  ("aha-bls-provider", "aha"),
     "acls": ("aha-acls-provider", "aha"),
@@ -119,12 +133,7 @@ def short_sid(sess_id: str, length: int = 7) -> str:
     return "s" + h[:length]
 
 def parse_hovn_date(s: str) -> datetime.datetime:
-    """
-    HOVN date example:
-    'Sat Oct 11 2025 08:30:00 GMT-0400 (Eastern Daylight Time)'
-    Strategy: drop the parentheses, drop literal 'GMT', keep numeric offset.
-    """
-    s = re.sub(r"\s*\(.*?\)\s*$", "", s)   # remove trailing " (Eastern ...)"
+    s = re.sub(r"\s*\(.*?\)\s*$", "", s)   # strip parens
     s = s.replace("GMT", "")                # remove literal GMT
     s = re.sub(r"\s{2,}", " ", s).strip()
     for fmt in ["%a %b %d %Y %H:%M:%S %z", "%a %b %d %Y %H:%M %z"]:
@@ -170,9 +179,7 @@ def render_html(
     dt_local = start_dt.astimezone()
     dt_human = dt_local.strftime("%A, %B %d, %Y • %I:%M %p").lstrip("0").replace(" 0", " ")
     provider_label = "American Heart Association" if provider_key=="aha" else ("HSI" if provider_key=="hsi" else agency or "910CPR")
-
     meta_robots = "noindex,follow" if is_past else "index,follow"
-
     json_ld = {
         "@context": "https://schema.org",
         "@type": "Event",
@@ -188,10 +195,8 @@ def render_html(
         "organizer": {"@type": "Organization", "name": "910CPR"},
         "offers": {"@type": "Offer", "url": enroll_url, "availability": "https://schema.org/InStock"}
     }
-
     hovn_schedule = "https://www.hovn.app/910cpr/schedule"
     course_page = f"/courses/{course_slug}/"
-
     past_html = f"""
       <div class="notice"><strong>This class has passed.</strong>
         <div class="btnrow" style="margin-top:8px">
@@ -200,9 +205,7 @@ def render_html(
         </div>
       </div>
     """ if is_past else ""
-
     canonical = "__CANONICAL__"
-
     return f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -218,19 +221,21 @@ def render_html(
       <h1>{escape(title)}</h1>
       <p><small>{escape(provider_label)} • {escape(fmt)} • {escape(city)}, {escape(state)}</small></p>
       <p><strong>{escape(dt_human)}</strong></p>
-
       {past_html}
-
       <p>{escape(intro)}</p>
       <p>{escape(audience)}</p>
       <p>{escape(local)}</p>
-
       {"<p><a class='btn' href='" + escape(enroll_url) + "'>Register Now</a></p>" if not is_past else ""}
       <p><small>Need a different time? {escape(hovn_schedule)}</small></p>
     </div>
   </main>
 </body></html>
 """
+
+def dedupe_key(start_dt, city, state, course_slug):
+    # normalize to 15-minute bucket to reduce micro-duplications; course & location bound
+    bucket = start_dt.astimezone().replace(second=0, microsecond=0, minute=(start_dt.minute // 15) * 15)
+    return (bucket.isoformat(), (city or "").lower().strip(), (state or "").lower().strip(), course_slug)
 
 def main() -> None:
     random.seed(0x910)
@@ -243,6 +248,9 @@ def main() -> None:
 
     print(f"Using sessions CSV: {CSV_PATH}")
     created = 0
+    future_feed = []
+    seen = set()
+
     with Path(CSV_PATH).open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -268,6 +276,13 @@ def main() -> None:
                 continue
 
             course_slug, provider_key = map_course_slug(certification, course_text)
+
+            # ---- dedupe
+            key = dedupe_key(start_dt, city, state, course_slug)
+            if key in seen:
+                continue
+            seen.add(key)
+
             sid_short = short_sid(sess_id, 7)
             filename = canonical_filename(start_dt, course_slug, city, state, sid_short)
             out_path = SESS_DIR / filename
@@ -276,7 +291,7 @@ def main() -> None:
             audience = random.choice(AUDIENCE_BLOCKS.get(course_slug) or AUDIENCE_BLOCKS.get("aha-heartsaver-first-aid-cpr-aed", []))
             local = random.choice(LOCAL_BLOCKS).format(city=city, state=state)
 
-            is_past = start_dt.astimezone() < datetime.datetime.now().astimezone()
+            is_past = start_dt.astimezone() < NOW
 
             html = render_html(
                 title=title, provider_key=provider_key, city=city, state=state,
@@ -287,11 +302,26 @@ def main() -> None:
 
             canonical_url = f"https://www.910cpr.com/sessions/{out_path.name}"
             html = html.replace("__CANONICAL__", canonical_url)
-
             out_path.write_text(html, encoding="utf-8")
             created += 1
 
+            # build feed for future-only
+            if not is_past:
+                future_feed.append({
+                    "title": title,
+                    "course_slug": course_slug,
+                    "city": city,
+                    "state": state,
+                    "start": start_dt.astimezone().isoformat(),
+                    "url": f"/sessions/{out_path.name}",
+                    "enroll": enroll_url
+                })
+
+    # write future sessions JSON feed
+    JSON_OUT.write_text(json.dumps({"generated": NOW.isoformat(), "items": future_feed}, ensure_ascii=False, indent=2), encoding="utf-8")
+
     print(f"Built {created} session pages into {SESS_DIR}")
+    print(f"Wrote future feed: {JSON_OUT} ({len(future_feed)} items)")
 
 if __name__ == "__main__":
     main()

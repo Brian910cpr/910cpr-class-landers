@@ -1,18 +1,20 @@
 <#
 Build-Sessions.ps1
-- Prefers newest sessions*.csv in .\data
-- Fallback: search Downloads and repo for sessions*.csv (including "sessions (1).csv")
-- Copies chosen CSV -> .\data\sessions.csv
-- Runs build + sitemap
-- Optional git commit
+- Prefers newest sessions*.csv in .\data (fallback: Downloads + repo)
+- Copies to .\data\sessions.csv
+- Runs: build_from_hovn.py (with optional --now), make_sessions_sitemap.py, make_course_hubs.py
+- Optional commit/push
 
 Usage:
   pwsh -File .\scripts\Build-Sessions.ps1
-  pwsh -File .\scripts\Build-Sessions.ps1 -NoGitCommit
+  pwsh -File .\scripts\Build-Sessions.ps1 -Now "2025-10-12 12:00" -NoGitCommit
+  pwsh -File .\scripts\Build-Sessions.ps1 -Push
 #>
 
 param(
-  [switch]$NoGitCommit
+  [string]$Now,
+  [switch]$NoGitCommit,
+  [switch]$Push
 )
 
 $ErrorActionPreference = "Stop"
@@ -21,7 +23,6 @@ Set-Location $Repo
 
 function Get-NewestCsv {
   param([string[]]$Roots)
-
   $patterns = @('sessions*.csv','Sessions*.csv')
   $files = @()
   foreach ($root in $Roots) {
@@ -34,17 +35,13 @@ function Get-NewestCsv {
   return $null
 }
 
-# 1) First preference: data\sessions*.csv
+# 1) Locate CSV (prefer data)
 $dataDir = Join-Path $Repo 'data'
 $newest = Get-NewestCsv -Roots @($dataDir)
-
-# 2) Fallback: Downloads and repo
 if (-not $newest) {
   $downloads = Join-Path $env:USERPROFILE 'Downloads'
   $newest = Get-NewestCsv -Roots @($downloads, $Repo)
 }
-
-# 3) If found, normalize to data\sessions.csv; if not, we still proceed (builder will warn/skip)
 if ($newest) {
   Write-Host "Using CSV: $($newest.FullName)"
   New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
@@ -53,34 +50,45 @@ if ($newest) {
   Write-Host "No sessions*.csv found. Builder will skip (pages remain as-is)."
 }
 
-# 4) Run builder & sitemap
+# 2) Paths
 $buildPy   = Join-Path $Repo "scripts\build_from_hovn.py"
 $siteMapPy = Join-Path $Repo "scripts\make_sessions_sitemap.py"
-if (-not (Test-Path $buildPy))   { throw "Missing $buildPy" }
-if (-not (Test-Path $siteMapPy)) { throw "Missing $siteMapPy" }
+$coursesPy = Join-Path $Repo "scripts\make_course_hubs.py"
+foreach ($p in @($buildPy,$siteMapPy,$coursesPy)) { if (-not (Test-Path $p)) { throw "Missing $p" } }
 
-Write-Host "`n== Build session pages =="
-python $buildPy
+# 3) Build: pages (+json), sitemap, hubs
+Write-Host "`n== Build session pages (and sessions.json) =="
+$nowArg = @()
+if ($Now) { $nowArg = @("--now", $Now) }
+python $buildPy @nowArg
 
 Write-Host "`n== Build sitemap (future only) =="
 python $siteMapPy
 
-# 5) Quick report
+Write-Host "`n== Build course hubs =="
+python $coursesPy
+
+# 4) Report
 $SessDir = Join-Path $Repo "docs\sessions"
 $pages = @(Get-ChildItem $SessDir -Filter *.html -ErrorAction SilentlyContinue)
 Write-Host ("`nPages on disk: {0}" -f $pages.Count)
 
-# 6) Optional commit
+# 5) Commit / push
 if (-not $NoGitCommit) {
   $changed = (git status --porcelain)
   if ($changed) {
     git add .
     $stamp = Get-Date -Format "yyyy-MM-dd HH:mm"
-    git commit -m "Build sessions & sitemap ($stamp)"
+    git commit -m "Build: sessions + sitemap + hubs ($stamp)"
     Write-Host "Committed changes."
   } else {
     Write-Host "No changes to commit."
   }
 } else {
   Write-Host "Skipping git commit (NoGitCommit)."
+}
+
+if ($Push) {
+  git push
+  Write-Host "Pushed to origin."
 }
