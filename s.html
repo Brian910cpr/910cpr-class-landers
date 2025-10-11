@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>910CPR — Instructor Submission</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Keep bots out -->
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="googlebot" content="noindex, nofollow, noarchive">
+  <link rel="canonical" href="https://www.910cpr.com/">
+  <!-- Tip: also set an X-Robots-Tag: noindex, nofollow, noarchive header at the edge (Cloudflare/host) -->
+
+  <link rel="icon" href="https://www.910cpr.com/favicon.ico">
+  <style>
+    :root{
+      --bg1:#ffffff;
+      --bg2:#f3f9ff;       /* very light blue 910CPR vibe */
+      --text:#0c2340;      /* deep blue */
+      --muted:#5a6a85;
+      --card:#ffffff;
+      --accent:#1a73e8;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      color:var(--text);
+      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:16px;}
+    header{display:flex;align-items:center;gap:16px;padding:16px 0 8px 0;}
+    header img.logo{height:64px;width:auto;border-radius:12px;}
+    .brand{display:flex;flex-direction:column;gap:6px;flex:1;}
+    .brand h1{font-size:clamp(22px,3vw,28px);line-height:1.2;margin:0;}
+    .brand p{margin:0;color:var(--muted);font-size:14px;}
+    .contactbar{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px;
+      font-size:14px;color:var(--text);
+    }
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid #d8e3ff;background:#eef4ff;padding:8px 12px;border-radius:999px;
+      text-decoration:none;color:inherit;font-weight:600;
+    }
+    .chip small{font-weight:500;color:var(--muted)}
+    .card{
+      background:var(--card);
+      border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.06);
+      padding:16px;
+      margin:8px 0 24px 0;
+      border:1px solid rgba(0,0,0,0.06);
+    }
+    .notice{font-size:14px;color:var(--muted);margin:0 0 8px 0;}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:8px 0 16px 0;}
+    .btn{
+      display:inline-block;text-decoration:none;
+      padding:10px 14px;border-radius:12px;border:1px solid #d8e3ff;
+      background:#eef4ff;color:#0c2340;font-weight:600;font-size:14px;
+    }
+    .btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+    .iframe-wrap{
+      width:100%;
+      min-height:calc(100vh - 260px);
+      border:1px solid rgba(0,0,0,0.08);
+      border-radius:16px;
+      overflow:hidden;
+      background:#fff;
+    }
+    iframe{width:100%;height:100%;border:0;display:block;min-height:85vh;}
+    footer{color:var(--muted);font-size:13px;padding:16px 0 24px 0;}
+    .contact a{color:var(--accent);text-decoration:none;}
+    .contact a:hover{text-decoration:underline;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img class="logo" src="https://www.910cpr.com/docs/images/910CPR_Fat.jpg" alt="910CPR logo">
+      <div class="brand">
+        <h1>910CPR Instructor Submission Portal</h1>
+        <p>Submit your class details to be added to HOVN. You’ll receive a shareable course link once created.</p>
+
+        <div class="contactbar" aria-label="Contact options">
+          <a class="chip" href="sms:+19103955193">
+            📱 Text: (910) 395-5193
+            <small>preferred — I may be in class</small>
+          </a>
+          <a class="chip" href="tel:+19103955193">📞 Call: (910) 395-5193</a>
+          <a class="chip" href="mailto:brian@910cpr.com">✉️ brian@910cpr.com</a>
+          <a class="chip" href="mailto:nicholas@coastalcprtraining.com">✉️ nicholas@coastalcprtraining.com</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="card">
+      <p class="notice">If your network blocks embedded forms, use the “Open Form in a new tab” button.</p>
+      <div class="actions">
+        <a class="btn primary" target="_blank" rel="noopener"
+           href="https://docs.google.com/forms/d/e/1FAIpQLSdr5GHYWVTj28kwIirZcXB5-87p2j_yXXMkhEg20aRql1MyRA/viewform">
+          Open Form in a new tab
+        </a>
+      </div>
+
+      <div class="iframe-wrap">
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSdr5GHYWVTj28kwIirZcXB5-87p2j_yXXMkhEg20aRql1MyRA/viewform?embedded=true"
+          width="640" height="4088" frameborder="0" marginheight="0" marginwidth="0"
+          allow="clipboard-write; encrypted-media; fullscreen">
+          Loading…
+        </iframe>
+      </div>
+    </div>
+
+    <footer>
+      <div class="contact">
+        Internal page for 910CPR instructors. Visit
+        <a href="https://www.910cpr.com/" rel="nofollow noopener">https://www.910cpr.com/</a>.
+      </div>
+      <div>© 910CPR LLC</div>
+    </footer>
+  </div>
+</body>
+</html>
