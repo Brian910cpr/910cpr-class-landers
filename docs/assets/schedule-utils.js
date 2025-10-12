@@ -1,0 +1,1 @@
+window.ScheduleUtils={parseDate:(s)=>new Date(s),fmtLabel:()=>'',inCity:()=>true,familyMatch:()=>true,classify:()=>({}),buildList:(f)=>f,pickNearest:(a)=>a[0]||null};

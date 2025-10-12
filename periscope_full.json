@@ -1,0 +1,34 @@
+[
+  {
+    "course_family": "BLS",
+    "course_name": "BLS Provider (AHA In-Person)",
+    "start": "2025-09-16T13:00:00-04:00",
+    "city": "Burgaw",
+    "label": "Sep 16, 1p \u2022 Burgaw",
+    "url": "https://www.hovn.app/service-providers/910cpr/sessions/SESSION_ID_BLS_1"
+  },
+  {
+    "course_family": "BLS",
+    "course_name": "BLS Provider - Heartcode (AHA Online + Skills)",
+    "start": "2025-09-17T12:30:00-04:00",
+    "city": "Wilmington",
+    "label": "Sep 17, 12:30p \u2022 Wilmington",
+    "url": "https://www.hovn.app/service-providers/910cpr/sessions/SESSION_ID_BLS_2"
+  },
+  {
+    "course_family": "ACLS",
+    "course_name": "ACLS Provider (AHA In-Person)",
+    "start": "2025-09-18T17:00:00-04:00",
+    "city": "Burgaw",
+    "label": "Sep 18, 5p \u2022 Burgaw",
+    "url": "https://www.hovn.app/service-providers/910cpr/sessions/SESSION_ID_ACLS_1"
+  },
+  {
+    "course_family": "PALS",
+    "course_name": "PALS Provider (AHA In-Person)",
+    "start": "2025-09-20T09:00:00-04:00",
+    "city": "Wilmington",
+    "label": "Sep 20, 9a \u2022 Wilmington",
+    "url": "https://www.hovn.app/service-providers/910cpr/sessions/SESSION_ID_PALS_1"
+  }
+]
