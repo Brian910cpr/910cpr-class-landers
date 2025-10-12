@@ -1,0 +1,4 @@
+# docs/robots.txt
+User-agent: *
+Allow: /
+Sitemap: https://www.910cpr.com/sitemap.xml
