@@ -1,0 +1,142 @@
+<html> <head> <meta charset="utf-8"> <title>910CPR Ops Dashboard</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <style> :root{--bg:#0b1220;--card:#121a2b;--muted:#7c8aa5;--ok:#16a34a;--warn:#f59e0b;--bad:#ef4444;--link:#60a5fa;--line:#1f2a44} *{box-sizing:border-box} body{margin:0;background:var(--bg);color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,"Helvetica Neue",Arial} a{color:var(--link);text-decoration:underline} h1,h2,h3{margin:0 0 .5rem 0} .wrap{max-width:1100px;margin:0 auto;padding:20px} .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px} .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px} .col-6{grid-column:span 6} .col-4{grid-column:span 4} .col-8{grid-column:span 8} .col-12{grid-column:span 12} .muted{color:var(--muted)} .pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;border:1px solid var(--line);margin-left:8px} .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:#0f172a;color:#e5e7eb;text-decoration:none;cursor:pointer} .btn:hover{background:#0d1424} .btn-ok{border-color:#14532d} .btn-bad{border-color:#7f1d1d} .krow{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:10px 0} .krow:first-child{border-top:none} .stat{display:flex;gap:14px;align-items:baseline} .sok{color:var(--ok)} .swarn{color:var(--warn)} .sbad{color:var(--bad)} code{background:#0b152d;border:1px solid var(--line);padding:2px 6px;border-radius:6px} .list{margin:8px 0 0 0;padding:0;list-style:none} .list li{padding:8px 0;border-top:1px dashed var(--line)} .list li:first-child{border-top:none} .small{font-size:12px} input[type="text"], input[type="url"]{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0b152d;color:#e5e7eb} .inputrow{display:grid;grid-template-columns:180px 1fr;gap:10px;align-items:center;margin:8px 0} .tag{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;margin-right:6px;font-size:12px} .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,"Ubuntu Mono",Consolas,monospace} </style> </head> <body> <div class="wrap"> <h1>910CPR Ops Dashboard <span class="pill" id="localTime"></span></h1> <p class="muted">Quick actions, reminders, research review, and system checks for the lander network and schedule flow.</p> <div class="grid" id="mainGrid">
+<!-- Quick Actions -->
+<div class="card col-6">
+  <h2>Quick Actions</h2>
+  <div class="krow">
+    <div>
+      <div class="stat"><strong>Export Sessions.csv</strong> <span class="pill">Enrollware</span></div>
+      <div class="small muted">Go to Enrollware Class Report export. Steps: Custom Range → Start = 2 days from today; End = 9 days from today → Go → XLS Export.</div>
+    </div>
+    <div>
+      <a class="btn" target="_blank" href="https://www.enrollware.com/admin/class-report.aspx">Open Enrollware export</a>
+    </div>
+  </div>
+
+  <div class="krow">
+    <div>
+      <div class="stat"><strong>Upload Sessions.csv</strong> <span class="pill">Generator input</span></div>
+      <div class="small muted">Drop the latest CSV to your intake endpoint. Configure the endpoint URL below in “Config”.</div>
+    </div>
+    <div>
+      <input type="file" id="csvFile" accept=".csv" />
+      <button class="btn" id="sendCsv">Send to intake</button>
+    </div>
+  </div>
+
+  <div class="krow">
+    <div>
+      <div class="stat"><strong>Trigger site rebuild</strong> <span class="pill">CI/Webhook</span></div>
+      <div class="small muted">Runs the generator, injects “Did You Know”, updates sitemap, deploys Pages/Workers.</div>
+    </div>
+    <div>
+      <button class="btn" id="btnRebuild">POST webhook</button>
+    </div>
+  </div>
+
+  <div class="krow">
+    <div>
+      <div class="stat"><strong>Rotate Did-You-Know pool</strong> <span class="pill">Content</span></div>
+      <div class="small muted">Open the JSON pool to add entries or tune links.</div>
+    </div>
+    <div>
+      <a class="btn" target="_blank" href="/data/did_you_know_pool.json">Open JSON</a>
+    </div>
+  </div>
+</div>
+
+<!-- Review Queue -->
+<div class="card col-6">
+  <h2>Research & Articles Review</h2>
+  <ul class="list" id="reviewList">
+    <li class="muted">Looking for <code>/docs/research/index.json</code> and recent items...</li>
+  </ul>
+  <div style="margin-top:10px">
+    <a class="btn" target="_blank" href="/docs/research/">Open research folder</a>
+    <a class="btn" target="_blank" href="/data/education/">Open education repository</a>
+  </div>
+  <p class="small muted" style="margin-top:8px">Tip: the Science Watcher can write summary stubs to <code>/docs/research/</code> and append metadata to <code>/docs/research/index.json</code>.</p>
+</div>
+
+<!-- Task Reminders -->
+<div class="card col-4">
+  <h2>Task Reminders</h2>
+  <div class="krow">
+    <div>
+      <div><strong>Upload Sessions.csv</strong></div>
+      <div class="small muted">Every 3 days</div>
+    </div>
+    <div class="small"><span id="t_sessions_due" class="tag">checking...</span> <button class="btn" id="markSessionsDone">Mark done</button></div>
+  </div>
+  <div class="krow">
+    <div>
+      <div><strong>Review research drafts</strong></div>
+      <div class="small muted">Weekly</div>
+    </div>
+    <div class="small"><span id="t_research_due" class="tag">checking...</span> <button class="btn" id="markResearchDone">Mark done</button></div>
+  </div>
+  <div class="krow">
+    <div>
+      <div><strong>Spot-check broken images & links</strong></div>
+      <div class="small muted">Weekly</div>
+    </div>
+    <div class="small"><span id="t_links_due" class="tag">checking...</span> <button class="btn" id="markLinksDone">Mark done</button></div>
+  </div>
+  <p class="small muted">This uses localStorage timestamps on this device. We can wire server-side tracking later.</p>
+</div>
+
+<!-- System Health -->
+<div class="card col-8">
+  <h2>System Health</h2>
+  <div class="krow"><div><strong>Sitemap</strong> <span class="muted small">/sitemap.xml</span></div><div id="h_sitemap" class="small">checking...</div></div>
+  <div class="krow"><div><strong>Robots</strong> <span class="muted small">/robots.txt</span></div><div id="h_robots" class="small">checking...</div></div>
+  <div class="krow"><div><strong>Brand image</strong> <span class="muted small">/docs/images/910CPR_Fat.jpg</span></div><div id="h_brand" class="small">checking...</div></div>
+  <div class="krow"><div><strong>Enrollware links live</strong> <span class="muted small">sample course filters</span></div><div id="h_enrollware" class="small">checking...</div></div>
+  <div class="krow"><div><strong>GA4 tag present</strong> <span class="muted small">sample class page</span></div><div id="h_ga" class="small">checking...</div></div>
+  <p class="small muted">Checks use <code>HEAD</code> or small <code>GET</code>. Configure sample URLs in the Config panel.</p>
+</div>
+
+<!-- Config -->
+<div class="card col-12">
+  <h2>Config</h2>
+  <div class="inputrow">
+    <label for="cfg_intake">CSV Intake Endpoint (POST)</label>
+    <input id="cfg_intake" type="url" placeholder="https://example.com/intake/sessions" />
+  </div>
+  <div class="inputrow">
+    <label for="cfg_webhook">Rebuild Webhook (POST)</label>
+    <input id="cfg_webhook" type="url" placeholder="https://api.github.com/repos/you/rebuild?token=..." />
+  </div>
+  <div class="inputrow">
+    <label for="cfg_samplepage">Sample Class Page URL</label>
+    <input id="cfg_samplepage" type="url" placeholder="https://www.910cpr.com/sessions/2025-11-02_09-00_BLS_Wilmington.html" />
+  </div>
+  <div class="inputrow">
+    <label for="cfg_enroll_bls">BLS Schedule URL</label>
+    <input id="cfg_enroll_bls" type="url" value="https://www.enrollware.com/site/coastalcprtraining/class/BLS-InPerson" />
+  </div>
+  <div class="inputrow">
+    <label for="cfg_sitemap">Sitemap URL</label>
+    <input id="cfg_sitemap" type="url" value="https://www.910cpr.com/sitemap.xml" />
+  </div>
+  <div class="inputrow">
+    <label for="cfg_robots">Robots URL</label>
+    <input id="cfg_robots" type="url" value="https://www.910cpr.com/robots.txt" />
+  </div>
+  <div class="inputrow">
+    <label for="cfg_brandimg">Brand Image URL</label>
+    <input id="cfg_brandimg" type="url" value="https://www.910cpr.com/docs/images/910CPR_Fat.jpg" />
+  </div>
+  <div class="inputrow">
+    <label for="cfg_indexjson">Research Index URL</label>
+    <input id="cfg_indexjson" type="url" value="https://www.910cpr.com/docs/research/index.json" />
+  </div>
+  <div>
+    <button class="btn" id="saveCfg">Save config</button>
+    <span class="small muted" id="cfgStatus"></span>
+  </div>
+  <p class="small muted" style="margin-top:8px">
+    All config is stored in this browser using localStorage. For server-side secrets, use a proxy Worker or GitHub Action secret.
+  </p>
+</div>
+
+</div> </div> <script> // util const $ = (q)=>document.querySelector(q) const cfgKey = "opsdash_cfg_v1" const taskKey = "opsdash_tasks_v1" function loadCfg(){ try{ return JSON.parse(localStorage.getItem(cfgKey) || "{}") }catch(e){ return {} } } function saveCfg(obj){ localStorage.setItem(cfgKey, JSON.stringify(obj||{})) $("#cfgStatus").textContent = "Saved at " + new Date().toLocaleString() } function initCfg(){ const c = loadCfg() const fields = ["cfg_intake","cfg_webhook","cfg_samplepage","cfg_enroll_bls","cfg_sitemap","cfg_robots","cfg_brandimg","cfg_indexjson"] fields.forEach(id=>{ if(c[id]) $("#"+id).value = c[id] }) } $("#saveCfg").addEventListener("click", ()=>{ const c = {} ;["cfg_intake","cfg_webhook","cfg_samplepage","cfg_enroll_bls","cfg_sitemap","cfg_robots","cfg_brandimg","cfg_indexjson"].forEach(id=>{ c[id] = $("#"+id).value.trim() }) saveCfg(c) }) initCfg() // clock function tick(){ $("#localTime").textContent = new Date().toLocaleString() } tick(); setInterval(tick, 1000) // basic fetch HEAD or GET async function headOk(url){ try{ const r = await fetch(url, {method:"HEAD", mode:"no-cors"}) // no-cors will not expose status; fallback to GET return true }catch(e){ try{ const r2 = await fetch(url, {method:"GET"}) return r2.ok }catch(e2){ return false } } } // health checks async function runHealth(){ const c = loadCfg() $("#h_sitemap").textContent = "checking..." $("#h_robots").textContent = "checking..." $("#h_brand").textContent = "checking..." $("#h_enrollware").textContent = "checking..." $("#h_ga").textContent = "checking..." const okS = await headOk(c.cfg_sitemap || "https://www.910cpr.com/sitemap.xml") $("#h_sitemap").innerHTML = okS ? '<span class="sok">OK</span>' : '<span class="sbad">Not found</span>' const okR = await headOk(c.cfg_robots || "https://www.910cpr.com/robots.txt") $("#h_robots").innerHTML = okR ? '<span class="sok">OK</span>' : '<span class="sbad">Not found</span>' const okB = await headOk(c.cfg_brandimg || "https://www.910cpr.com/docs/images/910CPR_Fat.jpg") $("#h_brand").innerHTML = okB ? '<span class="sok">OK</span>' : '<span class="sbad">Missing</span>' const okE = await headOk(c.cfg_enroll_bls || "https://www.enrollware.com/site/coastalcprtraining/class/BLS-InPerson") $("#h_enrollware").innerHTML = okE ? '<span class="sok">OK</span>' : '<span class="sbad">Check URL</span>' // crude GA check: fetch sample page and look for "gtag(" or "G-" id try{ const purl = c.cfg_samplepage || "" if(!purl){ $("#h_ga").innerHTML = '<span class="swarn">Set a sample page URL</span>'; } else{ const txt = await (await fetch(purl)).text() const hasGA = /gtag\(|G-\w{6,}/.test(txt) $("#h_ga").innerHTML = hasGA ? '<span class="sok">Tag found</span>' : '<span class="swarn">Not detected</span>' } }catch(e){ $("#h_ga").innerHTML = '<span class="swarn">Fetch failed</span>' } } runHealth() // review list async function loadReview(){ const c = loadCfg() const url = c.cfg_indexjson || "https://www.910cpr.com/docs/research/index.json" try{ const r = await fetch(url) if(!r.ok) throw new Error("not ok") const data = await r.json() const list = $("#reviewList"); list.innerHTML = "" ;(data.items||[]).slice(0,8).forEach(it=>{ const li = document.createElement("li") const status = it.status || "pending" li.innerHTML = ` <div><strong>${it.title||"Untitled"}</strong> <span class="pill">${status}</span></div> <div class="small muted mono">${it.url||""}</div> <div class="small"><a class="btn" target="_blank" href="${it.url||"#"}">Open</a></div> ` list.appendChild(li) }) if(!data.items || data.items.length===0){ $("#reviewList").innerHTML = '<li class="muted">No research items indexed yet.</li>' } }catch(e){ $("#reviewList").innerHTML = '<li class="muted">Index not found. Create /docs/research/index.json with {"items":[...]}</li>' } } loadReview() // tasks due logic const now = ()=>Date.now() function loadTasks(){ try{ return JSON.parse(localStorage.getItem(taskKey) || "{}") }catch(e){ return {} } } function saveTasks(t){ localStorage.setItem(taskKey, JSON.stringify(t||{})) } function humanDelta(ms){ const d = Math.round(ms/86400000) if(d===0) return "today" if(d>0) return d+" days" return (d*-1)+" days ago" } function updateTaskView(){ const t = loadTasks() const base = {sessions:{last: t.sessions?.last || 0, everyDays:3}, research:{last:t.research?.last||0, everyDays:7}, links:{last:t.links?.last||0, everyDays:7}} const pts = [ {id:"t_sessions_due", key:"sessions"}, {id:"t_research_due", key:"research"}, {id:"t_links_due", key:"links"} ] pts.forEach(p=>{ const rec = base[p.key] const dueAt = (rec.last||0) + rec.everyDays*86400000 const diff = dueAt - now() const tag = $("#"+p.id) if(rec.last===0){ tag.textContent = "not done yet"; tag.className = "tag" } else if(diff <= 0){ tag.textContent = "due ("+humanDelta(diff)+")"; tag.className = "tag"; tag.style.borderColor = "var(--bad)"; tag.style.color="var(--bad)" } else { tag.textContent = "in " + humanDelta(diff); tag.className = "tag"; tag.style.borderColor = "var(--warn)"; tag.style.color="var(--warn)" } }) } function markDone(key){ const t = loadTasks() t[key] = {last: now()} saveTasks(t); updateTaskView() } updateTaskView() $("#markSessionsDone").addEventListener("click", ()=>markDone("sessions")) $("#markResearchDone").addEventListener("click", ()=>markDone("research")) $("#markLinksDone").addEventListener("click", ()=>markDone("links")) // file upload to intake endpoint $("#sendCsv").addEventListener("click", async ()=>{ const f = $("#csvFile").files[0] const c = loadCfg() const url = c.cfg_intake if(!f){ alert("Choose a Sessions.csv file first."); return } if(!url){ alert("Set CSV Intake Endpoint in Config."); return } const fd = new FormData(); fd.append("file", f, f.name) try{ const r = await fetch(url, {method:"POST", body: fd}) if(r.ok){ alert("Upload sent. Check your intake logs."); markDone("sessions") } else{ alert("Upload failed: " + r.status) } }catch(e){ alert("Upload error: " + e.message) } }) // rebuild webhook $("#btnRebuild").addEventListener("click", async ()=>{ const c = loadCfg() if(!c.cfg_webhook){ alert("Set Rebuild Webhook in Config."); return } try{ const r = await fetch(c.cfg_webhook, {method:"POST"}) if(r.ok){ alert("Rebuild webhook posted.") } else { alert("Webhook failed: " + r.status) } }catch(e){ alert("Webhook error: " + e.message) } }) </script> </body> </html>
