@@ -1,0 +1,34 @@
+---
+enrollware_course_id: 450672
+client_name: "910CPR"
+client_id: "878"
+source_url: "https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=450672"
+seo_description: "Get certified in CPR and AED with this hands-on HSI course taught in Wilmington and Holly Ridge, NC. Perfect for auto shops, gyms, construction crews, and families. Covers adult CPR, AED use, and choking emergencies in under 2 hours. OSHA-accepted, workplace compliant, and includes a 2-year nationally recognized certification. Schedule your class today and learn from trusted local experts at 910CPR. In-person and on-site group options available across Eastern NC."
+hovn_sessions_url: 
+enrollware_sessions_url: "https://coastalcprtraining.enrollware.com/schedule#ct450672"
+title: "HSI Adult CPR AED<img src="
+created_utc: "2025-10-17T01:05:52.783198"
+source_file: "view-source_https___www.enrollware.com_admin_course-edit.aspx_ret=course-list.aspx&id=450672.html"
+---
+
+
+
+
+ 
+This class is designed for individuals and workplace responders who need Adult CPR and AED certification but do not require a First Aid component. Ideal for fitness staff, construction teams, child caregivers, or anyone seeking CPR/AED training for personal or professional reasons.
+If First Aid is also needed, you can register for the combined course HERE.
+What is covered
+
+Adult CPR and AED use
+Choking emergencies and airway obstruction
+Scene safety and EMS activation
+
+Plan on approximately 1–1.5 hours of instruction and hands-on practice
+ 
+Price Includes:
+
+Interactive training and guided skills practice
+Digital certification card valid for 2 years through HSI
+
+ 
+***THIS COURSE IS NOT INTENDED FOR LICENSED HEALTHCARE PROVIDERS -->  Please visit BLS options HERE.

@@ -1,0 +1,37 @@
+---
+enrollware_course_id: 241108
+client_name: "910CPR"
+client_id: "878"
+source_url: "https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=241108"
+seo_description: "Advance your lifesaving skills with our AHA ACLS course! Designed for healthcare professionals managing cardiovascular emergencies, this hands-on training covers airway management, cardiac arrest response, stroke recognition, and team-based resuscitation. Trusted, stress-free certification—no cancellations, no hassle. Get ACLS certified with 910 CPR today!"
+hovn_sessions_url: 
+enrollware_sessions_url: "https://coastalcprtraining.enrollware.com/schedule#ct241108"
+title: "AHA - ACLS Provider - In-person Initial  <img src="
+created_utc: "2025-10-17T01:05:54.767174"
+source_file: "view-source_https___www.enrollware.com_admin_course-edit.aspx_ret=course-list.aspx&id=241108.html"
+---
+
+AHA - ACLS Provider – In-person
+
+
+
+
+
+
+
+The Advanced Cardiac Life Support (ACLS) course is designed for healthcare professionals involved in the management of cardiopulmonary emergencies and resuscitation. This in-person, instructor-led training follows American Heart Association guidelines and emphasizes high-performance team dynamics and clinical decision-making in critical situations.
+This course is intended for personnel in emergency response, emergency medicine, intensive care, and critical care units. You may add an optional BLS renewal during registration if both certifications are needed.
+Course Topics Include:
+
+Early recognition and management of respiratory and cardiac arrest
+Airway management and related pharmacology
+Post-cardiac arrest care and team communication
+Identification and treatment of acute coronary syndromes and stroke
+
+Course Includes:
+
+Instructor-led classroom training with video-based and scenario-driven instruction
+Hands-on station practice and skills testing
+American Heart Association ACLS Provider eCard (valid for 2 years)
+
+ AHA® and ACLS® are registered trademarks of the American Heart Association and are used with permission. Training is conducted in accordance with the current AHA Program Administration Manual (PAM).

@@ -1,0 +1,23 @@
+---
+enrollware_course_id: 437967
+client_name: "910CPR"
+client_id: "878"
+source_url: "https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=437967"
+seo_description: "Looking for CPR certification in Wilmington or Holly Ridge, NC? 910CPR offers American Red Cross Blended Learning courses with flexible online modules and quick, in-person skill checks. We also provide onsite CPR training for businesses and organizations across Eastern North Carolina. OSHA-compliant and nationally recognized certification—valid for 2 years."
+hovn_sessions_url: 
+enrollware_sessions_url: "https://coastalcprtraining.enrollware.com/schedule#ct437967"
+title: "ARC - Adult First Aid / CPR / AED <b>Blended Learning</b><img src="
+created_utc: "2025-10-17T01:05:59.772284"
+source_file: "view-source_https___www.enrollware.com_admin_course-edit.aspx_ret=course-list.aspx&id=437967.html"
+---
+
+This American Red Cross Adult First Aid/CPR/AED Blended Learning course combines an interactive online learning module with a brief, in-person skills session. It is OSHA-compliant and ideal for workplace training or general community preparedness.
+🖥️ Step 1: Complete Online Course (2 hrs) After registering, you’ll receive access to the Red Cross online training portal. This portion must be completed before your in-person session. It covers adult first aid, cardiac, and breathing emergencies through engaging videos and interactive content.
+🏥 Step 2: Attend Skills Session Once the online training is done, join your instructor at the scheduled time to demonstrate your CPR, AED, and first aid skills using real equipment and scenarios.
+💳 Certification: Successful participants will receive a Red Cross Adult First Aid/CPR/AED digital certificate valid for 2 years. Certification is OSHA-acceptable and nationally recognized.
+📌 Requirements:
+
+Online training must be completed prior to the in-person class.
+Use a computer or tablet with high-speed internet for the online course.
+
+This flexible blended format is perfect for those needing certification but with limited time for a full in-person class.

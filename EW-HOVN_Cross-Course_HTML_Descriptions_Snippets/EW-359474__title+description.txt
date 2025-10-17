@@ -1,0 +1,54 @@
+---
+enrollware_course_id: 359474
+client_name: "910CPR"
+client_id: "878"
+source_url: "https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=359474"
+seo_description: "Refresh your CPR skills fast with our AHA BLS Renewal course—perfect for healthcare providers needing to recertify. This hands-on training covers high-quality CPR, AED use, airway management, and team-based resuscitation. We keep it fast-paced, practical, and engaging so you're confident in any emergency. Unlike other providers, we never cancel classes due to low enrollment, and we’re always available when you need us. Get your AHA BLS Provider eCard upon completion!"
+hovn_sessions_url: 
+enrollware_sessions_url: "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+title: "AHA - BLS Provider - In-person Renewal   <img src="
+created_utc: "2025-10-17T01:05:57.998585"
+source_file: "view-source_https___www.enrollware.com_admin_course-edit.aspx_ret=course-list.aspx&id=359474.html"
+---
+
+
+AHA BLS Provider – In-Person – Renewal
+
+
+
+This American Heart Association (AHA) Basic Life Support (BLS) Renewal course is designed for healthcare professionals with a current, valid AHA BLS Provider card who are seeking recertification. This course provides a focused review of core CPR and AED skills and allows participants to demonstrate continued competency in high-quality CPR.
+
+Requirement: You must bring a current, valid AHA BLS Provider card to class. If your card is expired, please contact us prior to registration to verify eligibility.
+
+ 
+
+This instructor-led, classroom-based course includes video instruction, skills demonstration, and scenario-based practice. Instructor-to-student ratio is maintained at 1:6 during hands-on sessions to meet AHA standards.
+
+We recommend reviewing the BLS Quick Reference Guide prior to class.
+
+Course Highlights:
+
+High-quality CPR for adults, children, and infants
+Use of AED and relief of choking
+Effective team dynamics and communication
+Opioid emergencies and maternity considerations
+Hands-on practice with BVM, pocket mask, and two-rescuer CPR
+
+
+Course Length:
+Approximately 3 hours (minimum per AHA PAM for BLS Renewal)
+
+Certification:
+American Heart Association BLS Provider eCard (valid for 2 years), issued upon successful completion of all course components.
+
+  (Click for information on potential CME credit.) 
+
+Continuing Medical Education (CME) Credits: The American Heart Association (AHA) authorizes the use of their courses for continuing education credits. The number of credit hours depends on the class and the accrediting agency.
+Accrediting Agencies: - American Medical Association (AMA): 1 credit = 1 hour. - American Nurses Credentialing Center (ANCC): 1 credit = 1 hour. - Commission on Accreditation for Pre-Hospital Continuing Education (CAPCE): 1 credit = 1 hour.
+Credit Hours for AHA Courses: - BLS Online: 0.25 credits per hour. - ACLS / PALS Online: 0.5 credits per hour. - In-Person Courses: Typically do not offer CME credits, except for specific regional requirements.
+For more detailed information about how to claim your CME credits, refer to the official AHA guidelines or contact your licensing agency for specific requirements.
+
+
+
+ AHA® is a registered trademark of the American Heart Association and is used with permission. 910CPR is an authorized provider aligned with an AHA Training Center.
+
