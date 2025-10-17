@@ -1,0 +1,22 @@
+[
+  {
+    "value": "",
+    "label": "All Locations",
+    "slug": "all-locations"
+  },
+  {
+    "value": "142482",
+    "label": "Breakthrough Autism: New Centre",
+    "slug": "breakthrough-autism-new-centre"
+  },
+  {
+    "value": "226176",
+    "label": "NC - Burgaw: 111 S Wright St @ 910CPR's Office",
+    "slug": "nc-burgaw-111-s-wright-st-910cprs-office"
+  },
+  {
+    "value": "101560",
+    "label": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+    "slug": "nc-wilmington-4018-shipyard-blvd-910cprs-office"
+  }
+]
