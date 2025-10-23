@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://910cpr.com/courses/index.html">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://coastalcprtraining.enrollware.com">
+<link rel="dns-prefetch" href="https://coastalcprtraining.enrollware.com">
+<title>Course Hubs | 910CPR</title>
+<meta name="description" content="Choose a course to see only its upcoming sessions with direct registration links.">
+<link rel="stylesheet" href="../styles.css">
+<script defer src="../scripts/analytics.js"></script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K58Z4XD" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<header class="header">
+  <div class="logo">910</div>
+  <nav class="nav">
+    <a class="btn secondary" href="../index.html">Home</a>
+    <a class="btn" href="https://coastalcprtraining.enrollware.com/schedule">Full Schedule</a>
+  </nav>
+</header>
+<main class="container">
+  <h1>Course Hubs</h1>
+  <p>Choose a course to see only its upcoming sessions with direct registration links.</p>
+  <div id="courseCards" class="grid"></div>
+</main>
+<footer class="footer">© 910CPR</footer>
+<script>
+fetch('../courses.json',{cache:'no-store'}).then(r=>r.json()).then(list=>{
+  const wrap = document.getElementById('courseCards');
+  wrap.innerHTML = list.map(c => `
+    <div class="card">
+      <h3>${c.name}</h3>
+      <p><a class="btn" href="./${c.slug}.html">View ${c.name}</a></p>
+    </div>
+  `).join('');
+});
+</script>
+</body>
+</html>

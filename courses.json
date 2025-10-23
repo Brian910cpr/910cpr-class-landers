@@ -1,0 +1,91 @@
+[
+  {
+    "name": "AHA - BLS Provider (In-Person)",
+    "slug": "bls-inperson",
+    "patterns": [
+      "\\bBLS\\b",
+      "Basic Life Support"
+    ]
+  },
+  {
+    "name": "AHA - BLS Provider - HeartCode Skills",
+    "slug": "bls-heartcode",
+    "patterns": [
+      "Heartcode.*BLS",
+      "BLS.*Skills",
+      "BLS Online"
+    ]
+  },
+  {
+    "name": "AHA - ACLS Provider - In-Person - Initial",
+    "slug": "acls-initial",
+    "patterns": [
+      "ACLS.*Initial",
+      "ACLS Provider.*Initial"
+    ]
+  },
+  {
+    "name": "AHA - ACLS Provider - In-Person - Renewal",
+    "slug": "acls-renewal",
+    "patterns": [
+      "ACLS.*Renewal",
+      "ACLS Update"
+    ]
+  },
+  {
+    "name": "AHA - ACLS Provider - HeartCode",
+    "slug": "acls-heartcode",
+    "patterns": [
+      "Heartcode.*ACLS",
+      "ACLS.*Skills.*(Heart|Code)",
+      "ACLS Online"
+    ]
+  },
+  {
+    "name": "AHA - PALS Provider - In-Person - Initial",
+    "slug": "pals-initial",
+    "patterns": [
+      "PALS.*Initial",
+      "PALS Provider.*Initial"
+    ]
+  },
+  {
+    "name": "AHA - PALS Provider - In-Person - Renewal",
+    "slug": "pals-renewal",
+    "patterns": [
+      "PALS.*Renewal",
+      "PALS Update"
+    ]
+  },
+  {
+    "name": "AHA - PALS Provider - HeartCode",
+    "slug": "pals-heartcode",
+    "patterns": [
+      "Heartcode.*PALS",
+      "PALS.*Skills",
+      "PALS Online"
+    ]
+  },
+  {
+    "name": "AHA - Heartsaver CPR/AED",
+    "slug": "heartsaver-cpr-aed",
+    "patterns": [
+      "Heartsaver\\s*CPR/?AED\\b"
+    ]
+  },
+  {
+    "name": "AHA - Heartsaver First Aid/CPR/AED",
+    "slug": "heartsaver-facpraed",
+    "patterns": [
+      "Heartsaver.*First Aid.*CPR.*AED"
+    ]
+  },
+  {
+    "name": "HSI - First Aid/CPR/AED (In-Person)",
+    "slug": "hsi-facpraed",
+    "patterns": [
+      "HSI.*First Aid.*CPR.*AED",
+      "Health & Safety Institute"
+    ]
+  }
+]
