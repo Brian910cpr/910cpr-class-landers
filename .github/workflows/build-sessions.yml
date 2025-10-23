@@ -1,0 +1,283 @@
+# ---------- FILE: .github/workflows/build-sessions.yml ----------
+name: Build Per-Session Landers
+on:
+  schedule:
+    - cron: "0 * * * *"   # hourly; adjust if desired
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TZ: America/New_York
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install beautifulsoup4 lxml python-dateutil
+
+      - name: Ensure shared schedule exists (optional bootstrap)
+        run: |
+          mkdir -p shared
+          if [ ! -s shared/schedule.html ]; then
+            echo "<!-- empty schedule placeholder; paste Enrollware HTML or let a separate job fetch it -->" > shared/schedule.html
+          fi
+
+      - name: Build per-session landers
+        run: |
+          python tools/build_sessions.py
+
+      - name: Commit changes (pages are never deleted)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-build: session pages created/updated"
+          file_pattern: |
+            sessions/**
+            sessions/index.html
+
+
+# ---------- FILE: tools/build_sessions.py ----------
+#!/usr/bin/env python3
+import re, json
+from pathlib import Path
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin, urlparse, parse_qs
+from datetime import datetime
+from dateutil import parser as dateparser
+from zoneinfo import ZoneInfo
+
+# Config
+SITE_TITLE = "910CPR"
+EASTERN = ZoneInfo("America/New_York")
+GTM = "GTM-K58Z4XD"
+GA4 = "G-45PBWBK7KR"
+COURSES_JSON = Path("courses.json")
+SCHEDULE_HTML = Path("shared/schedule.html")
+SESSIONS_DIR = Path("sessions")
+
+SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
+
+# Load course patterns
+courses = json.loads(COURSES_JSON.read_text(encoding="utf-8")) if COURSES_JSON.exists() else []
+
+def classify_course(label: str) -> dict:
+    for c in courses:
+        for pat in c.get("patterns", []):
+            try:
+                if re.search(pat, label, flags=re.I):
+                    return c
+            except re.error:
+                continue
+    return {"name": "Uncategorized", "slug": "uncategorized", "patterns": []}
+
+def extract_session_id(url: str) -> str:
+    u = urlparse(url)
+    qs = parse_qs(u.query)
+    if "id" in qs and qs["id"]:
+        return re.sub(r"\D+", "", qs["id"][0]) or "unknown"
+    m = re.search(r"/reg/(\d+)", u.path)
+    return m.group(1) if m else "unknown"
+
+def parse_datetime_from_label(text: str):
+    cleaned = re.sub(r"\s+", " ", text).strip()
+    try:
+        dt = dateparser.parse(cleaned, fuzzy=True, default=datetime.now(EASTERN))
+        return dt.replace(tzinfo=EASTERN) if dt.tzinfo is None else dt.astimezone(EASTERN)
+    except Exception:
+        return None
+
+def session_filename(dt, course_slug, session_id):
+    if dt is None:
+        return SESSIONS_DIR / f"unknown-{course_slug}-{session_id}.html"
+    stamp = dt.astimezone(EASTERN)
+    return SESSIONS_DIR / f"{stamp:%Y-%m-%d_%H-%M}_{course_slug}_{session_id}.html"
+
+def analytics_head():
+    parts = []
+    if GA4 and not GTM:
+        parts.append(f'<script async src="https://www.googletagmanager.com/gtag/js?id={GA4}"></script>')
+        parts.append("<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config','%s');</script>" % GA4)
+    if GTM:
+        parts.append(f"<script>(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{ 'gtm.start':new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}})(window,document,'script','dataLayer','{GTM}');</script>")
+    return "\n".join(parts)
+
+def gtm_noscript():
+    if not GTM: return ""
+    return f'<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>'
+
+def render_session_html(course, label, url, dt, is_past):
+    course_name = course["name"]
+    course_slug = course["slug"]
+    title = f"{course_name} | {SITE_TITLE}"
+    canon = f'<link rel="canonical" href="/courses/{course_slug}.html">'
+    when_text = label
+    reg_link = url
+
+    if is_past:
+        cta = (
+            '<div class="card">'
+            '<p class="small">This class has passed. To see future dates of this class type, click below:</p>'
+            f'<p><a class="btn" href="/courses/{course_slug}.html">See future {course_name} dates</a></p>'
+            '</div>'
+        )
+    else:
+        cta = (
+            '<div class="card">'
+            f'<p>Register URL: <a href="{reg_link}">{reg_link}</a></p>'
+            f'<p><a class="btn" href="{reg_link}" rel="nofollow noopener">Register for this date</a></p>'
+            f'<p class="small">Need another time? <a href="/courses/{course_slug}.html">See all {course_name} sessions</a></p>'
+            '</div>'
+        )
+
+    return (
+f"<!doctype html>\n"
+f"<html lang=\"en\">\n"
+f"<head>\n"
+f"<meta charset=\"utf-8\">\n"
+f"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+f"{canon}\n"
+f"<meta name=\"robots\" content=\"index,follow\">\n"
+f"<link rel=\"preconnect\" href=\"https://coastalcprtraining.enrollware.com\">\n"
+f"<link rel=\"dns-prefetch\" href=\"https://coastalcprtraining.enrollware.com\">\n"
+f"<title>{title}</title>\n"
+f"<meta name=\"description\" content=\"Direct registration for {course_name}. {when_text}\">\n"
+f"<link rel=\"stylesheet\" href=\"/styles.css\">\n"
+f"{analytics_head()}\n"
+f"</head>\n"
+f"<body>\n"
+f"{gtm_noscript()}\n"
+f"<header class=\"header\">\n"
+f"  <div class=\"logo\">910</div>\n"
+f"  <nav class=\"nav\">\n"
+f"    <a class=\"btn secondary\" href=\"/index.html\">Home</a>\n"
+f"    <a class=\"btn secondary\" href=\"/courses/{course_slug}.html\">Course Lander</a>\n"
+f"    <a class=\"btn\" href=\"https://coastalcprtraining.enrollware.com/schedule\">Full Schedule</a>\n"
+f"  </nav>\n"
+f"</header>\n"
+f"<main class=\"container\">\n"
+f"  <h1>{course_name}</h1>\n"
+f"  <div class=\"card\">\n"
+f"    <h2>Session details</h2>\n"
+f"    <p><strong>When:</strong> {when_text}</p>\n"
+f"    <p><strong>Register URL:</strong> <a href=\"{reg_link}\">{reg_link}</a></p>\n"
+f"  </div>\n"
+f"  {cta}\n"
+f"</main>\n"
+f"<footer class=\"footer\">© {SITE_TITLE}</footer>\n"
+f"</body>\n"
+f"</html>\n"
+    )
+
+def render_sessions_index(pages):
+    rows = []
+    for p in sorted(pages, key=lambda x: (x.get("dt") or datetime(2100,1,1,EASTERN)).timestamp()):
+        status = "Past" if p["is_past"] else "Upcoming"
+        dt_txt = p["label"]
+        rows.append(f'<tr><td>{p["course_name"]}</td><td>{dt_txt}</td><td>{status}</td><td><a class="btn" href="/sessions/{p["filename"]}">Open</a></td></tr>')
+    html = (
+        "<!doctype html>\n"
+        "<html lang=\"en\">\n"
+        "<head>\n"
+        "<meta charset=\"utf-8\">\n"
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+        f"<title>All Session Pages | {SITE_TITLE}</title>\n"
+        "<link rel=\"stylesheet\" href=\"/styles.css\">\n"
+        f"{analytics_head()}\n"
+        "</head>\n"
+        "<body>\n"
+        f"{gtm_noscript()}\n"
+        "<header class=\"header\">\n"
+        "  <div class=\"logo\">910</div>\n"
+        "  <nav class=\"nav\">\n"
+        "    <a class=\"btn secondary\" href=\"/index.html\">Home</a>\n"
+        "    <a class=\"btn\" href=\"/courses/index.html\">Course Hubs</a>\n"
+        "  </nav>\n"
+        "</header>\n"
+        "<main class=\"container\">\n"
+        "  <h1>All Session Pages</h1>\n"
+        "  <div class=\"card\">\n"
+        "    <table class=\"table\">\n"
+        "      <thead><tr><th>Course</th><th>When</th><th>Status</th><th>Page</th></tr></thead>\n"
+        "      <tbody>\n"
+        f"        {''.join(rows) if rows else '<tr><td colspan=\"4\">No sessions found.</td></tr>'}\n"
+        "      </tbody>\n"
+        "    </table>\n"
+        "  </div>\n"
+        "</main>\n"
+        f"<footer class=\"footer\">© {SITE_TITLE}</footer>\n"
+        "</body>\n"
+        "</html>\n"
+    )
+    (SESSIONS_DIR / "index.html").write_text(html, encoding="utf-8")
+
+def main():
+    if not SCHEDULE_HTML.exists():
+        print("No shared/schedule.html found; aborting.")
+        return
+
+    html = SCHEDULE_HTML.read_text(encoding="utf-8", errors="ignore")
+    soup = BeautifulSoup(html, "lxml")
+
+    anchors = []
+    for a in soup.select("a[href]"):
+        href = a.get("href","")
+        abs_url = urljoin("https://coastalcprtraining.enrollware.com/", href)
+        if re.search(r"(\/enroll\?id=\d+)|(\/reg\/\d+)", abs_url, flags=re.I):
+            label = a.get_text(" ", strip=True)
+            anchors.append((label, abs_url))
+
+    # De-dupe by final URL
+    seen = set()
+    sessions = []
+    for label, abs_url in anchors:
+        if abs_url in seen:
+            continue
+        seen.add(abs_url)
+        course = classify_course(label)
+        dt = parse_datetime_from_label(label)
+        is_past = False
+        if dt is not None:
+            now = datetime.now(EASTERN)
+            is_past = dt < now
+        sid = extract_session_id(abs_url)
+        filename = session_filename(dt, course["slug"], sid).name
+        sessions.append({
+            "course_name": course["name"],
+            "course_slug": course["slug"],
+            "label": label,
+            "url": abs_url,
+            "dt": dt,
+            "is_past": is_past,
+            "session_id": sid,
+            "filename": filename
+        })
+
+    # Write/Update each session page (never delete pages)
+    for s in sessions:
+        path = SESSIONS_DIR / s["filename"]
+        html = render_session_html(
+            {"name": s["course_name"], "slug": s["course_slug"]},
+            s["label"],
+            s["url"],
+            s["dt"],
+            s["is_past"]
+        )
+        path.write_text(html, encoding="utf-8")
+
+    # Build sessions index
+    render_sessions_index(sessions)
+
+    print(f"Wrote/updated {len(sessions)} session pages under sessions/. Never deleted existing files.")
+
+if __name__ == "__main__":
+    main()
