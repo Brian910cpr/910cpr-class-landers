@@ -1,6 +1,0 @@
-Source CSV: /home/runner/work/910cpr-class-landers/910cpr-class-landers/sessions.csv
-Headers: ['cuid', 'date', 'agency', 'certification', 'course', 'format', 'location', 'location.city', 'location.state', 'client', 'instructor', 'currentBookings', 'seats', 'status', 'link']
-Rows read: 805
-Parsed items: 805
-Skipped rows: 0
-

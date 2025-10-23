@@ -1,6 +1,0 @@
-[
-  { "slug": "nursing",   "title": "CPR for Nursing",   "course": "bls" },
-  { "slug": "paramedic", "title": "CPR for Paramedics","course": "acls" },
-  { "slug": "emt",       "title": "CPR for EMTs",      "course": "bls"  },
-  { "slug": "dental",    "title": "CPR for Dental",    "course": "bls"  }
-]
