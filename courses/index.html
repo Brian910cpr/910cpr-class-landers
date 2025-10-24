@@ -15,7 +15,7 @@
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K58Z4XD" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <header class="header">
-  <div class="logo">910</div>
+<a class="brand" href="/"><img src="/images/910cpr_Fat.png" alt="910CPR"></a>
   <nav class="nav">
     <a class="btn secondary" href="../index.html">Home</a>
     <a class="btn" href="https://coastalcprtraining.enrollware.com/schedule">Full Schedule</a>
@@ -27,16 +27,18 @@
   <div id="courseCards" class="grid"></div>
 </main>
 <footer class="footer">© 910CPR</footer>
+<script defer src="../scripts/analytics.js"></script>
+<script defer src="../scripts/cards.js"></script>
 <script>
-fetch('../courses.json',{cache:'no-store'}).then(r=>r.json()).then(list=>{
-  const wrap = document.getElementById('courseCards');
-  wrap.innerHTML = list.map(c => `
-    <div class="card">
-      <h3>${c.name}</h3>
-      <p><a class="btn" href="./${c.slug}.html">View ${c.name}</a></p>
-    </div>
-  `).join('');
+window.addEventListener('DOMContentLoaded', ()=>{
+  CourseCards.renderCards({
+    coursesJsonPath: '../courses.json',
+    scheduleHtmlPath: '../shared/schedule.html',
+    targetSelector: '#courseCards',
+    prefix: ''  // links inside /courses/ use relative './slug.html', but here we’re already in /courses/
+  });
 });
 </script>
+
 </body>
 </html>

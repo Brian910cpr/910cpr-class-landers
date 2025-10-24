@@ -12,27 +12,44 @@
     return res ? res.text() : '';
   }
 
-  function parseSessionsFromHTML(html){
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    const items = [];
-    tmp.querySelectorAll('a[href]').forEach(a=>{
-      const href = a.getAttribute('href')||'';
-      const abs = new URL(href, 'https://coastalcprtraining.enrollware.com').toString();
-      if (/(\/enroll\?id=\d+)|(\/reg\/\d+)/i.test(abs)){
-        const label = (a.textContent||'').trim().replace(/\s+/g,' ');
-        items.push({label, url: abs});
-      }
-    });
-    const seen = new Set();
-    return items.filter(x=>{ if(seen.has(x.url)) return false; seen.add(x.url); return true; });
-  }
+function parseSessionsFromHTML(html){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  const items = [];
+  tmp.querySelectorAll('a[href]').forEach(a=>{
+    const abs = absURL(a.getAttribute('href')||'');
+    if(!abs || !(/(\/enroll\?id=\d+)|(\/reg\/\d+)/i.test(abs))) return;
+    const label = (a.textContent||'').trim().replace(/\s+/g,' ');
+
+    // find a nearby image as "hero"
+    const container = a.closest('tr, li, .class, .schedule-item, div, section') || a.parentElement;
+    let img = container ? container.querySelector('img') : null;
+    let cur = container, tries=0;
+    while(!img && cur && tries<5){
+      cur = cur.previousElementSibling;
+      if(cur && cur.querySelector) img = cur.querySelector('img');
+      tries++;
+    }
+    const src = img ? absURL(img.getAttribute('src')||'') : null;
+
+    items.push({label, url: abs, img: src});
+  });
+
+  // de-dupe by URL
+  const seen = new Set();
+  return items.filter(x=>{ if(seen.has(x.url)) return false; seen.add(x.url); return true; });
+}
+
 
   function matchesCourse(label, course){
     if (!course || !course.patterns) return true;
     return course.patterns.some(p=>{
       try{ return new RegExp(p,'i').test(label); }catch(e){ return false; }
     });
+
+function absURL(u){ try{ return new URL(u, 'https://coastalcprtraining.enrollware.com').toString(); }catch(e){ return null; } }
+
+
   }
 
   function render(list, course){
@@ -77,6 +94,11 @@
 
   window.CoursePage = {
     async run(){
+const hero = (filtered.find(x=>x.img) || {}).img;
+if (hero) {
+  const holder = document.querySelector('.hero-holder');
+  if (holder) holder.innerHTML = `<img class="hero-img" src="${hero}" alt="${course.name}">`;
+}
       const slug = document.documentElement.getAttribute('data-course-slug');
       const [courses, html] = await Promise.all([loadCourses(), loadScheduleHTML()]);
       const course = (courses||[]).find(c=>c.slug===slug) || null;
