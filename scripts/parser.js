@@ -1,110 +1,95 @@
-
+/* /scripts/parser.js */
 (function(){
-  async function loadCourses(){
-    const here = location.pathname.endsWith('/') ? location.pathname : location.pathname.replace(/[^\/]+$/, '');
-    const url = here.includes('/courses/') ? '../courses.json' : './courses.json';
-    const res = await fetch(url, {cache:'no-store'}).catch(()=>null);
-    return res ? res.json() : [];
-  }
-
-  async function loadScheduleHTML(){
-    const res = await fetch('../shared/schedule.html', {cache:'no-store'}).catch(()=>null);
-    return res ? res.text() : '';
-  }
-
-function parseSessionsFromHTML(html){
-  const tmp = document.createElement('div');
-  tmp.innerHTML = html;
-  const items = [];
-  tmp.querySelectorAll('a[href]').forEach(a=>{
-    const abs = absURL(a.getAttribute('href')||'');
-    if(!abs || !(/(\/enroll\?id=\d+)|(\/reg\/\d+)/i.test(abs))) return;
-    const label = (a.textContent||'').trim().replace(/\s+/g,' ');
-
-    // find a nearby image as "hero"
-    const container = a.closest('tr, li, .class, .schedule-item, div, section') || a.parentElement;
-    let img = container ? container.querySelector('img') : null;
-    let cur = container, tries=0;
-    while(!img && cur && tries<5){
-      cur = cur.previousElementSibling;
-      if(cur && cur.querySelector) img = cur.querySelector('img');
-      tries++;
-    }
-    const src = img ? absURL(img.getAttribute('src')||'') : null;
-
-    items.push({label, url: abs, img: src});
-  });
-
-  // de-dupe by URL
-  const seen = new Set();
-  return items.filter(x=>{ if(seen.has(x.url)) return false; seen.add(x.url); return true; });
-}
-
-
-  function matchesCourse(label, course){
-    if (!course || !course.patterns) return true;
-    return course.patterns.some(p=>{
-      try{ return new RegExp(p,'i').test(label); }catch(e){ return false; }
-    });
-
-function absURL(u){ try{ return new URL(u, 'https://coastalcprtraining.enrollware.com').toString(); }catch(e){ return null; } }
-
-
-  }
-
-  function render(list, course){
-    const tbody = document.getElementById('sessions-tbody');
-    const total = document.getElementById('session-total');
-    tbody.innerHTML = '';
-    list.sort((a,b)=>a.label.localeCompare(b.label, undefined, {numeric:true}));
-    if(list.length===0){
-      tbody.innerHTML = '<tr><td>No upcoming sessions detected for this course.</td><td></td></tr>';
-    }else{
-      list.forEach(s=>{
-        const tr = document.createElement('tr');
-        const td1 = document.createElement('td');
-        td1.textContent = s.label;
-        const td2 = document.createElement('td');
-        const link = document.createElement('a');
-        link.href = s.url; link.textContent='Register'; link.className='btn'; link.rel='nofollow noopener';
-        td2.appendChild(link);
-        tr.appendChild(td1); tr.appendChild(td2);
-        tbody.appendChild(tr);
+  const ENROLLWARE_BASE = 'https://coastalcprtraining.enrollware.com';
+  function absURL(u){ try { return new URL(u, ENROLLWARE_BASE).toString(); } catch(e){ return null; } }
+  function sanitizeHTML(unsafe){
+    const w = document.createElement('div'); w.innerHTML = unsafe || '';
+    const ALLOW = new Set(['A','P','UL','LI','EM','STRONG','IMG','BR']);
+    const SAFE_ATTR = { 'A':['href','title','rel','target'], 'IMG':['src','alt','width','height'] };
+    (function walk(n){
+      Array.from(n.children).forEach(el=>{
+        if(!ALLOW.has(el.tagName)){
+          const f=document.createDocumentFragment(); while(el.firstChild) f.appendChild(el.firstChild);
+          el.replaceWith(f); walk(n); return;
+        }
+        Array.from(el.attributes).forEach(a=>{
+          const keep=(SAFE_ATTR[el.tagName]||[]).includes(a.name.toLowerCase());
+          if(!keep) el.removeAttribute(a.name);
+        });
+        if(el.tagName==='A'){
+          try{ const u=new URL(el.getAttribute('href')||'', ENROLLWARE_BASE);
+               el.setAttribute('href', u.toString());
+               el.setAttribute('rel','nofollow noopener'); el.setAttribute('target','_blank'); }
+          catch(e){ el.remove(); }
+        }
+        if(el.tagName==='IMG'){
+          const src = el.getAttribute('src')||'';
+          el.setAttribute('src', absURL(src)||'');
+        }
+        walk(el);
       });
-    }
-    if (total) total.textContent = String(list.length);
-
-    // Minimal JSON-LD
-    const ld = {
-      "@context":"https://schema.org",
-      "@graph": list.slice(0,100).map(s=>({
-        "@type":"Event",
-        "name": (course && course.name ? course.name + " – " : "") + s.label,
-        "eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode",
-        "eventStatus":"https://schema.org/EventScheduled",
-        "url": s.url,
-        "organizer":{"@type":"Organization","name":"910CPR","url":"https://910cpr.com"}
-      }))
-    };
-    const tag = document.createElement('script');
-    tag.type='application/ld+json';
-    tag.textContent = JSON.stringify(ld);
-    document.head.appendChild(tag);
+    })(w);
+    return w.innerHTML;
   }
-
-  window.CoursePage = {
-    async run(){
-const hero = (filtered.find(x=>x.img) || {}).img;
-if (hero) {
-  const holder = document.querySelector('.hero-holder');
-  if (holder) holder.innerHTML = `<img class="hero-img" src="${hero}" alt="${course.name}">`;
-}
-      const slug = document.documentElement.getAttribute('data-course-slug');
-      const [courses, html] = await Promise.all([loadCourses(), loadScheduleHTML()]);
-      const course = (courses||[]).find(c=>c.slug===slug) || null;
-      const all = parseSessionsFromHTML(html);
-      const filtered = course ? all.filter(x=>matchesCourse(x.label, course)) : all;
-      render(filtered, course);
+  function findPanelMeta(a){
+    const p = a.closest('.enrpanel'); let raw='';
+    if(p){
+      const v = p.getAttribute('value'); if(v) raw=v;
+      if(!raw){
+        const b = p.querySelector('.enrpanel-body');
+        if(b){
+          const list = b.querySelector('.enrclass-list'); const pieces=[];
+          let n = list ? list.previousElementSibling : null;
+          while(n){ if(/^(P|UL)$/i.test(n.tagName)) pieces.unshift(n.outerHTML); n = n.previousElementSibling; }
+          raw = pieces.join('');
+        }
+      }
     }
-  };
+    const clean = sanitizeHTML(raw);
+    const t = document.createElement('div'); t.innerHTML = clean;
+    const img = t.querySelector('img');
+    return { descHTML: clean, image: img ? img.getAttribute('src') : null };
+  }
+  function detectNoDateCTAs(root){
+    const map = {};
+    root.querySelectorAll("a[href*='?course=']").forEach(a=>{
+      const href = absURL(a.getAttribute('href')||''); const label = (a.textContent||'').trim().replace(/\s+/g,' ');
+      if(href) map[href] = { url: href, label };
+    });
+    return Object.values(map);
+  }
+  function parseSessionsFromHTML(html){
+    const tmp=document.createElement('div'); tmp.innerHTML = html;
+    const ctas = detectNoDateCTAs(tmp);
+    const out = [];
+    tmp.querySelectorAll('a[href]').forEach(a=>{
+      const href=a.getAttribute('href')||''; const abs=absURL(href);
+      if(!abs) return;
+      if(!(/(\/enroll\?id=\d+)|(\/reg\/\d+)/i.test(abs))) return;
+      const label=(a.textContent||'').trim().replace(/\s+/g,' ');
+      const meta = findPanelMeta(a);
+      out.push({label, url: abs, img: meta.image || null, desc: meta.descHTML || '', ctaNoDate: ctas.length ? ctas[0] : null});
+    });
+    const seen=new Set();
+    return out.filter(x=>{ if(seen.has(x.url)) return false; seen.add(x.url); return true; });
+  }
+  async function fetchText(p){ const r=await fetch(p,{cache:'no-store'}); return r.text(); }
+  async function fetchJSON(p){ const r=await fetch(p,{cache:'no-store'}); return r.json(); }
+  function courseMatches(label, c){ return (c.patterns||[]).some(p=>{ try { return new RegExp(p,'i').test(label); } catch(e){ return false; } }); }
+  function renderSessions(el, list){
+    el.innerHTML = list.map(s=>`<li><a class="btn" rel="nofollow noopener" target="_blank" href="${s.url}">${s.label}</a></li>`).join('')
+      || `<li><em>No upcoming sessions found.</em></li>`;
+  }
+  window.CoursePage = { async run(){
+    const main=document.querySelector('main[data-course]'); const slug=main?main.getAttribute('data-course'):null; if(!slug) return;
+    const [courses, html] = await Promise.all([ fetchJSON('../courses.json'), fetchText('../shared/schedule.html') ]);
+    const course = courses.find(c=>c.slug===slug); if(!course) return;
+    const all = parseSessionsFromHTML(html);
+    const filtered = all.filter(s=>courseMatches(s.label, course));
+    const rich = filtered.find(x=>x.img || x.desc || x.ctaNoDate) || {};
+    if(rich.img){ const h=document.querySelector('.hero-holder'); if(h) h.innerHTML = `<img class="hero-img" src="${rich.img}" alt="${course.name}">`; }
+    if(rich.desc){ const d=document.querySelector('.course-desc'); if(d) d.innerHTML = `<div class="desc">${rich.desc}</div>`; }
+    if(rich.ctaNoDate){ const c=document.querySelector('.no-date-cta'); if(c) c.innerHTML = `<a class="btn secondary" href="${rich.ctaNoDate.url}" rel="nofollow noopener" target="_blank">${rich.ctaNoDate.label}</a>`; }
+    const ul=document.querySelector('#sessions'); if(ul) renderSessions(ul, filtered);
+  }};
 })();

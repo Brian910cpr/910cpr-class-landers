@@ -1,31 +1,15 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="canonical" href="https://910cpr.com/courses/index.html">
-<meta name="robots" content="index,follow">
-<link rel="preconnect" href="https://coastalcprtraining.enrollware.com">
-<link rel="dns-prefetch" href="https://coastalcprtraining.enrollware.com">
-<title>Course Hubs | 910CPR</title>
-<meta name="description" content="Choose a course to see only its upcoming sessions with direct registration links.">
-<link rel="stylesheet" href="../styles.css">
-<script defer src="../scripts/analytics.js"></script>
-</head>
-<body>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K58Z4XD" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Courses • 910CPR</title>
+<link rel="stylesheet" href="../styles.css"></head><body>
 <header class="header">
-<a class="brand" href="/"><img src="/images/910cpr_Fat.png" alt="910CPR"></a>
+  <a class="brand" href="/"><img src="/images/910cpr_Fat.png" alt="910CPR"></a>
   <nav class="nav">
-    <a class="btn secondary" href="../index.html">Home</a>
-    <a class="btn" href="https://coastalcprtraining.enrollware.com/schedule">Full Schedule</a>
+    <a href="/">Home</a>
+    <a href="https://coastalcprtraining.enrollware.com/schedule" target="_blank" rel="nofollow noopener">Full Schedule</a>
   </nav>
 </header>
-<main class="container">
-  <h1>Course Hubs</h1>
-  <p>Choose a course to see only its upcoming sessions with direct registration links.</p>
-  <div id="courseCards" class="grid"></div>
-</main>
+<main class="container"><h1>Course Hubs</h1><div id="courseCards" class="grid"></div></main>
 <footer class="footer">© 910CPR</footer>
 <script defer src="../scripts/analytics.js"></script>
 <script defer src="../scripts/cards.js"></script>
@@ -35,10 +19,8 @@ window.addEventListener('DOMContentLoaded', ()=>{
     coursesJsonPath: '../courses.json',
     scheduleHtmlPath: '../shared/schedule.html',
     targetSelector: '#courseCards',
-    prefix: ''  // links inside /courses/ use relative './slug.html', but here we’re already in /courses/
+    prefix: ''
   });
 });
 </script>
-
-</body>
-</html>
+</body></html>

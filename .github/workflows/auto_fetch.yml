@@ -1,1 +1,37 @@
-
+name: Refresh Enrollware schedule (hourly)
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: enrollware-refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      SCHEDULE_URL: ${{ secrets.SCHEDULE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate settings
+        run: |
+          if [ -z "$SCHEDULE_URL" ]; then
+            echo "Missing SCHEDULE_URL secret"; exit 1; fi
+      - name: Fetch latest schedule
+        run: |
+          mkdir -p shared
+          curl -fsSL -A 'Mozilla/5.0 (GitHub Actions 910CPR)' "$SCHEDULE_URL" -o shared/schedule.html
+          tmp=$(mktemp)
+          awk 'BEGIN{IGNORECASE=1} /<script/ {inscript=1} inscript && /<\/script>/ {inscript=0; next} !inscript {print}' shared/schedule.html > "$tmp"
+          mv "$tmp" shared/schedule.html
+      - name: Commit only if changed
+        run: |
+          if git diff --quiet -- shared/schedule.html; then
+            echo "No changes"; exit 0; fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add shared/schedule.html
+          git commit -m "chore: refresh Enrollware schedule [skip ci]"
+          git push

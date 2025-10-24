@@ -11,17 +11,16 @@
     "name": "AHA - BLS Provider - HeartCode Skills",
     "slug": "bls-heartcode",
     "patterns": [
-      "Heartcode.*BLS",
-      "BLS.*Skills",
-      "BLS Online"
+      "Heart\\\\s*Code.*BLS",
+      "BLS.*Skills"
     ]
   },
   {
     "name": "AHA - ACLS Provider - In-Person - Initial",
     "slug": "acls-initial",
     "patterns": [
-      "ACLS.*Initial",
-      "ACLS Provider.*Initial"
+      "\\\\bACLS\\\\b.*Initial",
+      "ACLS Provider.*In-?person(?!.*Renewal)"
     ]
   },
   {
@@ -29,24 +28,23 @@
     "slug": "acls-renewal",
     "patterns": [
       "ACLS.*Renewal",
-      "ACLS Update"
+      "ACLS Provider Update"
     ]
   },
   {
     "name": "AHA - ACLS Provider - HeartCode",
     "slug": "acls-heartcode",
     "patterns": [
-      "Heartcode.*ACLS",
-      "ACLS.*Skills.*(Heart|Code)",
-      "ACLS Online"
+      "Heart\\\\s*Code.*ACLS",
+      "ACLS.*Skills Session"
     ]
   },
   {
     "name": "AHA - PALS Provider - In-Person - Initial",
     "slug": "pals-initial",
     "patterns": [
-      "PALS.*Initial",
-      "PALS Provider.*Initial"
+      "\\\\bPALS\\\\b.*Initial",
+      "PALS Provider(?!.*Renewal)"
     ]
   },
   {
@@ -54,23 +52,22 @@
     "slug": "pals-renewal",
     "patterns": [
       "PALS.*Renewal",
-      "PALS Update"
+      "PALS Provider Update"
     ]
   },
   {
     "name": "AHA - PALS Provider - HeartCode",
     "slug": "pals-heartcode",
     "patterns": [
-      "Heartcode.*PALS",
-      "PALS.*Skills",
-      "PALS Online"
+      "Heart\\\\s*Code.*PALS",
+      "PALS.*Skills Session"
     ]
   },
   {
     "name": "AHA - Heartsaver CPR/AED",
     "slug": "heartsaver-cpr-aed",
     "patterns": [
-      "Heartsaver\\s*CPR/?AED\\b"
+      "Heartsaver.*CPR/?AED"
     ]
   },
   {
@@ -84,8 +81,7 @@
     "name": "HSI - First Aid/CPR/AED (In-Person)",
     "slug": "hsi-facpraed",
     "patterns": [
-      "HSI.*First Aid.*CPR.*AED",
-      "Health & Safety Institute"
+      "\\\\bHSI\\\\b.*First Aid.*CPR.*AED"
     ]
   }
 ]

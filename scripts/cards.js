@@ -1,104 +1,74 @@
 // /scripts/cards.js
 (function(){
-  const BASE = 'https://coastalcprtraining.enrollware.com';
-
-  async function loadCoursesJSON(path){
-    const res = await fetch(path, {cache:'no-store'}).catch(()=>null);
-    return res ? res.json() : [];
+  const BASE='https://coastalcprtraining.enrollware.com';
+  function absURL(u){ try{return new URL(u,BASE).toString()}catch(e){return null} }
+  function sanitizeHTML(unsafe){
+    const w=document.createElement('div'); w.innerHTML=unsafe||'';
+    const AL=new Set(['A','P','UL','LI','EM','STRONG','IMG','BR']);
+    const SA={'A':['href','title','rel','target'],'IMG':['src','alt','width','height']};
+    (function walk(n){
+      Array.from(n.children).forEach(el=>{
+        if(!AL.has(el.tagName)){ const f=document.createDocumentFragment(); while(el.firstChild) f.appendChild(el.firstChild); el.replaceWith(f); walk(n); return; }
+        Array.from(el.attributes).forEach(a=>{ const keep=(SA[el.tagName]||[]).includes(a.name.toLowerCase()); if(!keep) el.removeAttribute(a.name); });
+        if(el.tagName==='A'){
+          try{ const u=new URL(el.getAttribute('href')||'',BASE); el.setAttribute('href',u.toString()); el.setAttribute('rel','nofollow noopener'); el.setAttribute('target','_blank'); }
+          catch(e){ el.remove(); }
+        }
+        if(el.tagName==='IMG'){ el.setAttribute('src', absURL(el.getAttribute('src')||'') || ''); }
+        walk(el);
+      });
+    })(w);
+    return w.innerHTML;
   }
-  async function loadScheduleHTML(path){
-    const res = await fetch(path, {cache:'no-store'}).catch(()=>null);
-    return res ? res.text() : '';
-  }
-  function absURL(url){ try{ return new URL(url, BASE).toString(); }catch(e){ return null; } }
-
-  // Find nearest image for each enroll link; return [{label,url,img}]
-  function parseSessionsWithImages(html){
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-
-    // collect all <img> so we can match by proximity
-    const allImgs = Array.from(tmp.querySelectorAll('img'));
-
-    const out = [];
-    tmp.querySelectorAll('a[href]').forEach(a=>{
-      const abs = absURL(a.getAttribute('href')||'');
+  function parse(html){
+    const t=document.createElement('div'); t.innerHTML=html;
+    const out=[];
+    t.querySelectorAll('a[href]').forEach(a=>{
+      const href=a.getAttribute('href')||''; const abs=absURL(href);
       if(!abs || !(/(\/enroll\?id=\d+)|(\/reg\/\d+)/i.test(abs))) return;
-
-      const label = (a.textContent||'').trim().replace(/\s+/g,' ');
-
-      // Heuristic: check container → siblings → previous elements → parent chain
-      const container = a.closest('tr, li, .class, .schedule-item, div, section') || a.parentElement;
-      let img = container ? container.querySelector('img') : null;
-
-      // if not found, probe previous siblings up to 5
-      let cur = container || a.parentElement, tries = 0;
-      while(!img && cur && tries < 5){
-        cur = cur.previousElementSibling;
-        if(cur){ img = cur.querySelector && cur.querySelector('img'); }
-        tries++;
+      const label=(a.textContent||'').trim().replace(/\s+/g,' ');
+      const p=a.closest('.enrpanel'); let raw='';
+      if(p){
+        const v=p.getAttribute('value'); if(v) raw=v;
+        if(!raw){
+          const b=p.querySelector('.enrpanel-body');
+          if(b){
+            const list=b.querySelector('.enrclass-list'); const parts=[]; let n=list?list.previousElementSibling:null;
+            while(n){ if(/^(P|UL)$/i.test(n.tagName)) parts.unshift(n.outerHTML); n=n.previousElementSibling; }
+            raw=parts.join('');
+          }
+        }
       }
-      // last resort: nearest image in DOM order (min distance)
-      if(!img && allImgs.length){
-        let best=null,bestDist=1e9;
-        allImgs.forEach((im,idx)=>{
-          const d = Math.abs(idx - allImgs.indexOf(img)); // fallback distance
-        });
-        // simple fallback – first image on page
-        img = allImgs[0];
-      }
-
-      const src = img ? absURL(img.getAttribute('src')||'') : null;
-      out.push({label, url: abs, img: src});
+      const clean=sanitizeHTML(raw);
+      const tmp=document.createElement('div'); tmp.innerHTML=clean; const img=tmp.querySelector('img');
+      out.push({label,url:abs,img:img?img.getAttribute('src'):null,desc:clean});
     });
-
-    // de-dupe by URL
-    const seen = new Set();
+    const seen=new Set();
     return out.filter(x=>{ if(seen.has(x.url)) return false; seen.add(x.url); return true; });
   }
-
-  function courseMatches(label, course){
-    return (course.patterns||[]).some(p=>{
-      try{ return new RegExp(p,'i').test(label); }catch(e){ return false; }
-    });
-  }
-
-  // Build a map: slug -> representative image URL (first seen)
-  function buildCourseImageMap(sessions, courses){
-    const map = {};
-    sessions.forEach(s=>{
-      courses.forEach(c=>{
-        if(!map[c.slug] && courseMatches(s.label, c) && s.img){
-          map[c.slug] = s.img;
-        }
-      });
-    });
+  function courseMatches(label,c){ return (c.patterns||[]).some(p=>{ try{return new RegExp(p,'i').test(label)}catch(e){return False} }); }
+  function build(items,courses,field){
+    const map={};
+    items.forEach(s=>{ courses.forEach(c=>{ if(!map[c.slug] && (c.patterns||[]).some(p=>{try{return new RegExp(p,'i').test(s.label)}catch(e){return false}}) && s[field]){ map[c.slug]=s[field]; } }); });
     return map;
   }
-
-  async function renderCards({coursesJsonPath, scheduleHtmlPath, targetSelector, prefix}){
-    const [courses, html] = await Promise.all([
-      loadCoursesJSON(coursesJsonPath),
-      loadScheduleHTML(scheduleHtmlPath)
-    ]);
-    const sessions = parseSessionsWithImages(html);
-    const imgMap = buildCourseImageMap(sessions, courses);
-
-    const wrap = document.querySelector(targetSelector);
-    if(!wrap) return;
-
-    wrap.innerHTML = courses.map(c=>{
-      const img = imgMap[c.slug] || c.image || ''; // allow manual override via courses.json "image"
+  async function load(p){ const r=await fetch(p,{cache:'no-store'}).catch(()=>null); if(!r) return null; return p.endsWith('.json')?r.json():r.text(); }
+  window.CourseCards = { async renderCards({coursesJsonPath,scheduleHtmlPath,targetSelector,prefix}){
+    const [courses,html] = await Promise.all([load(coursesJsonPath), load(scheduleHtmlPath)]);
+    const items = parse(html||'');
+    const imgMap  = build(items, courses, 'img');
+    const descMap = build(items, courses, 'desc');
+    const el = document.querySelector(targetSelector);
+    el.innerHTML = courses.map(c=>{
+      const img = imgMap[c.slug] || c.image || '';
+      const desc = (descMap[c.slug]||'').split('</p>')[0] || '';
       const href = `${prefix}${c.slug}.html`;
-      return `
-        <div class="card card-course">
-          ${img ? `<img class="card-img" src="${img}" alt="${c.name}">` : ''}
-          <h3>${c.name}</h3>
-          <p><a class="btn" href="${href}">View ${c.name}</a></p>
-        </div>
-      `;
+      return `<div class="card card-course">
+        ${img?`<img class="card-img" src="${img}" alt="${c.name}">`:''}
+        <h3>${c.name}</h3>
+        ${desc?`<div class="card-desc small">${desc}</div>`:''}
+        <p><a class="btn" href="${href}">View ${c.name}</a></p>
+      </div>`;
     }).join('');
-  }
-
-  window.CourseCards = { renderCards };
+  }};
 })();
