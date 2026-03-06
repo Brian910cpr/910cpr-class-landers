@@ -60,18 +60,19 @@ margin-bottom:20px;
 
 <p>
 
+
 <a class="button" href="https://coastalcprtraining.enrollware.com/enroll?id=10009277">
 Register Now
-
 </a>
+
 
 </p>
 
 <hr>
 
-<h2>Other Upcoming Sessions</h2>
+<h2>Upcoming Classes</h2>
 
-<div id="futureSessions">Loading upcoming classes…</div>
+<div id="futureSessions">Loading upcoming classes...</div>
 
 </div>
 
@@ -81,17 +82,19 @@ Register Now
 const courseName = "AHA - PALS Instructor Renewal";
 const sessionID = "35108";
 
-fetch("/data/public_schedule.json")
+fetch("/910cpr-class-landers/data/public_schedule.json")
 .then(r=>r.json())
 .then(data=>{
 
 const now = new Date();
 
 const matches = data.sessions.filter(s=>{
-    
-    if(s.course !== courseName) return false;
 
-    if(s.session_id == sessionID) return false;
+    if(!s.course.toLowerCase().includes(courseName.substring(0,25).toLowerCase()))
+        return false;
+
+    if(String(s.session_id) === String(sessionID))
+        return false;
 
     const dt = new Date(s.start);
 
@@ -104,27 +107,21 @@ matches.sort((a,b)=>new Date(a.start)-new Date(b.start));
 let html = "<ul>";
 
 matches.slice(0,8).forEach(s=>{
-    
-    html += `
-    <li>
-    ${
-        new Date(s.start).toLocaleString()
-    }
-    • ${
-        s.location
-    }
-    <a href="${
-        s.register_url
-    }">Register</a>
-    </li>
-    `;
-    
+
+html += `
+<li>
+${new Date(s.start).toLocaleString()}
+ • ${s.location}
+ <a href="${s.register_url}">Register</a>
+</li>
+`;
+
 });
 
 html += "</ul>";
 
 if(matches.length === 0)
-html = "No additional upcoming sessions currently scheduled.";
+html = "No upcoming sessions scheduled.";
 
 document.getElementById("futureSessions").innerHTML = html;
 
