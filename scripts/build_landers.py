@@ -1,49 +1,86 @@
+import json
+import os
+import re
+from html import unescape
+from datetime import datetime
+
+DATA_FILE = "../data/schedule.json"
+OUTPUT_DIR = "../docs/classes"
+
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+with open(DATA_FILE, "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+sessions = data["sessions"]
+
+
+def strip_html(text):
+    text = unescape(str(text))
+    text = re.sub(r"<[^>]+>", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def parse_dt(value):
+
+    raw = str(value)
+
+    for fmt in (
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M",
+        "%m/%d/%Y %H:%M",
+        "%m/%d/%Y %I:%M %p",
+    ):
+        try:
+            return datetime.strptime(raw, fmt)
+        except:
+            pass
+
+    return None
+
+
+template = """
 <!DOCTYPE html>
 <html>
 <head>
 
 <meta charset="UTF-8">
-<title>AHA - ACLS Provider - Online or Skills Session Blended Learning HeartCode® ACLS</title>
+<title>{course}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 
-body {
+body {{
 font-family: Arial;
 background:#eef2f5;
 padding:40px;
-}
+}}
 
-.card {
+.card {{
 background:white;
 padding:30px;
 border-radius:12px;
 max-width:900px;
 margin:auto;
 box-shadow:0 4px 14px rgba(0,0,0,0.15);
-}
+}}
 
-.button {
+.button {{
 display:inline-block;
 padding:12px 22px;
 background:#2c73d2;
 color:white;
 text-decoration:none;
 border-radius:8px;
-}
+}}
 
-.notice {
+.notice {{
 background:#fff3cd;
 padding:15px;
 border-radius:8px;
 margin-bottom:20px;
-}
-
-.smallbuild {
-margin-top:25px;
-font-size:11px;
-color:#999;
-}
+}}
 
 </style>
 
@@ -53,46 +90,42 @@ color:#999;
 
 <div class="card">
 
-<div class="notice">
-This session has passed. See other upcoming sessions below.
-</div>
+{past_notice}
 
-<h1>AHA - ACLS Provider - Online or Skills Session Blended Learning HeartCode® ACLS</h1>
+<h1>{course}</h1>
 
 <p>
-<strong>Date:</strong> March 02 2026<br>
-<strong>Time:</strong> 08:30 AM<br>
-<strong>Location:</strong> Wilmington; Shipyard Blvd
+<strong>Date:</strong> {date}<br>
+<strong>Time:</strong> {time}<br>
+<strong>Location:</strong> {location}
 </p>
 
 <p>
-<a class="button" href="/910cpr-class-landers/">View Upcoming Classes</a>
+
+{button_html}
+
 </p>
 
 <hr>
 
-<h2>Other Upcoming Sessions</h2>
+<h2>Upcoming Classes</h2>
 
 <div id="futureSessions">Loading upcoming classes...</div>
 
-<div class="smallbuild">
-build: 2026-03-06
 </div>
 
-</div>
 
 <script>
 
-const courseName = "AHA - ACLS Provider - Online or Skills Session Blended Learning HeartCode® ACLS";
-const sessionID = "48212";
+const courseName = "{course}";
+const sessionID = "{session_id}";
 
-fetch("../data/public_schedule.json")
-.then(r=>r.json())
-.then(data=>{
+fetch("../data/public_schedule.json").then(r=>r.json())
+.then(data=>{{
 
 const now = new Date();
 
-const matches = data.sessions.filter(s=>{
+const matches = data.sessions.filter(s=>{{
 
     if(!s.course.toLowerCase().includes(courseName.substring(0,25).toLowerCase()))
         return false;
@@ -104,23 +137,23 @@ const matches = data.sessions.filter(s=>{
 
     return dt >= now;
 
-});
+}});
 
 matches.sort((a,b)=>new Date(a.start)-new Date(b.start));
 
 let html = "<ul>";
 
-matches.slice(0,8).forEach(s=>{
+matches.slice(0,8).forEach(s=>{{
 
 html += `
 <li>
-${new Date(s.start).toLocaleString()}
- • ${s.location}
- <a href="${s.register_url}">Register</a>
+${{new Date(s.start).toLocaleString()}}
+ • ${{s.location}}
+ <a href="${{s.register_url}}">Register</a>
 </li>
 `;
 
-});
+}});
 
 html += "</ul>";
 
@@ -129,9 +162,75 @@ html = "No upcoming sessions scheduled.";
 
 document.getElementById("futureSessions").innerHTML = html;
 
-});
+}});
 
 </script>
 
 </body>
 </html>
+"""
+
+
+count = 0
+
+for s in sessions:
+
+    session_id = s.get("session_id")
+
+    course = strip_html(s.get("course"))
+
+    location = s.get("location")
+
+    register = s.get("register_url")
+
+    dt = parse_dt(s.get("start"))
+
+    if dt:
+        date = dt.strftime("%B %d %Y")
+        time = dt.strftime("%I:%M %p")
+    else:
+        date = ""
+        time = ""
+
+    past_notice = ""
+
+    if dt and dt < datetime.now():
+
+        past_notice = """
+<div class="notice">
+This session has passed. See other upcoming sessions below.
+</div>
+"""
+
+        button_html = f'''
+<a class="button" href="/910cpr-class-landers/">
+View Upcoming Classes
+</a>
+'''
+
+    else:
+
+        button_html = f'''
+<a class="button" href="{register}">
+Register Now
+</a>
+'''
+
+    html = template.format(
+        course=course,
+        location=location,
+        date=date,
+        time=time,
+        past_notice=past_notice,
+        session_id=session_id,
+        button_html=button_html,
+    )
+
+    path = os.path.join(OUTPUT_DIR, f"{session_id}.html")
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    count += 1
+
+print("Landers built:", count)
