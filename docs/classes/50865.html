@@ -82,8 +82,7 @@ Register Now
 const courseName = "AHA - ACLS Provider Renewal - In-Person Instructor-led Classroom program for ACLS Renewal";
 const sessionID = "50865";
 
-fetch("/910cpr-class-landers/data/public_schedule.json")
-.then(r=>r.json())
+fetch("../data/public_schedule.json").then(r=>r.json())
 .then(data=>{
 
 const now = new Date();

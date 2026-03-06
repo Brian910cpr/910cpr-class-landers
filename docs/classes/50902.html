@@ -59,7 +59,7 @@ This session has passed. See other upcoming sessions below.
 <p>
 <strong>Date:</strong> March 04 2026<br>
 <strong>Time:</strong> 09:00 AM<br>
-<strong>Location:</strong> Burgaw; 111 S Wright St
+<strong>Location:</strong> <img src="https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/bsh.png" style="width: 150px;"></img><br>5710 Oleander Dr #100
 </p>
 
 <p>
@@ -86,8 +86,7 @@ View Upcoming Classes
 const courseName = "AHA - Heartsaver® First Aid / CPR / AED In-person ❤️ Traditional Classroom (Instructor-Led) ✔ Meets OSHA Requirements for Workplace Responders (29 CFR 1910.151)";
 const sessionID = "50902";
 
-fetch("/910cpr-class-landers/data/public_schedule.json")
-.then(r=>r.json())
+fetch("../data/public_schedule.json").then(r=>r.json())
 .then(data=>{
 
 const now = new Date();

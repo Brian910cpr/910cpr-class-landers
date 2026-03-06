@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>AHA - ACLS Provider - Online or Skills Session Blended Learning HeartCode® ACLS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body {
+font-family: Arial;
+background:#eef2f5;
+padding:40px;
+}
+
+.card {
+background:white;
+padding:30px;
+border-radius:12px;
+max-width:900px;
+margin:auto;
+box-shadow:0 4px 14px rgba(0,0,0,0.15);
+}
+
+.button {
+display:inline-block;
+padding:12px 22px;
+background:#2c73d2;
+color:white;
+text-decoration:none;
+border-radius:8px;
+}
+
+.notice {
+background:#fff3cd;
+padding:15px;
+border-radius:8px;
+margin-bottom:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+
+<div class="notice">
+This session has passed. See other upcoming sessions below.
+</div>
+
+
+<h1>AHA - ACLS Provider - Online or Skills Session Blended Learning HeartCode® ACLS</h1>
+
+<p>
+<strong>Date:</strong> September 19 2022<br>
+<strong>Time:</strong> 09:00 AM<br>
+<strong>Location:</strong> Wilmington; Shipyard Blvd
+</p>
+
+<p>
+
+
+<a class="button" href="/910cpr-class-landers/">
+View Upcoming Classes
+</a>
+
+
+</p>
+
+<hr>
+
+<h2>Upcoming Classes</h2>
+
+<div id="futureSessions">Loading upcoming classes...</div>
+
+</div>
+
+
+<script>
+
+const courseName = "AHA - ACLS Provider - Online or Skills Session Blended Learning HeartCode® ACLS";
+const sessionID = "12051";
+
+fetch("../data/public_schedule.json").then(r=>r.json())
+.then(data=>{
+
+const now = new Date();
+
+const matches = data.sessions.filter(s=>{
+
+    if(!s.course.toLowerCase().includes(courseName.substring(0,25).toLowerCase()))
+        return false;
+
+    if(String(s.session_id) === String(sessionID))
+        return false;
+
+    const dt = new Date(s.start);
+
+    return dt >= now;
+
+});
+
+matches.sort((a,b)=>new Date(a.start)-new Date(b.start));
+
+let html = "<ul>";
+
+matches.slice(0,8).forEach(s=>{
+
+html += `
+<li>
+${new Date(s.start).toLocaleString()}
+ • ${s.location}
+ <a href="${s.register_url}">Register</a>
+</li>
+`;
+
+});
+
+html += "</ul>";
+
+if(matches.length === 0)
+html = "No upcoming sessions scheduled.";
+
+document.getElementById("futureSessions").innerHTML = html;
+
+});
+
+</script>
+
+</body>
+</html>

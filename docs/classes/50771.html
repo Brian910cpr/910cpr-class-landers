@@ -82,8 +82,7 @@ Register Now
 const courseName = "AHA - Heartsaver® Pediatric First Aid / CPR / AED Online + In-Person Skills ✔ Fulfills the CPR/First Aid component of NC DCDEE (10A NCAC 09 .1102); additional NC trainings required for full compliance ✔ Fulfills the CPR/First Aid requirement in CT OEC (Sec. 19a-79-4a); center policies/modules may apply";
 const sessionID = "50771";
 
-fetch("/910cpr-class-landers/data/public_schedule.json")
-.then(r=>r.json())
+fetch("../data/public_schedule.json").then(r=>r.json())
 .then(data=>{
 
 const now = new Date();

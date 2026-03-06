@@ -82,8 +82,7 @@ Register Now
 const courseName = "AHA - Heartsaver® First Aid / CPR / AED Online + In-Person Skills Self-Paced Online Coursework with Instructor-Led Hands-On Skills Testing ✔ Meets OSHA Requirements for Workplace Responders (29 CFR 1910.151)";
 const sessionID = "50537";
 
-fetch("/910cpr-class-landers/data/public_schedule.json")
-.then(r=>r.json())
+fetch("../data/public_schedule.json").then(r=>r.json())
 .then(data=>{
 
 const now = new Date();

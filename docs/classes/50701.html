@@ -82,8 +82,7 @@ Register Now
 const courseName = "Elementary First Aid p { text-indent: 50px; } to meet "U.S. Coast Guard Maritime Elementary First Aid and CPR" Requirement";
 const sessionID = "50701";
 
-fetch("/910cpr-class-landers/data/public_schedule.json")
-.then(r=>r.json())
+fetch("../data/public_schedule.json").then(r=>r.json())
 .then(data=>{
 
 const now = new Date();

@@ -82,8 +82,7 @@ Register Now
 const courseName = "AHA - BLS Provider - In-person Renewal Instructor-led Classroom program for BLS Renewal";
 const sessionID = "49256";
 
-fetch("/910cpr-class-landers/data/public_schedule.json")
-.then(r=>r.json())
+fetch("../data/public_schedule.json").then(r=>r.json())
 .then(data=>{
 
 const now = new Date();
