@@ -1,16 +1,20 @@
-import pandas as pd
 import json
-from datetime import datetime
+from datetime import datetime, UTC
+from pathlib import Path
 
-INPUT_FILE = "../raw/Class Report.xlsx"
-OUTPUT_FILE = "../data/schedule.json"
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parents[1]
+INPUT_FILE = ROOT / "raw" / "Class Report.xlsx"
+OUTPUT_FILE = ROOT / "data" / "schedule.json"
+
+OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_excel(INPUT_FILE)
 
 sessions = []
 
 for _, row in df.iterrows():
-
     session = {
         "session_id": int(row["ID"]),
         "course": str(row["Course"]),
@@ -20,17 +24,17 @@ for _, row in df.iterrows():
         "instructor": str(row["Instructor"]),
         "students": int(row["Students"]) if not pd.isna(row["Students"]) else 0,
         "seats": int(row["Seats"]) if not pd.isna(row["Seats"]) else 0,
-        "register_url": str(row["Registration Link"])
+        "register_url": str(row["Registration Link"]),
     }
-
     sessions.append(session)
 
 schedule = {
-    "generated": datetime.utcnow().isoformat(),
-    "sessions": sessions
+    "generated": datetime.now(UTC).isoformat(),
+    "sessions": sessions,
 }
 
-with open(OUTPUT_FILE, "w") as f:
+with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
     json.dump(schedule, f, indent=2)
 
-print("schedule.json created:", len(sessions), "sessions")
+print(f"schedule.json created: {len(sessions)} sessions")
+print(f"Wrote: {OUTPUT_FILE}")

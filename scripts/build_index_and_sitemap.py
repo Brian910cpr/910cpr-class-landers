@@ -1,9 +1,9 @@
 import json
 import re
+import hashlib
 from html import unescape
 from datetime import datetime
 from pathlib import Path
-import hashlib
 
 from title_cleaner import normalize_course_title
 
@@ -51,6 +51,45 @@ def render_gtm_body():
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_ID}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->"""
+
+
+def telemetry_script(page_type: str, page_name: str):
+    safe_page_name = str(page_name).replace("\\", "\\\\").replace('"', '\\"')
+    return f"""
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({{
+  event: "page_context",
+  page_type: "{page_type}",
+  page_name: "{safe_page_name}"
+}});
+
+document.addEventListener("click", function(e) {{
+  const a = e.target.closest("a");
+  if (!a) return;
+
+  const href = a.getAttribute("href") || "";
+  const text = (a.textContent || "").trim();
+
+  let eventName = "generic_link_click";
+
+  if (href.includes("/classes/")) eventName = "session_link_click";
+  else if (href.includes("/courses/")) eventName = "course_link_click";
+  else if (href.includes("/locations/")) eventName = "location_link_click";
+  else if (href.includes("enrollware.com/enroll?id=")) eventName = "register_click";
+  else if (href.includes("/blog/")) eventName = "blog_link_click";
+  else if (href.startsWith("tel:")) eventName = "phone_click";
+
+  window.dataLayer.push({{
+    event: eventName,
+    page_type: "{page_type}",
+    page_name: "{safe_page_name}",
+    click_text: text,
+    link_url: href
+  }});
+}});
+</script>
+"""
 
 
 def strip_html(text: str) -> str:
@@ -562,6 +601,7 @@ index_html = f"""<!DOCTYPE html>
   </div>
 
 </div>
+{telemetry_script("home", "Find Your CPR Class")}
 </body>
 </html>
 """
@@ -595,6 +635,7 @@ for course_name, items in course_groups.items():
 
   {blocks}
 </div>
+{telemetry_script("course", course_name)}
 </body>
 </html>
 """
@@ -627,6 +668,7 @@ for location_name, items in location_groups.items():
 
   {blocks}
 </div>
+{telemetry_script("location", location_name)}
 </body>
 </html>
 """

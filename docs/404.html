@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Page Not Found | 910CPR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body { font-family: Arial, sans-serif; background:#eef4f8; padding:40px; color:#1f2937; }
+.card { max-width:800px; margin:auto; background:white; border:1px solid #dbe4ee; border-radius:20px; padding:28px; }
+a.button { display:inline-block; padding:12px 16px; border-radius:12px; text-decoration:none; font-weight:700; background:#ea580c; color:white; }
+</style>
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  event: "page_404",
+  page_type: "404",
+  path: location.pathname
+});
+</script>
+</head>
+<body>
+<div class="card">
+  <h1>We couldn’t find that page.</h1>
+  <p>Try the live schedule or browse current classes.</p>
+  <p><a class="button" href="/index.html">Browse Current Classes</a></p>
+  <p><a href="https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule">View Enrollware Schedule</a></p>
+</div>
+</body>
+</html>

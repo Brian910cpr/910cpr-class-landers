@@ -8632,5 +8632,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </section>
         
 </div>
+
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  event: "page_context",
+  page_type: "course",
+  page_name: "USCG Elementary First Aid Class"
+});
+
+document.addEventListener("click", function(e) {
+  const a = e.target.closest("a");
+  if (!a) return;
+
+  const href = a.getAttribute("href") || "";
+  const text = (a.textContent || "").trim();
+
+  let eventName = "generic_link_click";
+
+  if (href.includes("/classes/")) eventName = "session_link_click";
+  else if (href.includes("/courses/")) eventName = "course_link_click";
+  else if (href.includes("/locations/")) eventName = "location_link_click";
+  else if (href.includes("enrollware.com/enroll?id=")) eventName = "register_click";
+  else if (href.includes("/blog/")) eventName = "blog_link_click";
+  else if (href.startsWith("tel:")) eventName = "phone_click";
+
+  window.dataLayer.push({
+    event: eventName,
+    page_type: "course",
+    page_name: "USCG Elementary First Aid Class",
+    click_text: text,
+    link_url: href
+  });
+});
+</script>
+
 </body>
 </html>
