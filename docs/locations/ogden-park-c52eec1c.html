@@ -5,41 +5,316 @@
 <title>CPR Classes in Ogden Park | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Browse upcoming public CPR classes in Ogden Park with 910CPR.">
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQS8DCBH');
+</script>
+<!-- End Google Tag Manager -->
+
 <style>
+:root {
+  --bg: #eef4f8;
+  --card: #ffffff;
+  --soft: #f8fbfd;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --accent-dark: #1d4ed8;
+  --cta: #ea580c;
+  --cta-dark: #c2410c;
+  --border: #dbe4ee;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(#f5f6f7, #e9eef2);
   margin: 0;
-  padding: 40px 20px;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #f8fbfd 0%, var(--bg) 100%);
+  color: var(--text);
 }
+
 .wrap {
-  max-width: 900px;
+  max-width: 1220px;
   margin: 0 auto;
+  padding: 36px 18px 60px;
 }
+
+.hero {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  margin-bottom: 26px;
+}
+
+.hero h1 {
+  margin: 0 0 10px 0;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.hero p {
+  margin: 0;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.section-title {
+  margin: 26px 0 14px 0;
+  font-size: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
+
 .card {
-  background: #f1f1f1;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
-a {
-  color: #2c73d2;
+
+.card h2 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.preview-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.preview-list li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.preview-list li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.text-link {
+  color: var(--accent);
   text-decoration: none;
 }
-li {
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.button {
+  display: inline-block;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.button.secondary {
+  background: #5f6f82;
+  color: white;
+}
+
+.button.secondary:hover {
+  background: #526170;
+}
+
+.button.primary {
+  background: var(--cta);
+  color: white;
+}
+
+.button.primary:hover {
+  background: var(--cta-dark);
+}
+
+.back-link {
+  display: inline-block;
+  margin: 2px 0 18px 0;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.month-group {
+  margin-top: 24px;
+}
+
+.month-heading {
+  margin: 0 0 14px 0;
+  font-size: 22px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+.session-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.session-card {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}
+
+.date-badge {
+  min-width: 78px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: white;
+  text-align: center;
+  padding: 10px 8px;
+}
+
+.date-month {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.date-day {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 4px 0;
+}
+
+.date-weekday {
+  font-size: 12px;
+  opacity: 0.95;
+}
+
+.session-main {
+  flex: 1;
+}
+
+.session-course {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
   margin-bottom: 8px;
 }
+
+.session-meta {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.session-links {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cta-small {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--cta);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.cta-small:hover {
+  background: var(--cta-dark);
+}
+
+.inline-count {
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 26px;
+  }
+
+  .session-card {
+    flex-direction: row;
+  }
+
+  .wrap {
+    padding: 22px 12px 40px;
+  }
+}
 </style>
+
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <div class="wrap">
-  <div class="card">
+  <section class="hero">
     <h1>CPR Classes in Ogden Park</h1>
-    <p><a href="../index.html">← Back to full schedule</a></p>
-    <ul>
-      <li><a href="../classes/18205.html">AED Maintenance Program ... an easy-to-understand and even simpler-to-implement plan to get an AED in your facility... • April 05, 2023 at 12:00 PM</a></li>
-    </ul>
-  </div>
+    <p>Upcoming public sessions grouped by month with quick registration buttons.</p>
+  </section>
+
+  <a class="back-link" href="../index.html">← Back to full schedule</a>
+
+  
+        <section class="month-group">
+          <h2 class="month-heading">April 2023</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">APR</div>
+        <div class="date-day">5</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        <div class="session-course">AED Maintenance Program ... an easy-to-understand and even simpler-to-implement plan to get an AED in your facility...</div>
+        <div class="session-meta"><strong>12:00 PM</strong></div>
+        <div class="session-meta">Ogden Park</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/18205.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=7870597">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
 </div>
 </body>
 </html>

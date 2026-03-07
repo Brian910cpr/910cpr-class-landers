@@ -5,41 +5,2454 @@
 <title>HSI BLS Blended Learning Skills Session Classes | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Browse upcoming public HSI BLS Blended Learning Skills Session classes with 910CPR.">
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQS8DCBH');
+</script>
+<!-- End Google Tag Manager -->
+
 <style>
+:root {
+  --bg: #eef4f8;
+  --card: #ffffff;
+  --soft: #f8fbfd;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --accent-dark: #1d4ed8;
+  --cta: #ea580c;
+  --cta-dark: #c2410c;
+  --border: #dbe4ee;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(#f5f6f7, #e9eef2);
   margin: 0;
-  padding: 40px 20px;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #f8fbfd 0%, var(--bg) 100%);
+  color: var(--text);
 }
+
 .wrap {
-  max-width: 900px;
+  max-width: 1220px;
   margin: 0 auto;
+  padding: 36px 18px 60px;
 }
+
+.hero {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  margin-bottom: 26px;
+}
+
+.hero h1 {
+  margin: 0 0 10px 0;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.hero p {
+  margin: 0;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.section-title {
+  margin: 26px 0 14px 0;
+  font-size: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
+
 .card {
-  background: #f1f1f1;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
-a {
-  color: #2c73d2;
+
+.card h2 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.preview-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.preview-list li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.preview-list li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.text-link {
+  color: var(--accent);
   text-decoration: none;
 }
-li {
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.button {
+  display: inline-block;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.button.secondary {
+  background: #5f6f82;
+  color: white;
+}
+
+.button.secondary:hover {
+  background: #526170;
+}
+
+.button.primary {
+  background: var(--cta);
+  color: white;
+}
+
+.button.primary:hover {
+  background: var(--cta-dark);
+}
+
+.back-link {
+  display: inline-block;
+  margin: 2px 0 18px 0;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.month-group {
+  margin-top: 24px;
+}
+
+.month-heading {
+  margin: 0 0 14px 0;
+  font-size: 22px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+.session-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.session-card {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}
+
+.date-badge {
+  min-width: 78px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: white;
+  text-align: center;
+  padding: 10px 8px;
+}
+
+.date-month {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.date-day {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 4px 0;
+}
+
+.date-weekday {
+  font-size: 12px;
+  opacity: 0.95;
+}
+
+.session-main {
+  flex: 1;
+}
+
+.session-course {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
   margin-bottom: 8px;
 }
+
+.session-meta {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.session-links {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cta-small {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--cta);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.cta-small:hover {
+  background: var(--cta-dark);
+}
+
+.inline-count {
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 26px;
+  }
+
+  .session-card {
+    flex-direction: row;
+  }
+
+  .wrap {
+    padding: 22px 12px 40px;
+  }
+}
 </style>
+
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <div class="wrap">
-  <div class="card">
+  <section class="hero">
     <h1>HSI BLS Blended Learning Skills Session</h1>
-    <p><a href="../index.html">← Back to full schedule</a></p>
-    <ul>
-      <li><a href="../classes/39710.html">June 02, 2025 at 5:45 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39712.html">June 09, 2025 at 5:45 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39730.html">June 09, 2025 at 5:45 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39747.html">June 16, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39666.html">June 16, 2025 at 5:45 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39699.html">June 17, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39700.html">June 18, 2025 at 4:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39770.html">June 19, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39668.html">June 20, 2025 at 9:15 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/43530.html">June 20, 2025 at 4:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39669.html">July 01, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39752.html">July 03, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39761.html">July 03, 2025 at 5:45 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44989.html">July 05, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39670.html">July 08, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39762.html">July 10, 2025 at 5:45 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44145.html">July 16, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45844.html">July 16, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39754.html">July 17, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44991.html">July 19, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45647.html">July 19, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/46233.html">July 23, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/39755.html">July 24, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44992.html">July 26, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45648.html">July 26, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45842.html">July 30, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44997.html">August 02, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45617.html">August 02, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44148.html">August 06, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45845.html">August 06, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44998.html">August 09, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45618.html">August 09, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44149.html">August 13, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45846.html">August 13, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44151.html">August 20, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45847.html">August 20, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44995.html">August 21, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45000.html">August 23, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45620.html">August 23, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44150.html">August 27, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45848.html">August 27, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44996.html">August 28, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44152.html">September 03, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45849.html">September 03, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45002.html">September 04, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45006.html">September 06, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45622.html">September 06, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44154.html">September 10, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45850.html">September 10, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45003.html">September 11, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44153.html">September 17, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45851.html">September 17, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45004.html">September 18, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45008.html">September 20, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45624.html">September 20, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45005.html">September 25, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45009.html">September 27, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45625.html">September 27, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44156.html">October 01, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45853.html">October 01, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45010.html">October 02, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45015.html">October 04, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45626.html">October 04, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44157.html">October 08, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45854.html">October 08, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45011.html">October 09, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45016.html">October 11, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45627.html">October 11, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44158.html">October 15, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45855.html">October 15, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45012.html">October 16, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/47408.html">October 16, 2025 at 5:45 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45017.html">October 18, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45628.html">October 18, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44159.html">October 22, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45856.html">October 22, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45013.html">October 23, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45018.html">October 25, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45629.html">October 25, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44160.html">October 29, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45857.html">October 29, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45014.html">October 30, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45045.html">November 01, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45630.html">November 01, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44173.html">November 05, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45858.html">November 05, 2025 at 5:45 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45050.html">November 06, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45046.html">November 08, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45631.html">November 08, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44174.html">November 12, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45859.html">November 12, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45051.html">November 13, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45047.html">November 15, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45632.html">November 15, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44175.html">November 19, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45860.html">November 19, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45052.html">November 21, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45048.html">November 22, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45633.html">November 22, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44176.html">November 26, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45861.html">November 26, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45053.html">November 27, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45049.html">November 29, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45634.html">November 29, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45041.html">December 04, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45037.html">December 06, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45635.html">December 06, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44170.html">December 10, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45863.html">December 10, 2025 at 5:00 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44171.html">December 17, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45864.html">December 17, 2025 at 5:45 PM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45042.html">December 18, 2025 at 8:30 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44172.html">December 31, 2025 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45638.html">January 03, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44165.html">January 07, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45639.html">January 10, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44166.html">January 14, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/50819.html">January 22, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45641.html">January 24, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/44168.html">January 28, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45643.html">February 07, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45645.html">February 21, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li><li><a href="../classes/45646.html">February 28, 2026 at 11:45 AM • Wilmington; Shipyard Blvd</a></li>
-    </ul>
-  </div>
+    <p>Upcoming public sessions listed by month for faster scanning and booking.</p>
+  </section>
+
+  <a class="back-link" href="../index.html">← Back to full schedule</a>
+
+  
+        <section class="month-group">
+          <h2 class="month-heading">June 2025</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">2</div>
+        <div class="date-weekday">Mon</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:45 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39710.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799544">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">9</div>
+        <div class="date-weekday">Mon</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:45 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39712.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799556">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">9</div>
+        <div class="date-weekday">Mon</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:45 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39730.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799575">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">16</div>
+        <div class="date-weekday">Mon</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39747.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799604">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">16</div>
+        <div class="date-weekday">Mon</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:45 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39666.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799261">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">17</div>
+        <div class="date-weekday">Tue</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39699.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799508">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">18</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>4:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39700.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799509">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">19</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39770.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799737">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">20</div>
+        <div class="date-weekday">Fri</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>9:15 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39668.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799357">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUN</div>
+        <div class="date-day">20</div>
+        <div class="date-weekday">Fri</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>4:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/43530.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11826623">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
+
+        <section class="month-group">
+          <h2 class="month-heading">July 2025</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">1</div>
+        <div class="date-weekday">Tue</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39669.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799358">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">3</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39752.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799630">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">3</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:45 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39761.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799726">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">5</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44989.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929384">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">8</div>
+        <div class="date-weekday">Tue</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39670.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799359">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">10</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:45 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39762.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799727">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">16</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44145.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924661">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">16</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45844.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930259">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">17</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39754.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799632">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">19</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44991.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929386">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">19</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45647.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930061">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">23</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/46233.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11961054">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">24</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/39755.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11799633">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">26</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44992.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929387">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">26</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45648.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930062">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">30</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45842.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930257">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
+
+        <section class="month-group">
+          <h2 class="month-heading">August 2025</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">2</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44997.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929392">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">2</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45617.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930031">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">6</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44148.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924664">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">6</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45845.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930260">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">9</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44998.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929393">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">9</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45618.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930032">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">13</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44149.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924665">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">13</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45846.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930261">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">20</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44151.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924667">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">20</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45847.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930262">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">21</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44995.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929390">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">23</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45000.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929395">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">23</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45620.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930034">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">27</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44150.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924666">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">27</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45848.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930263">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">AUG</div>
+        <div class="date-day">28</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44996.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929391">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
+
+        <section class="month-group">
+          <h2 class="month-heading">September 2025</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">3</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44152.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924668">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">3</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45849.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930264">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">4</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45002.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929397">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">6</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45006.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929401">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">6</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45622.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930036">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">10</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44154.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924670">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">10</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45850.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930265">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">11</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45003.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929398">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">17</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44153.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924669">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">17</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45851.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930266">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">18</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45004.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929399">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">20</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45008.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929403">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">20</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45624.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930038">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">25</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45005.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929400">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">27</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45009.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929404">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">SEP</div>
+        <div class="date-day">27</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45625.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930039">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
+
+        <section class="month-group">
+          <h2 class="month-heading">October 2025</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">1</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44156.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924672">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">1</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45853.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930268">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">2</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45010.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929405">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">4</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45015.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929410">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">4</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45626.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930040">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">8</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44157.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924673">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">8</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45854.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930269">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">9</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45011.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929406">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">11</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45016.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929411">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">11</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45627.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930041">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">15</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44158.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924674">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">15</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45855.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930270">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">16</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45012.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929407">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">16</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:45 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/47408.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12367229">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">18</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45017.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929412">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">18</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45628.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930042">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">22</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44159.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924675">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">22</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45856.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930271">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">23</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45013.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929408">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">25</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45018.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929413">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">25</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45629.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930043">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">29</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44160.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924676">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">29</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45857.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930272">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">OCT</div>
+        <div class="date-day">30</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45014.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929409">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
+
+        <section class="month-group">
+          <h2 class="month-heading">November 2025</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">1</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45045.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929440">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">1</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45630.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930044">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">5</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44173.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924689">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">5</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:45 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45858.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930273">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">6</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45050.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929445">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">8</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45046.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929441">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">8</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45631.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930045">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">12</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44174.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924690">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">12</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45859.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930274">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">13</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45051.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929446">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">15</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45047.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929442">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">15</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45632.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930046">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">19</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44175.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924691">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">19</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45860.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930275">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">21</div>
+        <div class="date-weekday">Fri</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45052.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929447">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">22</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45048.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929443">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">22</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45633.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930047">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">26</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44176.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924692">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">26</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45861.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930276">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">27</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45053.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929448">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">29</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45049.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929444">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">NOV</div>
+        <div class="date-day">29</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45634.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930048">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
+
+        <section class="month-group">
+          <h2 class="month-heading">December 2025</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">4</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45041.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929436">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">6</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45037.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929432">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">6</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45635.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930049">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">10</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44170.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924686">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">10</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:00 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45863.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930278">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">17</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44171.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924687">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">17</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>5:45 PM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45864.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930279">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">18</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>8:30 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45042.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11929437">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">31</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44172.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924688">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
+
+        <section class="month-group">
+          <h2 class="month-heading">January 2026</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JAN</div>
+        <div class="date-day">3</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45638.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930052">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JAN</div>
+        <div class="date-day">7</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44165.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924681">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JAN</div>
+        <div class="date-day">10</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45639.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930053">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JAN</div>
+        <div class="date-day">14</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44166.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924682">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JAN</div>
+        <div class="date-day">22</div>
+        <div class="date-weekday">Thu</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/50819.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12852818">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JAN</div>
+        <div class="date-day">24</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45641.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930055">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">JAN</div>
+        <div class="date-day">28</div>
+        <div class="date-weekday">Wed</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/44168.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11924684">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
+
+        <section class="month-group">
+          <h2 class="month-heading">February 2026</h2>
+          <div class="session-grid">
+            
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">FEB</div>
+        <div class="date-day">7</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45643.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930057">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">FEB</div>
+        <div class="date-day">21</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45645.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930059">Register</a>
+        </div>
+      </div>
+    </article>
+    
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">FEB</div>
+        <div class="date-day">28</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+      <div class="session-main">
+        
+        <div class="session-meta"><strong>11:45 AM</strong></div>
+        <div class="session-meta">Wilmington; Shipyard Blvd</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/45646.html">Details</a>
+          <a class="cta-small" href="https://coastalcprtraining.enrollware.com/enroll?id=11930060">Register</a>
+        </div>
+      </div>
+    </article>
+    
+          </div>
+        </section>
+        
 </div>
 </body>
 </html>

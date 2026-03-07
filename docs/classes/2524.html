@@ -1,135 +1,435 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
 <meta charset="UTF-8">
-<title>AHA - PALS Provider - Online or Skills Session - Initial or Renewal Blended Learning HeartCode® PALS</title>
+<title>AHA PALS HeartCode Skills Session in 115-3, NC | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="AHA PALS HeartCode Skills Session in 115-3. View class details and register online with 910CPR.">
+<meta name="robots" content="noindex,follow">
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQS8DCBH');
+</script>
+<!-- End Google Tag Manager -->
 
 <style>
+:root {
+  --bg: #eef4f8;
+  --card: #ffffff;
+  --soft: #f8fbfd;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --accent-dark: #1d4ed8;
+  --cta: #ea580c;
+  --cta-dark: #c2410c;
+  --border: #dbe4ee;
+  --warning-bg: #fff7d6;
+  --warning-border: #f2df91;
+  --warning-text: #6d5600;
+}
+
+* {
+  box-sizing: border-box;
+}
 
 body {
-font-family: Arial;
-background:#eef2f5;
-padding:40px;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #f8fbfd 0%, var(--bg) 100%);
+  color: var(--text);
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
 }
 
 .card {
-background:white;
-padding:30px;
-border-radius:12px;
-max-width:900px;
-margin:auto;
-box-shadow:0 4px 14px rgba(0,0,0,0.15);
-}
-
-.button {
-display:inline-block;
-padding:12px 22px;
-background:#2c73d2;
-color:white;
-text-decoration:none;
-border-radius:8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
 .notice {
-background:#fff3cd;
-padding:15px;
-border-radius:8px;
-margin-bottom:20px;
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+  padding: 16px 18px;
+  border-radius: 14px;
+  margin-bottom: 22px;
+  font-size: 18px;
 }
 
+.hero {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.date-badge {
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: white;
+  text-align: center;
+  padding: 14px 10px;
+}
+
+.date-month {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.date-day {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 6px 0;
+}
+
+.date-weekday {
+  font-size: 13px;
+}
+
+.hero h1 {
+  margin: 0 0 12px 0;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px 18px;
+  margin: 10px 0 0 0;
+}
+
+.meta-item {
+  background: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.meta-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.meta-value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cta-row {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.button {
+  display: inline-block;
+  padding: 13px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.button.primary {
+  background: var(--cta);
+  color: white;
+}
+
+.button.primary:hover {
+  background: var(--cta-dark);
+}
+
+.button.secondary {
+  background: #5f6f82;
+  color: white;
+}
+
+.button.secondary:hover {
+  background: #526170;
+}
+
+.section-title {
+  margin: 28px 0 14px 0;
+  font-size: 18px;
+}
+
+.session-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.session-card {
+  display: flex;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}
+
+.small-date {
+  min-width: 74px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: white;
+  text-align: center;
+  padding: 10px 8px;
+}
+
+.small-month {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.small-day {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 4px 0;
+}
+
+.small-weekday {
+  font-size: 12px;
+}
+
+.session-main {
+  flex: 1;
+}
+
+.session-time {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.session-location {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.session-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.text-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.cta-small {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--cta);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.cta-small:hover {
+  background: var(--cta-dark);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.month-group {
+  margin-top: 20px;
+}
+
+.month-heading {
+  margin: 0 0 14px 0;
+  font-size: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+.build-stamp {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 700px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .date-badge {
+    max-width: 92px;
+  }
+
+  .hero h1 {
+    font-size: 24px;
+  }
+}
 </style>
-
 </head>
-
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrap">
+  <div class="card">
 
-<div class="card">
-
-
+    
 <div class="notice">
 This session has passed. See other upcoming sessions below.
 </div>
 
 
-<h1>AHA - PALS Provider - Online or Skills Session - Initial or Renewal Blended Learning HeartCode® PALS</h1>
+    <section class="hero">
+      <div class="date-badge">
+        <div class="date-month">DEC</div>
+        <div class="date-day">9</div>
+        <div class="date-weekday">Wed</div>
+      </div>
 
-<p>
-<strong>Date:</strong> December 09 2020<br>
-<strong>Time:</strong> 04:00 PM<br>
-<strong>Location:</strong> 115-3
-</p>
+      <div>
+        <h1>AHA PALS HeartCode Skills Session</h1>
 
-<p>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">Date</div>
+            <div class="meta-value">December 09, 2020</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Time</div>
+            <div class="meta-value">4:00 PM</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Location</div>
+            <div class="meta-value">115-3</div>
+          </div>
+        </div>
 
+        <div class="cta-row">
+          <a class="button secondary" href="../courses/aha-pals-heartcode-skills-session-81bc4bba.html">View Upcoming Classes</a>
+        </div>
+      </div>
+    </section>
 
-<a class="button" href="/910cpr-class-landers/">
-View Upcoming Classes
-</a>
+    <h2 class="section-title">Upcoming Classes</h2>
 
+    <div id="futureSessions">Loading upcoming classes...</div>
 
-</p>
+    <div class="build-stamp">build: 2026-03-06 09:24 PM</div>
 
-<hr>
-
-<h2>Upcoming Classes</h2>
-
-<div id="futureSessions">Loading upcoming classes...</div>
-
+  </div>
 </div>
 
-
 <script>
-
-const courseName = "AHA - PALS Provider - Online or Skills Session - Initial or Renewal Blended Learning HeartCode® PALS";
+const courseName = "AHA PALS HeartCode Skills Session";
 const sessionID = "2524";
 
-fetch("../data/public_schedule.json").then(r=>r.json())
-.then(data=>{
+function monthKeyFromDate(d) {
+  return d.toLocaleString("en-US", { month: "long", year: "numeric" });
+}
 
-const now = new Date();
+function renderSessionCard(s) {
+  const d = new Date(s.start);
+  const month = d.toLocaleString("en-US", { month: "short" }).toUpperCase();
+  const day = d.getDate();
+  const weekday = d.toLocaleString("en-US", { weekday: "short" });
+  const time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 
-const matches = data.sessions.filter(s=>{
+  return `
+    <article class="session-card">
+      <div class="small-date">
+        <div class="small-month">${month}</div>
+        <div class="small-day">${day}</div>
+        <div class="small-weekday">${weekday}</div>
+      </div>
+      <div class="session-main">
+        <div class="session-time">${time}</div>
+        <div class="session-location">${s.location}</div>
+        <div class="session-actions">
+          <a class="cta-small" href="${s.register_url}">Register</a>
+        </div>
+      </div>
+    </article>
+  `;
+}
 
-    if(!s.course.toLowerCase().includes(courseName.substring(0,25).toLowerCase()))
-        return false;
+fetch("../data/public_schedule.json")
+.then(r => r.json())
+.then(data => {
+  const now = new Date();
 
-    if(String(s.session_id) === String(sessionID))
-        return false;
+  const matches = data.sessions.filter(s => {
+    if (!s.course) return false;
+    if (!s.course.toLowerCase().includes(courseName.substring(0, 25).toLowerCase())) return false;
+    if (String(s.session_id) === String(sessionID)) return false;
 
     const dt = new Date(s.start);
-
     return dt >= now;
+  });
 
+  matches.sort((a, b) => new Date(a.start) - new Date(b.start));
+
+  if (matches.length === 0) {
+    document.getElementById("futureSessions").innerHTML =
+      'No upcoming sessions scheduled right now. <a class="text-link" href="../courses/aha-pals-heartcode-skills-session-81bc4bba.html">View the full course page</a>.';
+    return;
+  }
+
+  const groups = {};
+
+  matches.slice(0, 12).forEach(s => {
+    const d = new Date(s.start);
+    const key = monthKeyFromDate(d);
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(s);
+  });
+
+  let html = "";
+
+  Object.keys(groups).forEach(month => {
+    html += `<section class="month-group"><h3 class="month-heading">${month}</h3><div class="session-grid">`;
+    groups[month].forEach(s => {
+      html += renderSessionCard(s);
+    });
+    html += `</div></section>`;
+  });
+
+  document.getElementById("futureSessions").innerHTML = html;
+})
+.catch(() => {
+  document.getElementById("futureSessions").innerHTML =
+    'Unable to load upcoming sessions right now. <a class="text-link" href="../courses/aha-pals-heartcode-skills-session-81bc4bba.html">View the full course page</a>.';
 });
-
-matches.sort((a,b)=>new Date(a.start)-new Date(b.start));
-
-let html = "<ul>";
-
-matches.slice(0,8).forEach(s=>{
-
-html += `
-<li>
-${new Date(s.start).toLocaleString()}
- • ${s.location}
- <a href="${s.register_url}">Register</a>
-</li>
-`;
-
-});
-
-html += "</ul>";
-
-if(matches.length === 0)
-html = "No upcoming sessions scheduled.";
-
-document.getElementById("futureSessions").innerHTML = html;
-
-});
-
 </script>
 
 </body>
