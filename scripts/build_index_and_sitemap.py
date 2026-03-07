@@ -13,9 +13,44 @@ DOCS_DIR = ROOT / "docs"
 INDEX_FILE = DOCS_DIR / "index.html"
 SITEMAP_FILE = DOCS_DIR / "sitemap.xml"
 
-SITE_BASE = "https://910cpr.com"
+SITE_BASE = "https://brian910cpr.github.io/910cpr-class-landers"
 PUBLIC_LOCATION = "Wilmington; Shipyard Blvd"
 PUBLIC_SEATS_SENTINEL = 555
+GTM_ID = "GTM-PQS8DCBH"
+
+ACCENT = "#2563eb"
+ACCENT_DARK = "#1d4ed8"
+CTA = "#ea580c"
+CTA_DARK = "#c2410c"
+BG = "#eef4f8"
+CARD = "#ffffff"
+TEXT = "#1f2937"
+MUTED = "#6b7280"
+BORDER = "#dbe4ee"
+SOFT = "#f8fbfd"
+
+
+def render_gtm_head():
+    if not GTM_ID:
+        return ""
+    return f"""<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':
+new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+}})(window,document,'script','dataLayer','{GTM_ID}');
+</script>
+<!-- End Google Tag Manager -->"""
+
+
+def render_gtm_body():
+    if not GTM_ID:
+        return ""
+    return f"""<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_ID}"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->"""
 
 
 def strip_html(text: str) -> str:
@@ -42,10 +77,9 @@ def short_slug(text: str, max_len: int = 70) -> str:
     return f"{clean}-{digest}" if clean else digest
 
 
-def parse_start(start_value: str):
+def parse_start_dt(start_value: str):
     raw = str(start_value).strip()
 
-    dt = None
     for fmt in (
         "%Y-%m-%d %H:%M:%S",
         "%Y-%m-%d %H:%M",
@@ -53,18 +87,24 @@ def parse_start(start_value: str):
         "%m/%d/%Y %I:%M %p",
     ):
         try:
-            dt = datetime.strptime(raw, fmt)
-            break
+            return datetime.strptime(raw, fmt)
         except ValueError:
             pass
 
+    return None
+
+
+def parse_start(start_value: str):
+    dt = parse_start_dt(start_value)
+
     if dt is None:
-        return raw, "", ""
+        return str(start_value).strip(), "", "", None, "Undated"
 
     display_date = dt.strftime("%B %d, %Y")
     display_time = dt.strftime("%I:%M %p").lstrip("0")
     iso_date = dt.strftime("%Y-%m-%d")
-    return display_date, display_time, iso_date
+    month_label = dt.strftime("%B %Y")
+    return display_date, display_time, iso_date, dt, month_label
 
 
 def is_public(session: dict) -> bool:
@@ -85,6 +125,345 @@ def is_public(session: dict) -> bool:
     return False
 
 
+def location_label(location: str) -> str:
+    return str(location or "").strip() or "Wilmington, NC"
+
+
+def session_card_html(session: dict, show_course: bool = False) -> str:
+    display_date, display_time, _, dt, _ = parse_start(session.get("start", ""))
+    register_url = session.get("register_url", "#")
+    location = location_label(session.get("location", ""))
+    course_name = clean_course_name(session.get("course", "CPR Class"))
+    session_id = session.get("session_id")
+
+    if dt:
+        month_abbr = dt.strftime("%b").upper()
+        day_num = dt.strftime("%d").lstrip("0")
+        weekday = dt.strftime("%a")
+    else:
+        month_abbr = "TBD"
+        day_num = "--"
+        weekday = ""
+
+    top_line = f'<div class="session-course">{course_name}</div>' if show_course else ""
+
+    return f"""
+    <article class="session-card">
+      <div class="date-badge">
+        <div class="date-month">{month_abbr}</div>
+        <div class="date-day">{day_num}</div>
+        <div class="date-weekday">{weekday}</div>
+      </div>
+      <div class="session-main">
+        {top_line}
+        <div class="session-meta"><strong>{display_time}</strong></div>
+        <div class="session-meta">{location}</div>
+        <div class="session-links">
+          <a class="text-link" href="../classes/{session_id}.html">Details</a>
+          <a class="cta-small" href="{register_url}">Register</a>
+        </div>
+      </div>
+    </article>
+    """
+
+
+def grouped_session_blocks(items, show_course=False):
+    groups = {}
+    for s in items:
+        _, _, _, dt, month_label = parse_start(s.get("start", ""))
+        key = month_label if month_label else "Undated"
+        groups.setdefault(key, []).append(s)
+
+    month_names = {
+        "January": 1, "February": 2, "March": 3, "April": 4,
+        "May": 5, "June": 6, "July": 7, "August": 8,
+        "September": 9, "October": 10, "November": 11, "December": 12
+    }
+
+    def month_sort_key(label):
+        try:
+            month, year = label.split()
+            return (int(year), month_names[month])
+        except Exception:
+            return (9999, 99)
+
+    html_parts = []
+    for month_label in sorted(groups.keys(), key=month_sort_key):
+        cards = "".join(session_card_html(s, show_course=show_course) for s in groups[month_label])
+        html_parts.append(f"""
+        <section class="month-group">
+          <h2 class="month-heading">{month_label}</h2>
+          <div class="session-grid">
+            {cards}
+          </div>
+        </section>
+        """)
+    return "\n".join(html_parts)
+
+
+BASE_STYLES = f"""
+<style>
+:root {{
+  --bg: {BG};
+  --card: {CARD};
+  --soft: {SOFT};
+  --text: {TEXT};
+  --muted: {MUTED};
+  --accent: {ACCENT};
+  --accent-dark: {ACCENT_DARK};
+  --cta: {CTA};
+  --cta-dark: {CTA_DARK};
+  --border: {BORDER};
+}}
+
+* {{
+  box-sizing: border-box;
+}}
+
+body {{
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #f8fbfd 0%, var(--bg) 100%);
+  color: var(--text);
+}}
+
+.wrap {{
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 36px 18px 60px;
+}}
+
+.hero {{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  margin-bottom: 26px;
+}}
+
+.hero h1 {{
+  margin: 0 0 10px 0;
+  font-size: 30px;
+  line-height: 1.1;
+}}
+
+.hero p {{
+  margin: 0;
+  font-size: 18px;
+  color: var(--muted);
+}}
+
+.section-title {{
+  margin: 26px 0 14px 0;
+  font-size: 20px;
+}}
+
+.grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}}
+
+.card {{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}}
+
+.card h2 {{
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  line-height: 1.15;
+}}
+
+.muted {{
+  color: var(--muted);
+}}
+
+.preview-list {{
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}}
+
+.preview-list li {{
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+}}
+
+.preview-list li:last-child {{
+  border-bottom: 0;
+  padding-bottom: 0;
+}}
+
+.text-link {{
+  color: var(--accent);
+  text-decoration: none;
+}}
+
+.text-link:hover {{
+  text-decoration: underline;
+}}
+
+.button {{
+  display: inline-block;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+}}
+
+.button.secondary {{
+  background: #5f6f82;
+  color: white;
+}}
+
+.button.secondary:hover {{
+  background: #526170;
+}}
+
+.button.primary {{
+  background: var(--cta);
+  color: white;
+}}
+
+.button.primary:hover {{
+  background: var(--cta-dark);
+}}
+
+.back-link {{
+  display: inline-block;
+  margin: 2px 0 18px 0;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 16px;
+}}
+
+.back-link:hover {{
+  text-decoration: underline;
+}}
+
+.month-group {{
+  margin-top: 24px;
+}}
+
+.month-heading {{
+  margin: 0 0 14px 0;
+  font-size: 22px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}}
+
+.session-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}}
+
+.session-card {{
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}}
+
+.date-badge {{
+  min-width: 78px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: white;
+  text-align: center;
+  padding: 10px 8px;
+}}
+
+.date-month {{
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}}
+
+.date-day {{
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 4px 0;
+}}
+
+.date-weekday {{
+  font-size: 12px;
+  opacity: 0.95;
+}}
+
+.session-main {{
+  flex: 1;
+}}
+
+.session-course {{
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}}
+
+.session-meta {{
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 6px;
+}}
+
+.session-links {{
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}}
+
+.cta-small {{
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--cta);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+}}
+
+.cta-small:hover {{
+  background: var(--cta-dark);
+}}
+
+.inline-count {{
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 15px;
+}}
+
+@media (max-width: 640px) {{
+  .hero h1 {{
+    font-size: 26px;
+  }}
+
+  .session-card {{
+    flex-direction: row;
+  }}
+
+  .wrap {{
+    padding: 22px 12px 40px;
+  }}
+}}
+</style>
+"""
+
 with open(DATA_FILE, "r", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -97,7 +476,7 @@ location_groups = {}
 
 for s in sessions:
     course_name = clean_course_name(s.get("course", "CPR Class"))
-    location = str(s.get("location", "Wilmington NC")).strip()
+    location = location_label(s.get("location", "Wilmington NC"))
 
     course_groups.setdefault(course_name, []).append(s)
     location_groups.setdefault(location, []).append(s)
@@ -109,22 +488,22 @@ LOCATIONS_DIR.mkdir(parents=True, exist_ok=True)
 
 course_blocks = []
 for course_name, items in sorted(course_groups.items(), key=lambda x: x[0]):
-    sample_links = []
-    for s in items[:12]:
+    preview_items = []
+    for s in items[:6]:
+        display_date, display_time, _, _, _ = parse_start(s.get("start", ""))
+        loc = location_label(s.get("location", ""))
         session_id = s.get("session_id")
-        display_date, display_time, _ = parse_start(s.get("start", ""))
-        loc = str(s.get("location", "")).strip()
-        sample_links.append(
-            f'<li><a href="classes/{session_id}.html">{display_date} at {display_time} • {loc}</a></li>'
+        preview_items.append(
+            f'<li><a class="text-link" href="classes/{session_id}.html">{display_date} at {display_time}</a> <span class="muted">• {loc}</span></li>'
         )
 
     course_slug = short_slug(course_name)
     course_blocks.append(f"""
     <section class="card">
       <h2>{course_name}</h2>
-      <p class="muted">{len(items)} upcoming public sessions</p>
-      <ul>
-        {''.join(sample_links)}
+      <div class="muted">{len(items)} upcoming public sessions</div>
+      <ul class="preview-list">
+        {''.join(preview_items)}
       </ul>
       <p><a class="button secondary" href="courses/{course_slug}.html">View all sessions</a></p>
     </section>
@@ -132,22 +511,22 @@ for course_name, items in sorted(course_groups.items(), key=lambda x: x[0]):
 
 location_blocks = []
 for location_name, items in sorted(location_groups.items(), key=lambda x: x[0]):
-    sample_links = []
-    for s in items[:10]:
-        session_id = s.get("session_id")
+    preview_items = []
+    for s in items[:6]:
+        display_date, display_time, _, _, _ = parse_start(s.get("start", ""))
         course_name = clean_course_name(s.get("course", "CPR Class"))
-        display_date, display_time, _ = parse_start(s.get("start", ""))
-        sample_links.append(
-            f'<li><a href="classes/{session_id}.html">{course_name} • {display_date} at {display_time}</a></li>'
+        session_id = s.get("session_id")
+        preview_items.append(
+            f'<li><a class="text-link" href="classes/{session_id}.html">{course_name}</a> <span class="muted">• {display_date} at {display_time}</span></li>'
         )
 
     location_slug = short_slug(location_name)
     location_blocks.append(f"""
     <section class="card">
       <h2>{location_name}</h2>
-      <p class="muted">{len(items)} upcoming public sessions</p>
-      <ul>
-        {''.join(sample_links)}
+      <div class="muted">{len(items)} upcoming public sessions</div>
+      <ul class="preview-list">
+        {''.join(preview_items)}
       </ul>
       <p><a class="button secondary" href="locations/{location_slug}.html">View all sessions</a></p>
     </section>
@@ -160,67 +539,11 @@ index_html = f"""<!DOCTYPE html>
 <title>CPR Class Schedule | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Browse upcoming public CPR, BLS, ACLS, PALS, Heartsaver, and first aid classes with 910CPR.">
-<style>
-body {{
-  font-family: Arial, sans-serif;
-  background: linear-gradient(#f5f6f7, #e9eef2);
-  margin: 0;
-  padding: 40px 20px;
-  color: #222;
-}}
-.wrap {{
-  max-width: 1100px;
-  margin: 0 auto;
-}}
-.hero {{
-  background: #f1f1f1;
-  border-radius: 18px;
-  padding: 32px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
-  margin-bottom: 24px;
-}}
-.grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-}}
-.card {{
-  background: #f1f1f1;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
-}}
-.button {{
-  display: inline-block;
-  background: #2c73d2;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: bold;
-}}
-.button.secondary {{
-  background: #5a6774;
-}}
-a {{
-  color: #2c73d2;
-  text-decoration: none;
-}}
-a:hover {{
-  text-decoration: underline;
-}}
-ul {{
-  padding-left: 20px;
-}}
-li {{
-  margin-bottom: 8px;
-}}
-.muted {{
-  color: #555;
-}}
-</style>
+{render_gtm_head()}
+{BASE_STYLES}
 </head>
 <body>
+{render_gtm_body()}
 <div class="wrap">
 
   <section class="hero">
@@ -228,12 +551,12 @@ li {{
     <p>Browse upcoming public 910CPR sessions by course type or by location.</p>
   </section>
 
-  <h2>Browse by Course</h2>
+  <h2 class="section-title">Browse by Course</h2>
   <div class="grid">
     {''.join(course_blocks)}
   </div>
 
-  <h2 style="margin-top:32px;">Browse by Location</h2>
+  <h2 class="section-title">Browse by Location</h2>
   <div class="grid">
     {''.join(location_blocks)}
   </div>
@@ -248,15 +571,7 @@ with open(INDEX_FILE, "w", encoding="utf-8") as f:
 
 for course_name, items in course_groups.items():
     course_slug = short_slug(course_name)
-    rows = []
-
-    for s in items:
-        session_id = s.get("session_id")
-        location = str(s.get("location", "")).strip()
-        display_date, display_time, _ = parse_start(s.get("start", ""))
-        rows.append(
-            f'<li><a href="../classes/{session_id}.html">{display_date} at {display_time} • {location}</a></li>'
-        )
+    blocks = grouped_session_blocks(items, show_course=False)
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -265,41 +580,20 @@ for course_name, items in course_groups.items():
 <title>{course_name} Classes | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Browse upcoming public {course_name} classes with 910CPR.">
-<style>
-body {{
-  font-family: Arial, sans-serif;
-  background: linear-gradient(#f5f6f7, #e9eef2);
-  margin: 0;
-  padding: 40px 20px;
-}}
-.wrap {{
-  max-width: 900px;
-  margin: 0 auto;
-}}
-.card {{
-  background: #f1f1f1;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
-}}
-a {{
-  color: #2c73d2;
-  text-decoration: none;
-}}
-li {{
-  margin-bottom: 8px;
-}}
-</style>
+{render_gtm_head()}
+{BASE_STYLES}
 </head>
 <body>
+{render_gtm_body()}
 <div class="wrap">
-  <div class="card">
+  <section class="hero">
     <h1>{course_name}</h1>
-    <p><a href="../index.html">← Back to full schedule</a></p>
-    <ul>
-      {''.join(rows)}
-    </ul>
-  </div>
+    <p>Upcoming public sessions listed by month for faster scanning and booking.</p>
+  </section>
+
+  <a class="back-link" href="../index.html">← Back to full schedule</a>
+
+  {blocks}
 </div>
 </body>
 </html>
@@ -309,15 +603,7 @@ li {{
 
 for location_name, items in location_groups.items():
     location_slug = short_slug(location_name)
-    rows = []
-
-    for s in items:
-        session_id = s.get("session_id")
-        course_name = clean_course_name(s.get("course", "CPR Class"))
-        display_date, display_time, _ = parse_start(s.get("start", ""))
-        rows.append(
-            f'<li><a href="../classes/{session_id}.html">{course_name} • {display_date} at {display_time}</a></li>'
-        )
+    blocks = grouped_session_blocks(items, show_course=True)
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -326,41 +612,20 @@ for location_name, items in location_groups.items():
 <title>CPR Classes in {location_name} | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Browse upcoming public CPR classes in {location_name} with 910CPR.">
-<style>
-body {{
-  font-family: Arial, sans-serif;
-  background: linear-gradient(#f5f6f7, #e9eef2);
-  margin: 0;
-  padding: 40px 20px;
-}}
-.wrap {{
-  max-width: 900px;
-  margin: 0 auto;
-}}
-.card {{
-  background: #f1f1f1;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
-}}
-a {{
-  color: #2c73d2;
-  text-decoration: none;
-}}
-li {{
-  margin-bottom: 8px;
-}}
-</style>
+{render_gtm_head()}
+{BASE_STYLES}
 </head>
 <body>
+{render_gtm_body()}
 <div class="wrap">
-  <div class="card">
+  <section class="hero">
     <h1>CPR Classes in {location_name}</h1>
-    <p><a href="../index.html">← Back to full schedule</a></p>
-    <ul>
-      {''.join(rows)}
-    </ul>
-  </div>
+    <p>Upcoming public sessions grouped by month with quick registration buttons.</p>
+  </section>
+
+  <a class="back-link" href="../index.html">← Back to full schedule</a>
+
+  {blocks}
 </div>
 </body>
 </html>
