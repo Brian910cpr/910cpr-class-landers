@@ -14,8 +14,6 @@ INDEX_FILE = DOCS_DIR / "index.html"
 SITEMAP_FILE = DOCS_DIR / "sitemap.xml"
 
 SITE_BASE = "https://brian910cpr.github.io/910cpr-class-landers"
-PUBLIC_LOCATION = "Wilmington; Shipyard Blvd"
-PUBLIC_SEATS_SENTINEL = 555
 GTM_ID = "GTM-PQS8DCBH"
 
 ACCENT = "#2563eb"
@@ -77,8 +75,6 @@ document.addEventListener("click", function(e) {{
   else if (href.includes("/courses/")) eventName = "course_link_click";
   else if (href.includes("/locations/")) eventName = "location_link_click";
   else if (href.includes("enrollware.com/enroll?id=")) eventName = "register_click";
-  else if (href.includes("/blog/")) eventName = "blog_link_click";
-  else if (href.startsWith("tel:")) eventName = "phone_click";
 
   window.dataLayer.push({{
     event: eventName,
@@ -146,26 +142,19 @@ def parse_start(start_value: str):
     return display_date, display_time, iso_date, dt, month_label
 
 
-def is_public(session: dict) -> bool:
-    location = str(session.get("location", "")).strip()
-    seats = session.get("seats")
+def is_public_listing_location(location: str) -> bool:
+    return str(location or "").strip().startswith("::")
 
-    try:
-        seats = int(seats) if seats is not None else None
-    except Exception:
-        seats = None
 
-    if location == PUBLIC_LOCATION:
-        return True
-
-    if location != PUBLIC_LOCATION and seats == PUBLIC_SEATS_SENTINEL:
-        return True
-
-    return False
+def clean_location_display(location: str) -> str:
+    value = str(location or "").strip()
+    if value.startswith("::"):
+        value = value[2:].strip()
+    return value
 
 
 def location_label(location: str) -> str:
-    return str(location or "").strip() or "Wilmington, NC"
+    return clean_location_display(location) or "Wilmington, NC"
 
 
 def session_card_html(session: dict, show_course: bool = False) -> str:
@@ -365,15 +354,6 @@ body {{
   background: #526170;
 }}
 
-.button.primary {{
-  background: var(--cta);
-  color: white;
-}}
-
-.button.primary:hover {{
-  background: var(--cta-dark);
-}}
-
 .back-link {{
   display: inline-block;
   margin: 2px 0 18px 0;
@@ -480,20 +460,9 @@ body {{
   background: var(--cta-dark);
 }}
 
-.inline-count {{
-  display: inline-block;
-  margin-left: 8px;
-  color: var(--muted);
-  font-size: 15px;
-}}
-
 @media (max-width: 640px) {{
   .hero h1 {{
     font-size: 26px;
-  }}
-
-  .session-card {{
-    flex-direction: row;
   }}
 
   .wrap {{
@@ -507,7 +476,7 @@ with open(DATA_FILE, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 all_sessions = data["sessions"]
-sessions = [s for s in all_sessions if is_public(s)]
+sessions = [s for s in all_sessions if is_public_listing_location(s.get("location", ""))]
 sessions.sort(key=lambda s: str(s.get("start", "")))
 
 course_groups = {}

@@ -1,66 +1,36 @@
 import json
-import os
-from datetime import datetime
+from datetime import datetime, UTC
+from pathlib import Path
 
-DATA_FILE = "../data/schedule.json"
-OUTPUT_FILE = "../docs/data/public_schedule.json"
+ROOT = Path(__file__).resolve().parents[1]
+DATA_FILE = ROOT / "data" / "schedule.json"
+OUTPUT_FILE = ROOT / "docs" / "data" / "public_schedule.json"
 
-PUBLIC_LOCATION = "Wilmington; Shipyard Blvd"
-PUBLIC_SEATS_SENTINEL = 555
+OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-os.makedirs("../docs/data", exist_ok=True)
+
+def is_public_listing_location(location: str) -> bool:
+    return str(location or "").strip().startswith("::")
+
+
+def clean_location_display(location: str) -> str:
+    value = str(location or "").strip()
+    if value.startswith("::"):
+        value = value[2:].strip()
+    return value
+
 
 with open(DATA_FILE, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 sessions = data["sessions"]
 
-
-def is_public(session):
-    location = str(session.get("location", "")).strip()
-
-    seats = session.get("seats")
-    try:
-        seats = int(seats)
-    except:
-        seats = None
-
-    if location == PUBLIC_LOCATION:
-        return True
-
-    if seats == PUBLIC_SEATS_SENTINEL and location != PUBLIC_LOCATION:
-        return True
-
-    return False
-
-
-def parse_dt(value):
-    raw = str(value)
-
-    for fmt in (
-        "%Y-%m-%d %H:%M:%S",
-        "%Y-%m-%d %H:%M",
-        "%m/%d/%Y %H:%M",
-        "%m/%d/%Y %I:%M %p",
-    ):
-        try:
-            return datetime.strptime(raw, fmt)
-        except:
-            pass
-
-    return None
-
-
 public_sessions = []
 
 for s in sessions:
+    location = str(s.get("location", "")).strip()
 
-    if not is_public(s):
-        continue
-
-    dt = parse_dt(s.get("start"))
-
-    if dt is None:
+    if not is_public_listing_location(location):
         continue
 
     public_sessions.append(
@@ -68,20 +38,20 @@ for s in sessions:
             "session_id": s.get("session_id"),
             "course": s.get("course"),
             "start": s.get("start"),
-            "location": s.get("location"),
+            "location": clean_location_display(location),
             "register_url": s.get("register_url"),
         }
     )
 
-public_sessions.sort(key=lambda x: x["start"])
+public_sessions.sort(key=lambda x: str(x.get("start", "")))
 
 output = {
-    "generated": datetime.utcnow().isoformat(),
+    "generated": datetime.now(UTC).isoformat(),
     "sessions": public_sessions,
 }
 
 with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
     json.dump(output, f, indent=2)
 
-print("Public schedule written:", OUTPUT_FILE)
-print("Sessions:", len(public_sessions))
+print(f"Public schedule written: {OUTPUT_FILE}")
+print(f"Sessions: {len(public_sessions)}")

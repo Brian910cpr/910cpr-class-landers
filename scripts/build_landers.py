@@ -1,18 +1,19 @@
 import json
-import os
 import re
-from html import unescape
-from datetime import datetime
 import hashlib
+from datetime import datetime
+from html import unescape
+from pathlib import Path
 
 from title_cleaner import normalize_course_title, seo_title_for_session
 
-DATA_FILE = "../data/schedule.json"
-OUTPUT_DIR = "../docs/classes"
+ROOT = Path(__file__).resolve().parents[1]
+DATA_FILE = ROOT / "data" / "schedule.json"
+OUTPUT_DIR = ROOT / "docs" / "classes"
 
 GTM_ID = "GTM-PQS8DCBH"
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def render_gtm_head():
@@ -38,12 +39,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->"""
 
 
-with open(DATA_FILE, "r", encoding="utf-8") as f:
-    data = json.load(f)
-
-sessions = data["sessions"]
-
-
 def strip_html(text):
     text = unescape(str(text))
     text = re.sub(r"<[^>]+>", " ", text)
@@ -64,6 +59,12 @@ def short_slug(text: str, max_len: int = 70) -> str:
         clean = clean[:max_len].rstrip("-")
 
     return f"{clean}-{digest}" if clean else digest
+
+
+def js_escape(value):
+    if value is None:
+        return ""
+    return str(value).replace("\\", "\\\\").replace('"', '\\"')
 
 
 def parse_dt(value):
@@ -100,6 +101,23 @@ def location_to_city_state(location: str):
 
     return "", "NC"
 
+
+def is_public_listing_location(location: str) -> bool:
+    return str(location or "").strip().startswith("::")
+
+
+def clean_location_display(location: str) -> str:
+    value = str(location or "").strip()
+    if value.startswith("::"):
+        value = value[2:].strip()
+    return value
+
+
+with open(DATA_FILE, "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+all_sessions = data["sessions"]
+sessions = [s for s in all_sessions if is_public_listing_location(s.get("location", ""))]
 
 template = """
 <!DOCTYPE html>
@@ -355,10 +373,6 @@ body {{
   background: var(--cta-dark);
 }}
 
-.muted {{
-  color: var(--muted);
-}}
-
 .month-group {{
   margin-top: 20px;
 }}
@@ -439,8 +453,71 @@ body {{
 </div>
 
 <script>
-const courseName = "{course}";
-const sessionID = "{session_id}";
+window.dataLayer = window.dataLayer || [];
+
+const pageContext = {{
+  page_type: "session",
+  session_id: "{session_id}",
+  course_name: "{course_js}",
+  course_slug: "{course_slug}",
+  location_name: "{location_js}",
+  is_past_session: {is_past_js},
+  register_url: "{register_js}",
+  build_stamp: "{build_stamp}"
+}};
+
+window.dataLayer.push({{
+  event: "page_context",
+  ...pageContext
+}});
+
+function pushLinkClick(eventName, extra = {{}}) {{
+  window.dataLayer.push({{
+    event: eventName,
+    ...pageContext,
+    ...extra
+  }});
+}}
+
+document.addEventListener("click", function(e) {{
+  const a = e.target.closest("a");
+  if (!a) return;
+
+  const href = a.getAttribute("href") || "";
+  const text = (a.textContent || "").trim();
+
+  if (href.includes("enrollware.com/enroll?id=")) {{
+    pushLinkClick("register_click", {{
+      click_text: text,
+      link_url: href
+    }});
+    return;
+  }}
+
+  if (text.toLowerCase().includes("view upcoming classes")) {{
+    pushLinkClick("view_upcoming_click", {{
+      click_text: text,
+      link_url: href
+    }});
+    return;
+  }}
+
+  if (href.includes("/courses/")) {{
+    pushLinkClick("course_link_click", {{
+      click_text: text,
+      link_url: href
+    }});
+    return;
+  }}
+
+  if (href.includes("/classes/")) {{
+    pushLinkClick("session_link_click", {{
+      click_text: text,
+      link_url: href
+    }});
+    return;
+  }}
+}});
 
 function monthKeyFromDate(d) {{
   return d.toLocaleString("en-US", {{ month: "long", year: "numeric" }});
@@ -478,8 +555,8 @@ fetch("../data/public_schedule.json")
 
   const matches = data.sessions.filter(s => {{
     if (!s.course) return false;
-    if (!s.course.toLowerCase().includes(courseName.substring(0, 25).toLowerCase())) return false;
-    if (String(s.session_id) === String(sessionID)) return false;
+    if (!s.course.toLowerCase().includes(pageContext.course_name.substring(0, 25).toLowerCase())) return false;
+    if (String(s.session_id) === String(pageContext.session_id)) return false;
 
     const dt = new Date(s.start);
     return dt >= now;
@@ -490,6 +567,12 @@ fetch("../data/public_schedule.json")
   if (matches.length === 0) {{
     document.getElementById("futureSessions").innerHTML =
       'No upcoming sessions scheduled right now. <a class="text-link" href="{course_page_url}">View the full course page</a>.';
+
+    window.dataLayer.push({{
+      event: "upcoming_sessions_empty",
+      ...pageContext,
+      upcoming_count: 0
+    }});
     return;
   }}
 
@@ -513,10 +596,22 @@ fetch("../data/public_schedule.json")
   }});
 
   document.getElementById("futureSessions").innerHTML = html;
+
+  window.dataLayer.push({{
+    event: "upcoming_sessions_loaded",
+    ...pageContext,
+    upcoming_count: matches.length
+  }});
 }})
-.catch(() => {{
+.catch((err) => {{
   document.getElementById("futureSessions").innerHTML =
     'Unable to load upcoming sessions right now. <a class="text-link" href="{course_page_url}">View the full course page</a>.';
+
+  window.dataLayer.push({{
+    event: "upcoming_sessions_error",
+    ...pageContext,
+    error_message: String(err)
+  }});
 }});
 </script>
 
@@ -526,12 +621,14 @@ fetch("../data/public_schedule.json")
 
 count = 0
 build_stamp = datetime.now().strftime("%Y-%m-%d %I:%M %p").lstrip("0")
+now_dt = datetime.now()
 
 for s in sessions:
     session_id = s.get("session_id")
     course_raw = s.get("course", "")
     course = canonical_course_name(course_raw)
-    location = str(s.get("location", "")).strip() or "Wilmington; Shipyard Blvd"
+    raw_location = str(s.get("location", "")).strip()
+    location = clean_location_display(raw_location) or "Wilmington; Shipyard Blvd"
     register = s.get("register_url", "#")
 
     dt = parse_dt(s.get("start"))
@@ -554,7 +651,9 @@ for s in sessions:
     meta_description = f"{course} in {location}. View class details and register online with 910CPR."
     course_page_url = f"../courses/{short_slug(course)}.html"
 
-    if dt and dt < datetime.now():
+    is_past = bool(dt and dt < now_dt)
+
+    if is_past:
         past_notice = """
 <div class="notice">
 This session has passed. See other upcoming sessions below.
@@ -585,13 +684,18 @@ This session has passed. See other upcoming sessions below.
         button_html=button_html,
         course_page_url=course_page_url,
         build_stamp=build_stamp,
+        course_js=js_escape(course),
+        course_slug=short_slug(course),
+        location_js=js_escape(location),
+        is_past_js="true" if is_past else "false",
+        register_js=js_escape(register),
     )
 
-    path = os.path.join(OUTPUT_DIR, f"{session_id}.html")
+    path = OUTPUT_DIR / f"{session_id}.html"
 
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)
 
     count += 1
 
-print("Landers built:", count)
+print(f"Landers built: {count}")
