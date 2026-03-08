@@ -75,6 +75,7 @@ document.addEventListener("click", function(e) {{
   else if (href.includes("/courses/")) eventName = "course_link_click";
   else if (href.includes("/locations/")) eventName = "location_link_click";
   else if (href.includes("enrollware.com/enroll?id=")) eventName = "register_click";
+  else if (href.startsWith("tel:")) eventName = "phone_click";
 
   window.dataLayer.push({{
     event: eventName,
@@ -255,10 +256,44 @@ body {{
   color: var(--text);
 }}
 
+.site-header,
+.site-footer {{
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 16px 18px;
+}}
+
+.site-header {{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}}
+
+.site-brand a {{
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 24px;
+}}
+
+.site-nav {{
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}}
+
+.site-nav a,
+.site-footer a {{
+  color: var(--accent);
+  text-decoration: none;
+}}
+
 .wrap {{
   max-width: 1220px;
   margin: 0 auto;
-  padding: 36px 18px 60px;
+  padding: 12px 18px 60px;
 }}
 
 .hero {{
@@ -460,13 +495,19 @@ body {{
   background: var(--cta-dark);
 }}
 
+.site-footer {{
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 14px;
+}}
+
 @media (max-width: 640px) {{
   .hero h1 {{
     font-size: 26px;
   }}
 
   .wrap {{
-    padding: 22px 12px 40px;
+    padding: 12px 12px 40px;
   }}
 }}
 </style>
@@ -552,6 +593,18 @@ index_html = f"""<!DOCTYPE html>
 </head>
 <body>
 {render_gtm_body()}
+
+<header class="site-header">
+  <div class="site-brand">
+    <a href="index.html">910CPR</a>
+  </div>
+  <nav class="site-nav">
+    <a href="index.html">Find a Class</a>
+    <a href="tel:+19103955193">Call 910-395-5193</a>
+    <a href="https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule">Schedule</a>
+  </nav>
+</header>
+
 <div class="wrap">
 
   <section class="hero">
@@ -570,6 +623,13 @@ index_html = f"""<!DOCTYPE html>
   </div>
 
 </div>
+
+<footer class="site-footer">
+  <p><strong>910CPR</strong></p>
+  <p>Public CPR, BLS, ACLS, PALS, and first aid classes.</p>
+  <p><a href="tel:+19103955193">910-395-5193</a></p>
+</footer>
+
 {telemetry_script("home", "Find Your CPR Class")}
 </body>
 </html>
@@ -594,6 +654,18 @@ for course_name, items in course_groups.items():
 </head>
 <body>
 {render_gtm_body()}
+
+<header class="site-header">
+  <div class="site-brand">
+    <a href="../index.html">910CPR</a>
+  </div>
+  <nav class="site-nav">
+    <a href="../index.html">Find a Class</a>
+    <a href="tel:+19103955193">Call 910-395-5193</a>
+    <a href="https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule">Schedule</a>
+  </nav>
+</header>
+
 <div class="wrap">
   <section class="hero">
     <h1>{course_name}</h1>
@@ -604,6 +676,13 @@ for course_name, items in course_groups.items():
 
   {blocks}
 </div>
+
+<footer class="site-footer">
+  <p><strong>910CPR</strong></p>
+  <p>Public CPR, BLS, ACLS, PALS, and first aid classes.</p>
+  <p><a href="tel:+19103955193">910-395-5193</a></p>
+</footer>
+
 {telemetry_script("course", course_name)}
 </body>
 </html>
@@ -627,6 +706,18 @@ for location_name, items in location_groups.items():
 </head>
 <body>
 {render_gtm_body()}
+
+<header class="site-header">
+  <div class="site-brand">
+    <a href="../index.html">910CPR</a>
+  </div>
+  <nav class="site-nav">
+    <a href="../index.html">Find a Class</a>
+    <a href="tel:+19103955193">Call 910-395-5193</a>
+    <a href="https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule">Schedule</a>
+  </nav>
+</header>
+
 <div class="wrap">
   <section class="hero">
     <h1>CPR Classes in {location_name}</h1>
@@ -637,6 +728,13 @@ for location_name, items in location_groups.items():
 
   {blocks}
 </div>
+
+<footer class="site-footer">
+  <p><strong>910CPR</strong></p>
+  <p>Public CPR, BLS, ACLS, PALS, and first aid classes.</p>
+  <p><a href="tel:+19103955193">910-395-5193</a></p>
+</footer>
+
 {telemetry_script("location", location_name)}
 </body>
 </html>
