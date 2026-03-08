@@ -158,6 +158,11 @@ def location_label(location: str) -> str:
     return clean_location_display(location) or "Wilmington, NC"
 
 
+def is_future_session(session: dict, now_dt: datetime) -> bool:
+    dt = parse_start_dt(session.get("start", ""))
+    return bool(dt and dt >= now_dt)
+
+
 def session_card_html(session: dict, show_course: bool = False) -> str:
     display_date, display_time, _, dt, _ = parse_start(session.get("start", ""))
     register_url = session.get("register_url", "#")
@@ -199,7 +204,7 @@ def session_card_html(session: dict, show_course: bool = False) -> str:
 def grouped_session_blocks(items, show_course=False):
     groups = {}
     for s in items:
-        _, _, _, dt, month_label = parse_start(s.get("start", ""))
+        _, _, _, _, month_label = parse_start(s.get("start", ""))
         key = month_label if month_label else "Undated"
         groups.setdefault(key, []).append(s)
 
@@ -517,7 +522,12 @@ with open(DATA_FILE, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 all_sessions = data["sessions"]
-sessions = [s for s in all_sessions if is_public_listing_location(s.get("location", ""))]
+now_dt = datetime.now()
+
+sessions = [
+    s for s in all_sessions
+    if is_public_listing_location(s.get("location", "")) and is_future_session(s, now_dt)
+]
 sessions.sort(key=lambda s: str(s.get("start", "")))
 
 course_groups = {}
@@ -767,4 +777,4 @@ sitemap_xml.append("</urlset>")
 with open(SITEMAP_FILE, "w", encoding="utf-8") as f:
     f.write("\n".join(sitemap_xml))
 
-print(f"Built index, course pages, location pages, and sitemap for {len(sessions)} PUBLIC sessions.")
+print(f"Built index, course pages, location pages, and sitemap for {len(sessions)} FUTURE PUBLIC sessions.")
