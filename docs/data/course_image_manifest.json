@@ -1,0 +1,621 @@
+{
+  "generated_utc": "2026-03-08T13:29:55Z",
+  "source_archive": "D:\\Users\\ten77\\Documents\\GitHub\\910cpr-class-landers\\raw\\course_archive_v4.json",
+  "updated_archive": "D:\\Users\\ten77\\Documents\\GitHub\\910cpr-class-landers\\docs\\data\\course_archive_mirrored.json",
+  "images_dir": "docs/images/course-archive",
+  "unique_image_count": 16,
+  "items": [
+    {
+      "course_id": "359474",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/USER_SCOPED_TEMP_DATA_orca-image-951419333%5B1%5D.jpg",
+      "local_filename": "course-359474-raw_enrollware_html-user_scoped_temp_data_orca-image-951419333-1-fbc5a68efbbd.jpg",
+      "repo_path": "docs/images/course-archive/course-359474-raw_enrollware_html-user_scoped_temp_data_orca-image-951419333-1-fbc5a68efbbd.jpg",
+      "relative_src": "../images/course-archive/course-359474-raw_enrollware_html-user_scoped_temp_data_orca-image-951419333-1-fbc5a68efbbd.jpg",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "359474",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/USER_SCOPED_TEMP_DATA_orca-image-951419333%5B1%5D.jpg",
+      "local_filename": "course-359474-raw_enrollware_html-user_scoped_temp_data_orca-image-951419333-1-fbc5a68efbbd.jpg",
+      "repo_path": "docs/images/course-archive/course-359474-raw_enrollware_html-user_scoped_temp_data_orca-image-951419333-1-fbc5a68efbbd.jpg",
+      "relative_src": "../images/course-archive/course-359474-raw_enrollware_html-user_scoped_temp_data_orca-image-951419333-1-fbc5a68efbbd.jpg",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "210549",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/1828336.png",
+      "local_filename": "course-210549-raw_enrollware_html-1828336-835fe71f9962.png",
+      "repo_path": "docs/images/course-archive/course-210549-raw_enrollware_html-1828336-835fe71f9962.png",
+      "relative_src": "../images/course-archive/course-210549-raw_enrollware_html-1828336-835fe71f9962.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "210549",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/HCBLS.png",
+      "local_filename": "course-210549-raw_enrollware_html-hcbls-5a4f680f4425.png",
+      "repo_path": "docs/images/course-archive/course-210549-raw_enrollware_html-hcbls-5a4f680f4425.png",
+      "relative_src": "../images/course-archive/course-210549-raw_enrollware_html-hcbls-5a4f680f4425.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "210549",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/1828336.png",
+      "local_filename": "course-210549-raw_enrollware_html-1828336-835fe71f9962.png",
+      "repo_path": "docs/images/course-archive/course-210549-raw_enrollware_html-1828336-835fe71f9962.png",
+      "relative_src": "../images/course-archive/course-210549-raw_enrollware_html-1828336-835fe71f9962.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "210549",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/HCBLS.png",
+      "local_filename": "course-210549-raw_enrollware_html-hcbls-5a4f680f4425.png",
+      "repo_path": "docs/images/course-archive/course-210549-raw_enrollware_html-hcbls-5a4f680f4425.png",
+      "relative_src": "../images/course-archive/course-210549-raw_enrollware_html-hcbls-5a4f680f4425.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "241108",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/AHAACLS.png",
+      "local_filename": "course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "repo_path": "docs/images/course-archive/course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "relative_src": "../images/course-archive/course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "241108",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/AHAACLS.png",
+      "local_filename": "course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "repo_path": "docs/images/course-archive/course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "relative_src": "../images/course-archive/course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209818",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/AHAACLS.png",
+      "local_filename": "course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "repo_path": "docs/images/course-archive/course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "relative_src": "../images/course-archive/course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209818",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/AHAACLS.png",
+      "local_filename": "course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "repo_path": "docs/images/course-archive/course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "relative_src": "../images/course-archive/course-241108-raw_enrollware_html-ahaacls-61526a9f36de.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209811",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209811",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/steps.png",
+      "local_filename": "course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209811",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/ACLSHC.png",
+      "local_filename": "course-209811-raw_enrollware_html-aclshc-e86904dcff93.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-aclshc-e86904dcff93.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-aclshc-e86904dcff93.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209811",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209811",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/steps.png",
+      "local_filename": "course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209811",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/ACLSHC.png",
+      "local_filename": "course-209811-raw_enrollware_html-aclshc-e86904dcff93.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-aclshc-e86904dcff93.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-aclshc-e86904dcff93.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "251496",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/419E5E17-3F14-4EB5-AF25-995EB198E2D0%5B1%5D.jpeg",
+      "local_filename": "course-251496-raw_enrollware_html-419e5e17-3f14-4eb5-af25-995eb198e2d0-1-5949cd4d5ca9.jpeg",
+      "repo_path": "docs/images/course-archive/course-251496-raw_enrollware_html-419e5e17-3f14-4eb5-af25-995eb198e2d0-1-5949cd4d5ca9.jpeg",
+      "relative_src": "../images/course-archive/course-251496-raw_enrollware_html-419e5e17-3f14-4eb5-af25-995eb198e2d0-1-5949cd4d5ca9.jpeg",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "251496",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/419E5E17-3F14-4EB5-AF25-995EB198E2D0%5B1%5D.jpeg",
+      "local_filename": "course-251496-raw_enrollware_html-419e5e17-3f14-4eb5-af25-995eb198e2d0-1-5949cd4d5ca9.jpeg",
+      "repo_path": "docs/images/course-archive/course-251496-raw_enrollware_html-419e5e17-3f14-4eb5-af25-995eb198e2d0-1-5949cd4d5ca9.jpeg",
+      "relative_src": "../images/course-archive/course-251496-raw_enrollware_html-419e5e17-3f14-4eb5-af25-995eb198e2d0-1-5949cd4d5ca9.jpeg",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209812",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209812",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/steps.png",
+      "local_filename": "course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209812",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209812",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209812",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/steps.png",
+      "local_filename": "course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209812",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "344085",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "344085",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "344085",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/CPRAED.png",
+      "local_filename": "course-344085-raw_enrollware_html-cpraed-0bb6d491090b.png",
+      "repo_path": "docs/images/course-archive/course-344085-raw_enrollware_html-cpraed-0bb6d491090b.png",
+      "relative_src": "../images/course-archive/course-344085-raw_enrollware_html-cpraed-0bb6d491090b.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "344085",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "344085",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "344085",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/CPRAED.png",
+      "local_filename": "course-344085-raw_enrollware_html-cpraed-0bb6d491090b.png",
+      "repo_path": "docs/images/course-archive/course-344085-raw_enrollware_html-cpraed-0bb6d491090b.png",
+      "relative_src": "../images/course-archive/course-344085-raw_enrollware_html-cpraed-0bb6d491090b.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "329495",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "329495",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/steps.png",
+      "local_filename": "course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "329495",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "329495",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "329495",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/steps.png",
+      "local_filename": "course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "329495",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "351632",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "351632",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "248288",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png",
+      "local_filename": "course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "repo_path": "docs/images/course-archive/course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "relative_src": "../images/course-archive/course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "248288",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png",
+      "local_filename": "course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "repo_path": "docs/images/course-archive/course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "relative_src": "../images/course-archive/course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "248287",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "248287",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png",
+      "local_filename": "course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "repo_path": "docs/images/course-archive/course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "relative_src": "../images/course-archive/course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "248287",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "248287",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png",
+      "local_filename": "course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "repo_path": "docs/images/course-archive/course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "relative_src": "../images/course-archive/course-248288-raw_enrollware_html-_arc-343318a32ec8.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "359827",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/steps.png",
+      "local_filename": "course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "359827",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "359827",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/steps.png",
+      "local_filename": "course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-steps-345a3ad43a99.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "359827",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "445670",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/HSI_BLS_FA_BL.jpg",
+      "local_filename": "course-445670-raw_enrollware_html-hsi_bls_fa_bl-73259e4ab27e.jpg",
+      "repo_path": "docs/images/course-archive/course-445670-raw_enrollware_html-hsi_bls_fa_bl-73259e4ab27e.jpg",
+      "relative_src": "../images/course-archive/course-445670-raw_enrollware_html-hsi_bls_fa_bl-73259e4ab27e.jpg",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "445670",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/HSI_BLS_FA_BL.jpg",
+      "local_filename": "course-445670-raw_enrollware_html-hsi_bls_fa_bl-73259e4ab27e.jpg",
+      "repo_path": "docs/images/course-archive/course-445670-raw_enrollware_html-hsi_bls_fa_bl-73259e4ab27e.jpg",
+      "relative_src": "../images/course-archive/course-445670-raw_enrollware_html-hsi_bls_fa_bl-73259e4ab27e.jpg",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "253588",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "253588",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "252737",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "252737",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/family-and-friends-CPRhhhh.png",
+      "local_filename": "course-252737-raw_enrollware_html-family-and-friends-cprhhhh-119085a49704.png",
+      "repo_path": "docs/images/course-archive/course-252737-raw_enrollware_html-family-and-friends-cprhhhh-119085a49704.png",
+      "relative_src": "../images/course-archive/course-252737-raw_enrollware_html-family-and-friends-cprhhhh-119085a49704.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "252737",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/FF-CPR-1.jpg",
+      "local_filename": "course-252737-raw_enrollware_html-ff-cpr-1-f86b621edf9b.jpg",
+      "repo_path": "docs/images/course-archive/course-252737-raw_enrollware_html-ff-cpr-1-f86b621edf9b.jpg",
+      "relative_src": "../images/course-archive/course-252737-raw_enrollware_html-ff-cpr-1-f86b621edf9b.jpg",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "252737",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "252737",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/family-and-friends-CPRhhhh.png",
+      "local_filename": "course-252737-raw_enrollware_html-family-and-friends-cprhhhh-119085a49704.png",
+      "repo_path": "docs/images/course-archive/course-252737-raw_enrollware_html-family-and-friends-cprhhhh-119085a49704.png",
+      "relative_src": "../images/course-archive/course-252737-raw_enrollware_html-family-and-friends-cprhhhh-119085a49704.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "252737",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/FF-CPR-1.jpg",
+      "local_filename": "course-252737-raw_enrollware_html-ff-cpr-1-f86b621edf9b.jpg",
+      "repo_path": "docs/images/course-archive/course-252737-raw_enrollware_html-ff-cpr-1-f86b621edf9b.jpg",
+      "relative_src": "../images/course-archive/course-252737-raw_enrollware_html-ff-cpr-1-f86b621edf9b.jpg",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209809",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209809",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209809",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "209809",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png",
+      "local_filename": "course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "repo_path": "docs/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "relative_src": "../images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "374378",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "374378",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png",
+      "local_filename": "course-374378-raw_enrollware_html-_hsi-df792764be14.png",
+      "repo_path": "docs/images/course-archive/course-374378-raw_enrollware_html-_hsi-df792764be14.png",
+      "relative_src": "../images/course-archive/course-374378-raw_enrollware_html-_hsi-df792764be14.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "374378",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Scroll.png",
+      "local_filename": "course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "repo_path": "docs/images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "relative_src": "../images/course-archive/course-209811-raw_enrollware_html-scroll-24fe655fd4fa.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "374378",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png",
+      "local_filename": "course-374378-raw_enrollware_html-_hsi-df792764be14.png",
+      "repo_path": "docs/images/course-archive/course-374378-raw_enrollware_html-_hsi-df792764be14.png",
+      "relative_src": "../images/course-archive/course-374378-raw_enrollware_html-_hsi-df792764be14.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "344486",
+      "field": "raw_enrollware_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/STB_I.png",
+      "local_filename": "course-344486-raw_enrollware_html-stb_i-f32eb2b17131.png",
+      "repo_path": "docs/images/course-archive/course-344486-raw_enrollware_html-stb_i-f32eb2b17131.png",
+      "relative_src": "../images/course-archive/course-344486-raw_enrollware_html-stb_i-f32eb2b17131.png",
+      "status": "downloaded"
+    },
+    {
+      "course_id": "344486",
+      "field": "original_html",
+      "original_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/STB_I.png",
+      "local_filename": "course-344486-raw_enrollware_html-stb_i-f32eb2b17131.png",
+      "repo_path": "docs/images/course-archive/course-344486-raw_enrollware_html-stb_i-f32eb2b17131.png",
+      "relative_src": "../images/course-archive/course-344486-raw_enrollware_html-stb_i-f32eb2b17131.png",
+      "status": "downloaded"
+    }
+  ]
+}
