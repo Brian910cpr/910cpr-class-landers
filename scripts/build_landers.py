@@ -585,14 +585,17 @@ body {{
         <p>{corporate_text}</p>
       </section>
 
-      <section class="info-box">
-        <h2>More Ways to Find This Training</h2>
-        <div class="link-list">
-          <a href="{course_page_url}">View this course</a>
-          <a href="{schedule_url}">See all upcoming dates</a>
-          <a href="/">910CPR home</a>
-        </div>
-      </section>
+    <section class="info-box">
+  <h2>Need a Different Date?</h2>
+  <p>
+    If this class time does not work for you, you can view the full schedule for this course below.
+  </p>
+  <p>
+    <a href="{schedule_url}" class="primary-link">
+      See all dates for this course
+    </a>
+  </p>
+</section>
     </div>
 
     <h2 class="section-title">Next Available Classes</h2>
