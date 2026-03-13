@@ -10,6 +10,7 @@ from title_cleaner import normalize_course_title, seo_title_for_session
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "data" / "schedule.json"
 OUTPUT_DIR = ROOT / "docs" / "classes"
+IMAGES_DIR = ROOT / "docs" / "images"
 
 GTM_ID = "GTM-PQS8DCBH"
 
@@ -191,6 +192,177 @@ def make_schema(course_name: str, session_dt, location_name: str, city: str, sta
 """.strip()
 
 
+def sanitize_description_html(html_text: str) -> str:
+    html_text = str(html_text or "").strip()
+    if not html_text:
+        return ""
+    html_text = re.sub(r"<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>", "", html_text, flags=re.I | re.S)
+    html_text = re.sub(r"\s+", " ", html_text).strip()
+    return html_text
+
+
+def load_course_description_html(course_id: str, course_name: str) -> str:
+    candidate_dirs = [
+        ROOT / "data" / "course_descriptions",
+        ROOT / "docs" / "course_descriptions",
+        ROOT / "course_descriptions",
+        ROOT / "raw" / "course_descriptions",
+        ROOT / "raw" / "descriptions",
+        ROOT / "data" / "descriptions",
+        ROOT / "raw",
+    ]
+
+    candidate_names = []
+    if course_id:
+        candidate_names.append(course_id)
+
+    candidate_names.extend(
+        [
+            short_slug(course_name),
+            slugify(course_name),
+            canonical_course_name(course_name),
+        ]
+    )
+
+    exts = [".html", ".htm", ".txt"]
+
+    for d in candidate_dirs:
+        if not d.exists():
+            continue
+
+        for name in candidate_names:
+            for ext in exts:
+                p = d / f"{name}{ext}"
+                if p.exists():
+                    return sanitize_description_html(p.read_text(encoding="utf-8", errors="ignore"))
+
+        if course_id:
+            for ext in exts:
+                matches = sorted(d.glob(f"{course_id}*{ext}"))
+                if matches:
+                    return sanitize_description_html(matches[0].read_text(encoding="utf-8", errors="ignore"))
+
+    return ""
+
+
+def find_existing_image(candidates):
+    if not IMAGES_DIR.exists():
+        return ""
+
+    existing = {p.name.lower(): p.name for p in IMAGES_DIR.iterdir() if p.is_file()}
+    for candidate in candidates:
+        key = candidate.lower()
+        if key in existing:
+            return f"/images/{existing[key]}"
+    return ""
+
+
+def provider_logo_url(course_name: str) -> str:
+    lower = course_name.lower()
+
+    if "red cross" in lower or lower.startswith("arc") or " arc " in f" {lower} ":
+        return find_existing_image(
+            [
+                "ARC_Logo.png",
+                "arc_logo.png",
+                "arc-logo.png",
+                "red-cross-logo.png",
+                "red_cross_logo.png",
+                "arc.png",
+            ]
+        )
+
+    if "hsi" in lower:
+        return find_existing_image(
+            [
+                "HSI_Logo.png",
+                "hsi_logo.png",
+                "hsi-logo.png",
+                "hsi.png",
+            ]
+        )
+
+    if "aha" in lower or "acls" in lower or "pals" in lower or "bls" in lower or "heartsaver" in lower:
+        return find_existing_image(
+            [
+                "AHA_Logo.png",
+                "aha_logo.png",
+                "aha-logo.png",
+                "aha.png",
+                "AHA.png",
+            ]
+        )
+
+    return ""
+
+
+def course_image_url(course_name: str) -> str:
+    lower = course_name.lower()
+
+    if "bls" in lower:
+        return find_existing_image(
+            [
+                "BLS_action-Nurses-taking_blood_pressure_in-Wilmington-NC.jpg",
+                "BLS_action.jpg",
+                "BLS_Logo.png",
+                "bls.jpg",
+                "bls.png",
+            ]
+        )
+
+    if "acls" in lower:
+        return find_existing_image(
+            [
+                "ACLS_action.jpg",
+                "ACLS_Logo.png",
+                "acls.jpg",
+                "acls.png",
+            ]
+        )
+
+    if "pals" in lower:
+        return find_existing_image(
+            [
+                "PALS_action.jpg",
+                "PALS_Logo.png",
+                "pals.jpg",
+                "pals.png",
+            ]
+        )
+
+    if "heartsaver" in lower:
+        return find_existing_image(
+            [
+                "Heartsaver_action.jpg",
+                "Heartsaver_Logo.png",
+                "heartsaver.jpg",
+                "heartsaver.png",
+            ]
+        )
+
+    if "red cross" in lower or lower.startswith("arc"):
+        return find_existing_image(
+            [
+                "ARC_BLS.jpg",
+                "ARC_Logo.png",
+                "arc.jpg",
+                "arc.png",
+            ]
+        )
+
+    if "hsi" in lower:
+        return find_existing_image(
+            [
+                "HSI_action.jpg",
+                "HSI_Logo.png",
+                "hsi.jpg",
+                "hsi.png",
+            ]
+        )
+
+    return ""
+
+
 with open(DATA_FILE, "r", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -240,6 +412,11 @@ body {{
   font-family: Arial, sans-serif;
   background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
   color: var(--text);
+}}
+
+body img {{
+  max-width: 100%;
+  height: auto;
 }}
 
 .wrap {{
@@ -404,6 +581,75 @@ body {{
   line-height: 1.6;
 }}
 
+.brand-strip {{
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}}
+
+.brand-card,
+.image-card {{
+  background: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+}}
+
+.brand-card {{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+}}
+
+.brand-card img {{
+  max-width: 140px;
+  max-height: 90px;
+  object-fit: contain;
+}}
+
+.image-card {{
+  min-height: 140px;
+}}
+
+.image-card img {{
+  width: 100%;
+  height: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+}}
+
+.description-box {{
+  margin-top: 24px;
+}}
+
+.description-box h2 {{
+  margin: 0 0 14px 0;
+  font-size: 22px;
+}}
+
+.description-html {{
+  line-height: 1.7;
+}}
+
+.description-html p {{
+  margin: 0 0 14px 0;
+}}
+
+.description-html ul,
+.description-html ol {{
+  margin: 0 0 14px 24px;
+  padding: 0;
+}}
+
+.description-html li {{
+  margin: 0 0 8px 0;
+}}
+
 .text-link {{
   color: var(--accent);
   text-decoration: none;
@@ -513,6 +759,12 @@ body {{
   font-size: 11px;
 }}
 
+@media (max-width: 840px) {{
+  .brand-strip {{
+    grid-template-columns: 1fr;
+  }}
+}}
+
 @media (max-width: 700px) {{
   .hero {{
     grid-template-columns: 1fr;
@@ -563,26 +815,20 @@ body {{
 
         <div class="cta-row">
           {button_html}
-          <a class="button secondary" href="{course_page_url}">Full Course Page</a>
+          <a class="button secondary" href="{schedule_url}">See All Dates/Times</a>
         </div>
       </div>
     </section>
+
+    {brand_strip_html}
+
+    {course_description_section}
 
     <div class="stack">
       <section class="info-box">
         <h2>Who This Class Is For</h2>
         <p>{audience_text}</p>
         <p>{corporate_text}</p>
-      </section>
-
-      <section class="info-box">
-        <h2>Need a Different Date?</h2>
-        <p>
-          If this class time does not work for you, you can view the full schedule for this course below.
-        </p>
-        <p>
-          <a href="{schedule_url}" class="text-link">See all dates for this course</a>
-        </p>
       </section>
     </div>
 
@@ -600,13 +846,15 @@ window.dataLayer = window.dataLayer || [];
 const pageContext = {{
   page_type: "session",
   session_id: "{session_id}",
+  course_id: "{course_id}",
   course_name: "{course_js}",
   course_slug: "{course_slug}",
   location_name: "{location_js}",
   is_past_session: {is_past_js},
   register_url: "{register_js}",
-  course_page_url: "{course_page_url}",
   schedule_url: "{schedule_url}",
+  course_page_url: "{course_page_url}",
+  enrollware_feed_url: "{enrollware_feed_url}",
   build_stamp: "{build_stamp}"
 }};
 
@@ -638,7 +886,7 @@ document.addEventListener("click", function(e) {{
     return;
   }}
 
-  if (text.includes("see all dates")) {{
+  if (text.includes("see all dates") || text.includes("see all dates/times")) {{
     pushLinkClick("view_upcoming_click", {{
       click_text: text,
       link_url: href
@@ -663,98 +911,135 @@ document.addEventListener("click", function(e) {{
   }}
 }});
 
-function monthKeyFromDate(d) {{
-  return d.toLocaleString("en-US", {{ month: "long", year: "numeric" }});
+function escapeHtml(value) {{
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }}
 
-function renderSessionCard(s) {{
-  const d = new Date(s.start);
-  const month = d.toLocaleString("en-US", {{ month: "short" }}).toUpperCase();
-  const day = d.getDate();
-  const weekday = d.toLocaleString("en-US", {{ weekday: "short" }});
-  const time = d.toLocaleTimeString("en-US", {{ hour: "numeric", minute: "2-digit" }});
+function tryParseFeedDate(line) {{
+  const text = String(line || "");
+  const firstPart = text.split(" from ")[0].trim();
+  const d = new Date(firstPart);
+  if (isNaN(d.getTime())) return null;
+  return d;
+}}
 
-  return `
-    <article class="session-card">
+function renderFeedItem(item) {{
+  const id = item && item.id ? String(item.id) : "";
+  if (id && id === String(pageContext.session_id)) {{
+    return "";
+  }}
+
+  const dateLines = Array.isArray(item.dateTimes)
+    ? item.dateTimes.filter(Boolean)
+    : [item.dateTimes].filter(Boolean);
+
+  const parsed = dateLines.length ? tryParseFeedDate(dateLines[0]) : null;
+
+  let badgeHtml = "";
+  if (parsed) {{
+    const month = parsed.toLocaleString("en-US", {{ month: "short" }}).toUpperCase();
+    const day = parsed.getDate();
+    const weekday = parsed.toLocaleString("en-US", {{ weekday: "short" }});
+    badgeHtml = `
       <div class="small-date">
         <div class="small-month">${{month}}</div>
         <div class="small-day">${{day}}</div>
         <div class="small-weekday">${{weekday}}</div>
       </div>
+    `;
+  }}
+
+  const whenHtml = dateLines.length
+    ? dateLines.map(x => `<div class="session-time">${{escapeHtml(x)}}</div>`).join("")
+    : `<div class="session-time">Upcoming session</div>`;
+
+  const locationHtml = item.location
+    ? `<div class="session-location">${{escapeHtml(item.location)}}</div>`
+    : "";
+
+  const seatsHtml =
+    item.seatsLeft === null || item.seatsLeft === undefined || item.seatsLeft === ""
+      ? ""
+      : `<div class="session-location">${{escapeHtml(item.seatsLeft)}} seats left</div>`;
+
+  const closedHtml = item.closed
+    ? `<div class="session-location">Registration closed</div>`
+    : "";
+
+  const regUrl = item.url || pageContext.schedule_url;
+
+  return `
+    <article class="session-card">
+      ${{badgeHtml}}
       <div class="session-main">
-        <div class="session-time">${{time}}</div>
-        <div class="session-location">${{s.location || ""}}</div>
+        ${{whenHtml}}
+        ${{locationHtml}}
+        ${{seatsHtml}}
+        ${{closedHtml}}
         <div class="session-actions">
-          <a class="cta-small" href="${{s.register_url || pageContext.schedule_url}}">Register</a>
+          <a class="cta-small" href="${{escapeHtml(regUrl)}}">Register</a>
         </div>
       </div>
     </article>
   `;
 }}
 
-fetch("/data/public_schedule.json")
-  .then(r => r.json())
-  .then(data => {{
-    const now = new Date();
-    const sameCourse = (data.sessions || []).filter(s => {{
-      if (!s.course) return false;
-      if (String(s.session_id) === String(pageContext.session_id)) return false;
+function renderNoSessions() {{
+  document.getElementById("futureSessions").innerHTML =
+    'No additional upcoming sessions are listed right now. <a class="text-link" href="' +
+    pageContext.schedule_url +
+    '">See all dates for this course</a>.';
 
-      const a = String(s.course).trim().toLowerCase();
-      const b = String(pageContext.course_name).trim().toLowerCase();
-      if (a !== b) return false;
+  window.dataLayer.push({{
+    event: "upcoming_sessions_empty",
+    ...pageContext,
+    upcoming_count: 0
+  }});
+}}
 
-      const dt = new Date(s.start);
-      return dt >= now;
-    }});
+function loadEnrollwareFeed() {{
+  const target = document.getElementById("futureSessions");
 
-    sameCourse.sort((a, b) => new Date(a.start) - new Date(b.start));
+  if (!pageContext.course_id || !pageContext.enrollware_feed_url) {{
+    renderNoSessions();
+    return;
+  }}
 
-    if (sameCourse.length === 0) {{
-      document.getElementById("futureSessions").innerHTML =
-        'No additional upcoming sessions are listed right now. <a class="text-link" href="' +
-        pageContext.schedule_url +
-        '">See all dates for this course</a>.';
+  const callbackName = "ewFeedCallback_" + String(pageContext.session_id).replace(/[^a-zA-Z0-9_]/g, "");
+  const script = document.createElement("script");
+
+  window[callbackName] = function(items) {{
+    try {{
+      const rows = Array.isArray(items) ? items : [];
+      const cards = rows.map(renderFeedItem).filter(Boolean).slice(0, 10);
+
+      if (!cards.length) {{
+        renderNoSessions();
+        return;
+      }}
+
+      target.innerHTML =
+        `<div class="session-grid">${{cards.join("")}}</div>` +
+        `<p style="margin-top:16px;"><a class="text-link" href="${{pageContext.schedule_url}}">See all dates for this course</a></p>`;
 
       window.dataLayer.push({{
-        event: "upcoming_sessions_empty",
+        event: "upcoming_sessions_loaded",
         ...pageContext,
-        upcoming_count: 0
+        upcoming_count: cards.length
       }});
-      return;
+    }} finally {{
+      try {{ delete window[callbackName]; }} catch (e) {{}}
+      if (script.parentNode) script.parentNode.removeChild(script);
     }}
+  }};
 
-    const groups = {{}};
-
-    sameCourse.slice(0, 10).forEach(s => {{
-      const d = new Date(s.start);
-      const key = monthKeyFromDate(d);
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(s);
-    }});
-
-    let html = "";
-
-    Object.keys(groups).forEach(month => {{
-      html += `<section class="month-group"><h3 class="month-heading">${{month}}</h3><div class="session-grid">`;
-      groups[month].forEach(s => {{
-        html += renderSessionCard(s);
-      }});
-      html += `</div></section>`;
-    }});
-
-    html += `<p style="margin-top:16px;"><a class="text-link" href="${{pageContext.schedule_url}}">See all dates for this course</a></p>`;
-
-    document.getElementById("futureSessions").innerHTML = html;
-
-    window.dataLayer.push({{
-      event: "upcoming_sessions_loaded",
-      ...pageContext,
-      upcoming_count: sameCourse.length
-    }});
-  }})
-  .catch((err) => {{
-    document.getElementById("futureSessions").innerHTML =
+  script.onerror = function(err) {{
+    target.innerHTML =
       'Unable to load upcoming sessions right now. <a class="text-link" href="' +
       pageContext.schedule_url +
       '">See all dates for this course</a>.';
@@ -764,7 +1049,17 @@ fetch("/data/public_schedule.json")
       ...pageContext,
       error_message: String(err)
     }});
-  }});
+
+    try {{ delete window[callbackName]; }} catch (e) {{}}
+    if (script.parentNode) script.parentNode.removeChild(script);
+  }};
+
+  const joiner = pageContext.enrollware_feed_url.includes("?") ? "&" : "?";
+  script.src = pageContext.enrollware_feed_url + joiner + "callback=" + encodeURIComponent(callbackName);
+  document.body.appendChild(script);
+}}
+
+loadEnrollwareFeed();
 </script>
 
 </body>
@@ -808,8 +1103,12 @@ for s in sessions:
     course_id = str(s.get("course_id", "")).strip()
     if course_id:
         schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{course_id}"
+        enrollware_feed_url = (
+            f"https://coastalcprtraining.enrollware.com/registration/schedule-feed.ashx?courseid={course_id}"
+        )
     else:
         schedule_url = course_page_url
+        enrollware_feed_url = ""
 
     canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
 
@@ -818,23 +1117,81 @@ for s in sessions:
     if is_past:
         state_notice = """
 <div class="notice">
-This specific session has passed. 910CPR still offers this course. See current upcoming classes below.
+This specific class date has passed. Use the current options below to choose a new session.
 </div>
 """
         button_html = f'<a class="button secondary" href="{schedule_url}">See Current Dates</a>'
         robots_value = "index,follow"
         hero_state_class = "past"
-        hero_subhead = "This session is part of the ongoing 910CPR training catalog. Use the live dates below to find current availability."
+        hero_subhead = (
+            "This page stays active so you can quickly find the next available option for the same course."
+        )
     else:
         state_notice = """
 <div class="notice live">
-This session is currently scheduled. You can register for this date below or view additional upcoming options.
+Seats for this date are currently available. Register now or choose another date and time.
 </div>
 """
         button_html = f'<a class="button primary" href="{register}">Register Now</a>'
         robots_value = "index,follow"
         hero_state_class = ""
-        hero_subhead = "Need a different date or time? Use the live upcoming classes section below to view other options for this same course."
+        hero_subhead = "Need a different date or time? Use the button beside Register or the live schedule list below."
+
+    logo_url = provider_logo_url(course)
+    course_img_url = course_image_url(course)
+
+    brand_parts = []
+    if logo_url:
+        brand_parts.append(
+            f'''
+<div class="brand-card">
+  <img src="{escape(logo_url)}" alt="{escape(course)} provider logo" loading="lazy">
+</div>
+'''
+        )
+
+    if course_img_url:
+        brand_parts.append(
+            f'''
+<div class="image-card">
+  <img src="{escape(course_img_url)}" alt="{escape(course)} training image" loading="lazy">
+</div>
+'''
+        )
+
+    if brand_parts:
+        if len(brand_parts) == 1 and 'image-card' in brand_parts[0]:
+            brand_parts.insert(
+                0,
+                """
+<div class="brand-card">
+  <div style="font-weight:700; color:#6b7280;">910CPR Training</div>
+</div>
+""".strip(),
+            )
+        brand_strip_html = f'<section class="brand-strip">{"".join(brand_parts)}</section>'
+    else:
+        brand_strip_html = ""
+
+    description_html = load_course_description_html(course_id, course)
+    if description_html:
+        course_description_section = f"""
+<section class="info-box description-box">
+  <h2>Course Description</h2>
+  <div class="description-html">
+    {description_html}
+  </div>
+</section>
+"""
+    else:
+        course_description_section = f"""
+<section class="info-box description-box">
+  <h2>Course Description</h2>
+  <div class="description-html">
+    <p>{escape(audience_blurb(course))}</p>
+  </div>
+</section>
+"""
 
     html = template.format(
         page_title=escape(page_title),
@@ -858,6 +1215,7 @@ This session is currently scheduled. You can register for this date below or vie
         schedule_url=escape(schedule_url),
         build_stamp=escape(build_stamp),
         course_js=js_escape(course),
+        course_id=escape(course_id),
         course_slug=short_slug(course),
         location_js=js_escape(location),
         is_past_js="true" if is_past else "false",
@@ -866,6 +1224,9 @@ This session is currently scheduled. You can register for this date below or vie
         corporate_text=escape(corporate_blurb(city, course)),
         hero_state_class=hero_state_class,
         hero_subhead=escape(hero_subhead),
+        brand_strip_html=brand_strip_html,
+        course_description_section=course_description_section,
+        enrollware_feed_url=escape(enrollware_feed_url),
     )
 
     path = OUTPUT_DIR / f"{session_id}.html"
