@@ -1,5 +1,3 @@
-# scripts/build_landers.py
-
 import json
 import re
 import hashlib
@@ -406,19 +404,11 @@ body {{
   line-height: 1.6;
 }}
 
-.link-list {{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 16px;
-}}
-
-.link-list a,
 .text-link {{
   color: var(--accent);
   text-decoration: none;
 }}
 
-.link-list a:hover,
 .text-link:hover {{
   text-decoration: underline;
 }}
@@ -585,17 +575,15 @@ body {{
         <p>{corporate_text}</p>
       </section>
 
-    <section class="info-box">
-  <h2>Need a Different Date?</h2>
-  <p>
-    If this class time does not work for you, you can view the full schedule for this course below.
-  </p>
-  <p>
-    <a href="{schedule_url}" class="primary-link">
-      See all dates for this course
-    </a>
-  </p>
-</section>
+      <section class="info-box">
+        <h2>Need a Different Date?</h2>
+        <p>
+          If this class time does not work for you, you can view the full schedule for this course below.
+        </p>
+        <p>
+          <a href="{schedule_url}" class="text-link">See all dates for this course</a>
+        </p>
+      </section>
     </div>
 
     <h2 class="section-title">Next Available Classes</h2>
@@ -640,7 +628,7 @@ document.addEventListener("click", function(e) {{
   if (!a) return;
 
   const href = a.getAttribute("href") || "";
-  const text = (a.textContent || "").trim();
+  const text = (a.textContent || "").trim().toLowerCase();
 
   if (href.includes("enrollware.com/enroll?id=")) {{
     pushLinkClick("register_click", {{
@@ -650,7 +638,7 @@ document.addEventListener("click", function(e) {{
     return;
   }}
 
-  if (text.toLowerCase().includes("next available") || text.toLowerCase().includes("see all upcoming")) {{
+  if (text.includes("see all dates")) {{
     pushLinkClick("view_upcoming_click", {{
       click_text: text,
       link_url: href
@@ -726,7 +714,7 @@ fetch("/data/public_schedule.json")
       document.getElementById("futureSessions").innerHTML =
         'No additional upcoming sessions are listed right now. <a class="text-link" href="' +
         pageContext.schedule_url +
-        '">See all upcoming dates</a>.';
+        '">See all dates for this course</a>.';
 
       window.dataLayer.push({{
         event: "upcoming_sessions_empty",
@@ -755,7 +743,7 @@ fetch("/data/public_schedule.json")
       html += `</div></section>`;
     }});
 
-    html += `<p style="margin-top:16px;"><a class="text-link" href="${{pageContext.schedule_url}}">See all upcoming dates for this course</a></p>`;
+    html += `<p style="margin-top:16px;"><a class="text-link" href="${{pageContext.schedule_url}}">See all dates for this course</a></p>`;
 
     document.getElementById("futureSessions").innerHTML = html;
 
@@ -769,7 +757,7 @@ fetch("/data/public_schedule.json")
     document.getElementById("futureSessions").innerHTML =
       'Unable to load upcoming sessions right now. <a class="text-link" href="' +
       pageContext.schedule_url +
-      '">See all upcoming dates</a>.';
+      '">See all dates for this course</a>.';
 
     window.dataLayer.push({{
       event: "upcoming_sessions_error",
@@ -816,7 +804,13 @@ for s in sessions:
         f"{course} in {location}. View class details, current schedule options, and register online with 910CPR."
     )
     course_page_url = f"../courses/{short_slug(course)}.html"
-    schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{str(s.get('course_id', '')).strip()}"
+
+    course_id = str(s.get("course_id", "")).strip()
+    if course_id:
+        schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{course_id}"
+    else:
+        schedule_url = course_page_url
+
     canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
 
     is_past = bool(dt and dt < now_dt)
