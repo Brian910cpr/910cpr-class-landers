@@ -49,6 +49,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 </script>
 
+<link rel="stylesheet" href="/assets/enrollware/enrollware.css">
+
 <style>
 :root {
   --bg: #eef4f8;
@@ -331,99 +333,49 @@ body img {
   font-size: 20px;
 }
 
-.session-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.session-card {
-  display: flex;
-  gap: 14px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 14px;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
-}
-
-.small-date {
-  min-width: 74px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-  color: white;
-  text-align: center;
-  padding: 10px 8px;
-}
-
-.small-month {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.small-day {
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1.05;
-  margin: 4px 0;
-}
-
-.small-weekday {
-  font-size: 12px;
-}
-
-.session-main {
-  flex: 1;
-}
-
-.session-time {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.session-location {
-  font-size: 15px;
-  color: var(--text);
-  margin-bottom: 10px;
-}
-
-.session-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.cta-small {
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: var(--cta);
-  color: white;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.cta-small:hover {
-  background: var(--cta-dark);
-}
-
-.month-group {
-  margin-top: 20px;
-}
-
-.month-heading {
-  margin: 0 0 14px 0;
-  font-size: 20px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--border);
+#futureSessions {
+  min-height: 60px;
 }
 
 .build-stamp {
   margin-top: 26px;
   color: var(--muted);
   font-size: 11px;
+}
+
+/* Light cleanup for Enrollware plugin output */
+#futureSessions .ew-list,
+#futureSessions ul,
+#futureSessions ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#futureSessions li,
+#futureSessions .ew-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin: 0 0 14px 0;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}
+
+#futureSessions a {
+  color: var(--accent);
+}
+
+#futureSessions .register,
+#futureSessions .ew-register,
+#futureSessions .enrollware-register {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--cta);
+  color: white !important;
+  text-decoration: none;
+  font-weight: 700;
 }
 
 @media (max-width: 840px) {
@@ -488,13 +440,21 @@ This specific class date has passed. Use the current options below to choose a n
         </div>
 
         <div class="cta-row">
-          <a class="button secondary" href="../courses/aha-pals-heartcode-skills-session-81bc4bba.html">See Current Dates</a>
-          <a class="button secondary" href="../courses/aha-pals-heartcode-skills-session-81bc4bba.html">See All Dates/Times</a>
+          <a class="button secondary" href="https://coastalcprtraining.enrollware.com/schedule#ct209812">See Current Dates</a>
+          <a class="button secondary" href="https://coastalcprtraining.enrollware.com/schedule#ct209812">See All Dates/Times</a>
         </div>
       </div>
     </section>
 
-    
+    <section class="brand-strip">
+<div class="brand-card">
+  <img src="/images/logo.png" alt="910CPR logo" loading="lazy">
+</div>
+
+<div class="image-card">
+  <img src="/images/course-archive/course-209812-raw_enrollware_html-_aha-01dc6231e294.png" alt="AHA PALS HeartCode Skills Session course image" loading="lazy">
+</div>
+</section>
 
     
 <section class="info-box description-box">
@@ -516,10 +476,13 @@ This specific class date has passed. Use the current options below to choose a n
     <h2 class="section-title">Next Available Classes</h2>
     <div id="futureSessions">Loading upcoming classes...</div>
 
-    <div class="build-stamp">build: 2026-03-12 10:37 PM</div>
+    <div class="build-stamp">build: 2026-03-13 11:27 PM</div>
 
   </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/assets/enrollware/jquery.enrollware.js"></script>
 
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -527,16 +490,16 @@ window.dataLayer = window.dataLayer || [];
 const pageContext = {
   page_type: "session",
   session_id: "1964",
-  course_id: "",
+  course_id: "209812",
   course_name: "AHA PALS HeartCode Skills Session",
   course_slug: "aha-pals-heartcode-skills-session-81bc4bba",
   location_name: "115-3",
   is_past_session: true,
   register_url: "https://coastalcprtraining.enrollware.com/enroll?id=4198114",
-  schedule_url: "../courses/aha-pals-heartcode-skills-session-81bc4bba.html",
+  schedule_url: "https://coastalcprtraining.enrollware.com/schedule#ct209812",
   course_page_url: "../courses/aha-pals-heartcode-skills-session-81bc4bba.html",
-  enrollware_feed_url: "",
-  build_stamp: "2026-03-12 10:37 PM"
+  enrollware_feed_url: "https://coastalcprtraining.enrollware.com/registration/schedule-feed.ashx?courseid=209812",
+  build_stamp: "2026-03-13 11:27 PM"
 };
 
 window.dataLayer.push({
@@ -592,155 +555,19 @@ document.addEventListener("click", function(e) {
   }
 });
 
-function escapeHtml(value) {
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
-function tryParseFeedDate(line) {
-  const text = String(line || "");
-  const firstPart = text.split(" from ")[0].trim();
-  const d = new Date(firstPart);
-  if (isNaN(d.getTime())) return null;
-  return d;
-}
-
-function renderFeedItem(item) {
-  const id = item && item.id ? String(item.id) : "";
-  if (id && id === String(pageContext.session_id)) {
-    return "";
-  }
-
-  const dateLines = Array.isArray(item.dateTimes)
-    ? item.dateTimes.filter(Boolean)
-    : [item.dateTimes].filter(Boolean);
-
-  const parsed = dateLines.length ? tryParseFeedDate(dateLines[0]) : null;
-
-  let badgeHtml = "";
-  if (parsed) {
-    const month = parsed.toLocaleString("en-US", { month: "short" }).toUpperCase();
-    const day = parsed.getDate();
-    const weekday = parsed.toLocaleString("en-US", { weekday: "short" });
-    badgeHtml = `
-      <div class="small-date">
-        <div class="small-month">${month}</div>
-        <div class="small-day">${day}</div>
-        <div class="small-weekday">${weekday}</div>
-      </div>
-    `;
-  }
-
-  const whenHtml = dateLines.length
-    ? dateLines.map(x => `<div class="session-time">${escapeHtml(x)}</div>`).join("")
-    : `<div class="session-time">Upcoming session</div>`;
-
-  const locationHtml = item.location
-    ? `<div class="session-location">${escapeHtml(item.location)}</div>`
-    : "";
-
-  const seatsHtml =
-    item.seatsLeft === null || item.seatsLeft === undefined || item.seatsLeft === ""
-      ? ""
-      : `<div class="session-location">${escapeHtml(item.seatsLeft)} seats left</div>`;
-
-  const closedHtml = item.closed
-    ? `<div class="session-location">Registration closed</div>`
-    : "";
-
-  const regUrl = item.url || pageContext.schedule_url;
-
-  return `
-    <article class="session-card">
-      ${badgeHtml}
-      <div class="session-main">
-        ${whenHtml}
-        ${locationHtml}
-        ${seatsHtml}
-        ${closedHtml}
-        <div class="session-actions">
-          <a class="cta-small" href="${escapeHtml(regUrl)}">Register</a>
-        </div>
-      </div>
-    </article>
-  `;
-}
-
-function renderNoSessions() {
-  document.getElementById("futureSessions").innerHTML =
-    'No additional upcoming sessions are listed right now. <a class="text-link" href="' +
-    pageContext.schedule_url +
-    '">See all dates for this course</a>.';
-
-  window.dataLayer.push({
-    event: "upcoming_sessions_empty",
-    ...pageContext,
-    upcoming_count: 0
-  });
-}
-
-function loadEnrollwareFeed() {
-  const target = document.getElementById("futureSessions");
-
-  if (!pageContext.course_id || !pageContext.enrollware_feed_url) {
-    renderNoSessions();
-    return;
-  }
-
-  const callbackName = "ewFeedCallback_" + String(pageContext.session_id).replace(/[^a-zA-Z0-9_]/g, "");
-  const script = document.createElement("script");
-
-  window[callbackName] = function(items) {
-    try {
-      const rows = Array.isArray(items) ? items : [];
-      const cards = rows.map(renderFeedItem).filter(Boolean).slice(0, 10);
-
-      if (!cards.length) {
-        renderNoSessions();
-        return;
-      }
-
-      target.innerHTML =
-        `<div class="session-grid">${cards.join("")}</div>` +
-        `<p style="margin-top:16px;"><a class="text-link" href="${pageContext.schedule_url}">See all dates for this course</a></p>`;
-
-      window.dataLayer.push({
-        event: "upcoming_sessions_loaded",
-        ...pageContext,
-        upcoming_count: cards.length
-      });
-    } finally {
-      try { delete window[callbackName]; } catch (e) {}
-      if (script.parentNode) script.parentNode.removeChild(script);
-    }
-  };
-
-  script.onerror = function(err) {
-    target.innerHTML =
-      'Unable to load upcoming sessions right now. <a class="text-link" href="' +
-      pageContext.schedule_url +
-      '">See all dates for this course</a>.';
-
-    window.dataLayer.push({
-      event: "upcoming_sessions_error",
-      ...pageContext,
-      error_message: String(err)
+$(document).ready(function () {
+  if (pageContext.course_id && pageContext.enrollware_feed_url && $.fn.enrollware) {
+    $('#futureSessions').enrollware({
+      feed: pageContext.enrollware_feed_url
     });
-
-    try { delete window[callbackName]; } catch (e) {}
-    if (script.parentNode) script.parentNode.removeChild(script);
-  };
-
-  const joiner = pageContext.enrollware_feed_url.includes("?") ? "&" : "?";
-  script.src = pageContext.enrollware_feed_url + joiner + "callback=" + encodeURIComponent(callbackName);
-  document.body.appendChild(script);
-}
-
-loadEnrollwareFeed();
+  } else {
+    $('#futureSessions').html(
+      'No additional upcoming sessions are listed right now. <a class="text-link" href="' +
+      pageContext.schedule_url +
+      '">See all dates for this course</a>.'
+    );
+  }
+});
 </script>
 
 </body>

@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "data" / "schedule.json"
 OUTPUT_DIR = ROOT / "docs" / "classes"
 IMAGES_DIR = ROOT / "docs" / "images"
+COURSE_ARCHIVE_DIR = IMAGES_DIR / "course-archive"
 
 GTM_ID = "GTM-PQS8DCBH"
 
@@ -245,122 +246,45 @@ def load_course_description_html(course_id: str, course_name: str) -> str:
     return ""
 
 
-def find_existing_image(candidates):
+def default_logo_url() -> str:
     if not IMAGES_DIR.exists():
         return ""
-
-    existing = {p.name.lower(): p.name for p in IMAGES_DIR.iterdir() if p.is_file()}
-    for candidate in candidates:
-        key = candidate.lower()
-        if key in existing:
-            return f"/images/{existing[key]}"
+    logo = IMAGES_DIR / "logo.png"
+    if logo.exists():
+        return "/images/logo.png"
     return ""
 
 
-def provider_logo_url(course_name: str) -> str:
-    lower = course_name.lower()
+def find_course_archive_image(course_id: str) -> str:
+    if not course_id or not COURSE_ARCHIVE_DIR.exists():
+        return ""
 
-    if "red cross" in lower or lower.startswith("arc") or " arc " in f" {lower} ":
-        return find_existing_image(
-            [
-                "ARC_Logo.png",
-                "arc_logo.png",
-                "arc-logo.png",
-                "red-cross-logo.png",
-                "red_cross_logo.png",
-                "arc.png",
-            ]
-        )
+    exts = [".png", ".jpg", ".jpeg", ".webp"]
 
-    if "hsi" in lower:
-        return find_existing_image(
-            [
-                "HSI_Logo.png",
-                "hsi_logo.png",
-                "hsi-logo.png",
-                "hsi.png",
-            ]
-        )
+    preferred = []
+    secondary = []
 
-    if "aha" in lower or "acls" in lower or "pals" in lower or "bls" in lower or "heartsaver" in lower:
-        return find_existing_image(
-            [
-                "AHA_Logo.png",
-                "aha_logo.png",
-                "aha-logo.png",
-                "aha.png",
-                "AHA.png",
-            ]
-        )
+    for ext in exts:
+        preferred.extend(sorted(COURSE_ARCHIVE_DIR.glob(f"course-{course_id}-raw_enrollware_html-*{ext}")))
+        preferred.extend(sorted(COURSE_ARCHIVE_DIR.glob(f"course-{course_id}-original_html-*{ext}")))
 
-    return ""
+    # ignore tiny helper images if possible
+    def score(path: Path):
+        name = path.name.lower()
+        penalty = 0
+        if "scroll" in name:
+            penalty += 1000000
+        if "steps" in name:
+            penalty += 500000
+        return penalty - path.stat().st_size
 
+    candidates = preferred if preferred else secondary
+    if not candidates:
+        return ""
 
-def course_image_url(course_name: str) -> str:
-    lower = course_name.lower()
-
-    if "bls" in lower:
-        return find_existing_image(
-            [
-                "BLS_action-Nurses-taking_blood_pressure_in-Wilmington-NC.jpg",
-                "BLS_action.jpg",
-                "BLS_Logo.png",
-                "bls.jpg",
-                "bls.png",
-            ]
-        )
-
-    if "acls" in lower:
-        return find_existing_image(
-            [
-                "ACLS_action.jpg",
-                "ACLS_Logo.png",
-                "acls.jpg",
-                "acls.png",
-            ]
-        )
-
-    if "pals" in lower:
-        return find_existing_image(
-            [
-                "PALS_action.jpg",
-                "PALS_Logo.png",
-                "pals.jpg",
-                "pals.png",
-            ]
-        )
-
-    if "heartsaver" in lower:
-        return find_existing_image(
-            [
-                "Heartsaver_action.jpg",
-                "Heartsaver_Logo.png",
-                "heartsaver.jpg",
-                "heartsaver.png",
-            ]
-        )
-
-    if "red cross" in lower or lower.startswith("arc"):
-        return find_existing_image(
-            [
-                "ARC_BLS.jpg",
-                "ARC_Logo.png",
-                "arc.jpg",
-                "arc.png",
-            ]
-        )
-
-    if "hsi" in lower:
-        return find_existing_image(
-            [
-                "HSI_action.jpg",
-                "HSI_Logo.png",
-                "hsi.jpg",
-                "hsi.png",
-            ]
-        )
-
-    return ""
+    candidates = sorted(candidates, key=score)
+    chosen = candidates[0]
+    return f"/images/course-archive/{chosen.name}"
 
 
 with open(DATA_FILE, "r", encoding="utf-8") as f:
@@ -381,6 +305,8 @@ template = """
 <link rel="canonical" href="{canonical_url}">
 {gtm_head}
 {schema_block}
+
+<link rel="stylesheet" href="/assets/enrollware/enrollware.css">
 
 <style>
 :root {{
@@ -664,99 +590,49 @@ body img {{
   font-size: 20px;
 }}
 
-.session-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-}}
-
-.session-card {{
-  display: flex;
-  gap: 14px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 14px;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
-}}
-
-.small-date {{
-  min-width: 74px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-  color: white;
-  text-align: center;
-  padding: 10px 8px;
-}}
-
-.small-month {{
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}}
-
-.small-day {{
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1.05;
-  margin: 4px 0;
-}}
-
-.small-weekday {{
-  font-size: 12px;
-}}
-
-.session-main {{
-  flex: 1;
-}}
-
-.session-time {{
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}}
-
-.session-location {{
-  font-size: 15px;
-  color: var(--text);
-  margin-bottom: 10px;
-}}
-
-.session-actions {{
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}}
-
-.cta-small {{
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: var(--cta);
-  color: white;
-  text-decoration: none;
-  font-weight: 700;
-}}
-
-.cta-small:hover {{
-  background: var(--cta-dark);
-}}
-
-.month-group {{
-  margin-top: 20px;
-}}
-
-.month-heading {{
-  margin: 0 0 14px 0;
-  font-size: 20px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--border);
+#futureSessions {{
+  min-height: 60px;
 }}
 
 .build-stamp {{
   margin-top: 26px;
   color: var(--muted);
   font-size: 11px;
+}}
+
+/* Light cleanup for Enrollware plugin output */
+#futureSessions .ew-list,
+#futureSessions ul,
+#futureSessions ol {{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}}
+
+#futureSessions li,
+#futureSessions .ew-item {{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin: 0 0 14px 0;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}}
+
+#futureSessions a {{
+  color: var(--accent);
+}}
+
+#futureSessions .register,
+#futureSessions .ew-register,
+#futureSessions .enrollware-register {{
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--cta);
+  color: white !important;
+  text-decoration: none;
+  font-weight: 700;
 }}
 
 @media (max-width: 840px) {{
@@ -840,6 +716,9 @@ body img {{
   </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/assets/enrollware/jquery.enrollware.js"></script>
+
 <script>
 window.dataLayer = window.dataLayer || [];
 
@@ -911,155 +790,19 @@ document.addEventListener("click", function(e) {{
   }}
 }});
 
-function escapeHtml(value) {{
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}}
-
-function tryParseFeedDate(line) {{
-  const text = String(line || "");
-  const firstPart = text.split(" from ")[0].trim();
-  const d = new Date(firstPart);
-  if (isNaN(d.getTime())) return null;
-  return d;
-}}
-
-function renderFeedItem(item) {{
-  const id = item && item.id ? String(item.id) : "";
-  if (id && id === String(pageContext.session_id)) {{
-    return "";
-  }}
-
-  const dateLines = Array.isArray(item.dateTimes)
-    ? item.dateTimes.filter(Boolean)
-    : [item.dateTimes].filter(Boolean);
-
-  const parsed = dateLines.length ? tryParseFeedDate(dateLines[0]) : null;
-
-  let badgeHtml = "";
-  if (parsed) {{
-    const month = parsed.toLocaleString("en-US", {{ month: "short" }}).toUpperCase();
-    const day = parsed.getDate();
-    const weekday = parsed.toLocaleString("en-US", {{ weekday: "short" }});
-    badgeHtml = `
-      <div class="small-date">
-        <div class="small-month">${{month}}</div>
-        <div class="small-day">${{day}}</div>
-        <div class="small-weekday">${{weekday}}</div>
-      </div>
-    `;
-  }}
-
-  const whenHtml = dateLines.length
-    ? dateLines.map(x => `<div class="session-time">${{escapeHtml(x)}}</div>`).join("")
-    : `<div class="session-time">Upcoming session</div>`;
-
-  const locationHtml = item.location
-    ? `<div class="session-location">${{escapeHtml(item.location)}}</div>`
-    : "";
-
-  const seatsHtml =
-    item.seatsLeft === null || item.seatsLeft === undefined || item.seatsLeft === ""
-      ? ""
-      : `<div class="session-location">${{escapeHtml(item.seatsLeft)}} seats left</div>`;
-
-  const closedHtml = item.closed
-    ? `<div class="session-location">Registration closed</div>`
-    : "";
-
-  const regUrl = item.url || pageContext.schedule_url;
-
-  return `
-    <article class="session-card">
-      ${{badgeHtml}}
-      <div class="session-main">
-        ${{whenHtml}}
-        ${{locationHtml}}
-        ${{seatsHtml}}
-        ${{closedHtml}}
-        <div class="session-actions">
-          <a class="cta-small" href="${{escapeHtml(regUrl)}}">Register</a>
-        </div>
-      </div>
-    </article>
-  `;
-}}
-
-function renderNoSessions() {{
-  document.getElementById("futureSessions").innerHTML =
-    'No additional upcoming sessions are listed right now. <a class="text-link" href="' +
-    pageContext.schedule_url +
-    '">See all dates for this course</a>.';
-
-  window.dataLayer.push({{
-    event: "upcoming_sessions_empty",
-    ...pageContext,
-    upcoming_count: 0
-  }});
-}}
-
-function loadEnrollwareFeed() {{
-  const target = document.getElementById("futureSessions");
-
-  if (!pageContext.course_id || !pageContext.enrollware_feed_url) {{
-    renderNoSessions();
-    return;
-  }}
-
-  const callbackName = "ewFeedCallback_" + String(pageContext.session_id).replace(/[^a-zA-Z0-9_]/g, "");
-  const script = document.createElement("script");
-
-  window[callbackName] = function(items) {{
-    try {{
-      const rows = Array.isArray(items) ? items : [];
-      const cards = rows.map(renderFeedItem).filter(Boolean).slice(0, 10);
-
-      if (!cards.length) {{
-        renderNoSessions();
-        return;
-      }}
-
-      target.innerHTML =
-        `<div class="session-grid">${{cards.join("")}}</div>` +
-        `<p style="margin-top:16px;"><a class="text-link" href="${{pageContext.schedule_url}}">See all dates for this course</a></p>`;
-
-      window.dataLayer.push({{
-        event: "upcoming_sessions_loaded",
-        ...pageContext,
-        upcoming_count: cards.length
-      }});
-    }} finally {{
-      try {{ delete window[callbackName]; }} catch (e) {{}}
-      if (script.parentNode) script.parentNode.removeChild(script);
-    }}
-  }};
-
-  script.onerror = function(err) {{
-    target.innerHTML =
-      'Unable to load upcoming sessions right now. <a class="text-link" href="' +
-      pageContext.schedule_url +
-      '">See all dates for this course</a>.';
-
-    window.dataLayer.push({{
-      event: "upcoming_sessions_error",
-      ...pageContext,
-      error_message: String(err)
+$(document).ready(function () {{
+  if (pageContext.course_id && pageContext.enrollware_feed_url && $.fn.enrollware) {{
+    $('#futureSessions').enrollware({{
+      feed: pageContext.enrollware_feed_url
     }});
-
-    try {{ delete window[callbackName]; }} catch (e) {{}}
-    if (script.parentNode) script.parentNode.removeChild(script);
-  }};
-
-  const joiner = pageContext.enrollware_feed_url.includes("?") ? "&" : "?";
-  script.src = pageContext.enrollware_feed_url + joiner + "callback=" + encodeURIComponent(callbackName);
-  document.body.appendChild(script);
-}}
-
-loadEnrollwareFeed();
+  }} else {{
+    $('#futureSessions').html(
+      'No additional upcoming sessions are listed right now. <a class="text-link" href="' +
+      pageContext.schedule_url +
+      '">See all dates for this course</a>.'
+    );
+  }}
+}});
 </script>
 
 </body>
@@ -1137,15 +880,15 @@ Seats for this date are currently available. Register now or choose another date
         hero_state_class = ""
         hero_subhead = "Need a different date or time? Use the button beside Register or the live schedule list below."
 
-    logo_url = provider_logo_url(course)
-    course_img_url = course_image_url(course)
+    logo_url = default_logo_url()
+    course_img_url = find_course_archive_image(course_id)
 
     brand_parts = []
     if logo_url:
         brand_parts.append(
             f'''
 <div class="brand-card">
-  <img src="{escape(logo_url)}" alt="{escape(course)} provider logo" loading="lazy">
+  <img src="{escape(logo_url)}" alt="910CPR logo" loading="lazy">
 </div>
 '''
         )
@@ -1154,21 +897,12 @@ Seats for this date are currently available. Register now or choose another date
         brand_parts.append(
             f'''
 <div class="image-card">
-  <img src="{escape(course_img_url)}" alt="{escape(course)} training image" loading="lazy">
+  <img src="{escape(course_img_url)}" alt="{escape(course)} course image" loading="lazy">
 </div>
 '''
         )
 
     if brand_parts:
-        if len(brand_parts) == 1 and 'image-card' in brand_parts[0]:
-            brand_parts.insert(
-                0,
-                """
-<div class="brand-card">
-  <div style="font-weight:700; color:#6b7280;">910CPR Training</div>
-</div>
-""".strip(),
-            )
         brand_strip_html = f'<section class="brand-strip">{"".join(brand_parts)}</section>'
     else:
         brand_strip_html = ""
