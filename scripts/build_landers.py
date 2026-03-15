@@ -951,7 +951,7 @@ Seats for this date are currently available. Register now or choose another date
         course_js=js_escape(course),
         course_id=escape(course_id),
         course_slug=short_slug(course),
-        location_js=js_escape(location),
+        location_js=js_escape(location),import json
 import re
 import hashlib
 from datetime import datetime

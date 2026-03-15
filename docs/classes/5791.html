@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <title>AHA ACLS HeartCode Skills Session in Wilmington, NC | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="AHA ACLS HeartCode Skills Session in Wilmington; Shipyard Blvd. View class details, current schedule options, and register online with 910CPR.">
+<meta name="description" content="AHA ACLS HeartCode Skills Session in Wilmington, NC. View class details, current schedule options, and register online with 910CPR.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.910cpr.com/classes/5791.html">
 <!-- Google Tag Manager -->
@@ -27,7 +27,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   "startDate": "2021-07-09T12:00:00",
   "location": {
     "@type": "Place",
-    "name": "Wilmington; Shipyard Blvd",
+    "name": "Wilmington, NC",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Wilmington",
@@ -201,6 +201,21 @@ body img {
   flex-wrap: wrap;
 }
 
+.alt-time-block {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.alt-time-block a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.alt-time-block a:hover {
+  text-decoration: underline;
+}
+
 .button {
   display: inline-block;
   padding: 13px 18px;
@@ -343,7 +358,6 @@ body img {
   font-size: 11px;
 }
 
-/* Light cleanup for Enrollware plugin output */
 #futureSessions .ew-list,
 #futureSessions ul,
 #futureSessions ol {
@@ -435,7 +449,7 @@ This specific class date has passed. Use the current options below to choose a n
           </div>
           <div class="meta-item">
             <div class="meta-label">Location</div>
-            <div class="meta-value">Wilmington; Shipyard Blvd</div>
+            <div class="meta-value">Wilmington, NC</div>
           </div>
         </div>
 
@@ -443,6 +457,8 @@ This specific class date has passed. Use the current options below to choose a n
           <a class="button secondary" href="https://coastalcprtraining.enrollware.com/schedule#ct209811">See Current Dates</a>
           <a class="button secondary" href="https://coastalcprtraining.enrollware.com/schedule#ct209811">See All Dates/Times</a>
         </div>
+
+        <div class="alt-time-block">Did you need a different time? <a href="https://coastalcprtraining.enrollware.com/schedule#ct209811">View all upcoming sessions</a></div>
       </div>
     </section>
 
@@ -471,12 +487,21 @@ This specific class date has passed. Use the current options below to choose a n
         <p>This course is commonly taken by nurses, paramedics, respiratory therapists, ER staff, ICU staff, and other clinicians who need advanced cardiovascular life support training.</p>
         <p>910CPR also supports employers in Wilmington that need documented, renewable training for staff. If you need multiple employees trained in AHA ACLS HeartCode Skills Session, group and workplace options may be available.</p>
       </section>
+
+      
+<section class="info-box">
+  <h2>Need Training for Your Team?</h2>
+  <p>910CPR supports employers, schools, offices, dental practices, gyms, churches, and job sites with private group training, recurring renewals, and documented CPR programs.</p>
+  <p><strong>Need a workplace CPR program, not just one seat?</strong></p>
+  <p><a class="button primary" href="tel:+19103955193">Call (910) 395-5193</a></p>
+</section>
+
     </div>
 
     <h2 class="section-title">Next Available Classes</h2>
     <div id="futureSessions">Loading upcoming classes...</div>
 
-    <div class="build-stamp">build: 2026-03-13 11:27 PM</div>
+    <div class="build-stamp">build: 2026-03-14 08:43 PM</div>
 
   </div>
 </div>
@@ -493,13 +518,13 @@ const pageContext = {
   course_id: "209811",
   course_name: "AHA ACLS HeartCode Skills Session",
   course_slug: "aha-acls-heartcode-skills-session-f7ecb4f8",
-  location_name: "Wilmington; Shipyard Blvd",
+  location_name: "Wilmington, NC",
   is_past_session: true,
   register_url: "https://coastalcprtraining.enrollware.com/enroll?id=4897442",
   schedule_url: "https://coastalcprtraining.enrollware.com/schedule#ct209811",
   course_page_url: "../courses/aha-acls-heartcode-skills-session-f7ecb4f8.html",
   enrollware_feed_url: "https://coastalcprtraining.enrollware.com/registration/schedule-feed.ashx?courseid=209811",
-  build_stamp: "2026-03-13 11:27 PM"
+  build_stamp: "2026-03-14 08:43 PM"
 };
 
 window.dataLayer.push({
@@ -530,7 +555,7 @@ document.addEventListener("click", function(e) {
     return;
   }
 
-  if (text.includes("see all dates") || text.includes("see all dates/times")) {
+  if (text.includes("see all dates") || text.includes("see all dates/times") || text.includes("view all upcoming sessions")) {
     pushLinkClick("view_upcoming_click", {
       click_text: text,
       link_url: href
@@ -548,6 +573,14 @@ document.addEventListener("click", function(e) {
 
   if (href.includes("/classes/")) {
     pushLinkClick("session_link_click", {
+      click_text: text,
+      link_url: href
+    });
+    return;
+  }
+
+  if (href.includes("tel:+19103955193")) {
+    pushLinkClick("corporate_call_click", {
       click_text: text,
       link_url: href
     });
