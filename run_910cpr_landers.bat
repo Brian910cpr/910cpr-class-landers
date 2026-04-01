@@ -18,7 +18,7 @@ set LOG_FILE=%LOG_DIR%\run_%TS%.log
 call :log ==========================================
 call :log 910CPR lander run started
 call :log Repo: %REPO_DIR%
-call :log Log:  %LOG_FILE%
+call :log Log: %LOG_FILE%
 call :log ==========================================
 
 cd /d "%REPO_DIR%"
@@ -38,30 +38,14 @@ if exist "%VENV_ACTIVATE%" (
     call :log WARNING: No virtual environment activate script found. Continuing without venv.
 )
 
-REM --------------------------------------------------
-REM STEP 1 - Watch Enrollware schedule feed
-REM --------------------------------------------------
 call :runstep "STEP 1 - Enrollware schedule watcher" python scripts\ew_schedule_watcher.py
 if errorlevel 1 goto :fail
 
-REM --------------------------------------------------
-REM STEP 2 - Build or update class landers
-REM --------------------------------------------------
 call :runstep "STEP 2 - Build or update landers" python scripts\build_or_update_landers.py
 if errorlevel 1 goto :fail
 
-REM --------------------------------------------------
-REM STEP 3 - Rebuild indexes / sitemap
-REM --------------------------------------------------
 call :runstep "STEP 3 - Build index and sitemap" python scripts\build_index_and_sitemap.py
 if errorlevel 1 goto :fail
-
-REM --------------------------------------------------
-REM STEP 4 - Optional PowerShell step
-REM Uncomment and edit if needed
-REM --------------------------------------------------
-REM call :runstep "STEP 4 - Optional PowerShell task" powershell -NoProfile -ExecutionPolicy Bypass -File scripts\your_step.ps1
-REM if errorlevel 1 goto :fail
 
 call :log SUCCESS: Run completed successfully.
 call :log Finished at %date% %time%
@@ -75,7 +59,7 @@ exit /b 1
 :runstep
 set STEP_NAME=%~1
 shift
-call :log.
+call :log
 call :log ==================================================
 call :log RUNNING: %STEP_NAME%
 call :log COMMAND: %*
@@ -90,6 +74,11 @@ call :log DONE: %STEP_NAME%
 exit /b 0
 
 :log
-echo %~1
->> "%LOG_FILE%" echo %~1
+if "%~1"=="" (
+    echo(
+    >> "%LOG_FILE%" echo(
+) else (
+    echo %~1
+    >> "%LOG_FILE%" echo %~1
+)
 exit /b 0

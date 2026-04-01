@@ -14,6 +14,7 @@ IMAGES_DIR = ROOT / "docs" / "images"
 COURSE_ARCHIVE_DIR = IMAGES_DIR / "course-archive"
 
 GTM_ID = "GTM-PQS8DCBH"
+UPCOMING_LIMIT = 10
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -247,11 +248,27 @@ def load_course_description_html(course_id: str, course_name: str) -> str:
 
 
 def default_logo_url() -> str:
-    if not IMAGES_DIR.exists():
-        return ""
     logo = IMAGES_DIR / "logo.png"
     if logo.exists():
         return "/images/logo.png"
+    return ""
+
+
+def detect_cert_logo(course_name: str) -> str:
+    c = course_name.lower()
+
+    if "red cross" in c or c.startswith("arc ") or "arc " in c:
+        if (IMAGES_DIR / "_ARC.png").exists():
+            return "/images/_ARC.png"
+
+    if "hsi" in c or "ashi" in c:
+        if (IMAGES_DIR / "_HSI.png").exists():
+            return "/images/_HSI.png"
+
+    if "aha" in c or "heartsaver" in c or "heartcode" in c or "acls" in c or "pals" in c or "bls" in c:
+        if (IMAGES_DIR / "_AHA.png").exists():
+            return "/images/_AHA.png"
+
     return ""
 
 
@@ -262,7 +279,6 @@ def find_course_archive_image(course_id: str) -> str:
     exts = [".png", ".jpg", ".jpeg", ".webp"]
 
     preferred = []
-    secondary = []
 
     for ext in exts:
         preferred.extend(sorted(COURSE_ARCHIVE_DIR.glob(f"course-{course_id}-raw_enrollware_html-*{ext}")))
@@ -275,15 +291,95 @@ def find_course_archive_image(course_id: str) -> str:
             penalty += 1000000
         if "steps" in name:
             penalty += 500000
+        if "icon" in name:
+            penalty += 500000
         return penalty - path.stat().st_size
 
-    candidates = preferred if preferred else secondary
-    if not candidates:
+    if not preferred:
         return ""
 
-    candidates = sorted(candidates, key=score)
-    chosen = candidates[0]
+    chosen = sorted(preferred, key=score)[0]
     return f"/images/course-archive/{chosen.name}"
+
+
+def same_course(session_a: dict, session_b: dict) -> bool:
+    a_course_id = str(session_a.get("course_id", "")).strip()
+    b_course_id = str(session_b.get("course_id", "")).strip()
+
+    if a_course_id and b_course_id:
+        return a_course_id == b_course_id
+
+    a_name = canonical_course_name(session_a.get("course", ""))
+    b_name = canonical_course_name(session_b.get("course", ""))
+    return a_name == b_name
+
+
+def get_upcoming_sessions(current_session: dict, sessions: list[dict], now_dt: datetime, limit: int = UPCOMING_LIMIT) -> list[dict]:
+    current_id = str(current_session.get("session_id", "")).strip()
+    matches = []
+
+    for s in sessions:
+        if not same_course(current_session, s):
+            continue
+
+        sid = str(s.get("session_id", "")).strip()
+        if sid == current_id:
+            continue
+
+        dt = parse_dt(s.get("start"))
+        if not dt or dt < now_dt:
+            continue
+
+        s_copy = dict(s)
+        s_copy["_parsed_dt"] = dt
+        matches.append(s_copy)
+
+    matches.sort(key=lambda x: x["_parsed_dt"])
+    return matches[:limit]
+
+
+def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: str, course_name: str) -> str:
+    if not upcoming_sessions:
+        return f"""
+<section class="info-box upcoming-box">
+  <h2>Upcoming Classes</h2>
+  <p>No upcoming public sessions are listed right now.</p>
+  <p><a class="text-link" href="{escape(schedule_url)}">See all current dates and times</a></p>
+</section>
+"""
+
+    cards = []
+    for s in upcoming_sessions:
+        dt = s["_parsed_dt"]
+        date_label = dt.strftime("%B %d, %Y")
+        time_label = dt.strftime("%I:%M %p").lstrip("0")
+        location_label = clean_location_display(s.get("location", "")) or "Location TBD"
+        register_url = s.get("register_url", "#")
+
+        cards.append(
+            f"""
+<div class="upcoming-card">
+  <div class="upcoming-date">{escape(date_label)}</div>
+  <div class="upcoming-time">{escape(time_label)}</div>
+  <div class="upcoming-location">{escape(location_label)}</div>
+  <div class="upcoming-actions">
+    <a class="button small primary" href="{escape(register_url)}">Register</a>
+  </div>
+</div>
+"""
+        )
+
+    return f"""
+<section class="info-box upcoming-box">
+  <div class="upcoming-head">
+    <h2>Upcoming Classes</h2>
+    <a class="text-link" href="{escape(schedule_url)}">See all current dates and times</a>
+  </div>
+  <div class="upcoming-grid">
+    {''.join(cards)}
+  </div>
+</section>
+"""
 
 
 with open(DATA_FILE, "r", encoding="utf-8") as f:
@@ -321,9 +417,6 @@ template = """
   --warning-bg: #fff7d6;
   --warning-border: #f2df91;
   --warning-text: #6d5600;
-  --success-bg: #ecfdf3;
-  --success-border: #b7ebc7;
-  --success-text: #166534;
 }}
 
 * {{
@@ -366,24 +459,19 @@ body img {{
   font-size: 18px;
 }}
 
-.notice.live {{
-  background: var(--success-bg);
-  border-color: var(--success-border);
-  color: var(--success-text);
-}}
-
 .hero {{
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 18px;
-  align-items: start;
+  display: block;
 }}
 
-.hero.past {{
-  opacity: 0.72;
+.hero-top {{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
 }}
 
 .date-badge {{
+  min-width: 96px;
   border-radius: 18px;
   background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
   color: white;
@@ -406,6 +494,28 @@ body img {{
 
 .date-weekday {{
   font-size: 13px;
+}}
+
+.cert-badge {{
+  min-width: 96px;
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 10px;
+}}
+
+.cert-badge img {{
+  max-width: 72px;
+  max-height: 72px;
+  object-fit: contain;
+}}
+
+.hero-content {{
+  margin-top: 18px;
 }}
 
 .hero h1 {{
@@ -463,6 +573,11 @@ body img {{
   font-weight: 700;
 }}
 
+.button.small {{
+  padding: 10px 14px;
+  font-size: 14px;
+}}
+
 .button.primary {{
   background: var(--cta);
   color: white;
@@ -504,6 +619,51 @@ body img {{
   line-height: 1.6;
 }}
 
+.upcoming-head {{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}}
+
+.upcoming-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}}
+
+.upcoming-card {{
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}}
+
+.upcoming-date {{
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}}
+
+.upcoming-time {{
+  font-size: 15px;
+  margin-bottom: 4px;
+}}
+
+.upcoming-location {{
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 12px;
+}}
+
+.upcoming-actions {{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}}
+
 .brand-strip {{
   margin-top: 24px;
   display: grid;
@@ -525,12 +685,15 @@ body img {{
   align-items: center;
   justify-content: center;
   min-height: 140px;
+  text-align: center;
 }}
 
 .brand-card img {{
   max-width: 140px;
   max-height: 90px;
   object-fit: contain;
+  margin: 0 auto;
+  display: block;
 }}
 
 .image-card {{
@@ -595,12 +758,14 @@ body img {{
 }}
 
 @media (max-width: 700px) {{
-  .hero {{
-    grid-template-columns: 1fr;
+  .hero-top {{
+    align-items: stretch;
   }}
 
-  .date-badge {{
-    max-width: 96px;
+  .date-badge,
+  .cert-badge {{
+    min-width: 82px;
+    min-height: 82px;
   }}
 
   .hero h1 {{
@@ -616,14 +781,17 @@ body img {{
 
     {state_notice}
 
-    <section class="hero {hero_state_class}">
-      <div class="date-badge">
-        <div class="date-month">{month_abbr}</div>
-        <div class="date-day">{day_num}</div>
-        <div class="date-weekday">{weekday}</div>
+    <section class="hero">
+      <div class="hero-top">
+        <div class="date-badge">
+          <div class="date-month">{month_abbr}</div>
+          <div class="date-day">{day_num}</div>
+          <div class="date-weekday">{weekday}</div>
+        </div>
+        {cert_logo_html}
       </div>
 
-      <div>
+      <div class="hero-content">
         <h1>{course}</h1>
         <p class="subhead">{hero_subhead}</p>
 
@@ -648,6 +816,8 @@ body img {{
         </div>
       </div>
     </section>
+
+    {upcoming_sessions_html}
 
     {brand_strip_html}
 
@@ -711,7 +881,7 @@ document.addEventListener("click", function(e) {{
     return;
   }}
 
-  if (text.includes("see all dates") || text.includes("see all dates/times")) {{
+  if (text.includes("see all dates") || text.includes("see all dates/times") || text.includes("see upcoming classes")) {{
     pushLinkClick("view_upcoming_click", {{
       click_text: text,
       link_url: href
@@ -785,17 +955,29 @@ for s in sessions:
     is_past = bool(dt and dt < now_dt)
 
     if is_past:
-        state_notice = ""
-        button_html = f'<a class="button secondary" href="{schedule_url}">See Current Dates</a>'
+        state_notice = """
+<div class="notice">
+This specific session has passed. See upcoming classes below.
+</div>
+"""
+        button_html = f'<a class="button secondary" href="{schedule_url}">See Upcoming Classes</a>'
         robots_value = "index,follow"
-        hero_state_class = ""
-        hero_subhead = "Use the schedule button to find the next available option for this course."
+        hero_subhead = "Use the schedule button or the upcoming list below to pick the next available class."
     else:
         state_notice = ""
         button_html = f'<a class="button primary" href="{register}">Register Now</a>'
         robots_value = "index,follow"
-        hero_state_class = ""
-        hero_subhead = "Use the register button for this session or the schedule button for other dates and times."
+        hero_subhead = "Use the register button for this session or the upcoming list below for other dates and times."
+
+    cert_logo = detect_cert_logo(course)
+    if cert_logo:
+        cert_logo_html = f'''
+<div class="cert-badge">
+  <img src="{escape(cert_logo)}" alt="Certifying body logo" loading="lazy">
+</div>
+'''
+    else:
+        cert_logo_html = '<div class="cert-badge"></div>'
 
     logo_url = default_logo_url()
     course_img_url = find_course_archive_image(course_id)
@@ -844,6 +1026,9 @@ for s in sessions:
 </section>
 """
 
+    upcoming_sessions = get_upcoming_sessions(s, sessions, now_dt, limit=UPCOMING_LIMIT)
+    upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, schedule_url, course)
+
     html = template.format(
         page_title=escape(page_title),
         meta_description=escape(meta_description),
@@ -873,10 +1058,11 @@ for s in sessions:
         register_js=js_escape(register),
         audience_text=escape(audience_blurb(course)),
         corporate_text=escape(corporate_blurb(city, course)),
-        hero_state_class=hero_state_class,
         hero_subhead=escape(hero_subhead),
+        cert_logo_html=cert_logo_html,
         brand_strip_html=brand_strip_html,
         course_description_section=course_description_section,
+        upcoming_sessions_html=upcoming_sessions_html,
     )
 
     path = OUTPUT_DIR / f"{session_id}.html"
