@@ -1,0 +1,42 @@
+STRUCTURED INDEX SYSTEM
+Course files: 91
+Class pages: 24479
+
+TOPIC HUBS
+- topics/bls.html :: BLS (7 course files, 10494 class pages)
+- topics/acls.html :: ACLS (7 course files, 3831 class pages)
+- topics/pals.html :: PALS (4 course files, 500 class pages)
+- topics/heartsaver.html :: Heartsaver (17 course files, 3903 class pages)
+- topics/first-aid.html :: First Aid (1 course files, 0 class pages)
+- topics/red-cross.html :: Red Cross (11 course files, 3042 class pages)
+- topics/hsi.html :: HSI (11 course files, 364 class pages)
+- topics/uscg.html :: USCG / Coast Guard (4 course files, 1129 class pages)
+- topics/instructor.html :: Instructor Courses (17 course files, 689 class pages)
+- topics/family-friends.html :: Family & Friends (3 course files, 297 class pages)
+- topics/stop-the-bleed.html :: Stop the Bleed (1 course files, 0 class pages)
+- topics/aed.html :: AED / Maintenance (1 course files, 1 class pages)
+- topics/misc.html :: Other Courses (7 course files, 229 class pages)
+
+YEAR PAGES
+- years/2020.html :: 1151 class pages
+- years/2021.html :: 7816 class pages
+- years/2022.html :: 1216 class pages
+- years/2023.html :: 3347 class pages
+- years/2024.html :: 4700 class pages
+- years/2025.html :: 4171 class pages
+- years/2026.html :: 2078 class pages
+
+LOCATION PAGES
+- locations/wilmington-shipyard-blvd.html :: Wilmington; Shipyard Blvd (17818)
+- locations/holly-ridge-sound-rd.html :: Holly Ridge; Sound Rd (4630)
+- locations/115-3.html :: 115-3 (1404)
+- locations/burgaw-111-s-wright-st.html :: Burgaw; 111 S Wright St (417)
+- locations/809.html :: 809 (147)
+- locations/ct-colchester.html :: CT - Colchester (18)
+- locations/ct-oak-ridge-dr-colchester.html :: CT - Oak Ridge Dr, Colchester (14)
+- locations/merlot-crt.html :: Merlot Crt (13)
+- locations/colchester-town-hall.html :: Colchester Town Hall (10)
+- locations/808cpr.html :: 808CPR (3)
+- locations/hsi-rsv.html :: HSI RSV (3)
+- locations/cragin-library-8-linwood-ave-colchester-ct-06415.html :: Cragin Library, 8 Linwood Ave, Colchester, CT 06415 (1)
+- locations/ky-versailles-chamber-of-commerce.html :: KY- Versailles Chamber of Commerce (1)
