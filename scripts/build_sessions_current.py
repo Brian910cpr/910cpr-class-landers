@@ -1,43 +1,27 @@
-
 from __future__ import annotations
-
-import argparse
-import json
+import argparse, json
 from datetime import datetime
 from pathlib import Path
 
-def build_sessions_current(schedule_json: Path, output_json: Path) -> None:
-    payload = json.loads(schedule_json.read_text(encoding="utf-8"))
-    today = datetime.now().date()
-
-    sessions = []
-    for s in payload.get("sessions", []):
-        try:
-            s_date = datetime.fromisoformat(s.get("date")).date()
-        except Exception:
-            continue
-        if s_date >= today:
-            sessions.append(s)
-
-    out = {
-        "build": {
-            "source_schedule": str(schedule_json),
-            "session_count": len(sessions),
-        },
-        "sessions": sessions,
-    }
-    output_json.parent.mkdir(parents=True, exist_ok=True)
-    output_json.write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"Wrote {output_json}")
-    print(json.dumps(out["build"], indent=2))
-
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Filter schedule.json into future-facing sessions_current.json")
-    parser.add_argument("--schedule-json", required=True)
-    parser.add_argument("--output", required=True)
-    args = parser.parse_args()
-    build_sessions_current(Path(args.schedule_json), Path(args.output))
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--schedule-json", required=True)
+    ap.add_argument("--output", required=True)
+    args=ap.parse_args()
+    data=json.loads(Path(args.schedule_json).read_text(encoding="utf-8"))
+    now=datetime.now()
+    sessions=[]
+    for s in data.get("sessions", []):
+        try:
+            if s.get("start") and datetime.fromisoformat(s["start"]) >= now:
+                sessions.append(s)
+        except Exception:
+            pass
+    sessions.sort(key=lambda s: s.get("start") or "")
+    out={"build":{"source_schedule_json":args.schedule_json,"session_count":len(sessions)},"sessions":sessions}
+    p=Path(args.output); p.parent.mkdir(parents=True, exist_ok=True); p.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    print(f"Wrote {p}")
     return 0
 
-if __name__ == "__main__":
+if __name__=="__main__":
     raise SystemExit(main())

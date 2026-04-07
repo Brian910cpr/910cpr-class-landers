@@ -1,22 +1,377 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Structured Index System | 910CPR Structured Index</title><meta name="robots" content="index,follow"><style>
-    :root{--bg:#eef4f8;--card:#fff;--text:#1f2937;--muted:#6b7280;--accent:#2563eb;--border:#dbe4ee;--cta:#ea580c}
-    *{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#f8fbfd 0%,var(--bg) 100%);color:var(--text)}
-    .wrap{max-width:1200px;margin:0 auto;padding:20px 18px 50px} .hero,.card{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
-    .hero{padding:26px;margin-bottom:22px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.card{padding:18px}
-    h1{margin:0 0 8px;font-size:30px} h2{margin:0 0 12px;font-size:22px} h3{margin:0 0 10px;font-size:18px} p,li{line-height:1.45} .muted{color:var(--muted)}
-    a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline} .button{display:inline-block;padding:11px 15px;background:#5f6f82;color:#fff;border-radius:12px;font-weight:700;text-decoration:none}
-    .button:hover{background:#526170;text-decoration:none}.crumbs{font-size:14px;margin:0 0 14px}.list{margin:0;padding-left:18px}.small{font-size:14px}.section{margin-top:24px}
-    .split{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:800px){.split{grid-template-columns:1fr} h1{font-size:26px}}
-    </style></head><body><div class="wrap">
-<div class="hero"><h1>Structured Index System for Classes and Courses</h1>
-<p class="muted">This layer does not change your existing pages. It adds organized hub pages that point into every course file and every class file from the uploaded zips.</p>
-<p><strong>Coverage:</strong> 91 course files and 24479 class pages.</p></div>
-<div class="split">
-<section class="card"><h2>How this is organized</h2><ul class="list"><li>Topic hubs such as BLS, ACLS, PALS, Heartsaver, Red Cross, HSI, and USCG</li><li>Year buckets for 2020 through 2026</li><li>Location hubs for the active office/location labels found in the class files</li><li>Topic + Year pages so the big buckets still look intentional and readable</li></ul></section>
-<section class="card"><h2>Main index paths</h2><ul class="list"><li><a href="topics/bls.html">topics/bls.html</a></li><li><a href="topics/acls.html">topics/acls.html</a></li><li><a href="topics/heartsaver.html">topics/heartsaver.html</a></li><li><a href="years/2026.html">years/2026.html</a></li><li><a href="locations/wilmington-shipyard-blvd.html">locations/wilmington-shipyard-blvd.html</a></li></ul></section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CPR Class Schedule | 910CPR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Browse upcoming public CPR, BLS, ACLS, PALS, Heartsaver, and first aid classes with 910CPR.">
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQS8DCBH');
+</script>
+<!-- End Google Tag Manager -->
+
+<style>
+:root {
+  --bg: #eef4f8;
+  --card: #ffffff;
+  --soft: #f8fbfd;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --accent-dark: #1d4ed8;
+  --cta: #ea580c;
+  --cta-dark: #c2410c;
+  --border: #dbe4ee;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #f8fbfd 0%, var(--bg) 100%);
+  color: var(--text);
+}
+
+.site-header,
+.site-footer {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 16px 18px;
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.site-brand a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 24px;
+}
+
+.site-nav {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.site-nav a,
+.site-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.wrap {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 12px 18px 60px;
+}
+
+.hero {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  margin-bottom: 26px;
+}
+
+.hero h1 {
+  margin: 0 0 10px 0;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.hero p {
+  margin: 0;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.section-title {
+  margin: 26px 0 14px 0;
+  font-size: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.card h2 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.preview-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.preview-list li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.preview-list li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.text-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.button {
+  display: inline-block;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.button.secondary {
+  background: #5f6f82;
+  color: white;
+}
+
+.button.secondary:hover {
+  background: #526170;
+}
+
+.back-link {
+  display: inline-block;
+  margin: 2px 0 18px 0;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.month-group {
+  margin-top: 24px;
+}
+
+.month-heading {
+  margin: 0 0 14px 0;
+  font-size: 22px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+.session-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.session-card {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}
+
+.date-badge {
+  min-width: 78px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: white;
+  text-align: center;
+  padding: 10px 8px;
+}
+
+.date-month {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.date-day {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 4px 0;
+}
+
+.date-weekday {
+  font-size: 12px;
+  opacity: 0.95;
+}
+
+.session-main {
+  flex: 1;
+}
+
+.session-course {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.session-meta {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.session-links {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cta-small {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--cta);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.cta-small:hover {
+  background: var(--cta-dark);
+}
+
+.site-footer {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 26px;
+  }
+
+  .wrap {
+    padding: 12px 12px 40px;
+  }
+}
+</style>
+
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<header class="site-header">
+  <div class="site-brand">
+    <a href="index.html">910CPR</a>
+  </div>
+  <nav class="site-nav">
+    <a href="index.html">Find a Class</a>
+    <a href="tel:+19103955193">Call 910-395-5193</a>
+    <a href="https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule">Schedule</a>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <h1>Find Your CPR Class</h1>
+    <p>Browse upcoming public 910CPR sessions by course type or by location.</p>
+  </section>
+
+  <h2 class="section-title">Browse by Course</h2>
+  <div class="grid">
+    
+  </div>
+
+  <h2 class="section-title">Browse by Location</h2>
+  <div class="grid">
+    
+  </div>
+
 </div>
-<div class="section"><h2>Browse by topic</h2><div class="grid"><section class="card"><h3>BLS</h3><p class="muted">7 course files • 10494 class pages</p><p><a class="button" href="topics/bls.html">Open BLS hub</a></p></section><section class="card"><h3>ACLS</h3><p class="muted">7 course files • 3831 class pages</p><p><a class="button" href="topics/acls.html">Open ACLS hub</a></p></section><section class="card"><h3>PALS</h3><p class="muted">4 course files • 500 class pages</p><p><a class="button" href="topics/pals.html">Open PALS hub</a></p></section><section class="card"><h3>Heartsaver</h3><p class="muted">17 course files • 3903 class pages</p><p><a class="button" href="topics/heartsaver.html">Open Heartsaver hub</a></p></section><section class="card"><h3>First Aid</h3><p class="muted">1 course files • 0 class pages</p><p><a class="button" href="topics/first-aid.html">Open First Aid hub</a></p></section><section class="card"><h3>Red Cross</h3><p class="muted">11 course files • 3042 class pages</p><p><a class="button" href="topics/red-cross.html">Open Red Cross hub</a></p></section><section class="card"><h3>HSI</h3><p class="muted">11 course files • 364 class pages</p><p><a class="button" href="topics/hsi.html">Open HSI hub</a></p></section><section class="card"><h3>USCG / Coast Guard</h3><p class="muted">4 course files • 1129 class pages</p><p><a class="button" href="topics/uscg.html">Open USCG / Coast Guard hub</a></p></section><section class="card"><h3>Instructor Courses</h3><p class="muted">17 course files • 689 class pages</p><p><a class="button" href="topics/instructor.html">Open Instructor Courses hub</a></p></section><section class="card"><h3>Family &amp; Friends</h3><p class="muted">3 course files • 297 class pages</p><p><a class="button" href="topics/family-friends.html">Open Family &amp; Friends hub</a></p></section><section class="card"><h3>Stop the Bleed</h3><p class="muted">1 course files • 0 class pages</p><p><a class="button" href="topics/stop-the-bleed.html">Open Stop the Bleed hub</a></p></section><section class="card"><h3>AED / Maintenance</h3><p class="muted">1 course files • 1 class pages</p><p><a class="button" href="topics/aed.html">Open AED / Maintenance hub</a></p></section><section class="card"><h3>Other Courses</h3><p class="muted">7 course files • 229 class pages</p><p><a class="button" href="topics/misc.html">Open Other Courses hub</a></p></section></div></div>
-<div class="section"><h2>Browse by year</h2><div class="grid"><section class="card"><h3>2020</h3><p class="muted">1151 class pages</p><p><a class="button" href="years/2020.html">Open 2020 index</a></p></section><section class="card"><h3>2021</h3><p class="muted">7816 class pages</p><p><a class="button" href="years/2021.html">Open 2021 index</a></p></section><section class="card"><h3>2022</h3><p class="muted">1216 class pages</p><p><a class="button" href="years/2022.html">Open 2022 index</a></p></section><section class="card"><h3>2023</h3><p class="muted">3347 class pages</p><p><a class="button" href="years/2023.html">Open 2023 index</a></p></section><section class="card"><h3>2024</h3><p class="muted">4700 class pages</p><p><a class="button" href="years/2024.html">Open 2024 index</a></p></section><section class="card"><h3>2025</h3><p class="muted">4171 class pages</p><p><a class="button" href="years/2025.html">Open 2025 index</a></p></section><section class="card"><h3>2026</h3><p class="muted">2078 class pages</p><p><a class="button" href="years/2026.html">Open 2026 index</a></p></section></div></div>
-<div class="section"><h2>Browse by location</h2><div class="grid"><section class="card"><h3>Wilmington; Shipyard Blvd</h3><p class="muted">17818 class pages</p><p><a class="button" href="locations/wilmington-shipyard-blvd.html">Open location index</a></p></section><section class="card"><h3>Holly Ridge; Sound Rd</h3><p class="muted">4630 class pages</p><p><a class="button" href="locations/holly-ridge-sound-rd.html">Open location index</a></p></section><section class="card"><h3>115-3</h3><p class="muted">1404 class pages</p><p><a class="button" href="locations/115-3.html">Open location index</a></p></section><section class="card"><h3>Burgaw; 111 S Wright St</h3><p class="muted">417 class pages</p><p><a class="button" href="locations/burgaw-111-s-wright-st.html">Open location index</a></p></section><section class="card"><h3>809</h3><p class="muted">147 class pages</p><p><a class="button" href="locations/809.html">Open location index</a></p></section><section class="card"><h3>CT - Colchester</h3><p class="muted">18 class pages</p><p><a class="button" href="locations/ct-colchester.html">Open location index</a></p></section><section class="card"><h3>CT - Oak Ridge Dr, Colchester</h3><p class="muted">14 class pages</p><p><a class="button" href="locations/ct-oak-ridge-dr-colchester.html">Open location index</a></p></section><section class="card"><h3>Merlot Crt</h3><p class="muted">13 class pages</p><p><a class="button" href="locations/merlot-crt.html">Open location index</a></p></section><section class="card"><h3>Colchester Town Hall</h3><p class="muted">10 class pages</p><p><a class="button" href="locations/colchester-town-hall.html">Open location index</a></p></section><section class="card"><h3>808CPR</h3><p class="muted">3 class pages</p><p><a class="button" href="locations/808cpr.html">Open location index</a></p></section><section class="card"><h3>HSI RSV</h3><p class="muted">3 class pages</p><p><a class="button" href="locations/hsi-rsv.html">Open location index</a></p></section><section class="card"><h3>Cragin Library, 8 Linwood Ave, Colchester, CT 06415</h3><p class="muted">1 class pages</p><p><a class="button" href="locations/cragin-library-8-linwood-ave-colchester-ct-06415.html">Open location index</a></p></section></div></div>
-<div class="section"><section class="card"><h2>Course file directory</h2><p class="muted">Every course HTML file from the zip is also listed in one place.</p><p><a class="button" href="courses/all-courses.html">Open all course files</a></p></section></div>
-</div></body></html>
+
+<footer class="site-footer">
+  <p><strong>910CPR</strong></p>
+  <p>Public CPR, BLS, ACLS, PALS, and first aid classes.</p>
+  <p><a href="tel:+19103955193">910-395-5193</a></p>
+</footer>
+
+
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  event: "page_context",
+  page_type: "home",
+  page_name: "Find Your CPR Class"
+});
+
+document.addEventListener("click", function(e) {
+  const a = e.target.closest("a");
+  if (!a) return;
+
+  const href = a.getAttribute("href") || "";
+  const text = (a.textContent || "").trim();
+
+  let eventName = "generic_link_click";
+
+  if (href.includes("/classes/")) eventName = "session_link_click";
+  else if (href.includes("/courses/")) eventName = "course_link_click";
+  else if (href.includes("/locations/")) eventName = "location_link_click";
+  else if (href.includes("enrollware.com/enroll?id=")) eventName = "register_click";
+  else if (href.startsWith("tel:")) eventName = "phone_click";
+
+  window.dataLayer.push({
+    event: eventName,
+    page_type: "home",
+    page_name: "Find Your CPR Class",
+    click_text: text,
+    link_url: href
+  });
+});
+</script>
+
+</body>
+</html>

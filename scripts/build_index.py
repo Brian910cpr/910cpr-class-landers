@@ -1,192 +1,59 @@
-
 from __future__ import annotations
-
-import argparse
-import html
-import json
+import argparse, json, html
 from collections import defaultdict
-from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from datetime import datetime
 
-from ew_ingest import course_slug, location_slug, session_slug, topic_slug_for_session
+TOPIC_LABELS={"bls":"BLS","acls":"ACLS","pals":"PALS","heartsaver":"Heartsaver","first-aid":"First Aid","red-cross":"Red Cross","hsi":"HSI","uscg":"USCG / Coast Guard","instructor":"Instructor Courses","family-friends":"Family & Friends","stop-the-bleed":"Stop the Bleed","aed":"AED / Maintenance","misc":"Other Courses"}
 
-TOPIC_LABELS = {
-    "bls": "BLS",
-    "acls": "ACLS",
-    "pals": "PALS",
-    "heartsaver": "Heartsaver",
-    "red-cross": "Red Cross",
-    "hsi": "HSI",
-    "uscg": "USCG / Coast Guard",
-    "instructor": "Instructor Courses",
-    "family-friends": "Family & Friends",
-    "aed": "AED / Maintenance",
-    "first-aid": "First Aid",
-    "misc": "Other Courses",
-}
-
-def esc(v: Any) -> str:
-    return html.escape("" if v is None else str(v))
-
-def pretty_dt(iso_text: str) -> str:
-    try:
-        dt = datetime.fromisoformat(iso_text)
-        return dt.strftime("%B %d, %Y at %-I:%M %p")
-    except Exception:
-        return str(iso_text or "")
-
-def load_payload(path: Path) -> Dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-def page_template(title: str, body_html: str, description: str = "") -> str:
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>{esc(title)} | 910CPR</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="{esc(description or title)}">
-<meta name="robots" content="index,follow">
-<style>
-:root{{--bg:#eef4f8;--card:#fff;--text:#1f2937;--muted:#6b7280;--accent:#2563eb;--border:#dbe4ee}}
-*{{box-sizing:border-box}} body{{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#f8fbfd 0%,var(--bg) 100%);color:var(--text)}}
-.wrap{{max-width:1200px;margin:0 auto;padding:20px 18px 50px}} .hero,.card{{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:0 8px 24px rgba(15,23,42,.06)}}
-.hero{{padding:26px;margin-bottom:22px}} .grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}} .card{{padding:18px}}
-h1{{margin:0 0 8px;font-size:30px}} h2{{margin:0 0 12px;font-size:22px}} h3{{margin:0 0 10px;font-size:18px}} p,li{{line-height:1.45}}
-.muted{{color:var(--muted)}} a{{color:var(--accent);text-decoration:none}} a:hover{{text-decoration:underline}} .button{{display:inline-block;padding:11px 15px;background:#5f6f82;color:#fff;border-radius:12px;font-weight:700;text-decoration:none}}
-.list{{margin:0;padding-left:18px}} .section{{margin-top:24px}}
-</style>
-</head>
-<body><div class="wrap">{body_html}</div></body></html>"""
-
-def write_page(path: Path, title: str, body_html: str, description: str = "") -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(page_template(title, body_html, description), encoding="utf-8")
-
-def session_link(session: Dict[str, Any], relative_prefix: str = "../") -> str:
-    href = f"{relative_prefix}classes/{session_slug(session)}.html"
-    title = esc(session.get("course_title") or session.get("course_display_title"))
-    meta = f"{esc(pretty_dt(session.get('start','')))} • {esc(session.get('location',''))}"
-    return f'<li><a href="{href}">{title}</a> <span class="muted">• {meta}</span></li>'
-
-def course_link(course: Dict[str, Any], relative_prefix: str = "../") -> str:
-    href = f"{relative_prefix}courses/{course_slug(course)}.html"
-    title = esc(course.get("title") or course.get("source_name"))
-    meta = esc(course.get("family") or course.get("discipline") or "")
-    return f'<li><a href="{href}">{title}</a> <span class="muted">• {meta}</span></li>'
-
-def build_index(schedule_json: Path, output_dir: Path) -> None:
-    payload = load_payload(schedule_json)
-    sessions = payload.get("sessions", [])
-    courses = payload.get("courses", [])
-
-    by_topic = defaultdict(list)
-    by_year = defaultdict(list)
-    by_topic_year = defaultdict(list)
-    by_location = defaultdict(list)
-
-    for s in sessions:
-        topic = s.get("topic_slug") or topic_slug_for_session(s)
-        year = str(s.get("year") or "unknown")
-        location = s.get("location") or "Unknown Location"
-        by_topic[topic].append(s)
-        by_year[year].append(s)
-        by_topic_year[(topic, year)].append(s)
-        by_location[location].append(s)
-
-    for topic, items in by_topic.items():
-        items = sorted(items, key=lambda x: (x.get("start") or "", x.get("id") or 0))
-        year_links = []
-        for year in sorted({str(i.get("year") or "unknown") for i in items}):
-            year_links.append(f'<li><a href="../topics-year/{topic}-{year}.html">{esc(TOPIC_LABELS.get(topic, topic.title()))} {esc(year)}</a></li>')
-        sessions_html = "".join(session_link(i) for i in items[:500])
-        body = (
-            '<p><a href="../index.html">Back to Index</a></p>'
-            f'<section class="hero"><h1>{esc(TOPIC_LABELS.get(topic, topic.title()))}</h1><p class="muted">{len(items)} session pages in this topic bucket.</p></section>'
-            f'<section class="card"><h2>Topic-year buckets</h2><ul class="list">{"".join(year_links) or "<li>No year buckets</li>"}</ul></section>'
-            f'<section class="section card"><h2>Sessions</h2><ul class="list">{sessions_html or "<li>No sessions</li>"}</ul></section>'
-        )
-        write_page(output_dir / "topics" / f"{topic}.html", TOPIC_LABELS.get(topic, topic.title()), body)
-
-    for year, items in by_year.items():
-        items = sorted(items, key=lambda x: (x.get("start") or "", x.get("id") or 0))
-        topic_links = []
-        for topic in sorted({i.get("topic_slug") or topic_slug_for_session(i) for i in items}):
-            topic_links.append(f'<li><a href="../topics-year/{topic}-{year}.html">{esc(TOPIC_LABELS.get(topic, topic.title()))} {esc(year)}</a></li>')
-        body = (
-            '<p><a href="../index.html">Back to Index</a></p>'
-            f'<section class="hero"><h1>{esc(year)} Sessions</h1><p class="muted">{len(items)} session pages in this year bucket.</p></section>'
-            f'<section class="card"><h2>Topic-year buckets</h2><ul class="list">{"".join(topic_links) or "<li>No topic-year buckets</li>"}</ul></section>'
-            f'<section class="section card"><h2>Sessions</h2><ul class="list">{"".join(session_link(i) for i in items[:500]) or "<li>No sessions</li>"}</ul></section>'
-        )
-        write_page(output_dir / "years" / f"{year}.html", f"{year} Sessions", body)
-
-    for (topic, year), items in by_topic_year.items():
-        items = sorted(items, key=lambda x: (x.get("start") or "", x.get("id") or 0))
-        body = (
-            '<p><a href="../index.html">Back to Index</a></p>'
-            f'<section class="hero"><h1>{esc(TOPIC_LABELS.get(topic, topic.title()))} {esc(year)}</h1><p class="muted">{len(items)} session pages in this topic-year bucket.</p></section>'
-            f'<section class="card"><h2>Sessions</h2><ul class="list">{"".join(session_link(i) for i in items[:500]) or "<li>No sessions</li>"}</ul></section>'
-        )
-        write_page(output_dir / "topics-year" / f"{topic}-{year}.html", f"{TOPIC_LABELS.get(topic, topic.title())} {year}", body)
-
-    for location, items in by_location.items():
-        items = sorted(items, key=lambda x: (x.get("start") or "", x.get("id") or 0))
-        slug = location_slug(location)
-        body = (
-            '<p><a href="../index.html">Back to Index</a></p>'
-            f'<section class="hero"><h1>{esc(location)}</h1><p class="muted">{len(items)} session pages in this location bucket.</p></section>'
-            f'<section class="card"><h2>Sessions</h2><ul class="list">{"".join(session_link(i) for i in items[:500]) or "<li>No sessions</li>"}</ul></section>'
-        )
-        write_page(output_dir / "locations" / f"{slug}.html", location, body)
-
-    courses_sorted = sorted(courses, key=lambda c: (c.get("family") or "", c.get("title") or c.get("source_name") or ""))
-    body = (
-        '<p><a href="../index.html">Back to Index</a></p>'
-        f'<section class="hero"><h1>All Course Files</h1><p class="muted">{len(courses_sorted)} course rows from course export.</p></section>'
-        f'<section class="card"><h2>Courses</h2><ul class="list">{"".join(course_link(c) for c in courses_sorted) or "<li>No courses</li>"}</ul></section>'
-    )
-    write_page(output_dir / "courses" / "all-courses.html", "All Course Files", body)
-
-    topic_cards = []
-    for topic in sorted(by_topic):
-        topic_cards.append(
-            f'<section class="card"><h3>{esc(TOPIC_LABELS.get(topic, topic.title()))}</h3><p class="muted">{len(by_topic[topic])} session pages</p><p><a class="button" href="topics/{topic}.html">Open topic hub</a></p></section>'
-        )
-    year_cards = []
-    for year in sorted(by_year):
-        year_cards.append(
-            f'<section class="card"><h3>{esc(year)}</h3><p class="muted">{len(by_year[year])} session pages</p><p><a class="button" href="years/{year}.html">Open year index</a></p></section>'
-        )
-    loc_cards = []
-    for location in sorted(by_location):
-        slug = location_slug(location)
-        loc_cards.append(
-            f'<section class="card"><h3>{esc(location)}</h3><p class="muted">{len(by_location[location])} session pages</p><p><a class="button" href="locations/{slug}.html">Open location index</a></p></section>'
-        )
-
-    body = (
-        '<section class="hero">'
-        '<h1>Structured Index System for Classes and Courses</h1>'
-        '<p class="muted">This layer does not change your existing pages. It adds organized hub pages built from schedule.json and course-export / class-report data.</p>'
-        f'<p><strong>Coverage:</strong> {len(courses)} course rows and {len(sessions)} session rows.</p>'
-        '</section>'
-        f'<div class="section"><h2>Browse by topic</h2><div class="grid">{"".join(topic_cards)}</div></div>'
-        f'<div class="section"><h2>Browse by year</h2><div class="grid">{"".join(year_cards)}</div></div>'
-        f'<div class="section"><h2>Browse by location</h2><div class="grid">{"".join(loc_cards)}</div></div>'
-        '<div class="section"><section class="card"><h2>Course file directory</h2><p class="muted">Every course row from the course export is listed in one place.</p><p><a class="button" href="courses/all-courses.html">Open all course files</a></p></section></div>'
-    )
-    write_page(output_dir / "index.html", "Structured Index System", body)
-    print(f"Wrote structured index pages to {output_dir}")
+def ensure(p: Path): p.mkdir(parents=True, exist_ok=True)
+def fmt(iso):
+    try: return datetime.fromisoformat(iso).strftime("%B %d, %Y at %I:%M %p").replace(" 0"," ")
+    except Exception: return iso or ""
+def shell(title, body):
+    return f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}</title><meta name="robots" content="index,follow"><style>:root{{--bg:#eef4f8;--card:#fff;--text:#1f2937;--muted:#6b7280;--accent:#2563eb;--border:#dbe4ee}}*{{box-sizing:border-box}}body{{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#f8fbfd 0%,var(--bg) 100%);color:var(--text)}}.wrap{{max-width:1200px;margin:0 auto;padding:20px 18px 50px}}.hero,.card{{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:0 8px 24px rgba(15,23,42,.06)}}.hero{{padding:26px;margin-bottom:22px}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}}.card{{padding:18px}}h1{{margin:0 0 8px;font-size:30px}}h2{{margin:0 0 12px;font-size:22px}}h3{{margin:0 0 10px;font-size:18px}}p,li{{line-height:1.45}}.muted{{color:var(--muted)}}a{{color:var(--accent);text-decoration:none}}a:hover{{text-decoration:underline}}.button{{display:inline-block;padding:11px 15px;background:#5f6f82;color:#fff;border-radius:12px;font-weight:700;text-decoration:none}}.button:hover{{background:#526170;text-decoration:none}}.preview-list{{list-style:none;padding:0;margin:12px 0 0}}.preview-list li{{margin:0 0 9px;padding-bottom:9px;border-bottom:1px dashed var(--border)}}.preview-list li:last-child{{border-bottom:0}}</style></head><body><div class="wrap">{body}</div></body></html>"""
+def write(p: Path, title, body):
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(shell(title, body), encoding="utf-8")
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Build structured index pages from schedule.json")
-    parser.add_argument("--schedule-json", required=True)
-    parser.add_argument("--output-dir", required=True)
-    args = parser.parse_args()
-    build_index(Path(args.schedule_json), Path(args.output_dir))
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--schedule-json", required=True)
+    ap.add_argument("--output-dir", required=True)
+    args=ap.parse_args()
+    data=json.loads(Path(args.schedule_json).read_text(encoding="utf-8"))
+    sessions=data.get("sessions", []); courses=data.get("courses", [])
+    docs=Path(args.output_dir)
+    for d in ["topics","topics-year","years","locations","courses","data"]: ensure(docs/d)
+    by_topic=defaultdict(list); by_year=defaultdict(list); by_loc=defaultdict(list); by_ty=defaultdict(list)
+    for s in sessions:
+        t=s.get("topic") or "misc"; y=str(s.get("year") or "unknown"); l=s.get("location_slug") or "unknown-location"
+        by_topic[t].append(s); by_year[y].append(s); by_loc[l].append(s); by_ty[(t,y)].append(s)
+    topic_cards="".join(f'<section class="card"><h3>{html.escape(TOPIC_LABELS.get(t,t.title()))}</h3><p class="muted">{len(v)} session pages</p><p><a class="button" href="topics/{t}.html">Open hub</a></p></section>' for t,v in sorted(by_topic.items()))
+    year_cards="".join(f'<section class="card"><h3>{html.escape(y)}</h3><p class="muted">{len(v)} session pages</p><p><a class="button" href="years/{y}.html">Open year</a></p></section>' for y,v in sorted(by_year.items()))
+    loc_cards="".join(f'<section class="card"><h3>{html.escape(v[0].get("location") or k)}</h3><p class="muted">{len(v)} session pages</p><p><a class="button" href="locations/{k}.html">Open location</a></p></section>' for k,v in sorted(by_loc.items(), key=lambda kv:(-len(kv[1]), kv[0]))[:20])
+    write(docs/"index.html","Structured Index System | 910CPR",f'<div class="hero"><h1>Structured Index System for Classes and Courses</h1><p class="muted">This layer adds organized hub pages that point into the generated docs pages.</p><p><strong>Coverage:</strong> {len(courses)} course records and {len(sessions)} session records.</p></div><div><h2>Browse by topic</h2><div class="grid">{topic_cards}</div></div><div><h2>Browse by year</h2><div class="grid">{year_cards}</div></div><div><h2>Browse by location</h2><div class="grid">{loc_cards}</div></div><div><section class="card"><h2>Course Record Directory</h2><p><a class="button" href="courses/all-courses.html">Open all course records</a></p></section></div>')
+    for t,items in by_topic.items():
+        lis="".join(f'<li><a href="../{html.escape(s["class_page"])}">{html.escape(s["title"])}</a> <span class="muted">• {html.escape(s.get("location") or "")} • {html.escape(fmt(s.get("start")))}' + '</span></li>' for s in sorted(items, key=lambda s:s.get("start") or "")[:50])
+        years="".join(f'<li><a href="../topics-year/{t}-{y}.html">{html.escape(TOPIC_LABELS.get(t,t.title()))} {y}</a></li>' for y in sorted({str(s.get("year") or "unknown") for s in items}))
+        write(docs/"topics"/f"{t}.html",f"{TOPIC_LABELS.get(t,t.title())} | 910CPR",f'<div class="hero"><h1>{html.escape(TOPIC_LABELS.get(t,t.title()))}</h1><p class="muted">{len(items)} sessions in this topic bucket.</p></div><div class="card"><h2>By year</h2><ul>{years}</ul></div><div class="card"><h2>Preview sessions</h2><ul class="preview-list">{lis}</ul></div>')
+    for y,items in by_year.items():
+        lis="".join(f'<li><a href="../{html.escape(s["class_page"])}">{html.escape(s["title"])}</a> <span class="muted">• {html.escape(s.get("location") or "")}</span></li>' for s in sorted(items, key=lambda s:s.get("start") or "")[:80])
+        write(docs/"years"/f"{y}.html",f"{y} Sessions | 910CPR",f'<div class="hero"><h1>{html.escape(y)}</h1><p class="muted">{len(items)} sessions in this year bucket.</p></div><div class="card"><ul class="preview-list">{lis}</ul></div>')
+    for (t,y),items in by_ty.items():
+        lis="".join(f'<li><a href="../{html.escape(s["class_page"])}">{html.escape(s["title"])}</a> <span class="muted">• {html.escape(s.get("location") or "")}</span></li>' for s in sorted(items, key=lambda s:s.get("start") or "")[:80])
+        lab=TOPIC_LABELS.get(t,t.title())
+        write(docs/"topics-year"/f"{t}-{y}.html",f"{lab} {y} | 910CPR",f'<div class="hero"><h1>{html.escape(lab)} {html.escape(y)}</h1><p class="muted">{len(items)} sessions in this topic and year bucket.</p></div><div class="card"><ul class="preview-list">{lis}</ul></div>')
+    for k,items in by_loc.items():
+        label=items[0].get("location") or k
+        lis="".join(f'<li><a href="../{html.escape(s["class_page"])}">{html.escape(s["title"])}</a> <span class="muted">• {html.escape(fmt(s.get("start")))}' + '</span></li>' for s in sorted(items, key=lambda s:s.get("start") or "")[:80])
+        write(docs/"locations"/f"{k}.html",f"{label} | 910CPR",f'<div class="hero"><h1>{html.escape(label)}</h1><p class="muted">{len(items)} sessions in this location bucket.</p></div><div class="card"><ul class="preview-list">{lis}</ul></div>')
+    course_lis="".join(f'<li>{html.escape(c.get("name") or c.get("meta_key") or c.get("slug") or "")} <span class="muted">• {html.escape(c.get("family") or "")} • {html.escape(c.get("certifying_body") or "")}</span></li>' for c in sorted(courses, key=lambda c:(c.get("family") or "", c.get("name") or "")))
+    write(docs/"courses"/"all-courses.html","Course Record Directory | 910CPR",f'<div class="hero"><h1>Course Record Directory</h1><p class="muted">{len(courses)} course records found in the current course export.</p></div><div class="card"><ul class="preview-list">{course_lis}</ul></div>')
+    (docs/"data"/"schedule.json").write_text(Path(args.schedule_json).read_text(encoding="utf-8"), encoding="utf-8")
+    (docs/"STRUCTURE.txt").write_text("This docs bundle contains index.html, topics, topics-year, years, locations, and a course record directory.\n", encoding="utf-8")
+    print(f"Wrote structured index pages to {docs}")
     return 0
 
-if __name__ == "__main__":
+if __name__=="__main__":
     raise SystemExit(main())
