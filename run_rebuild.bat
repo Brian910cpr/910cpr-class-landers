@@ -12,13 +12,13 @@ if errorlevel 1 goto error
 
 echo.
 echo STEP 2 - Build public schedule JSON
-python scripts\build_public_schedule_json.py
-if errorlevel 1 goto error
-
+python .\scripts\build_public_schedule_compat.py
+if errorlevel 1 goto :fail
 echo.
+
 echo STEP 3 - Build class landers
-python scripts\build_landers.py
-if errorlevel 1 goto error
+python scripts\build_sessions_from_public.py
+if errorlevel 1 goto :fail
 
 echo.
 echo STEP 4 - Build course landers
@@ -26,9 +26,10 @@ python scripts\build_course_landers.py
 if errorlevel 1 goto error
 
 echo.
-echo STEP 5 - Build index and sitemap
-python scripts\build_index_and_sitemap.py
-if errorlevel 1 goto error
+
+echo STEP 5 - Build index from public schedule
+python scripts\build_index_from_public.py
+if errorlevel 1 goto :fail
 
 echo.
 echo =========================
