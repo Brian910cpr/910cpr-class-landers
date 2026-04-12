@@ -276,7 +276,7 @@ def detect_cert_logo(course_name: str) -> str:
 
     if "hsi" in c or "ashi" in c:
         if (IMAGES_DIR / "0hsi.png").exists():
-            return "/images/hsi.png"
+            return "/images/0hsi.png"
 
     if "aha" in c or "heartsaver" in c or "heartcode" in c or "acls" in c or "pals" in c or "bls" in c:
         if (IMAGES_DIR / "0aha.png").exists():
