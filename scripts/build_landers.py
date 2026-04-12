@@ -515,13 +515,17 @@ def parse_review_objects(review_list: list) -> list[dict]:
         if not isinstance(item, dict):
             continue
 
-        comment = clean_review_text(item.get("comment", ""))
+        comment = clean_review_text(
+            item.get("comment", "")
+            or item.get("text", "")
+        )
         if len(comment) < MIN_REVIEW_LENGTH:
             continue
 
         reviewer = item.get("reviewer", {}) or {}
         author = normalize_whitespace(
             reviewer.get("displayName")
+            or item.get("author_name")
             or item.get("name")
             or item.get("author")
             or "Google Review"
@@ -535,6 +539,7 @@ def parse_review_objects(review_list: list) -> list[dict]:
             "FOUR": 4,
             "FIVE": 5,
         }
+
         stars = stars_lookup.get(stars_raw)
         if stars is None:
             try:
@@ -555,7 +560,11 @@ def parse_review_objects(review_list: list) -> list[dict]:
                 "author": compact_reviewer_name(author),
                 "comment": comment,
                 "stars": max(1, min(5, int(stars))),
-                "created": str(item.get("createTime", "")).strip(),
+                "created": str(
+                    item.get("createTime", "")
+                    or item.get("created_at", "")
+                    or item.get("created_date", "")
+                ).strip(),
             }
         )
 
@@ -1371,4 +1380,6 @@ This specific session has passed. See upcoming classes below.
     count += 1
 
 print(f"Landers built: {count}")
-print(f"Reviews loaded: {len(all_reviews)}")
+print(f"Loaded: {len(all_reviews)}")
+if str(session_id) == "12774297":
+    print("For 12774297:", len(selected_reviews))
