@@ -1,14 +1,17 @@
 import json
 import re
 import hashlib
+from zoneinfo import ZoneInfo
 from datetime import datetime
 from html import unescape, escape
 from pathlib import Path
 
 from title_cleaner import normalize_course_title, seo_title_for_session
 
+TZ = ZoneInfo("America/New_York")
+
 ROOT = Path(__file__).resolve().parents[1]
-DATA_FILE = ROOT / "data" / "schedule.json"
+DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs" / "classes"
 IMAGES_DIR = ROOT / "docs" / "images"
 COURSE_ARCHIVE_DIR = IMAGES_DIR / "course-archive"
@@ -82,13 +85,23 @@ def parse_dt(value):
         "%m/%d/%Y %H:%M",
         "%m/%d/%Y %I:%M %p",
         "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S%z",
     ):
         try:
-            return datetime.strptime(raw, fmt)
+            dt = datetime.strptime(raw, fmt)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=TZ)
+            return dt.astimezone(TZ)
         except Exception:
             pass
 
-    return None
+    try:
+        dt = datetime.fromisoformat(raw)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=TZ)
+        return dt.astimezone(TZ)
+    except Exception:
+        return None
 
 
 def location_to_city_state(location: str):
@@ -309,8 +322,8 @@ def same_course(session_a: dict, session_b: dict) -> bool:
     if a_course_id and b_course_id:
         return a_course_id == b_course_id
 
-    a_name = canonical_course_name(session_a.get("course", ""))
-    b_name = canonical_course_name(session_b.get("course", ""))
+    a_name = canonical_course_name(session_a.get("course_name", ""))
+    b_name = canonical_course_name(session_b.get("course_name", ""))
     return a_name == b_name
 
 
@@ -326,7 +339,7 @@ def get_upcoming_sessions(current_session: dict, sessions: list[dict], now_dt: d
         if sid == current_id:
             continue
 
-        dt = parse_dt(s.get("start"))
+        dt = parse_dt(s.get("start_at"))
         if not dt or dt < now_dt:
             continue
 
@@ -353,8 +366,8 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
         dt = s["_parsed_dt"]
         date_label = dt.strftime("%B %d, %Y")
         time_label = dt.strftime("%I:%M %p").lstrip("0")
-        location_label = clean_location_display(s.get("location", "")) or "Location TBD"
-        register_url = s.get("register_url", "#")
+        location_label = clean_location_display(s.get("location_display", "")) or "Location TBD"
+        register_url = s.get("registration_url", "#")
 
         cards.append(
             f"""
@@ -386,7 +399,7 @@ with open(DATA_FILE, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 all_sessions = data["sessions"]
-sessions = [s for s in all_sessions if is_public_listing_location(s.get("location", ""))]
+sessions = all_sessions
 
 template = """
 <!DOCTYPE html>
@@ -913,16 +926,15 @@ document.addEventListener("click", function(e) {{
 
 count = 0
 build_stamp = datetime.now().strftime("%Y-%m-%d %I:%M %p").lstrip("0")
-now_dt = datetime.now()
-
+now_dt = datetime.now(TZ)
 for s in sessions:
     session_id = s.get("session_id")
-    course_raw = s.get("course", "")
+    course_raw = s.get("course_name", "")
     course = canonical_course_name(course_raw)
-    raw_location = str(s.get("location", "")).strip()
+    raw_location = str(s.get("location_display", "")).strip()
     location = clean_location_display(raw_location) or "Wilmington; Shipyard Blvd"
-    register = s.get("register_url", "#")
-    dt = parse_dt(s.get("start"))
+    register = s.get("registration_url", "#")
+    dt = parse_dt(s.get("start_at"))
 
     if dt:
         date = dt.strftime("%B %d, %Y")
@@ -1029,7 +1041,7 @@ This specific session has passed. See upcoming classes below.
     upcoming_sessions = get_upcoming_sessions(s, sessions, now_dt, limit=UPCOMING_LIMIT)
     upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, schedule_url, course)
 
-    html = template.format(
+    html_doc = template.format(
         page_title=escape(page_title),
         meta_description=escape(meta_description),
         robots_value=robots_value,
@@ -1067,7 +1079,7 @@ This specific session has passed. See upcoming classes below.
 
     path = OUTPUT_DIR / f"{session_id}.html"
     with open(path, "w", encoding="utf-8") as f:
-        f.write(html)
+        f.write(html_doc)
 
     count += 1
 
