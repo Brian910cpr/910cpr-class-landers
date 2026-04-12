@@ -1,10 +1,12 @@
 import json
 import re
 import hashlib
+import random
 from datetime import datetime
 from html import unescape, escape
 from pathlib import Path
 from zoneinfo import ZoneInfo
+from zipfile import ZipFile
 
 from title_cleaner import normalize_course_title, seo_title_for_session
 
@@ -15,9 +17,12 @@ DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs" / "classes"
 IMAGES_DIR = ROOT / "docs" / "images"
 COURSE_ARCHIVE_DIR = IMAGES_DIR / "course-archive"
+REVIEWS_SOURCE = ROOT / "data" / "raw" / "reviews"
 
 GTM_ID = "GTM-PQS8DCBH"
 UPCOMING_LIMIT = 10
+REVIEWS_PER_PAGE = 3
+MIN_REVIEW_LENGTH = 35
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -52,12 +57,40 @@ def strip_html(text):
     return text
 
 
-def canonical_course_name(course_raw: str) -> str:
-    return normalize_course_title(course_raw) or strip_html(course_raw) or "CPR Class"
+def display_course_name(course_raw: str) -> str:
+    cleaned = normalize_course_title(course_raw) or strip_html(course_raw) or "Course"
+    cleaned = re.sub(
+        r"\b(CPR\s+Class|Training\s+Class|Class)\b$",
+        "",
+        cleaned,
+        flags=re.I,
+    ).strip(" -–—,:;/")
+    return cleaned or "Course"
+
+
+def seo_course_phrase(course_name: str) -> str:
+    """
+    Human-facing name stays clean.
+    SEO-facing strings can carry search terms naturally.
+    """
+    base = display_course_name(course_name)
+    lower = base.lower()
+
+    if "bls" in lower and "cpr" not in lower:
+        return f"{base} CPR Certification"
+    if "acls" in lower and "training" not in lower:
+        return f"{base} Training"
+    if "pals" in lower and "training" not in lower:
+        return f"{base} Training"
+    if "heartsaver" in lower and "training" not in lower:
+        return f"{base} Training"
+    if "cpr" not in lower and "aed" in lower:
+        return f"{base} Training"
+    return base
 
 
 def slugify(text: str) -> str:
-    text = canonical_course_name(text).lower()
+    text = display_course_name(text).lower()
     text = re.sub(r"[^a-z0-9]+", "-", text).strip("-")
     return text or "course"
 
@@ -158,7 +191,7 @@ def audience_blurb(course_name: str) -> str:
         )
 
     return (
-        "This class supports both individual certification needs and organizations that need reliable, "
+        "This course supports both individual certification needs and organizations that need reliable, "
         "repeatable safety training for employees."
     )
 
@@ -166,18 +199,20 @@ def audience_blurb(course_name: str) -> str:
 def corporate_blurb(city: str, course_name: str) -> str:
     return (
         f"910CPR also supports employers in {city} that need documented, renewable training for staff. "
-        f"If you need multiple employees trained in {course_name}, group and workplace options may be available."
+        f"If you need multiple employees trained in {display_course_name(course_name)}, "
+        f"group and workplace options may be available."
     )
 
 
 def make_schema(course_name: str, session_dt, location_name: str, city: str, state: str, register_url: str):
     start_iso = session_dt.isoformat() if session_dt else ""
+    schema_name = seo_course_phrase(course_name)
     return f"""
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
   "@type": "Event",
-  "name": {json.dumps(course_name)},
+  "name": {json.dumps(schema_name)},
   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
   "eventStatus": "https://schema.org/EventScheduled",
   "startDate": {json.dumps(start_iso)},
@@ -235,7 +270,7 @@ def load_course_description_html(course_id: str, course_name: str) -> str:
         [
             short_slug(course_name),
             slugify(course_name),
-            canonical_course_name(course_name),
+            display_course_name(course_name),
         ]
     )
 
@@ -328,8 +363,8 @@ def same_course(session_a: dict, session_b: dict) -> bool:
     if a_course_id and b_course_id:
         return a_course_id == b_course_id
 
-    a_name = canonical_course_name(session_a.get("course_name", ""))
-    b_name = canonical_course_name(session_b.get("course_name", ""))
+    a_name = display_course_name(session_a.get("course_name", ""))
+    b_name = display_course_name(session_b.get("course_name", ""))
     return a_name == b_name
 
 
@@ -401,11 +436,259 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
 """
 
 
+def normalize_whitespace(text: str) -> str:
+    return re.sub(r"\s+", " ", str(text or "")).strip()
+
+
+def clean_review_text(text: str) -> str:
+    text = strip_html(text)
+    text = normalize_whitespace(text)
+    text = text.strip(' "\'')
+    return text
+
+
+def compact_reviewer_name(name: str) -> str:
+    name = normalize_whitespace(name)
+    if not name:
+        return "Google Review"
+
+    parts = [p for p in re.split(r"\s+", name) if p]
+    if len(parts) == 1:
+        return parts[0]
+
+    last_initial = parts[-1][0].upper() + "."
+    return f"{parts[0]} {last_initial}"
+
+
+def review_record_key(author: str, comment: str) -> str:
+    raw = f"{author}|{comment}".lower()
+    return hashlib.md5(raw.encode("utf-8")).hexdigest()
+
+
+def review_matches_course(course_name: str, comment: str) -> bool:
+    lower_course = display_course_name(course_name).lower()
+    lower_comment = comment.lower()
+
+    if "bls" in lower_course:
+        return "bls" in lower_comment
+    if "acls" in lower_course:
+        return "acls" in lower_comment
+    if "pals" in lower_course:
+        return "pals" in lower_comment
+    if "heartsaver" in lower_course:
+        return "heartsaver" in lower_comment
+    if "first aid" in lower_course:
+        return "first aid" in lower_comment
+
+    return False
+
+
+def iter_review_payloads_from_json(data_obj):
+    if isinstance(data_obj, dict):
+        if isinstance(data_obj.get("reviews"), list):
+            yield data_obj["reviews"]
+        for value in data_obj.values():
+            yield from iter_review_payloads_from_json(value)
+    elif isinstance(data_obj, list):
+        looks_like_reviews = False
+        for item in data_obj:
+            if isinstance(item, dict) and (
+                "comment" in item
+                or "reviewer" in item
+                or "starRating" in item
+                or "reviewId" in item
+            ):
+                looks_like_reviews = True
+                break
+        if looks_like_reviews:
+            yield data_obj
+        else:
+            for item in data_obj:
+                yield from iter_review_payloads_from_json(item)
+
+
+def parse_review_objects(review_list: list) -> list[dict]:
+    parsed = []
+    seen = set()
+
+    for item in review_list:
+        if not isinstance(item, dict):
+            continue
+
+        comment = clean_review_text(item.get("comment", ""))
+        if len(comment) < MIN_REVIEW_LENGTH:
+            continue
+
+        reviewer = item.get("reviewer", {}) or {}
+        author = normalize_whitespace(
+            reviewer.get("displayName")
+            or item.get("name")
+            or item.get("author")
+            or "Google Review"
+        )
+
+        stars_raw = str(item.get("starRating", "")).upper()
+        stars_lookup = {
+            "ONE": 1,
+            "TWO": 2,
+            "THREE": 3,
+            "FOUR": 4,
+            "FIVE": 5,
+        }
+        stars = stars_lookup.get(stars_raw)
+        if stars is None:
+            try:
+                stars = int(item.get("rating", 5))
+            except Exception:
+                stars = 5
+
+        if stars < 4:
+            continue
+
+        key = review_record_key(author, comment)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        parsed.append(
+            {
+                "author": compact_reviewer_name(author),
+                "comment": comment,
+                "stars": max(1, min(5, int(stars))),
+                "created": str(item.get("createTime", "")).strip(),
+            }
+        )
+
+    return parsed
+
+
+def load_reviews() -> list[dict]:
+    sources = []
+
+    if REVIEWS_SOURCE.is_file():
+        sources.append(REVIEWS_SOURCE)
+    elif REVIEWS_SOURCE.exists():
+        for ext in ("*.json", "*.zip"):
+            sources.extend(sorted(REVIEWS_SOURCE.glob(ext)))
+
+    all_reviews = []
+    seen = set()
+
+    for path in sources:
+        try:
+            if path.suffix.lower() == ".json":
+                data_obj = json.loads(path.read_text(encoding="utf-8", errors="ignore"))
+                for review_list in iter_review_payloads_from_json(data_obj):
+                    for review in parse_review_objects(review_list):
+                        key = review_record_key(review["author"], review["comment"])
+                        if key not in seen:
+                            seen.add(key)
+                            all_reviews.append(review)
+
+            elif path.suffix.lower() == ".zip":
+                with ZipFile(path) as zf:
+                    for name in zf.namelist():
+                        if not name.lower().endswith(".json"):
+                            continue
+                        try:
+                            with zf.open(name) as f:
+                                data_obj = json.loads(f.read().decode("utf-8", errors="ignore"))
+                            for review_list in iter_review_payloads_from_json(data_obj):
+                                for review in parse_review_objects(review_list):
+                                    key = review_record_key(review["author"], review["comment"])
+                                    if key not in seen:
+                                        seen.add(key)
+                                        all_reviews.append(review)
+                        except Exception:
+                            continue
+        except Exception:
+            continue
+
+    return all_reviews
+
+
+def pick_reviews_for_session(
+    session_id: str,
+    course_id: str,
+    course_name: str,
+    reviews: list[dict],
+    count: int = REVIEWS_PER_PAGE,
+) -> list[dict]:
+    if not reviews:
+        return []
+
+    course_specific = [r for r in reviews if review_matches_course(course_name, r["comment"])]
+    general = [r for r in reviews if r not in course_specific]
+
+    seed_value = f"{session_id}|{course_id}|{display_course_name(course_name)}"
+    rng = random.Random(hashlib.md5(seed_value.encode("utf-8")).hexdigest())
+
+    chosen = []
+
+    def pull(pool: list[dict], needed: int):
+        if needed <= 0 or not pool:
+            return []
+        pool_copy = list(pool)
+        rng.shuffle(pool_copy)
+        return pool_copy[:needed]
+
+    chosen.extend(pull(course_specific, count))
+
+    if len(chosen) < count:
+        already = {review_record_key(r["author"], r["comment"]) for r in chosen}
+        remaining_general = [
+            r for r in general
+            if review_record_key(r["author"], r["comment"]) not in already
+        ]
+        chosen.extend(pull(remaining_general, count - len(chosen)))
+
+    return chosen[:count]
+
+
+def truncate_review(text: str, max_chars: int = 220) -> str:
+    text = normalize_whitespace(text)
+    if len(text) <= max_chars:
+        return text
+    cut = text[:max_chars].rsplit(" ", 1)[0].strip()
+    return cut + "..."
+
+
+def render_reviews_html(selected_reviews: list[dict]) -> str:
+    if not selected_reviews:
+        return ""
+
+    cards = []
+    for review in selected_reviews:
+        stars = "★" * int(review.get("stars", 5))
+        comment = truncate_review(review.get("comment", ""))
+        author = review.get("author", "Google Review")
+
+        cards.append(
+            f"""
+<div class="review-card">
+  <div class="review-stars" aria-label="Five star review">{stars}</div>
+  <p class="review-text">“{escape(comment)}”</p>
+  <div class="review-author">{escape(author)}</div>
+</div>
+"""
+        )
+
+    return f"""
+<section class="info-box reviews-box">
+  <h2>Why Students Choose 910CPR</h2>
+  <div class="reviews-grid">
+    {''.join(cards)}
+  </div>
+</section>
+"""
+
+
 with open(DATA_FILE, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 all_sessions = data["sessions"]
 sessions = all_sessions
+all_reviews = load_reviews()
 
 template = """
 <!DOCTYPE html>
@@ -749,6 +1032,41 @@ body img {{
   margin: 0 0 8px 0;
 }}
 
+.reviews-box {{
+  margin-top: 24px;
+}}
+
+.reviews-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}}
+
+.review-card {{
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}}
+
+.review-stars {{
+  color: #d97706;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}}
+
+.review-text {{
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+}}
+
+.review-author {{
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}}
+
 .text-link {{
   color: var(--accent);
   text-decoration: none;
@@ -834,6 +1152,8 @@ body img {{
 
     {brand_strip_html}
 
+    {reviews_html}
+
     {course_description_section}
 
     <div class="stack">
@@ -883,7 +1203,8 @@ now_dt = datetime.now(TZ)
 for s in sessions:
     session_id = s.get("session_id")
     course_raw = s.get("course_name", "")
-    course = canonical_course_name(course_raw)
+    course_display = display_course_name(course_raw)
+    course_seo = seo_course_phrase(course_raw)
     raw_location = str(s.get("location_display", "")).strip()
     location = clean_location_display(raw_location) or "Wilmington; Shipyard Blvd"
     register = s.get("registration_url", "#")
@@ -903,11 +1224,12 @@ for s in sessions:
         weekday = ""
 
     city, state = location_to_city_state(location)
-    page_title = f"{seo_title_for_session(course, city=city, state=state)} | 910CPR"
+    page_title = f"{seo_title_for_session(course_seo, city=city, state=state)} | 910CPR"
     meta_description = (
-        f"{course} in {location}. View class details, current schedule options, and register online with 910CPR."
+        f"{course_seo} in {location}. View class details, current schedule options, "
+        f"and register online with 910CPR."
     )
-    course_page_url = f"../courses/{short_slug(course)}.html"
+    course_page_url = f"../courses/{short_slug(course_display)}.html"
 
     course_id = str(s.get("course_id", "")).strip()
     course_number = str(s.get("course_number", "")).strip()
@@ -936,7 +1258,7 @@ This specific session has passed. See upcoming classes below.
         robots_value = "index,follow"
         hero_subhead = "Use the register button for this session or the upcoming list below for other dates and times."
 
-    cert_logo = detect_cert_logo(course)
+    cert_logo = detect_cert_logo(course_display)
     if cert_logo:
         cert_logo_html = f'''
 <div class="cert-badge">
@@ -963,7 +1285,7 @@ This specific session has passed. See upcoming classes below.
         brand_parts.append(
             f'''
 <div class="image-card">
-  <img src="{escape(course_img_url)}" alt="{escape(course)} course image" loading="lazy">
+  <img src="{escape(course_img_url)}" alt="{escape(course_display)} course image" loading="lazy">
 </div>
 '''
         )
@@ -973,7 +1295,7 @@ This specific session has passed. See upcoming classes below.
     else:
         brand_strip_html = ""
 
-    description_html = load_course_description_html(course_id or course_number, course)
+    description_html = load_course_description_html(course_id or course_number, course_display)
     if description_html:
         course_description_section = f"""
 <section class="info-box description-box">
@@ -988,13 +1310,22 @@ This specific session has passed. See upcoming classes below.
 <section class="info-box description-box">
   <h2>Course Description</h2>
   <div class="description-html">
-    <p>{escape(audience_blurb(course))}</p>
+    <p>{escape(audience_blurb(course_display))}</p>
   </div>
 </section>
 """
 
     upcoming_sessions = get_upcoming_sessions(s, sessions, now_dt, limit=UPCOMING_LIMIT)
     upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, schedule_url)
+
+    selected_reviews = pick_reviews_for_session(
+        session_id=str(session_id or ""),
+        course_id=course_id or course_number,
+        course_name=course_display,
+        reviews=all_reviews,
+        count=REVIEWS_PER_PAGE,
+    )
+    reviews_html = render_reviews_html(selected_reviews)
 
     html_doc = template.format(
         page_title=escape(page_title),
@@ -1003,8 +1334,8 @@ This specific session has passed. See upcoming classes below.
         canonical_url=escape(canonical_url),
         gtm_head=render_gtm_head(),
         gtm_body=render_gtm_body(),
-        schema_block=make_schema(course, dt, location, city, state, register),
-        course=escape(course),
+        schema_block=make_schema(course_seo, dt, location, city, state, register),
+        course=escape(course_display),
         location=escape(location),
         date=escape(date),
         time=escape(time),
@@ -1017,19 +1348,20 @@ This specific session has passed. See upcoming classes below.
         course_page_url=escape(course_page_url),
         schedule_url=escape(schedule_url),
         build_stamp=escape(build_stamp),
-        course_js=js_escape(course),
+        course_js=js_escape(course_display),
         course_id=escape(course_id or course_number),
-        course_slug=short_slug(course),
+        course_slug=short_slug(course_display),
         location_js=js_escape(location),
         is_past_js="true" if is_past else "false",
         register_js=js_escape(register),
-        audience_text=escape(audience_blurb(course)),
-        corporate_text=escape(corporate_blurb(city, course)),
+        audience_text=escape(audience_blurb(course_display)),
+        corporate_text=escape(corporate_blurb(city, course_display)),
         hero_subhead=escape(hero_subhead),
         cert_logo_html=cert_logo_html,
         brand_strip_html=brand_strip_html,
         course_description_section=course_description_section,
         upcoming_sessions_html=upcoming_sessions_html,
+        reviews_html=reviews_html,
     )
 
     path = OUTPUT_DIR / f"{session_id}.html"
@@ -1039,3 +1371,4 @@ This specific session has passed. See upcoming classes below.
     count += 1
 
 print(f"Landers built: {count}")
+print(f"Reviews loaded: {len(all_reviews)}")
