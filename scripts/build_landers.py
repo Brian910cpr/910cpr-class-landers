@@ -2,13 +2,13 @@ import json
 import re
 import hashlib
 from datetime import datetime
-from zoneinfo import ZoneInfo
-
-TZ = ZoneInfo("America/New_York")
+from html import unescape, escape
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from title_cleaner import normalize_course_title, seo_title_for_session
 
+TZ = ZoneInfo("America/New_York")
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
@@ -78,15 +78,19 @@ def js_escape(value):
 
 def parse_dt(value):
     raw = str(value or "").strip()
+    if not raw:
+        return None
 
-    for fmt in (
+    formats = (
         "%Y-%m-%d %H:%M:%S",
         "%Y-%m-%d %H:%M",
         "%m/%d/%Y %H:%M",
         "%m/%d/%Y %I:%M %p",
         "%Y-%m-%dT%H:%M:%S",
         "%Y-%m-%dT%H:%M:%S%z",
-    ):
+    )
+
+    for fmt in formats:
         try:
             dt = datetime.strptime(raw, fmt)
             if dt.tzinfo is None:
@@ -120,10 +124,6 @@ def location_to_city_state(location: str):
         return raw, "NC"
 
     return "Wilmington", "NC"
-
-
-def is_public_listing_location(location: str) -> bool:
-    return str(location or "").strip().startswith("::")
 
 
 def clean_location_display(location: str) -> str:
@@ -171,7 +171,7 @@ def corporate_blurb(city: str, course_name: str) -> str:
 
 
 def make_schema(course_name: str, session_dt, location_name: str, city: str, state: str, register_url: str):
-    start_iso = session_dt.strftime("%Y-%m-%dT%H:%M:%S") if session_dt else ""
+    start_iso = session_dt.isoformat() if session_dt else ""
     return f"""
 <script type="application/ld+json">
 {{
@@ -261,9 +261,18 @@ def load_course_description_html(course_id: str, course_name: str) -> str:
 
 
 def default_logo_url() -> str:
-    logo = IMAGES_DIR / "logo.png"
-    if logo.exists():
-        return "/images/logo.png"
+    for name in ("logo.png", "Logo.png", "LOGO.png"):
+        p = IMAGES_DIR / name
+        if p.exists():
+            return f"/images/{name}"
+    return ""
+
+
+def first_existing_image(*names: str) -> str:
+    for name in names:
+        p = IMAGES_DIR / name
+        if p.exists():
+            return f"/images/{name}"
     return ""
 
 
@@ -271,16 +280,13 @@ def detect_cert_logo(course_name: str) -> str:
     c = course_name.lower()
 
     if "red cross" in c or c.startswith("arc ") or "arc " in c:
-        if (IMAGES_DIR / "0arc.png").exists():
-            return "/images/arc.png"
+        return first_existing_image("0arc.png", "0ARC.png", "arc.png", "ARC.png")
 
     if "hsi" in c or "ashi" in c:
-        if (IMAGES_DIR / "0hsi.png").exists():
-            return "/images/0hsi.png"
+        return first_existing_image("0hsi.png", "0HSI.png", "hsi.png", "HSI.png")
 
     if "aha" in c or "heartsaver" in c or "heartcode" in c or "acls" in c or "pals" in c or "bls" in c:
-        if (IMAGES_DIR / "0aha.png").exists():
-            return "/images/aha.png"
+        return first_existing_image("0aha.png", "0AHA.png", "aha.png", "AHA.png")
 
     return ""
 
@@ -351,7 +357,7 @@ def get_upcoming_sessions(current_session: dict, sessions: list[dict], now_dt: d
     return matches[:limit]
 
 
-def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: str, course_name: str) -> str:
+def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: str) -> str:
     if not upcoming_sessions:
         return f"""
 <section class="info-box upcoming-box">
@@ -432,9 +438,7 @@ template = """
   --warning-text: #6d5600;
 }}
 
-* {{
-  box-sizing: border-box;
-}}
+* {{ box-sizing: border-box; }}
 
 body {{
   margin: 0;
@@ -470,10 +474,6 @@ body img {{
   border-radius: 14px;
   margin-bottom: 22px;
   font-size: 18px;
-}}
-
-.hero {{
-  display: block;
 }}
 
 .hero-top {{
@@ -870,54 +870,6 @@ window.dataLayer.push({{
   event: "page_context",
   ...pageContext
 }});
-
-function pushLinkClick(eventName, extra = {{}}) {{
-  window.dataLayer.push({{
-    event: eventName,
-    ...pageContext,
-    ...extra
-  }});
-}}
-
-document.addEventListener("click", function(e) {{
-  const a = e.target.closest("a");
-  if (!a) return;
-
-  const href = a.getAttribute("href") || "";
-  const text = (a.textContent || "").trim().toLowerCase();
-
-  if (href.includes("enrollware.com/enroll?id=")) {{
-    pushLinkClick("register_click", {{
-      click_text: text,
-      link_url: href
-    }});
-    return;
-  }}
-
-  if (text.includes("see all dates") || text.includes("see all dates/times") || text.includes("see upcoming classes")) {{
-    pushLinkClick("view_upcoming_click", {{
-      click_text: text,
-      link_url: href
-    }});
-    return;
-  }}
-
-  if (href.includes("/courses/")) {{
-    pushLinkClick("course_link_click", {{
-      click_text: text,
-      link_url: href
-    }});
-    return;
-  }}
-
-  if (href.includes("/classes/")) {{
-    pushLinkClick("session_link_click", {{
-      click_text: text,
-      link_url: href
-    }});
-    return;
-  }}
-}});
 </script>
 
 </body>
@@ -925,8 +877,9 @@ document.addEventListener("click", function(e) {{
 """
 
 count = 0
-build_stamp = datetime.now().strftime("%Y-%m-%d %I:%M %p").lstrip("0")
+build_stamp = datetime.now(TZ).strftime("%Y-%m-%d %I:%M %p").lstrip("0")
 now_dt = datetime.now(TZ)
+
 for s in sessions:
     session_id = s.get("session_id")
     course_raw = s.get("course_name", "")
@@ -957,8 +910,10 @@ for s in sessions:
     course_page_url = f"../courses/{short_slug(course)}.html"
 
     course_id = str(s.get("course_id", "")).strip()
-    if course_id:
-        schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{course_id}"
+    course_number = str(s.get("course_number", "")).strip()
+    schedule_anchor = course_id or course_number
+    if schedule_anchor:
+        schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
     else:
         schedule_url = course_page_url
 
@@ -992,7 +947,7 @@ This specific session has passed. See upcoming classes below.
         cert_logo_html = '<div class="cert-badge"></div>'
 
     logo_url = default_logo_url()
-    course_img_url = find_course_archive_image(course_id)
+    course_img_url = find_course_archive_image(course_id or course_number)
 
     brand_parts = []
     if logo_url:
@@ -1018,7 +973,7 @@ This specific session has passed. See upcoming classes below.
     else:
         brand_strip_html = ""
 
-    description_html = load_course_description_html(course_id, course)
+    description_html = load_course_description_html(course_id or course_number, course)
     if description_html:
         course_description_section = f"""
 <section class="info-box description-box">
@@ -1039,7 +994,7 @@ This specific session has passed. See upcoming classes below.
 """
 
     upcoming_sessions = get_upcoming_sessions(s, sessions, now_dt, limit=UPCOMING_LIMIT)
-    upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, schedule_url, course)
+    upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, schedule_url)
 
     html_doc = template.format(
         page_title=escape(page_title),
@@ -1063,7 +1018,7 @@ This specific session has passed. See upcoming classes below.
         schedule_url=escape(schedule_url),
         build_stamp=escape(build_stamp),
         course_js=js_escape(course),
-        course_id=escape(course_id),
+        course_id=escape(course_id or course_number),
         course_slug=short_slug(course),
         location_js=js_escape(location),
         is_past_js="true" if is_past else "false",
