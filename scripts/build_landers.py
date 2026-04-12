@@ -271,16 +271,16 @@ def detect_cert_logo(course_name: str) -> str:
     c = course_name.lower()
 
     if "red cross" in c or c.startswith("arc ") or "arc " in c:
-        if (IMAGES_DIR / "_ARC.png").exists():
-            return "/images/_ARC.png"
+        if (IMAGES_DIR / "0arc.png").exists():
+            return "/images/arc.png"
 
     if "hsi" in c or "ashi" in c:
-        if (IMAGES_DIR / "_HSI.png").exists():
-            return "/images/_HSI.png"
+        if (IMAGES_DIR / "0hsi.png").exists():
+            return "/images/hsi.png"
 
     if "aha" in c or "heartsaver" in c or "heartcode" in c or "acls" in c or "pals" in c or "bls" in c:
-        if (IMAGES_DIR / "_AHA.png").exists():
-            return "/images/_AHA.png"
+        if (IMAGES_DIR / "0aha.png").exists():
+            return "/images/aha.png"
 
     return ""
 
