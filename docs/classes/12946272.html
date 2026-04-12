@@ -69,6 +69,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 * { box-sizing: border-box; }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -306,6 +310,11 @@ body img {
   flex-wrap: wrap;
 }
 
+.upcoming-footer-link {
+  margin-top: 16px;
+  text-align: center;
+}
+
 .brand-strip {
   margin-top: 24px;
   display: grid;
@@ -346,7 +355,7 @@ body img {
   width: 100%;
   height: 100%;
   max-height: 260px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 12px;
   display: block;
 }
@@ -413,6 +422,13 @@ body img {
   font-weight: 700;
 }
 
+.reviews-fallback {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+
 .text-link {
   color: var(--accent);
   text-decoration: none;
@@ -420,6 +436,11 @@ body img {
 
 .text-link:hover {
   text-decoration: underline;
+}
+
+.strong-link {
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .build-stamp {
@@ -496,16 +517,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="cta-row">
           <a class="button primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12946272">Register Now</a>
-          <a class="button secondary" href="https://coastalcprtraining.enrollware.com/schedule#ct251496">See All Dates/Times</a>
+          <a class="button secondary" href="#upcoming-times">See Other Upcoming Class Times</a>
         </div>
       </div>
     </section>
 
     
-<section class="info-box upcoming-box">
+<section id="upcoming-times" class="info-box upcoming-box">
   <h2>Upcoming Classes</h2>
   <p>No upcoming public sessions are listed right now.</p>
-  <p><a class="text-link" href="https://coastalcprtraining.enrollware.com/schedule#ct251496">See all current dates and times</a></p>
+  <div class="upcoming-footer-link">
+    <a class="text-link strong-link" href="https://coastalcprtraining.enrollware.com/schedule#ct251496">See full schedule for this course</a>
+  </div>
 </section>
 
 
@@ -513,9 +536,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="brand-card">
   <img src="/images/logo.png" alt="910CPR logo" loading="lazy">
 </div>
+
+<div class="image-card">
+  <img src="/images/0aha.png" alt="AHA PALS Provider course image" loading="lazy">
+</div>
 </section>
 
     
+<section class="info-box reviews-box">
+  <h2>Why Students Choose 910CPR</h2>
+  <div class="reviews-grid">
+    
+<div class="review-card">
+  <div class="review-stars" aria-label="Five star review">★★★★★</div>
+  <p class="review-text">“Great learning environment. Concise and got the class completed. Recommend for all your CPR, ACLS, and PALS certification and renewals.”</p>
+  <div class="review-author">Denise S.</div>
+</div>
+
+<div class="review-card">
+  <div class="review-stars" aria-label="Five star review">★★★★★</div>
+  <p class="review-text">“I had a great experience attaining my CPR/AED/1st Aid certification with Coastal Carolina CPR. Brian was a very knowledgeable instructor, provided an enthusiastic, thorough class and answered all my questions. I would...”</p>
+  <div class="review-author">Erin L.</div>
+</div>
+
+<div class="review-card">
+  <div class="review-stars" aria-label="Five star review">★★★★★</div>
+  <p class="review-text">“Brain was super welcoming and helpful”</p>
+  <div class="review-author">Matt J.</div>
+</div>
+
+  </div>
+</section>
+
 
     
 <section class="info-box description-box">
@@ -534,7 +586,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </section>
     </div>
 
-    <div class="build-stamp">build: 2026-04-12 09:40 AM</div>
+    <div class="build-stamp">build: 2026-04-12 10:26 AM</div>
 
   </div>
 </div>
@@ -553,7 +605,7 @@ const pageContext = {
   register_url: "https://coastalcprtraining.enrollware.com/enroll?id=12946272",
   schedule_url: "https://coastalcprtraining.enrollware.com/schedule#ct251496",
   course_page_url: "../courses/aha-pals-provider-840b5546.html",
-  build_stamp: "2026-04-12 09:40 AM"
+  build_stamp: "2026-04-12 10:26 AM"
 };
 
 window.dataLayer.push({

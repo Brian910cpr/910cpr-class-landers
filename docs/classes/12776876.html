@@ -69,6 +69,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 * { box-sizing: border-box; }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -306,6 +310,11 @@ body img {
   flex-wrap: wrap;
 }
 
+.upcoming-footer-link {
+  margin-top: 16px;
+  text-align: center;
+}
+
 .brand-strip {
   margin-top: 24px;
   display: grid;
@@ -346,7 +355,7 @@ body img {
   width: 100%;
   height: 100%;
   max-height: 260px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 12px;
   display: block;
 }
@@ -413,6 +422,13 @@ body img {
   font-weight: 700;
 }
 
+.reviews-fallback {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+
 .text-link {
   color: var(--accent);
   text-decoration: none;
@@ -420,6 +436,11 @@ body img {
 
 .text-link:hover {
   text-decoration: underline;
+}
+
+.strong-link {
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .build-stamp {
@@ -492,16 +513,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="cta-row">
           <a class="button primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12776876">Register Now</a>
-          <a class="button secondary" href="https://coastalcprtraining.enrollware.com/schedule#ct253768">See All Dates/Times</a>
+          <a class="button secondary" href="#upcoming-times">See Other Upcoming Class Times</a>
         </div>
       </div>
     </section>
 
     
-<section class="info-box upcoming-box">
+<section id="upcoming-times" class="info-box upcoming-box">
   <div class="upcoming-head">
     <h2>Upcoming Classes</h2>
-    <a class="text-link" href="https://coastalcprtraining.enrollware.com/schedule#ct253768">See all current dates and times</a>
   </div>
   <div class="upcoming-grid">
     
@@ -596,6 +616,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
   </div>
+  <div class="upcoming-footer-link">
+    <a class="text-link strong-link" href="https://coastalcprtraining.enrollware.com/schedule#ct253768">See full schedule for this course</a>
+  </div>
 </section>
 
 
@@ -606,6 +629,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
     
+<section class="info-box reviews-box">
+  <h2>Why Students Choose 910CPR</h2>
+  <div class="reviews-grid">
+    
+<div class="review-card">
+  <div class="review-stars" aria-label="Five star review">★★★★★</div>
+  <p class="review-text">“I had a great experience receiving my Heartsaver First Aid CPR AED certification. A very clean and professional environment with top notch instruction and transfer of knowledge from Mr. Nicholas Tripp. I would recommend...”</p>
+  <div class="review-author">Tommy K.</div>
+</div>
+
+<div class="review-card">
+  <div class="review-stars" aria-label="Five star review">★★★★★</div>
+  <p class="review-text">“This should be your organization’s go-to company for your CPR/First Aid needs. Class act trainers.”</p>
+  <div class="review-author">Alan B.</div>
+</div>
+
+<div class="review-card">
+  <div class="review-stars" aria-label="Five star review">★★★★★</div>
+  <p class="review-text">“Brian was great! Would recommend to anyone that needs CPR and first aid training!”</p>
+  <div class="review-author">Benjamin D.</div>
+</div>
+
+  </div>
+</section>
+
 
     
 <section class="info-box description-box">
@@ -624,7 +672,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </section>
     </div>
 
-    <div class="build-stamp">build: 2026-04-12 09:40 AM</div>
+    <div class="build-stamp">build: 2026-04-12 10:26 AM</div>
 
   </div>
 </div>
@@ -643,7 +691,7 @@ const pageContext = {
   register_url: "https://coastalcprtraining.enrollware.com/enroll?id=12776876",
   schedule_url: "https://coastalcprtraining.enrollware.com/schedule#ct253768",
   course_page_url: "../courses/uscg-elementary-first-aid-789b522e.html",
-  build_stamp: "2026-04-12 09:40 AM"
+  build_stamp: "2026-04-12 10:26 AM"
 };
 
 window.dataLayer.push({
