@@ -1,1041 +1,878 @@
-import json
-import re
-import hashlib
-from datetime import datetime
-from html import unescape, escape
-from pathlib import Path
-from zoneinfo import ZoneInfo
-
-from title_cleaner import normalize_course_title, seo_title_for_session
-
-TZ = ZoneInfo("America/New_York")
-
-ROOT = Path(__file__).resolve().parents[1]
-DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
-OUTPUT_DIR = ROOT / "docs" / "classes"
-IMAGES_DIR = ROOT / "docs" / "images"
-COURSE_ARCHIVE_DIR = IMAGES_DIR / "course-archive"
-
-GTM_ID = "GTM-PQS8DCBH"
-UPCOMING_LIMIT = 10
-
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-
-def render_gtm_head():
-    if not GTM_ID:
-        return ""
-    return f"""<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':
-new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-}})(window,document,'script','dataLayer','{GTM_ID}');
-</script>
-<!-- End Google Tag Manager -->"""
-
-
-def render_gtm_body():
-    if not GTM_ID:
-        return ""
-    return f"""<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_ID}"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->"""
-
-
-def strip_html(text):
-    text = unescape(str(text or ""))
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
-
-
-def canonical_course_name(course_raw: str) -> str:
-    return normalize_course_title(course_raw) or strip_html(course_raw) or "CPR Class"
-
-
-def slugify(text: str) -> str:
-    text = canonical_course_name(text).lower()
-    text = re.sub(r"[^a-z0-9]+", "-", text).strip("-")
-    return text or "course"
-
-
-def short_slug(text: str, max_len: int = 70) -> str:
-    clean = slugify(text)
-    digest = hashlib.md5(clean.encode("utf-8")).hexdigest()[:8]
-    if len(clean) > max_len:
-        clean = clean[:max_len].rstrip("-")
-    return f"{clean}-{digest}" if clean else digest
-
-
-def js_escape(value):
-    if value is None:
-        return ""
-    return str(value).replace("\\", "\\\\").replace('"', '\\"')
-
-
-def parse_dt(value):
-    raw = str(value or "").strip()
-    if not raw:
-        return None
-
-    formats = (
-        "%Y-%m-%d %H:%M:%S",
-        "%Y-%m-%d %H:%M",
-        "%m/%d/%Y %H:%M",
-        "%m/%d/%Y %I:%M %p",
-        "%Y-%m-%dT%H:%M:%S",
-        "%Y-%m-%dT%H:%M:%S%z",
-    )
-
-    for fmt in formats:
-        try:
-            dt = datetime.strptime(raw, fmt)
-            if dt.tzinfo is None:
-                dt = dt.replace(tzinfo=TZ)
-            return dt.astimezone(TZ)
-        except Exception:
-            pass
-
-    try:
-        dt = datetime.fromisoformat(raw)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=TZ)
-        return dt.astimezone(TZ)
-    except Exception:
-        return None
-
-
-def location_to_city_state(location: str):
-    raw = str(location or "").strip()
-
-    if ";" in raw:
-        city = raw.split(";")[0].strip()
-        return city, "NC"
-
-    if "," in raw:
-        parts = [p.strip() for p in raw.split(",") if p.strip()]
-        if len(parts) >= 2:
-            return parts[0], parts[1]
-
-    if raw:
-        return raw, "NC"
-
-    return "Wilmington", "NC"
-
-
-def clean_location_display(location: str) -> str:
-    value = str(location or "").strip()
-    if value.startswith("::"):
-        value = value[2:].strip()
-    return value
-
-
-def audience_blurb(course_name: str) -> str:
-    lower = course_name.lower()
-
-    if "acls" in lower:
-        return (
-            "This course is commonly taken by nurses, paramedics, respiratory therapists, "
-            "ER staff, ICU staff, and other clinicians who need advanced cardiovascular life support training."
-        )
-    if "pals" in lower:
-        return (
-            "This course is commonly taken by pediatric nurses, emergency clinicians, paramedics, "
-            "and other providers who care for infants and children."
-        )
-    if "bls" in lower:
-        return (
-            "This course is commonly taken by healthcare workers, nursing students, dental staff, "
-            "EMS personnel, and others who need professional-level CPR certification."
-        )
-    if "heartsaver" in lower or "cpr" in lower or "aed" in lower:
-        return (
-            "This course is commonly taken by teachers, childcare staff, fitness professionals, "
-            "security personnel, church staff, office teams, and other workplace responders."
-        )
-
-    return (
-        "This class supports both individual certification needs and organizations that need reliable, "
-        "repeatable safety training for employees."
-    )
-
-
-def corporate_blurb(city: str, course_name: str) -> str:
-    return (
-        f"910CPR also supports employers in {city} that need documented, renewable training for staff. "
-        f"If you need multiple employees trained in {course_name}, group and workplace options may be available."
-    )
-
-
-def make_schema(course_name: str, session_dt, location_name: str, city: str, state: str, register_url: str):
-    start_iso = session_dt.isoformat() if session_dt else ""
-    return f"""
-<script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@type": "Event",
-  "name": {json.dumps(course_name)},
-  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-  "eventStatus": "https://schema.org/EventScheduled",
-  "startDate": {json.dumps(start_iso)},
-  "location": {{
-    "@type": "Place",
-    "name": {json.dumps(location_name)},
-    "address": {{
-      "@type": "PostalAddress",
-      "addressLocality": {json.dumps(city)},
-      "addressRegion": {json.dumps(state)},
-      "addressCountry": "US"
-    }}
-  }},
-  "organizer": {{
-    "@type": "Organization",
-    "name": "910CPR",
-    "url": "https://www.910cpr.com/"
-  }},
-  "offers": {{
-    "@type": "Offer",
-    "url": {json.dumps(register_url)},
-    "availability": "https://schema.org/InStock",
-    "priceCurrency": "USD"
-  }}
-}}
-</script>
-""".strip()
-
-
-def sanitize_description_html(html_text: str) -> str:
-    html_text = str(html_text or "").strip()
-    if not html_text:
-        return ""
-    html_text = re.sub(r"<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>", "", html_text, flags=re.I | re.S)
-    html_text = re.sub(r"\s+", " ", html_text).strip()
-    return html_text
-
-
-def load_course_description_html(course_id: str, course_name: str) -> str:
-    candidate_dirs = [
-        ROOT / "data" / "course_descriptions",
-        ROOT / "docs" / "course_descriptions",
-        ROOT / "course_descriptions",
-        ROOT / "raw" / "course_descriptions",
-        ROOT / "raw" / "descriptions",
-        ROOT / "data" / "descriptions",
-        ROOT / "raw",
-    ]
-
-    candidate_names = []
-    if course_id:
-        candidate_names.append(course_id)
-
-    candidate_names.extend(
-        [
-            short_slug(course_name),
-            slugify(course_name),
-            canonical_course_name(course_name),
-        ]
-    )
-
-    exts = [".html", ".htm", ".txt"]
-
-    for d in candidate_dirs:
-        if not d.exists():
-            continue
-
-        for name in candidate_names:
-            for ext in exts:
-                p = d / f"{name}{ext}"
-                if p.exists():
-                    return sanitize_description_html(p.read_text(encoding="utf-8", errors="ignore"))
-
-        if course_id:
-            for ext in exts:
-                matches = sorted(d.glob(f"{course_id}*{ext}"))
-                if matches:
-                    return sanitize_description_html(matches[0].read_text(encoding="utf-8", errors="ignore"))
-
-    return ""
-
-
-def default_logo_url() -> str:
-    for name in ("logo.png", "Logo.png", "LOGO.png"):
-        p = IMAGES_DIR / name
-        if p.exists():
-            return f"/images/{name}"
-    return ""
-
-
-def first_existing_image(*names: str) -> str:
-    for name in names:
-        p = IMAGES_DIR / name
-        if p.exists():
-            return f"/images/{name}"
-    return ""
-
-
-def detect_cert_logo(course_name: str) -> str:
-    c = course_name.lower()
-
-    if "red cross" in c or c.startswith("arc ") or "arc " in c:
-        return first_existing_image("0arc.png", "0ARC.png", "arc.png", "ARC.png")
-
-    if "hsi" in c or "ashi" in c:
-        return first_existing_image("0hsi.png", "0HSI.png", "hsi.png", "HSI.png")
-
-    if "aha" in c or "heartsaver" in c or "heartcode" in c or "acls" in c or "pals" in c or "bls" in c:
-        return first_existing_image("0aha.png", "0AHA.png", "aha.png", "AHA.png")
-
-    return ""
-
-
-def find_course_archive_image(course_id: str) -> str:
-    if not course_id or not COURSE_ARCHIVE_DIR.exists():
-        return ""
-
-    exts = [".png", ".jpg", ".jpeg", ".webp"]
-
-    preferred = []
-
-    for ext in exts:
-        preferred.extend(sorted(COURSE_ARCHIVE_DIR.glob(f"course-{course_id}-raw_enrollware_html-*{ext}")))
-        preferred.extend(sorted(COURSE_ARCHIVE_DIR.glob(f"course-{course_id}-original_html-*{ext}")))
-
-    def score(path: Path):
-        name = path.name.lower()
-        penalty = 0
-        if "scroll" in name:
-            penalty += 1000000
-        if "steps" in name:
-            penalty += 500000
-        if "icon" in name:
-            penalty += 500000
-        return penalty - path.stat().st_size
-
-    if not preferred:
-        return ""
-
-    chosen = sorted(preferred, key=score)[0]
-    return f"/images/course-archive/{chosen.name}"
-
-
-def same_course(session_a: dict, session_b: dict) -> bool:
-    a_course_id = str(session_a.get("course_id", "")).strip()
-    b_course_id = str(session_b.get("course_id", "")).strip()
-
-    if a_course_id and b_course_id:
-        return a_course_id == b_course_id
-
-    a_name = canonical_course_name(session_a.get("course_name", ""))
-    b_name = canonical_course_name(session_b.get("course_name", ""))
-    return a_name == b_name
-
-
-def get_upcoming_sessions(current_session: dict, sessions: list[dict], now_dt: datetime, limit: int = UPCOMING_LIMIT) -> list[dict]:
-    current_id = str(current_session.get("session_id", "")).strip()
-    matches = []
-
-    for s in sessions:
-        if not same_course(current_session, s):
-            continue
-
-        sid = str(s.get("session_id", "")).strip()
-        if sid == current_id:
-            continue
-
-        dt = parse_dt(s.get("start_at"))
-        if not dt or dt < now_dt:
-            continue
-
-        s_copy = dict(s)
-        s_copy["_parsed_dt"] = dt
-        matches.append(s_copy)
-
-    matches.sort(key=lambda x: x["_parsed_dt"])
-    return matches[:limit]
-
-
-def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: str) -> str:
-    if not upcoming_sessions:
-        return f"""
-<section class="info-box upcoming-box">
-  <h2>Upcoming Classes</h2>
-  <p>No upcoming public sessions are listed right now.</p>
-  <p><a class="text-link" href="{escape(schedule_url)}">See all current dates and times</a></p>
-</section>
-"""
-
-    cards = []
-    for s in upcoming_sessions:
-        dt = s["_parsed_dt"]
-        date_label = dt.strftime("%B %d, %Y")
-        time_label = dt.strftime("%I:%M %p").lstrip("0")
-        location_label = clean_location_display(s.get("location_display", "")) or "Location TBD"
-        register_url = s.get("registration_url", "#")
-
-        cards.append(
-            f"""
-<div class="upcoming-card">
-  <div class="upcoming-date">{escape(date_label)}</div>
-  <div class="upcoming-time">{escape(time_label)}</div>
-  <div class="upcoming-location">{escape(location_label)}</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="{escape(register_url)}">Register</a>
-  </div>
-</div>
-"""
-        )
-
-    return f"""
-<section class="info-box upcoming-box">
-  <div class="upcoming-head">
-    <h2>Upcoming Classes</h2>
-    <a class="text-link" href="{escape(schedule_url)}">See all current dates and times</a>
-  </div>
-  <div class="upcoming-grid">
-    {''.join(cards)}
-  </div>
-</section>
-"""
-
-
-with open(DATA_FILE, "r", encoding="utf-8") as f:
-    data = json.load(f)
-
-all_sessions = data["sessions"]
-sessions = all_sessions
-
-template = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>{page_title}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="{meta_description}">
-<meta name="robots" content="{robots_value}">
-<link rel="canonical" href="{canonical_url}">
-{gtm_head}
-{schema_block}
+  <meta charset="UTF-8" />
+  <title>AHA BLS Provider CPR Class in Wilmington, NC | 910CPR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="AHA BLS Provider CPR Class in Wilmington; Shipyard Blvd. View class details, current schedule options, and register online with 910CPR."
+  />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://www.910cpr.com/classes/12774297.html" />
 
-<style>
-:root {{
-  --bg: #eef4f8;
-  --bg2: #f8fbfd;
-  --card: #ffffff;
-  --soft: #f8fbfd;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --accent: #2563eb;
-  --accent-dark: #1d4ed8;
-  --cta: #ea580c;
-  --cta-dark: #c2410c;
-  --border: #dbe4ee;
-  --warning-bg: #fff7d6;
-  --warning-border: #f2df91;
-  --warning-text: #6d5600;
-}}
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PQS8DCBH');
+  </script>
 
-* {{ box-sizing: border-box; }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "AHA BLS Provider CPR Class",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "startDate": "2026-04-13T12:30:00",
+    "location": {
+      "@type": "Place",
+      "name": "Wilmington; Shipyard Blvd",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Wilmington",
+        "addressRegion": "NC",
+        "addressCountry": "US"
+      }
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": "910CPR",
+      "url": "https://www.910cpr.com/"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://coastalcprtraining.enrollware.com/enroll?id=12774297",
+      "availability": "https://schema.org/InStock",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 
-body {{
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
-  color: var(--text);
-}}
+  <style>
+    :root {
+      --bg: #fff7fa;
+      --bg-2: #fffdfd;
+      --surface: rgba(255,255,255,0.82);
+      --surface-strong: #ffffff;
+      --soft-pink: #fff0f5;
+      --soft-mint: #eefaf8;
+      --soft-rose: #fbe3ea;
+      --text: #2e2430;
+      --muted: #7f6d79;
+      --line: #efd9e2;
+      --primary: #cf4d7d;
+      --primary-dark: #b53d69;
+      --secondary: #78c8c0;
+      --secondary-dark: #59afa6;
+      --cta: linear-gradient(135deg, #ff7b9a 0%, #cf4d7d 100%);
+      --cta-hover: linear-gradient(135deg, #f46b8c 0%, #b83b68 100%);
+      --shadow: 0 18px 50px rgba(207, 77, 125, 0.14);
+      --shadow-soft: 0 10px 30px rgba(120, 200, 192, 0.12);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-pill: 999px;
+      --max: 1180px;
+    }
 
-body img {{
-  max-width: 100%;
-  height: auto;
-}}
+    * { box-sizing: border-box; }
 
-.wrap {{
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 32px 16px 56px;
-}}
+    html { scroll-behavior: smooth; }
 
-.card {{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 28px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-}}
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 186, 211, 0.35), transparent 34%),
+        radial-gradient(circle at top right, rgba(120, 200, 192, 0.25), transparent 28%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+    }
 
-.notice {{
-  background: var(--warning-bg);
-  border: 1px solid var(--warning-border);
-  color: var(--warning-text);
-  padding: 16px 18px;
-  border-radius: 14px;
-  margin-bottom: 22px;
-  font-size: 18px;
-}}
+    img {
+      max-width: 100%;
+      display: block;
+      height: auto;
+    }
 
-.hero-top {{
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
-}}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-.date-badge {{
-  min-width: 96px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-  color: white;
-  text-align: center;
-  padding: 14px 10px;
-}}
+    .page-shell {
+      width: min(calc(100% - 28px), var(--max));
+      margin: 0 auto;
+      padding: 28px 0 70px;
+    }
 
-.date-month {{
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}}
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.7);
+      background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.98));
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+      isolation: isolate;
+    }
 
-.date-day {{
-  font-size: 34px;
-  font-weight: 800;
-  line-height: 1.05;
-  margin: 6px 0;
-}}
+    .hero-card::before,
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      z-index: -1;
+      filter: blur(6px);
+    }
 
-.date-weekday {{
-  font-size: 13px;
-}}
+    .hero-card::before {
+      width: 280px;
+      height: 280px;
+      top: -90px;
+      right: -40px;
+      background: rgba(255, 176, 200, 0.26);
+    }
 
-.cert-badge {{
-  min-width: 96px;
-  min-height: 96px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 10px;
-}}
+    .hero-card::after {
+      width: 220px;
+      height: 220px;
+      bottom: -80px;
+      left: -40px;
+      background: rgba(120, 200, 192, 0.18);
+    }
 
-.cert-badge img {{
-  max-width: 72px;
-  max-height: 72px;
-  object-fit: contain;
-}}
+    .eyebrow-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
 
-.hero-content {{
-  margin-top: 18px;
-}}
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(207, 77, 125, 0.09);
+      border: 1px solid rgba(207, 77, 125, 0.15);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
 
-.hero h1 {{
-  margin: 0 0 12px 0;
-  font-size: 30px;
-  line-height: 1.1;
-}}
+    .brand-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-soft);
+    }
 
-.subhead {{
-  margin: 0 0 14px 0;
-  color: var(--muted);
-  font-size: 15px;
-}}
+    .brand-chip img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
 
-.meta-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 10px 18px;
-  margin: 10px 0 0 0;
-}}
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 130px minmax(0, 1fr) 320px;
+      gap: 22px;
+      align-items: start;
+    }
 
-.meta-item {{
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 14px;
-}}
+    .date-panel {
+      padding: 18px 14px;
+      border-radius: 26px;
+      background: linear-gradient(180deg, #ff8dab 0%, #cf4d7d 100%);
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 18px 30px rgba(207, 77, 125, 0.24);
+    }
 
-.meta-label {{
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}}
+    .date-month {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.96;
+    }
 
-.meta-value {{
-  font-size: 16px;
-  font-weight: 700;
-}}
+    .date-day {
+      font-size: 52px;
+      line-height: 1;
+      font-weight: 900;
+      margin: 8px 0 6px;
+    }
 
-.cta-row {{
-  margin-top: 18px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}}
+    .date-weekday {
+      font-size: 14px;
+      opacity: 0.95;
+      font-weight: 700;
+    }
 
-.button {{
-  display: inline-block;
-  padding: 13px 18px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 700;
-}}
+    .hero-copy h1 {
+      margin: 6px 0 10px;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      max-width: 12ch;
+    }
 
-.button.small {{
-  padding: 10px 14px;
-  font-size: 14px;
-}}
+    .hero-copy p.lead {
+      margin: 0 0 18px;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--muted);
+      max-width: 58ch;
+    }
 
-.button.primary {{
-  background: var(--cta);
-  color: white;
-}}
+    .micro-proof {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
 
-.button.primary:hover {{
-  background: var(--cta-dark);
-}}
+    .micro-proof span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(120, 200, 192, 0.12);
+      border: 1px solid rgba(120, 200, 192, 0.2);
+      color: #2e6f69;
+      font-weight: 700;
+      font-size: 14px;
+    }
 
-.button.secondary {{
-  background: #5f6f82;
-  color: white;
-}}
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
 
-.button.secondary:hover {{
-  background: #526170;
-}}
+    .meta-card {
+      padding: 16px;
+      background: linear-gradient(180deg, #fff7fa, #ffffff);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
 
-.stack {{
-  display: grid;
-  gap: 18px;
-  margin-top: 28px;
-}}
+    .meta-label {
+      margin-bottom: 6px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      font-weight: 800;
+    }
 
-.info-box {{
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 18px;
-}}
+    .meta-value {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
 
-.info-box h2 {{
-  margin: 0 0 10px 0;
-  font-size: 20px;
-}}
+    .booking-card {
+      border-radius: 28px;
+      padding: 20px;
+      background: linear-gradient(180deg, rgba(255,240,245,0.95), rgba(255,255,255,0.98));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+    }
 
-.info-box p {{
-  margin: 0 0 12px 0;
-  line-height: 1.6;
-}}
+    .booking-card h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.1;
+    }
 
-.upcoming-head {{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}}
+    .booking-card p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15px;
+    }
 
-.upcoming-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-}}
+    .cta-stack {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
 
-.upcoming-card {{
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
-}}
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 54px;
+      padding: 14px 20px;
+      border: 0;
+      border-radius: var(--radius-pill);
+      font-size: 16px;
+      font-weight: 800;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      cursor: pointer;
+    }
 
-.upcoming-date {{
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}}
+    .button:hover {
+      transform: translateY(-1px);
+    }
 
-.upcoming-time {{
-  font-size: 15px;
-  margin-bottom: 4px;
-}}
+    .button-primary {
+      color: #fff;
+      background: var(--cta);
+      box-shadow: 0 16px 30px rgba(207, 77, 125, 0.28);
+    }
 
-.upcoming-location {{
-  color: var(--muted);
-  font-size: 14px;
-  margin-bottom: 12px;
-}}
+    .button-primary:hover {
+      background: var(--cta-hover);
+    }
 
-.upcoming-actions {{
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}}
+    .button-secondary {
+      color: var(--primary-dark);
+      background: #fff;
+      border: 1px solid var(--line);
+    }
 
-.brand-strip {{
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
-  gap: 18px;
-  align-items: stretch;
-}}
+    .button-small {
+      min-height: 42px;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-weight: 800;
+    }
 
-.brand-card,
-.image-card {{
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 16px;
-}}
+    .urgency {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(207, 77, 125, 0.08);
+      border: 1px solid rgba(207, 77, 125, 0.14);
+      color: var(--primary-dark);
+      font-size: 14px;
+      font-weight: 700;
+    }
 
-.brand-card {{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 140px;
-  text-align: center;
-}}
+    .section {
+      margin-top: 22px;
+      padding: 22px;
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(255,255,255,0.74);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+    }
 
-.brand-card img {{
-  max-width: 140px;
-  max-height: 90px;
-  object-fit: contain;
-  margin: 0 auto;
-  display: block;
-}}
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
 
-.image-card {{
-  min-height: 140px;
-}}
+    .section-title {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
 
-.image-card img {{
-  width: 100%;
-  height: 100%;
-  max-height: 260px;
-  object-fit: cover;
-  border-radius: 12px;
-  display: block;
-}}
+    .section-sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 60ch;
+    }
 
-.description-box {{
-  margin-top: 24px;
-}}
+    .text-link {
+      color: var(--primary-dark);
+      font-weight: 800;
+    }
 
-.description-box h2 {{
-  margin: 0 0 14px 0;
-  font-size: 22px;
-}}
+    .highlights {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
 
-.description-html {{
-  line-height: 1.7;
-}}
+    .highlight-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #ffffff, #fff7fa);
+      border: 1px solid var(--line);
+    }
 
-.description-html p {{
-  margin: 0 0 14px 0;
-}}
+    .highlight-card strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
 
-.description-html ul,
-.description-html ol {{
-  margin: 0 0 14px 24px;
-  padding: 0;
-}}
+    .highlight-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15px;
+    }
 
-.description-html li {{
-  margin: 0 0 8px 0;
-}}
+    .upcoming-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
 
-.text-link {{
-  color: var(--accent);
-  text-decoration: none;
-}}
+    .upcoming-card {
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #fef8fb);
+    }
 
-.text-link:hover {{
-  text-decoration: underline;
-}}
+    .upcoming-date {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
 
-.build-stamp {{
-  margin-top: 26px;
-  color: var(--muted);
-  font-size: 11px;
-}}
+    .upcoming-time {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--primary-dark);
+    }
 
-@media (max-width: 840px) {{
-  .brand-strip {{
-    grid-template-columns: 1fr;
-  }}
-}}
+    .upcoming-location {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
 
-@media (max-width: 700px) {{
-  .hero-top {{
-    align-items: stretch;
-  }}
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+    }
 
-  .date-badge,
-  .cert-badge {{
-    min-width: 82px;
-    min-height: 82px;
-  }}
+    .content-card,
+    .logo-card {
+      padding: 20px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #fff9fb);
+    }
 
-  .hero h1 {{
-    font-size: 25px;
-  }}
-}}
-</style>
+    .content-card h3,
+    .logo-card h3 {
+      margin: 0 0 12px;
+      font-size: 21px;
+    }
+
+    .content-card p,
+    .logo-card p,
+    .content-card li {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .content-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .logo-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo-wrap {
+      width: 100%;
+      min-height: 160px;
+      padding: 20px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fff1f6, #ffffff);
+      border: 1px dashed #e8bfd0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .logo-wrap img {
+      max-width: 170px;
+      max-height: 90px;
+      object-fit: contain;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid {
+        grid-template-columns: 120px minmax(0, 1fr);
+      }
+
+      .booking-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .highlights,
+      .upcoming-grid,
+      .two-col,
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .date-panel {
+        max-width: 160px;
+      }
+
+      .hero-copy h1 {
+        max-width: none;
+      }
+
+      .page-shell {
+        width: min(calc(100% - 18px), var(--max));
+        padding-top: 14px;
+      }
+
+      .hero-card,
+      .section {
+        padding: 18px;
+      }
+    }
+  </style>
 </head>
 <body>
-{gtm_body}
-<div class="wrap">
-  <div class="card">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe
+      src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
+      height="0"
+      width="0"
+      style="display:none;visibility:hidden"
+    ></iframe>
+  </noscript>
 
-    {state_notice}
-
-    <section class="hero">
-      <div class="hero-top">
-        <div class="date-badge">
-          <div class="date-month">{month_abbr}</div>
-          <div class="date-day">{day_num}</div>
-          <div class="date-weekday">{weekday}</div>
+  <main class="page-shell">
+    <section class="hero-card">
+      <div class="eyebrow-row">
+        <div class="eyebrow">AHA Certified • Hands-On • Healthcare Focused</div>
+        <div class="brand-chip">
+          <img src="/images/_AHA.png" alt="AHA logo" loading="lazy" />
+          <span style="font-weight:800;font-size:14px;color:var(--primary-dark);">American Heart Association</span>
         </div>
-        {cert_logo_html}
       </div>
 
-      <div class="hero-content">
-        <h1>{course}</h1>
-        <p class="subhead">{hero_subhead}</p>
+      <div class="hero-grid">
+        <aside class="date-panel" aria-label="Class date">
+          <div class="date-month">APR</div>
+          <div class="date-day">13</div>
+          <div class="date-weekday">Monday</div>
+        </aside>
 
-        <div class="meta-grid">
-          <div class="meta-item">
-            <div class="meta-label">Date</div>
-            <div class="meta-value">{date}</div>
+        <div class="hero-copy">
+          <h1>AHA BLS Provider CPR Class</h1>
+          <p class="lead">
+            Get certified with confidence in a clean, supportive learning environment designed for
+            healthcare professionals, students, and clinical teams.
+          </p>
+
+          <div class="micro-proof">
+            <span>✓ Professional-level CPR certification</span>
+            <span>✓ Ideal for healthcare providers</span>
+            <span>✓ Simple online registration</span>
           </div>
-          <div class="meta-item">
-            <div class="meta-label">Time</div>
-            <div class="meta-value">{time}</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Location</div>
-            <div class="meta-value">{location}</div>
+
+          <div class="meta-grid">
+            <div class="meta-card">
+              <div class="meta-label">Date</div>
+              <div class="meta-value">April 13, 2026</div>
+            </div>
+            <div class="meta-card">
+              <div class="meta-label">Time</div>
+              <div class="meta-value">12:30 PM</div>
+            </div>
+            <div class="meta-card">
+              <div class="meta-label">Location</div>
+              <div class="meta-value">Wilmington; Shipyard Blvd</div>
+            </div>
+            <div class="meta-card">
+              <div class="meta-label">Best For</div>
+              <div class="meta-value">Healthcare Workers, Students, EMS, Dental Staff</div>
+            </div>
           </div>
         </div>
 
-        <div class="cta-row">
-          {button_html}
-          <a class="button secondary" href="{schedule_url}">See All Dates/Times</a>
+        <aside class="booking-card">
+          <h2>Reserve Your Seat</h2>
+          <p>
+            Choose this class session or browse additional upcoming dates if another time works
+            better for you.
+          </p>
+
+          <div class="cta-stack">
+            <a
+              class="button button-primary"
+              href="https://coastalcprtraining.enrollware.com/enroll?id=12774297"
+            >
+              Register Now
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="https://coastalcprtraining.enrollware.com/schedule#ct209806"
+            >
+              See All Dates &amp; Times
+            </a>
+          </div>
+
+          <div class="urgency">
+            Spots can fill quickly for healthcare-focused classes. Secure your preferred time today.
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Why Students Choose This Class</h2>
+          <p class="section-sub">
+            A cleaner, friendlier booking experience with the same core class information and registration flow.
+          </p>
+        </div>
+      </div>
+
+      <div class="highlights">
+        <div class="highlight-card">
+          <strong>Professional-Level Training</strong>
+          <p>This course is designed for people who need BLS certification in healthcare and clinical settings.</p>
+        </div>
+        <div class="highlight-card">
+          <strong>Easy Scheduling</strong>
+          <p>See current availability quickly and choose the session that fits your work or school schedule.</p>
+        </div>
+        <div class="highlight-card">
+          <strong>Trusted Provider</strong>
+          <p>910CPR supports both individual students and employer training needs in the Wilmington area.</p>
         </div>
       </div>
     </section>
 
-    {upcoming_sessions_html}
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Upcoming Classes</h2>
+          <p class="section-sub">Need a different time? Here are additional upcoming sessions for the same course.</p>
+        </div>
+        <a class="text-link" href="https://coastalcprtraining.enrollware.com/schedule#ct209806">
+          View full current schedule
+        </a>
+      </div>
 
-    {brand_strip_html}
+      <div class="upcoming-grid">
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 13, 2026</div>
+          <div class="upcoming-time">6:15 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12774514">Register</a>
+        </article>
 
-    {course_description_section}
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 14, 2026</div>
+          <div class="upcoming-time">6:45 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12774519">Register</a>
+        </article>
 
-    <div class="stack">
-      <section class="info-box">
-        <h2>Who This Class Is For</h2>
-        <p>{audience_text}</p>
-        <p>{corporate_text}</p>
-      </section>
-    </div>
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 15, 2026</div>
+          <div class="upcoming-time">12:30 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12774301">Register</a>
+        </article>
 
-    <div class="build-stamp">build: {build_stamp}</div>
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 16, 2026</div>
+          <div class="upcoming-time">12:30 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=13198624">Register</a>
+        </article>
 
-  </div>
-</div>
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 17, 2026</div>
+          <div class="upcoming-time">12:30 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12774307">Register</a>
+        </article>
 
-<script>
-window.dataLayer = window.dataLayer || [];
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 17, 2026</div>
+          <div class="upcoming-time">6:15 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12774527">Register</a>
+        </article>
 
-const pageContext = {{
-  page_type: "session",
-  session_id: "{session_id}",
-  course_id: "{course_id}",
-  course_name: "{course_js}",
-  course_slug: "{course_slug}",
-  location_name: "{location_js}",
-  is_past_session: {is_past_js},
-  register_url: "{register_js}",
-  schedule_url: "{schedule_url}",
-  course_page_url: "{course_page_url}",
-  build_stamp: "{build_stamp}"
-}};
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 18, 2026</div>
+          <div class="upcoming-time">12:30 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12776642">Register</a>
+        </article>
 
-window.dataLayer.push({{
-  event: "page_context",
-  ...pageContext
-}});
-</script>
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 18, 2026</div>
+          <div class="upcoming-time">6:15 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12774526">Register</a>
+        </article>
 
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 20, 2026</div>
+          <div class="upcoming-time">12:30 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12774298">Register</a>
+        </article>
+
+        <article class="upcoming-card">
+          <div class="upcoming-date">April 21, 2026</div>
+          <div class="upcoming-time">12:30 PM</div>
+          <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+          <a class="button button-primary button-small" href="https://coastalcprtraining.enrollware.com/enroll?id=12776544">Register</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="two-col">
+        <div class="content-card">
+          <h3>Who This Class Is For</h3>
+          <p>
+            This course is commonly taken by healthcare workers, nursing students, dental staff,
+            EMS personnel, and others who need professional-level CPR certification.
+          </p>
+          <p>
+            910CPR also supports employers in Wilmington that need documented, renewable training
+            for staff. If you need multiple employees trained in AHA BLS Provider CPR Class, group
+            and workplace options may be available.
+          </p>
+        </div>
+
+        <div class="logo-card">
+          <h3>Hosted by 910CPR</h3>
+          <p>Local training for Wilmington-area students and healthcare teams.</p>
+          <div class="logo-wrap">
+            <img src="/images/logo.png" alt="910CPR logo" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">build: 2026-04-12 12:09 AM</div>
+  </main>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    const pageContext = {
+      page_type: "session",
+      session_id: "12774297",
+      course_id: "209806",
+      course_name: "AHA BLS Provider CPR Class",
+      course_slug: "aha-bls-provider-cpr-class-ac701b0e",
+      location_name: "Wilmington; Shipyard Blvd",
+      is_past_session: false,
+      register_url: "https://coastalcprtraining.enrollware.com/enroll?id=12774297",
+      schedule_url: "https://coastalcprtraining.enrollware.com/schedule#ct209806",
+      course_page_url: "../courses/aha-bls-provider-cpr-class-ac701b0e.html",
+      build_stamp: "2026-04-12 12:09 AM"
+    };
+
+    window.dataLayer.push({
+      event: "page_context",
+      ...pageContext
+    });
+
+    function pushLinkClick(eventName, extra = {}) {
+      window.dataLayer.push({
+        event: eventName,
+        ...pageContext,
+        ...extra
+      });
+    }
+
+    document.addEventListener("click", function(e) {
+      const a = e.target.closest("a");
+      if (!a) return;
+
+      const href = a.getAttribute("href") || "";
+      const text = (a.textContent || "").trim().toLowerCase();
+
+      if (href.includes("enrollware.com/enroll?id=")) {
+        pushLinkClick("register_click", {
+          click_text: text,
+          link_url: href
+        });
+        return;
+      }
+
+      if (
+        text.includes("see all dates") ||
+        text.includes("see all dates/times") ||
+        text.includes("see upcoming classes") ||
+        text.includes("view full current schedule")
+      ) {
+        pushLinkClick("view_upcoming_click", {
+          click_text: text,
+          link_url: href
+        });
+        return;
+      }
+
+      if (href.includes("/courses/")) {
+        pushLinkClick("course_link_click", {
+          click_text: text,
+          link_url: href
+        });
+        return;
+      }
+
+      if (href.includes("/classes/")) {
+        pushLinkClick("session_link_click", {
+          click_text: text,
+          link_url: href
+        });
+      }
+    });
+  </script>
 </body>
 </html>
-"""
-
-count = 0
-build_stamp = datetime.now(TZ).strftime("%Y-%m-%d %I:%M %p").lstrip("0")
-now_dt = datetime.now(TZ)
-
-for s in sessions:
-    session_id = s.get("session_id")
-    course_raw = s.get("course_name", "")
-    course = canonical_course_name(course_raw)
-    raw_location = str(s.get("location_display", "")).strip()
-    location = clean_location_display(raw_location) or "Wilmington; Shipyard Blvd"
-    register = s.get("registration_url", "#")
-    dt = parse_dt(s.get("start_at"))
-
-    if dt:
-        date = dt.strftime("%B %d, %Y")
-        time = dt.strftime("%I:%M %p").lstrip("0")
-        month_abbr = dt.strftime("%b").upper()
-        day_num = dt.strftime("%d").lstrip("0")
-        weekday = dt.strftime("%a")
-    else:
-        date = "TBD"
-        time = "TBD"
-        month_abbr = "TBD"
-        day_num = "--"
-        weekday = ""
-
-    city, state = location_to_city_state(location)
-    page_title = f"{seo_title_for_session(course, city=city, state=state)} | 910CPR"
-    meta_description = (
-        f"{course} in {location}. View class details, current schedule options, and register online with 910CPR."
-    )
-    course_page_url = f"../courses/{short_slug(course)}.html"
-
-    course_id = str(s.get("course_id", "")).strip()
-    course_number = str(s.get("course_number", "")).strip()
-    schedule_anchor = course_id or course_number
-    if schedule_anchor:
-        schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
-    else:
-        schedule_url = course_page_url
-
-    canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
-
-    is_past = bool(dt and dt < now_dt)
-
-    if is_past:
-        state_notice = """
-<div class="notice">
-This specific session has passed. See upcoming classes below.
-</div>
-"""
-        button_html = f'<a class="button secondary" href="{schedule_url}">See Upcoming Classes</a>'
-        robots_value = "index,follow"
-        hero_subhead = "Use the schedule button or the upcoming list below to pick the next available class."
-    else:
-        state_notice = ""
-        button_html = f'<a class="button primary" href="{register}">Register Now</a>'
-        robots_value = "index,follow"
-        hero_subhead = "Use the register button for this session or the upcoming list below for other dates and times."
-
-    cert_logo = detect_cert_logo(course)
-    if cert_logo:
-        cert_logo_html = f'''
-<div class="cert-badge">
-  <img src="{escape(cert_logo)}" alt="Certifying body logo" loading="lazy">
-</div>
-'''
-    else:
-        cert_logo_html = '<div class="cert-badge"></div>'
-
-    logo_url = default_logo_url()
-    course_img_url = find_course_archive_image(course_id or course_number)
-
-    brand_parts = []
-    if logo_url:
-        brand_parts.append(
-            f'''
-<div class="brand-card">
-  <img src="{escape(logo_url)}" alt="910CPR logo" loading="lazy">
-</div>
-'''
-        )
-
-    if course_img_url:
-        brand_parts.append(
-            f'''
-<div class="image-card">
-  <img src="{escape(course_img_url)}" alt="{escape(course)} course image" loading="lazy">
-</div>
-'''
-        )
-
-    if brand_parts:
-        brand_strip_html = f'<section class="brand-strip">{"".join(brand_parts)}</section>'
-    else:
-        brand_strip_html = ""
-
-    description_html = load_course_description_html(course_id or course_number, course)
-    if description_html:
-        course_description_section = f"""
-<section class="info-box description-box">
-  <h2>Course Description</h2>
-  <div class="description-html">
-    {description_html}
-  </div>
-</section>
-"""
-    else:
-        course_description_section = f"""
-<section class="info-box description-box">
-  <h2>Course Description</h2>
-  <div class="description-html">
-    <p>{escape(audience_blurb(course))}</p>
-  </div>
-</section>
-"""
-
-    upcoming_sessions = get_upcoming_sessions(s, sessions, now_dt, limit=UPCOMING_LIMIT)
-    upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, schedule_url)
-
-    html_doc = template.format(
-        page_title=escape(page_title),
-        meta_description=escape(meta_description),
-        robots_value=robots_value,
-        canonical_url=escape(canonical_url),
-        gtm_head=render_gtm_head(),
-        gtm_body=render_gtm_body(),
-        schema_block=make_schema(course, dt, location, city, state, register),
-        course=escape(course),
-        location=escape(location),
-        date=escape(date),
-        time=escape(time),
-        month_abbr=escape(month_abbr),
-        day_num=escape(day_num),
-        weekday=escape(weekday),
-        state_notice=state_notice,
-        session_id=escape(str(session_id)),
-        button_html=button_html,
-        course_page_url=escape(course_page_url),
-        schedule_url=escape(schedule_url),
-        build_stamp=escape(build_stamp),
-        course_js=js_escape(course),
-        course_id=escape(course_id or course_number),
-        course_slug=short_slug(course),
-        location_js=js_escape(location),
-        is_past_js="true" if is_past else "false",
-        register_js=js_escape(register),
-        audience_text=escape(audience_blurb(course)),
-        corporate_text=escape(corporate_blurb(city, course)),
-        hero_subhead=escape(hero_subhead),
-        cert_logo_html=cert_logo_html,
-        brand_strip_html=brand_strip_html,
-        course_description_section=course_description_section,
-        upcoming_sessions_html=upcoming_sessions_html,
-    )
-
-    path = OUTPUT_DIR / f"{session_id}.html"
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(html_doc)
-
-    count += 1
-
-print(f"Landers built: {count}")
