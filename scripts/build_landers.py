@@ -57,6 +57,10 @@ def strip_html(text):
     return text
 
 
+def normalize_whitespace(text: str) -> str:
+    return re.sub(r"\s+", " ", str(text or "")).strip()
+
+
 def display_course_name(course_raw: str) -> str:
     cleaned = normalize_course_title(course_raw) or strip_html(course_raw) or "Course"
     cleaned = re.sub(
@@ -69,10 +73,6 @@ def display_course_name(course_raw: str) -> str:
 
 
 def seo_course_phrase(course_name: str) -> str:
-    """
-    Human-facing name stays clean.
-    SEO-facing strings can carry search terms naturally.
-    """
     base = display_course_name(course_name)
     lower = base.lower()
 
@@ -331,7 +331,6 @@ def find_course_archive_image(course_id: str) -> str:
         return ""
 
     exts = [".png", ".jpg", ".jpeg", ".webp"]
-
     preferred = []
 
     for ext in exts:
@@ -354,6 +353,18 @@ def find_course_archive_image(course_id: str) -> str:
 
     chosen = sorted(preferred, key=score)[0]
     return f"/images/course-archive/{chosen.name}"
+
+
+def fallback_course_image(course_name: str, course_id: str, course_number: str) -> str:
+    archive_img = find_course_archive_image(course_id or course_number)
+    if archive_img:
+        return archive_img
+
+    cert_img = detect_cert_logo(course_name)
+    if cert_img:
+        return cert_img
+
+    return ""
 
 
 def same_course(session_a: dict, session_b: dict) -> bool:
@@ -395,10 +406,12 @@ def get_upcoming_sessions(current_session: dict, sessions: list[dict], now_dt: d
 def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: str) -> str:
     if not upcoming_sessions:
         return f"""
-<section class="info-box upcoming-box">
+<section id="upcoming-times" class="info-box upcoming-box">
   <h2>Upcoming Classes</h2>
   <p>No upcoming public sessions are listed right now.</p>
-  <p><a class="text-link" href="{escape(schedule_url)}">See all current dates and times</a></p>
+  <div class="upcoming-footer-link">
+    <a class="text-link strong-link" href="{escape(schedule_url)}">See full schedule for this course</a>
+  </div>
 </section>
 """
 
@@ -424,20 +437,18 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
         )
 
     return f"""
-<section class="info-box upcoming-box">
+<section id="upcoming-times" class="info-box upcoming-box">
   <div class="upcoming-head">
     <h2>Upcoming Classes</h2>
-    <a class="text-link" href="{escape(schedule_url)}">See all current dates and times</a>
   </div>
   <div class="upcoming-grid">
     {''.join(cards)}
   </div>
+  <div class="upcoming-footer-link">
+    <a class="text-link strong-link" href="{escape(schedule_url)}">See full schedule for this course</a>
+  </div>
 </section>
 """
-
-
-def normalize_whitespace(text: str) -> str:
-    return re.sub(r"\s+", " ", str(text or "")).strip()
 
 
 def clean_review_text(text: str) -> str:
@@ -494,9 +505,11 @@ def iter_review_payloads_from_json(data_obj):
         for item in data_obj:
             if isinstance(item, dict) and (
                 "comment" in item
+                or "text" in item
                 or "reviewer" in item
+                or "author_name" in item
                 or "starRating" in item
-                or "reviewId" in item
+                or "rating" in item
             ):
                 looks_like_reviews = True
                 break
@@ -513,6 +526,9 @@ def parse_review_objects(review_list: list) -> list[dict]:
 
     for item in review_list:
         if not isinstance(item, dict):
+            continue
+
+        if item.get("has_text") is False:
             continue
 
         comment = clean_review_text(
@@ -664,7 +680,14 @@ def truncate_review(text: str, max_chars: int = 220) -> str:
 
 def render_reviews_html(selected_reviews: list[dict]) -> str:
     if not selected_reviews:
-        return ""
+        return """
+<section class="info-box reviews-box">
+  <h2>Why Students Choose 910CPR</h2>
+  <div class="reviews-fallback">
+    <p>Students consistently choose 910CPR for clear instruction, flexible scheduling, and a supportive learning environment.</p>
+  </div>
+</section>
+"""
 
     cards = []
     for review in selected_reviews:
@@ -731,6 +754,10 @@ template = """
 }}
 
 * {{ box-sizing: border-box; }}
+
+html {{
+  scroll-behavior: smooth;
+}}
 
 body {{
   margin: 0;
@@ -969,6 +996,11 @@ body img {{
   flex-wrap: wrap;
 }}
 
+.upcoming-footer-link {{
+  margin-top: 16px;
+  text-align: center;
+}}
+
 .brand-strip {{
   margin-top: 24px;
   display: grid;
@@ -1009,7 +1041,7 @@ body img {{
   width: 100%;
   height: 100%;
   max-height: 260px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 12px;
   display: block;
 }}
@@ -1076,6 +1108,13 @@ body img {{
   font-weight: 700;
 }}
 
+.reviews-fallback {{
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}}
+
 .text-link {{
   color: var(--accent);
   text-decoration: none;
@@ -1083,6 +1122,11 @@ body img {{
 
 .text-link:hover {{
   text-decoration: underline;
+}}
+
+.strong-link {{
+  font-size: 16px;
+  font-weight: 700;
 }}
 
 .build-stamp {{
@@ -1152,7 +1196,7 @@ body img {{
 
         <div class="cta-row">
           {button_html}
-          <a class="button secondary" href="{schedule_url}">See All Dates/Times</a>
+          <a class="button secondary" href="#upcoming-times">See Other Upcoming Class Times</a>
         </div>
       </div>
     </section>
@@ -1249,7 +1293,6 @@ for s in sessions:
         schedule_url = course_page_url
 
     canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
-
     is_past = bool(dt and dt < now_dt)
 
     if is_past:
@@ -1258,9 +1301,9 @@ for s in sessions:
 This specific session has passed. See upcoming classes below.
 </div>
 """
-        button_html = f'<a class="button secondary" href="{schedule_url}">See Upcoming Classes</a>'
+        button_html = f'<a class="button secondary" href="#upcoming-times">See Upcoming Classes</a>'
         robots_value = "index,follow"
-        hero_subhead = "Use the schedule button or the upcoming list below to pick the next available class."
+        hero_subhead = "Use the upcoming list below to pick the next available class."
     else:
         state_notice = ""
         button_html = f'<a class="button primary" href="{register}">Register Now</a>'
@@ -1278,7 +1321,7 @@ This specific session has passed. See upcoming classes below.
         cert_logo_html = '<div class="cert-badge"></div>'
 
     logo_url = default_logo_url()
-    course_img_url = find_course_archive_image(course_id or course_number)
+    course_img_url = fallback_course_image(course_display, course_id, course_number)
 
     brand_parts = []
     if logo_url:
@@ -1380,6 +1423,4 @@ This specific session has passed. See upcoming classes below.
     count += 1
 
 print(f"Landers built: {count}")
-print(f"Loaded: {len(all_reviews)}")
-if str(session_id) == "12774297":
-    print("For 12774297:", len(selected_reviews))
+print(f"Reviews loaded: {len(all_reviews)}")
