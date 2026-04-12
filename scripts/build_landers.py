@@ -1333,14 +1333,14 @@ This specific session has passed. See upcoming classes below.
 '''
         )
 
-    if course_img_url:
-        brand_parts.append(
-            f'''
+if course_img_url and course_img_url != cert_logo:
+    brand_parts.append(
+        f'''
 <div class="image-card">
   <img src="{escape(course_img_url)}" alt="{escape(course_display)} course image" loading="lazy">
 </div>
 '''
-        )
+    )        )
 
     if brand_parts:
         brand_strip_html = f'<section class="brand-strip">{"".join(brand_parts)}</section>'

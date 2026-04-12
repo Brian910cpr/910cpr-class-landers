@@ -1,13 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AHA BLS Provider CPR Class in Wilmington, NC | 910CPR</title>
+<title>AHA BLS Provider in Wilmington, NC | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="AHA BLS Provider CPR Certification in Wilmington; Shipyard Blvd. View class details, current schedule options, and register online with 910CPR.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.910cpr.com/classes/12774297.html">
+
 <!-- Google Tag Manager -->
 <script>
 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -17,6 +17,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PQS8DCBH');
 </script>
 <!-- End Google Tag Manager -->
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -51,23 +52,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <style>
 :root {
-  --bg: #eef4f8;
-  --bg2: #f8fbfd;
-  --card: #ffffff;
-  --soft: #f8fbfd;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --accent: #2563eb;
-  --accent-dark: #1d4ed8;
-  --cta: #ea580c;
-  --cta-dark: #c2410c;
-  --border: #dbe4ee;
-  --warning-bg: #fff7d6;
-  --warning-border: #f2df91;
-  --warning-text: #6d5600;
+  --bg: #f4f8fb;
+  --bg2: #fbfdff;
+  --surface: #ffffff;
+  --surface-soft: #f8fbfd;
+  --surface-tint: #f6f8fc;
+  --hero-tint: linear-gradient(180deg, #fcfeff 0%, #f7fafc 100%);
+  --text: #1f2d3d;
+  --muted: #64748b;
+  --heading: #18324a;
+  --border: #d8e4ee;
+  --border-strong: #c8d7e4;
+  --accent: #d95b88;
+  --accent-dark: #bc416d;
+  --accent-soft: #fce8ef;
+  --cta: #de5b86;
+  --cta-dark: #c44671;
+  --cta-shadow: rgba(217, 91, 136, 0.22);
+  --medical: #7ec9c8;
+  --medical-dark: #4fa9a7;
+  --medical-soft: #ecf8f8;
+  --star: #d78b2a;
+  --shadow: 0 14px 34px rgba(22, 42, 66, 0.06);
+  --shadow-soft: 0 8px 18px rgba(22, 42, 66, 0.04);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 html {
   scroll-behavior: smooth;
@@ -76,8 +88,11 @@ html {
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
   color: var(--text);
+  background:
+    radial-gradient(circle at top right, rgba(126, 201, 200, 0.10), transparent 24%),
+    radial-gradient(circle at top left, rgba(217, 91, 136, 0.08), transparent 28%),
+    linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
 }
 
 body img {
@@ -85,229 +100,342 @@ body img {
   height: auto;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .wrap {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 32px 16px 56px;
+  padding: 36px 16px 60px;
 }
 
 .card {
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 24px;
+  border-radius: 28px;
   padding: 28px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow);
 }
 
-.notice {
-  background: var(--warning-bg);
-  border: 1px solid var(--warning-border);
-  color: var(--warning-text);
-  padding: 16px 18px;
-  border-radius: 14px;
-  margin-bottom: 22px;
-  font-size: 18px;
-}
-
-.hero-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
+.hero {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr) 164px;
+  gap: 20px;
+  align-items: start;
+  padding-bottom: 4px;
 }
 
 .date-badge {
   min-width: 96px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-  color: white;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #5f7ff0 0%, #2f5dde 100%);
+  color: #fff;
   text-align: center;
   padding: 14px 10px;
+  box-shadow: 0 10px 24px rgba(47, 93, 222, 0.20);
 }
 
 .date-month {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .date-day {
-  font-size: 34px;
+  font-size: 40px;
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.02;
   margin: 6px 0;
 }
 
 .date-weekday {
   font-size: 13px;
+  font-weight: 700;
 }
 
-.cert-badge {
-  min-width: 96px;
-  min-height: 96px;
-  display: flex;
+.hero-main {
+  min-width: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 10px;
-}
-
-.cert-badge img {
-  max-width: 72px;
-  max-height: 72px;
-  object-fit: contain;
-}
-
-.hero-content {
-  margin-top: 18px;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--medical-soft);
+  border: 1px solid #d7eceb;
+  color: #2f6f70;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-bottom: 12px;
 }
 
 .hero h1 {
-  margin: 0 0 12px 0;
-  font-size: 30px;
-  line-height: 1.1;
+  margin: 0 0 10px 0;
+  font-size: 36px;
+  line-height: 1.08;
+  color: var(--heading);
+  letter-spacing: -0.02em;
 }
 
 .subhead {
-  margin: 0 0 14px 0;
+  margin: 0;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+.hero-side {
+  display: grid;
+  gap: 12px;
+}
+
+.cert-badge,
+.trust-badge {
+  background: var(--hero-tint);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 12px;
+  box-shadow: var(--shadow-soft);
+}
+
+.cert-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+}
+
+.cert-badge img {
+  max-width: 74px;
+  max-height: 74px;
+  object-fit: contain;
+}
+
+.trust-badge {
+  text-align: center;
+  padding: 12px 10px;
+}
+
+.trust-badge strong {
+  display: block;
+  font-size: 13px;
+  color: var(--heading);
+  margin-bottom: 4px;
+}
+
+.trust-badge span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.hero-details {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 18px;
+  align-items: start;
 }
 
 .meta-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 10px 18px;
-  margin: 10px 0 0 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .meta-item {
-  background: var(--soft);
+  background: var(--surface-soft);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 14px;
+  border-radius: 16px;
+  padding: 14px 15px;
 }
 
 .meta-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
 }
 
 .meta-value {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
+  color: var(--heading);
+  line-height: 1.35;
+}
+
+.cta-panel {
+  background: linear-gradient(180deg, #fffafb 0%, #ffffff 100%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.cta-panel-label {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+
+.cta-panel-copy {
+  margin: 0 0 14px 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
 }
 
 .cta-row {
-  margin-top: 18px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  display: grid;
+  gap: 10px;
 }
 
 .button {
-  display: inline-block;
-  padding: 13px 18px;
-  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 18px;
+  border-radius: 999px;
   text-decoration: none;
   font-weight: 700;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.button.small {
-  padding: 10px 14px;
-  font-size: 14px;
+.button:hover {
+  transform: translateY(-1px);
 }
 
 .button.primary {
-  background: var(--cta);
-  color: white;
+  background: linear-gradient(180deg, var(--cta) 0%, var(--cta-dark) 100%);
+  color: #fff;
+  box-shadow: 0 10px 24px var(--cta-shadow);
 }
 
 .button.primary:hover {
-  background: var(--cta-dark);
+  background: linear-gradient(180deg, #d95581 0%, #b93f68 100%);
 }
 
 .button.secondary {
-  background: #5f6f82;
-  color: white;
+  background: #fff;
+  color: var(--heading);
+  border: 1px solid var(--border-strong);
 }
 
 .button.secondary:hover {
-  background: #526170;
+  background: #f9fbfd;
+}
+
+.button.small {
+  min-height: 38px;
+  padding: 8px 13px;
+  font-size: 13px;
+  border-radius: 12px;
+}
+
+.jump-link {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 .stack {
   display: grid;
   gap: 18px;
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
-.info-box {
-  background: var(--soft);
+.section-box {
+  background: linear-gradient(180deg, var(--surface-soft) 0%, #ffffff 100%);
   border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 18px;
+  border-radius: 20px;
+  padding: 20px;
 }
 
-.info-box h2 {
-  margin: 0 0 10px 0;
-  font-size: 20px;
-}
-
-.info-box p {
-  margin: 0 0 12px 0;
-  line-height: 1.6;
-}
-
-.upcoming-head {
+.section-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   gap: 14px;
   margin-bottom: 14px;
   flex-wrap: wrap;
 }
 
+.section-title-wrap h2 {
+  margin: 0;
+  font-size: 24px;
+  color: var(--heading);
+  letter-spacing: -0.01em;
+}
+
+.section-title-wrap p {
+  margin: 6px 0 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.text-link {
+  color: #2c65d6;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
 .upcoming-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .upcoming-card {
   background: #ffffff;
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
+  border-radius: 16px;
+  padding: 15px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 14px;
+  align-items: center;
+}
+
+.upcoming-main {
+  min-width: 0;
 }
 
 .upcoming-date {
   font-size: 16px;
   font-weight: 700;
+  color: var(--heading);
   margin-bottom: 4px;
 }
 
 .upcoming-time {
   font-size: 15px;
+  font-weight: 700;
+  color: #325d94;
   margin-bottom: 4px;
 }
 
 .upcoming-location {
   color: var(--muted);
   font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.upcoming-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  line-height: 1.4;
 }
 
 .upcoming-footer-link {
@@ -316,104 +444,76 @@ body img {
 }
 
 .brand-strip {
-  margin-top: 24px;
   display: grid;
-  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+  grid-template-columns: 180px minmax(0, 1fr);
   gap: 18px;
   align-items: stretch;
 }
 
 .brand-card,
 .image-card {
-  background: var(--soft);
+  background: linear-gradient(180deg, var(--surface-soft) 0%, #ffffff 100%);
   border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 16px;
+  border-radius: 20px;
+  padding: 18px;
 }
 
 .brand-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 140px;
-  text-align: center;
+  min-height: 162px;
 }
 
 .brand-card img {
-  max-width: 140px;
+  max-width: 130px;
   max-height: 90px;
   object-fit: contain;
-  margin: 0 auto;
-  display: block;
 }
 
 .image-card {
-  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 162px;
+  background:
+    radial-gradient(circle at top right, rgba(126, 201, 200, 0.10), transparent 26%),
+    radial-gradient(circle at bottom left, rgba(217, 91, 136, 0.08), transparent 22%),
+    linear-gradient(180deg, #fcfdff 0%, #f7fafc 100%);
 }
 
 .image-card img {
   width: 100%;
-  height: 100%;
-  max-height: 260px;
+  max-height: 180px;
   object-fit: contain;
-  border-radius: 12px;
   display: block;
-}
-
-.description-box {
-  margin-top: 24px;
-}
-
-.description-box h2 {
-  margin: 0 0 14px 0;
-  font-size: 22px;
-}
-
-.description-html {
-  line-height: 1.7;
-}
-
-.description-html p {
-  margin: 0 0 14px 0;
-}
-
-.description-html ul,
-.description-html ol {
-  margin: 0 0 14px 24px;
-  padding: 0;
-}
-
-.description-html li {
-  margin: 0 0 8px 0;
-}
-
-.reviews-box {
-  margin-top: 24px;
 }
 
 .reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
 .review-card {
   background: #ffffff;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 16px;
 }
 
 .review-stars {
-  color: #d97706;
-  font-size: 16px;
+  color: var(--star);
+  font-size: 15px;
   letter-spacing: 0.04em;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .review-text {
   margin: 0 0 12px 0;
-  line-height: 1.6;
+  line-height: 1.65;
+  color: var(--text);
+  font-size: 15px;
 }
 
 .review-author {
@@ -422,52 +522,107 @@ body img {
   font-weight: 700;
 }
 
-.reviews-fallback {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
+.description-html,
+.copy-block p {
+  line-height: 1.7;
+  color: var(--text);
+  font-size: 15px;
 }
 
-.text-link {
-  color: var(--accent);
-  text-decoration: none;
+.description-html p,
+.copy-block p:last-child {
+  margin-bottom: 0;
 }
 
-.text-link:hover {
-  text-decoration: underline;
-}
-
-.strong-link {
-  font-size: 16px;
-  font-weight: 700;
+.copy-block p {
+  margin: 0 0 12px 0;
 }
 
 .build-stamp {
-  margin-top: 26px;
-  color: var(--muted);
+  margin-top: 24px;
+  color: #8a97a6;
   font-size: 11px;
+}
+
+@media (max-width: 980px) {
+  .hero {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .hero-side {
+    grid-column: 1 / -1;
+    grid-template-columns: 120px 1fr;
+    align-items: stretch;
+  }
+
+  .hero-details {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-panel {
+    max-width: 420px;
+  }
+
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 840px) {
   .brand-strip {
     grid-template-columns: 1fr;
   }
+
+  .meta-grid,
+  .upcoming-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 700px) {
-  .hero-top {
-    align-items: stretch;
+  .wrap {
+    padding: 18px 12px 42px;
   }
 
-  .date-badge,
-  .cert-badge {
-    min-width: 82px;
-    min-height: 82px;
+  .card {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .hero-side {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .date-badge {
+    max-width: 100px;
   }
 
   .hero h1 {
-    font-size: 25px;
+    font-size: 30px;
+  }
+
+  .upcoming-card {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .upcoming-card .button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-side {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-item {
+    padding: 13px 14px;
   }
 }
 </style>
@@ -477,211 +632,226 @@ body img {
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
+
 <div class="wrap">
   <div class="card">
-
-    
-
     <section class="hero">
-      <div class="hero-top">
-        <div class="date-badge">
-          <div class="date-month">APR</div>
-          <div class="date-day">13</div>
-          <div class="date-weekday">Mon</div>
-        </div>
-        
-<div class="cert-badge">
-  <img src="/images/0aha.png" alt="Certifying body logo" loading="lazy">
-</div>
-
+      <div class="date-badge">
+        <div class="date-month">APR</div>
+        <div class="date-day">13</div>
+        <div class="date-weekday">Mon</div>
       </div>
 
-      <div class="hero-content">
+      <div class="hero-main">
+        <div class="eyebrow">AHA Certified • In-Person Training</div>
         <h1>AHA BLS Provider</h1>
-        <p class="subhead">Use the register button for this session or the upcoming list below for other dates and times.</p>
+        <p class="subhead">
+          Professional-level CPR training for healthcare workers, students, and clinical staff. Choose this session to register now, or browse additional upcoming class times below.
+        </p>
+      </div>
 
-        <div class="meta-grid">
-          <div class="meta-item">
-            <div class="meta-label">Date</div>
-            <div class="meta-value">April 13, 2026</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Time</div>
-            <div class="meta-value">12:30 PM</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Location</div>
-            <div class="meta-value">Wilmington; Shipyard Blvd</div>
-          </div>
+      <div class="hero-side">
+        <div class="cert-badge">
+          <img src="/images/0aha.png" alt="Certifying body logo" loading="lazy">
         </div>
-
-        <div class="cta-row">
-          <a class="button primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774297">Register Now</a>
-          <a class="button secondary" href="#upcoming-times">See Other Upcoming Class Times</a>
+        <div class="trust-badge">
+          <strong>Clear. Calm. Practical.</strong>
+          <span>Designed to help students feel prepared and confident.</span>
         </div>
       </div>
     </section>
 
-    
-<section id="upcoming-times" class="info-box upcoming-box">
-  <div class="upcoming-head">
-    <h2>Upcoming Classes</h2>
-  </div>
-  <div class="upcoming-grid">
-    
-<div class="upcoming-card">
-  <div class="upcoming-date">April 13, 2026</div>
-  <div class="upcoming-time">6:15 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774514">Register</a>
-  </div>
-</div>
+    <div class="hero-details">
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">Date</div>
+          <div class="meta-value">April 13, 2026</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Time</div>
+          <div class="meta-value">12:30 PM</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Location</div>
+          <div class="meta-value">Wilmington; Shipyard Blvd</div>
+        </div>
+      </div>
 
-<div class="upcoming-card">
-  <div class="upcoming-date">April 14, 2026</div>
-  <div class="upcoming-time">6:45 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774519">Register</a>
-  </div>
-</div>
-
-<div class="upcoming-card">
-  <div class="upcoming-date">April 15, 2026</div>
-  <div class="upcoming-time">12:30 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774301">Register</a>
-  </div>
-</div>
-
-<div class="upcoming-card">
-  <div class="upcoming-date">April 16, 2026</div>
-  <div class="upcoming-time">12:30 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=13198624">Register</a>
-  </div>
-</div>
-
-<div class="upcoming-card">
-  <div class="upcoming-date">April 17, 2026</div>
-  <div class="upcoming-time">12:30 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774307">Register</a>
-  </div>
-</div>
-
-<div class="upcoming-card">
-  <div class="upcoming-date">April 17, 2026</div>
-  <div class="upcoming-time">6:15 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774527">Register</a>
-  </div>
-</div>
-
-<div class="upcoming-card">
-  <div class="upcoming-date">April 18, 2026</div>
-  <div class="upcoming-time">12:30 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12776642">Register</a>
-  </div>
-</div>
-
-<div class="upcoming-card">
-  <div class="upcoming-date">April 18, 2026</div>
-  <div class="upcoming-time">6:15 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774526">Register</a>
-  </div>
-</div>
-
-<div class="upcoming-card">
-  <div class="upcoming-date">April 20, 2026</div>
-  <div class="upcoming-time">12:30 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774298">Register</a>
-  </div>
-</div>
-
-<div class="upcoming-card">
-  <div class="upcoming-date">April 21, 2026</div>
-  <div class="upcoming-time">12:30 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
-  <div class="upcoming-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12776544">Register</a>
-  </div>
-</div>
-
-  </div>
-  <div class="upcoming-footer-link">
-    <a class="text-link strong-link" href="https://coastalcprtraining.enrollware.com/schedule#ct209806">See full schedule for this course</a>
-  </div>
-</section>
-
-
-    <section class="brand-strip">
-<div class="brand-card">
-  <img src="/images/logo.png" alt="910CPR logo" loading="lazy">
-</div>
-
-<div class="image-card">
-  <img src="/images/0aha.png" alt="AHA BLS Provider course image" loading="lazy">
-</div>
-</section>
-
-    
-<section class="info-box reviews-box">
-  <h2>Why Students Choose 910CPR</h2>
-  <div class="reviews-grid">
-    
-<div class="review-card">
-  <div class="review-stars" aria-label="Five star review">★★★★★</div>
-  <p class="review-text">“Had a wonderful experience taking the BLS class with Brian. He was very knowledgeable and easy to be open with if I didn&#x27;t understand something. It was a very professional atmosphere and I felt confident in my skills...”</p>
-  <div class="review-author">Pat H.</div>
-</div>
-
-<div class="review-card">
-  <div class="review-stars" aria-label="Five star review">★★★★★</div>
-  <p class="review-text">“Great place to renew my BLS, only place I use.”</p>
-  <div class="review-author">Jeff E.</div>
-</div>
-
-<div class="review-card">
-  <div class="review-stars" aria-label="Five star review">★★★★★</div>
-  <p class="review-text">“Brian was extremely knowledgeable and made the class enjoyable. I appreciated the speed at which he went through BLS training and he made sure I was prepared for the written test. Thanks Brian!”</p>
-  <div class="review-author">Samantha</div>
-</div>
-
-  </div>
-</section>
-
-
-    
-<section class="info-box description-box">
-  <h2>Course Description</h2>
-  <div class="description-html">
-    <p>This course is commonly taken by healthcare workers, nursing students, dental staff, EMS personnel, and others who need professional-level CPR certification.</p>
-  </div>
-</section>
-
+      <div class="cta-panel">
+        <p class="cta-panel-label">Reserve your seat</p>
+        <p class="cta-panel-copy">Registration for this class takes just a moment. If you need another time, you can compare upcoming options below.</p>
+        <div class="cta-row">
+          <a class="button primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774297">Register Now</a>
+          <a class="button secondary" href="#upcoming-times">See Upcoming Class Times</a>
+        </div>
+        <div class="jump-link">Need a different session? Scroll down for the full upcoming list.</div>
+      </div>
+    </div>
 
     <div class="stack">
-      <section class="info-box">
-        <h2>Who This Class Is For</h2>
-        <p>This course is commonly taken by healthcare workers, nursing students, dental staff, EMS personnel, and others who need professional-level CPR certification.</p>
-        <p>910CPR also supports employers in Wilmington that need documented, renewable training for staff. If you need multiple employees trained in AHA BLS Provider, group and workplace options may be available.</p>
+      <section id="upcoming-times" class="section-box">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <h2>Upcoming Classes</h2>
+            <p>Quickly compare dates and times for the same course.</p>
+          </div>
+        </div>
+
+        <div class="upcoming-grid">
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 13, 2026</div>
+              <div class="upcoming-time">6:15 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774514">Register</a>
+          </div>
+
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 14, 2026</div>
+              <div class="upcoming-time">6:45 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774519">Register</a>
+          </div>
+
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 15, 2026</div>
+              <div class="upcoming-time">12:30 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774301">Register</a>
+          </div>
+
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 16, 2026</div>
+              <div class="upcoming-time">12:30 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=13198624">Register</a>
+          </div>
+
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 17, 2026</div>
+              <div class="upcoming-time">12:30 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774307">Register</a>
+          </div>
+
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 17, 2026</div>
+              <div class="upcoming-time">6:15 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774527">Register</a>
+          </div>
+
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 18, 2026</div>
+              <div class="upcoming-time">12:30 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12776642">Register</a>
+          </div>
+
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 18, 2026</div>
+              <div class="upcoming-time">6:15 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774526">Register</a>
+          </div>
+
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 20, 2026</div>
+              <div class="upcoming-time">12:30 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774298">Register</a>
+          </div>
+
+          <div class="upcoming-card">
+            <div class="upcoming-main">
+              <div class="upcoming-date">April 21, 2026</div>
+              <div class="upcoming-time">12:30 PM</div>
+              <div class="upcoming-location">Wilmington; Shipyard Blvd</div>
+            </div>
+            <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12776544">Register</a>
+          </div>
+        </div>
+
+        <div class="upcoming-footer-link">
+          <a class="text-link" href="https://coastalcprtraining.enrollware.com/schedule#ct209806">See full schedule for this course</a>
+        </div>
+      </section>
+
+      <section class="brand-strip">
+        <div class="brand-card">
+          <img src="/images/logo.png" alt="910CPR logo" loading="lazy">
+        </div>
+
+        <div class="image-card">
+          <img src="/images/0aha.png" alt="AHA BLS Provider course image" loading="lazy">
+        </div>
+      </section>
+
+      <section class="section-box">
+        <div class="section-title-wrap" style="margin-bottom:14px;">
+          <h2>Why Students Choose 910CPR</h2>
+          <p>Reviews from students who have taken BLS training with 910CPR.</p>
+        </div>
+
+        <div class="reviews-grid">
+          <div class="review-card">
+            <div class="review-stars" aria-label="Five star review">★★★★★</div>
+            <p class="review-text">“Had a wonderful experience taking the BLS class with Brian. He was very knowledgeable and easy to be open with if I didn’t understand something. It was a very professional atmosphere and I felt confident in my skills...”</p>
+            <div class="review-author">Pat H.</div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-stars" aria-label="Five star review">★★★★★</div>
+            <p class="review-text">“Great place to renew my BLS, only place I use.”</p>
+            <div class="review-author">Jeff E.</div>
+          </div>
+
+          <div class="review-card">
+            <div class="review-stars" aria-label="Five star review">★★★★★</div>
+            <p class="review-text">“Brian was extremely knowledgeable and made the class enjoyable. I appreciated the speed at which he went through BLS training and he made sure I was prepared for the written test. Thanks Brian!”</p>
+            <div class="review-author">Samantha</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-box">
+        <div class="section-title-wrap" style="margin-bottom:12px;">
+          <h2>Course Description</h2>
+        </div>
+        <div class="description-html">
+          <p>This course is commonly taken by healthcare workers, nursing students, dental staff, EMS personnel, and others who need professional-level CPR certification.</p>
+        </div>
+      </section>
+
+      <section class="section-box">
+        <div class="section-title-wrap" style="margin-bottom:12px;">
+          <h2>Who This Class Is For</h2>
+        </div>
+        <div class="copy-block">
+          <p>This course is commonly taken by healthcare workers, nursing students, dental staff, EMS personnel, and others who need professional-level CPR certification.</p>
+          <p>910CPR also supports employers in Wilmington that need documented, renewable training for staff. If you need multiple employees trained in AHA BLS Provider, group and workplace options may be available.</p>
+        </div>
       </section>
     </div>
 
     <div class="build-stamp">build: 2026-04-12 10:26 AM</div>
-
   </div>
 </div>
 
@@ -706,7 +876,57 @@ window.dataLayer.push({
   event: "page_context",
   ...pageContext
 });
-</script>
 
+function pushLinkClick(eventName, extra = {}) {
+  window.dataLayer.push({
+    event: eventName,
+    ...pageContext,
+    ...extra
+  });
+}
+
+document.addEventListener("click", function(e) {
+  const a = e.target.closest("a");
+  if (!a) return;
+
+  const href = a.getAttribute("href") || "";
+  const text = (a.textContent || "").trim().toLowerCase();
+
+  if (href.includes("enrollware.com/enroll?id=")) {
+    pushLinkClick("register_click", {
+      click_text: text,
+      link_url: href
+    });
+    return;
+  }
+
+  if (
+    text.includes("see full schedule") ||
+    text.includes("upcoming class times") ||
+    text.includes("upcoming classes")
+  ) {
+    pushLinkClick("view_upcoming_click", {
+      click_text: text,
+      link_url: href
+    });
+    return;
+  }
+
+  if (href.includes("/courses/")) {
+    pushLinkClick("course_link_click", {
+      click_text: text,
+      link_url: href
+    });
+    return;
+  }
+
+  if (href.includes("/classes/")) {
+    pushLinkClick("session_link_click", {
+      click_text: text,
+      link_url: href
+    });
+  }
+});
+</script>
 </body>
 </html>
