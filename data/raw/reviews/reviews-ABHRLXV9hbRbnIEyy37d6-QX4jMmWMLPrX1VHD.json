@@ -1,0 +1,255 @@
+{
+  "reviews": [{
+    "reviewer": {
+      "displayName": "Cyndi Mitchell"
+    },
+    "starRating": "FIVE",
+    "createTime": "2020-06-12T15:51:37.499158Z",
+    "updateTime": "2020-06-12T15:51:37.499158Z",
+    "reviewReply": {
+      "comment": "Thank you for your feedback.  Look forward to working with you again soon. Have a great Summer.",
+      "updateTime": "2020-06-13T13:50:41.224402Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSURjenZMd2d3RRAB"
+  }, {
+    "reviewer": {
+      "displayName": "nathan lowe"
+    },
+    "starRating": "FIVE",
+    "createTime": "2020-06-12T13:31:54.203640Z",
+    "updateTime": "2020-06-12T13:31:54.203640Z",
+    "reviewReply": {
+      "comment": "Your input is very important to us.  Thank you, Nathan.",
+      "updateTime": "2020-06-12T14:28:14.864550Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSURjanJlZTJBRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Emily McDonald"
+    },
+    "starRating": "FIVE",
+    "createTime": "2020-06-12T13:23:24.643822Z",
+    "updateTime": "2020-06-12T13:23:24.643822Z",
+    "reviewReply": {
+      "comment": "Thank you, Emily!  We were pleased to be a part of your training.  Have a great summer!",
+      "updateTime": "2020-06-12T14:26:48.794634Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSURjanBmeXl3RRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Allyson Boonbumrung"
+    },
+    "starRating": "FIVE",
+    "comment": "Great place to get certifications renewed!!! Lots of class flexibility, and the instructors are very knowledgeable and engaging! I will be back and will refer my fellow health care providers to them!",
+    "createTime": "2020-06-05T13:43:52.458154Z",
+    "updateTime": "2020-06-05T13:43:52.458154Z",
+    "reviewReply": {
+      "comment": "Thank you, Allyson, for the kind words.  It was nice to meet you and I\u0027m glad we were able to help.   Enjoy your Summer!",
+      "updateTime": "2020-06-06T01:29:29.986149Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSURjcXVqenFnRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Emma Yost"
+    },
+    "starRating": "FIVE",
+    "createTime": "2020-05-30T17:06:57.853628Z",
+    "updateTime": "2020-05-30T17:06:57.853628Z",
+    "reviewReply": {
+      "comment": "Thank you, Emma!    Have a great summer.",
+      "updateTime": "2020-05-30T18:35:02.922640Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSURjdkt2ak93EAE"
+  }, {
+    "reviewer": {
+      "displayName": "Tommy Kasper"
+    },
+    "starRating": "FIVE",
+    "comment": "I had a great experience receiving my Heartsaver First Aid CPR AED certification. A very clean and professional environment with top notch instruction and transfer of knowledge from Mr. Nicholas Tripp. I would recommend to anyone needing to certify or re-certify.",
+    "createTime": "2020-05-27T11:51:14.295785Z",
+    "updateTime": "2020-05-27T11:51:14.295785Z",
+    "reviewReply": {
+      "comment": "Thank you for your kind words, Tommy.  And, we thank you for allowing us to be a part of your training.",
+      "updateTime": "2020-05-29T21:22:39.361381Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSURjako3cHV3RRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Latrecia Fraley"
+    },
+    "starRating": "FIVE",
+    "comment": "Wonderful staff! Mr. Tripp was very professional and knowledgeable. Mr.Ennis replied to my emails promptly and they both helped me with any questions or concerns I had. I would highly recommend them to anyone trying to obtain their BLS Certification! Thank you, Nicholas and Brian! Job well done 👏🏼",
+    "createTime": "2020-05-07T22:04:57.981745Z",
+    "updateTime": "2020-05-07T22:04:57.981745Z",
+    "reviewReply": {
+      "comment": "Thank you, Latrecia!  I\u0027m glad we were able to help.   We strive to make navigating the AHA catalog and paths to certification as easy as possible.  Have a great summer!",
+      "updateTime": "2020-05-15T04:51:10.118649Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUNjdjQyX3dBRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "John Banialis"
+    },
+    "starRating": "FIVE",
+    "comment": "Brian and Nicholas are great. I am on my last week to submit documents for paramedic school and needed to get an AHA BLS cert, which during a pandemic, thought would be impossible. They got me in and certified with a DAY notice. They actually care about helping people out the best they can, especially with the pandemic we are all currently working through. The professionalism and dedication they both demonstrated was a refreshing experience, especially in the health care community.\nWill be going back to renew my cert as well as future certs.",
+    "createTime": "2020-05-07T12:29:58.791104Z",
+    "updateTime": "2020-05-07T12:29:58.791104Z",
+    "reviewReply": {
+      "comment": "Thank you, John.   All our instructors are EMTs and are excited to see folks advancing in the field.  Best wishes to you in your new career path.  Admittedly, we are having a bit of a hiccup during this pandemic in our ACLS offerings, but very soon we will be able to offer ACLS and PALS with as much flexibility as we are providing BLS.",
+      "updateTime": "2020-05-15T04:33:09.732340Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNjdl95dmZ3EAE"
+  }, {
+    "reviewer": {
+      "displayName": "Karis van Althuis"
+    },
+    "starRating": "FIVE",
+    "comment": "Worked with me to get the certification I needed!",
+    "createTime": "2020-04-03T14:23:19.074035Z",
+    "updateTime": "2020-04-03T14:23:19.074035Z",
+    "reviewReply": {
+      "comment": "Thank you, Karis, for allowing us to be a part of your training.  Look forward to working with you again.  Have a great summer.",
+      "updateTime": "2020-05-15T04:44:38.764798Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNjMF9QUEd3EAE"
+  }, {
+    "reviewer": {
+      "displayName": "Mike M"
+    },
+    "starRating": "FIVE",
+    "createTime": "2020-03-29T13:53:54.129217Z",
+    "updateTime": "2020-03-29T13:53:54.129217Z",
+    "reviewReply": {
+      "comment": "Thank you, Mike!  It was nice to meet you. Just an FYI; We are offering classes in a mobile classroom now.  If interested, we are able provide AHA\u0027s Heartsaver First Aid/CPR on-site to your teams.",
+      "updateTime": "2020-05-15T04:37:08.511989Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNjb19LRkxnEAE"
+  }, {
+    "reviewer": {
+      "displayName": "Michelle Robinson"
+    },
+    "starRating": "FIVE",
+    "comment": "Great experience! Would definitely recommend Coastal Carolina CPR",
+    "createTime": "2020-03-17T18:13:57.066641Z",
+    "updateTime": "2020-03-17T18:13:57.066641Z",
+    "reviewReply": {
+      "comment": "Thank you, Michelle.  We do appreciate you trusting us to be a part of your training.",
+      "updateTime": "2020-03-17T19:28:01.915084Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUNjNVlYdW5nRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Kelly Maxwell"
+    },
+    "starRating": "FIVE",
+    "comment": "Brian and Nicholas were extremely helpful! Brian even called me back once he found an easier alternative to my need, which he did not have to do. Its always nice to know that people will still go out of their way to help you! I will be referring our caregivers in need of CPR to them moving forward.",
+    "createTime": "2020-03-12T15:51:15.757346Z",
+    "updateTime": "2020-03-12T15:51:15.757346Z",
+    "reviewReply": {
+      "comment": "Thank you, Kelly... for going out of your way to reciprocate!  ᕕ( ᐛ )ᕗ.  Look forward to working with you again soon.",
+      "updateTime": "2020-03-13T11:30:45.719326Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUNjb2ZLSWtBRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Hannah Gastwirth"
+    },
+    "starRating": "FIVE",
+    "comment": "The instructor was very helpful and I felt at ease. I was completely prepared for the test at the end and would definitely recommend! Thank you!",
+    "createTime": "2020-03-11T02:41:53.801817Z",
+    "updateTime": "2020-03-11T02:41:53.801817Z",
+    "reviewReply": {
+      "comment": "Thank you, Hannah, for allowing us to be apart of your training.   I\u0027m glad we were able to help!",
+      "updateTime": "2020-03-13T11:36:40.003888Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNjMVBTMGVnEAE"
+  }, {
+    "reviewer": {
+      "displayName": "Erin Lyons"
+    },
+    "starRating": "FIVE",
+    "comment": "I had a great experience attaining my CPR/AED/1st Aid certification with Coastal Carolina CPR. Brian was a very knowledgeable instructor, provided an enthusiastic, thorough class and answered all my questions.\nI would highly recommend Coastal Carolina CPR.",
+    "createTime": "2020-03-09T23:09:33.857659Z",
+    "updateTime": "2020-03-09T23:09:33.857659Z",
+    "reviewReply": {
+      "comment": "Thank you, Erin.   It was a pleasure to meet you, and wish you the best with the new job!",
+      "updateTime": "2020-03-10T16:54:27.256440Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSURzX2N2eVFREAE"
+  }, {
+    "reviewer": {
+      "displayName": "Shariah Miller"
+    },
+    "starRating": "FIVE",
+    "createTime": "2020-03-09T17:40:18.985754Z",
+    "updateTime": "2020-03-09T17:40:18.985754Z",
+    "reviewReply": {
+      "comment": "Thank you for your review, Shariah!  We are glad to be able to help.  Wishing you our best on your new position.",
+      "updateTime": "2020-03-09T19:05:57.804032Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSURzaGRYQWNREAE"
+  }, {
+    "reviewer": {
+      "displayName": "Misty Roos"
+    },
+    "starRating": "FIVE",
+    "createTime": "2020-03-03T18:50:53.014122Z",
+    "updateTime": "2020-03-03T18:50:53.014122Z",
+    "reviewReply": {
+      "comment": "Thank you, Misty, for your review.  We are pleased that you found found value in our service, and look forward to working with you again in the future!",
+      "updateTime": "2020-03-04T02:23:18.101012Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSURzOXNMZFlBEAE"
+  }, {
+    "reviewer": {
+      "displayName": "Lisa L"
+    },
+    "starRating": "TWO",
+    "comment": "My experience with Coastal Carolina CPR was wonderful.  I felt very prepared for the test at the end after reviewing the videos with the instructor.  Also the instructor’s knowledge of rescue techniques is extensive and he takes time to review hands on techniques for choking and the proper depth and rhythm for CPR.  Great Experience, and thank you Brian, much success to you!",
+    "createTime": "2020-02-13T21:24:00.655381Z",
+    "updateTime": "2020-02-13T21:24:00.655381Z",
+    "reviewReply": {
+      "comment": "Thank you, Lisa!  I\u0027m glad we were able to help.  Best of luck in the new job!  Have a wonderful 2020.",
+      "updateTime": "2020-02-13T21:50:11.185211Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUNzODVDSGhRRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "gary wolff"
+    },
+    "starRating": "FIVE",
+    "comment": "The instructors where very informative and helpful Nic Tripp was great.",
+    "createTime": "2020-02-13T20:37:05.071699Z",
+    "updateTime": "2020-02-13T20:37:05.071699Z",
+    "reviewReply": {
+      "comment": "Thank you for the 5️⃣⭐!  We are pleased to be able to help on short notice.\n\nDefinitely, look forward to working with you again soon.  We offer ACLS and PALS upon request. Let Nick know if we can help in any way.",
+      "updateTime": "2020-02-13T21:58:16.942674Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNzczVmZ0h3EAE"
+  }, {
+    "reviewer": {
+      "displayName": "Jenn Rollins"
+    },
+    "starRating": "FIVE",
+    "comment": "Brian was quick to respond to all emails and I was able to re-certify for a new job almost immediately. The guys are very kind, professional, and knowledgeable. Highly recommend them.",
+    "createTime": "2020-02-10T16:32:31.396043Z",
+    "updateTime": "2020-02-10T16:32:31.396043Z",
+    "reviewReply": {
+      "comment": "Thank you, Jenn!  We are pleased that your recert was convenient.  We make every attempt to reduce the stress of navigating the AHA processes. I look forward to being there for your next recert.  Have a successful 2020!",
+      "updateTime": "2020-02-10T17:39:27.891449Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNzcmJ2dFhBEAE"
+  }, {
+    "reviewer": {
+      "displayName": "Greg DeArros"
+    },
+    "starRating": "THREE",
+    "createTime": "2020-01-27T19:40:20.739397Z",
+    "updateTime": "2020-01-27T19:40:20.739397Z",
+    "reviewReply": {
+      "comment": "Thank you for taking the time to review Coastal Carolina CPR.  We understand your training is important and appreciate the trust placed upon us to provide that training.  Feedback like this allows us the opportunity to gauge and reflect on the service provided.",
+      "updateTime": "2020-07-26T20:12:33.416724Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUNzc3N5ZmtRRRAB"
+  }]
+}

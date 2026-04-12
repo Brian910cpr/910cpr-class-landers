@@ -1,0 +1,257 @@
+{
+  "reviews": [{
+    "reviewer": {
+      "displayName": "Kimberly Shuey"
+    },
+    "starRating": "FIVE",
+    "comment": "Easy access and very friendly staff!",
+    "createTime": "2021-09-01T21:19:47.952893Z",
+    "updateTime": "2021-09-01T21:19:47.952893Z",
+    "reviewReply": {
+      "comment": "Thank you, Kimberly!  Your feedback is valuable to us and we hope to work with you again.",
+      "updateTime": "2021-09-02T13:14:42.816375Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUM2d3JQUmlRRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Grace Harte"
+    },
+    "starRating": "FIVE",
+    "comment": "Thank you to Nick and Brian for making the process of getting my first ACLS certification painless. Highly recommend to anyone needing this certification to use Coastal Carolina CPR.",
+    "createTime": "2021-08-31T14:13:55.985020Z",
+    "updateTime": "2021-08-31T14:13:55.985020Z",
+    "reviewReply": {
+      "comment": "Thank you, Grace!  Nice to meet you. We look forward to working with you again.  Best wishes on new adventures!",
+      "updateTime": "2021-09-02T13:17:04.890752Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUM2alBuVm1nRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Amber Deveaugh"
+    },
+    "starRating": "FIVE",
+    "comment": "Brian was amazing.  He was so funny and the class went by so quick! I learned alot of good information and I\u0027m really impressed with how things went (: Thank you Brian!!!",
+    "createTime": "2021-08-24T14:35:17.138020Z",
+    "updateTime": "2021-08-24T14:35:17.138020Z",
+    "reviewReply": {
+      "comment": "Thank you for the feedback, Amber!  Nice meeting you and look forward to working with you again.  Wishing you all the best in school.",
+      "updateTime": "2021-08-24T16:08:32.746206Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSURhallhQmV3EAE"
+  }, {
+    "reviewer": {
+      "displayName": "Shanelle Pearce"
+    },
+    "starRating": "FIVE",
+    "comment": "They provide a great laid back atmosphere while providing you with the knowledge you need. I definitely recommend them to anyone and will be using them again myself!",
+    "createTime": "2021-08-21T16:52:49.440915Z",
+    "updateTime": "2021-08-21T16:55:44.563939Z",
+    "reviewReply": {
+      "comment": "Thank you, Shanelle!   Glad you enjoyed... and, we look forward to working with you again.",
+      "updateTime": "2021-08-24T16:10:02.211273Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSURhanVLeG9RRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Caroline Jackson"
+    },
+    "starRating": "FIVE",
+    "comment": "Awesome experience! Super funny and kind, would definitely recommend!!",
+    "createTime": "2021-08-19T14:13:07.206117Z",
+    "updateTime": "2021-08-19T14:13:07.206117Z",
+    "reviewReply": {
+      "comment": "Thank you, Caroline!  Glad you enjoyed yourself.  Look forward to working with you again.",
+      "updateTime": "2021-08-24T16:10:51.409682Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSURhMnV1WU9BEAE"
+  }, {
+    "reviewer": {
+      "displayName": "Ethan Nettles"
+    },
+    "starRating": "FIVE",
+    "comment": "Great place to receive BLS and ACLS training. Nick Tripp is the best!",
+    "createTime": "2021-08-17T14:58:50.877842Z",
+    "updateTime": "2021-08-17T14:58:50.877842Z",
+    "reviewReply": {
+      "comment": "Thanks, Ethan, for the feedback!  I\u0027m glad we were able to fit your schedule.  We offer ACLS several times a week and BLS daily.  Nice to meet you and look forward to having you back.",
+      "updateTime": "2021-08-24T16:14:27.422915Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSURhNHVhTjZ3RRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Jaye Mckernan"
+    },
+    "starRating": "FIVE",
+    "createTime": "2021-08-16T16:52:27.243252Z",
+    "updateTime": "2021-08-16T16:52:27.243252Z",
+    "reviewReply": {
+      "comment": "Thank you, Jaye, for your feedback.   Looking forward to working with you again.",
+      "updateTime": "2021-08-17T03:01:42.497463Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSURhOU1XQ1pREAE"
+  }, {
+    "reviewer": {
+      "displayName": "maria thomas"
+    },
+    "starRating": "FIVE",
+    "createTime": "2021-08-15T14:34:25.153013Z",
+    "updateTime": "2021-08-15T14:34:25.153013Z",
+    "reviewReply": {
+      "comment": "Thank you, Maria.  Nice to meet you and look forward to working with you again!",
+      "updateTime": "2021-08-17T03:02:30.559090Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSURhcE9pbmp3RRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Leah Thompson"
+    },
+    "starRating": "FIVE",
+    "comment": "They were incredibly friendly, funny, and easy to work with. Great communication, flexible class times, and just a great experience overall. 100% recommend them for all of your BLS training needs.",
+    "createTime": "2021-08-13T14:13:00.449282Z",
+    "updateTime": "2021-08-13T14:15:11.169190Z",
+    "reviewReply": {
+      "comment": "Thank you, Leah.  Your feedback is important and we appreciate the kind words.  We look forward to working with you again.",
+      "updateTime": "2021-08-17T03:00:29.086020Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSURhOFB1M01nEAE"
+  }, {
+    "reviewer": {
+      "displayName": "Ruby Martinez"
+    },
+    "starRating": "FIVE",
+    "comment": "Great class and super convenient. Lots of locations with an awesome instructor!",
+    "createTime": "2021-08-08T14:14:06.510509Z",
+    "updateTime": "2021-08-08T14:14:06.510509Z",
+    "reviewReply": {
+      "comment": "Thank you, Ruby, for your feedback!  Best wishes to you.  Look forward to working with you again.\n\nWe have 2 locations in southeastern North Carolina and offer classes in southeast Connecticut.  And, we are always willing to administer classes hosted at doctors\u0027, dentists\u0027, or construction contractors\u0027 offices, or community- and church-hosted programs.  Please call us (910) 395-5193 or visit our schedule at: https://bit.ly/3lN1L5c",
+      "updateTime": "2021-08-09T12:01:10.240998Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNhbzdhSVR3EAE"
+  }, {
+    "reviewer": {
+      "displayName": "Taya Lindenmuth"
+    },
+    "starRating": "FIVE",
+    "createTime": "2021-08-07T15:36:28.614375Z",
+    "updateTime": "2021-08-07T15:36:28.614375Z",
+    "reviewReply": {
+      "comment": "Thank you, Taya, for your feedback!  It was great to meet you and look forward to working with you again.",
+      "updateTime": "2021-08-09T12:11:07.463888Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNhdlp6elF3EAE"
+  }, {
+    "reviewer": {
+      "displayName": "Megan Comtois"
+    },
+    "starRating": "FIVE",
+    "comment": "Brian and Nick made my BLS and ACLS recertification experience stress free with lots of laughs. I learned new skills that I didn’t previously acquire. I will definitely use them again for all my bls/acls needs and recommend them to friends and family!",
+    "createTime": "2021-08-06T16:46:09.277105Z",
+    "updateTime": "2021-08-06T16:46:09.277105Z",
+    "reviewReply": {
+      "comment": "Thanks for the feedback, Megan!    We strive to make getting recerts as stress-free as possible.   We offer the most class dates/times in eastern North and northeastern South Carolina!  CCC may only answer the phone from 8 to 8, but if you cant find a date/time that meets your schedule, we will schedule a class any time 24 hours a day.",
+      "updateTime": "2021-08-09T12:15:37.295531Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNhcmREY2RREAE"
+  }, {
+    "reviewer": {
+      "displayName": "Megan M"
+    },
+    "starRating": "FIVE",
+    "comment": "Great class, learned everything I needed!",
+    "createTime": "2021-08-06T14:31:14.577857Z",
+    "updateTime": "2021-08-06T14:31:14.577857Z",
+    "reviewReply": {
+      "comment": "Thank you, Megan.   We are glad you feel prepared and look forward to working with you again!",
+      "updateTime": "2021-08-09T12:17:24.260470Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNhemU2YUtnEAE"
+  }, {
+    "reviewer": {
+      "displayName": "julianna zavattieri"
+    },
+    "starRating": "FIVE",
+    "comment": "Very relaxed atmosphere, great instructor!",
+    "createTime": "2021-08-05T16:40:08.344298Z",
+    "updateTime": "2021-08-05T16:40:08.344298Z",
+    "reviewReply": {
+      "comment": "Thank you, Julianna, for the feedback.  Glad to hear it was a tad 🤏 less stressful than expected.",
+      "updateTime": "2021-08-24T16:18:11.255277Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNhMWM3OFNBEAE"
+  }, {
+    "reviewer": {
+      "displayName": "Kate Polk"
+    },
+    "starRating": "FIVE",
+    "comment": "I had an amazing experience with Nick at Coastal Carolina CPR! He went above and beyond in helping me schedule a class with him during a short time frame. He is a wonderful instructor and very knowledgeable. He made the class a fun learning experience. I highly recommend Nick to everyone!!",
+    "createTime": "2021-08-03T14:23:35.161238Z",
+    "updateTime": "2021-08-03T14:23:35.161238Z",
+    "reviewReply": {
+      "comment": "Thank you, Kate, for your feedback!  Hope you had a wonderful summer.  Look forward to working with you again.",
+      "updateTime": "2021-08-24T16:20:42.407755Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNhNllMaFhnEAE"
+  }, {
+    "reviewer": {
+      "displayName": "Fred Keyser"
+    },
+    "starRating": "FIVE",
+    "comment": "Nick was beyond knowledgeable and capable. He shared and prepared me for my ACLS certification patiently, professionally and kindly. I learned a great deal. Nick also went above and beyond to help within an unfortunate tight time window.",
+    "createTime": "2021-07-24T01:36:03.851430Z",
+    "updateTime": "2021-07-24T01:36:03.851430Z",
+    "reviewReply": {
+      "comment": "Thank you, Fred.  Glad we were able to help.  Look forward to hearing from you and/or you son again soon.  Don\u0027t hesitate to call Nick if we can be of any further assistance.",
+      "updateTime": "2021-07-28T01:21:51.445005Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUNhMVBfNHlnRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "pamela palmer"
+    },
+    "starRating": "FIVE",
+    "createTime": "2021-07-23T21:29:27.325991Z",
+    "updateTime": "2021-07-23T21:29:27.325991Z",
+    "reviewReply": {
+      "comment": "Thank you, Pamela!  Your feedback is meaningful.   We hope you have a great summer.",
+      "updateTime": "2021-07-28T01:22:28.923926Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUNhcEpXNW93RRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Margie Gilligan"
+    },
+    "starRating": "FIVE",
+    "createTime": "2021-07-22T15:22:38.778123Z",
+    "updateTime": "2021-07-22T15:22:38.778123Z",
+    "reviewReply": {
+      "comment": "Thank you, Margie, for your feedback!   Look forward to with you again.",
+      "updateTime": "2021-07-28T01:42:52.458749Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChZDSUhNMG9nS0VJQ0FnSUNheUxPOVp3EAE"
+  }, {
+    "reviewer": {
+      "displayName": "Keturah Ursua"
+    },
+    "starRating": "FIVE",
+    "createTime": "2021-07-22T15:18:19.271684Z",
+    "updateTime": "2021-07-22T15:18:19.271684Z",
+    "reviewReply": {
+      "comment": "Thank you for your feedback, Keturah.   Have a great summer and our best wishes.",
+      "updateTime": "2021-07-28T01:44:21.233879Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUNheUpPT2lBRRAB"
+  }, {
+    "reviewer": {
+      "displayName": "Kaitlyn Nieves"
+    },
+    "starRating": "FIVE",
+    "comment": "Highly recommend! Nicholas Tripp was a great instructor! He was also super nice and funny which made the overall experience really comfortable and enjoyable :)",
+    "createTime": "2021-07-21T21:01:00.007533Z",
+    "updateTime": "2021-07-21T21:19:09.651100Z",
+    "reviewReply": {
+      "comment": "Thank you, Kaitlyn, for sharing!   Nick understands the frustration, inconvenience, and, often, dread of having to attend a BLS refresher...  He, as we all do, wants to make the experience convenient with as little anxiety as possible.",
+      "updateTime": "2021-07-28T01:56:45.335523Z"
+    },
+    "name": "accounts/113447197806150947083/locations/8102268822080792056/reviews/ChdDSUhNMG9nS0VJQ0FnSUNhc0xuRjh3RRAB"
+  }]
+}
