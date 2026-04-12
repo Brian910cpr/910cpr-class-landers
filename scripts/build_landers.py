@@ -1,14 +1,14 @@
 import json
 import re
 import hashlib
-from zoneinfo import ZoneInfo
 from datetime import datetime
-from html import unescape, escape
+from zoneinfo import ZoneInfo
+
+TZ = ZoneInfo("America/New_York")
 from pathlib import Path
 
 from title_cleaner import normalize_course_title, seo_title_for_session
 
-TZ = ZoneInfo("America/New_York")
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
