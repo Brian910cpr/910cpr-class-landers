@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +7,7 @@
 <meta name="description" content="AHA ACLS HeartCode Skills Session Training in Wilmington; Shipyard Blvd. View class details, current schedule options, and register online with 910CPR.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.910cpr.com/classes/12774086.html">
+<link rel="stylesheet" href="/css/lander.css">
 <!-- Google Tag Manager -->
 <script>
 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -48,482 +48,76 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
 }
 </script>
-
-<style>
-:root {
-  --bg: #eef4f8;
-  --bg2: #f8fbfd;
-  --card: #ffffff;
-  --soft: #f8fbfd;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --accent: #2563eb;
-  --accent-dark: #1d4ed8;
-  --cta: #ea580c;
-  --cta-dark: #c2410c;
-  --border: #dbe4ee;
-  --warning-bg: #fff7d6;
-  --warning-border: #f2df91;
-  --warning-text: #6d5600;
-}
-
-* { box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
-  color: var(--text);
-}
-
-body img {
-  max-width: 100%;
-  height: auto;
-}
-
-.wrap {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 32px 16px 56px;
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 28px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-}
-
-.notice {
-  background: var(--warning-bg);
-  border: 1px solid var(--warning-border);
-  color: var(--warning-text);
-  padding: 16px 18px;
-  border-radius: 14px;
-  margin-bottom: 22px;
-  font-size: 18px;
-}
-
-.hero-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
-}
-
-.date-badge {
-  min-width: 96px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-  color: white;
-  text-align: center;
-  padding: 14px 10px;
-}
-
-.date-month {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.date-day {
-  font-size: 34px;
-  font-weight: 800;
-  line-height: 1.05;
-  margin: 6px 0;
-}
-
-.date-weekday {
-  font-size: 13px;
-}
-
-.cert-badge {
-  min-width: 96px;
-  min-height: 96px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 10px;
-}
-
-.cert-badge img {
-  max-width: 72px;
-  max-height: 72px;
-  object-fit: contain;
-}
-
-.hero-content {
-  margin-top: 18px;
-}
-
-.hero h1 {
-  margin: 0 0 12px 0;
-  font-size: 30px;
-  line-height: 1.1;
-}
-
-.subhead {
-  margin: 0 0 14px 0;
-  color: var(--muted);
-  font-size: 15px;
-}
-
-.meta-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 10px 18px;
-  margin: 10px 0 0 0;
-}
-
-.meta-item {
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 14px;
-}
-
-.meta-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}
-
-.meta-value {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.cta-row {
-  margin-top: 18px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.button {
-  display: inline-block;
-  padding: 13px 18px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.button.small {
-  padding: 10px 14px;
-  font-size: 14px;
-}
-
-.button.primary {
-  background: var(--cta);
-  color: white;
-}
-
-.button.primary:hover {
-  background: var(--cta-dark);
-}
-
-.button.secondary {
-  background: #5f6f82;
-  color: white;
-}
-
-.button.secondary:hover {
-  background: #526170;
-}
-
-.stack {
-  display: grid;
-  gap: 18px;
-  margin-top: 28px;
-}
-
-.info-box {
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 18px;
-}
-
-.info-box h2 {
-  margin: 0 0 10px 0;
-  font-size: 20px;
-}
-
-.info-box p {
-  margin: 0 0 12px 0;
-  line-height: 1.6;
-}
-
-.upcoming-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-
-.upcoming-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-}
-
-.upcoming-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
-}
-
-.upcoming-date {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.upcoming-time {
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-
-.upcoming-location {
-  color: var(--muted);
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.upcoming-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.upcoming-footer-link {
-  margin-top: 16px;
-  text-align: center;
-}
-
-.brand-strip {
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
-  gap: 18px;
-  align-items: stretch;
-}
-
-.brand-card,
-.image-card {
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 16px;
-}
-
-.brand-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 140px;
-  text-align: center;
-}
-
-.brand-card img {
-  max-width: 140px;
-  max-height: 90px;
-  object-fit: contain;
-  margin: 0 auto;
-  display: block;
-}
-
-.image-card {
-  min-height: 140px;
-}
-
-.image-card img {
-  width: 100%;
-  height: 100%;
-  max-height: 260px;
-  object-fit: contain;
-  border-radius: 12px;
-  display: block;
-}
-
-.description-box {
-  margin-top: 24px;
-}
-
-.description-box h2 {
-  margin: 0 0 14px 0;
-  font-size: 22px;
-}
-
-.description-html {
-  line-height: 1.7;
-}
-
-.description-html p {
-  margin: 0 0 14px 0;
-}
-
-.description-html ul,
-.description-html ol {
-  margin: 0 0 14px 24px;
-  padding: 0;
-}
-
-.description-html li {
-  margin: 0 0 8px 0;
-}
-
-.reviews-box {
-  margin-top: 24px;
-}
-
-.reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-}
-
-.review-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-}
-
-.review-stars {
-  color: #d97706;
-  font-size: 16px;
-  letter-spacing: 0.04em;
-  margin-bottom: 8px;
-}
-
-.review-text {
-  margin: 0 0 12px 0;
-  line-height: 1.6;
-}
-
-.review-author {
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.reviews-fallback {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-}
-
-.text-link {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.text-link:hover {
-  text-decoration: underline;
-}
-
-.strong-link {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.build-stamp {
-  margin-top: 26px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-@media (max-width: 840px) {
-  .brand-strip {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 700px) {
-  .hero-top {
-    align-items: stretch;
-  }
-
-  .date-badge,
-  .cert-badge {
-    min-width: 82px;
-    min-height: 82px;
-  }
-
-  .hero h1 {
-    font-size: 25px;
-  }
-}
-</style>
 </head>
-<body>
+<body class="lander course-aha-acls-heartcode-skills-session-f7ecb4f8">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <div class="wrap">
-  <div class="card">
+  <div class="page-shell">
 
     
 
     <section class="hero">
-      <div class="hero-top">
-        <div class="date-badge">
-          <div class="date-month">JUL</div>
-          <div class="date-day">11</div>
-          <div class="date-weekday">Sat</div>
-        </div>
+
+      <div class="date-badge">
+        <div class="date-month">JUL</div>
+        <div class="date-day">11</div>
+        <div class="date-weekday">Sat</div>
+      </div>
+
+      <div class="hero-main">
+        <div class="eyebrow">AHA ACLS HeartCode Skills Session</div>
+        <h1>AHA ACLS HeartCode Skills Session</h1>
+        <p class="subhead">Use the register button for this session or the upcoming list below for other dates and times.</p>
+      </div>
+
+      <div class="hero-side">
         
 <div class="cert-badge">
   <img src="/images/0aha.png" alt="Certifying body logo" loading="lazy">
 </div>
 
+        <div class="trust-badge">
+          <strong>Same-Day Certification</strong>
+          <span>Most students receive their certification the same day.</span>
+        </div>
       </div>
 
-      <div class="hero-content">
-        <h1>AHA ACLS HeartCode Skills Session</h1>
-        <p class="subhead">Use the register button for this session or the upcoming list below for other dates and times.</p>
+    </section>
 
-        <div class="meta-grid">
-          <div class="meta-item">
-            <div class="meta-label">Date</div>
-            <div class="meta-value">July 11, 2026</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Time</div>
-            <div class="meta-value">8:30 AM</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Location</div>
-            <div class="meta-value">Wilmington; Shipyard Blvd</div>
-          </div>
+    <div class="hero-details">
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">Date</div>
+          <div class="meta-value">July 11, 2026</div>
         </div>
+        <div class="meta-item">
+          <div class="meta-label">Time</div>
+          <div class="meta-value">8:30 AM</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Location</div>
+          <div class="meta-value">Wilmington; Shipyard Blvd</div>
+        </div>
+      </div>
+
+      <div class="cta-panel">
+        <p class="cta-panel-label">Reserve your seat</p>
+        <p class="cta-panel-copy">Use the register button for this session or the upcoming list below for other dates and times.</p>
 
         <div class="cta-row">
           <a class="button primary" href="https://coastalcprtraining.enrollware.com/enroll?id=12774086">Register Now</a>
           <a class="button secondary" href="#upcoming-times">See Other Upcoming Class Times</a>
         </div>
       </div>
-    </section>
+
+    </div>
 
     
-<section id="upcoming-times" class="info-box upcoming-box">
+<section id="upcoming-times" class="section-box">
   <div class="upcoming-head">
     <h2>Upcoming Classes</h2>
   </div>
@@ -626,18 +220,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 
-    <section class="brand-strip">
-<div class="brand-card">
-  <img src="/images/logo.png" alt="910CPR logo" loading="lazy">
-</div>
-
-<div class="image-card">
-  <img src="/images/0aha.png" alt="AHA ACLS HeartCode Skills Session course image" loading="lazy">
-</div>
-</section>
+    
 
     
-<section class="info-box reviews-box">
+<section class="section-box">
   <h2>Why Students Choose 910CPR</h2>
   <div class="reviews-grid">
     
@@ -664,23 +250,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
     
-<section class="info-box description-box">
+<section class="section-box">
   <h2>Course Description</h2>
   <div class="description-html">
-    <p>This course is commonly taken by nurses, paramedics, respiratory therapists, ER staff, ICU staff, and other clinicians who need advanced cardiovascular life support training.</p>
+    <p>This class is commonly taken by nurses, paramedics, respiratory therapists, ER staff, ICU staff, and other clinicians who need advanced cardiovascular life support training.</p>
   </div>
 </section>
 
 
-    <div class="stack">
-      <section class="info-box">
-        <h2>Who This Class Is For</h2>
-        <p>This course is commonly taken by nurses, paramedics, respiratory therapists, ER staff, ICU staff, and other clinicians who need advanced cardiovascular life support training.</p>
-        <p>910CPR also supports employers in Wilmington that need documented, renewable training for staff. If you need multiple employees trained in AHA ACLS HeartCode Skills Session, group and workplace options may be available.</p>
-      </section>
-    </div>
+    <section class="section-box">
+      <h2>Who This Class Is For</h2>
+      <p>This class is commonly taken by nurses, paramedics, respiratory therapists, ER staff, ICU staff, and other clinicians who need advanced cardiovascular life support training.</p>
+      <p>910CPR also supports employers in Wilmington that need documented, renewable training for staff. If you need multiple employees trained in AHA ACLS HeartCode Skills Session, group and workplace options may be available.</p>
+    </section>
 
-    <div class="build-stamp">build: 2026-04-12 10:26 AM</div>
+    <div class="build-stamp">build: 2026-04-12 10:20 PM</div>
 
   </div>
 </div>
@@ -699,7 +283,7 @@ const pageContext = {
   register_url: "https://coastalcprtraining.enrollware.com/enroll?id=12774086",
   schedule_url: "https://coastalcprtraining.enrollware.com/schedule#ct209811",
   course_page_url: "../courses/aha-acls-heartcode-skills-session-f7ecb4f8.html",
-  build_stamp: "2026-04-12 10:26 AM"
+  build_stamp: "2026-04-12 10:20 PM"
 };
 
 window.dataLayer.push({

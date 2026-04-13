@@ -3,7 +3,7 @@ import re
 import hashlib
 import random
 from datetime import datetime
-from html import unescape, escape
+from html import escape, unescape
 from pathlib import Path
 from zoneinfo import ZoneInfo
 from zipfile import ZipFile
@@ -16,7 +16,6 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs" / "classes"
 IMAGES_DIR = ROOT / "docs" / "images"
-COURSE_ARCHIVE_DIR = IMAGES_DIR / "course-archive"
 REVIEWS_SOURCE = ROOT / "data" / "raw" / "reviews"
 
 GTM_ID = "GTM-PQS8DCBH"
@@ -27,7 +26,7 @@ MIN_REVIEW_LENGTH = 35
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def render_gtm_head():
+def render_gtm_head() -> str:
     if not GTM_ID:
         return ""
     return f"""<!-- Google Tag Manager -->
@@ -41,7 +40,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->"""
 
 
-def render_gtm_body():
+def render_gtm_body() -> str:
     if not GTM_ID:
         return ""
     return f"""<!-- Google Tag Manager (noscript) -->
@@ -50,11 +49,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->"""
 
 
-def strip_html(text):
+def strip_html(text: str) -> str:
     text = unescape(str(text or ""))
     text = re.sub(r"<[^>]+>", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def normalize_whitespace(text: str) -> str:
@@ -103,7 +101,7 @@ def short_slug(text: str, max_len: int = 70) -> str:
     return f"{clean}-{digest}" if clean else digest
 
 
-def js_escape(value):
+def js_escape(value: str) -> str:
     if value is None:
         return ""
     return str(value).replace("\\", "\\\\").replace('"', '\\"')
@@ -171,27 +169,27 @@ def audience_blurb(course_name: str) -> str:
 
     if "acls" in lower:
         return (
-            "This course is commonly taken by nurses, paramedics, respiratory therapists, "
+            "This class is commonly taken by nurses, paramedics, respiratory therapists, "
             "ER staff, ICU staff, and other clinicians who need advanced cardiovascular life support training."
         )
     if "pals" in lower:
         return (
-            "This course is commonly taken by pediatric nurses, emergency clinicians, paramedics, "
+            "This class is commonly taken by pediatric nurses, emergency clinicians, paramedics, "
             "and other providers who care for infants and children."
         )
     if "bls" in lower:
         return (
-            "This course is commonly taken by healthcare workers, nursing students, dental staff, "
+            "This class is commonly taken by healthcare workers, nursing students, dental staff, "
             "EMS personnel, and others who need professional-level CPR certification."
         )
     if "heartsaver" in lower or "cpr" in lower or "aed" in lower:
         return (
-            "This course is commonly taken by teachers, childcare staff, fitness professionals, "
+            "This class is commonly taken by teachers, childcare staff, fitness professionals, "
             "security personnel, church staff, office teams, and other workplace responders."
         )
 
     return (
-        "This course supports both individual certification needs and organizations that need reliable, "
+        "This class supports both individual certification needs and organizations that need reliable, "
         "repeatable safety training for employees."
     )
 
@@ -204,7 +202,7 @@ def corporate_blurb(city: str, course_name: str) -> str:
     )
 
 
-def make_schema(course_name: str, session_dt, location_name: str, city: str, state: str, register_url: str):
+def make_schema(course_name: str, session_dt, location_name: str, city: str, state: str, register_url: str) -> str:
     start_iso = session_dt.isoformat() if session_dt else ""
     schema_name = seo_course_phrase(course_name)
     return f"""
@@ -246,9 +244,13 @@ def sanitize_description_html(html_text: str) -> str:
     html_text = str(html_text or "").strip()
     if not html_text:
         return ""
-    html_text = re.sub(r"<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>", "", html_text, flags=re.I | re.S)
-    html_text = re.sub(r"\s+", " ", html_text).strip()
-    return html_text
+    html_text = re.sub(
+        r"<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>",
+        "",
+        html_text,
+        flags=re.I | re.S,
+    )
+    return re.sub(r"\s+", " ", html_text).strip()
 
 
 def load_course_description_html(course_id: str, course_name: str) -> str:
@@ -276,93 +278,69 @@ def load_course_description_html(course_id: str, course_name: str) -> str:
 
     exts = [".html", ".htm", ".txt"]
 
-    for d in candidate_dirs:
-        if not d.exists():
+    for directory in candidate_dirs:
+        if not directory.exists():
             continue
 
         for name in candidate_names:
             for ext in exts:
-                p = d / f"{name}{ext}"
-                if p.exists():
-                    return sanitize_description_html(p.read_text(encoding="utf-8", errors="ignore"))
+                path = directory / f"{name}{ext}"
+                if path.exists():
+                    return sanitize_description_html(path.read_text(encoding="utf-8", errors="ignore"))
 
         if course_id:
             for ext in exts:
-                matches = sorted(d.glob(f"{course_id}*{ext}"))
+                matches = sorted(directory.glob(f"{course_id}*{ext}"))
                 if matches:
                     return sanitize_description_html(matches[0].read_text(encoding="utf-8", errors="ignore"))
 
     return ""
 
 
-def default_logo_url() -> str:
-    for name in ("logo.png", "Logo.png", "LOGO.png"):
-        p = IMAGES_DIR / name
-        if p.exists():
-            return f"/images/{name}"
-    return ""
-
-
 def first_existing_image(*names: str) -> str:
     for name in names:
-        p = IMAGES_DIR / name
-        if p.exists():
+        path = IMAGES_DIR / name
+        if path.exists():
             return f"/images/{name}"
     return ""
+
+
+def default_logo_url() -> str:
+    return first_existing_image("logo.png", "Logo.png", "LOGO.png")
 
 
 def detect_cert_logo(course_name: str) -> str:
-    c = course_name.lower()
+    course = course_name.lower()
 
-    if "red cross" in c or c.startswith("arc ") or "arc " in c:
+    if "red cross" in course or course.startswith("arc ") or "arc " in course:
         return first_existing_image("0arc.png", "0ARC.png", "arc.png", "ARC.png")
 
-    if "hsi" in c or "ashi" in c:
+    if "hsi" in course or "ashi" in course:
         return first_existing_image("0hsi.png", "0HSI.png", "hsi.png", "HSI.png")
 
-    if "aha" in c or "heartsaver" in c or "heartcode" in c or "acls" in c or "pals" in c or "bls" in c:
+    if any(token in course for token in ("aha", "heartsaver", "heartcode", "acls", "pals", "bls")):
         return first_existing_image("0aha.png", "0AHA.png", "aha.png", "AHA.png")
 
     return ""
 
 
-def find_course_archive_image(course_id: str) -> str:
-    if not course_id or not COURSE_ARCHIVE_DIR.exists():
-        return ""
+def get_course_type_image(course_name: str) -> str:
+    course = course_name.lower()
 
-    exts = [".png", ".jpg", ".jpeg", ".webp"]
-    preferred = []
-
-    for ext in exts:
-        preferred.extend(sorted(COURSE_ARCHIVE_DIR.glob(f"course-{course_id}-raw_enrollware_html-*{ext}")))
-        preferred.extend(sorted(COURSE_ARCHIVE_DIR.glob(f"course-{course_id}-original_html-*{ext}")))
-
-    def score(path: Path):
-        name = path.name.lower()
-        penalty = 0
-        if "scroll" in name:
-            penalty += 1000000
-        if "steps" in name:
-            penalty += 500000
-        if "icon" in name:
-            penalty += 500000
-        return penalty - path.stat().st_size
-
-    if not preferred:
-        return ""
-
-    chosen = sorted(preferred, key=score)[0]
-    return f"/images/course-archive/{chosen.name}"
-
-
-def fallback_course_image(course_name: str, course_id: str, course_number: str) -> str:
-    archive_img = find_course_archive_image(course_id or course_number)
-    if archive_img:
-        return archive_img
-
-    cert_img = detect_cert_logo(course_name)
-    if cert_img:
-        return cert_img
+    if "bls" in course:
+        return first_existing_image("bls.jpg", "bls.jpeg", "bls.png", "BLS.jpg", "BLS.png")
+    if "acls" in course:
+        return first_existing_image("acls.jpg", "acls.jpeg", "acls.png", "ACLS.jpg", "ACLS.png")
+    if "pals" in course:
+        return first_existing_image("pals.jpg", "pals.jpeg", "pals.png", "PALS.jpg", "PALS.png")
+    if "heartsaver" in course:
+        return first_existing_image(
+            "heartsaver.jpg",
+            "heartsaver.jpeg",
+            "heartsaver.png",
+            "Heartsaver.jpg",
+            "Heartsaver.png",
+        )
 
     return ""
 
@@ -383,30 +361,30 @@ def get_upcoming_sessions(current_session: dict, sessions: list[dict], now_dt: d
     current_id = str(current_session.get("session_id", "")).strip()
     matches = []
 
-    for s in sessions:
-        if not same_course(current_session, s):
+    for session in sessions:
+        if not same_course(current_session, session):
             continue
 
-        sid = str(s.get("session_id", "")).strip()
+        sid = str(session.get("session_id", "")).strip()
         if sid == current_id:
             continue
 
-        dt = parse_dt(s.get("start_at"))
+        dt = parse_dt(session.get("start_at"))
         if not dt or dt < now_dt:
             continue
 
-        s_copy = dict(s)
-        s_copy["_parsed_dt"] = dt
-        matches.append(s_copy)
+        copy = dict(session)
+        copy["_parsed_dt"] = dt
+        matches.append(copy)
 
-    matches.sort(key=lambda x: x["_parsed_dt"])
+    matches.sort(key=lambda item: item["_parsed_dt"])
     return matches[:limit]
 
 
 def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: str) -> str:
     if not upcoming_sessions:
         return f"""
-<section id="upcoming-times" class="info-box upcoming-box">
+<section id="upcoming-times" class="section-box">
   <h2>Upcoming Classes</h2>
   <p>No upcoming public sessions are listed right now.</p>
   <div class="upcoming-footer-link">
@@ -416,12 +394,12 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
 """
 
     cards = []
-    for s in upcoming_sessions:
-        dt = s["_parsed_dt"]
+    for session in upcoming_sessions:
+        dt = session["_parsed_dt"]
         date_label = dt.strftime("%B %d, %Y")
         time_label = dt.strftime("%I:%M %p").lstrip("0")
-        location_label = clean_location_display(s.get("location_display", "")) or "Location TBD"
-        register_url = s.get("registration_url", "#")
+        location_label = clean_location_display(session.get("location_display", "")) or "Location TBD"
+        register_url = session.get("registration_url", "#")
 
         cards.append(
             f"""
@@ -437,7 +415,7 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
         )
 
     return f"""
-<section id="upcoming-times" class="info-box upcoming-box">
+<section id="upcoming-times" class="section-box">
   <div class="upcoming-head">
     <h2>Upcoming Classes</h2>
   </div>
@@ -454,8 +432,7 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
 def clean_review_text(text: str) -> str:
     text = strip_html(text)
     text = normalize_whitespace(text)
-    text = text.strip(' "\'')
-    return text
+    return text.strip(' "\'')
 
 
 def compact_reviewer_name(name: str) -> str:
@@ -531,10 +508,7 @@ def parse_review_objects(review_list: list) -> list[dict]:
         if item.get("has_text") is False:
             continue
 
-        comment = clean_review_text(
-            item.get("comment", "")
-            or item.get("text", "")
-        )
+        comment = clean_review_text(item.get("comment", "") or item.get("text", ""))
         if len(comment) < MIN_REVIEW_LENGTH:
             continue
 
@@ -548,15 +522,9 @@ def parse_review_objects(review_list: list) -> list[dict]:
         )
 
         stars_raw = str(item.get("starRating", "")).upper()
-        stars_lookup = {
-            "ONE": 1,
-            "TWO": 2,
-            "THREE": 3,
-            "FOUR": 4,
-            "FIVE": 5,
-        }
-
+        stars_lookup = {"ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5}
         stars = stars_lookup.get(stars_raw)
+
         if stars is None:
             try:
                 stars = int(item.get("rating", 5))
@@ -616,8 +584,8 @@ def load_reviews() -> list[dict]:
                         if not name.lower().endswith(".json"):
                             continue
                         try:
-                            with zf.open(name) as f:
-                                data_obj = json.loads(f.read().decode("utf-8", errors="ignore"))
+                            with zf.open(name) as handle:
+                                data_obj = json.loads(handle.read().decode("utf-8", errors="ignore"))
                             for review_list in iter_review_payloads_from_json(data_obj):
                                 for review in parse_review_objects(review_list):
                                     key = review_record_key(review["author"], review["comment"])
@@ -642,15 +610,15 @@ def pick_reviews_for_session(
     if not reviews:
         return []
 
-    course_specific = [r for r in reviews if review_matches_course(course_name, r["comment"])]
-    general = [r for r in reviews if r not in course_specific]
+    course_specific = [review for review in reviews if review_matches_course(course_name, review["comment"])]
+    general = [review for review in reviews if review not in course_specific]
 
     seed_value = f"{session_id}|{course_id}|{display_course_name(course_name)}"
     rng = random.Random(hashlib.md5(seed_value.encode("utf-8")).hexdigest())
 
     chosen = []
 
-    def pull(pool: list[dict], needed: int):
+    def pull(pool: list[dict], needed: int) -> list[dict]:
         if needed <= 0 or not pool:
             return []
         pool_copy = list(pool)
@@ -660,11 +628,8 @@ def pick_reviews_for_session(
     chosen.extend(pull(course_specific, count))
 
     if len(chosen) < count:
-        already = {review_record_key(r["author"], r["comment"]) for r in chosen}
-        remaining_general = [
-            r for r in general
-            if review_record_key(r["author"], r["comment"]) not in already
-        ]
+        already = {review_record_key(review["author"], review["comment"]) for review in chosen}
+        remaining_general = [review for review in general if review_record_key(review["author"], review["comment"]) not in already]
         chosen.extend(pull(remaining_general, count - len(chosen)))
 
     return chosen[:count]
@@ -681,7 +646,7 @@ def truncate_review(text: str, max_chars: int = 220) -> str:
 def render_reviews_html(selected_reviews: list[dict]) -> str:
     if not selected_reviews:
         return """
-<section class="info-box reviews-box">
+<section class="section-box">
   <h2>Why Students Choose 910CPR</h2>
   <div class="reviews-fallback">
     <p>Students consistently choose 910CPR for clear instruction, flexible scheduling, and a supportive learning environment.</p>
@@ -694,7 +659,6 @@ def render_reviews_html(selected_reviews: list[dict]) -> str:
         stars = "★" * int(review.get("stars", 5))
         comment = truncate_review(review.get("comment", ""))
         author = review.get("author", "Google Review")
-
         cards.append(
             f"""
 <div class="review-card">
@@ -706,7 +670,7 @@ def render_reviews_html(selected_reviews: list[dict]) -> str:
         )
 
     return f"""
-<section class="info-box reviews-box">
+<section class="section-box">
   <h2>Why Students Choose 910CPR</h2>
   <div class="reviews-grid">
     {''.join(cards)}
@@ -715,15 +679,7 @@ def render_reviews_html(selected_reviews: list[dict]) -> str:
 """
 
 
-with open(DATA_FILE, "r", encoding="utf-8") as f:
-    data = json.load(f)
-
-all_sessions = data["sessions"]
-sessions = all_sessions
-all_reviews = load_reviews()
-
-template = """
-<!DOCTYPE html>
+TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -732,474 +688,69 @@ template = """
 <meta name="description" content="{meta_description}">
 <meta name="robots" content="{robots_value}">
 <link rel="canonical" href="{canonical_url}">
+<link rel="stylesheet" href="/css/lander.css">
 {gtm_head}
 {schema_block}
-
-<style>
-:root {{
-  --bg: #eef4f8;
-  --bg2: #f8fbfd;
-  --card: #ffffff;
-  --soft: #f8fbfd;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --accent: #2563eb;
-  --accent-dark: #1d4ed8;
-  --cta: #ea580c;
-  --cta-dark: #c2410c;
-  --border: #dbe4ee;
-  --warning-bg: #fff7d6;
-  --warning-border: #f2df91;
-  --warning-text: #6d5600;
-}}
-
-* {{ box-sizing: border-box; }}
-
-html {{
-  scroll-behavior: smooth;
-}}
-
-body {{
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
-  color: var(--text);
-}}
-
-body img {{
-  max-width: 100%;
-  height: auto;
-}}
-
-.wrap {{
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 32px 16px 56px;
-}}
-
-.card {{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 28px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-}}
-
-.notice {{
-  background: var(--warning-bg);
-  border: 1px solid var(--warning-border);
-  color: var(--warning-text);
-  padding: 16px 18px;
-  border-radius: 14px;
-  margin-bottom: 22px;
-  font-size: 18px;
-}}
-
-.hero-top {{
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
-}}
-
-.date-badge {{
-  min-width: 96px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-  color: white;
-  text-align: center;
-  padding: 14px 10px;
-}}
-
-.date-month {{
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}}
-
-.date-day {{
-  font-size: 34px;
-  font-weight: 800;
-  line-height: 1.05;
-  margin: 6px 0;
-}}
-
-.date-weekday {{
-  font-size: 13px;
-}}
-
-.cert-badge {{
-  min-width: 96px;
-  min-height: 96px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 10px;
-}}
-
-.cert-badge img {{
-  max-width: 72px;
-  max-height: 72px;
-  object-fit: contain;
-}}
-
-.hero-content {{
-  margin-top: 18px;
-}}
-
-.hero h1 {{
-  margin: 0 0 12px 0;
-  font-size: 30px;
-  line-height: 1.1;
-}}
-
-.subhead {{
-  margin: 0 0 14px 0;
-  color: var(--muted);
-  font-size: 15px;
-}}
-
-.meta-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 10px 18px;
-  margin: 10px 0 0 0;
-}}
-
-.meta-item {{
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 14px;
-}}
-
-.meta-label {{
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}}
-
-.meta-value {{
-  font-size: 16px;
-  font-weight: 700;
-}}
-
-.cta-row {{
-  margin-top: 18px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}}
-
-.button {{
-  display: inline-block;
-  padding: 13px 18px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 700;
-}}
-
-.button.small {{
-  padding: 10px 14px;
-  font-size: 14px;
-}}
-
-.button.primary {{
-  background: var(--cta);
-  color: white;
-}}
-
-.button.primary:hover {{
-  background: var(--cta-dark);
-}}
-
-.button.secondary {{
-  background: #5f6f82;
-  color: white;
-}}
-
-.button.secondary:hover {{
-  background: #526170;
-}}
-
-.stack {{
-  display: grid;
-  gap: 18px;
-  margin-top: 28px;
-}}
-
-.info-box {{
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 18px;
-}}
-
-.info-box h2 {{
-  margin: 0 0 10px 0;
-  font-size: 20px;
-}}
-
-.info-box p {{
-  margin: 0 0 12px 0;
-  line-height: 1.6;
-}}
-
-.upcoming-head {{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}}
-
-.upcoming-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-}}
-
-.upcoming-card {{
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
-}}
-
-.upcoming-date {{
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}}
-
-.upcoming-time {{
-  font-size: 15px;
-  margin-bottom: 4px;
-}}
-
-.upcoming-location {{
-  color: var(--muted);
-  font-size: 14px;
-  margin-bottom: 12px;
-}}
-
-.upcoming-actions {{
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}}
-
-.upcoming-footer-link {{
-  margin-top: 16px;
-  text-align: center;
-}}
-
-.brand-strip {{
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
-  gap: 18px;
-  align-items: stretch;
-}}
-
-.brand-card,
-.image-card {{
-  background: var(--soft);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 16px;
-}}
-
-.brand-card {{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 140px;
-  text-align: center;
-}}
-
-.brand-card img {{
-  max-width: 140px;
-  max-height: 90px;
-  object-fit: contain;
-  margin: 0 auto;
-  display: block;
-}}
-
-.image-card {{
-  min-height: 140px;
-}}
-
-.image-card img {{
-  width: 100%;
-  height: 100%;
-  max-height: 260px;
-  object-fit: contain;
-  border-radius: 12px;
-  display: block;
-}}
-
-.description-box {{
-  margin-top: 24px;
-}}
-
-.description-box h2 {{
-  margin: 0 0 14px 0;
-  font-size: 22px;
-}}
-
-.description-html {{
-  line-height: 1.7;
-}}
-
-.description-html p {{
-  margin: 0 0 14px 0;
-}}
-
-.description-html ul,
-.description-html ol {{
-  margin: 0 0 14px 24px;
-  padding: 0;
-}}
-
-.description-html li {{
-  margin: 0 0 8px 0;
-}}
-
-.reviews-box {{
-  margin-top: 24px;
-}}
-
-.reviews-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-}}
-
-.review-card {{
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-}}
-
-.review-stars {{
-  color: #d97706;
-  font-size: 16px;
-  letter-spacing: 0.04em;
-  margin-bottom: 8px;
-}}
-
-.review-text {{
-  margin: 0 0 12px 0;
-  line-height: 1.6;
-}}
-
-.review-author {{
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 700;
-}}
-
-.reviews-fallback {{
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-}}
-
-.text-link {{
-  color: var(--accent);
-  text-decoration: none;
-}}
-
-.text-link:hover {{
-  text-decoration: underline;
-}}
-
-.strong-link {{
-  font-size: 16px;
-  font-weight: 700;
-}}
-
-.build-stamp {{
-  margin-top: 26px;
-  color: var(--muted);
-  font-size: 11px;
-}}
-
-@media (max-width: 840px) {{
-  .brand-strip {{
-    grid-template-columns: 1fr;
-  }}
-}}
-
-@media (max-width: 700px) {{
-  .hero-top {{
-    align-items: stretch;
-  }}
-
-  .date-badge,
-  .cert-badge {{
-    min-width: 82px;
-    min-height: 82px;
-  }}
-
-  .hero h1 {{
-    font-size: 25px;
-  }}
-}}
-</style>
 </head>
-<body>
+<body class="lander course-{course_slug}">
 {gtm_body}
 <div class="wrap">
-  <div class="card">
+  <div class="page-shell">
 
     {state_notice}
 
     <section class="hero">
-      <div class="hero-top">
-        <div class="date-badge">
-          <div class="date-month">{month_abbr}</div>
-          <div class="date-day">{day_num}</div>
-          <div class="date-weekday">{weekday}</div>
-        </div>
-        {cert_logo_html}
+
+      <div class="date-badge">
+        <div class="date-month">{month_abbr}</div>
+        <div class="date-day">{day_num}</div>
+        <div class="date-weekday">{weekday}</div>
       </div>
 
-      <div class="hero-content">
+      <div class="hero-main">
+        <div class="eyebrow">{course}</div>
         <h1>{course}</h1>
         <p class="subhead">{hero_subhead}</p>
+      </div>
 
-        <div class="meta-grid">
-          <div class="meta-item">
-            <div class="meta-label">Date</div>
-            <div class="meta-value">{date}</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Time</div>
-            <div class="meta-value">{time}</div>
-          </div>
-          <div class="meta-item">
-            <div class="meta-label">Location</div>
-            <div class="meta-value">{location}</div>
-          </div>
+      <div class="hero-side">
+        {cert_logo_html}
+        <div class="trust-badge">
+          <strong>Same-Day Certification</strong>
+          <span>Most students receive their certification the same day.</span>
         </div>
+      </div>
+
+    </section>
+
+    <div class="hero-details">
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">Date</div>
+          <div class="meta-value">{date}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Time</div>
+          <div class="meta-value">{time}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Location</div>
+          <div class="meta-value">{location}</div>
+        </div>
+      </div>
+
+      <div class="cta-panel">
+        <p class="cta-panel-label">Reserve your seat</p>
+        <p class="cta-panel-copy">{hero_subhead}</p>
 
         <div class="cta-row">
           {button_html}
           <a class="button secondary" href="#upcoming-times">See Other Upcoming Class Times</a>
         </div>
       </div>
-    </section>
+
+    </div>
 
     {upcoming_sessions_html}
 
@@ -1209,13 +760,11 @@ body img {{
 
     {course_description_section}
 
-    <div class="stack">
-      <section class="info-box">
-        <h2>Who This Class Is For</h2>
-        <p>{audience_text}</p>
-        <p>{corporate_text}</p>
-      </section>
-    </div>
+    <section class="section-box">
+      <h2>Who This Class Is For</h2>
+      <p>{audience_text}</p>
+      <p>{corporate_text}</p>
+    </section>
 
     <div class="build-stamp">build: {build_stamp}</div>
 
@@ -1249,117 +798,121 @@ window.dataLayer.push({{
 </html>
 """
 
-count = 0
-build_stamp = datetime.now(TZ).strftime("%Y-%m-%d %I:%M %p").lstrip("0")
-now_dt = datetime.now(TZ)
 
-for s in sessions:
-    session_id = s.get("session_id")
-    course_raw = s.get("course_name", "")
-    course_display = display_course_name(course_raw)
-    course_seo = seo_course_phrase(course_raw)
-    raw_location = str(s.get("location_display", "")).strip()
-    location = clean_location_display(raw_location) or "Wilmington; Shipyard Blvd"
-    register = s.get("registration_url", "#")
-    dt = parse_dt(s.get("start_at"))
+def main() -> None:
+    with open(DATA_FILE, "r", encoding="utf-8") as handle:
+        data = json.load(handle)
 
-    if dt:
-        date = dt.strftime("%B %d, %Y")
-        time = dt.strftime("%I:%M %p").lstrip("0")
-        month_abbr = dt.strftime("%b").upper()
-        day_num = dt.strftime("%d").lstrip("0")
-        weekday = dt.strftime("%a")
-    else:
-        date = "TBD"
-        time = "TBD"
-        month_abbr = "TBD"
-        day_num = "--"
-        weekday = ""
+    sessions = data["sessions"]
+    all_reviews = load_reviews()
+    build_stamp = datetime.now(TZ).strftime("%Y-%m-%d %I:%M %p").lstrip("0")
+    now_dt = datetime.now(TZ)
 
-    city, state = location_to_city_state(location)
-    page_title = f"{seo_title_for_session(course_seo, city=city, state=state)} | 910CPR"
-    meta_description = (
-        f"{course_seo} in {location}. View class details, current schedule options, "
-        f"and register online with 910CPR."
-    )
-    course_page_url = f"../courses/{short_slug(course_display)}.html"
+    count = 0
 
-    course_id = str(s.get("course_id", "")).strip()
-    course_number = str(s.get("course_number", "")).strip()
-    schedule_anchor = course_id or course_number
-    if schedule_anchor:
-        schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
-    else:
-        schedule_url = course_page_url
+    for session in sessions:
+        session_id = str(session.get("session_id", "")).strip()
+        course_raw = session.get("course_name", "")
+        course_display = display_course_name(course_raw)
+        course_seo = seo_course_phrase(course_raw)
 
-    canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
-    is_past = bool(dt and dt < now_dt)
+        raw_location = str(session.get("location_display", "")).strip()
+        location = clean_location_display(raw_location) or "Wilmington; Shipyard Blvd"
+        register = session.get("registration_url", "#")
+        dt = parse_dt(session.get("start_at"))
 
-    if is_past:
-        state_notice = """
+        if dt:
+            date = dt.strftime("%B %d, %Y")
+            time = dt.strftime("%I:%M %p").lstrip("0")
+            month_abbr = dt.strftime("%b").upper()
+            day_num = dt.strftime("%d").lstrip("0")
+            weekday = dt.strftime("%a")
+        else:
+            date = "TBD"
+            time = "TBD"
+            month_abbr = "TBD"
+            day_num = "--"
+            weekday = ""
+
+        city, state = location_to_city_state(location)
+        page_title = f"{seo_title_for_session(course_seo, city=city, state=state)} | 910CPR"
+        meta_description = (
+            f"{course_seo} in {location}. View class details, current schedule options, "
+            f"and register online with 910CPR."
+        )
+
+        course_page_url = f"../courses/{short_slug(course_display)}.html"
+
+        course_id = str(session.get("course_id", "")).strip()
+        course_number = str(session.get("course_number", "")).strip()
+        schedule_anchor = course_id or course_number
+        if schedule_anchor:
+            schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
+        else:
+            schedule_url = course_page_url
+
+        canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
+        is_past = bool(dt and dt < now_dt)
+
+        if is_past:
+            state_notice = """
 <div class="notice">
-This specific session has passed. See upcoming classes below.
+  This specific session has passed. See upcoming classes below.
 </div>
 """
-        button_html = f'<a class="button secondary" href="#upcoming-times">See Upcoming Classes</a>'
-        robots_value = "index,follow"
-        hero_subhead = "Use the upcoming list below to pick the next available class."
-    else:
-        state_notice = ""
-        button_html = f'<a class="button primary" href="{register}">Register Now</a>'
-        robots_value = "index,follow"
-        hero_subhead = "Use the register button for this session or the upcoming list below for other dates and times."
+            button_html = '<a class="button secondary" href="#upcoming-times">See Upcoming Classes</a>'
+            hero_subhead = "Use the upcoming list below to pick the next available class."
+        else:
+            state_notice = ""
+            button_html = f'<a class="button primary" href="{escape(register)}">Register Now</a>'
+            hero_subhead = "Use the register button for this session or the upcoming list below for other dates and times."
 
-    cert_logo = detect_cert_logo(course_display)
-    if cert_logo:
-        cert_logo_html = f'''
+        cert_logo = detect_cert_logo(course_display)
+        if cert_logo:
+            cert_logo_html = f"""
 <div class="cert-badge">
   <img src="{escape(cert_logo)}" alt="Certifying body logo" loading="lazy">
 </div>
-'''
-    else:
-        cert_logo_html = '<div class="cert-badge"></div>'
+"""
+        else:
+            cert_logo_html = """
+<div class="cert-badge cert-badge-empty" aria-hidden="true"></div>
+"""
 
-    logo_url = default_logo_url()
-    course_img_url = fallback_course_image(course_display, course_id, course_number)
+        logo_url = default_logo_url()
+        course_image_url = get_course_type_image(course_display)
+        if course_image_url:
+            logo_card = ""
+            if logo_url:
+                logo_card = f"""
+  <div class="brand-card">
+    <img src="{escape(logo_url)}" alt="910CPR logo" loading="lazy">
+  </div>
+"""
+            brand_strip_html = f"""
+<section class="brand-strip">
+{logo_card}
+  <div class="image-card">
+    <img src="{escape(course_image_url)}" alt="{escape(course_display)}" loading="lazy">
+  </div>
+</section>
+"""
+        else:
+            brand_strip_html = ""
 
-    brand_parts = []
-    if logo_url:
-        brand_parts.append(
-            f'''
-<div class="brand-card">
-  <img src="{escape(logo_url)}" alt="910CPR logo" loading="lazy">
-</div>
-'''
-        )
-
-if course_img_url and course_img_url != cert_logo:
-    brand_parts.append(
-        f'''
-<div class="image-card">
-  <img src="{escape(course_img_url)}" alt="{escape(course_display)} course image" loading="lazy">
-</div>
-'''
-    )        )
-
-    if brand_parts:
-        brand_strip_html = f'<section class="brand-strip">{"".join(brand_parts)}</section>'
-    else:
-        brand_strip_html = ""
-
-    description_html = load_course_description_html(course_id or course_number, course_display)
-    if description_html:
-        course_description_section = f"""
-<section class="info-box description-box">
+        description_html = load_course_description_html(course_id or course_number, course_display)
+        if description_html:
+            course_description_section = f"""
+<section class="section-box">
   <h2>Course Description</h2>
   <div class="description-html">
     {description_html}
   </div>
 </section>
 """
-    else:
-        course_description_section = f"""
-<section class="info-box description-box">
+        else:
+            course_description_section = f"""
+<section class="section-box">
   <h2>Course Description</h2>
   <div class="description-html">
     <p>{escape(audience_blurb(course_display))}</p>
@@ -1367,60 +920,62 @@ if course_img_url and course_img_url != cert_logo:
 </section>
 """
 
-    upcoming_sessions = get_upcoming_sessions(s, sessions, now_dt, limit=UPCOMING_LIMIT)
-    upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, schedule_url)
+        upcoming_sessions = get_upcoming_sessions(session, sessions, now_dt, limit=UPCOMING_LIMIT)
+        upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, schedule_url)
 
-    selected_reviews = pick_reviews_for_session(
-        session_id=str(session_id or ""),
-        course_id=course_id or course_number,
-        course_name=course_display,
-        reviews=all_reviews,
-        count=REVIEWS_PER_PAGE,
-    )
-    reviews_html = render_reviews_html(selected_reviews)
+        selected_reviews = pick_reviews_for_session(
+            session_id=session_id,
+            course_id=course_id or course_number,
+            course_name=course_display,
+            reviews=all_reviews,
+            count=REVIEWS_PER_PAGE,
+        )
+        reviews_html = render_reviews_html(selected_reviews)
 
-    html_doc = template.format(
-        page_title=escape(page_title),
-        meta_description=escape(meta_description),
-        robots_value=robots_value,
-        canonical_url=escape(canonical_url),
-        gtm_head=render_gtm_head(),
-        gtm_body=render_gtm_body(),
-        schema_block=make_schema(course_seo, dt, location, city, state, register),
-        course=escape(course_display),
-        location=escape(location),
-        date=escape(date),
-        time=escape(time),
-        month_abbr=escape(month_abbr),
-        day_num=escape(day_num),
-        weekday=escape(weekday),
-        state_notice=state_notice,
-        session_id=escape(str(session_id)),
-        button_html=button_html,
-        course_page_url=escape(course_page_url),
-        schedule_url=escape(schedule_url),
-        build_stamp=escape(build_stamp),
-        course_js=js_escape(course_display),
-        course_id=escape(course_id or course_number),
-        course_slug=short_slug(course_display),
-        location_js=js_escape(location),
-        is_past_js="true" if is_past else "false",
-        register_js=js_escape(register),
-        audience_text=escape(audience_blurb(course_display)),
-        corporate_text=escape(corporate_blurb(city, course_display)),
-        hero_subhead=escape(hero_subhead),
-        cert_logo_html=cert_logo_html,
-        brand_strip_html=brand_strip_html,
-        course_description_section=course_description_section,
-        upcoming_sessions_html=upcoming_sessions_html,
-        reviews_html=reviews_html,
-    )
+        html_doc = TEMPLATE.format(
+            page_title=escape(page_title),
+            meta_description=escape(meta_description),
+            robots_value="index,follow",
+            canonical_url=escape(canonical_url),
+            gtm_head=render_gtm_head(),
+            gtm_body=render_gtm_body(),
+            schema_block=make_schema(course_seo, dt, location, city, state, register),
+            state_notice=state_notice,
+            month_abbr=escape(month_abbr),
+            day_num=escape(day_num),
+            weekday=escape(weekday),
+            course=escape(course_display),
+            hero_subhead=escape(hero_subhead),
+            cert_logo_html=cert_logo_html,
+            date=escape(date),
+            time=escape(time),
+            location=escape(location),
+            button_html=button_html,
+            upcoming_sessions_html=upcoming_sessions_html,
+            brand_strip_html=brand_strip_html,
+            reviews_html=reviews_html,
+            course_description_section=course_description_section,
+            audience_text=escape(audience_blurb(course_display)),
+            corporate_text=escape(corporate_blurb(city, course_display)),
+            build_stamp=escape(build_stamp),
+            session_id=escape(session_id),
+            course_id=escape(course_id or course_number),
+            course_js=js_escape(course_display),
+            course_slug=short_slug(course_display),
+            location_js=js_escape(location),
+            is_past_js="true" if is_past else "false",
+            register_js=js_escape(register),
+            schedule_url=escape(schedule_url),
+            course_page_url=escape(course_page_url),
+        )
 
-    path = OUTPUT_DIR / f"{session_id}.html"
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(html_doc)
+        output_path = OUTPUT_DIR / f"{session_id}.html"
+        output_path.write_text(html_doc, encoding="utf-8")
+        count += 1
 
-    count += 1
+    print(f"Landers built: {count}")
+    print(f"Reviews loaded: {len(all_reviews)}")
 
-print(f"Landers built: {count}")
-print(f"Reviews loaded: {len(all_reviews)}")
+
+if __name__ == "__main__":
+    main()
