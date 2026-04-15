@@ -1,0 +1,4 @@
+Source URL,Target URL,Status Code,Subpath Matching,Preserve Path Suffix,Preserve Query String,Include Subdomains
+https://910cpr.com/,https://coastalcprtraining.enrollware.com/schedule,302,off,off,off,off
+https://910cpr.com/api/schedule.json,https://www.910cpr.com/data/schedule.json,302,off,off,off,off
+https://910cpr.com/,https://www.910cpr.com/,301,on,on,on,off
