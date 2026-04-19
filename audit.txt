@@ -1,0 +1,19 @@
+Read audit.txt and follow the instructions exactly.
+
+Rewrite the function update_manifest_after_execution() in supervisor/main.py completely.
+
+Do NOT partially edit it.
+Do NOT append to it.
+
+Replace the entire function with a clean, syntactically valid implementation that includes:
+
+- classification empty guard
+- source_feed_suspect handling
+- preservation of previous sessions
+- transition history updates
+- safe construction of updated_sessions
+- build metadata update
+
+Do NOT modify any other part of the file.
+
+Return ONLY the full updated supervisor/main.py.
