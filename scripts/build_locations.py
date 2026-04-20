@@ -10,28 +10,30 @@ from scripts.hub_utils import (
 OUTPUT_DIR = os.path.join("docs", "locations")
 
 
-def is_public_location(location_name: str) -> bool:
-    return location_name.strip().startswith(":: ")
-
-
-def clean_location_name(location_name: str) -> str:
-    # ":: Wilmington; Shipyard Blvd" → "Wilmington"
-    name = location_name.replace("::", "").strip()
-    return name.split(";")[0].strip()
+def valid_city(city: str) -> bool:
+    value = str(city or "").strip()
+    if not value:
+        return False
+    if value.lower() in {"nan", "none", "unknown"}:
+        return False
+    if value.isdigit():
+        return False
+    return True
 
 
 def build_locations():
     sessions = load_sessions()
+    future_public = upcoming_public_sessions(
+        [s for s in sessions if getattr(s, "is_public", False)]
+    )
 
     location_map = {}
 
-    for s in sessions:
-        location = s.get("Location", "")
+    for s in future_public:
+        city = str(getattr(s, "city", "")).strip()
 
-        if not is_public_location(location):
+        if not valid_city(city):
             continue
-
-        city = clean_location_name(location)
 
         location_map.setdefault(city, []).append(s)
 
@@ -40,17 +42,13 @@ def build_locations():
     count = 0
 
     for city, city_sessions in location_map.items():
-        public = upcoming_public_sessions(city_sessions)
-
-        if not public:
-            continue  # skip empty public locations for now
-
         html = render_page(
             title=f"CPR Classes in {city}",
-            content=f"""
+            body=f"""
 <h1>CPR Classes in {city}</h1>
-{session_rows(public)}
+{session_rows(city_sessions)}
 """,
+            description=f"Upcoming CPR classes in {city}.",
         )
 
         filename = os.path.join(OUTPUT_DIR, f"{slugify(city)}.html")

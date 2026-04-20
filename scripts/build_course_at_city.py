@@ -10,50 +10,45 @@ from scripts.hub_utils import (
 OUTPUT_DIR = os.path.join("docs", "course-at-city")
 
 
-def is_public_location(location_name: str) -> bool:
-    return location_name.strip().startswith(":: ")
+def valid_city(city: str) -> bool:
+    value = str(city or "").strip()
+    if not value:
+        return False
+    if value.lower() in {"nan", "none", "unknown"}:
+        return False
+    if value.isdigit():
+        return False
+    return True
 
 
-def clean_city(location_name: str) -> str:
-    name = location_name.replace("::", "").strip()
-    return name.split(";")[0].strip()
-
-
-def get_course_family(course_name: str) -> str:
-    course_name = course_name.lower()
-
-    if "bls" in course_name:
-        return "BLS"
-    if "acls" in course_name:
-        return "ACLS"
-    if "pals" in course_name:
-        return "PALS"
-    if "heartsaver" in course_name or "first aid" in course_name:
-        return "First Aid CPR AED"
-    if "uscg" in course_name:
-        return "USCG First Aid CPR"
-
-    return None
+def valid_family(family: str) -> bool:
+    value = str(family or "").strip()
+    return value in {
+        "BLS",
+        "ACLS",
+        "PALS",
+        "Heartsaver",
+        "USCG Elementary First Aid | CPR",
+    }
 
 
 def build_course_at_city():
     sessions = load_sessions()
+    future_public = upcoming_public_sessions(
+        [s for s in sessions if getattr(s, "is_public", False)]
+    )
 
     combo_map = {}
 
-    for s in sessions:
-        location = s.get("Location", "")
-        course = s.get("Course", "")
+    for s in future_public:
+        city = str(getattr(s, "city", "")).strip()
+        family = str(getattr(s, "course_family", "")).strip()
 
-        if not is_public_location(location):
+        if not valid_city(city):
             continue
 
-        family = get_course_family(course)
-
-        if not family:
+        if not valid_family(family):
             continue
-
-        city = clean_city(location)
 
         key = (family, city)
         combo_map.setdefault(key, []).append(s)
@@ -63,17 +58,13 @@ def build_course_at_city():
     count = 0
 
     for (family, city), group_sessions in combo_map.items():
-        public = upcoming_public_sessions(group_sessions)
-
-        if not public:
-            continue
-
         html = render_page(
             title=f"{family} Classes in {city}",
-            content=f"""
+            body=f"""
 <h1>{family} Classes in {city}</h1>
-{session_rows(public)}
+{session_rows(group_sessions)}
 """,
+            description=f"Upcoming {family} classes in {city}.",
         )
 
         filename = os.path.join(
