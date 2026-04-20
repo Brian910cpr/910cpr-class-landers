@@ -8,6 +8,8 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from zipfile import ZipFile
 
+from tqdm import tqdm
+
 from title_cleaner import normalize_course_title, seo_title_for_session
 
 TZ = ZoneInfo("America/New_York")
@@ -810,7 +812,7 @@ def main() -> None:
 
     count = 0
 
-    for session in sessions:
+    for session in tqdm(sessions, desc="Building landers", unit="page", miniters=50):
         session_id = str(session.get("session_id", "")).strip()
         course_raw = session.get("course_name", "")
         course_display = display_course_name(course_raw)

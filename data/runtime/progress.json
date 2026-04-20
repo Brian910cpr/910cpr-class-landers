@@ -1,0 +1,59 @@
+{
+  "started_at": "2026-04-19T10:42:31.726102-04:00",
+  "updated_at": "2026-04-19T10:42:32.546321-04:00",
+  "status": "running",
+  "current_stage": "build_landers",
+  "stages": {
+    "load_manifest": {
+      "status": "completed",
+      "started_at": "2026-04-19T10:42:31.727136-04:00",
+      "finished_at": "2026-04-19T10:42:31.727136-04:00",
+      "message": null
+    },
+    "load_schedule": {
+      "status": "completed",
+      "started_at": "2026-04-19T10:42:31.728106-04:00",
+      "finished_at": "2026-04-19T10:42:32.029770-04:00",
+      "message": null
+    },
+    "classify_sessions": {
+      "status": "completed",
+      "started_at": "2026-04-19T10:42:32.029770-04:00",
+      "finished_at": "2026-04-19T10:42:32.374136-04:00",
+      "message": null
+    },
+    "generate_build_plan": {
+      "status": "completed",
+      "started_at": "2026-04-19T10:42:32.375136-04:00",
+      "finished_at": "2026-04-19T10:42:32.544778-04:00",
+      "message": null
+    },
+    "run_pipeline": {
+      "status": "running",
+      "started_at": "2026-04-19T10:42:32.545316-04:00",
+      "finished_at": null,
+      "message": null
+    },
+    "update_manifest": {
+      "status": "pending",
+      "started_at": null,
+      "finished_at": null,
+      "message": null
+    },
+    "finalize": {
+      "status": "pending",
+      "started_at": null,
+      "finished_at": null,
+      "message": null
+    },
+    "build_landers": {
+      "status": "running",
+      "started_at": "2026-04-19T10:42:32.546321-04:00",
+      "finished_at": null,
+      "message": "Running scripts\\build_landers.py",
+      "details": {
+        "script": "scripts\\build_landers.py"
+      }
+    }
+  }
+}

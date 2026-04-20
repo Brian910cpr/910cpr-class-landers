@@ -1,0 +1,51 @@
+{
+  "Wilmington": [
+    "Leland",
+    "Hampstead",
+    "Wrightsville Beach",
+    "Carolina Beach",
+    "Burgaw"
+  ],
+  "Jacksonville": [
+    "Holly Ridge",
+    "Sneads Ferry",
+    "Richlands",
+    "Swansboro",
+    "Camp Lejeune"
+  ],
+  "Myrtle Beach": [
+    "North Myrtle Beach",
+    "Surfside Beach",
+    "Conway",
+    "Longs",
+    "Little River"
+  ],
+  "Raleigh": [
+    "Cary",
+    "Morrisville",
+    "Garner",
+    "Apex",
+    "Wake Forest"
+  ],
+  "Beaufort": [
+    "Morehead City",
+    "Atlantic Beach",
+    "Pine Knoll Shores",
+    "Newport",
+    "Harkers Island"
+  ],
+  "Holly Ridge": [
+    "Sneads Ferry",
+    "Surf City",
+    "Topsail Beach",
+    "Hampstead",
+    "Jacksonville"
+  ],
+  "Burgaw": [
+    "Rocky Point",
+    "Watha",
+    "Wallace",
+    "Castle Hayne",
+    "Wilmington"
+  ]
+}
