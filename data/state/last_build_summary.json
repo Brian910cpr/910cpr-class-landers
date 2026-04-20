@@ -1,0 +1,39 @@
+{
+  "status": "completed",
+  "started_at": "2026-04-19T10:42:31.726102-04:00",
+  "finished_at": "2026-04-19T23:33:57.853850-04:00",
+  "schedule_path": "docs\\data\\schedule_future.json",
+  "manifest_path": "data\\state\\session_manifest.json",
+  "progress_path": "data\\runtime\\progress.json",
+  "classification_counts": {
+    "total_sessions": 26048,
+    "future_active": 1470,
+    "past_live": 24319,
+    "canceled_deprecated": 0,
+    "invalid_remove": 259,
+    "seen_in_source": 26048,
+    "missing_from_source": 0
+  },
+  "build_plan_counts": {
+    "to_build": 1470,
+    "to_rebuild": 24319,
+    "to_deprecate": 0,
+    "to_remove": 259,
+    "to_skip": 0,
+    "total": 26048
+  },
+  "pipeline_status": "completed",
+  "stages": {
+    "load_manifest": "completed",
+    "load_schedule": "completed",
+    "classify_sessions": "completed",
+    "generate_build_plan": "completed",
+    "run_pipeline": "completed",
+    "update_manifest": "completed",
+    "finalize": "completed",
+    "build_landers": "completed",
+    "cleanup_deprecate": "skipped",
+    "cleanup_remove": "completed",
+    "build_index_and_sitemap": "completed"
+  }
+}
