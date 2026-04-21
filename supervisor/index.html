@@ -228,7 +228,7 @@ code{
       <div class="hero-top">
         <div>
           <h1>Build Dashboard</h1>
-          <p class="muted">Static supervisor polling <code>data/runtime/*.json</code> every 3 seconds.</p>
+          <p class="muted">Static supervisor polling <code>data/runtime/*.json</code> with legacy fallback to <code>../data/runtime/*.json</code> every 3 seconds.</p>
         </div>
         <div id="overall-badge" class="badge state-unknown">UNKNOWN</div>
       </div>
@@ -356,16 +356,24 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+const RUNTIME_BASES = [
+  "data/runtime",
+  "../data/runtime"
+];
+
 async function loadPhase(phase) {
-  const url = `../data/runtime/${phase.name}.json?ts=${Date.now()}`;
-  try {
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) return { phase, data: null };
-    const data = await response.json();
-    return { phase, data };
-  } catch {
-    return { phase, data: null };
+  for (const base of RUNTIME_BASES) {
+    const url = `${base}/${phase.name}.json?ts=${Date.now()}`;
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) continue;
+      const data = await response.json();
+      return { phase, data };
+    } catch {
+      continue;
+    }
   }
+  return { phase, data: null };
 }
 
 function computeOverall(results) {
