@@ -17,6 +17,7 @@ MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs"
 TZ = ZoneInfo("America/New_York")
+TOP_STRIP_LIMIT = 5
 
 
 def parse_dt(value: str | None) -> datetime | None:
@@ -36,10 +37,11 @@ def clean_location(value: str | None) -> str:
     text = re.sub(r"<br\s*/?>", " ", text, flags=re.I)
     text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
-    if "::" in text:
-        text = text.rsplit("::", 1)[-1].strip()
     if text.startswith("::"):
         text = text[2:].strip()
+    text = re.sub(r"\s*;\s*", ", ", text)
+    text = re.sub(r"\s*,\s*", ", ", text)
+    text = re.sub(r"\s+", " ", text).strip(" ,")
     return text or "Location TBA"
 
 
@@ -168,6 +170,10 @@ def render_session_badge(session: dict[str, Any]) -> str:
     return ""
 
 
+def session_identity(session: dict[str, Any]) -> str:
+    return str(session.get("session_id") or session.get("registration_url") or "")
+
+
 def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     start_dt = parse_dt(session.get("start_at"))
     location = clean_location(session.get("location_display") or session.get("location_name"))
@@ -219,12 +225,21 @@ def render_empty_state(tab: dict[str, Any], *, group_mode: bool) -> str:
     )
 
 
-def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
+def render_tab_panel(
+    tab: dict[str, Any],
+    sessions: list[dict[str, Any]],
+    *,
+    active: bool,
+    group_mode: bool,
+    suppress_session_ids: set[str] | None = None,
+) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
     print(f"TOTAL MATCHED SESSIONS: {len(sessions)}")
     print(f"FIRST 5 SESSION IDS: {[str(session.get('session_id')) for session in sessions[:5]]}")
     sorted_sessions = sort_sessions(sessions)
-    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sorted_sessions)
+    suppress_session_ids = suppress_session_ids or set()
+    display_sessions = [session for session in sorted_sessions if session_identity(session) not in suppress_session_ids]
+    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in display_sessions)
     if not cards:
         cards = render_empty_state(tab, group_mode=group_mode)
 
@@ -241,7 +256,7 @@ def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, act
         else full_schedule_url
     )
     cta_label = escape(tab["primary_cta_label"])
-    inventory_label = f"{len(sessions)} upcoming option" + ("" if len(sessions) == 1 else "s")
+    inventory_label = f"{len(display_sessions)} upcoming option" + ("" if len(display_sessions) == 1 else "s")
 
     secondary_label = "Open full schedule" if group_mode else "Course details"
 
@@ -266,10 +281,23 @@ def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, act
 """.strip()
 
 
+def top_strip_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    ordered: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for session in sort_sessions(sessions):
+        sid = session_identity(session)
+        if sid in seen:
+            continue
+        seen.add(sid)
+        ordered.append(session)
+        if len(ordered) >= TOP_STRIP_LIMIT:
+            break
+    return ordered
+
+
 def render_next_available_strip(sessions: list[dict[str, Any]], *, group_mode: bool) -> str:
-    print(f"TOTAL MATCHED SESSIONS: {len(sessions)}")
-    print(f"FIRST 5 SESSION IDS: {[str(session.get('session_id')) for session in sessions[:5]]}")
-    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sort_sessions(sessions))
+    strip_sessions = top_strip_sessions(sessions)
+    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in strip_sessions)
     if not cards:
         cards = (
             "<div class='slug-empty'>"
@@ -324,7 +352,6 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
                 else tab["full_schedule_url"]
             )
             first_cta_label = tab["primary_cta_label"]
-        panels.append(render_tab_panel(tab, matched, active=index == 0, group_mode=group_mode))
 
     first_banner = {
         "url": page["tabs"][0]["full_schedule_url"],
@@ -334,6 +361,19 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     total_dates = sum(matched_counts)
     live_formats = sum(1 for count in matched_counts if count > 0)
     assert len(all_matched_sessions) > 0, f"No sessions matched for hub page {page['slug']}"
+    strip_sessions = top_strip_sessions(all_matched_sessions)
+    strip_session_ids = {session_identity(session) for session in strip_sessions}
+    first_tab_sessions = sort_sessions([session for session in sessions if matches_tab(session, page["tabs"][0], page_slug=page.get("slug"))])
+    first_tab_display_count = len([session for session in first_tab_sessions if session_identity(session) not in strip_session_ids])
+    print(f"PAGE {page['slug']} TOTAL MATCHED BEFORE PRESENTATION DEDUPE: {len(all_matched_sessions)}")
+    print(f"PAGE {page['slug']} TOP STRIP COUNT SHOWN: {len(strip_sessions)}")
+    print(f"PAGE {page['slug']} FIRST TAB COUNT SHOWN AFTER DEDUPE: {first_tab_display_count}")
+
+    panels = []
+    for index, tab in enumerate(page.get("tabs", [])):
+        matched = sort_sessions([session for session in sessions if matches_tab(session, tab, page_slug=page.get("slug"))])
+        suppress_ids = strip_session_ids if index == 0 else set()
+        panels.append(render_tab_panel(tab, matched, active=index == 0, group_mode=group_mode, suppress_session_ids=suppress_ids))
 
     body = f"""
 <div class="card slug-hub-shell">
