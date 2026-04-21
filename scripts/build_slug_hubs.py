@@ -18,6 +18,7 @@ SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs"
 TZ = ZoneInfo("America/New_York")
 TOP_STRIP_LIMIT = 5
+MIN_FIRST_TAB_AFTER_DEDUPE = 3
 
 
 def parse_dt(value: str | None) -> datetime | None:
@@ -364,15 +365,20 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     strip_sessions = top_strip_sessions(all_matched_sessions)
     strip_session_ids = {session_identity(session) for session in strip_sessions}
     first_tab_sessions = sort_sessions([session for session in sessions if matches_tab(session, page["tabs"][0], page_slug=page.get("slug"))])
-    first_tab_display_count = len([session for session in first_tab_sessions if session_identity(session) not in strip_session_ids])
+    first_tab_display_sessions = [session for session in first_tab_sessions if session_identity(session) not in strip_session_ids]
+    first_tab_before_dedupe_count = len(first_tab_sessions)
+    first_tab_after_dedupe_count = len(first_tab_display_sessions)
+    first_tab_dedupe_applied = first_tab_after_dedupe_count >= MIN_FIRST_TAB_AFTER_DEDUPE
     print(f"PAGE {page['slug']} TOTAL MATCHED BEFORE PRESENTATION DEDUPE: {len(all_matched_sessions)}")
     print(f"PAGE {page['slug']} TOP STRIP COUNT SHOWN: {len(strip_sessions)}")
-    print(f"PAGE {page['slug']} FIRST TAB COUNT SHOWN AFTER DEDUPE: {first_tab_display_count}")
+    print(f"PAGE {page['slug']} FIRST TAB COUNT BEFORE DEDUPE: {first_tab_before_dedupe_count}")
+    print(f"PAGE {page['slug']} FIRST TAB COUNT AFTER DEDUPE: {first_tab_after_dedupe_count}")
+    print(f"PAGE {page['slug']} DEDUPE {'APPLIED' if first_tab_dedupe_applied else 'SKIPPED'}")
 
     panels = []
     for index, tab in enumerate(page.get("tabs", [])):
         matched = sort_sessions([session for session in sessions if matches_tab(session, tab, page_slug=page.get("slug"))])
-        suppress_ids = strip_session_ids if index == 0 else set()
+        suppress_ids = strip_session_ids if index == 0 and first_tab_dedupe_applied else set()
         panels.append(render_tab_panel(tab, matched, active=index == 0, group_mode=group_mode, suppress_session_ids=suppress_ids))
 
     body = f"""
