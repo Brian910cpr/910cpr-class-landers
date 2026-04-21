@@ -18,6 +18,7 @@ SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs"
 TZ = ZoneInfo("America/New_York")
 DATE_LIMIT = 12
+NEXT_AVAILABLE_LIMIT = 5
 
 
 def parse_dt(value: str | None) -> datetime | None:
@@ -93,6 +94,36 @@ def format_time_line(dt: datetime | None) -> str:
     return dt.strftime("%I:%M %p").lstrip("0") if dt else "Time TBA"
 
 
+def seat_fill_ratio(session: dict[str, Any]) -> float:
+    try:
+        registered = float(session.get("registered_count") or 0)
+        capacity = float(session.get("max_students") or 0)
+    except (TypeError, ValueError):
+        return 0.0
+    if capacity <= 0:
+        return 0.0
+    return registered / capacity
+
+
+def sort_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(
+        sessions,
+        key=lambda session: (
+            parse_dt(session.get("start_at")) or datetime.max.replace(tzinfo=TZ),
+            -seat_fill_ratio(session),
+        ),
+    )
+
+
+def render_session_badge(session: dict[str, Any]) -> str:
+    fill_ratio = seat_fill_ratio(session)
+    if fill_ratio >= 0.9:
+        return '<div class="session-badge session-badge-critical">⛔ Last सीट</div>'
+    if fill_ratio >= 0.7:
+        return '<div class="session-badge session-badge-hot">🔥 Almost Full</div>'
+    return ""
+
+
 def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     start_dt = parse_dt(session.get("start_at"))
     location = clean_location(session.get("location_display") or session.get("location_name"))
@@ -102,15 +133,17 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     action_label = "See Public Class" if group_mode else "Register"
     subtitle = escape(title)
     action_hint = "Preview the closest public option" if group_mode else "Secure this class time"
+    badge = render_session_badge(session)
 
     return f"""
-<article class="slug-pill">
+<article class="slug-pill session-card" data-url="{register_url}" tabindex="0" role="link">
   <div class="slug-pill-date">
     <div class="slug-pill-month">{format_month(start_dt)}</div>
     <div class="slug-pill-day">{format_day(start_dt)}</div>
     <div class="slug-pill-weekday">{format_weekday(start_dt)}</div>
   </div>
   <div class="slug-pill-main">
+    {badge}
     <div class="slug-pill-title">{escape(format_date_line(start_dt))}</div>
     <div class="slug-pill-meta-row">
       <span class="slug-pill-chip">{escape(format_time_line(start_dt))}</span>
@@ -144,7 +177,8 @@ def render_empty_state(tab: dict[str, Any], *, group_mode: bool) -> str:
 
 def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
-    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sessions[:DATE_LIMIT])
+    sorted_sessions = sort_sessions(sessions)
+    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sorted_sessions[:DATE_LIMIT])
     if not cards:
         cards = render_empty_state(tab, group_mode=group_mode)
 
@@ -172,18 +206,41 @@ def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, act
       <div>
         <div class="slug-panel-kicker">{escape(inventory_label)}</div>
         <h2>{escape(tab['label'])}</h2>
-        <p class="slug-panel-copy">{escape(tab['description'])}</p>
       </div>
       <div class="slug-panel-cta">
         <a class="button primary" href="{cta_href}">{cta_label}</a>
         <a class="button secondary" href="{full_schedule_url}">{secondary_label}</a>
       </div>
     </div>
-    <div class="slug-pill-list">
+    <div class="slug-pill-list session-grid">
       {cards}
     </div>
   </div>
 </section>
+""".strip()
+
+
+def render_next_available_strip(sessions: list[dict[str, Any]], *, group_mode: bool) -> str:
+    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sort_sessions(sessions)[:NEXT_AVAILABLE_LIMIT])
+    if not cards:
+        cards = (
+            "<div class='slug-empty'>"
+            "<strong>No upcoming dates are listed right now.</strong>"
+            "<p>Check the tabs below for more course paths and refreshed inventory later.</p>"
+            "</div>"
+        )
+    return f"""
+  <section class="section-box next-classes">
+    <div class="slug-panel-head next-classes-head">
+      <div>
+        <div class="slug-panel-kicker">Fastest Openings</div>
+        <h2>Next Available Classes</h2>
+      </div>
+    </div>
+    <div class="session-grid">
+      {cards}
+    </div>
+  </section>
 """.strip()
 
 
@@ -193,11 +250,15 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     panels: list[str] = []
     quick_picks: list[str] = []
     matched_counts: list[int] = []
+    all_matched_sessions: dict[str, dict[str, Any]] = {}
     first_cta_href = ""
     first_cta_label = ""
 
     for index, tab in enumerate(page.get("tabs", [])):
-        matched = [session for session in sessions if matches_tab(session, tab)]
+        matched = sort_sessions([session for session in sessions if matches_tab(session, tab)])
+        for session in matched:
+            session_key = str(session.get("session_id") or session.get("registration_url") or len(all_matched_sessions))
+            all_matched_sessions[session_key] = session
         matched_counts.append(len(matched))
         active_class = " active" if index == 0 else ""
         buttons.append(
@@ -270,6 +331,8 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
       </div>
     </div>
   </section>
+
+  {render_next_available_strip(list(all_matched_sessions.values()), group_mode=group_mode)}
 
   <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
     <div class="tabs hub-tabs">

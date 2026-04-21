@@ -104,9 +104,35 @@
     });
   }
 
+  function bindSessionCards() {
+    document.querySelectorAll(".session-card[data-url]").forEach(function (card) {
+      const navigate = function () {
+        const url = card.dataset.url;
+        if (url) {
+          window.location.href = url;
+        }
+      };
+
+      card.addEventListener("click", function (event) {
+        if (event.target.closest("a, button")) {
+          return;
+        }
+        navigate();
+      });
+
+      card.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          navigate();
+        }
+      });
+    });
+  }
+
   window.addEventListener("DOMContentLoaded", function () {
     bindTriggers();
     initializeScopes();
     activateProgramFromQuery();
+    bindSessionCards();
   });
 })();
