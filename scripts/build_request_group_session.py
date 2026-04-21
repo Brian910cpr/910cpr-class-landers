@@ -25,68 +25,112 @@ def build():
         for i, (label, slug, html) in enumerate(TABS):
             active = " active" if i == 0 else ""
             tab_buttons.append(f"<button class='tab-btn{active}' data-program='{label}' data-tab-target='#{slug}' type='button'>{label}</button>")
-            tab_panels.append(f"<section class='tab-panel{active}' id='{slug}'>{html}</section>")
+            tab_panels.append(f"<section class='tab-panel request-program-card{active}' id='{slug}'>{html}</section>")
 
         body = f"""
-<h1>Request On-Site Group Training</h1>
-<p class='muted'>Tell us what your team needs, where you need it, and when you’d like it. We’ll use this request to match the right program, certifying body, and schedule.</p>
-
-<div class='callout'>
-  <strong>Transparent pricing matters.</strong>
-  <p class='muted'>We show baseline pricing where it makes sense, then quote larger groups or unusual travel honestly instead of hiding everything behind “call for pricing.”</p>
-</div>
-
-<div data-tabs>
-  <div class='tabs'>
-    {''.join(tab_buttons)}
-  </div>
-  {''.join(tab_panels)}
-</div>
-
-<section class='section-box'>
-  <h2>Tell us about your group</h2>
-  <form method='post' action='#'>
-    <div class='grid-2'>
-      <label class='field'><span>Name</span><input type='text' name='name' required></label>
-      <label class='field'><span>Organization</span><input type='text' name='organization'></label>
-      <label class='field'><span>Email</span><input type='email' name='email' required></label>
-      <label class='field'><span>Mobile</span><input type='tel' name='mobile'></label>
-      <label class='field'><span>City</span><input type='text' name='city'></label>
-      <label class='field'><span>On-site Address</span><input type='text' name='address'></label>
-      <label class='field'><span>Estimated Headcount</span><input type='number' min='1' name='headcount'></label>
-      <label class='field'><span>Desired Dates / Times</span><input type='text' name='preferred_times' placeholder='Any Thursday in May could work'></label>
+<div class='card request-shell'>
+  <section class='hero request-hero'>
+    <div class='hero-main'>
+      <div class='eyebrow'>Private Team Training</div>
+      <h1>Request On-Site Group Training</h1>
+      <p class='subhead'>Pick the course path your team needs, then send one request with your location, headcount, and preferred dates. We’ll match the right format without making you decode internal schedule names.</p>
+      <div class='slug-hero-actions'>
+        <a class='button primary' href='#request-form'>Start Your Request</a>
+        <a class='button secondary' href='/group-training.html'>See Group Training Overview</a>
+      </div>
+      <div class='slug-hero-picks'>
+        <div class='slug-hero-picks-label'>Common Requests</div>
+        <div class='request-badges'>
+          <span class='badge'>Healthcare teams</span>
+          <span class='badge'>Dental offices</span>
+          <span class='badge'>Schools and churches</span>
+          <span class='badge'>Maritime crews</span>
+        </div>
+      </div>
     </div>
-    <label class='field'><span>Program</span><input id='program' type='text' name='program' value='BLS On-Site'></label>
-    <label class='field'><span>Comments / Special Requests</span>
-      <textarea name='comments' placeholder='We have 12 for BLS, and 4 who need ACLS too.&#10;Any Thursday in May could work.&#10;Morning is better than afternoon.&#10;We may need training at our office in Morehead City.&#10;Some staff need Heartsaver, others need BLS.&#10;We already have AHA online completed, just need skills testing.'></textarea>
-    </label>
-    <p class='muted'>Current placeholder form only. Wire this to your preferred form handler or CRM next.</p>
-    <button class='button' type='submit'>Send Request</button>
-  </form>
-</section>
-<script>
-window.addEventListener('load', function () {{
-  const params = new URLSearchParams(window.location.search);
-  const requestedProgram = params.get('program');
-  if (!requestedProgram) return;
+    <div class='hero-side'>
+      <div class='trust-badge'>
+        <strong>Clear Pricing Where It Fits</strong>
+        <span>Baseline group pricing stays visible when it makes sense, and custom quotes stay custom for larger or unusual requests.</span>
+      </div>
+      <div class='trust-badge'>
+        <strong>One Form, Multiple Paths</strong>
+        <span>Use the tabs below to compare BLS, HeartCode, Heartsaver, ACLS, PALS, and USCG options before you submit.</span>
+      </div>
+      <div class='slug-stat-grid request-stat-grid'>
+        <div class='slug-stat'>
+          <strong>6</strong>
+          <span>program tracks</span>
+        </div>
+        <div class='slug-stat'>
+          <strong>On-site</strong>
+          <span>at your location</span>
+        </div>
+        <div class='slug-stat'>
+          <strong>Fast</strong>
+          <span>quote follow-up</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  const target = Array.from(document.querySelectorAll('[data-program]')).find((button) => button.getAttribute('data-program') === requestedProgram);
-  if (!target) return;
+  <section class='section-box request-tabs-shell' data-tabs data-sync-program='#program'>
+    <div class='tabs hub-tabs'>
+      {''.join(tab_buttons)}
+    </div>
+    {''.join(tab_panels)}
+  </section>
 
-  const scope = target.closest('[data-tabs]');
-  if (!scope) return;
+  <section class='request-form-grid' id='request-form'>
+    <div class='section-box request-form-card'>
+      <div class='request-form-head'>
+        <div>
+          <div class='slug-panel-kicker'>Step 2</div>
+          <h2>Tell us about your team</h2>
+          <p class='muted'>Share the basics and we’ll match the right training path, timing, and travel details.</p>
+        </div>
+      </div>
+      <form method='post' action='#'>
+        <div class='grid-2'>
+          <label class='field'><span>Name</span><input type='text' name='name' required></label>
+          <label class='field'><span>Organization</span><input type='text' name='organization'></label>
+          <label class='field'><span>Email</span><input type='email' name='email' required></label>
+          <label class='field'><span>Mobile</span><input type='tel' name='mobile'></label>
+          <label class='field'><span>City</span><input type='text' name='city'></label>
+          <label class='field'><span>On-site Address</span><input type='text' name='address'></label>
+          <label class='field'><span>Estimated Headcount</span><input type='number' min='1' name='headcount'></label>
+          <label class='field'><span>Desired Dates / Times</span><input type='text' name='preferred_times' placeholder='Any Thursday in May could work'></label>
+        </div>
+        <label class='field'><span>Program</span><input id='program' type='text' name='program' value='BLS On-Site'></label>
+        <label class='field'><span>Comments / Special Requests</span>
+          <textarea name='comments' placeholder='We have 12 for BLS, and 4 who need ACLS too.&#10;Any Thursday in May could work.&#10;Morning is better than afternoon.&#10;We may need training at our office in Morehead City.&#10;Some staff need Heartsaver, others need BLS.&#10;We already have AHA online completed, just need skills testing.'></textarea>
+        </label>
+        <p class='muted'>Current placeholder form only. Wire this to your preferred form handler or CRM next.</p>
+        <button class='button primary' type='submit'>Send Request</button>
+      </form>
+    </div>
 
-  scope.querySelectorAll('.tab-btn').forEach((button) => button.classList.remove('active'));
-  scope.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
-  target.classList.add('active');
-
-  const panel = scope.querySelector(target.getAttribute('data-tab-target'));
-  if (panel) panel.classList.add('active');
-
-  const input = document.querySelector('#program');
-  if (input) input.value = requestedProgram;
-}});
-</script>
+    <aside class='section-box request-sidebar'>
+      <div class='slug-panel-kicker'>Before You Submit</div>
+      <h2>What helps us quote faster</h2>
+      <ul class='request-checklist'>
+        <li>Approximate headcount and whether everyone needs the same certification</li>
+        <li>Your city or full on-site address for travel planning</li>
+        <li>Date windows that work best for your team</li>
+        <li>Whether anyone already completed HeartCode online work</li>
+      </ul>
+      <div class='callout'>
+        <strong>Need public seats instead?</strong>
+        <p class='muted'>If you only need a few spots, the public class schedule may be faster than setting up a private session.</p>
+      </div>
+      <div class='request-link-list'>
+        <a class='button secondary' href='/bls.html'>Browse BLS public dates</a>
+        <a class='button secondary' href='/acls.html'>Browse ACLS public dates</a>
+        <a class='button secondary' href='/heartsaver.html'>Browse Heartsaver public dates</a>
+      </div>
+    </aside>
+  </section>
+</div>
 """
         html = render_page("Request On-Site Group Training | 910CPR", body, "Request on-site BLS, HeartCode BLS, First Aid/CPR/AED, ACLS, PALS, or USCG group training.")
         OUTPUT.write_text(html, encoding='utf-8')

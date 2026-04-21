@@ -6,104 +6,117 @@
 <title>Request On-Site Group Training | 910CPR</title>
 <meta name="description" content="Request on-site BLS, HeartCode BLS, First Aid/CPR/AED, ACLS, PALS, or USCG group training.">
 <link rel="stylesheet" href="/css/lander.css">
-<style>
-.tabs { display:flex; gap:8px; flex-wrap:wrap; margin:0 0 16px; }
-.tab-btn { padding:10px 14px; border-radius:999px; border:1px solid #c7d3ea; background:#fff; cursor:pointer; }
-.tab-btn.active { background:#3a5289; color:#fff; border-color:#3a5289; }
-.tab-panel { display:none; }
-.tab-panel.active { display:block; }
-.table-lite { width:100%; border-collapse:collapse; margin-top:12px; }
-.table-lite th,.table-lite td { padding:10px; border-bottom:1px solid #dde4f1; text-align:left; }
-.muted { color:#5c6c87; }
-.button { display:inline-block; padding:10px 14px; border-radius:8px; background:#3a5289; color:#fff; text-decoration:none; }
-.button.secondary { background:#eef3fb; color:#25364f; }
-.callout { background:#f6f8fc; border:1px solid #dde4f1; border-radius:14px; padding:16px; margin:16px 0; }
-.grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
-.field { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
-input, select, textarea { padding:12px; border:1px solid #cbd5e1; border-radius:8px; font:inherit; }
-textarea { min-height:140px; }
-.badge { display:inline-block; padding:4px 8px; border-radius:999px; background:#eef3fb; color:#25364f; font-size:12px; margin-right:6px; }
-</style>
 </head>
 <body>
 <div class="wrap">
   <div class="page-shell">
     
-<h1>Request On-Site Group Training</h1>
-<p class='muted'>Tell us what your team needs, where you need it, and when you’d like it. We’ll use this request to match the right program, certifying body, and schedule.</p>
-
-<div class='callout'>
-  <strong>Transparent pricing matters.</strong>
-  <p class='muted'>We show baseline pricing where it makes sense, then quote larger groups or unusual travel honestly instead of hiding everything behind “call for pricing.”</p>
-</div>
-
-<div data-tabs>
-  <div class='tabs'>
-    <button class='tab-btn active' data-program='BLS On-Site' data-tab-target='#bls' type='button'>BLS On-Site</button><button class='tab-btn' data-program='HeartCode BLS Group Skills' data-tab-target='#heartcode' type='button'>HeartCode BLS Group Skills</button><button class='tab-btn' data-program='First Aid / CPR / AED' data-tab-target='#fa_cpr_aed' type='button'>First Aid / CPR / AED</button><button class='tab-btn' data-program='ACLS' data-tab-target='#acls' type='button'>ACLS</button><button class='tab-btn' data-program='PALS' data-tab-target='#pals' type='button'>PALS</button><button class='tab-btn' data-program='USCG Elementary First Aid | CPR' data-tab-target='#uscg' type='button'>USCG Elementary First Aid | CPR</button>
-  </div>
-  <section class='tab-panel active' id='bls'><h2>BLS On-Site</h2><p>American Heart Association BLS Provider training delivered at your location. Ideal for healthcare offices, dental teams, clinics, and medical groups.</p><ul><li><strong>$700 for up to 12 participants</strong></li><li>We come to your location</li><li>Flexible scheduling</li><li>Most classes run about 3.5 to 4 hours</li></ul></section><section class='tab-panel' id='heartcode'><h2>HeartCode BLS Group Skills</h2><p>Blended package for offices that want online coursework plus a private on-site skills session.</p><ul><li><strong>$999 for up to 12 participants</strong></li><li>Includes HeartCode access and group skills testing</li><li>Completion certificates must be completed before the in-person session</li></ul></section><section class='tab-panel' id='fa_cpr_aed'><h2>First Aid / CPR / AED</h2><p>Workplace-friendly group training for offices, schools, churches, and general workplace responders.</p><ul><li><strong>$400 + $35 per participant</strong> (up to 20)</li><li>Delivered at your location</li><li>Approx. 2.25 hours depending on program/body</li></ul></section><section class='tab-panel' id='acls'><h2>ACLS</h2><p>Advanced Cardiac Life Support group options for clinical teams. Best handled as a custom quote based on provider count, experience level, and desired format.</p></section><section class='tab-panel' id='pals'><h2>PALS</h2><p>Pediatric Advanced Life Support group options for teams caring for infants and children. Custom scheduling available for appropriate groups.</p></section><section class='tab-panel' id='uscg'><h2>USCG Elementary First Aid | CPR</h2><p>Maritime-focused training options for teams needing USCG-aligned certification. Request details and preferred scheduling window below.</p></section>
-</div>
-
-<section class='section-box'>
-  <h2>Tell us about your group</h2>
-  <form method='post' action='#'>
-    <div class='grid-2'>
-      <label class='field'><span>Name</span><input type='text' name='name' required></label>
-      <label class='field'><span>Organization</span><input type='text' name='organization'></label>
-      <label class='field'><span>Email</span><input type='email' name='email' required></label>
-      <label class='field'><span>Mobile</span><input type='tel' name='mobile'></label>
-      <label class='field'><span>City</span><input type='text' name='city'></label>
-      <label class='field'><span>On-site Address</span><input type='text' name='address'></label>
-      <label class='field'><span>Estimated Headcount</span><input type='number' min='1' name='headcount'></label>
-      <label class='field'><span>Desired Dates / Times</span><input type='text' name='preferred_times' placeholder='Any Thursday in May could work'></label>
+<div class='card request-shell'>
+  <section class='hero request-hero'>
+    <div class='hero-main'>
+      <div class='eyebrow'>Private Team Training</div>
+      <h1>Request On-Site Group Training</h1>
+      <p class='subhead'>Pick the course path your team needs, then send one request with your location, headcount, and preferred dates. We’ll match the right format without making you decode internal schedule names.</p>
+      <div class='slug-hero-actions'>
+        <a class='button primary' href='#request-form'>Start Your Request</a>
+        <a class='button secondary' href='/group-training.html'>See Group Training Overview</a>
+      </div>
+      <div class='slug-hero-picks'>
+        <div class='slug-hero-picks-label'>Common Requests</div>
+        <div class='request-badges'>
+          <span class='badge'>Healthcare teams</span>
+          <span class='badge'>Dental offices</span>
+          <span class='badge'>Schools and churches</span>
+          <span class='badge'>Maritime crews</span>
+        </div>
+      </div>
     </div>
-    <label class='field'><span>Program</span><input id='program' type='text' name='program' value='BLS On-Site'></label>
-    <label class='field'><span>Comments / Special Requests</span>
-      <textarea name='comments' placeholder='We have 12 for BLS, and 4 who need ACLS too.&#10;Any Thursday in May could work.&#10;Morning is better than afternoon.&#10;We may need training at our office in Morehead City.&#10;Some staff need Heartsaver, others need BLS.&#10;We already have AHA online completed, just need skills testing.'></textarea>
-    </label>
-    <p class='muted'>Current placeholder form only. Wire this to your preferred form handler or CRM next.</p>
-    <button class='button' type='submit'>Send Request</button>
-  </form>
-</section>
-<script>
-window.addEventListener('load', function () {
-  const params = new URLSearchParams(window.location.search);
-  const requestedProgram = params.get('program');
-  if (!requestedProgram) return;
+    <div class='hero-side'>
+      <div class='trust-badge'>
+        <strong>Clear Pricing Where It Fits</strong>
+        <span>Baseline group pricing stays visible when it makes sense, and custom quotes stay custom for larger or unusual requests.</span>
+      </div>
+      <div class='trust-badge'>
+        <strong>One Form, Multiple Paths</strong>
+        <span>Use the tabs below to compare BLS, HeartCode, Heartsaver, ACLS, PALS, and USCG options before you submit.</span>
+      </div>
+      <div class='slug-stat-grid request-stat-grid'>
+        <div class='slug-stat'>
+          <strong>6</strong>
+          <span>program tracks</span>
+        </div>
+        <div class='slug-stat'>
+          <strong>On-site</strong>
+          <span>at your location</span>
+        </div>
+        <div class='slug-stat'>
+          <strong>Fast</strong>
+          <span>quote follow-up</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  const target = Array.from(document.querySelectorAll('[data-program]')).find((button) => button.getAttribute('data-program') === requestedProgram);
-  if (!target) return;
+  <section class='section-box request-tabs-shell' data-tabs data-sync-program='#program'>
+    <div class='tabs hub-tabs'>
+      <button class='tab-btn active' data-program='BLS On-Site' data-tab-target='#bls' type='button'>BLS On-Site</button><button class='tab-btn' data-program='HeartCode BLS Group Skills' data-tab-target='#heartcode' type='button'>HeartCode BLS Group Skills</button><button class='tab-btn' data-program='First Aid / CPR / AED' data-tab-target='#fa_cpr_aed' type='button'>First Aid / CPR / AED</button><button class='tab-btn' data-program='ACLS' data-tab-target='#acls' type='button'>ACLS</button><button class='tab-btn' data-program='PALS' data-tab-target='#pals' type='button'>PALS</button><button class='tab-btn' data-program='USCG Elementary First Aid | CPR' data-tab-target='#uscg' type='button'>USCG Elementary First Aid | CPR</button>
+    </div>
+    <section class='tab-panel request-program-card active' id='bls'><h2>BLS On-Site</h2><p>American Heart Association BLS Provider training delivered at your location. Ideal for healthcare offices, dental teams, clinics, and medical groups.</p><ul><li><strong>$700 for up to 12 participants</strong></li><li>We come to your location</li><li>Flexible scheduling</li><li>Most classes run about 3.5 to 4 hours</li></ul></section><section class='tab-panel request-program-card' id='heartcode'><h2>HeartCode BLS Group Skills</h2><p>Blended package for offices that want online coursework plus a private on-site skills session.</p><ul><li><strong>$999 for up to 12 participants</strong></li><li>Includes HeartCode access and group skills testing</li><li>Completion certificates must be completed before the in-person session</li></ul></section><section class='tab-panel request-program-card' id='fa_cpr_aed'><h2>First Aid / CPR / AED</h2><p>Workplace-friendly group training for offices, schools, churches, and general workplace responders.</p><ul><li><strong>$400 + $35 per participant</strong> (up to 20)</li><li>Delivered at your location</li><li>Approx. 2.25 hours depending on program/body</li></ul></section><section class='tab-panel request-program-card' id='acls'><h2>ACLS</h2><p>Advanced Cardiac Life Support group options for clinical teams. Best handled as a custom quote based on provider count, experience level, and desired format.</p></section><section class='tab-panel request-program-card' id='pals'><h2>PALS</h2><p>Pediatric Advanced Life Support group options for teams caring for infants and children. Custom scheduling available for appropriate groups.</p></section><section class='tab-panel request-program-card' id='uscg'><h2>USCG Elementary First Aid | CPR</h2><p>Maritime-focused training options for teams needing USCG-aligned certification. Request details and preferred scheduling window below.</p></section>
+  </section>
 
-  const scope = target.closest('[data-tabs]');
-  if (!scope) return;
+  <section class='request-form-grid' id='request-form'>
+    <div class='section-box request-form-card'>
+      <div class='request-form-head'>
+        <div>
+          <div class='slug-panel-kicker'>Step 2</div>
+          <h2>Tell us about your team</h2>
+          <p class='muted'>Share the basics and we’ll match the right training path, timing, and travel details.</p>
+        </div>
+      </div>
+      <form method='post' action='#'>
+        <div class='grid-2'>
+          <label class='field'><span>Name</span><input type='text' name='name' required></label>
+          <label class='field'><span>Organization</span><input type='text' name='organization'></label>
+          <label class='field'><span>Email</span><input type='email' name='email' required></label>
+          <label class='field'><span>Mobile</span><input type='tel' name='mobile'></label>
+          <label class='field'><span>City</span><input type='text' name='city'></label>
+          <label class='field'><span>On-site Address</span><input type='text' name='address'></label>
+          <label class='field'><span>Estimated Headcount</span><input type='number' min='1' name='headcount'></label>
+          <label class='field'><span>Desired Dates / Times</span><input type='text' name='preferred_times' placeholder='Any Thursday in May could work'></label>
+        </div>
+        <label class='field'><span>Program</span><input id='program' type='text' name='program' value='BLS On-Site'></label>
+        <label class='field'><span>Comments / Special Requests</span>
+          <textarea name='comments' placeholder='We have 12 for BLS, and 4 who need ACLS too.&#10;Any Thursday in May could work.&#10;Morning is better than afternoon.&#10;We may need training at our office in Morehead City.&#10;Some staff need Heartsaver, others need BLS.&#10;We already have AHA online completed, just need skills testing.'></textarea>
+        </label>
+        <p class='muted'>Current placeholder form only. Wire this to your preferred form handler or CRM next.</p>
+        <button class='button primary' type='submit'>Send Request</button>
+      </form>
+    </div>
 
-  scope.querySelectorAll('.tab-btn').forEach((button) => button.classList.remove('active'));
-  scope.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
-  target.classList.add('active');
-
-  const panel = scope.querySelector(target.getAttribute('data-tab-target'));
-  if (panel) panel.classList.add('active');
-
-  const input = document.querySelector('#program');
-  if (input) input.value = requestedProgram;
-});
-</script>
+    <aside class='section-box request-sidebar'>
+      <div class='slug-panel-kicker'>Before You Submit</div>
+      <h2>What helps us quote faster</h2>
+      <ul class='request-checklist'>
+        <li>Approximate headcount and whether everyone needs the same certification</li>
+        <li>Your city or full on-site address for travel planning</li>
+        <li>Date windows that work best for your team</li>
+        <li>Whether anyone already completed HeartCode online work</li>
+      </ul>
+      <div class='callout'>
+        <strong>Need public seats instead?</strong>
+        <p class='muted'>If you only need a few spots, the public class schedule may be faster than setting up a private session.</p>
+      </div>
+      <div class='request-link-list'>
+        <a class='button secondary' href='/bls.html'>Browse BLS public dates</a>
+        <a class='button secondary' href='/acls.html'>Browse ACLS public dates</a>
+        <a class='button secondary' href='/heartsaver.html'>Browse Heartsaver public dates</a>
+      </div>
+    </aside>
+  </section>
+</div>
 
   </div>
 </div>
-<script>
-document.querySelectorAll('[data-tab-target]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const scope = btn.closest('[data-tabs]');
-    scope.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
-    scope.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
-    btn.classList.add('active');
-    scope.querySelector(btn.getAttribute('data-tab-target')).classList.add('active');
-    const program = btn.getAttribute('data-program');
-    const input = document.querySelector('#program');
-    if (input) input.value = program;
-  });
-});
-</script>
+<script src="/assets/hub-ui.js"></script>
 </body>
 </html>
