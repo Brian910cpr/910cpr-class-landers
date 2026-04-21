@@ -1,6 +1,10 @@
 import os
 from scripts.build_status import BuildStatusReporter
-from tqdm import tqdm
+try:
+    from tqdm import tqdm
+except ModuleNotFoundError:
+    def tqdm(iterable, **_kwargs):
+        return iterable
 from scripts.hub_utils import (
     load_sessions,
     upcoming_public_sessions,

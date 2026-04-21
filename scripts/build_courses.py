@@ -3,7 +3,11 @@ from pathlib import Path
 from collections import defaultdict
 from scripts.build_status import BuildStatusReporter
 from scripts.hub_utils import load_sessions, upcoming_public_sessions, render_page, session_rows, slugify
-from tqdm import tqdm
+try:
+    from tqdm import tqdm
+except ModuleNotFoundError:
+    def tqdm(iterable, **_kwargs):
+        return iterable
 
 OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "courses"
 OUTPUT.mkdir(parents=True, exist_ok=True)

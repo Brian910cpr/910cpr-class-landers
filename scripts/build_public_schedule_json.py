@@ -5,11 +5,14 @@ import time as time_module
 from datetime import datetime
 from html import unescape, escape
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from title_cleaner import normalize_course_title, seo_title_for_session
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_FILE = ROOT / "data" / "schedule.json"
+PRIMARY_DATA_FILE = ROOT / "data" / "schedule.json"
+FALLBACK_DATA_FILE = ROOT / "docs" / "data" / "schedule.json"
+DATA_FILE = PRIMARY_DATA_FILE if PRIMARY_DATA_FILE.exists() else FALLBACK_DATA_FILE
 OUTPUT_DIR = ROOT / "docs" / "classes"
 IMAGES_DIR = ROOT / "docs" / "images"
 COURSE_ARCHIVE_DIR = IMAGES_DIR / "course-archive"
@@ -17,6 +20,7 @@ COURSE_ARCHIVE_DIR = IMAGES_DIR / "course-archive"
 GTM_ID = "GTM-PQS8DCBH"
 UPCOMING_LIMIT = 10
 PROGRESS_EVERY = 250
+TZ = ZoneInfo("America/New_York")
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -328,7 +332,7 @@ def get_upcoming_sessions(current_session: dict, sessions: list[dict], now_dt: d
             continue
 
         dt = parse_dt(s.get("start"))
-        if not dt or dt < now_dt:
+        if not is_future_session(dt, now_dt):
             continue
 
         s_copy = dict(s)
@@ -339,10 +343,14 @@ def get_upcoming_sessions(current_session: dict, sessions: list[dict], now_dt: d
     return matches[:limit]
 
 
+def is_future_session(session_start: datetime | None, now_dt: datetime) -> bool:
+    return bool(session_start and session_start > now_dt)
+
+
 def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: str) -> str:
     if not upcoming_sessions:
         return f"""
-<section class="info-box upcoming-box">
+<section class="info-box upcoming-box js-live-session-group" data-empty-link="{escape(schedule_url)}" data-empty-link-label="See all current dates and times">
   <h2>Upcoming Classes</h2>
   <p>No upcoming public sessions are listed right now.</p>
   <p><a class="text-link" href="{escape(schedule_url)}">See all current dates and times</a></p>
@@ -359,7 +367,7 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
 
         cards.append(
             f"""
-<div class="upcoming-card">
+<div class="upcoming-card js-session-item" data-session-start="{escape(dt.isoformat(), quote=True)}">
   <div class="upcoming-date">{escape(date_label)}</div>
   <div class="upcoming-time">{escape(time_label)}</div>
   <div class="upcoming-location">{escape(location_label)}</div>
@@ -371,7 +379,7 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
         )
 
     return f"""
-<section class="info-box upcoming-box">
+<section class="info-box upcoming-box js-live-session-group" data-empty-link="{escape(schedule_url)}" data-empty-link-label="See all current dates and times">
   <div class="upcoming-head">
     <h2>Upcoming Classes</h2>
     <a class="text-link" href="{escape(schedule_url)}">See all current dates and times</a>
@@ -813,7 +821,6 @@ body img {{
 
         <div class="cta-row">
           {button_html}
-          <a class="button secondary" href="{schedule_url}">See All Dates/Times</a>
         </div>
       </div>
     </section>
@@ -907,6 +914,7 @@ document.addEventListener("click", function(e) {{
   }}
 }});
 </script>
+<script src="/assets/live-sessions.js"></script>
 
 </body>
 </html>
@@ -917,8 +925,8 @@ print(f"Total sessions in schedule.json: {len(all_sessions)}", flush=True)
 print(f"Public sessions to build: {len(sessions)}", flush=True)
 
 count = 0
-build_stamp = datetime.now().strftime("%Y-%m-%d %I:%M %p").lstrip("0")
-now_dt = datetime.now()
+build_stamp = datetime.now(TZ).strftime("%Y-%m-%d %I:%M %p").lstrip("0")
+now_dt = datetime.now(TZ)
 started = time_module.time()
 
 print("Starting class lander build...", flush=True)
@@ -960,7 +968,7 @@ for idx, s in enumerate(sessions, 1):
 
     canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
 
-    is_past = bool(dt and dt < now_dt)
+    is_past = bool(dt and dt <= now_dt)
 
     if is_past:
         state_notice = """

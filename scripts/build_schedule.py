@@ -11,7 +11,9 @@ except ModuleNotFoundError:
     from title_cleaner import normalize_course_title, seo_title_for_session
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_FILE = ROOT / "data" / "schedule.json"
+PRIMARY_DATA_FILE = ROOT / "data" / "schedule.json"
+FALLBACK_DATA_FILE = ROOT / "docs" / "data" / "schedule.json"
+DATA_FILE = PRIMARY_DATA_FILE if PRIMARY_DATA_FILE.exists() else FALLBACK_DATA_FILE
 OUTPUT_DIR = ROOT / "docs" / "classes"
 IMAGES_DIR = ROOT / "docs" / "images"
 COURSE_ARCHIVE_DIR = IMAGES_DIR / "course-archive"
@@ -641,7 +643,6 @@ body img {{
 
         <div class="cta-row">
           {button_html}
-          <a class="button secondary" href="{schedule_url}">See All Dates/Times</a>
         </div>
       </div>
     </section>
@@ -789,7 +790,7 @@ for s in sessions:
 
     canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
 
-    if dt and dt < now_dt:
+    if dt and dt <= now_dt:
         button_html = f'<a class="button secondary" href="{schedule_url}">See Current Dates</a>'
     else:
         button_html = f'<a class="button primary" href="{register}">Register Now</a>'

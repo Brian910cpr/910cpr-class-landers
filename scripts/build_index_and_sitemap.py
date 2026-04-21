@@ -378,7 +378,7 @@ def build():
     sessions = []
     for path in class_files:
         parsed = parse_class_page(path)
-        if parsed:
+        if parsed and parsed.get("course_name", "").strip().lower() != "course":
             sessions.append(parsed)
 
     # Sort by best available date text, then session id

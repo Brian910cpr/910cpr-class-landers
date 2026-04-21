@@ -187,7 +187,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     badge = render_session_badge(session)
 
     return f"""
-<article class="slug-pill session-card" data-url="{register_url}" tabindex="0" role="link">
+<article class="slug-pill session-card js-session-item" data-url="{register_url}" data-session-start="{escape(start_dt.isoformat() if start_dt else '', quote=True)}" tabindex="0" role="link">
   <div class="slug-pill-date">
     <div class="slug-pill-month">{format_month(start_dt)}</div>
     <div class="slug-pill-day">{format_day(start_dt)}</div>
@@ -245,34 +245,30 @@ def render_tab_panel(
         cards = render_empty_state(tab, group_mode=group_mode)
 
     full_schedule_url = escape(tab["full_schedule_url"], quote=True)
-    full_schedule_label = escape(tab["full_schedule_label"])
     full_schedule_data = escape(json.dumps({
         "url": tab["full_schedule_url"],
         "label": tab["full_schedule_label"],
     }), quote=True)
 
-    cta_href = (
-        f"/request_group_session.html?program={quote(tab['program'])}"
-        if group_mode
-        else full_schedule_url
-    )
-    cta_label = escape(tab["primary_cta_label"])
     inventory_label = f"{len(display_sessions)} upcoming option" + ("" if len(display_sessions) == 1 else "s")
-
-    secondary_label = "Open full schedule" if group_mode else "Course details"
+    panel_cta_html = ""
+    if group_mode:
+        cta_href = f"/request_group_session.html?program={quote(tab['program'])}"
+        cta_label = escape(tab["primary_cta_label"])
+        panel_cta_html = f"""
+      <div class="slug-panel-cta">
+        <a class="button primary" href="{cta_href}">{cta_label}</a>
+      </div>"""
 
     return f"""
 <section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}">
-  <div class="slug-panel-card">
+  <div class="slug-panel-card js-live-session-group" data-empty-link="{full_schedule_url}" data-empty-link-label="{escape(tab['full_schedule_label'], quote=True)}">
     <div class="slug-panel-head">
       <div>
         <div class="slug-panel-kicker">{escape(inventory_label)}</div>
         <h2>{escape(tab['label'])}</h2>
       </div>
-      <div class="slug-panel-cta">
-        <a class="button primary" href="{cta_href}">{cta_label}</a>
-        <a class="button secondary" href="{full_schedule_url}">{secondary_label}</a>
-      </div>
+      {panel_cta_html}
     </div>
     <div class="slug-pill-list session-grid">
       {cards}
@@ -296,7 +292,7 @@ def top_strip_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return ordered
 
 
-def render_next_available_strip(sessions: list[dict[str, Any]], *, group_mode: bool) -> str:
+def render_next_available_strip(sessions: list[dict[str, Any]], *, group_mode: bool, empty_link: str, empty_label: str) -> str:
     strip_sessions = top_strip_sessions(sessions)
     cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in strip_sessions)
     if not cards:
@@ -307,7 +303,7 @@ def render_next_available_strip(sessions: list[dict[str, Any]], *, group_mode: b
             "</div>"
         )
     return f"""
-  <section class="section-box next-classes">
+  <section class="section-box next-classes js-live-session-group" data-empty-link="{escape(empty_link, quote=True)}" data-empty-link-label="{escape(empty_label, quote=True)}">
     <div class="slug-panel-head next-classes-head">
       <div>
         <div class="slug-panel-kicker">Fastest Openings</div>
@@ -328,9 +324,6 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     quick_picks: list[str] = []
     matched_counts: list[int] = []
     all_matched_sessions: list[dict[str, Any]] = []
-    first_cta_href = ""
-    first_cta_label = ""
-
     for index, tab in enumerate(page.get("tabs", [])):
         matched = sort_sessions([session for session in sessions if matches_tab(session, tab, page_slug=page.get("slug"))])
         all_matched_sessions.extend(matched)
@@ -346,19 +339,6 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
             f"data-tab-target='#{escape(tab['id'], quote=True)}' type='button'>"
             f"<span>{escape(tab['label'])}</span><strong>{escape(count_label)}</strong></button>"
         )
-        if index == 0:
-            first_cta_href = (
-                f"/request_group_session.html?program={quote(tab['program'])}"
-                if group_mode
-                else tab["full_schedule_url"]
-            )
-            first_cta_label = tab["primary_cta_label"]
-
-    first_banner = {
-        "url": page["tabs"][0]["full_schedule_url"],
-        "label": page["tabs"][0]["full_schedule_label"],
-    }
-
     total_dates = sum(matched_counts)
     live_formats = sum(1 for count in matched_counts if count > 0)
     assert len(all_matched_sessions) > 0, f"No sessions matched for hub page {page['slug']}"
@@ -375,6 +355,27 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     print(f"PAGE {page['slug']} FIRST TAB COUNT AFTER DEDUPE: {first_tab_after_dedupe_count}")
     print(f"PAGE {page['slug']} DEDUPE {'APPLIED' if first_tab_dedupe_applied else 'SKIPPED'}")
 
+    hero_actions_html = ""
+    banner_html = ""
+    if group_mode:
+        first_tab = page["tabs"][0]
+        first_cta_href = f"/request_group_session.html?program={quote(first_tab['program'])}"
+        first_cta_label = first_tab["primary_cta_label"]
+        hero_actions_html = f"""
+      <div class="slug-hero-actions">
+        <a class="button primary" href="{escape(first_cta_href, quote=True)}">{escape(first_cta_label)}</a>
+      </div>"""
+        banner_html = f"""
+  <section class="slug-banner">
+    <div class="slug-banner-copy">
+      <div class="slug-banner-eyebrow">Full Schedule</div>
+      <h2>{escape(page['full_schedule_banner'])}</h2>
+    </div>
+    <div class="slug-banner-actions">
+      <a class="button primary" data-full-schedule-link href="{escape(first_tab['full_schedule_url'], quote=True)}">{escape(first_tab['full_schedule_label'])}</a>
+    </div>
+  </section>"""
+
     panels = []
     for index, tab in enumerate(page.get("tabs", [])):
         matched = sort_sessions([session for session in sessions if matches_tab(session, tab, page_slug=page.get("slug"))])
@@ -388,10 +389,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
       <div class="eyebrow">{escape(page['eyebrow'])}</div>
       <h1>{escape(page['hero_title'])}</h1>
       <p class="subhead">{escape(page['hero_copy'])}</p>
-      <div class="slug-hero-actions">
-        <a class="button primary" href="{escape(first_cta_href, quote=True)}">{escape(first_cta_label)}</a>
-        <a class="button secondary" href="{escape(first_banner['url'], quote=True)}">{escape(first_banner['label'])}</a>
-      </div>
+      {hero_actions_html}
       <div class="slug-hero-picks">
         <div class="slug-hero-picks-label">Compare Formats Fast</div>
         <div class="slug-quick-picks">
@@ -425,7 +423,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     </div>
   </section>
 
-  {render_next_available_strip(all_matched_sessions, group_mode=group_mode)}
+  {render_next_available_strip(all_matched_sessions, group_mode=group_mode, empty_link=page['tabs'][0]['full_schedule_url'], empty_label=page['tabs'][0]['full_schedule_label'])}
 
   <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
     <div class="tabs hub-tabs">
@@ -433,16 +431,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     </div>
     {''.join(panels)}
   </section>
-
-  <section class="slug-banner">
-    <div class="slug-banner-copy">
-      <div class="slug-banner-eyebrow">Full Schedule</div>
-      <h2>{escape(page['full_schedule_banner'])}</h2>
-    </div>
-    <div class="slug-banner-actions">
-      <a class="button primary" data-full-schedule-link href="{escape(first_banner['url'], quote=True)}">{escape(first_banner['label'])}</a>
-    </div>
-  </section>
+  {banner_html}
 </div>
 """
     return f"""<!DOCTYPE html>
@@ -462,6 +451,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
   </div>
 </div>
 <script src="/assets/hub-ui.js"></script>
+<script src="/assets/live-sessions.js"></script>
 </body>
 </html>"""
 

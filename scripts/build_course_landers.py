@@ -7,6 +7,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +18,7 @@ INDEX_JSON_PATH = OUTPUT_DIR / "index.json"
 
 SITE_NAME = "910CPR"
 BASE_URL = "https://www.910cpr.com"
+TZ = ZoneInfo("America/New_York")
 
 VISIBLE_SESSION_COUNT = 8
 CURTAIN_SESSION_COUNT = 16
@@ -168,12 +170,27 @@ def normalize_course_name(value: str) -> str:
 
 
 def parse_dt(value: str) -> datetime | None:
-    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+    raw = safe_text(value).strip()
+    if not raw:
+        return None
+
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d"):
         try:
-            return datetime.strptime(value, fmt)
+            dt = datetime.strptime(raw, fmt)
+            return dt.replace(tzinfo=TZ)
         except ValueError:
             continue
-    return None
+    try:
+        dt = datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=TZ)
+    return dt.astimezone(TZ)
+
+
+def is_future_session(session_start: datetime | None, now_dt: datetime) -> bool:
+    return bool(session_start and session_start > now_dt)
 
 
 def pick_image(course: dict[str, Any]) -> str:
@@ -322,7 +339,7 @@ def course_aliases(course: dict[str, Any]) -> list[str]:
 
 def match_sessions(course: dict[str, Any], sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
     alias_norms = {normalize_course_name(a) for a in course_aliases(course)}
-    now = datetime.now()
+    now = datetime.now(TZ)
 
     matched = []
     for session in sessions:
@@ -342,13 +359,13 @@ def match_sessions(course: dict[str, Any], sessions: list[dict[str, Any]]) -> li
             continue
 
         dt = parse_dt(safe_text(session.get("start")).strip())
-        if dt and dt < now:
+        if not is_future_session(dt, now):
             continue
 
         session["_parsed_start"] = dt
         matched.append(session)
 
-    matched.sort(key=lambda s: s.get("_parsed_start") or datetime.max)
+    matched.sort(key=lambda s: s.get("_parsed_start") or datetime.max.replace(tzinfo=TZ))
     return matched
 
 
@@ -396,7 +413,7 @@ def session_card(session: dict[str, Any]) -> str:
     register_url = safe_text(session.get("register_url")).strip() or "#"
 
     return f"""
-    <a class="session-pill" href="{html.escape(register_url)}">
+    <a class="session-pill js-session-item" href="{html.escape(register_url)}" data-session-start="{html.escape(dt.isoformat() if dt else '', quote=True)}">
       <span class="session-date">{html.escape(date_label)}</span>
       <span class="session-time">{html.escape(time_label)}</span>
       <span class="session-location">{html.escape(location_label)}</span>
@@ -410,7 +427,7 @@ def build_session_blocks(course: dict[str, Any], sessions: list[dict[str, Any]])
         schedule_url = safe_text(course.get("schedule_url")).strip()
         if schedule_url:
             return f"""
-            <section class="sessions">
+            <section class="sessions js-live-session-group" data-empty-link="{html.escape(schedule_url)}" data-empty-link-label="See the full class calendar">
               <div class="section-label">Upcoming Classes</div>
               <p class="empty-note">
                 New dates are added regularly.
@@ -446,7 +463,7 @@ def build_session_blocks(course: dict[str, Any], sessions: list[dict[str, Any]])
         """
 
     return f"""
-    <section class="sessions">
+    <section class="sessions js-live-session-group" data-empty-link="{html.escape(schedule_url)}" data-empty-link-label="See the full class calendar">
       <div class="section-label">Upcoming Classes</div>
       <div class="session-grid">
         {visible_html}
@@ -712,6 +729,7 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
       </p>
     </section>
   </div>
+<script src="/assets/live-sessions.js"></script>
 </body>
 </html>
 """
