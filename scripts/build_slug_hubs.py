@@ -17,8 +17,6 @@ MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs"
 TZ = ZoneInfo("America/New_York")
-DATE_LIMIT = 12
-NEXT_AVAILABLE_LIMIT = 5
 
 
 def parse_dt(value: str | None) -> datetime | None:
@@ -49,29 +47,59 @@ def normalize_space(value: str | None) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
+def infer_family_token(tab: dict[str, Any]) -> str:
+    text = " ".join(
+        str(tab.get(key, ""))
+        for key in ("label", "program", "id", "full_schedule_url", "full_schedule_label", "primary_cta_label")
+    ).upper()
+    if "USCG" in text:
+        return "USCG"
+    if "HEARTSAVER" in text or "HS-" in text or "/HEARTSAVER" in text:
+        return "HEARTSAVER"
+    for token in ("ACLS", "BLS", "PALS"):
+        if token in text:
+            return token
+    return ""
+
+
 def matches_tab(session: dict[str, Any], tab: dict[str, Any]) -> bool:
     course_name = normalize_space(session.get("course_name"))
     course_subtitle = normalize_space(session.get("course_subtitle"))
-    course_code = normalize_space(session.get("course_code"))
-    haystack = f"{course_name} {course_subtitle}".lower()
-    course_name_lower = course_name.lower()
+    haystack_upper = f"{course_name} {course_subtitle}".upper()
+    course_name_upper = course_name.upper()
+    tab_text_upper = f"{tab.get('label', '')} {tab.get('program', '')} {tab.get('id', '')}".upper()
+    family_token = infer_family_token(tab)
 
-    codes = {normalize_space(code) for code in tab.get("course_codes", []) if normalize_space(code)}
-    if codes:
-        if course_code:
-            matched = course_code in codes
-        else:
-            needles = [str(item).lower() for item in tab.get("name_contains", []) if str(item).strip()]
-            matched = not needles or any(needle in haystack for needle in needles)
-    else:
-        needles = [str(item).lower() for item in tab.get("name_contains", []) if str(item).strip()]
-        matched = not needles or any(needle in haystack for needle in needles)
-
-    if not matched:
+    if family_token and family_token not in haystack_upper:
         return False
 
-    excludes = [str(item).lower() for item in tab.get("exclude_name_contains", []) if str(item).strip()]
-    return not any(needle in course_name_lower for needle in excludes)
+    if "RENEWAL" in tab_text_upper and "RENEWAL" not in haystack_upper:
+        return False
+
+    if "HEARTCODE" in tab_text_upper and "HEARTCODE" not in haystack_upper:
+        return False
+
+    if (
+        "PROVIDER" in tab_text_upper
+        and "RENEWAL" not in tab_text_upper
+        and "HEARTCODE" not in tab_text_upper
+        and family_token in {"ACLS", "BLS", "PALS"}
+    ):
+        if "RENEWAL" in course_name_upper or "HEARTCODE" in course_name_upper or "INSTRUCTOR" in course_name_upper:
+            return False
+
+    if "PEDIATRIC" in tab_text_upper:
+        if "PEDIATRIC" not in haystack_upper:
+            return False
+    elif family_token == "HEARTSAVER" and "CPR + AED ONLY" in tab_text_upper:
+        if "CPR AED" not in haystack_upper or "FIRST AID" in haystack_upper or "PEDIATRIC" in haystack_upper:
+            return False
+    elif family_token == "HEARTSAVER" and "FIRST AID" in tab_text_upper and "PEDIATRIC" not in tab_text_upper:
+        if "FIRST AID" not in haystack_upper or "PEDIATRIC" in haystack_upper:
+            return False
+
+    excludes = [str(item).upper() for item in tab.get("exclude_name_contains", []) if str(item).strip()]
+    return not any(needle in course_name_upper for needle in excludes)
 
 
 def format_month(dt: datetime | None) -> str:
@@ -177,8 +205,10 @@ def render_empty_state(tab: dict[str, Any], *, group_mode: bool) -> str:
 
 def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
+    print(f"TOTAL MATCHED SESSIONS: {len(sessions)}")
+    print(f"FIRST 5 SESSION IDS: {[str(session.get('session_id')) for session in sessions[:5]]}")
     sorted_sessions = sort_sessions(sessions)
-    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sorted_sessions[:DATE_LIMIT])
+    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sorted_sessions)
     if not cards:
         cards = render_empty_state(tab, group_mode=group_mode)
 
@@ -221,7 +251,9 @@ def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, act
 
 
 def render_next_available_strip(sessions: list[dict[str, Any]], *, group_mode: bool) -> str:
-    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sort_sessions(sessions)[:NEXT_AVAILABLE_LIMIT])
+    print(f"TOTAL MATCHED SESSIONS: {len(sessions)}")
+    print(f"FIRST 5 SESSION IDS: {[str(session.get('session_id')) for session in sessions[:5]]}")
+    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sort_sessions(sessions))
     if not cards:
         cards = (
             "<div class='slug-empty'>"
@@ -250,15 +282,13 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     panels: list[str] = []
     quick_picks: list[str] = []
     matched_counts: list[int] = []
-    all_matched_sessions: dict[str, dict[str, Any]] = {}
+    all_matched_sessions: list[dict[str, Any]] = []
     first_cta_href = ""
     first_cta_label = ""
 
     for index, tab in enumerate(page.get("tabs", [])):
         matched = sort_sessions([session for session in sessions if matches_tab(session, tab)])
-        for session in matched:
-            session_key = str(session.get("session_id") or session.get("registration_url") or len(all_matched_sessions))
-            all_matched_sessions[session_key] = session
+        all_matched_sessions.extend(matched)
         matched_counts.append(len(matched))
         active_class = " active" if index == 0 else ""
         buttons.append(
@@ -287,6 +317,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
 
     total_dates = sum(matched_counts)
     live_formats = sum(1 for count in matched_counts if count > 0)
+    assert len(all_matched_sessions) > 0, f"No sessions matched for hub page {page['slug']}"
 
     body = f"""
 <div class="card slug-hub-shell">
@@ -332,7 +363,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     </div>
   </section>
 
-  {render_next_available_strip(list(all_matched_sessions.values()), group_mode=group_mode)}
+  {render_next_available_strip(all_matched_sessions, group_mode=group_mode)}
 
   <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
     <div class="tabs hub-tabs">
