@@ -62,13 +62,29 @@ def infer_family_token(tab: dict[str, Any]) -> str:
     return ""
 
 
-def matches_tab(session: dict[str, Any], tab: dict[str, Any]) -> bool:
+def is_public_student_hub(page_slug: str | None) -> bool:
+    return page_slug in {"bls", "acls", "pals", "heartsaver"}
+
+
+def is_instructor_certification(course_name: str) -> bool:
+    name_upper = course_name.upper()
+    return "INSTRUCTOR" in name_upper and "INSTRUCTOR-LED" not in name_upper
+
+
+def matches_tab(session: dict[str, Any], tab: dict[str, Any], *, page_slug: str | None = None) -> bool:
     course_name = normalize_space(session.get("course_name"))
     course_subtitle = normalize_space(session.get("course_subtitle"))
     haystack_upper = f"{course_name} {course_subtitle}".upper()
     course_name_upper = course_name.upper()
     tab_text_upper = f"{tab.get('label', '')} {tab.get('program', '')} {tab.get('id', '')}".upper()
     family_token = infer_family_token(tab)
+
+    if (
+        is_public_student_hub(page_slug)
+        and family_token in {"BLS", "ACLS", "PALS", "HEARTSAVER"}
+        and is_instructor_certification(course_name)
+    ):
+        return False
 
     if family_token and family_token not in haystack_upper:
         return False
@@ -287,7 +303,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     first_cta_label = ""
 
     for index, tab in enumerate(page.get("tabs", [])):
-        matched = sort_sessions([session for session in sessions if matches_tab(session, tab)])
+        matched = sort_sessions([session for session in sessions if matches_tab(session, tab, page_slug=page.get("slug"))])
         all_matched_sessions.extend(matched)
         matched_counts.append(len(matched))
         active_class = " active" if index == 0 else ""
