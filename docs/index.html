@@ -1,17 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Redirecting...</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Redirecting to Enrollware...</title>
+  <meta name="robots" content="noindex,follow" />
 
-  <!-- Meta fallback -->
-  <meta http-equiv="refresh" content="0; url=https://coastalcprtraining.enrollware.com/schedule">
-
-  <!-- JS primary -->
+  <!-- Google Tag Manager -->
   <script>
-    window.location.replace("https://coastalcprtraining.enrollware.com/schedule");
+    (function(w,d,s,l,i){
+      w[l]=w[l]||[];
+      w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),
+          dl=l!='dataLayer' ? '&l='+l : '';
+      j.async=true;
+      j.src='https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PQS8DCBH');
   </script>
+  <!-- End Google Tag Manager -->
+
+  <script>
+    function goToEnrollware() {
+      var targetUrl = 'https://coastalcprtraining.enrollware.com/schedule';
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'enrollware_redirect',
+        redirect_page_path: window.location.pathname,
+        redirect_page_url: window.location.href,
+        redirect_destination: targetUrl,
+        redirect_page_title: document.title
+      });
+
+      setTimeout(function () {
+        window.location.replace(targetUrl);
+      }, 700);
+    }
+
+    window.addEventListener('load', goToEnrollware);
+  </script>
+
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=https://coastalcprtraining.enrollware.com/schedule">
+  </noscript>
 </head>
-<body>
-  <p>If you are not redirected, <a href="https://coastalcprtraining.enrollware.com/schedule">click here</a>.</p>
+<body class="lander course-aha-bls-provider-a17a3d7a">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <p>Redirecting to Enrollware...</p>
+  <p><a href="https://coastalcprtraining.enrollware.com/schedule">Click here if you are not redirected.</a></p>
 </body>
 </html>
