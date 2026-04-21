@@ -1,5 +1,6 @@
 
 from pathlib import Path
+from scripts.build_status import BuildStatusReporter
 from scripts.hub_utils import render_page
 
 OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "request_group_session.html"
@@ -14,14 +15,19 @@ TABS = [
 ]
 
 def build():
-    tab_buttons = []
-    tab_panels = []
-    for i, (label, slug, html) in enumerate(TABS):
-        active = " active" if i == 0 else ""
-        tab_buttons.append(f"<button class='tab-btn{active}' data-program='{label}' data-tab-target='#{slug}' type='button'>{label}</button>")
-        tab_panels.append(f"<section class='tab-panel{active}' id='{slug}'>{html}</section>")
+    reporter = BuildStatusReporter("build_request_group_session")
+    reporter.waiting(total=1)
+    try:
+        reporter.start(total=1)
+        print("Building request group session page")
+        tab_buttons = []
+        tab_panels = []
+        for i, (label, slug, html) in enumerate(TABS):
+            active = " active" if i == 0 else ""
+            tab_buttons.append(f"<button class='tab-btn{active}' data-program='{label}' data-tab-target='#{slug}' type='button'>{label}</button>")
+            tab_panels.append(f"<section class='tab-panel{active}' id='{slug}'>{html}</section>")
 
-    body = f"""
+        body = f"""
 <h1>Request On-Site Group Training</h1>
 <p class='muted'>Tell us what your team needs, where you need it, and when you’d like it. We’ll use this request to match the right program, certifying body, and schedule.</p>
 
@@ -58,10 +64,38 @@ def build():
     <button class='button' type='submit'>Send Request</button>
   </form>
 </section>
+<script>
+window.addEventListener('load', function () {{
+  const params = new URLSearchParams(window.location.search);
+  const requestedProgram = params.get('program');
+  if (!requestedProgram) return;
+
+  const target = Array.from(document.querySelectorAll('[data-program]')).find((button) => button.getAttribute('data-program') === requestedProgram);
+  if (!target) return;
+
+  const scope = target.closest('[data-tabs]');
+  if (!scope) return;
+
+  scope.querySelectorAll('.tab-btn').forEach((button) => button.classList.remove('active'));
+  scope.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
+  target.classList.add('active');
+
+  const panel = scope.querySelector(target.getAttribute('data-tab-target'));
+  if (panel) panel.classList.add('active');
+
+  const input = document.querySelector('#program');
+  if (input) input.value = requestedProgram;
+}});
+</script>
 """
-    html = render_page("Request On-Site Group Training | 910CPR", body, "Request on-site BLS, HeartCode BLS, First Aid/CPR/AED, ACLS, PALS, or USCG group training.")
-    OUTPUT.write_text(html, encoding='utf-8')
-    print(f"Wrote {OUTPUT}")
+        html = render_page("Request On-Site Group Training | 910CPR", body, "Request on-site BLS, HeartCode BLS, First Aid/CPR/AED, ACLS, PALS, or USCG group training.")
+        OUTPUT.write_text(html, encoding='utf-8')
+        reporter.done(current=1, total=1, last_output_file=OUTPUT)
+        print(f"Configured {len(TABS)} request tabs")
+        print(f"Wrote {OUTPUT}")
+    except Exception:
+        reporter.error(last_output_file=OUTPUT if OUTPUT.exists() else None)
+        raise
 
 if __name__ == "__main__":
     build()

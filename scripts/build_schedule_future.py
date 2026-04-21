@@ -4,6 +4,7 @@ import argparse
 import json
 from datetime import datetime
 from pathlib import Path
+from scripts.build_status import BuildStatusReporter
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
 
@@ -69,6 +70,7 @@ def build_public_future_session(session: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> int:
+    reporter = BuildStatusReporter("build_schedule_future")
     parser = argparse.ArgumentParser(description="Build docs/data/schedule_future.json from data/sessions_current.json")
     parser.add_argument(
         "--repo-root",
@@ -94,61 +96,74 @@ def main() -> int:
     if not input_path.exists():
         raise SystemExit(f"Input file not found: {input_path}")
 
-    raw = json.loads(input_path.read_text(encoding="utf-8"))
-    sessions = raw.get("sessions", [])
+    reporter.waiting(total=0)
+    try:
+        raw = json.loads(input_path.read_text(encoding="utf-8"))
+        sessions = raw.get("sessions", [])
+        reporter.start(total=len(sessions))
+        print(f"Loaded {len(sessions)} sessions from {input_path}")
+        print("Filtering future sessions")
 
-    now_dt = datetime.now(TZ)
-    now_iso = now_dt.isoformat()
+        now_dt = datetime.now(TZ)
+        now_iso = now_dt.isoformat()
 
-    future_sessions_raw: list[dict[str, Any]] = []
-    skipped_missing_start = 0
-    skipped_past = 0
+        future_sessions_raw: list[dict[str, Any]] = []
+        skipped_missing_start = 0
+        skipped_past = 0
 
-    for session in sessions:
-        start_dt = parse_iso_dt(session.get("timing", {}).get("start_at"))
-        if start_dt is None:
-            skipped_missing_start += 1
-            continue
-        if start_dt < now_dt:
-            skipped_past += 1
-            continue
-        future_sessions_raw.append(session)
+        for index, session in enumerate(sessions, start=1):
+            start_dt = parse_iso_dt(session.get("timing", {}).get("start_at"))
+            if start_dt is None:
+                skipped_missing_start += 1
+                reporter.update(current=index, total=len(sessions))
+                continue
+            if start_dt < now_dt:
+                skipped_past += 1
+                reporter.update(current=index, total=len(sessions))
+                continue
+            future_sessions_raw.append(session)
+            reporter.update(current=index, total=len(sessions))
 
-    future_sessions_raw.sort(
-        key=lambda s: (
-            s.get("timing", {}).get("start_at") or "",
-            s.get("session_id") or "",
+        future_sessions_raw.sort(
+            key=lambda s: (
+                s.get("timing", {}).get("start_at") or "",
+                s.get("session_id") or "",
+            )
         )
-    )
 
-    future_sessions = [build_public_future_session(s) for s in future_sessions_raw]
+        future_sessions = [build_public_future_session(s) for s in future_sessions_raw]
 
-    output = {
-        "build": {
-            "generated_at": now_iso,
-            "source_file": str(input_path),
-            "counts": {
-                "sessions_input": len(sessions),
-                "sessions_output": len(future_sessions),
-                "skipped_missing_start": skipped_missing_start,
-                "skipped_past": skipped_past,
+        output = {
+            "build": {
+                "generated_at": now_iso,
+                "source_file": str(input_path),
+                "counts": {
+                    "sessions_input": len(sessions),
+                    "sessions_output": len(future_sessions),
+                    "skipped_missing_start": skipped_missing_start,
+                    "skipped_past": skipped_past,
+                },
             },
-        },
-        "sessions": future_sessions,
-    }
+            "sessions": future_sessions,
+        }
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(
-        json.dumps(output, indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(
+            json.dumps(output, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
 
-    print(f"Wrote {output_path}")
-    print(f"Future sessions written: {len(future_sessions)}")
-    print(f"Skipped missing start: {skipped_missing_start}")
-    print(f"Skipped past: {skipped_past}")
+        reporter.done(current=len(sessions), total=len(sessions), last_output_file=output_path)
+        print("Future schedule build complete")
+        print(f"Wrote {output_path}")
+        print(f"Future sessions written: {len(future_sessions)}")
+        print(f"Skipped missing start: {skipped_missing_start}")
+        print(f"Skipped past: {skipped_past}")
 
-    return 0
+        return 0
+    except Exception:
+        reporter.error(last_output_file=output_path if output_path.exists() else None)
+        raise
 
 
 if __name__ == "__main__":

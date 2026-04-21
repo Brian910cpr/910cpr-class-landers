@@ -572,3 +572,232 @@ a {
     padding: 13px 14px;
   }
 }
+
+.slug-hub-shell {
+  padding: 0;
+  overflow: hidden;
+}
+
+.slug-hero {
+  grid-template-columns: minmax(0, 1fr) 260px;
+  padding: 28px 28px 8px;
+}
+
+.slug-tabs-block {
+  margin: 0 28px;
+}
+
+.hub-tabs {
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.hub-tabs .tab-btn {
+  min-height: 46px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  color: var(--heading);
+  font-weight: 700;
+  box-shadow: var(--shadow-soft);
+}
+
+.hub-tabs .tab-btn.active {
+  background: linear-gradient(180deg, #355fda 0%, #294fbf 100%);
+  border-color: #294fbf;
+  color: #ffffff;
+}
+
+.slug-panel-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+}
+
+.slug-panel-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.slug-panel-head h2 {
+  margin: 0 0 8px 0;
+  color: var(--heading);
+  font-size: 26px;
+  line-height: 1.1;
+}
+
+.slug-panel-copy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.65;
+  max-width: 60ch;
+}
+
+.slug-panel-cta {
+  display: grid;
+  gap: 10px;
+  min-width: 220px;
+}
+
+.slug-pill-list {
+  display: grid;
+  gap: 12px;
+}
+
+.slug-pill {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.slug-pill-date {
+  border-radius: 16px;
+  background: linear-gradient(180deg, #5f7ff0 0%, #2f5dde 100%);
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 8px;
+  box-shadow: 0 10px 24px rgba(47, 93, 222, 0.16);
+}
+
+.slug-pill-month {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.slug-pill-day {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 4px 0;
+}
+
+.slug-pill-weekday {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.slug-pill-main {
+  min-width: 0;
+}
+
+.slug-pill-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 4px;
+}
+
+.slug-pill-meta,
+.slug-pill-subtitle {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.slug-pill-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.slug-empty {
+  border: 1px dashed var(--border-strong);
+  border-radius: 18px;
+  padding: 18px;
+  background: #ffffff;
+}
+
+.slug-empty strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--heading);
+}
+
+.slug-empty p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.slug-banner {
+  margin: 20px 28px 28px;
+  padding: 20px 22px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(circle at top right, rgba(126, 201, 200, 0.16), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(217, 91, 136, 0.10), transparent 22%),
+    linear-gradient(180deg, #fdfefe 0%, #f7fafc 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.slug-banner-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2f6f70;
+  margin-bottom: 6px;
+}
+
+.slug-banner h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.25;
+  color: var(--heading);
+}
+
+@media (max-width: 900px) {
+  .slug-hero,
+  .slug-panel-head,
+  .slug-banner {
+    grid-template-columns: 1fr;
+  }
+
+  .slug-panel-cta {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .slug-tabs-block,
+  .slug-banner {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .slug-hero {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .slug-pill {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .slug-pill-actions .button,
+  .slug-panel-cta .button,
+  .slug-banner .button {
+    width: 100%;
+  }
+
+  .slug-pill-date {
+    max-width: 82px;
+  }
+}

@@ -1,41 +1,569 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>910CPR Supervisor</title>
-<link rel="stylesheet" href="../docs/css/lander.css">
+<title>910CPR Build Dashboard</title>
 <style>
-body{font-family:system-ui,Arial,sans-serif;margin:0;background:#f6f8fc;color:#24324a}
-.wrap{max-width:1100px;margin:0 auto;padding:24px}
-.card{background:#fff;border:1px solid #dde4f1;border-radius:16px;padding:18px;margin-bottom:16px}
-code{background:#eef3fb;padding:2px 6px;border-radius:6px}
+:root{
+  --bg:#f4f7fa;
+  --panel:#ffffff;
+  --panel-soft:#f8fafc;
+  --border:#dbe3ea;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --waiting:#9ca3af;
+  --running:#2563eb;
+  --done:#16a34a;
+  --error:#dc2626;
+  --shadow:0 8px 22px rgba(15,23,42,.05);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+.wrap{
+  max-width:1240px;
+  margin:0 auto;
+  padding:24px 16px 40px;
+}
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+}
+.stack{display:grid;gap:16px}
+.hero{
+  padding:18px;
+  display:grid;
+  gap:16px;
+}
+.hero-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  flex-wrap:wrap;
+}
+h1,h2,h3,p{margin:0}
+.muted{color:var(--muted)}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:7px 12px;
+  border-radius:999px;
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+}
+.state-waiting{background:var(--waiting)}
+.state-running{background:var(--running)}
+.state-done{background:var(--done)}
+.state-error{background:var(--error)}
+.state-unknown{background:#475569}
+.overview{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+.metric{
+  background:var(--panel-soft);
+  border:1px solid #e5ebf1;
+  border-radius:10px;
+  padding:14px;
+}
+.metric-label{
+  font-size:12px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.metric-value{
+  font-size:26px;
+  font-weight:700;
+}
+.metric-value.small{font-size:17px}
+.progress{
+  height:12px;
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+}
+.progress > div{
+  height:100%;
+  width:0%;
+  background:#94a3b8;
+  transition:width .35s ease;
+}
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:16px;
+}
+.tiles-panel,
+.side-panel{
+  padding:16px;
+}
+.phase-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:12px;
+}
+.tile{
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  padding:14px;
+  display:grid;
+  gap:10px;
+}
+.tile-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.tile-name{
+  font-weight:700;
+}
+.tile-meta{
+  display:grid;
+  gap:8px;
+  font-size:13px;
+}
+.label{
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:2px;
+}
+.side-stack{
+  display:grid;
+  gap:16px;
+}
+.section{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  background:var(--panel-soft);
+}
+.section h3{
+  margin-bottom:10px;
+  font-size:15px;
+}
+.latest-list{
+  max-height:280px;
+  overflow:auto;
+  display:grid;
+  gap:8px;
+  padding-right:4px;
+}
+.latest-item{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px;
+  font-size:13px;
+}
+.latest-phase{
+  font-weight:700;
+  margin-bottom:4px;
+}
+.workers{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.worker{
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 8px;
+  text-align:center;
+  background:#fff;
+}
+.worker-dot{
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  margin:0 auto 8px;
+  background:#cbd5e1;
+}
+.worker.busy .worker-dot{background:var(--running)}
+.worker.idle .worker-dot{background:#cbd5e1}
+.worker.done .worker-dot{background:var(--done)}
+.worker.error .worker-dot{background:var(--error)}
+.worker-label{
+  font-size:12px;
+  color:var(--muted);
+}
+.worker-state{
+  font-size:12px;
+  font-weight:700;
+  margin-top:3px;
+}
+.empty{
+  color:var(--muted);
+  font-size:14px;
+}
+code{
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:12px;
+  background:#f3f4f6;
+  padding:2px 6px;
+  border-radius:6px;
+  word-break:break-all;
+}
+@media (max-width: 960px){
+  .grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="card">
-    <h1>Supervisor</h1>
-    <p>This is the safe control-site stub. Use it as the single place to see what belongs in the stack and what still needs human action.</p>
-  </div>
-  <div class="card">
-    <h2>Builders in tonight’s stack</h2>
-    <ul>
-      <li><code>scripts/build_request_group_session.py</code></li>
-      <li><code>scripts/build_courses.py</code></li>
-      <li><code>scripts/build_locations.py</code></li>
-      <li><code>scripts/build_course_at_city.py</code></li>
-    </ul>
-  </div>
-  <div class="card">
-    <h2>Manual reminders</h2>
-    <ul>
-      <li>Confirm Cloudflare only redirects the root and not lander paths.</li>
-      <li>Keep sitemap limited to canonical pages you want indexed.</li>
-      <li>Use Class Report.xlsx as the common source for hubs.</li>
-    </ul>
+  <div class="stack">
+    <div class="panel hero">
+      <div class="hero-top">
+        <div>
+          <h1>Build Dashboard</h1>
+          <p class="muted">Static supervisor polling <code>data/runtime/*.json</code> every 3 seconds.</p>
+        </div>
+        <div id="overall-badge" class="badge state-unknown">UNKNOWN</div>
+      </div>
+
+      <div class="overview">
+        <div class="metric">
+          <div class="metric-label">Overall Progress</div>
+          <div id="overall-progress-text" class="metric-value">0%</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Current Phase</div>
+          <div id="current-phase" class="metric-value small">Waiting</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Elapsed Time</div>
+          <div id="elapsed-time" class="metric-value small">n/a</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">ETA</div>
+          <div id="eta-time" class="metric-value small">n/a</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Completed Phases</div>
+          <div id="phase-count" class="metric-value small">0 / 0</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Last Update</div>
+          <div id="last-update" class="metric-value small">Waiting</div>
+        </div>
+      </div>
+
+      <div class="progress">
+        <div id="overall-progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel tiles-panel">
+        <h2 style="margin-bottom:12px;">Per-Phase Status</h2>
+        <div id="phase-grid" class="phase-grid"></div>
+        <p id="empty-state" class="empty" style="display:none;">No status files found yet.</p>
+      </div>
+
+      <div class="panel side-panel">
+        <div class="side-stack">
+          <div class="section">
+            <h3>Processor / Workers</h3>
+            <p class="muted" style="margin-bottom:10px;">Simulated from active phase and expected worker count.</p>
+            <div id="worker-summary" class="muted" style="margin-bottom:10px;">No active workers</div>
+            <div id="workers" class="workers"></div>
+          </div>
+
+          <div class="section">
+            <h3>Latest Files Written</h3>
+            <div id="latest-list" class="latest-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<script>
+const POLL_MS = 3000;
+const PHASES = [
+  { name: "build_schedule", label: "Build Schedule", workers: 1 },
+  { name: "build_schedule_future", label: "Build Schedule Future", workers: 1 },
+  { name: "build_landers", label: "Build Landers", workers: 6 },
+  { name: "build_request_group_session", label: "Build Request Group Session", workers: 1 },
+  { name: "build_courses", label: "Build Courses", workers: 1 },
+  { name: "build_locations", label: "Build Locations", workers: 1 },
+  { name: "build_course_at_city", label: "Build Course At City", workers: 1 }
+];
+
+const firstSeenAt = new Map();
+const latestFileHistory = [];
+const seenLatestFileKeys = new Set();
+
+function stateClass(status) {
+  if (status === "waiting") return "state-waiting";
+  if (status === "running") return "state-running";
+  if (status === "done") return "state-done";
+  if (status === "error") return "state-error";
+  return "state-unknown";
+}
+
+function stateLabel(status) {
+  if (!status) return "Unknown";
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+function progressPercent(data) {
+  if (typeof data?.percent_complete === "number") return data.percent_complete;
+  if ((data?.current_count ?? null) !== null && data?.total_count) {
+    return Math.round((data.current_count / data.total_count) * 100);
+  }
+  return 0;
+}
+
+function formatProgress(data) {
+  const current = data?.current_count ?? 0;
+  const total = data?.total_count ?? 0;
+  const percent = progressPercent(data);
+  if (total) return `${current} / ${total} (${percent}%)`;
+  return `${percent}%`;
+}
+
+function formatDuration(ms) {
+  if (!Number.isFinite(ms) || ms < 0) return "n/a";
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  if (minutes > 0) return `${minutes}m ${seconds}s`;
+  return `${seconds}s`;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+async function loadPhase(phase) {
+  const url = `../data/runtime/${phase.name}.json?ts=${Date.now()}`;
+  try {
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) return { phase, data: null };
+    const data = await response.json();
+    return { phase, data };
+  } catch {
+    return { phase, data: null };
+  }
+}
+
+function computeOverall(results) {
+  const loaded = results.filter(item => item.data);
+  const total = results.length;
+  const doneCount = loaded.filter(item => item.data.status === "done").length;
+  const hasError = loaded.some(item => item.data.status === "error");
+  const runningItem = loaded.find(item => item.data.status === "running");
+  const hasWaiting = loaded.some(item => item.data.status === "waiting");
+
+  let state = "waiting";
+  if (hasError) state = "error";
+  else if (runningItem) state = "running";
+  else if (loaded.length && doneCount === total) state = "done";
+  else if (hasWaiting || !loaded.length) state = "waiting";
+
+  const weightedPercent = total
+    ? Math.round(results.reduce((sum, item) => sum + (item.data ? progressPercent(item.data) : 0), 0) / total)
+    : 0;
+
+  const currentPhase = runningItem?.phase?.label
+    || loaded.find(item => item.data.status === "error")?.phase?.label
+    || "Waiting";
+
+  const latestTimestamp = loaded
+    .map(item => item.data.timestamp)
+    .filter(Boolean)
+    .sort()
+    .at(-1) || "Waiting";
+
+  return { state, doneCount, total, weightedPercent, currentPhase, latestTimestamp };
+}
+
+function updateTimings(results, overall) {
+  const now = Date.now();
+  results.forEach(({ phase, data }) => {
+    if (!data) return;
+    if (!firstSeenAt.has(phase.name) && (data.status === "running" || data.status === "done" || data.status === "error")) {
+      firstSeenAt.set(phase.name, now);
+    }
+  });
+
+  const activeStarts = results
+    .filter(item => item.data && firstSeenAt.has(item.phase.name))
+    .map(item => firstSeenAt.get(item.phase.name));
+
+  const startedAt = activeStarts.length ? Math.min(...activeStarts) : null;
+  const elapsedMs = startedAt ? now - startedAt : NaN;
+  let etaMs = NaN;
+  if (overall.weightedPercent > 0 && overall.weightedPercent < 100 && Number.isFinite(elapsedMs)) {
+    etaMs = elapsedMs * ((100 - overall.weightedPercent) / overall.weightedPercent);
+  }
+
+  document.getElementById("elapsed-time").textContent = formatDuration(elapsedMs);
+  document.getElementById("eta-time").textContent = formatDuration(etaMs);
+}
+
+function updateLatestFiles(results) {
+  results.forEach(({ phase, data }) => {
+    if (!data?.last_output_file) return;
+    const key = `${phase.name}|${data.last_output_file}|${data.timestamp}`;
+    if (seenLatestFileKeys.has(key)) return;
+    seenLatestFileKeys.add(key);
+    latestFileHistory.unshift({
+      phase: phase.label,
+      file: data.last_output_file,
+      timestamp: data.timestamp
+    });
+  });
+
+  latestFileHistory.splice(18);
+  const list = document.getElementById("latest-list");
+  list.innerHTML = latestFileHistory.length
+    ? latestFileHistory.map(item => `
+        <div class="latest-item">
+          <div class="latest-phase">${escapeHtml(item.phase)}</div>
+          <div><code>${escapeHtml(item.file)}</code></div>
+          <div class="muted" style="margin-top:4px;">${escapeHtml(item.timestamp)}</div>
+        </div>
+      `).join("")
+    : `<div class="empty">No files written yet.</div>`;
+}
+
+function renderWorkers(results) {
+  const active = results.find(item => item.data?.status === "running");
+  const error = results.find(item => item.data?.status === "error");
+  const completed = results.every(item => item.data?.status === "done");
+  const container = document.getElementById("workers");
+  const summary = document.getElementById("worker-summary");
+
+  if (error) {
+    summary.textContent = `${error.phase.label} reported an error`;
+  } else if (active) {
+    const workers = active.phase.workers || 1;
+    const percent = progressPercent(active.data);
+    const busyEstimate = Math.max(1, Math.min(workers, Math.round((percent % 100) / 100 * workers) || workers));
+    summary.textContent = `${active.phase.label} active with ${workers} simulated worker${workers === 1 ? "" : "s"}`;
+    container.innerHTML = Array.from({ length: workers }, (_, index) => {
+      const busy = index < busyEstimate;
+      return `
+        <div class="worker ${busy ? "busy" : "idle"}">
+          <div class="worker-dot"></div>
+          <div class="worker-label">Worker ${index + 1}</div>
+          <div class="worker-state">${busy ? "Busy" : "Idle"}</div>
+        </div>
+      `;
+    }).join("");
+    return;
+  } else if (completed) {
+    summary.textContent = "All workers idle, build complete";
+    container.innerHTML = Array.from({ length: 6 }, (_, index) => `
+      <div class="worker done">
+        <div class="worker-dot"></div>
+        <div class="worker-label">Worker ${index + 1}</div>
+        <div class="worker-state">Done</div>
+      </div>
+    `).join("");
+    return;
+  } else {
+    summary.textContent = "No active workers";
+  }
+
+  container.innerHTML = Array.from({ length: 6 }, (_, index) => `
+    <div class="worker idle">
+      <div class="worker-dot"></div>
+      <div class="worker-label">Worker ${index + 1}</div>
+      <div class="worker-state">Idle</div>
+    </div>
+  `).join("");
+}
+
+function render(results) {
+  const overall = computeOverall(results);
+  document.getElementById("overall-progress-text").textContent = `${overall.weightedPercent}%`;
+  document.getElementById("current-phase").textContent = overall.currentPhase;
+  document.getElementById("phase-count").textContent = `${overall.doneCount} / ${overall.total}`;
+  document.getElementById("last-update").textContent = overall.latestTimestamp;
+  document.getElementById("overall-progress-fill").style.width = `${overall.weightedPercent}%`;
+  document.getElementById("overall-progress-fill").style.background =
+    overall.state === "error" ? "var(--error)" :
+    overall.state === "done" ? "var(--done)" :
+    overall.state === "running" ? "var(--running)" : "var(--waiting)";
+
+  const badge = document.getElementById("overall-badge");
+  badge.className = `badge ${stateClass(overall.state)}`;
+  badge.textContent = stateLabel(overall.state).toUpperCase();
+
+  const grid = document.getElementById("phase-grid");
+  const emptyState = document.getElementById("empty-state");
+  const anyLoaded = results.some(item => item.data);
+  emptyState.style.display = anyLoaded ? "none" : "block";
+
+  grid.innerHTML = results.map(({ phase, data }) => {
+    const status = data?.status || "waiting";
+    const percent = progressPercent(data);
+    const outputFile = data?.last_output_file
+      ? `<code>${escapeHtml(data.last_output_file)}</code>`
+      : `<span class="muted">n/a</span>`;
+
+    return `
+      <div class="tile">
+        <div class="tile-top">
+          <div class="tile-name">${escapeHtml(phase.label)}</div>
+          <div class="badge ${stateClass(status)}">${escapeHtml(stateLabel(status))}</div>
+        </div>
+        <div class="tile-meta">
+          <div>
+            <div class="label">Progress</div>
+            <div>${escapeHtml(formatProgress(data))}</div>
+          </div>
+          <div class="progress">
+            <div style="width:${percent}%; background:${status === "error" ? "var(--error)" : status === "done" ? "var(--done)" : status === "running" ? "var(--running)" : "var(--waiting)"};"></div>
+          </div>
+          <div>
+            <div class="label">Last Output File</div>
+            <div>${outputFile}</div>
+          </div>
+          <div>
+            <div class="label">Timestamp</div>
+            <div>${escapeHtml(data?.timestamp || "Waiting")}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  updateTimings(results, overall);
+  updateLatestFiles(results);
+  renderWorkers(results);
+}
+
+async function refresh() {
+  const results = await Promise.all(PHASES.map(loadPhase));
+  render(results);
+}
+
+refresh();
+setInterval(refresh, POLL_MS);
+</script>
 </body>
 </html>

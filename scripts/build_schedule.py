@@ -5,7 +5,10 @@ from datetime import datetime
 from html import unescape, escape
 from pathlib import Path
 
-from title_cleaner import normalize_course_title, seo_title_for_session
+try:
+    from scripts.title_cleaner import normalize_course_title, seo_title_for_session
+except ModuleNotFoundError:
+    from title_cleaner import normalize_course_title, seo_title_for_session
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "data" / "schedule.json"

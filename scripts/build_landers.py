@@ -2,6 +2,7 @@ import json
 import re
 import hashlib
 import random
+import argparse
 from datetime import datetime
 from html import escape, unescape
 from pathlib import Path
@@ -10,12 +11,16 @@ from zipfile import ZipFile
 
 from tqdm import tqdm
 
-from title_cleaner import normalize_course_title, seo_title_for_session
+try:
+    from scripts.title_cleaner import normalize_course_title, seo_title_for_session
+except ModuleNotFoundError:
+    from title_cleaner import normalize_course_title, seo_title_for_session
 
 TZ = ZoneInfo("America/New_York")
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
+DEFAULT_DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
+FULL_DATA_FILE = ROOT / "data" / "schedule.json"
 OUTPUT_DIR = ROOT / "docs" / "classes"
 IMAGES_DIR = ROOT / "docs" / "images"
 REVIEWS_SOURCE = ROOT / "data" / "raw" / "reviews"
@@ -801,8 +806,37 @@ window.dataLayer.push({{
 """
 
 
+def resolve_data_file(dataset: str, data_file: str | None) -> Path:
+    if data_file:
+        return (ROOT / data_file).resolve()
+    if dataset == "full":
+        return FULL_DATA_FILE
+    return DEFAULT_DATA_FILE
+
+
 def main() -> None:
-    with open(DATA_FILE, "r", encoding="utf-8") as handle:
+    parser = argparse.ArgumentParser(description="Build class lander pages")
+    parser.add_argument(
+        "--dataset",
+        choices=("future", "full"),
+        default="future",
+        help="Choose the input dataset. Defaults to future to preserve current behavior.",
+    )
+    parser.add_argument(
+        "--data-file",
+        default="",
+        help="Optional explicit input JSON path, relative to repo root.",
+    )
+    parser.add_argument(
+        "--workers",
+        default="",
+        help="Accepted for compatibility with existing build commands. Not used by this builder.",
+    )
+    args = parser.parse_args()
+
+    data_file = resolve_data_file(args.dataset, args.data_file.strip() or None)
+
+    with open(data_file, "r", encoding="utf-8") as handle:
         data = json.load(handle)
 
     sessions = data["sessions"]
@@ -975,6 +1009,7 @@ def main() -> None:
         output_path.write_text(html_doc, encoding="utf-8")
         count += 1
 
+    print(f"Dataset used: {data_file}")
     print(f"Landers built: {count}")
     print(f"Reviews loaded: {len(all_reviews)}")
 

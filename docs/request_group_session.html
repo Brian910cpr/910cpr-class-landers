@@ -65,6 +65,29 @@ textarea { min-height:140px; }
     <button class='button' type='submit'>Send Request</button>
   </form>
 </section>
+<script>
+window.addEventListener('load', function () {
+  const params = new URLSearchParams(window.location.search);
+  const requestedProgram = params.get('program');
+  if (!requestedProgram) return;
+
+  const target = Array.from(document.querySelectorAll('[data-program]')).find((button) => button.getAttribute('data-program') === requestedProgram);
+  if (!target) return;
+
+  const scope = target.closest('[data-tabs]');
+  if (!scope) return;
+
+  scope.querySelectorAll('.tab-btn').forEach((button) => button.classList.remove('active'));
+  scope.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
+  target.classList.add('active');
+
+  const panel = scope.querySelector(target.getAttribute('data-tab-target'));
+  if (panel) panel.classList.add('active');
+
+  const input = document.querySelector('#program');
+  if (input) input.value = requestedProgram;
+});
+</script>
 
   </div>
 </div>
