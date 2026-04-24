@@ -1,11 +1,11 @@
-# DEPLOY_CHECK
+# Deploy Check
 
-Files changed:
-- `scripts/build_slug_hubs.py`
-- `scripts/hub_utils.py`
-- `scripts/build_request_group_session.py`
-- `docs/assets/hub-ui.js`
+## Files changed
 - `docs/css/lander.css`
+- `docs/assets/hub-ui.js`
+- `scripts/build_slug_hubs.py`
+- `scripts/build_request_group_session.py`
+- `scripts/hub_utils.py`
 - `docs/bls.html`
 - `docs/acls.html`
 - `docs/pals.html`
@@ -14,26 +14,28 @@ Files changed:
 - `docs/group-training.html`
 - `docs/request_group_session.html`
 
-What publishes the site:
-- This repo appears to use GitHub Pages from the `main` branch and the `docs/` folder.
-- There is no GitHub Actions Pages workflow in `.github/workflows` in this checkout.
-- `docs/CNAME` points the site at `www.910cpr.com`.
+## What publishes the site
+- This repo appears to publish as a branch-based GitHub Pages site, not an Actions-built Pages site.
+- There is no `.github/workflows` Pages workflow in the repo.
+- The repo’s active branch is `main`, and the public site files live in `docs/`.
+- `docs/CNAME` is set to `www.910cpr.com`, which matches the live custom domain.
 
-Public URLs that should reflect the update:
-- `https://www.910cpr.com/bls.html`
-- `https://www.910cpr.com/acls.html`
-- `https://www.910cpr.com/pals.html`
-- `https://www.910cpr.com/heartsaver.html`
-- `https://www.910cpr.com/uscg-elementary-first-aid-cpr.html`
-- `https://www.910cpr.com/group-training.html`
+## Public URLs that should reflect the update
+- `https://www.910cpr.com/bls`
+- `https://www.910cpr.com/acls`
+- `https://www.910cpr.com/pals`
+- `https://www.910cpr.com/heartsaver`
+- `https://www.910cpr.com/uscg-elementary-first-aid-cpr`
+- `https://www.910cpr.com/group-training`
 - `https://www.910cpr.com/request_group_session.html`
 
-How to confirm the newest commit is live:
-- Open one of the URLs above and hard refresh.
-- View page source and confirm it includes `/assets/hub-ui.js`.
-- Confirm the visible hero, tab, and card styling matches the new shared hub layout.
-- Check that the published HTML matches the latest commit on `main`.
+## How to confirm the newest commit is live
+1. Push the commit to the publishing branch.
+2. Open one of the URLs above.
+3. Hard refresh the page.
+4. Confirm the updated hero section, quick-pick tab chips, polished date cards, and shared tab behavior are visible.
+5. Confirm `request_group_session.html?program=BLS%20On-Site` preselects the matching tab and program field.
 
-Cache delay:
-- GitHub Pages usually updates within a few minutes after the commit reaches the publishing branch.
-- A short browser or CDN cache delay is possible, so a hard refresh may be needed.
+## Cache delay
+- A short GitHub Pages propagation delay is normal after push.
+- Browser cache can also lag a little, especially for CSS and JS, so a hard refresh may be needed.

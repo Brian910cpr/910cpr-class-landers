@@ -17,8 +17,7 @@ MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs"
 TZ = ZoneInfo("America/New_York")
-TOP_STRIP_LIMIT = 5
-MIN_FIRST_TAB_AFTER_DEDUPE = 3
+DATE_LIMIT = 12
 
 
 def parse_dt(value: str | None) -> datetime | None:
@@ -38,11 +37,10 @@ def clean_location(value: str | None) -> str:
     text = re.sub(r"<br\s*/?>", " ", text, flags=re.I)
     text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
+    if "::" in text:
+        text = text.rsplit("::", 1)[-1].strip()
     if text.startswith("::"):
         text = text[2:].strip()
-    text = re.sub(r"\s*;\s*", ", ", text)
-    text = re.sub(r"\s*,\s*", ", ", text)
-    text = re.sub(r"\s+", " ", text).strip(" ,")
     return text or "Location TBA"
 
 
@@ -50,75 +48,29 @@ def normalize_space(value: str | None) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
-def infer_family_token(tab: dict[str, Any]) -> str:
-    text = " ".join(
-        str(tab.get(key, ""))
-        for key in ("label", "program", "id", "full_schedule_url", "full_schedule_label", "primary_cta_label")
-    ).upper()
-    if "USCG" in text:
-        return "USCG"
-    if "HEARTSAVER" in text or "HS-" in text or "/HEARTSAVER" in text:
-        return "HEARTSAVER"
-    for token in ("ACLS", "BLS", "PALS"):
-        if token in text:
-            return token
-    return ""
-
-
-def is_public_student_hub(page_slug: str | None) -> bool:
-    return page_slug in {"bls", "acls", "pals", "heartsaver"}
-
-
-def is_instructor_certification(course_name: str) -> bool:
-    name_upper = course_name.upper()
-    return "INSTRUCTOR" in name_upper and "INSTRUCTOR-LED" not in name_upper
-
-
-def matches_tab(session: dict[str, Any], tab: dict[str, Any], *, page_slug: str | None = None) -> bool:
+def matches_tab(session: dict[str, Any], tab: dict[str, Any]) -> bool:
     course_name = normalize_space(session.get("course_name"))
     course_subtitle = normalize_space(session.get("course_subtitle"))
-    haystack_upper = f"{course_name} {course_subtitle}".upper()
-    course_name_upper = course_name.upper()
-    tab_text_upper = f"{tab.get('label', '')} {tab.get('program', '')} {tab.get('id', '')}".upper()
-    family_token = infer_family_token(tab)
+    course_code = normalize_space(session.get("course_code"))
+    haystack = f"{course_name} {course_subtitle}".lower()
+    course_name_lower = course_name.lower()
 
-    if (
-        is_public_student_hub(page_slug)
-        and family_token in {"BLS", "ACLS", "PALS", "HEARTSAVER"}
-        and is_instructor_certification(course_name)
-    ):
+    codes = {normalize_space(code) for code in tab.get("course_codes", []) if normalize_space(code)}
+    if codes:
+        if course_code:
+            matched = course_code in codes
+        else:
+            needles = [str(item).lower() for item in tab.get("name_contains", []) if str(item).strip()]
+            matched = not needles or any(needle in haystack for needle in needles)
+    else:
+        needles = [str(item).lower() for item in tab.get("name_contains", []) if str(item).strip()]
+        matched = not needles or any(needle in haystack for needle in needles)
+
+    if not matched:
         return False
 
-    if family_token and family_token not in haystack_upper:
-        return False
-
-    if "RENEWAL" in tab_text_upper and "RENEWAL" not in haystack_upper:
-        return False
-
-    if "HEARTCODE" in tab_text_upper and "HEARTCODE" not in haystack_upper:
-        return False
-
-    if (
-        "PROVIDER" in tab_text_upper
-        and "RENEWAL" not in tab_text_upper
-        and "HEARTCODE" not in tab_text_upper
-        and family_token in {"ACLS", "BLS", "PALS"}
-    ):
-        if "RENEWAL" in course_name_upper or "HEARTCODE" in course_name_upper or "INSTRUCTOR" in course_name_upper:
-            return False
-
-    if "PEDIATRIC" in tab_text_upper:
-        if "PEDIATRIC" not in haystack_upper:
-            return False
-    elif family_token == "HEARTSAVER" and "CPR + AED ONLY" in tab_text_upper:
-        if "CPR AED" not in haystack_upper or "FIRST AID" in haystack_upper or "PEDIATRIC" in haystack_upper:
-            return False
-    elif family_token == "HEARTSAVER" and "FIRST AID" in tab_text_upper and "PEDIATRIC" not in tab_text_upper:
-        if "FIRST AID" not in haystack_upper or "PEDIATRIC" in haystack_upper:
-            return False
-
-    excludes = [str(item).upper() for item in tab.get("exclude_name_contains", []) if str(item).strip()]
-    return not any(needle in course_name_upper for needle in excludes)
+    excludes = [str(item).lower() for item in tab.get("exclude_name_contains", []) if str(item).strip()]
+    return not any(needle in course_name_lower for needle in excludes)
 
 
 def format_month(dt: datetime | None) -> str:
@@ -141,40 +93,6 @@ def format_time_line(dt: datetime | None) -> str:
     return dt.strftime("%I:%M %p").lstrip("0") if dt else "Time TBA"
 
 
-def seat_fill_ratio(session: dict[str, Any]) -> float:
-    try:
-        registered = float(session.get("registered_count") or 0)
-        capacity = float(session.get("max_students") or 0)
-    except (TypeError, ValueError):
-        return 0.0
-    if capacity <= 0:
-        return 0.0
-    return registered / capacity
-
-
-def sort_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return sorted(
-        sessions,
-        key=lambda session: (
-            parse_dt(session.get("start_at")) or datetime.max.replace(tzinfo=TZ),
-            -seat_fill_ratio(session),
-        ),
-    )
-
-
-def render_session_badge(session: dict[str, Any]) -> str:
-    fill_ratio = seat_fill_ratio(session)
-    if fill_ratio >= 0.9:
-        return '<div class="session-badge session-badge-critical">⛔ Last सीट</div>'
-    if fill_ratio >= 0.7:
-        return '<div class="session-badge session-badge-hot">🔥 Almost Full</div>'
-    return ""
-
-
-def session_identity(session: dict[str, Any]) -> str:
-    return str(session.get("session_id") or session.get("registration_url") or "")
-
-
 def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     start_dt = parse_dt(session.get("start_at"))
     location = clean_location(session.get("location_display") or session.get("location_name"))
@@ -184,17 +102,19 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     action_label = "See Public Class" if group_mode else "Register"
     subtitle = escape(title)
     action_hint = "Preview the closest public option" if group_mode else "Secure this class time"
-    badge = render_session_badge(session)
 
     return f"""
+<<<<<<< HEAD
 <article class="slug-pill session-card js-session-item" data-url="{register_url}" data-session-start="{escape(start_dt.isoformat() if start_dt else '', quote=True)}" tabindex="0" role="link">
+=======
+<article class="slug-pill">
+>>>>>>> 49092bae675cc9650bc8b30658737bc014626048
   <div class="slug-pill-date">
     <div class="slug-pill-month">{format_month(start_dt)}</div>
     <div class="slug-pill-day">{format_day(start_dt)}</div>
     <div class="slug-pill-weekday">{format_weekday(start_dt)}</div>
   </div>
   <div class="slug-pill-main">
-    {badge}
     <div class="slug-pill-title">{escape(format_date_line(start_dt))}</div>
     <div class="slug-pill-meta-row">
       <span class="slug-pill-chip">{escape(format_time_line(start_dt))}</span>
@@ -226,21 +146,9 @@ def render_empty_state(tab: dict[str, Any], *, group_mode: bool) -> str:
     )
 
 
-def render_tab_panel(
-    tab: dict[str, Any],
-    sessions: list[dict[str, Any]],
-    *,
-    active: bool,
-    group_mode: bool,
-    suppress_session_ids: set[str] | None = None,
-) -> str:
+def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
-    print(f"TOTAL MATCHED SESSIONS: {len(sessions)}")
-    print(f"FIRST 5 SESSION IDS: {[str(session.get('session_id')) for session in sessions[:5]]}")
-    sorted_sessions = sort_sessions(sessions)
-    suppress_session_ids = suppress_session_ids or set()
-    display_sessions = [session for session in sorted_sessions if session_identity(session) not in suppress_session_ids]
-    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in display_sessions)
+    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sessions[:DATE_LIMIT])
     if not cards:
         cards = render_empty_state(tab, group_mode=group_mode)
 
@@ -250,6 +158,7 @@ def render_tab_panel(
         "label": tab["full_schedule_label"],
     }), quote=True)
 
+<<<<<<< HEAD
     inventory_label = f"{len(display_sessions)} upcoming option" + ("" if len(display_sessions) == 1 else "s")
     panel_cta_html = ""
     if group_mode:
@@ -259,6 +168,17 @@ def render_tab_panel(
       <div class="slug-panel-cta">
         <a class="button primary" href="{cta_href}">{cta_label}</a>
       </div>"""
+=======
+    cta_href = (
+        f"/request_group_session.html?program={quote(tab['program'])}"
+        if group_mode
+        else full_schedule_url
+    )
+    cta_label = escape(tab["primary_cta_label"])
+    inventory_label = f"{len(sessions)} upcoming option" + ("" if len(sessions) == 1 else "s")
+
+    secondary_label = "Open full schedule" if group_mode else "Course details"
+>>>>>>> 49092bae675cc9650bc8b30658737bc014626048
 
     return f"""
 <section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}">
@@ -267,10 +187,11 @@ def render_tab_panel(
       <div>
         <div class="slug-panel-kicker">{escape(inventory_label)}</div>
         <h2>{escape(tab['label'])}</h2>
+        <p class="slug-panel-copy">{escape(tab['description'])}</p>
       </div>
       {panel_cta_html}
     </div>
-    <div class="slug-pill-list session-grid">
+    <div class="slug-pill-list">
       {cards}
     </div>
   </div>
@@ -278,6 +199,7 @@ def render_tab_panel(
 """.strip()
 
 
+<<<<<<< HEAD
 def top_strip_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
     ordered: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -317,16 +239,23 @@ def render_next_available_strip(sessions: list[dict[str, Any]], *, group_mode: b
 """.strip()
 
 
+=======
+>>>>>>> 49092bae675cc9650bc8b30658737bc014626048
 def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     group_mode = bool(page.get("group_mode"))
     buttons: list[str] = []
     panels: list[str] = []
     quick_picks: list[str] = []
     matched_counts: list[int] = []
+<<<<<<< HEAD
     all_matched_sessions: list[dict[str, Any]] = []
+=======
+    first_cta_href = ""
+    first_cta_label = ""
+
+>>>>>>> 49092bae675cc9650bc8b30658737bc014626048
     for index, tab in enumerate(page.get("tabs", [])):
-        matched = sort_sessions([session for session in sessions if matches_tab(session, tab, page_slug=page.get("slug"))])
-        all_matched_sessions.extend(matched)
+        matched = [session for session in sessions if matches_tab(session, tab)]
         matched_counts.append(len(matched))
         active_class = " active" if index == 0 else ""
         buttons.append(
@@ -339,6 +268,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
             f"data-tab-target='#{escape(tab['id'], quote=True)}' type='button'>"
             f"<span>{escape(tab['label'])}</span><strong>{escape(count_label)}</strong></button>"
         )
+<<<<<<< HEAD
     total_dates = sum(matched_counts)
     live_formats = sum(1 for count in matched_counts if count > 0)
     assert len(all_matched_sessions) > 0, f"No sessions matched for hub page {page['slug']}"
@@ -381,6 +311,24 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
         matched = sort_sessions([session for session in sessions if matches_tab(session, tab, page_slug=page.get("slug"))])
         suppress_ids = strip_session_ids if index == 0 and first_tab_dedupe_applied else set()
         panels.append(render_tab_panel(tab, matched, active=index == 0, group_mode=group_mode, suppress_session_ids=suppress_ids))
+=======
+        if index == 0:
+            first_cta_href = (
+                f"/request_group_session.html?program={quote(tab['program'])}"
+                if group_mode
+                else tab["full_schedule_url"]
+            )
+            first_cta_label = tab["primary_cta_label"]
+        panels.append(render_tab_panel(tab, matched, active=index == 0, group_mode=group_mode))
+
+    first_banner = {
+        "url": page["tabs"][0]["full_schedule_url"],
+        "label": page["tabs"][0]["full_schedule_label"],
+    }
+
+    total_dates = sum(matched_counts)
+    live_formats = sum(1 for count in matched_counts if count > 0)
+>>>>>>> 49092bae675cc9650bc8b30658737bc014626048
 
     body = f"""
 <div class="card slug-hub-shell">
@@ -423,8 +371,11 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     </div>
   </section>
 
+<<<<<<< HEAD
   {render_next_available_strip(all_matched_sessions, group_mode=group_mode, empty_link=page['tabs'][0]['full_schedule_url'], empty_label=page['tabs'][0]['full_schedule_label'])}
 
+=======
+>>>>>>> 49092bae675cc9650bc8b30658737bc014626048
   <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
     <div class="tabs hub-tabs">
       {''.join(buttons)}
