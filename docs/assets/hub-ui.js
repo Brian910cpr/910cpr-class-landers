@@ -1,5 +1,6 @@
 (function () {
-  const EMPTY_FALLBACK_MESSAGE = "No upcoming dates are currently listed for this course. Please check back soon or request help finding a class.";
+  const EMPTY_FALLBACK_TITLE = "No upcoming dates are currently listed for this course.";
+  const EMPTY_FALLBACK_BODY = "Please contact us and we'll help you find the right class.";
   const MONTHS = {
     jan: 0,
     january: 0,
@@ -195,7 +196,7 @@
     if (!fallback) {
       fallback = document.createElement("div");
       fallback.className = "slug-empty hub-empty-state";
-      fallback.innerHTML = `<strong>${EMPTY_FALLBACK_MESSAGE}</strong>`;
+      fallback.innerHTML = `<strong>${EMPTY_FALLBACK_TITLE}</strong><p>${EMPTY_FALLBACK_BODY}</p>`;
       scope.appendChild(fallback);
     }
     return fallback;
@@ -216,8 +217,8 @@
     if (!existing) {
       list.innerHTML = (
         "<div class='slug-empty'>"
-        + "<strong>No upcoming dates are listed right now.</strong>"
-        + "<p>Use the full course page for more details or check back after the next schedule update.</p>"
+        + `<strong>${EMPTY_FALLBACK_TITLE}</strong>`
+        + `<p>${EMPTY_FALLBACK_BODY}</p>`
         + "</div>"
       );
     }

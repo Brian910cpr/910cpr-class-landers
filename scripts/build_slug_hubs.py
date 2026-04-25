@@ -18,6 +18,8 @@ SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs"
 TZ = ZoneInfo("America/New_York")
 DATE_LIMIT = 12
+EMPTY_FALLBACK_TITLE = "No upcoming dates are currently listed for this course."
+EMPTY_FALLBACK_BODY = "Please contact us and we'll help you find the right class."
 
 
 def parse_dt(value: str | None) -> datetime | None:
@@ -83,6 +85,11 @@ def sort_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(sessions, key=sort_key)
 
 
+def is_future_session(session: dict[str, Any], *, now: datetime) -> bool:
+    start_dt = parse_dt(session.get("start_at"))
+    return bool(start_dt and start_dt > now)
+
+
 def format_month(dt: datetime | None) -> str:
     return dt.strftime("%b").upper() if dt else "TBD"
 
@@ -137,17 +144,10 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
 
 
 def render_empty_state(*, group_mode: bool) -> str:
-    if group_mode:
-        return (
-            "<div class='slug-empty'>"
-            "<strong>Private scheduling is still available.</strong>"
-            "<p>No matching public class dates are listed right now, but you can still request this program for your team.</p>"
-            "</div>"
-        )
     return (
         "<div class='slug-empty'>"
-        "<strong>No upcoming dates are listed right now.</strong>"
-        "<p>Please check back soon or request help finding a class.</p>"
+        f"<strong>{EMPTY_FALLBACK_TITLE}</strong>"
+        f"<p>{EMPTY_FALLBACK_BODY}</p>"
         "</div>"
     )
 
@@ -255,16 +255,47 @@ def render_banner(page: dict[str, Any], first_tab: dict[str, Any]) -> str:
 
 def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     group_mode = bool(page.get("group_mode"))
+    now = datetime.now(TZ)
     tabs = page.get("tabs", [])
     first_tab = tabs[0]
+
+    visible_tabs: list[tuple[dict[str, Any], list[dict[str, Any]]]] = []
+    for tab in tabs:
+        matched = [
+            session
+            for session in sessions
+            if matches_tab(session, tab) and is_future_session(session, now=now)
+        ]
+        matched = sort_sessions(matched)
+        if matched:
+            visible_tabs.append((tab, matched))
 
     buttons: list[str] = []
     panels: list[str] = []
 
-    for index, tab in enumerate(tabs):
-        matched = sort_sessions([session for session in sessions if matches_tab(session, tab)])
+    for index, (tab, matched) in enumerate(visible_tabs):
         buttons.append(render_tab_button(tab, active=index == 0))
         panels.append(render_tab_panel(tab, matched, active=index == 0, group_mode=group_mode))
+
+    tabs_html = (
+        f"""
+  <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
+    <div class="tabs hub-tabs">
+      {''.join(buttons)}
+    </div>
+    {''.join(panels)}
+  </section>
+"""
+        if visible_tabs
+        else f"""
+  <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
+    <div class="slug-empty hub-empty-state">
+      <strong>{escape(EMPTY_FALLBACK_TITLE)}</strong>
+      <p>{escape(EMPTY_FALLBACK_BODY)}</p>
+    </div>
+  </section>
+"""
+    )
 
     body = f"""
 <div class="card slug-hub-shell">
@@ -279,13 +310,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
       {render_hero_image(page)}
     </div>
   </section>
-
-  <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
-    <div class="tabs hub-tabs">
-      {''.join(buttons)}
-    </div>
-    {''.join(panels)}
-  </section>
+  {tabs_html}
   {render_banner(page, first_tab)}
 </div>
 """
