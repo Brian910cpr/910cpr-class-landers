@@ -4,6 +4,9 @@ from pathlib import Path
 from html import unescape
 from collections import defaultdict
 
+from scripts.build_status import BuildStatusReporter
+from supervisor.status_snapshot import write_status_snapshot
+
 ROOT = Path(__file__).resolve().parents[1]
 
 DOCS_DIR = ROOT / "docs"
@@ -362,6 +365,8 @@ def parse_class_page(path: Path) -> dict | None:
 
 
 def build():
+    reporter = BuildStatusReporter("build_index_and_sitemap")
+    reporter.waiting(total=0)
     if not CLASSES_DIR.exists():
         raise FileNotFoundError(f"Missing classes directory: {CLASSES_DIR}")
 
@@ -374,6 +379,7 @@ def build():
         p for p in CLASSES_DIR.glob("*.html")
         if p.name.lower() != "index.html"
     )
+    reporter.start(total=len(class_files))
 
     sessions = []
     for path in class_files:
@@ -655,6 +661,8 @@ def build():
     sitemap_xml.append("</urlset>")
 
     SITEMAP_FILE.write_text("\n".join(sitemap_xml), encoding="utf-8")
+    reporter.done(current=len(class_files), total=len(class_files), last_output_file=SITEMAP_FILE)
+    write_status_snapshot()
 
     print(f"Scanned class pages: {len(class_files)}")
     print(f"Parsed valid class pages: {len(sessions)}")

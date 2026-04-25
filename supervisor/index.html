@@ -3,44 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>910CPR Build Dashboard</title>
+<title>910CPR Supervisor</title>
 <style>
 :root{
-  --bg:#f4f7fa;
-  --panel:#ffffff;
-  --panel-soft:#f8fafc;
-  --border:#dbe3ea;
-  --text:#1f2937;
-  --muted:#6b7280;
-  --waiting:#9ca3af;
-  --running:#2563eb;
-  --done:#16a34a;
-  --error:#dc2626;
-  --shadow:0 8px 22px rgba(15,23,42,.05);
+  --bg:#0f1724;
+  --panel:#162131;
+  --panel-soft:#1b293d;
+  --border:#2b3c56;
+  --text:#e5eefb;
+  --muted:#9fb0c8;
+  --accent:#6fb1ff;
+  --good:#2ec27e;
+  --warn:#ffb648;
+  --bad:#ff6b6b;
+  --shadow:0 18px 42px rgba(0,0,0,.24);
 }
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family:system-ui,Arial,sans-serif;
-  background:var(--bg);
+  background:linear-gradient(180deg,#0b1320 0%,#111b2b 100%);
   color:var(--text);
+  font-family:Inter,Segoe UI,Arial,sans-serif;
 }
 .wrap{
-  max-width:1240px;
+  max-width:1280px;
   margin:0 auto;
-  padding:24px 16px 40px;
+  padding:24px 16px 56px;
 }
+.stack{display:grid;gap:18px}
 .panel{
-  background:var(--panel);
+  background:rgba(22,33,49,.96);
   border:1px solid var(--border);
-  border-radius:12px;
+  border-radius:18px;
   box-shadow:var(--shadow);
 }
-.stack{display:grid;gap:16px}
 .hero{
-  padding:18px;
+  padding:22px;
   display:grid;
-  gap:16px;
+  gap:18px;
 }
 .hero-top{
   display:flex;
@@ -51,172 +51,140 @@ body{
 }
 h1,h2,h3,p{margin:0}
 .muted{color:var(--muted)}
-.badge{
+.status-pill{
   display:inline-flex;
   align-items:center;
-  padding:7px 12px;
+  gap:8px;
+  padding:10px 14px;
   border-radius:999px;
-  color:#fff;
   font-size:13px;
-  font-weight:700;
+  font-weight:800;
+  letter-spacing:.03em;
+  text-transform:uppercase;
 }
-.state-waiting{background:var(--waiting)}
-.state-running{background:var(--running)}
-.state-done{background:var(--done)}
-.state-error{background:var(--error)}
-.state-unknown{background:#475569}
+.status-good{background:rgba(46,194,126,.18); color:#b9f2d4}
+.status-warn{background:rgba(255,182,72,.18); color:#ffe0a8}
+.status-bad{background:rgba(255,107,107,.18); color:#ffc4c4}
+.status-neutral{background:rgba(159,176,200,.16); color:#d6e2f3}
 .overview{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
   gap:12px;
 }
 .metric{
-  background:var(--panel-soft);
-  border:1px solid #e5ebf1;
-  border-radius:10px;
   padding:14px;
+  border-radius:14px;
+  background:var(--panel-soft);
+  border:1px solid #23344c;
 }
 .metric-label{
-  font-size:12px;
+  font-size:11px;
   text-transform:uppercase;
+  letter-spacing:.08em;
   color:var(--muted);
-  margin-bottom:6px;
+  margin-bottom:8px;
 }
 .metric-value{
-  font-size:26px;
-  font-weight:700;
+  font-size:24px;
+  font-weight:800;
+  line-height:1.2;
 }
-.metric-value.small{font-size:17px}
-.progress{
-  height:12px;
-  background:#e5e7eb;
-  border-radius:999px;
-  overflow:hidden;
-}
-.progress > div{
-  height:100%;
-  width:0%;
-  background:#94a3b8;
-  transition:width .35s ease;
+.metric-value.small{
+  font-size:15px;
+  word-break:break-word;
 }
 .grid{
   display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:16px;
+  grid-template-columns:1.35fr .9fr;
+  gap:18px;
 }
-.tiles-panel,
-.side-panel{
-  padding:16px;
+.panel-pad{padding:18px}
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:12px;
+  margin-bottom:14px;
 }
-.phase-grid{
+.section-copy{
+  color:var(--muted);
+  font-size:14px;
+}
+.phase-list,.list{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
   gap:12px;
 }
-.tile{
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#fff;
+.phase-card,.list-card{
+  border:1px solid #243752;
+  background:var(--panel-soft);
+  border-radius:14px;
   padding:14px;
-  display:grid;
-  gap:10px;
 }
-.tile-top{
+.phase-top,.list-top{
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
   gap:12px;
-}
-.tile-name{
-  font-weight:700;
-}
-.tile-meta{
-  display:grid;
-  gap:8px;
-  font-size:13px;
-}
-.label{
-  color:var(--muted);
-  font-size:12px;
-  margin-bottom:2px;
-}
-.side-stack{
-  display:grid;
-  gap:16px;
-}
-.section{
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:14px;
-  background:var(--panel-soft);
-}
-.section h3{
   margin-bottom:10px;
-  font-size:15px;
 }
-.latest-list{
-  max-height:280px;
-  overflow:auto;
+.phase-name,.list-title{
+  font-weight:800;
+}
+.kv{
   display:grid;
-  gap:8px;
-  padding-right:4px;
-}
-.latest-item{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:10px;
-  font-size:13px;
-}
-.latest-phase{
-  font-weight:700;
-  margin-bottom:4px;
-}
-.workers{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:8px;
-}
-.worker{
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:10px 8px;
-  text-align:center;
-  background:#fff;
-}
-.worker-dot{
-  width:10px;
-  height:10px;
-  border-radius:999px;
-  margin:0 auto 8px;
-  background:#cbd5e1;
-}
-.worker.busy .worker-dot{background:var(--running)}
-.worker.idle .worker-dot{background:#cbd5e1}
-.worker.done .worker-dot{background:var(--done)}
-.worker.error .worker-dot{background:var(--error)}
-.worker-label{
-  font-size:12px;
-  color:var(--muted);
-}
-.worker-state{
-  font-size:12px;
-  font-weight:700;
-  margin-top:3px;
-}
-.empty{
-  color:var(--muted);
+  grid-template-columns:160px minmax(0,1fr);
+  gap:8px 12px;
   font-size:14px;
 }
-code{
+.kv .k{
+  color:var(--muted);
+}
+.code{
   font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
   font-size:12px;
-  background:#f3f4f6;
-  padding:2px 6px;
-  border-radius:6px;
+  background:#0f1724;
+  border:1px solid #243752;
+  border-radius:8px;
+  padding:5px 7px;
+  color:#dfe9f7;
   word-break:break-all;
 }
-@media (max-width: 960px){
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  padding:7px 10px;
+  border-radius:999px;
+  background:#0f1724;
+  border:1px solid #243752;
+  color:#dfe9f7;
+  font-size:12px;
+}
+.chip.warn{border-color:rgba(255,182,72,.45); color:#ffe0a8}
+.chip.bad{border-color:rgba(255,107,107,.45); color:#ffc4c4}
+.chip.good{border-color:rgba(46,194,126,.45); color:#b9f2d4}
+.subgrid{
+  display:grid;
+  gap:18px;
+}
+.empty{
+  padding:14px;
+  border:1px dashed #334966;
+  border-radius:12px;
+  color:var(--muted);
+}
+.tight{display:grid; gap:8px}
+.mono-list{
+  display:grid;
+  gap:8px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:12px;
+}
+@media (max-width: 980px){
   .grid{grid-template-columns:1fr}
 }
 </style>
@@ -224,128 +192,129 @@ code{
 <body>
 <div class="wrap">
   <div class="stack">
-    <div class="panel hero">
+    <section class="panel hero">
       <div class="hero-top">
-        <div>
-          <h1>Build Dashboard</h1>
-          <p class="muted">Static supervisor polling <code>data/runtime/*.json</code> with legacy fallback to <code>../data/runtime/*.json</code> every 3 seconds.</p>
+        <div class="tight">
+          <h1>Supervisor</h1>
+          <p class="muted">Builder and status viewer for the lander system. This page is read-only by design so it answers what happened before we add more controls.</p>
         </div>
-        <div id="overall-badge" class="badge state-unknown">UNKNOWN</div>
+        <div id="overall-pill" class="status-pill status-neutral">Loading</div>
       </div>
-
       <div class="overview">
         <div class="metric">
-          <div class="metric-label">Overall Progress</div>
-          <div id="overall-progress-text" class="metric-value">0%</div>
+          <div class="metric-label">Monitored Repo Path</div>
+          <div id="repo-path" class="metric-value small">Waiting…</div>
         </div>
         <div class="metric">
-          <div class="metric-label">Current Phase</div>
-          <div id="current-phase" class="metric-value small">Waiting</div>
+          <div class="metric-label">Last Run Time</div>
+          <div id="last-run" class="metric-value small">Waiting…</div>
         </div>
         <div class="metric">
-          <div class="metric-label">Elapsed Time</div>
-          <div id="elapsed-time" class="metric-value small">n/a</div>
+          <div class="metric-label">Schedule JSON Source</div>
+          <div id="schedule-source" class="metric-value small">Waiting…</div>
         </div>
         <div class="metric">
-          <div class="metric-label">ETA</div>
-          <div id="eta-time" class="metric-value small">n/a</div>
+          <div class="metric-label">Current Config Source</div>
+          <div id="config-source" class="metric-value small">Waiting…</div>
         </div>
         <div class="metric">
-          <div class="metric-label">Completed Phases</div>
-          <div id="phase-count" class="metric-value small">0 / 0</div>
+          <div class="metric-label">Hub Staleness</div>
+          <div id="hub-stale" class="metric-value small">Waiting…</div>
         </div>
         <div class="metric">
-          <div class="metric-label">Last Update</div>
-          <div id="last-update" class="metric-value small">Waiting</div>
+          <div class="metric-label">Git Working Tree</div>
+          <div id="git-state" class="metric-value small">Waiting…</div>
         </div>
       </div>
+    </section>
 
-      <div class="progress">
-        <div id="overall-progress-fill"></div>
+    <div class="grid">
+      <section class="panel panel-pad">
+        <div class="section-head">
+          <div>
+            <h2>Build Activity</h2>
+            <p class="section-copy">What the builder ran, what it wrote, and whether the current site looks fresh.</p>
+          </div>
+        </div>
+        <div id="runtime-list" class="phase-list"></div>
+      </section>
+
+      <div class="subgrid">
+        <section class="panel panel-pad">
+          <div class="section-head">
+            <div>
+              <h2>Detected Settings</h2>
+              <p class="section-copy">Read-only for now. This is the future-ready config surface, not a theme editor.</p>
+            </div>
+          </div>
+          <div id="settings-kv" class="kv"></div>
+        </section>
+
+        <section class="panel panel-pad">
+          <div class="section-head">
+            <div>
+              <h2>Warnings & Errors</h2>
+              <p class="section-copy">Problems that could block trust in the public build.</p>
+            </div>
+          </div>
+          <div id="alerts"></div>
+        </section>
       </div>
     </div>
 
     <div class="grid">
-      <div class="panel tiles-panel">
-        <h2 style="margin-bottom:12px;">Per-Phase Status</h2>
-        <div id="phase-grid" class="phase-grid"></div>
-        <p id="empty-state" class="empty" style="display:none;">No status files found yet.</p>
-      </div>
-
-      <div class="panel side-panel">
-        <div class="side-stack">
-          <div class="section">
-            <h3>Processor / Workers</h3>
-            <p class="muted" style="margin-bottom:10px;">Simulated from active phase and expected worker count.</p>
-            <div id="worker-summary" class="muted" style="margin-bottom:10px;">No active workers</div>
-            <div id="workers" class="workers"></div>
-          </div>
-
-          <div class="section">
-            <h3>Latest Files Written</h3>
-            <div id="latest-list" class="latest-list"></div>
+      <section class="panel panel-pad">
+        <div class="section-head">
+          <div>
+            <h2>Files Written</h2>
+            <p class="section-copy">Most recent builder outputs and hub files touched.</p>
           </div>
         </div>
-      </div>
+        <div id="files-list" class="list"></div>
+      </section>
+
+      <section class="panel panel-pad">
+        <div class="section-head">
+          <div>
+            <h2>Generated Output</h2>
+            <p class="section-copy">Actual generated page counts and core hub freshness checks.</p>
+          </div>
+        </div>
+        <div id="output-summary" class="tight"></div>
+        <div id="hub-list" class="list" style="margin-top:14px;"></div>
+      </section>
+    </div>
+
+    <div class="grid">
+      <section class="panel panel-pad">
+        <div class="section-head">
+          <div>
+            <h2>Build Summary</h2>
+            <p class="section-copy">High-level pipeline result from the supervisor summary artifact.</p>
+          </div>
+        </div>
+        <div id="summary-kv" class="kv"></div>
+      </section>
+
+      <section class="panel panel-pad">
+        <div class="section-head">
+          <div>
+            <h2>Git Status</h2>
+            <p class="section-copy">Commit readiness for the monitored repo.</p>
+          </div>
+        </div>
+        <div id="git-panel" class="tight"></div>
+      </section>
     </div>
   </div>
 </div>
 
 <script>
-const POLL_MS = 3000;
-const PHASES = [
-  { name: "build_schedule", label: "Build Schedule", workers: 1 },
-  { name: "build_schedule_future", label: "Build Schedule Future", workers: 1 },
-  { name: "build_landers", label: "Build Landers", workers: 6 },
-  { name: "build_request_group_session", label: "Build Request Group Session", workers: 1 },
-  { name: "build_courses", label: "Build Courses", workers: 1 },
-  { name: "build_locations", label: "Build Locations", workers: 1 },
-  { name: "build_course_at_city", label: "Build Course At City", workers: 1 }
+const POLL_MS = 5000;
+const SOURCES = [
+  "../data/state/supervisor_status.json",
+  "data/state/supervisor_status.json"
 ];
-
-const firstSeenAt = new Map();
-const latestFileHistory = [];
-const seenLatestFileKeys = new Set();
-
-function stateClass(status) {
-  if (status === "waiting") return "state-waiting";
-  if (status === "running") return "state-running";
-  if (status === "done") return "state-done";
-  if (status === "error") return "state-error";
-  return "state-unknown";
-}
-
-function stateLabel(status) {
-  if (!status) return "Unknown";
-  return status.charAt(0).toUpperCase() + status.slice(1);
-}
-
-function progressPercent(data) {
-  if (typeof data?.percent_complete === "number") return data.percent_complete;
-  if ((data?.current_count ?? null) !== null && data?.total_count) {
-    return Math.round((data.current_count / data.total_count) * 100);
-  }
-  return 0;
-}
-
-function formatProgress(data) {
-  const current = data?.current_count ?? 0;
-  const total = data?.total_count ?? 0;
-  const percent = progressPercent(data);
-  if (total) return `${current} / ${total} (${percent}%)`;
-  return `${percent}%`;
-}
-
-function formatDuration(ms) {
-  if (!Number.isFinite(ms) || ms < 0) return "n/a";
-  const totalSeconds = Math.floor(ms / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-  if (hours > 0) return `${hours}h ${minutes}m`;
-  if (minutes > 0) return `${minutes}m ${seconds}s`;
-  return `${seconds}s`;
-}
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -356,218 +325,250 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-const RUNTIME_BASES = [
-  "data/runtime",
-  "../data/runtime"
-];
-
-async function loadPhase(phase) {
-  for (const base of RUNTIME_BASES) {
-    const url = `${base}/${phase.name}.json?ts=${Date.now()}`;
+async function fetchFirstJson(paths) {
+  for (const path of paths) {
     try {
-      const response = await fetch(url, { cache: "no-store" });
+      const response = await fetch(`${path}?ts=${Date.now()}`, { cache: "no-store" });
       if (!response.ok) continue;
-      const data = await response.json();
-      return { phase, data };
+      return await response.json();
     } catch {
       continue;
     }
   }
-  return { phase, data: null };
+  return null;
 }
 
-function computeOverall(results) {
-  const loaded = results.filter(item => item.data);
-  const total = results.length;
-  const doneCount = loaded.filter(item => item.data.status === "done").length;
-  const hasError = loaded.some(item => item.data.status === "error");
-  const runningItem = loaded.find(item => item.data.status === "running");
-  const hasWaiting = loaded.some(item => item.data.status === "waiting");
-
-  let state = "waiting";
-  if (hasError) state = "error";
-  else if (runningItem) state = "running";
-  else if (loaded.length && doneCount === total) state = "done";
-  else if (hasWaiting || !loaded.length) state = "waiting";
-
-  const weightedPercent = total
-    ? Math.round(results.reduce((sum, item) => sum + (item.data ? progressPercent(item.data) : 0), 0) / total)
-    : 0;
-
-  const currentPhase = runningItem?.phase?.label
-    || loaded.find(item => item.data.status === "error")?.phase?.label
-    || "Waiting";
-
-  const latestTimestamp = loaded
-    .map(item => item.data.timestamp)
-    .filter(Boolean)
-    .sort()
-    .at(-1) || "Waiting";
-
-  return { state, doneCount, total, weightedPercent, currentPhase, latestTimestamp };
+function pillClass(kind) {
+  if (kind === "good") return "status-pill status-good";
+  if (kind === "warn") return "status-pill status-warn";
+  if (kind === "bad") return "status-pill status-bad";
+  return "status-pill status-neutral";
 }
 
-function updateTimings(results, overall) {
-  const now = Date.now();
-  results.forEach(({ phase, data }) => {
-    if (!data) return;
-    if (!firstSeenAt.has(phase.name) && (data.status === "running" || data.status === "done" || data.status === "error")) {
-      firstSeenAt.set(phase.name, now);
-    }
-  });
-
-  const activeStarts = results
-    .filter(item => item.data && firstSeenAt.has(item.phase.name))
-    .map(item => firstSeenAt.get(item.phase.name));
-
-  const startedAt = activeStarts.length ? Math.min(...activeStarts) : null;
-  const elapsedMs = startedAt ? now - startedAt : NaN;
-  let etaMs = NaN;
-  if (overall.weightedPercent > 0 && overall.weightedPercent < 100 && Number.isFinite(elapsedMs)) {
-    etaMs = elapsedMs * ((100 - overall.weightedPercent) / overall.weightedPercent);
-  }
-
-  document.getElementById("elapsed-time").textContent = formatDuration(elapsedMs);
-  document.getElementById("eta-time").textContent = formatDuration(etaMs);
+function statusTone(status) {
+  if (status === "done" || status === "completed") return "good";
+  if (status === "running") return "warn";
+  if (status === "error" || status === "failed") return "bad";
+  return "neutral";
 }
 
-function updateLatestFiles(results) {
-  results.forEach(({ phase, data }) => {
-    if (!data?.last_output_file) return;
-    const key = `${phase.name}|${data.last_output_file}|${data.timestamp}`;
-    if (seenLatestFileKeys.has(key)) return;
-    seenLatestFileKeys.add(key);
-    latestFileHistory.unshift({
-      phase: phase.label,
-      file: data.last_output_file,
-      timestamp: data.timestamp
-    });
-  });
-
-  latestFileHistory.splice(18);
-  const list = document.getElementById("latest-list");
-  list.innerHTML = latestFileHistory.length
-    ? latestFileHistory.map(item => `
-        <div class="latest-item">
-          <div class="latest-phase">${escapeHtml(item.phase)}</div>
-          <div><code>${escapeHtml(item.file)}</code></div>
-          <div class="muted" style="margin-top:4px;">${escapeHtml(item.timestamp)}</div>
-        </div>
-      `).join("")
-    : `<div class="empty">No files written yet.</div>`;
+function statusLabel(status) {
+  if (!status) return "Unknown";
+  return String(status).replaceAll("_", " ");
 }
 
-function renderWorkers(results) {
-  const active = results.find(item => item.data?.status === "running");
-  const error = results.find(item => item.data?.status === "error");
-  const completed = results.every(item => item.data?.status === "done");
-  const container = document.getElementById("workers");
-  const summary = document.getElementById("worker-summary");
+function setText(id, value) {
+  document.getElementById(id).textContent = value ?? "n/a";
+}
 
-  if (error) {
-    summary.textContent = `${error.phase.label} reported an error`;
-  } else if (active) {
-    const workers = active.phase.workers || 1;
-    const percent = progressPercent(active.data);
-    const busyEstimate = Math.max(1, Math.min(workers, Math.round((percent % 100) / 100 * workers) || workers));
-    summary.textContent = `${active.phase.label} active with ${workers} simulated worker${workers === 1 ? "" : "s"}`;
-    container.innerHTML = Array.from({ length: workers }, (_, index) => {
-      const busy = index < busyEstimate;
-      return `
-        <div class="worker ${busy ? "busy" : "idle"}">
-          <div class="worker-dot"></div>
-          <div class="worker-label">Worker ${index + 1}</div>
-          <div class="worker-state">${busy ? "Busy" : "Idle"}</div>
-        </div>
-      `;
-    }).join("");
+function renderKv(targetId, rows) {
+  const el = document.getElementById(targetId);
+  if (!rows.length) {
+    el.innerHTML = `<div class="empty">No data available yet.</div>`;
     return;
-  } else if (completed) {
-    summary.textContent = "All workers idle, build complete";
-    container.innerHTML = Array.from({ length: 6 }, (_, index) => `
-      <div class="worker done">
-        <div class="worker-dot"></div>
-        <div class="worker-label">Worker ${index + 1}</div>
-        <div class="worker-state">Done</div>
-      </div>
-    `).join("");
-    return;
-  } else {
-    summary.textContent = "No active workers";
   }
-
-  container.innerHTML = Array.from({ length: 6 }, (_, index) => `
-    <div class="worker idle">
-      <div class="worker-dot"></div>
-      <div class="worker-label">Worker ${index + 1}</div>
-      <div class="worker-state">Idle</div>
-    </div>
+  el.innerHTML = rows.map(([key, value]) => `
+    <div class="k">${escapeHtml(key)}</div>
+    <div>${value}</div>
   `).join("");
 }
 
-function render(results) {
-  const overall = computeOverall(results);
-  document.getElementById("overall-progress-text").textContent = `${overall.weightedPercent}%`;
-  document.getElementById("current-phase").textContent = overall.currentPhase;
-  document.getElementById("phase-count").textContent = `${overall.doneCount} / ${overall.total}`;
-  document.getElementById("last-update").textContent = overall.latestTimestamp;
-  document.getElementById("overall-progress-fill").style.width = `${overall.weightedPercent}%`;
-  document.getElementById("overall-progress-fill").style.background =
-    overall.state === "error" ? "var(--error)" :
-    overall.state === "done" ? "var(--done)" :
-    overall.state === "running" ? "var(--running)" : "var(--waiting)";
+function renderAlerts(data) {
+  const warnings = Array.isArray(data?.warnings) ? data.warnings : [];
+  const errors = Array.isArray(data?.errors) ? data.errors : [];
+  const el = document.getElementById("alerts");
+  if (!warnings.length && !errors.length) {
+    el.innerHTML = `<div class="chips"><span class="chip good">No active warnings or errors</span></div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="chips">
+      ${errors.map(item => `<span class="chip bad">${escapeHtml(item)}</span>`).join("")}
+      ${warnings.map(item => `<span class="chip warn">${escapeHtml(item)}</span>`).join("")}
+    </div>
+  `;
+}
 
-  const badge = document.getElementById("overall-badge");
-  badge.className = `badge ${stateClass(overall.state)}`;
-  badge.textContent = stateLabel(overall.state).toUpperCase();
+function renderRuntime(data) {
+  const phases = Array.isArray(data?.runtime_statuses) ? data.runtime_statuses : [];
+  const el = document.getElementById("runtime-list");
+  if (!phases.length) {
+    el.innerHTML = `<div class="empty">No runtime status files found yet.</div>`;
+    return;
+  }
+  el.innerHTML = phases.map(item => `
+    <article class="phase-card">
+      <div class="phase-top">
+        <div class="phase-name">${escapeHtml(item.label || item.phase_name)}</div>
+        <div class="${pillClass(statusTone(item.status))}">${escapeHtml(statusLabel(item.status))}</div>
+      </div>
+      <div class="kv">
+        <div class="k">Runtime File</div>
+        <div><span class="code">${escapeHtml(item.runtime_file || "n/a")}</span></div>
+        <div class="k">Timestamp</div>
+        <div>${escapeHtml(item.timestamp || "n/a")}</div>
+        <div class="k">Progress</div>
+        <div>${escapeHtml(`${item.current_count ?? "?"} / ${item.total_count ?? "?"}`)}</div>
+        <div class="k">Last Output</div>
+        <div><span class="code">${escapeHtml(item.last_output_file || "n/a")}</span></div>
+      </div>
+    </article>
+  `).join("");
+}
 
-  const grid = document.getElementById("phase-grid");
-  const emptyState = document.getElementById("empty-state");
-  const anyLoaded = results.some(item => item.data);
-  emptyState.style.display = anyLoaded ? "none" : "block";
+function renderFiles(data) {
+  const files = Array.isArray(data?.files_written) ? data.files_written : [];
+  const el = document.getElementById("files-list");
+  if (!files.length) {
+    el.innerHTML = `<div class="empty">No files written recorded yet.</div>`;
+    return;
+  }
+  el.innerHTML = files.map(item => `
+    <article class="list-card">
+      <div class="list-top">
+        <div class="list-title">${escapeHtml(item.phase || "Output")}</div>
+        <div class="muted">${escapeHtml(item.timestamp || "n/a")}</div>
+      </div>
+      <div class="code">${escapeHtml(item.path || "n/a")}</div>
+    </article>
+  `).join("");
+}
 
-  grid.innerHTML = results.map(({ phase, data }) => {
-    const status = data?.status || "waiting";
-    const percent = progressPercent(data);
-    const outputFile = data?.last_output_file
-      ? `<code>${escapeHtml(data.last_output_file)}</code>`
-      : `<span class="muted">n/a</span>`;
+function renderOutputs(data) {
+  const counts = data?.generated_page_counts || {};
+  const hubState = data?.hub_state || {};
+  renderKv("output-summary", [
+    ["Hub Pages", escapeHtml(counts.hub_pages ?? "n/a")],
+    ["Class Pages", escapeHtml(counts.class_pages ?? "n/a")],
+    ["Course Pages", escapeHtml(counts.course_pages ?? "n/a")],
+    ["Location Pages", escapeHtml(counts.location_pages ?? "n/a")],
+    ["Course-at-City Pages", escapeHtml(counts.course_at_city_pages ?? "n/a")],
+    ["Schedule Feed Sessions", escapeHtml(hubState.schedule_session_count ?? "n/a")],
+    ["Expired Session Markers", `<span class="chip ${hubState.expired_session_markers_total ? "warn" : "good"}">${escapeHtml(hubState.expired_session_markers_total ?? 0)}</span>`],
+  ]);
 
-    return `
-      <div class="tile">
-        <div class="tile-top">
-          <div class="tile-name">${escapeHtml(phase.label)}</div>
-          <div class="badge ${stateClass(status)}">${escapeHtml(stateLabel(status))}</div>
-        </div>
-        <div class="tile-meta">
-          <div>
-            <div class="label">Progress</div>
-            <div>${escapeHtml(formatProgress(data))}</div>
-          </div>
-          <div class="progress">
-            <div style="width:${percent}%; background:${status === "error" ? "var(--error)" : status === "done" ? "var(--done)" : status === "running" ? "var(--running)" : "var(--waiting)"};"></div>
-          </div>
-          <div>
-            <div class="label">Last Output File</div>
-            <div>${outputFile}</div>
-          </div>
-          <div>
-            <div class="label">Timestamp</div>
-            <div>${escapeHtml(data?.timestamp || "Waiting")}</div>
-          </div>
+  const hubs = Array.isArray(hubState.core_hubs) ? hubState.core_hubs : [];
+  const hubList = document.getElementById("hub-list");
+  if (!hubs.length) {
+    hubList.innerHTML = `<div class="empty">No hub output data found.</div>`;
+    return;
+  }
+  hubList.innerHTML = hubs.map(item => `
+    <article class="list-card">
+      <div class="list-top">
+        <div class="list-title">/${escapeHtml(item.slug)}.html</div>
+        <div class="chips">
+          <span class="chip ${item.stale_vs_schedule_feed ? "warn" : "good"}">${item.stale_vs_schedule_feed ? "Stale" : "Fresh"}</span>
+          <span class="chip ${item.expired_session_markers ? "warn" : "good"}">Expired markers: ${escapeHtml(item.expired_session_markers ?? 0)}</span>
         </div>
       </div>
-    `;
-  }).join("");
+      <div class="kv">
+        <div class="k">Path</div>
+        <div><span class="code">${escapeHtml(item.path || "n/a")}</span></div>
+        <div class="k">Modified</div>
+        <div>${escapeHtml(item.modified_at || "n/a")}</div>
+        <div class="k">Session Markers</div>
+        <div>${escapeHtml(item.session_marker_count ?? 0)}</div>
+      </div>
+    </article>
+  `).join("");
+}
 
-  updateTimings(results, overall);
-  updateLatestFiles(results);
-  renderWorkers(results);
+function renderSummary(data) {
+  const summary = data?.build_summary || {};
+  renderKv("summary-kv", [
+    ["Summary Status", `<span class="${pillClass(statusTone(summary.status))}">${escapeHtml(statusLabel(summary.status || "unknown"))}</span>`],
+    ["Started At", escapeHtml(summary.started_at || "n/a")],
+    ["Finished At", escapeHtml(summary.finished_at || "n/a")],
+    ["Pipeline Status", escapeHtml(summary.pipeline_status || "n/a")],
+    ["Schedule Path", `<span class="code">${escapeHtml(summary.schedule_path || "n/a")}</span>`],
+    ["Manifest Path", `<span class="code">${escapeHtml(summary.manifest_path || "n/a")}</span>`],
+    ["Future Active Count", escapeHtml(summary.classification_counts?.future_active ?? "n/a")],
+    ["Build Plan To Build", escapeHtml(summary.build_plan_counts?.to_build ?? "n/a")],
+  ]);
+}
+
+function renderSettings(data) {
+  const settings = data?.detected_settings || {};
+  const heroPaths = settings.active_hero_image_paths || {};
+  const heroHtml = Object.entries(heroPaths).map(([slug, path]) => `
+    <span class="chip">${escapeHtml(slug)}: ${escapeHtml(path || "n/a")}</span>
+  `).join("");
+
+  renderKv("settings-kv", [
+    ["hub_upcoming_session_limit", escapeHtml(settings.hub_upcoming_session_limit ?? "n/a")],
+    ["active_hero_image_paths", heroHtml ? `<div class="chips">${heroHtml}</div>` : "n/a"],
+    ["active_json_feed_path", `<span class="code">${escapeHtml(settings.active_json_feed_path || "n/a")}</span>`],
+    ["current_output_folder", `<span class="code">${escapeHtml(settings.current_output_folder || "n/a")}</span>`],
+    ["gtm_container_id", escapeHtml(settings.gtm_container_id || "n/a")],
+  ]);
+}
+
+function renderGit(data) {
+  const git = data?.git || {};
+  const state = git.has_uncommitted_changes === true ? "Dirty" : git.has_uncommitted_changes === false ? "Clean" : "Unknown";
+  const tone = git.has_uncommitted_changes === true ? "warn" : git.has_uncommitted_changes === false ? "good" : "neutral";
+
+  document.getElementById("git-panel").innerHTML = `
+    <div class="chips">
+      <span class="chip ${tone}">${escapeHtml(state)}</span>
+      ${git.branch ? `<span class="chip">Branch: ${escapeHtml(git.branch)}</span>` : ""}
+      ${git.head ? `<span class="chip">HEAD: ${escapeHtml(git.head)}</span>` : ""}
+      ${git.changed_files_count != null ? `<span class="chip">Changed files: ${escapeHtml(git.changed_files_count)}</span>` : ""}
+    </div>
+    <div class="mono-list">
+      ${(git.changed_files_preview || []).map(line => `<div>${escapeHtml(line)}</div>`).join("") || "<div>No changed files preview.</div>"}
+    </div>
+  `;
+}
+
+function renderTopline(data) {
+  const staleCount = data?.hub_state?.stale_hub_count ?? 0;
+  const expiredMarkers = data?.hub_state?.expired_session_markers_total ?? 0;
+  const gitDirty = data?.git?.has_uncommitted_changes === true;
+  const errors = Array.isArray(data?.errors) ? data.errors : [];
+
+  let tone = "good";
+  let label = "Healthy";
+  if (errors.length) {
+    tone = "bad";
+    label = "Build Errors";
+  } else if (staleCount || expiredMarkers || gitDirty) {
+    tone = "warn";
+    label = "Needs Attention";
+  }
+
+  const pill = document.getElementById("overall-pill");
+  pill.className = pillClass(tone);
+  pill.textContent = label;
+
+  setText("repo-path", data?.monitored_repo_path || "n/a");
+  setText("last-run", data?.build_summary?.finished_at || data?.generated_at || "n/a");
+  setText("schedule-source", data?.current_schedule_json_source?.path || "n/a");
+  setText("config-source", data?.current_config_source || "n/a");
+  setText("hub-stale", staleCount ? `${staleCount} stale hub(s)` : "All core hubs fresh");
+  setText("git-state", gitDirty ? "Uncommitted changes present" : "Working tree clean");
+}
+
+function render(data) {
+  renderTopline(data);
+  renderRuntime(data);
+  renderFiles(data);
+  renderOutputs(data);
+  renderSummary(data);
+  renderSettings(data);
+  renderGit(data);
+  renderAlerts(data);
 }
 
 async function refresh() {
-  const results = await Promise.all(PHASES.map(loadPhase));
-  render(results);
+  const data = await fetchFirstJson(SOURCES);
+  if (!data) {
+    document.getElementById("overall-pill").className = pillClass("bad");
+    document.getElementById("overall-pill").textContent = "No Snapshot";
+    return;
+  }
+  render(data);
 }
 
 refresh();

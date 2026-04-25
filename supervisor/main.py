@@ -18,6 +18,7 @@ if str(REPO_ROOT) not in sys.path:
 from supervisor import pipeline as pipeline_module
 from supervisor.manifest import classifier, manifest_io
 from supervisor.planning import build_plan as build_plan_module
+from supervisor.status_snapshot import write_status_snapshot
 
 SUPERVISOR_DIR = REPO_ROOT / "supervisor"
 RUNTIME_DIR = REPO_ROOT / "data" / "runtime"
@@ -374,6 +375,7 @@ def run_pipeline() -> int:
             },
         }
         write_json(SUMMARY_PATH, summary)
+        write_status_snapshot()
         logging.info("Wrote build summary: %s", rel(SUMMARY_PATH))
         return 0
 
@@ -398,6 +400,7 @@ def run_pipeline() -> int:
             "progress_path": rel(PROGRESS_PATH),
         }
         write_json(SUMMARY_PATH, summary)
+        write_status_snapshot()
         return 1
 
 

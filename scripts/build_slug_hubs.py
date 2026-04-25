@@ -9,6 +9,7 @@ from typing import Any
 from urllib.parse import quote
 
 from scripts.build_status import BuildStatusReporter
+from supervisor.status_snapshot import write_status_snapshot
 from zoneinfo import ZoneInfo
 
 
@@ -16,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs"
+STATE_DIR = ROOT / "data" / "state"
 TZ = ZoneInfo("America/New_York")
 DATE_LIMIT = 12
 EMPTY_FALLBACK_TITLE = "No upcoming dates are currently listed for this course."
@@ -50,7 +52,48 @@ def normalize_space(value: str | None) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
-def matches_tab(session: dict[str, Any], tab: dict[str, Any]) -> bool:
+def normalize_match_text(value: str | None) -> str:
+    text = normalize_space(value).lower()
+    text = text.replace("&", " and ")
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def classify_acls_tab(session: dict[str, Any]) -> tuple[str | None, str]:
+    course_name = normalize_space(session.get("course_name"))
+    course_subtitle = normalize_space(session.get("course_subtitle"))
+    course_code = normalize_space(session.get("course_code")).upper()
+    haystack = normalize_match_text(f"{course_name} {course_subtitle}")
+
+    if "ACLS" not in course_name.upper() and "ACLS" not in course_code:
+        return None, "excluded:not_acls"
+
+    if course_code == "AHA_ACLS_HEARTCODE":
+        return "acls-heartcode", "course_code:AHA_ACLS_HEARTCODE"
+    if course_code == "AHA_ACLS_PROVIDER_RENEWAL":
+        return "acls-renewal", "course_code:AHA_ACLS_PROVIDER_RENEWAL"
+    if course_code == "AHA_ACLS_PROVIDER_INITIAL":
+        return "acls-provider", "course_code:AHA_ACLS_PROVIDER_INITIAL"
+
+    if "heartcode" in haystack or "skills session" in haystack:
+        return "acls-heartcode", "normalized_title:heartcode_or_skills_session"
+    if "renewal" in haystack or "provider update" in haystack:
+        return "acls-renewal", "normalized_title:renewal_or_update"
+    if "acls provider initial" in haystack:
+        return "acls-provider", "normalized_title:acls_provider_initial"
+    if "acls provider in person initial" in haystack:
+        return "acls-provider", "normalized_title:acls_provider_in_person_initial"
+    if "aha acls provider" in haystack and "renewal" not in haystack and "update" not in haystack:
+        return "acls-provider", "normalized_title:default_provider"
+
+    return None, "excluded:no_acls_tab_match"
+
+
+def matches_tab(session: dict[str, Any], tab: dict[str, Any], *, page_slug: str | None = None) -> bool:
+    if page_slug == "acls":
+        matched_tab, _ = classify_acls_tab(session)
+        return matched_tab == tab.get("id")
+
     course_name = normalize_space(session.get("course_name"))
     course_subtitle = normalize_space(session.get("course_subtitle"))
     course_code = normalize_space(session.get("course_code"))
@@ -73,6 +116,31 @@ def matches_tab(session: dict[str, Any], tab: dict[str, Any]) -> bool:
 
     excludes = [str(item).lower() for item in tab.get("exclude_name_contains", []) if str(item).strip()]
     return not any(needle in course_name_lower for needle in excludes)
+
+
+def build_acls_debug_records(page: dict[str, Any], sessions: list[dict[str, Any]], *, now: datetime) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for session in sort_sessions(sessions):
+        if not is_future_session(session, now=now):
+            continue
+        course_name = normalize_space(session.get("course_name"))
+        course_code = normalize_space(session.get("course_code")).upper()
+        if "ACLS" not in course_name.upper() and "ACLS" not in course_code:
+            continue
+        normalized_tab, reason = classify_acls_tab(session)
+        records.append(
+            {
+                "session_id": session.get("session_id"),
+                "raw_title": session.get("course_name"),
+                "start_datetime": session.get("start_at"),
+                "normalized_hub": page.get("slug"),
+                "normalized_tab": normalized_tab,
+                "included": normalized_tab is not None,
+                "reason": reason if normalized_tab is None else None,
+                "match_reason": reason if normalized_tab is not None else None,
+            }
+        )
+    return records
 
 
 def sort_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -264,7 +332,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
         matched = [
             session
             for session in sessions
-            if matches_tab(session, tab) and is_future_session(session, now=now)
+            if matches_tab(session, tab, page_slug=str(page.get("slug") or "")) and is_future_session(session, now=now)
         ]
         matched = sort_sessions(matched)
         if matched:
@@ -343,6 +411,7 @@ def build() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     schedule = json.loads(SCHEDULE_PATH.read_text(encoding="utf-8"))
     sessions = schedule.get("sessions", [])
+    now = datetime.now(TZ)
 
     reporter.start(total=len(manifest))
     last_output: Path | None = None
@@ -351,9 +420,19 @@ def build() -> None:
             html = render_page(page, sessions)
             last_output = OUTPUT_DIR / f"{page['slug']}.html"
             last_output.write_text(html, encoding="utf-8")
+            if page.get("slug") == "acls":
+                acl_debug_path = STATE_DIR / "acls_hub_debug.json"
+                acl_debug_payload = {
+                    "generated_at": now.isoformat(),
+                    "source_schedule_path": str(SCHEDULE_PATH),
+                    "page_slug": "acls",
+                    "records": build_acls_debug_records(page, sessions, now=now),
+                }
+                acl_debug_path.write_text(json.dumps(acl_debug_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
             reporter.update(current=index, total=len(manifest), last_output_file=last_output)
             print(f"Wrote {last_output}")
         reporter.done(current=len(manifest), total=len(manifest), last_output_file=last_output)
+        write_status_snapshot()
     except Exception:
         reporter.error(last_output_file=last_output)
         raise

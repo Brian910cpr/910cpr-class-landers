@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 from scripts.build_status import BuildStatusReporter
+from supervisor.status_snapshot import write_status_snapshot
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
 
@@ -154,6 +155,7 @@ def main() -> int:
         )
 
         reporter.done(current=len(sessions), total=len(sessions), last_output_file=output_path)
+        write_status_snapshot()
         print("Future schedule build complete")
         print(f"Wrote {output_path}")
         print(f"Future sessions written: {len(future_sessions)}")

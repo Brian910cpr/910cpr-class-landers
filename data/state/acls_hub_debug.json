@@ -1,0 +1,1057 @@
+{
+  "generated_at": "2026-04-24T21:55:22.772306-04:00",
+  "source_schedule_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
+  "page_slug": "acls",
+  "records": [
+    {
+      "session_id": "12774070",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-04-25T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774060",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-04-27T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774066",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-04-29T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774015",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-02T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774041",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-06T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774014",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-09T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12773995",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-11T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774042",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-13T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774013",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-16T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12773996",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-18T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774012",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-23T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12773997",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-25T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774044",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-05-27T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774028",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-01T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774034",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-03T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774037",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-06T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774029",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-08T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774033",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-10T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774038",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-13T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774030",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-15T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774036",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-17T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774039",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-20T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774031",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-22T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774035",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-24T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774040",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-27T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774032",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-06-29T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774089",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-01T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774085",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-04T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774094",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-06T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774090",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-08T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774086",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-11T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774095",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-13T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774091",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-15T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774087",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-18T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774096",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-20T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774092",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-22T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774088",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-25T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774097",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-27T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774093",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-07-29T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774071",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-01T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774076",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-03T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774081",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-05T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774072",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-08T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12946261",
+      "raw_title": "AHA ACLS Provider - In-person (Renewal)",
+      "start_datetime": "2026-08-10T11:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-renewal",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_PROVIDER_RENEWAL"
+    },
+    {
+      "session_id": "12774082",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-12T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774073",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-15T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774078",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-17T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774083",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-19T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774074",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-22T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774079",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-24T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774084",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-26T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774075",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-29T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774080",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-08-31T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774002",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-02T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774007",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-05T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12773998",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-07T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774003",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-09T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774008",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-12T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774000",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-14T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774004",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-16T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774009",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-19T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12773999",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-21T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774005",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-23T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774010",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-26T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774001",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-28T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774006",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-09-30T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774106",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-03T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774098",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-05T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774102",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-07T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774107",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-10T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774099",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-12T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774103",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-14T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774110",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-17T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774100",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-19T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774104",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-21T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774109",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-24T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774101",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-26T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774105",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-28T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774108",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-10-31T08:30:00-04:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774111",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-02T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774116",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-04T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774120",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-07T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774112",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-09T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774117",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-11T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774121",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-14T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774113",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-16T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774118",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-18T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774122",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-21T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774114",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-23T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774119",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-25T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774123",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-28T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774115",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-11-30T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774128",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-02T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774134",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-05T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774124",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-07T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774129",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-09T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774133",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-12T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774125",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-14T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774130",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-16T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774135",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-19T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774126",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-21T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774131",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-23T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774136",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-26T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774127",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-28T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    },
+    {
+      "session_id": "12774132",
+      "raw_title": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
+      "start_datetime": "2026-12-30T08:30:00-05:00",
+      "normalized_hub": "acls",
+      "normalized_tab": "acls-heartcode",
+      "included": true,
+      "reason": null,
+      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
+    }
+  ]
+}

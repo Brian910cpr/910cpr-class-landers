@@ -66,12 +66,17 @@
       {
         "id": "acls-provider",
         "label": "ACLS Provider",
-        "tab_badge": "In-Person",
+        "tab_badge": "Initial",
         "tab_icon": "/images/tab_classroom.png",
         "program": "AHA ACLS Provider",
         "description": "Standard ACLS provider training for first-time students or anyone coming back after expiration.",
         "course_codes": ["AHA_ACLS_PROVIDER_INITIAL"],
-        "name_contains": ["ACLS Provider - In-person (Initial)", "ACLS Provider Class"],
+        "name_contains": [
+          "AHA ACLS Provider - In-person (Initial)",
+          "AHA - ACLS Provider - In-person Initial",
+          "AHA ACLS Provider",
+          "ACLS Provider Initial"
+        ],
         "full_schedule_url": "/courses/aha-acls-provider-class.html",
         "full_schedule_label": "See full ACLS provider schedule",
         "primary_cta_label": "See ACLS provider page"
@@ -84,7 +89,12 @@
         "program": "AHA ACLS Renewal",
         "description": "For current ACLS providers who need renewal and want the shortest in-person path that still covers the required material.",
         "course_codes": ["AHA_ACLS_PROVIDER_RENEWAL"],
-        "name_contains": ["ACLS Provider - In-person (Renewal)", "ACLS Renewal"],
+        "name_contains": [
+          "AHA ACLS Provider - In-person (Renewal)",
+          "AHA - ACLS Provider Update - In-Person",
+          "AHA ACLS Provider Update",
+          "ACLS Renewal"
+        ],
         "full_schedule_url": "/courses/acls-renewal.html",
         "full_schedule_label": "See full ACLS renewal schedule",
         "primary_cta_label": "See ACLS renewal page"
@@ -97,7 +107,12 @@
         "program": "HeartCode ACLS Skills",
         "description": "Finish the online HeartCode ACLS coursework first, then choose an in-person skills session to complete the certification.",
         "course_codes": ["AHA_ACLS_HEARTCODE"],
-        "name_contains": ["ACLS Provider - HeartCode", "HeartCode"],
+        "name_contains": [
+          "AHA ACLS HeartCode Skills Session",
+          "AHA - ACLS Heartcode Online/Skills",
+          "ACLS HeartCode",
+          "ACLS Skills Session"
+        ],
         "full_schedule_url": "/courses/aha-acls-heartcode-skills-session.html",
         "full_schedule_label": "See full ACLS HeartCode schedule",
         "primary_cta_label": "See ACLS HeartCode page"
