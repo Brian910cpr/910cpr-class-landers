@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T22:13:49.292028-04:00",
+  "generated_at": "2026-04-24T22:47:12.328350-04:00",
   "monitored_repo_path": "E:\\GitHub\\910cpr-class-landers",
   "build_summary": {
     "summary_file": "data\\state\\last_build_summary.json",
@@ -46,12 +46,23 @@
       "phase_name": "build_slug_hubs",
       "label": "Build Hub Pages",
       "status": "done",
-      "timestamp": "2026-04-24T22:13:48.982593-04:00",
+      "timestamp": "2026-04-24T22:47:11.852010-04:00",
       "current_count": 6,
       "total_count": 6,
       "percent_complete": 100.0,
       "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
       "runtime_file": "data\\runtime\\build_slug_hubs.json"
+    },
+    {
+      "phase_name": "build_index_and_sitemap",
+      "label": "Build Index And Sitemap",
+      "status": "done",
+      "timestamp": "2026-04-24T22:38:03.966926-04:00",
+      "current_count": 27603,
+      "total_count": 27603,
+      "percent_complete": 100.0,
+      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
+      "runtime_file": "data\\runtime\\build_index_and_sitemap.json"
     },
     {
       "phase_name": "build_schedule_future",
@@ -118,43 +129,59 @@
       "percent_complete": null,
       "last_output_file": null,
       "runtime_file": "data\\runtime\\acls_hub_debug.json"
+    },
+    {
+      "phase_name": "heartsaver_hub_debug",
+      "label": "Heartsaver Hub Debug",
+      "status": "unknown",
+      "timestamp": null,
+      "current_count": null,
+      "total_count": null,
+      "percent_complete": null,
+      "last_output_file": null,
+      "runtime_file": "data\\runtime\\heartsaver_hub_debug.json"
     }
   ],
   "files_written": [
     {
       "phase": "Build Hub Pages",
       "path": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
-      "timestamp": "2026-04-24T22:13:48.982593-04:00"
+      "timestamp": "2026-04-24T22:47:11.852010-04:00"
     },
     {
       "phase": "Hub Output",
       "path": "docs\\group-training.html",
-      "timestamp": "2026-04-24T22:13:48.981592-04:00"
+      "timestamp": "2026-04-24T22:47:11.852010-04:00"
     },
     {
       "phase": "Hub Output",
       "path": "docs\\uscg-elementary-first-aid-cpr.html",
-      "timestamp": "2026-04-24T22:13:48.895884-04:00"
+      "timestamp": "2026-04-24T22:47:11.751656-04:00"
     },
     {
       "phase": "Hub Output",
       "path": "docs\\heartsaver.html",
-      "timestamp": "2026-04-24T22:13:48.883313-04:00"
+      "timestamp": "2026-04-24T22:47:11.680628-04:00"
     },
     {
       "phase": "Hub Output",
       "path": "docs\\pals.html",
-      "timestamp": "2026-04-24T22:13:48.837775-04:00"
+      "timestamp": "2026-04-24T22:47:11.396566-04:00"
     },
     {
       "phase": "Hub Output",
       "path": "docs\\acls.html",
-      "timestamp": "2026-04-24T22:13:48.746520-04:00"
+      "timestamp": "2026-04-24T22:47:11.306865-04:00"
     },
     {
       "phase": "Hub Output",
       "path": "docs\\bls.html",
-      "timestamp": "2026-04-24T22:13:48.653198-04:00"
+      "timestamp": "2026-04-24T22:47:11.218938-04:00"
+    },
+    {
+      "phase": "Build Index And Sitemap",
+      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
+      "timestamp": "2026-04-24T22:38:03.966926-04:00"
     },
     {
       "phase": "Build Future Schedule Feed",
@@ -184,8 +211,8 @@
   ],
   "generated_page_counts": {
     "hub_pages": 6,
-    "class_pages": 27604,
-    "course_pages": 180,
+    "class_pages": 27652,
+    "course_pages": 181,
     "location_pages": 254,
     "course_at_city_pages": 4,
     "topic_pages": 13,
@@ -211,8 +238,8 @@
         "slug": "bls",
         "path": "docs\\bls.html",
         "exists": true,
-        "modified_at": "2026-04-24T22:13:48.653198-04:00",
-        "size_bytes": 35544,
+        "modified_at": "2026-04-24T22:47:11.218938-04:00",
+        "size_bytes": 36618,
         "session_marker_count": 36,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -221,8 +248,8 @@
         "slug": "acls",
         "path": "docs\\acls.html",
         "exists": true,
-        "modified_at": "2026-04-24T22:13:48.746520-04:00",
-        "size_bytes": 36275,
+        "modified_at": "2026-04-24T22:47:11.306865-04:00",
+        "size_bytes": 37359,
         "session_marker_count": 36,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -231,8 +258,8 @@
         "slug": "pals",
         "path": "docs\\pals.html",
         "exists": true,
-        "modified_at": "2026-04-24T22:13:48.837775-04:00",
-        "size_bytes": 26073,
+        "modified_at": "2026-04-24T22:47:11.396566-04:00",
+        "size_bytes": 27049,
         "session_marker_count": 24,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -241,9 +268,9 @@
         "slug": "heartsaver",
         "path": "docs\\heartsaver.html",
         "exists": true,
-        "modified_at": "2026-04-24T22:13:48.883313-04:00",
-        "size_bytes": 27118,
-        "session_marker_count": 25,
+        "modified_at": "2026-04-24T22:47:11.680628-04:00",
+        "size_bytes": 31282,
+        "session_marker_count": 24,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
       },
@@ -251,8 +278,8 @@
         "slug": "group-training",
         "path": "docs\\group-training.html",
         "exists": true,
-        "modified_at": "2026-04-24T22:13:48.981592-04:00",
-        "size_bytes": 59997,
+        "modified_at": "2026-04-24T22:47:11.852010-04:00",
+        "size_bytes": 61140,
         "session_marker_count": 60,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -261,8 +288,8 @@
         "slug": "uscg-elementary-first-aid-cpr",
         "path": "docs\\uscg-elementary-first-aid-cpr.html",
         "exists": true,
-        "modified_at": "2026-04-24T22:13:48.895884-04:00",
-        "size_bytes": 13483,
+        "modified_at": "2026-04-24T22:47:11.751656-04:00",
+        "size_bytes": 14306,
         "session_marker_count": 12,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -277,19 +304,35 @@
   "git": {
     "repo_root": "E:/GitHub/910cpr-class-landers",
     "branch": "main",
-    "head": "b4b53b2a5db",
+    "head": "bb5eb0c9bb2",
     "has_uncommitted_changes": true,
-    "changed_files_count": 9,
+    "changed_files_count": 27990,
     "changed_files_preview": [
+      " M data/config/slug_hubs.json",
       " M data/runtime/acls_hub_debug.json",
-      " M data/runtime/build_schedule_future.json",
       " M data/runtime/build_slug_hubs.json",
       " M data/state/supervisor_status.json",
       " M docs/acls.html",
-      " M docs/data/schedule_future.json",
-      " M docs/group-training.html",
-      " M docs/heartsaver.html",
-      " M docs/pals.html"
+      " M docs/bls.html",
+      " M docs/classes/10000418.html",
+      " M docs/classes/10002547.html",
+      " M docs/classes/10004935.html",
+      " M docs/classes/10005545.html",
+      " M docs/classes/10005558.html",
+      " M docs/classes/10008140.html",
+      " M docs/classes/10008989.html",
+      " M docs/classes/10009253.html",
+      " M docs/classes/10009255.html",
+      " M docs/classes/10009256.html",
+      " M docs/classes/10009257.html",
+      " M docs/classes/10009258.html",
+      " M docs/classes/10009261.html",
+      " M docs/classes/10009262.html",
+      " M docs/classes/10009265.html",
+      " M docs/classes/10009271.html",
+      " M docs/classes/10009275.html",
+      " M docs/classes/10009276.html",
+      " M docs/classes/10009277.html"
     ]
   },
   "detected_settings": {
@@ -306,7 +349,7 @@
     "config_source": "data\\config\\slug_hubs.json"
   },
   "warnings": [
-    "git_dirty:9"
+    "git_dirty:27990"
   ],
   "errors": []
 }

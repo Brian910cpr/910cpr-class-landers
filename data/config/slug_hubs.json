@@ -181,14 +181,53 @@
     "hero_image": "/images/heartsaver_general.png",
     "hero_image_alt": "AHA Heartsaver CPR and first aid course",
     "full_schedule_banner": "Want more Heartsaver dates? Open the full schedule page for the tab you selected.",
+    "other_training_options": [
+      {
+        "label": "AHA Courses",
+        "description": "Browse the main American Heart Association paths including BLS, ACLS, PALS, and Heartsaver.",
+        "href": "/index.html",
+        "cta": "Browse AHA training"
+      },
+      {
+        "label": "American Red Cross Courses",
+        "description": "Compare Red Cross options if your employer, school, or program prefers ARC certification.",
+        "href": "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule",
+        "cta": "See ARC schedule options"
+      },
+      {
+        "label": "HSI Courses",
+        "description": "Explore HSI workplace-focused options when you need a non-AHA certification path.",
+        "href": "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule",
+        "cta": "See HSI schedule options"
+      },
+      {
+        "label": "Group / Workplace Training",
+        "description": "Plan a private class for a team, office, school, or jobsite instead of booking individual seats.",
+        "href": "/group-training.html",
+        "cta": "Request group training"
+      },
+      {
+        "label": "USCG / Maritime First Aid",
+        "description": "Find the maritime-first option for crews and mariners who need USCG-aligned first aid and CPR.",
+        "href": "/uscg-elementary-first-aid-cpr.html",
+        "cta": "See maritime options"
+      }
+    ],
+    "approved_public_locations": [
+      "Wilmington; Shipyard Blvd",
+      "Holly Ridge; Sound Rd",
+      "Burgaw; 111 S Wright St"
+    ],
     "tabs": [
       {
         "id": "hs-fa-cpr-aed",
         "label": "First Aid + CPR + AED",
-        "tab_badge": "Popular Choice",
+        "tab_badge": "In-Person + Online + Skills",
         "tab_icon": "/images/tab_blended.png",
         "program": "First Aid / CPR / AED",
         "description": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
+        "description_short": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
+        "description_more": "Choose this path when you need the most complete workplace-friendly Heartsaver option. Public dates can include both traditional in-person classes and blended online-plus-skills sessions, and each session row shows the actual format.",
         "course_codes": ["AHA_HS_FA_CPR_IP", "AHA_HS_FA_CPR_BL"],
         "name_contains": ["Heartsaver® First Aid CPR AED"],
         "exclude_name_contains": ["Pediatric"],
@@ -203,6 +242,8 @@
         "tab_icon": "/images/tab_classroom.png",
         "program": "Heartsaver CPR AED",
         "description": "Best when you need CPR and AED training without the added first aid component.",
+        "description_short": "Best when you need CPR and AED training without the added first aid component.",
+        "description_more": "This is the leaner Heartsaver option for teams and individuals who do not need the first aid module. Private or onsite-only sessions are excluded from the public hub, so only bookable public inventory should appear here.",
         "name_contains": ["Heartsaver® CPR AED"],
         "exclude_name_contains": ["Pediatric", "First Aid"],
         "full_schedule_url": "/heartsaver.html",
@@ -216,6 +257,8 @@
         "tab_icon": "/images/tab_classroom.png",
         "program": "Pediatric First Aid CPR AED",
         "description": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
+        "description_short": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
+        "description_more": "Use this tab for childcare, camp, school, and caregiver requirements. If the visible sessions are blended, the row badges will show that clearly so the tab does not mislead anyone into expecting a classroom-only format.",
         "course_codes": ["AHA_HS_PED_FA_CPR_BL"],
         "name_contains": ["Heartsaver® Pediatric First Aid CPR AED"],
         "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",

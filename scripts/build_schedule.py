@@ -80,6 +80,11 @@ def short_slug(text: str, max_len: int = 70) -> str:
     return f"{clean}-{digest}" if clean else digest
 
 
+def is_valid_schedule_anchor(value: str) -> bool:
+    token = str(value or "").strip()
+    return bool(token and token not in {"0", "None", "none", "null", "NULL"})
+
+
 def js_escape(value):
     if value is None:
         return ""
@@ -782,11 +787,12 @@ for s in sessions:
     )
     course_id = str(s.get("course_id", "")).strip()
     course_number = str(s.get("course_number", "")).strip()
-    schedule_anchor = course_id or course_number
-    if schedule_anchor:
+    schedule_anchor = course_id if is_valid_schedule_anchor(course_id) else course_number
+    if is_valid_schedule_anchor(schedule_anchor):
         schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
     else:
         schedule_url = "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule"
+    course_page_url = schedule_url
 
     canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
 

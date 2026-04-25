@@ -70,6 +70,93 @@ ul {
   padding: 14px;
   border-radius: 8px;
 }
+.course-hero, .course-sessions {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+.course-sessions {
+  margin-top: 22px;
+}
+.course-eyebrow {
+  margin: 0 0 8px;
+  color: #0f5e9c;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.course-description {
+  max-width: 760px;
+  color: #334155;
+  font-size: 1.02rem;
+}
+.course-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+.course-primary-cta, .course-secondary-cta, .course-session-register, .course-help-cta, .course-load-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.course-primary-cta, .course-session-register, .course-help-cta {
+  background: #0f5e9c;
+  color: #ffffff;
+}
+.course-secondary-cta, .course-load-more {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+.course-section-head h2 {
+  margin-bottom: 4px;
+}
+.course-section-head p {
+  margin-top: 0;
+  color: #475569;
+}
+.course-session-list {
+  display: grid;
+  gap: 12px;
+}
+.course-session-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) minmax(180px, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid #dbe4ee;
+  border-radius: 16px;
+  background: #f8fbff;
+}
+.course-session-date {
+  font-weight: 800;
+}
+.course-session-time, .course-session-where {
+  color: #475569;
+}
+.course-more-row {
+  margin-top: 16px;
+}
+.js-live-session-empty p {
+  color: #475569;
+}
+@media (max-width: 760px) {
+  .course-session-row {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 <body>
@@ -604,5 +691,6 @@ window.dataLayer.push({
 });
 </script>
 
+<script src="/assets/live-sessions.js"></script>
 </body>
 </html>

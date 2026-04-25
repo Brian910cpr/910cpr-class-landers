@@ -965,6 +965,7 @@ for idx, s in enumerate(sessions, 1):
         schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
     else:
         schedule_url = "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule"
+    course_page_url = schedule_url
 
     canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
 

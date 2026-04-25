@@ -1,52 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Redirecting to Enrollware...</title>
-  <meta name="robots" content="noindex,follow" />
-
-  <!-- Google Tag Manager -->
-  <script>
-    (function(w,d,s,l,i){
-      w[l]=w[l]||[];
-      w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
-      var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),
-          dl=l!='dataLayer' ? '&l='+l : '';
-      j.async=true;
-      j.src='https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-      f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PQS8DCBH');
-  </script>
-  <!-- End Google Tag Manager -->
-
-  <script>
-    function goToEnrollware() {
-      var targetUrl = 'https://coastalcprtraining.enrollware.com/schedule';
-
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: 'enrollware_redirect',
-        redirect_page_path: window.location.pathname,
-        redirect_page_url: window.location.href,
-        redirect_destination: targetUrl,
-        redirect_page_title: document.title
-      });
-
-      setTimeout(function () {
-        window.location.replace(targetUrl);
-      }, 700);
-    }
-
-    window.addEventListener('load', goToEnrollware);
-  </script>
-
-  <noscript>
-    <meta http-equiv="refresh" content="0; url=https://coastalcprtraining.enrollware.com/schedule">
-  </noscript>
+<meta charset="UTF-8">
+<title>910CPR Class Reference Index</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Class index built from actual generated class pages.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.910cpr.com/">
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQS8DCBH');
+</script>
+<!-- End Google Tag Manager -->
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #111827;
+  background: #ffffff;
+  line-height: 1.45;
+}
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 16px;
+}
+header, footer {
+  border-bottom: 1px solid #e5e7eb;
+}
+footer {
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 0;
+  margin-top: 30px;
+}
+h1, h2, h3 {
+  line-height: 1.2;
+}
+a {
+  color: #1d4ed8;
+}
+ul {
+  margin-top: 10px;
+}
+.meta {
+  color: #4b5563;
+}
+.small {
+  font-size: 14px;
+  color: #4b5563;
+}
+.nav a {
+  margin-right: 12px;
+}
+.section {
+  margin-top: 28px;
+}
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+.plain-card {
+  border: 1px solid #e5e7eb;
+  padding: 14px;
+  border-radius: 8px;
+}
+.course-hero, .course-sessions {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+.course-sessions {
+  margin-top: 22px;
+}
+.course-eyebrow {
+  margin: 0 0 8px;
+  color: #0f5e9c;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.course-description {
+  max-width: 760px;
+  color: #334155;
+  font-size: 1.02rem;
+}
+.course-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+.course-primary-cta, .course-secondary-cta, .course-session-register, .course-help-cta, .course-load-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.course-primary-cta, .course-session-register, .course-help-cta {
+  background: #0f5e9c;
+  color: #ffffff;
+}
+.course-secondary-cta, .course-load-more {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+.course-section-head h2 {
+  margin-bottom: 4px;
+}
+.course-section-head p {
+  margin-top: 0;
+  color: #475569;
+}
+.course-session-list {
+  display: grid;
+  gap: 12px;
+}
+.course-session-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) minmax(180px, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid #dbe4ee;
+  border-radius: 16px;
+  background: #f8fbff;
+}
+.course-session-date {
+  font-weight: 800;
+}
+.course-session-time, .course-session-where {
+  color: #475569;
+}
+.course-more-row {
+  margin-top: 16px;
+}
+.js-live-session-empty p {
+  color: #475569;
+}
+@media (max-width: 760px) {
+  .course-session-row {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
-<<<<<<< HEAD
 <body>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
@@ -119,17 +231,7 @@ window.dataLayer.push({
   page_name: "910CPR Class Reference Index"
 });
 </script>
-=======
-<body class="lander course-aha-bls-provider-a17a3d7a">
-  <!-- Google Tag Manager (noscript) -->
-  <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
-      height="0" width="0" style="display:none;visibility:hidden"></iframe>
-  </noscript>
-  <!-- End Google Tag Manager (noscript) -->
->>>>>>> 49092bae675cc9650bc8b30658737bc014626048
 
-  <p>Redirecting to Enrollware...</p>
-  <p><a href="https://coastalcprtraining.enrollware.com/schedule">Click here if you are not redirected.</a></p>
+<script src="/assets/live-sessions.js"></script>
 </body>
 </html>

@@ -24,6 +24,19 @@ TZ = ZoneInfo("America/New_York")
 DATE_LIMIT = 12
 EMPTY_FALLBACK_TITLE = "No upcoming dates are currently listed for this course."
 EMPTY_FALLBACK_BODY = "Please contact us and we'll help you find the right class."
+PRIVATE_HINTS = (
+    "private",
+    "onsite",
+    "on-site",
+    "client",
+    "residence",
+    "business",
+    "organization",
+    "appointment",
+    "custom group",
+    "custom session",
+    "tbd",
+)
 
 
 def parse_dt(value: str | None) -> datetime | None:
@@ -59,6 +72,88 @@ def normalize_match_text(value: str | None) -> str:
     text = text.replace("&", " and ")
     text = re.sub(r"[^a-z0-9]+", " ", text)
     return re.sub(r"\s+", " ", text).strip()
+
+
+def approved_locations_for_page(page: dict[str, Any]) -> set[str]:
+    return {
+        clean_location(location)
+        for location in page.get("approved_public_locations", [])
+        if clean_location(location)
+    }
+
+
+def public_inventory_decision(session: dict[str, Any], page: dict[str, Any]) -> tuple[bool, str]:
+    location_raw = normalize_space(session.get("location_display") or session.get("location_name"))
+    course_name = normalize_space(session.get("course_name"))
+    course_subtitle = normalize_space(session.get("course_subtitle"))
+    haystack = normalize_match_text(f"{course_name} {course_subtitle} {location_raw}")
+    location_clean = clean_location(location_raw)
+
+    approved_locations = approved_locations_for_page(page)
+    if approved_locations and location_clean not in approved_locations:
+        return False, "excluded:unapproved_location"
+
+    if any(term in haystack for term in PRIVATE_HINTS):
+        return False, "excluded:private_or_custom_signal"
+
+    return True, "included:public_inventory"
+
+
+def classify_heartsaver_session(session: dict[str, Any]) -> tuple[dict[str, str] | None, str]:
+    course_name = normalize_space(session.get("course_name"))
+    course_subtitle = normalize_space(session.get("course_subtitle"))
+    course_code = normalize_space(session.get("course_code")).upper()
+    haystack = normalize_match_text(f"{course_name} {course_subtitle}")
+    upper_name = course_name.upper()
+
+    if "HEARTSAVER" not in upper_name:
+        return None, "excluded:not_heartsaver"
+    if "USCG" in upper_name:
+        return None, "excluded:uscg_routed_elsewhere"
+
+    is_blended = bool(
+        course_code in {"AHA_HS_FA_CPR_BL", "AHA_HS_PED_FA_CPR_BL"}
+        or "blended" in haystack
+        or "skills session" in haystack
+        or "online" in haystack
+    )
+    format_badge = "Online + Skills" if is_blended else "In-Person"
+    format_icon = "/images/tab_blended.png" if is_blended else "/images/tab_classroom.png"
+
+    if "pediatric" in haystack:
+        return (
+            {
+                "tab_id": "hs-pediatric",
+                "format_badge": "Online + Skills / Childcare" if is_blended else "In-Person",
+                "format_icon": format_icon,
+                "family_badge": "Childcare",
+            },
+            "matched:heartsaver_pediatric",
+        )
+
+    if "first aid" in haystack and "cpr aed" in haystack:
+        return (
+            {
+                "tab_id": "hs-fa-cpr-aed",
+                "format_badge": format_badge,
+                "format_icon": format_icon,
+                "family_badge": "",
+            },
+            "matched:heartsaver_first_aid_cpr_aed",
+        )
+
+    if "cpr aed" in haystack and "first aid" not in haystack:
+        return (
+            {
+                "tab_id": "hs-cpr-aed",
+                "format_badge": format_badge,
+                "format_icon": format_icon,
+                "family_badge": "CPR Focus",
+            },
+            "matched:heartsaver_cpr_aed_only",
+        )
+
+    return None, "excluded:no_heartsaver_tab_match"
 
 
 def classify_acls_tab(session: dict[str, Any]) -> tuple[str | None, str]:
@@ -229,6 +324,44 @@ def write_acls_runtime_debug(page: dict[str, Any], future_sessions: list[dict[st
     output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def write_heartsaver_runtime_debug(page: dict[str, Any], future_sessions: list[dict[str, Any]], *, now: datetime) -> None:
+    records: list[dict[str, Any]] = []
+    for session in sort_sessions(future_sessions):
+        if not is_future_session(session, now=now):
+            continue
+        raw_course_name = normalize_space(session.get("course_name"))
+        if "HEARTSAVER" not in raw_course_name.upper():
+            continue
+
+        is_public, public_reason = public_inventory_decision(session, page)
+        classification, class_reason = classify_heartsaver_session(session)
+        included = bool(is_public and classification is not None)
+        records.append(
+            {
+                "session_id": session.get("session_id"),
+                "raw_course_name": session.get("course_name"),
+                "start_datetime": session.get("start_at"),
+                "location": clean_location(session.get("location_display") or session.get("location_name")),
+                "public_private_decision": "public" if is_public else "private_or_hidden",
+                "normalized_tab": classification.get("tab_id") if classification else None,
+                "normalized_format": classification.get("format_badge") if classification else None,
+                "icon_selected": classification.get("format_icon") if classification else None,
+                "included": included,
+                "exclusion_reason": None if included else (public_reason if not is_public else class_reason),
+            }
+        )
+
+    payload = {
+        "generated_at": now.isoformat(),
+        "source_schedule_future_path": str(SCHEDULE_PATH),
+        "page_slug": page.get("slug"),
+        "records": records,
+    }
+    output_path = RUNTIME_DIR / "heartsaver_hub_debug.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
 def sort_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
     def sort_key(session: dict[str, Any]) -> tuple[int, str]:
         dt = parse_dt(session.get("start_at"))
@@ -242,6 +375,49 @@ def sort_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def is_future_session(session: dict[str, Any], *, now: datetime) -> bool:
     start_dt = parse_dt(session.get("start_at"))
     return bool(start_dt and start_dt > now)
+
+
+def enrich_session_for_page(session: dict[str, Any], page: dict[str, Any], tab: dict[str, Any], *, now: datetime) -> dict[str, Any] | None:
+    if not is_future_session(session, now=now):
+        return None
+
+    page_slug = str(page.get("slug") or "")
+    enriched = dict(session)
+
+    if page_slug == "acls":
+        matched_tab, _ = classify_acls_tab(session)
+        if matched_tab != tab.get("id"):
+            return None
+        return enriched
+
+    if page_slug == "heartsaver":
+        is_public, _ = public_inventory_decision(session, page)
+        if not is_public:
+            return None
+        classification, _ = classify_heartsaver_session(session)
+        if not classification or classification.get("tab_id") != tab.get("id"):
+            return None
+        enriched["_format_badge"] = classification.get("format_badge", "")
+        enriched["_format_icon"] = classification.get("format_icon", "")
+        enriched["_family_badge"] = classification.get("family_badge", "")
+        return enriched
+
+    if matches_tab(session, tab, page_slug=page_slug):
+        return enriched
+    return None
+
+
+def heartsaver_tab_display(tab: dict[str, Any], sessions: list[dict[str, Any]]) -> dict[str, str]:
+    icons = {str(session.get("_format_icon") or "").strip() for session in sessions if session.get("_format_icon")}
+    if len(icons) == 1:
+        return {
+            "tab_icon": next(iter(icons)),
+            "tab_badge": tab.get("tab_badge") or "",
+        }
+    return {
+        "tab_icon": tab.get("tab_icon") or "/images/tab_classroom.png",
+        "tab_badge": tab.get("tab_badge") or "",
+    }
 
 
 def format_month(dt: datetime | None) -> str:
@@ -270,9 +446,16 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     title = normalize_space(session.get("course_name"))
     register_url = escape(session.get("registration_url") or "#", quote=True)
     session_start = escape(start_dt.isoformat() if start_dt else "", quote=True)
+    format_badge = normalize_space(session.get("_format_badge"))
+    family_badge = normalize_space(session.get("_family_badge"))
 
     action_label = "See Public Class" if group_mode else "Register"
     action_hint = "Preview the closest public option" if group_mode else "Secure this class time"
+    badge_html = ""
+    if format_badge:
+        badge_html += f'<span class="slug-pill-chip slug-pill-chip-format">{escape(format_badge)}</span>'
+    if family_badge:
+        badge_html += f'<span class="slug-pill-chip slug-pill-chip-family">{escape(family_badge)}</span>'
 
     return f"""
 <article class="slug-pill" data-session-start="{session_start}">
@@ -286,6 +469,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     <div class="slug-pill-meta-row">
       <span class="slug-pill-chip">{escape(format_time_line(start_dt))}</span>
       <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
+      {badge_html}
     </div>
     <div class="slug-pill-subtitle">{escape(title)}</div>
   </div>
@@ -323,6 +507,20 @@ def render_tab_button(tab: dict[str, Any], *, active: bool) -> str:
     )
 
 
+def render_panel_description(tab: dict[str, Any]) -> str:
+    short_text = escape(tab.get("description_short") or tab.get("description") or "")
+    more_text = escape(tab.get("description_more") or "")
+    if not more_text:
+        return f'<p class="slug-panel-copy">{short_text}</p>'
+    return (
+        "<div class=\"slug-panel-description\">"
+        f"<p class=\"slug-panel-copy\">{short_text}</p>"
+        "<button class=\"slug-more-toggle\" type=\"button\" data-more-toggle>More</button>"
+        f"<div class=\"slug-more-copy\" data-more-copy hidden><p>{more_text}</p></div>"
+        "</div>"
+    )
+
+
 def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
     cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sessions[:DATE_LIMIT])
@@ -348,7 +546,7 @@ def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, act
       <div>
         <div class="slug-panel-kicker">{escape(inventory_label)}</div>
         <h2>{escape(tab['label'])}</h2>
-        <p class="slug-panel-copy">{escape(tab['description'])}</p>
+        {render_panel_description(tab)}
       </div>
     </div>
     <div class="slug-pill-list">
@@ -407,6 +605,34 @@ def render_banner(page: dict[str, Any], first_tab: dict[str, Any]) -> str:
 """.strip()
 
 
+def render_other_training_options(page: dict[str, Any]) -> str:
+    cards = page.get("other_training_options", [])
+    if not cards:
+        return ""
+    rendered = []
+    for card in cards:
+        rendered.append(
+            f"""
+<article class="training-option-card">
+  <h3>{escape(card['label'])}</h3>
+  <p>{escape(card['description'])}</p>
+  <a class="text-link strong-link" href="{escape(card['href'], quote=True)}">{escape(card['cta'])}</a>
+</article>
+""".strip()
+        )
+    return f"""
+  <section class="slug-training-options">
+    <div class="slug-banner-copy">
+      <div class="slug-banner-eyebrow">Other Training Options</div>
+      <h2>Need a different certifying body or delivery path?</h2>
+    </div>
+    <div class="training-option-grid">
+      {''.join(rendered)}
+    </div>
+  </section>
+""".strip()
+
+
 def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     group_mode = bool(page.get("group_mode"))
     now = datetime.now(TZ)
@@ -415,13 +641,16 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
 
     visible_tabs: list[tuple[dict[str, Any], list[dict[str, Any]]]] = []
     for tab in tabs:
-        matched = [
-            session
-            for session in sessions
-            if matches_tab(session, tab, page_slug=str(page.get("slug") or "")) and is_future_session(session, now=now)
-        ]
+        matched = []
+        for session in sessions:
+            enriched = enrich_session_for_page(session, page, tab, now=now)
+            if enriched:
+                matched.append(enriched)
         matched = sort_sessions(matched)
         if matched:
+            if page.get("slug") == "heartsaver":
+                display = heartsaver_tab_display(tab, matched)
+                tab = {**tab, **display}
             visible_tabs.append((tab, matched))
 
     buttons: list[str] = []
@@ -466,6 +695,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
   </section>
   {tabs_html}
   {render_banner(page, first_tab)}
+  {render_other_training_options(page)}
 </div>
 """
 
@@ -487,6 +717,26 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
 </div>
 <script src="/assets/hub-ui.js"></script>
 <script src="/assets/live-sessions.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {{
+  document.querySelectorAll("[data-more-toggle]").forEach(function (button) {{
+    button.addEventListener("click", function () {{
+      var wrap = button.closest(".slug-panel-description");
+      if (!wrap) return;
+      var more = wrap.querySelector("[data-more-copy]");
+      if (!more) return;
+      var hidden = more.hasAttribute("hidden");
+      if (hidden) {{
+        more.removeAttribute("hidden");
+        button.textContent = "Less";
+      }} else {{
+        more.setAttribute("hidden", "");
+        button.textContent = "More";
+      }}
+    }});
+  }});
+}});
+</script>
 </body>
 </html>"""
 
@@ -508,6 +758,8 @@ def build() -> None:
             last_output.write_text(html, encoding="utf-8")
             if page.get("slug") == "acls":
                 write_acls_runtime_debug(page, sessions, now=now)
+            if page.get("slug") == "heartsaver":
+                write_heartsaver_runtime_debug(page, sessions, now=now)
             reporter.update(current=index, total=len(manifest), last_output_file=last_output)
             print(f"Wrote {last_output}")
         reporter.done(current=len(manifest), total=len(manifest), last_output_file=last_output)
