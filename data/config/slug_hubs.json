@@ -20,7 +20,7 @@
         "course_codes": ["AHA_BLS_IP_INITIAL"],
         "name_contains": ["AHA BLS Provider"],
         "exclude_name_contains": ["Renewal", "HeartCode", "Instructor"],
-        "full_schedule_url": "/courses/aha-bls-provider-cpr-class.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209806",
         "full_schedule_label": "See full BLS Provider schedule",
         "primary_cta_label": "See BLS Provider page"
       },
@@ -33,7 +33,7 @@
         "description": "For currently certified providers who need a focused recertification class instead of the full initial course.",
         "course_codes": ["AHA_BLS_IP_RENEWAL"],
         "name_contains": ["BLS Provider Renewal"],
-        "full_schedule_url": "/courses/bls-renewal.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474",
         "full_schedule_label": "See full BLS renewal schedule",
         "primary_cta_label": "See BLS renewal page"
       },
@@ -46,7 +46,7 @@
         "description": "Complete the online HeartCode portion first, then book a short in-person skills session to finish your certification.",
         "course_codes": ["AHA_BLS_BL_SKILLS"],
         "name_contains": ["BLS Provider HeartCode Skills", "HeartCode"],
-        "full_schedule_url": "/courses/aha-bls-heartcode-skills-session.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct210549",
         "full_schedule_label": "See full HeartCode skills schedule",
         "primary_cta_label": "See HeartCode skills page"
       }
@@ -77,7 +77,7 @@
           "AHA ACLS Provider",
           "ACLS Provider Initial"
         ],
-        "full_schedule_url": "/courses/aha-acls-provider-class.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct241108",
         "full_schedule_label": "See full ACLS provider schedule",
         "primary_cta_label": "See ACLS provider page"
       },
@@ -95,7 +95,7 @@
           "AHA ACLS Provider Update",
           "ACLS Renewal"
         ],
-        "full_schedule_url": "/courses/acls-renewal.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209818",
         "full_schedule_label": "See full ACLS renewal schedule",
         "primary_cta_label": "See ACLS renewal page"
       },
@@ -113,7 +113,7 @@
           "ACLS HeartCode",
           "ACLS Skills Session"
         ],
-        "full_schedule_url": "/courses/aha-acls-heartcode-skills-session.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209811",
         "full_schedule_label": "See full ACLS HeartCode schedule",
         "primary_cta_label": "See ACLS HeartCode page"
       }
@@ -139,7 +139,7 @@
         "description": "Initial or expired PALS certification in a traditional instructor-led classroom format.",
         "course_codes": ["AHA_PALS_INITIAL"],
         "name_contains": ["PALS Provider - In-Person - Initial", "PALS Provider Class"],
-        "full_schedule_url": "/courses/aha-pals-provider-class.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209805",
         "full_schedule_label": "See full PALS provider schedule",
         "primary_cta_label": "See PALS provider page"
       },
@@ -152,7 +152,7 @@
         "description": "Focused recertification for providers who already hold PALS and need their next card without the full initial course.",
         "course_codes": ["AHA_PALS_RENEWAL"],
         "name_contains": ["PALS Provider - In-Person - Renewal", "PALS Renewal"],
-        "full_schedule_url": "/courses/pals-renewal.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251496",
         "full_schedule_label": "See full PALS renewal schedule",
         "primary_cta_label": "See PALS renewal page"
       },
@@ -165,7 +165,7 @@
         "description": "Self-paced online HeartCode plus an in-person skills session for providers who prefer a blended-learning path.",
         "course_codes": ["AHA_PALS_HEARTCODE"],
         "name_contains": ["PALS Provider - HeartCode", "PALS HeartCode"],
-        "full_schedule_url": "/courses/aha-pals-heartcode-skills-session.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209812",
         "full_schedule_label": "See full PALS HeartCode schedule",
         "primary_cta_label": "See PALS HeartCode page"
       }
@@ -192,7 +192,7 @@
         "course_codes": ["AHA_HS_FA_CPR_IP", "AHA_HS_FA_CPR_BL"],
         "name_contains": ["Heartsaver® First Aid CPR AED"],
         "exclude_name_contains": ["Pediatric"],
-        "full_schedule_url": "/courses/aha-heartsaver-first-aid-cpr-aed-class.html",
+        "full_schedule_url": "/heartsaver.html",
         "full_schedule_label": "See full Heartsaver First Aid CPR AED schedule",
         "primary_cta_label": "See full class page"
       },
@@ -205,7 +205,7 @@
         "description": "Best when you need CPR and AED training without the added first aid component.",
         "name_contains": ["Heartsaver® CPR AED"],
         "exclude_name_contains": ["Pediatric", "First Aid"],
-        "full_schedule_url": "/courses/aha-heartsaver-cpr-aed-class.html",
+        "full_schedule_url": "/heartsaver.html",
         "full_schedule_label": "See full Heartsaver CPR AED schedule",
         "primary_cta_label": "See CPR AED page"
       },
@@ -218,7 +218,7 @@
         "description": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
         "course_codes": ["AHA_HS_PED_FA_CPR_BL"],
         "name_contains": ["Heartsaver® Pediatric First Aid CPR AED"],
-        "full_schedule_url": "/courses/aha-heartsaver-pediatric-first-aid-cpr-aed-class.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
         "full_schedule_label": "See full pediatric Heartsaver schedule",
         "primary_cta_label": "See pediatric page"
       }
@@ -241,7 +241,7 @@
         "description": "Meets U.S. Coast Guard maritime requirements using the Heartsaver-based format aligned to AMERHA-216.",
         "course_codes": ["USCG_EFA_AHA"],
         "name_contains": ["USCG Elementary First Aid | CPR"],
-        "full_schedule_url": "/courses/uscg-elementary-first-aid-cpr.html",
+        "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct253768",
         "full_schedule_label": "See full USCG Elementary First Aid CPR schedule",
         "primary_cta_label": "See full USCG page"
       }

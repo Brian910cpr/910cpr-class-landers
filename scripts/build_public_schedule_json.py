@@ -958,11 +958,11 @@ for idx, s in enumerate(sessions, 1):
     meta_description = (
         f"{course} in {location}. View class details, current schedule options, and register online with 910CPR."
     )
-    course_page_url = f"../courses/{short_slug(course)}.html"
-
     course_id = str(s.get("course_id", "")).strip()
-    if course_id and course_id != "0":
-        schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{course_id}"
+    course_number = str(s.get("course_number", "")).strip()
+    schedule_anchor = course_id or course_number
+    if schedule_anchor and schedule_anchor != "0":
+        schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
     else:
         schedule_url = "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule"
 

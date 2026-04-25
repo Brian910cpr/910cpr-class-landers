@@ -780,13 +780,13 @@ for s in sessions:
     meta_description = (
         f"{course} in {location}. View class details, current schedule options, and register online with 910CPR."
     )
-    course_page_url = f"../courses/{short_slug(course)}.html"
-
     course_id = str(s.get("course_id", "")).strip()
-    if course_id:
-        schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{course_id}"
+    course_number = str(s.get("course_number", "")).strip()
+    schedule_anchor = course_id or course_number
+    if schedule_anchor:
+        schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
     else:
-        schedule_url = course_page_url
+        schedule_url = "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule"
 
     canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
 

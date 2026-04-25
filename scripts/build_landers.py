@@ -887,15 +887,13 @@ def main() -> None:
             f"and register online with 910CPR."
         )
 
-        course_page_url = f"../courses/{short_slug(course_display)}.html"
-
         course_id = str(session.get("course_id", "")).strip()
         course_number = str(session.get("course_number", "")).strip()
         schedule_anchor = course_id or course_number
         if schedule_anchor:
             schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
         else:
-            schedule_url = course_page_url
+            schedule_url = "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule"
 
         canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
         is_past = bool(dt and dt <= now_dt)

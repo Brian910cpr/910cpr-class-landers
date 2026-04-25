@@ -7,6 +7,7 @@ from html import unescape
 from collections import defaultdict
 
 from scripts.build_status import BuildStatusReporter
+from scripts.build_course_landers import COURSE_SESSION_ALIASES, TITLE_OVERRIDES
 from supervisor.status_snapshot import write_status_snapshot
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -177,6 +178,250 @@ def clean_location_name(location: str) -> str:
     return value or "Unknown Location"
 
 
+def normalize_course_key(value: str) -> str:
+    return short_slug(value or "", max_len=120)
+
+
+def parse_local_datetime(value: str) -> datetime | None:
+    raw = str(value or "").strip()
+    if not raw:
+        return None
+    if raw.endswith("Z"):
+        raw = raw[:-1] + "+00:00"
+    try:
+        dt = datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=LOCAL_TZ)
+    return dt.astimezone(LOCAL_TZ)
+
+
+def is_valid_course_token(value: str) -> bool:
+    token = str(value or "").strip()
+    return bool(token and token not in {"0", "None", "none", "null", "NULL"})
+
+
+def extract_course_token_from_schedule_url(url: str) -> str:
+    match = re.search(r"#ct([^&#]+)", str(url or ""))
+    token = match.group(1).strip() if match else ""
+    return token if is_valid_course_token(token) else ""
+
+
+def build_exact_schedule_url(course_id: str, course_number: str) -> str:
+    token = course_id if is_valid_course_token(course_id) else course_number
+    token = str(token or "").strip()
+    if token:
+        return f"https://coastalcprtraining.enrollware.com/schedule#ct{token}"
+    return ENROLLWARE_SCHEDULE_URL
+
+
+def infer_parent_hub(course_name: str) -> str:
+    upper = strip_html(course_name).upper()
+    if "ACLS" in upper:
+        return "/acls.html"
+    if "PALS" in upper:
+        return "/pals.html"
+    if "HEARTSAVER" in upper:
+        return "/heartsaver.html"
+    if "USCG" in upper or "ELEMENTARY FIRST AID" in upper:
+        return "/uscg-elementary-first-aid-cpr.html"
+    if "BLS" in upper:
+        return "/bls.html"
+    if "GROUP" in upper or "ONSITE" in upper:
+        return "/group-training.html"
+    return "/index.html"
+
+
+def course_description(course_name: str) -> str:
+    title = strip_html(course_name)
+    upper = title.upper()
+    if "HEARTCODE" in upper or "SKILLS" in upper:
+        return f"Browse upcoming hands-on skills sessions for {title}. Choose a future date, register directly, or use the full course calendar for additional openings."
+    if "RENEW" in upper or "UPDATE" in upper:
+        return f"See upcoming renewal dates for {title}. These pages stay focused on current bookable sessions instead of historical archives."
+    return f"See current upcoming dates for {title}, with direct registration links and a clean course-specific schedule view."
+
+
+def load_schedule_future_sessions() -> list[dict]:
+    if not SCHEDULE_FUTURE_FILE.exists():
+        return []
+    payload = json.loads(SCHEDULE_FUTURE_FILE.read_text(encoding="utf-8"))
+    sessions = payload.get("sessions", []) if isinstance(payload, dict) else []
+    out: list[dict] = []
+    for session in sessions:
+        if not isinstance(session, dict):
+            continue
+        enriched = dict(session)
+        enriched["_parsed_start"] = parse_local_datetime(enriched.get("start_at", ""))
+        out.append(enriched)
+    out.sort(key=lambda item: ((item.get("_parsed_start") or datetime.max.replace(tzinfo=LOCAL_TZ)), str(item.get("session_id", ""))))
+    return out
+
+
+def build_future_course_aliases(session: dict) -> set[str]:
+    aliases: set[str] = set()
+    course_name = str(session.get("course_name", "")).strip()
+    course_id = str(session.get("course_id", "")).strip()
+    course_upper = course_name.upper()
+    if course_name:
+        aliases.add(normalize_course_key(course_name))
+    override = TITLE_OVERRIDES.get(course_id or "")
+    if override:
+        aliases.add(normalize_course_key(override.get("title", "")))
+    for alias in COURSE_SESSION_ALIASES.get(course_id or "", []):
+        aliases.add(normalize_course_key(alias))
+    if "ACLS" in course_upper and "HEARTCODE" in course_upper:
+        aliases.add(normalize_course_key("AHA ACLS HeartCode Skills Session"))
+    if "BLS" in course_upper and "HEARTCODE" in course_upper:
+        aliases.add(normalize_course_key("AHA BLS HeartCode Skills Session"))
+    if "PALS" in course_upper and "HEARTCODE" in course_upper:
+        aliases.add(normalize_course_key("AHA PALS HeartCode Skills Session"))
+    if "HEARTSAVER" in course_upper and ("ONLINE" in course_upper or "SKILLS" in course_upper):
+        aliases.add(normalize_course_key("AHA Heartsaver Skills Session"))
+    return {alias for alias in aliases if alias}
+
+
+def session_matches_course(session: dict, course_meta: dict) -> bool:
+    session_course_id = str(session.get("course_id", "")).strip()
+    session_course_number = str(session.get("course_number", "")).strip()
+
+    course_ids = course_meta.get("course_ids", set())
+    course_numbers = course_meta.get("course_numbers", set())
+    if course_ids or course_numbers:
+        return (session_course_id in course_ids and is_valid_course_token(session_course_id)) or (
+            session_course_number in course_numbers and is_valid_course_token(session_course_number)
+        )
+
+    session_aliases = build_future_course_aliases(session)
+    target_aliases = course_meta.get("normalized_aliases", set())
+    return bool(session_aliases & target_aliases)
+
+
+def render_course_session_rows(sessions: list[dict]) -> str:
+    rows = []
+    for index, session in enumerate(sessions):
+        start = session.get("_parsed_start")
+        if not start:
+            continue
+        hidden_attr = " hidden" if index >= COURSE_PAGE_VISIBLE_BATCH else ""
+        date_label = start.strftime("%A, %B %d, %Y")
+        time_label = start.strftime("%I:%M %p").lstrip("0")
+        location = clean_location_name(session.get("location_display") or session.get("location_name") or "")
+        register_url = str(session.get("registration_url", "")).strip()
+        register_html = (
+            f'<a class="course-session-register" href="{html_escape(register_url)}">Register</a>'
+            if register_url
+            else ""
+        )
+        rows.append(
+            f"""
+<article class="course-session-row js-session-item" data-session-start="{html_escape(start.isoformat())}" data-course-session{hidden_attr}>
+  <div class="course-session-when">
+    <div class="course-session-date">{html_escape(date_label)}</div>
+    <div class="course-session-time">{html_escape(time_label)}</div>
+  </div>
+  <div class="course-session-where">{html_escape(location)}</div>
+  <div class="course-session-actions">{register_html}</div>
+</article>
+"""
+        )
+    return "".join(rows)
+
+
+def render_course_page_body(course_meta: dict, future_sessions: list[dict]) -> str:
+    title = course_meta["course_name"]
+    description = course_description(title)
+    parent_hub = course_meta.get("parent_hub") or infer_parent_hub(title)
+    schedule_url = course_meta.get("schedule_url") or parent_hub
+
+    if future_sessions:
+        sessions_html = render_course_session_rows(future_sessions)
+        load_more_html = ""
+        if len(future_sessions) > COURSE_PAGE_VISIBLE_BATCH:
+            load_more_html = '<button class="course-load-more" type="button" data-load-more>Load 10 more</button>'
+        schedule_block = f"""
+<section class="course-sessions js-live-session-group" data-empty-link="{html_escape(schedule_url)}" data-empty-link-label="See full schedule for this course">
+  <div class="course-section-head">
+    <h2>Upcoming Dates</h2>
+    <p>Only future sessions for this exact course are shown here.</p>
+  </div>
+  <div class="course-session-list" data-session-list>
+    {sessions_html}
+  </div>
+  <div class="course-more-row">{load_more_html}</div>
+</section>
+"""
+    else:
+        schedule_block = f"""
+<section class="course-sessions course-empty js-live-session-group" data-empty-link="{html_escape(schedule_url)}" data-empty-link-label="See full schedule for this course">
+  <div class="course-section-head">
+    <h2>Upcoming Dates</h2>
+  </div>
+  <div class="js-live-session-empty">
+    <p>No upcoming dates are currently listed for this course. Please contact us and we'll help you find the right class.</p>
+    <p><a class="course-help-cta" href="{html_escape(schedule_url)}">See full schedule for this course</a></p>
+  </div>
+</section>
+"""
+
+    return f"""
+<section class="course-hero">
+  <div class="course-hero-copy">
+    <p class="course-eyebrow">Course Details</p>
+    <h1>{html_escape(title)}</h1>
+    <p class="course-description">{html_escape(description)}</p>
+    <div class="course-cta-row">
+      <a class="course-primary-cta" href="{html_escape(schedule_url)}">See full schedule for this course</a>
+      <a class="course-secondary-cta" href="{html_escape(parent_hub)}">Back to related hub</a>
+    </div>
+  </div>
+</section>
+{schedule_block}
+<script>
+(function () {{
+  function refreshCourseLists() {{
+    document.querySelectorAll('[data-session-list]').forEach(function (list) {{
+      var items = Array.from(list.querySelectorAll('[data-course-session]'));
+      items.forEach(function (item, index) {{
+        if (index < {COURSE_PAGE_VISIBLE_BATCH}) {{
+          item.hidden = false;
+        }}
+      }});
+      var button = list.parentElement.querySelector('[data-load-more]');
+      if (!button) return;
+      if (items.length <= {COURSE_PAGE_VISIBLE_BATCH}) {{
+        button.hidden = true;
+      }}
+    }});
+  }}
+
+  function wireLoadMore() {{
+    document.querySelectorAll('[data-load-more]').forEach(function (button) {{
+      button.addEventListener('click', function () {{
+        var section = button.closest('.course-sessions');
+        if (!section) return;
+        var hidden = Array.from(section.querySelectorAll('[data-course-session][hidden]')).slice(0, {COURSE_PAGE_VISIBLE_BATCH});
+        hidden.forEach(function (item) {{ item.hidden = false; }});
+        if (!section.querySelector('[data-course-session][hidden]')) {{
+          button.hidden = true;
+        }}
+      }});
+    }});
+  }}
+
+  window.addEventListener('DOMContentLoaded', function () {{
+    if (window.pruneExpiredSessions) {{
+      window.pruneExpiredSessions();
+    }}
+    refreshCourseLists();
+    wireLoadMore();
+  }});
+}})();
+</script>
+"""
+
+
 def page_template(title: str, description: str, body_html: str, page_type: str, page_name: str, canonical_path: str) -> str:
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -242,6 +487,93 @@ ul {{
   padding: 14px;
   border-radius: 8px;
 }}
+.course-hero, .course-sessions {{
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}}
+.course-sessions {{
+  margin-top: 22px;
+}}
+.course-eyebrow {{
+  margin: 0 0 8px;
+  color: #0f5e9c;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}}
+.course-description {{
+  max-width: 760px;
+  color: #334155;
+  font-size: 1.02rem;
+}}
+.course-cta-row {{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}}
+.course-primary-cta, .course-secondary-cta, .course-session-register, .course-help-cta, .course-load-more {{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid transparent;
+}}
+.course-primary-cta, .course-session-register, .course-help-cta {{
+  background: #0f5e9c;
+  color: #ffffff;
+}}
+.course-secondary-cta, .course-load-more {{
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}}
+.course-section-head h2 {{
+  margin-bottom: 4px;
+}}
+.course-section-head p {{
+  margin-top: 0;
+  color: #475569;
+}}
+.course-session-list {{
+  display: grid;
+  gap: 12px;
+}}
+.course-session-row {{
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) minmax(180px, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid #dbe4ee;
+  border-radius: 16px;
+  background: #f8fbff;
+}}
+.course-session-date {{
+  font-weight: 800;
+}}
+.course-session-time, .course-session-where {{
+  color: #475569;
+}}
+.course-more-row {{
+  margin-top: 16px;
+}}
+.js-live-session-empty p {{
+  color: #475569;
+}}
+@media (max-width: 760px) {{
+  .course-session-row {{
+    grid-template-columns: 1fr;
+  }}
+}}
 </style>
 </head>
 <body>
@@ -272,6 +604,7 @@ ul {{
 </footer>
 
 {telemetry_script(page_type, page_name)}
+<script src="/assets/live-sessions.js"></script>
 </body>
 </html>"""
 
@@ -310,6 +643,9 @@ def parse_class_page(path: Path) -> dict | None:
         or title
     )
 
+    raw_course_id = str(page_context.get("course_id", "")).strip()
+    course_id = raw_course_id if is_valid_course_token(raw_course_id) else ""
+
     # Prefer pageContext location, then JSON-LD Event location
     location_name = str(page_context.get("location_name", "")).strip()
     if not location_name:
@@ -327,6 +663,8 @@ def parse_class_page(path: Path) -> dict | None:
             register_url = str(offers.get("url", "")).strip()
 
     schedule_url = str(page_context.get("schedule_url", "")).strip()
+    schedule_course_token = extract_course_token_from_schedule_url(schedule_url)
+    course_number = schedule_course_token or course_id
 
     # Use visible meta values when possible
     display_date = extract_first(
@@ -354,6 +692,8 @@ def parse_class_page(path: Path) -> dict | None:
 
     return {
         "session_id": session_id,
+        "course_id": course_id,
+        "course_number": course_number,
         "course_name": course_name or "CPR Class",
         "course_slug": course_slug,
         "location_name": location_name or "Unknown Location",
@@ -392,6 +732,8 @@ def build():
         if parsed and parsed.get("course_name", "").strip().lower() != "course":
             sessions.append(parsed)
 
+    future_sessions = load_schedule_future_sessions()
+
     # Sort by best available date text, then session id
     sessions.sort(key=lambda s: (s.get("display_date", ""), s.get("display_time", ""), s.get("session_id", "")))
 
@@ -401,6 +743,37 @@ def build():
     for s in sessions:
         course_groups[s["course_name"]].append(s)
         location_groups[s["location_name"]].append(s)
+
+    course_pages: list[dict] = []
+    for course_name, items in sorted(course_groups.items(), key=lambda x: x[0].lower()):
+        slug = short_slug(course_name)
+        course_ids = {str(item.get("course_id", "")).strip() for item in items if is_valid_course_token(item.get("course_id", ""))}
+        course_numbers = {str(item.get("course_number", "")).strip() for item in items if is_valid_course_token(item.get("course_number", ""))}
+        normalized_aliases = {normalize_course_key(course_name)}
+        normalized_aliases.update(normalize_course_key(item.get("title", "")) for item in items if item.get("title"))
+        page_meta = {
+            "course_name": course_name,
+            "slug": slug,
+            "course_ids": course_ids,
+            "course_numbers": course_numbers,
+            "normalized_aliases": {alias for alias in normalized_aliases if alias},
+            "primary_course_id": sorted(course_ids)[0] if course_ids else "",
+            "primary_course_number": sorted(course_numbers)[0] if course_numbers else "",
+            "parent_hub": infer_parent_hub(course_name),
+        }
+        page_meta["schedule_url"] = (
+            build_exact_schedule_url(page_meta["primary_course_id"], page_meta["primary_course_number"])
+            if page_meta["primary_course_id"] or page_meta["primary_course_number"]
+            else page_meta["parent_hub"]
+        )
+        matched_future = [session for session in future_sessions if session_matches_course(session, page_meta)]
+        if matched_future and not (page_meta["primary_course_id"] or page_meta["primary_course_number"]):
+            first_match = matched_future[0]
+            page_meta["primary_course_id"] = str(first_match.get("course_id", "")).strip()
+            page_meta["primary_course_number"] = str(first_match.get("course_number", "")).strip()
+            if page_meta["primary_course_id"] or page_meta["primary_course_number"]:
+                page_meta["schedule_url"] = build_exact_schedule_url(page_meta["primary_course_id"], page_meta["primary_course_number"])
+        course_pages.append({"meta": page_meta, "future_sessions": matched_future})
 
     # -----------------------------------------------------------------
     # Root index
@@ -551,37 +924,17 @@ def build():
     # -----------------------------------------------------------------
     # Course pages
     # -----------------------------------------------------------------
-    for course_name, items in course_groups.items():
-        slug = short_slug(course_name)
-
-        lines = []
-        for s in items:
-            bits = []
-            if s["display_date"]:
-                bits.append(s["display_date"])
-            if s["display_time"]:
-                bits.append(s["display_time"])
-            if s["location_name"]:
-                bits.append(s["location_name"])
-
-            line = " | ".join(html_escape(x) for x in bits if x)
-            detail_link = f'<a href="{s["local_path"]}">Details</a>'
-            register_link = f' | <a href="{s["register_url"]}">Register</a>' if s["register_url"] else ""
-
-            lines.append(f"<li>{line} | {detail_link}{register_link}</li>")
+    for page in course_pages:
+        meta = page["meta"]
+        course_name = meta["course_name"]
+        slug = meta["slug"]
+        future_matches = page["future_sessions"]
 
         (COURSES_DIR / f"{slug}.html").write_text(
             page_template(
-                title=f"{course_name} Classes | 910CPR",
-                description=f"Index of generated class pages for {course_name}.",
-                body_html=f"""
-<h1>{html_escape(course_name)}</h1>
-<p class="meta">Grouped from the generated class pages.</p>
-<p><a href="/courses/index.html">Back to course index</a></p>
-<ul>
-{''.join(lines)}
-</ul>
-""",
+                title=f"{course_name} | 910CPR",
+                description=course_description(course_name),
+                body_html=render_course_page_body(meta, future_matches),
                 page_type="course",
                 page_name=course_name,
                 canonical_path=f"/courses/{slug}.html",
