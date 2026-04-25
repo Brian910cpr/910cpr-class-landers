@@ -1,6 +1,8 @@
 import json
 import re
 from pathlib import Path
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from html import unescape
 from collections import defaultdict
 
@@ -18,12 +20,15 @@ INDEX_FILE = DOCS_DIR / "index.html"
 CLASSES_INDEX_FILE = CLASSES_DIR / "index.html"
 COURSES_INDEX_FILE = COURSES_DIR / "index.html"
 SITEMAP_FILE = DOCS_DIR / "sitemap.xml"
+SCHEDULE_FUTURE_FILE = DOCS_DIR / "data" / "schedule_future.json"
 
 SITE_BASE = "https://www.910cpr.com"
 GTM_ID = "GTM-PQS8DCBH"
 PHONE_DISPLAY = "910-395-5193"
 PHONE_LINK = "tel:+19103955193"
 ENROLLWARE_SCHEDULE_URL = "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule"
+LOCAL_TZ = ZoneInfo("America/New_York")
+COURSE_PAGE_VISIBLE_BATCH = 10
 
 
 # ---------------------------------------------------------------------
