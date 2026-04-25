@@ -18,6 +18,8 @@ MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = ROOT / "docs"
 STATE_DIR = ROOT / "data" / "state"
+RUNTIME_DIR = ROOT / "data" / "runtime"
+SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
 TZ = ZoneInfo("America/New_York")
 DATE_LIMIT = 12
 EMPTY_FALLBACK_TITLE = "No upcoming dates are currently listed for this course."
@@ -141,6 +143,90 @@ def build_acls_debug_records(page: dict[str, Any], sessions: list[dict[str, Any]
             }
         )
     return records
+
+
+def session_current_to_future_shape(session: dict[str, Any]) -> dict[str, Any]:
+    course = session.get("course", {}) or {}
+    timing = session.get("timing", {}) or {}
+    location = session.get("location", {}) or {}
+    commerce = session.get("commerce", {}) or {}
+    return {
+        "session_id": session.get("session_id"),
+        "course_number": course.get("course_number"),
+        "course_name": course.get("course_name_primary_clean"),
+        "course_name_raw": course.get("course_name_primary_raw") or course.get("course_name_primary_clean"),
+        "course_subtitle": course.get("course_subtitle_text"),
+        "course_code": course.get("course_code_hint"),
+        "start_at": timing.get("start_at"),
+        "location_display": location.get("location_display") or location.get("location_name"),
+        "registration_url": commerce.get("registration_url"),
+    }
+
+
+def write_acls_runtime_debug(page: dict[str, Any], future_sessions: list[dict[str, Any]], *, now: datetime) -> None:
+    current_payload = json.loads(SESSIONS_CURRENT_PATH.read_text(encoding="utf-8")) if SESSIONS_CURRENT_PATH.exists() else {}
+    current_sessions = current_payload.get("sessions", []) if isinstance(current_payload.get("sessions"), list) else []
+    future_by_id = {
+        str(session.get("session_id")): session
+        for session in future_sessions
+        if session.get("session_id") is not None
+    }
+
+    records: list[dict[str, Any]] = []
+    for raw_session in current_sessions:
+        current_shape = session_current_to_future_shape(raw_session)
+        start_dt = parse_dt(current_shape.get("start_at"))
+        if start_dt is None or start_dt <= now:
+            continue
+
+        raw_course_name = normalize_space(current_shape.get("course_name_raw") or current_shape.get("course_name"))
+        if "ACLS" not in raw_course_name.upper():
+            continue
+
+        session_id = str(current_shape.get("session_id") or "")
+        included_in_schedule_future = session_id in future_by_id
+        normalized_tab = None
+        match_reason = None
+        exclusion_reason = None
+        normalized_hub = "acls"
+        included_in_acls_hub = False
+
+        if included_in_schedule_future:
+            normalized_tab, match_reason = classify_acls_tab(future_by_id[session_id])
+            included_in_acls_hub = normalized_tab is not None
+            if not included_in_acls_hub:
+                exclusion_reason = match_reason
+        else:
+            normalized_tab, match_reason = classify_acls_tab(current_shape)
+            exclusion_reason = "excluded_from_schedule_future"
+
+        records.append(
+            {
+                "session_id": current_shape.get("session_id"),
+                "course_number": current_shape.get("course_number"),
+                "raw_course_name": raw_course_name,
+                "start_datetime": current_shape.get("start_at"),
+                "location": clean_location(current_shape.get("location_display")),
+                "register_url": current_shape.get("registration_url"),
+                "included_in_schedule_future": included_in_schedule_future,
+                "normalized_hub": normalized_hub,
+                "normalized_tab": normalized_tab,
+                "included_in_acls_hub": included_in_acls_hub,
+                "exclusion_reason": exclusion_reason,
+                "match_reason": match_reason,
+            }
+        )
+
+    payload = {
+        "generated_at": now.isoformat(),
+        "source_sessions_current_path": str(SESSIONS_CURRENT_PATH),
+        "source_schedule_future_path": str(SCHEDULE_PATH),
+        "page_slug": page.get("slug"),
+        "records": records,
+    }
+    output_path = RUNTIME_DIR / "acls_hub_debug.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def sort_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -421,14 +507,7 @@ def build() -> None:
             last_output = OUTPUT_DIR / f"{page['slug']}.html"
             last_output.write_text(html, encoding="utf-8")
             if page.get("slug") == "acls":
-                acl_debug_path = STATE_DIR / "acls_hub_debug.json"
-                acl_debug_payload = {
-                    "generated_at": now.isoformat(),
-                    "source_schedule_path": str(SCHEDULE_PATH),
-                    "page_slug": "acls",
-                    "records": build_acls_debug_records(page, sessions, now=now),
-                }
-                acl_debug_path.write_text(json.dumps(acl_debug_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+                write_acls_runtime_debug(page, sessions, now=now)
             reporter.update(current=index, total=len(manifest), last_output_file=last_output)
             print(f"Wrote {last_output}")
         reporter.done(current=len(manifest), total=len(manifest), last_output_file=last_output)
