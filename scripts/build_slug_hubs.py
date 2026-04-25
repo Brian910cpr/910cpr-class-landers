@@ -163,7 +163,7 @@ def render_tab_button(tab: dict[str, Any], *, active: bool) -> str:
 
     return (
         f"<button class='tab-btn{active_class}' data-program='{program}' data-tab-target='#{target}' type='button'>"
-        f"<span class=\"hub-tab-icon\"><img src=\"{icon}\" alt=\"\" loading=\"lazy\" onerror=\"this.parentElement.hidden=true\"></span>"
+        f"<img class=\"hub-tab-icon\" src=\"{icon}\" alt=\"\" loading=\"lazy\" onerror=\"this.style.display='none'\">"
         f"<span class=\"hub-tab-copy\"><span class=\"hub-tab-label\">{label}</span>{badge_html}</span>"
         "</button>"
     )

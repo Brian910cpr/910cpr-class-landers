@@ -1344,9 +1344,9 @@ textarea {
 
 .hub-tabs .tab-btn {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr);
+  grid-template-columns: 36px minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   min-height: 78px;
   min-width: 240px;
   padding: 14px 16px;
@@ -1374,24 +1374,13 @@ textarea {
 }
 
 .hub-tab-icon {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
-  background: rgba(243, 247, 251, 0.92);
-  overflow: hidden;
-}
-
-.hub-tab-icon img {
   display: block;
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
-}
-
-.hub-tabs .tab-btn.active .hub-tab-icon {
-  background: rgba(255, 255, 255, 0.2);
+  justify-self: start;
+  align-self: center;
+  flex-shrink: 0;
 }
 
 .hub-tab-copy {
@@ -1782,7 +1771,7 @@ textarea {
   }
 
   .hub-tabs .tab-btn {
-    grid-template-columns: 42px minmax(0, 1fr);
+    grid-template-columns: 36px minmax(0, 1fr);
     min-width: min(100%, 260px);
     width: 100%;
   }
