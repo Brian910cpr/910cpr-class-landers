@@ -18,6 +18,25 @@ from openpyxl import load_workbook
 TZ = ZoneInfo("America/New_York")
 
 
+def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
+    requested_path = (repo_root / requested).resolve()
+    if requested_path.exists():
+        return requested_path
+
+    candidates = [
+        repo_root / "data" / "raw" / "Class Report.xlsx",
+        repo_root / "data" / "raw" / "class_report.xlsx",
+        repo_root / "Class Report (37).xlsx",
+        repo_root / "data" / "Class Report.xlsx",
+        repo_root / "class-report.xlsx",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate.resolve()
+
+    return requested_path
+
+
 def clean_string(value: Any) -> Optional[str]:
     if value is None:
         return None
@@ -452,7 +471,7 @@ def main() -> int:
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
-    class_report_path = (repo_root / args.class_report).resolve()
+    class_report_path = resolve_class_report_path(repo_root, args.class_report)
     classes_csv_path = (repo_root / args.classes_csv).resolve()
     students_csv_path = (repo_root / args.students_csv).resolve()
     output_path = (repo_root / args.output).resolve()
