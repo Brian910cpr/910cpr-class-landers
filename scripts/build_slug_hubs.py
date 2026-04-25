@@ -73,6 +73,16 @@ def matches_tab(session: dict[str, Any], tab: dict[str, Any]) -> bool:
     return not any(needle in course_name_lower for needle in excludes)
 
 
+def sort_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def sort_key(session: dict[str, Any]) -> tuple[int, str]:
+        dt = parse_dt(session.get("start_at"))
+        if dt is None:
+            return (1, "9999-12-31T23:59:59")
+        return (0, dt.isoformat())
+
+    return sorted(sessions, key=sort_key)
+
+
 def format_month(dt: datetime | None) -> str:
     return dt.strftime("%b").upper() if dt else "TBD"
 
@@ -98,17 +108,13 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     location = clean_location(session.get("location_display") or session.get("location_name"))
     title = normalize_space(session.get("course_name"))
     register_url = escape(session.get("registration_url") or "#", quote=True)
+    session_start = escape(start_dt.isoformat() if start_dt else "", quote=True)
 
     action_label = "See Public Class" if group_mode else "Register"
-    subtitle = escape(title)
     action_hint = "Preview the closest public option" if group_mode else "Secure this class time"
 
     return f"""
-<<<<<<< HEAD
-<article class="slug-pill session-card js-session-item" data-url="{register_url}" data-session-start="{escape(start_dt.isoformat() if start_dt else '', quote=True)}" tabindex="0" role="link">
-=======
-<article class="slug-pill">
->>>>>>> 49092bae675cc9650bc8b30658737bc014626048
+<article class="slug-pill" data-session-start="{session_start}">
   <div class="slug-pill-date">
     <div class="slug-pill-month">{format_month(start_dt)}</div>
     <div class="slug-pill-day">{format_day(start_dt)}</div>
@@ -120,7 +126,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
       <span class="slug-pill-chip">{escape(format_time_line(start_dt))}</span>
       <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
     </div>
-    <div class="slug-pill-subtitle">{subtitle}</div>
+    <div class="slug-pill-subtitle">{escape(title)}</div>
   </div>
   <div class="slug-pill-actions">
     <div class="slug-pill-hint">{escape(action_hint)}</div>
@@ -130,7 +136,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
 """.strip()
 
 
-def render_empty_state(tab: dict[str, Any], *, group_mode: bool) -> str:
+def render_empty_state(*, group_mode: bool) -> str:
     if group_mode:
         return (
             "<div class='slug-empty'>"
@@ -141,8 +147,25 @@ def render_empty_state(tab: dict[str, Any], *, group_mode: bool) -> str:
     return (
         "<div class='slug-empty'>"
         "<strong>No upcoming dates are listed right now.</strong>"
-        "<p>Use the full course page for more details or check back after the next schedule update.</p>"
+        "<p>Please check back soon or request help finding a class.</p>"
         "</div>"
+    )
+
+
+def render_tab_button(tab: dict[str, Any], *, active: bool) -> str:
+    active_class = " active" if active else ""
+    icon = escape(tab.get("tab_icon") or "/images/tab_classroom.png", quote=True)
+    badge = escape(tab.get("tab_badge") or "", quote=False)
+    label = escape(tab["label"])
+    program = escape(tab["program"], quote=True)
+    target = escape(tab["id"], quote=True)
+    badge_html = f'<span class="hub-tab-tag">{badge}</span>' if badge else ""
+
+    return (
+        f"<button class='tab-btn{active_class}' data-program='{program}' data-tab-target='#{target}' type='button'>"
+        f"<span class=\"hub-tab-icon\"><img src=\"{icon}\" alt=\"\" loading=\"lazy\" onerror=\"this.parentElement.hidden=true\"></span>"
+        f"<span class=\"hub-tab-copy\"><span class=\"hub-tab-label\">{label}</span>{badge_html}</span>"
+        "</button>"
     )
 
 
@@ -150,46 +173,29 @@ def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, act
     panel_class = "tab-panel active" if active else "tab-panel"
     cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sessions[:DATE_LIMIT])
     if not cards:
-        cards = render_empty_state(tab, group_mode=group_mode)
+        cards = render_empty_state(group_mode=group_mode)
 
     full_schedule_url = escape(tab["full_schedule_url"], quote=True)
-    full_schedule_data = escape(json.dumps({
-        "url": tab["full_schedule_url"],
-        "label": tab["full_schedule_label"],
-    }), quote=True)
-
-<<<<<<< HEAD
-    inventory_label = f"{len(display_sessions)} upcoming option" + ("" if len(display_sessions) == 1 else "s")
-    panel_cta_html = ""
-    if group_mode:
-        cta_href = f"/request_group_session.html?program={quote(tab['program'])}"
-        cta_label = escape(tab["primary_cta_label"])
-        panel_cta_html = f"""
-      <div class="slug-panel-cta">
-        <a class="button primary" href="{cta_href}">{cta_label}</a>
-      </div>"""
-=======
-    cta_href = (
-        f"/request_group_session.html?program={quote(tab['program'])}"
-        if group_mode
-        else full_schedule_url
+    full_schedule_data = escape(
+        json.dumps(
+            {
+                "url": tab["full_schedule_url"],
+                "label": tab["full_schedule_label"],
+            }
+        ),
+        quote=True,
     )
-    cta_label = escape(tab["primary_cta_label"])
     inventory_label = f"{len(sessions)} upcoming option" + ("" if len(sessions) == 1 else "s")
-
-    secondary_label = "Open full schedule" if group_mode else "Course details"
->>>>>>> 49092bae675cc9650bc8b30658737bc014626048
 
     return f"""
 <section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}">
-  <div class="slug-panel-card js-live-session-group" data-empty-link="{full_schedule_url}" data-empty-link-label="{escape(tab['full_schedule_label'], quote=True)}">
+  <div class="slug-panel-card">
     <div class="slug-panel-head">
       <div>
         <div class="slug-panel-kicker">{escape(inventory_label)}</div>
         <h2>{escape(tab['label'])}</h2>
         <p class="slug-panel-copy">{escape(tab['description'])}</p>
       </div>
-      {panel_cta_html}
     </div>
     <div class="slug-pill-list">
       {cards}
@@ -199,103 +205,42 @@ def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, act
 """.strip()
 
 
-<<<<<<< HEAD
-def top_strip_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    ordered: list[dict[str, Any]] = []
-    seen: set[str] = set()
-    for session in sort_sessions(sessions):
-        sid = session_identity(session)
-        if sid in seen:
-            continue
-        seen.add(sid)
-        ordered.append(session)
-        if len(ordered) >= TOP_STRIP_LIMIT:
-            break
-    return ordered
+def render_hero_image(page: dict[str, Any]) -> str:
+    hero_image = str(page.get("hero_image") or "").strip()
+    if not hero_image:
+        return ""
+    hero_alt = escape(page.get("hero_image_alt") or page["hero_title"])
+    return (
+        "<div class=\"slug-hero-image-wrap\">"
+        f"<img class=\"slug-hero-image\" src=\"{escape(hero_image, quote=True)}\" alt=\"{hero_alt}\" loading=\"lazy\" onerror=\"this.parentElement.hidden=true\">"
+        "</div>"
+    )
 
 
-def render_next_available_strip(sessions: list[dict[str, Any]], *, group_mode: bool, empty_link: str, empty_label: str) -> str:
-    strip_sessions = top_strip_sessions(sessions)
-    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in strip_sessions)
-    if not cards:
-        cards = (
-            "<div class='slug-empty'>"
-            "<strong>No upcoming dates are listed right now.</strong>"
-            "<p>Check the tabs below for more course paths and refreshed inventory later.</p>"
+def render_hero_actions(page: dict[str, Any], first_tab: dict[str, Any], *, group_mode: bool) -> str:
+    if group_mode:
+        primary_href = f"/request_group_session.html?program={quote(first_tab['program'])}"
+        primary_label = first_tab["primary_cta_label"]
+        return (
+            "<div class=\"slug-hero-actions\">"
+            f"<a class=\"button primary\" href=\"{escape(primary_href, quote=True)}\">{escape(primary_label)}</a>"
             "</div>"
         )
+
+    primary_href = first_tab["full_schedule_url"]
+    primary_label = first_tab["primary_cta_label"]
+    secondary_href = first_tab["full_schedule_url"]
+    secondary_label = first_tab["full_schedule_label"]
+    return (
+        "<div class=\"slug-hero-actions\">"
+        f"<a class=\"button primary\" href=\"{escape(primary_href, quote=True)}\">{escape(primary_label)}</a>"
+        f"<a class=\"button secondary\" href=\"{escape(secondary_href, quote=True)}\">{escape(secondary_label)}</a>"
+        "</div>"
+    )
+
+
+def render_banner(page: dict[str, Any], first_tab: dict[str, Any]) -> str:
     return f"""
-  <section class="section-box next-classes js-live-session-group" data-empty-link="{escape(empty_link, quote=True)}" data-empty-link-label="{escape(empty_label, quote=True)}">
-    <div class="slug-panel-head next-classes-head">
-      <div>
-        <div class="slug-panel-kicker">Fastest Openings</div>
-        <h2>Next Available Classes</h2>
-      </div>
-    </div>
-    <div class="session-grid">
-      {cards}
-    </div>
-  </section>
-""".strip()
-
-
-=======
->>>>>>> 49092bae675cc9650bc8b30658737bc014626048
-def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
-    group_mode = bool(page.get("group_mode"))
-    buttons: list[str] = []
-    panels: list[str] = []
-    quick_picks: list[str] = []
-    matched_counts: list[int] = []
-<<<<<<< HEAD
-    all_matched_sessions: list[dict[str, Any]] = []
-=======
-    first_cta_href = ""
-    first_cta_label = ""
-
->>>>>>> 49092bae675cc9650bc8b30658737bc014626048
-    for index, tab in enumerate(page.get("tabs", [])):
-        matched = [session for session in sessions if matches_tab(session, tab)]
-        matched_counts.append(len(matched))
-        active_class = " active" if index == 0 else ""
-        buttons.append(
-            f"<button class='tab-btn{active_class}' data-program='{escape(tab['program'], quote=True)}' "
-            f"data-tab-target='#{escape(tab['id'], quote=True)}' type='button'>{escape(tab['label'])}</button>"
-        )
-        count_label = f"{len(matched)} date" + ("" if len(matched) == 1 else "s")
-        quick_picks.append(
-            f"<button class='slug-quick-pick{active_class}' data-tab-scope='#slug-tabs-{escape(page['slug'], quote=True)}' "
-            f"data-tab-target='#{escape(tab['id'], quote=True)}' type='button'>"
-            f"<span>{escape(tab['label'])}</span><strong>{escape(count_label)}</strong></button>"
-        )
-<<<<<<< HEAD
-    total_dates = sum(matched_counts)
-    live_formats = sum(1 for count in matched_counts if count > 0)
-    assert len(all_matched_sessions) > 0, f"No sessions matched for hub page {page['slug']}"
-    strip_sessions = top_strip_sessions(all_matched_sessions)
-    strip_session_ids = {session_identity(session) for session in strip_sessions}
-    first_tab_sessions = sort_sessions([session for session in sessions if matches_tab(session, page["tabs"][0], page_slug=page.get("slug"))])
-    first_tab_display_sessions = [session for session in first_tab_sessions if session_identity(session) not in strip_session_ids]
-    first_tab_before_dedupe_count = len(first_tab_sessions)
-    first_tab_after_dedupe_count = len(first_tab_display_sessions)
-    first_tab_dedupe_applied = first_tab_after_dedupe_count >= MIN_FIRST_TAB_AFTER_DEDUPE
-    print(f"PAGE {page['slug']} TOTAL MATCHED BEFORE PRESENTATION DEDUPE: {len(all_matched_sessions)}")
-    print(f"PAGE {page['slug']} TOP STRIP COUNT SHOWN: {len(strip_sessions)}")
-    print(f"PAGE {page['slug']} FIRST TAB COUNT BEFORE DEDUPE: {first_tab_before_dedupe_count}")
-    print(f"PAGE {page['slug']} FIRST TAB COUNT AFTER DEDUPE: {first_tab_after_dedupe_count}")
-    print(f"PAGE {page['slug']} DEDUPE {'APPLIED' if first_tab_dedupe_applied else 'SKIPPED'}")
-
-    hero_actions_html = ""
-    banner_html = ""
-    if group_mode:
-        first_tab = page["tabs"][0]
-        first_cta_href = f"/request_group_session.html?program={quote(first_tab['program'])}"
-        first_cta_label = first_tab["primary_cta_label"]
-        hero_actions_html = f"""
-      <div class="slug-hero-actions">
-        <a class="button primary" href="{escape(first_cta_href, quote=True)}">{escape(first_cta_label)}</a>
-      </div>"""
-        banner_html = f"""
   <section class="slug-banner">
     <div class="slug-banner-copy">
       <div class="slug-banner-eyebrow">Full Schedule</div>
@@ -304,31 +249,22 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     <div class="slug-banner-actions">
       <a class="button primary" data-full-schedule-link href="{escape(first_tab['full_schedule_url'], quote=True)}">{escape(first_tab['full_schedule_label'])}</a>
     </div>
-  </section>"""
+  </section>
+""".strip()
 
-    panels = []
-    for index, tab in enumerate(page.get("tabs", [])):
-        matched = sort_sessions([session for session in sessions if matches_tab(session, tab, page_slug=page.get("slug"))])
-        suppress_ids = strip_session_ids if index == 0 and first_tab_dedupe_applied else set()
-        panels.append(render_tab_panel(tab, matched, active=index == 0, group_mode=group_mode, suppress_session_ids=suppress_ids))
-=======
-        if index == 0:
-            first_cta_href = (
-                f"/request_group_session.html?program={quote(tab['program'])}"
-                if group_mode
-                else tab["full_schedule_url"]
-            )
-            first_cta_label = tab["primary_cta_label"]
+
+def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
+    group_mode = bool(page.get("group_mode"))
+    tabs = page.get("tabs", [])
+    first_tab = tabs[0]
+
+    buttons: list[str] = []
+    panels: list[str] = []
+
+    for index, tab in enumerate(tabs):
+        matched = sort_sessions([session for session in sessions if matches_tab(session, tab)])
+        buttons.append(render_tab_button(tab, active=index == 0))
         panels.append(render_tab_panel(tab, matched, active=index == 0, group_mode=group_mode))
-
-    first_banner = {
-        "url": page["tabs"][0]["full_schedule_url"],
-        "label": page["tabs"][0]["full_schedule_label"],
-    }
-
-    total_dates = sum(matched_counts)
-    live_formats = sum(1 for count in matched_counts if count > 0)
->>>>>>> 49092bae675cc9650bc8b30658737bc014626048
 
     body = f"""
 <div class="card slug-hub-shell">
@@ -337,54 +273,23 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
       <div class="eyebrow">{escape(page['eyebrow'])}</div>
       <h1>{escape(page['hero_title'])}</h1>
       <p class="subhead">{escape(page['hero_copy'])}</p>
-      {hero_actions_html}
-      <div class="slug-hero-picks">
-        <div class="slug-hero-picks-label">Compare Formats Fast</div>
-        <div class="slug-quick-picks">
-          {''.join(quick_picks)}
-        </div>
-      </div>
+      {render_hero_actions(page, first_tab, group_mode=group_mode)}
     </div>
     <div class="hero-side">
-      <div class="trust-badge">
-        <strong>Quick Course Picker</strong>
-        <span>{escape(page['hero_note'])}</span>
-      </div>
-      <div class="trust-badge">
-        <strong>Live Upcoming Dates</strong>
-        <span>Each tab shows the next available openings pulled from the current schedule feed.</span>
-      </div>
-      <div class="slug-stat-grid">
-        <div class="slug-stat">
-          <strong>{len(page['tabs'])}</strong>
-          <span>course paths</span>
-        </div>
-        <div class="slug-stat">
-          <strong>{total_dates}</strong>
-          <span>upcoming dates</span>
-        </div>
-        <div class="slug-stat">
-          <strong>{live_formats}</strong>
-          <span>live formats now</span>
-        </div>
-      </div>
+      {render_hero_image(page)}
     </div>
   </section>
 
-<<<<<<< HEAD
-  {render_next_available_strip(all_matched_sessions, group_mode=group_mode, empty_link=page['tabs'][0]['full_schedule_url'], empty_label=page['tabs'][0]['full_schedule_label'])}
-
-=======
->>>>>>> 49092bae675cc9650bc8b30658737bc014626048
   <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
     <div class="tabs hub-tabs">
       {''.join(buttons)}
     </div>
     {''.join(panels)}
   </section>
-  {banner_html}
+  {render_banner(page, first_tab)}
 </div>
 """
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
