@@ -86,17 +86,6 @@
     return Number.isNaN(fallback.getTime()) ? null : fallback;
   }
 
-  function nowEasternDate() {
-    const parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone: EASTERN_TIMEZONE,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).formatToParts(new Date());
-    const lookup = Object.fromEntries(parts.filter((part) => part.type !== "literal").map((part) => [part.type, part.value]));
-    return new Date(`${lookup.year}-${lookup.month}-${lookup.day}T00:00:00-04:00`);
-  }
-
   function cleanLocation(raw) {
     const text = normalizeSpace(raw);
     if (!text) return "";
@@ -233,12 +222,12 @@
   }
 
   function enrichSessions(primarySessions, enrichmentMap) {
-    const today = nowEasternDate();
+    const now = new Date();
     const seen = new Set();
 
     return primarySessions
       .map((session) => {
-        if (!session.startDate || session.startDate < today) return null;
+        if (!session.startDate || session.startDate < now) return null;
         const key = recordKey(session.start, session.locationClean, session.sectionId, session.subtype);
         const enrichment = enrichmentMap.get(key);
         if (!enrichment) return null;
@@ -322,7 +311,7 @@
     const subtype = session.subtype ? `<div class="finder-pill-subtitle">${escapeHtml(session.subtype)}</div>` : "";
     return `
       <a class="finder-pill-link" href="${escapeAttribute(pillHref(section, session))}">
-        <article class="slug-pill finder-pill">
+        <article class="slug-pill finder-pill" data-session-start="${escapeAttribute(session.startDate ? session.startDate.toISOString() : "")}">
           <div class="slug-pill-date">
             <div class="slug-pill-month">${monthLabel(session.startDate)}</div>
             <div class="slug-pill-day">${dayLabel(session.startDate)}</div>

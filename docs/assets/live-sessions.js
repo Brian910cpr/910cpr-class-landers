@@ -7,12 +7,43 @@
     return Number.isNaN(date.getTime()) ? null : date;
   }
 
+  function inferStartFromMarkup(item) {
+    if (!item) {
+      return null;
+    }
+
+    var existing = parseStart(item.getAttribute("data-session-start"));
+    if (existing) {
+      return existing;
+    }
+
+    var dateNode = item.querySelector(".upcoming-date");
+    var timeNode = item.querySelector(".upcoming-time");
+    if (dateNode && timeNode) {
+      var parsed = parseStart(dateNode.textContent.trim() + " " + timeNode.textContent.trim());
+      if (parsed) {
+        item.setAttribute("data-session-start", parsed.toISOString());
+        return parsed;
+      }
+    }
+
+    return null;
+  }
+
   function removeExpiredItems(group) {
     var now = new Date();
-    group.querySelectorAll(".js-session-item[data-session-start]").forEach(function (item) {
-      var start = parseStart(item.getAttribute("data-session-start"));
-      if (!start || start <= now) {
+    group.querySelectorAll(".js-session-item[data-session-start], .js-session-item:not([data-session-start])").forEach(function (item) {
+      var start = inferStartFromMarkup(item);
+      if (start && start < now) {
         item.remove();
+      }
+    });
+  }
+
+  function removeEmptyDayCards(group) {
+    group.querySelectorAll(".slug-day-card").forEach(function (card) {
+      if (!card.querySelector(".slug-time-row") && !card.querySelector(".js-session-item")) {
+        card.remove();
       }
     });
   }
@@ -35,7 +66,7 @@
   }
 
   function hasVisibleItems(group) {
-    return Boolean(group.querySelector(".js-session-item"));
+    return Boolean(group.querySelector(".js-session-item, .slug-time-row, .slug-day-card"));
   }
 
   function appendFallback(group) {
@@ -81,6 +112,7 @@
   function refreshLiveSessionGroups() {
     document.querySelectorAll(".js-live-session-group").forEach(function (group) {
       removeExpiredItems(group);
+      removeEmptyDayCards(group);
       promoteCurtainItems(group);
       if (!hasVisibleItems(group)) {
         appendFallback(group);
@@ -88,5 +120,6 @@
     });
   }
 
+  window.pruneExpiredSessions = window.pruneExpiredSessions || refreshLiveSessionGroups;
   window.addEventListener("DOMContentLoaded", refreshLiveSessionGroups);
 })();
