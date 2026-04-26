@@ -1,6 +1,10 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
+set "COMPLETE_REBUILD=0"
+if /I "%~1"=="--complete" set "COMPLETE_REBUILD=1"
+if /I "%~1"=="--full" set "COMPLETE_REBUILD=1"
+
 cd /d "%~dp0"
 if errorlevel 1 (
     echo ERROR: Could not change to repo root.
@@ -32,9 +36,18 @@ echo ============================================
 echo RUNNING FROM:
 cd
 echo.
+if "%COMPLETE_REBUILD%"=="1" (
+    echo MODE: COMPLETE REBUILD
+    echo EXTRA STEP: python -m scripts.build_index_and_sitemap
+) else (
+    echo MODE: STANDARD REBUILD
+)
+echo NOTE: This run does not call python -m scripts.build_sessions_current
+echo.
 
 set "BAR_WIDTH=40"
 set /a TOTAL_WEIGHT=100
+if "%COMPLETE_REBUILD%"=="1" set /a TOTAL_WEIGHT=106
 set /a COMPLETED_WEIGHT=0
 
 call :show_progress "Starting build"
@@ -127,6 +140,19 @@ if errorlevel 1 goto :fail
 set /a COMPLETED_WEIGHT+=6
 call :show_progress "Completed Build course-at-city pages"
 echo.
+
+if "%COMPLETE_REBUILD%"=="1" (
+echo ------------------------------------------------
+echo RUNNING: Build index and sitemap
+echo COMMAND: python -m scripts.build_index_and_sitemap
+echo ------------------------------------------------
+call :show_progress "Running Build index and sitemap"
+python -m scripts.build_index_and_sitemap
+if errorlevel 1 goto :fail
+set /a COMPLETED_WEIGHT+=6
+call :show_progress "Completed Build index and sitemap"
+echo.
+)
 
 call :show_progress "Build complete"
 echo ============================================

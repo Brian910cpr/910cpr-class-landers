@@ -422,7 +422,15 @@ def render_course_page_body(course_meta: dict, future_sessions: list[dict]) -> s
 """
 
 
-def page_template(title: str, description: str, body_html: str, page_type: str, page_name: str, canonical_path: str) -> str:
+def page_template(
+    title: str,
+    description: str,
+    body_html: str,
+    page_type: str,
+    page_name: str,
+    canonical_path: str,
+    robots_content: str = "index,follow",
+) -> str:
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -430,7 +438,7 @@ def page_template(title: str, description: str, body_html: str, page_type: str, 
 <title>{html_escape(title)}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{html_escape(description)}">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="{html_escape(robots_content)}">
 <link rel="canonical" href="{SITE_BASE}{canonical_path}">
 {render_gtm_head()}
 <style>
@@ -583,8 +591,10 @@ ul {{
     <div><strong><a href="/index.html">910CPR</a></strong></div>
     <div class="nav small" style="margin-top:8px;">
       <a href="/index.html">Home</a>
-      <a href="/classes/index.html">Classes</a>
-      <a href="/courses/index.html">Courses</a>
+      <a href="/bls.html">BLS</a>
+      <a href="/acls.html">ACLS</a>
+      <a href="/pals.html">PALS</a>
+      <a href="/heartsaver.html">Heartsaver</a>
       <a href="{PHONE_LINK}">Call {PHONE_DISPLAY}</a>
       <a href="{ENROLLWARE_SCHEDULE_URL}">Enrollware Schedule</a>
     </div>
@@ -605,6 +615,108 @@ ul {{
 
 {telemetry_script(page_type, page_name)}
 <script src="/assets/live-sessions.js"></script>
+</body>
+</html>"""
+
+
+def render_homepage() -> str:
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find Your CPR Class Fast | 910CPR</title>
+<meta name="description" content="Find the right 910CPR class fast. Compare BLS, ACLS, PALS, Heartsaver, USCG, and group training options with real upcoming availability and direct booking links.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="{SITE_BASE}/">
+<link rel="stylesheet" href="/css/lander.css">
+{render_gtm_head()}
+</head>
+<body>
+{render_gtm_body()}
+<div class="wrap">
+  <div class="page-shell">
+    <main class="card home-shell">
+      <section class="hero home-hero">
+        <div class="hero-main">
+          <div class="eyebrow">910CPR Booking Homepage</div>
+          <h1>Find the right CPR class in a minute, not a spreadsheet.</h1>
+          <p class="subhead">Choose the training type you need, review a short list of real upcoming openings, and jump straight into the correct 910CPR booking flow powered by Enrollware checkout.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#class-finder">Browse live class openings</a>
+            <a class="button secondary" href="/group-training.html">Need training for a team?</a>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="trust-badge">
+            <strong>Live Public Inventory</strong>
+            <span>Only future, bookable classes with approved public-facing locations are surfaced here.</span>
+          </div>
+          <div class="trust-badge">
+            <strong>Fastest Route To Checkout</strong>
+            <span>Every session pill is the CTA, so you can jump directly into the right Enrollware enroll page.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-jumps" aria-label="Quick jumps">
+        <a class="jump-chip" href="#bls">Healthcare CPR</a>
+        <a class="jump-chip" href="#bls">BLS Renewal</a>
+        <a class="jump-chip" href="#bls">HeartCode Skills</a>
+        <a class="jump-chip" href="#heartsaver">Workplace CPR</a>
+        <a class="jump-chip" href="#acls">ACLS</a>
+        <a class="jump-chip" href="#pals">PALS</a>
+        <a class="jump-chip" href="#uscg">USCG</a>
+      </section>
+
+      <section class="home-status">
+        <div>
+          <div class="home-status-label">How this page works</div>
+          <p>Browse by public class type instead of internal Enrollware naming. Each section stays concise, and the full schedule button takes you to the relevant hub page when you want more options.</p>
+        </div>
+        <div class="home-status-badges">
+          <span class="home-stat">Upcoming only</span>
+          <span class="home-stat">Approved locations only</span>
+          <span class="home-stat">Enrollware checkout preserved</span>
+        </div>
+      </section>
+
+      <section class="home-finder" id="class-finder">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Class Finder</div>
+            <h2>Book by the class type students actually search for</h2>
+          </div>
+          <p class="section-copy">We keep the homepage focused on the next few relevant openings for each category, then hand off to the right hub page or enroll URL when you’re ready.</p>
+        </div>
+
+        <div class="finder-grid" data-home-sections>
+          <article class="finder-card finder-card-loading">
+            <div class="finder-card-head">
+              <div>
+                <h3>Loading live class availability</h3>
+                <p class="finder-card-copy">Pulling the current public schedule now.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<noscript>
+  <div class="wrap">
+    <div class="card home-noscript">
+      <h2>Quick class links</h2>
+      <p>JavaScript is required for the live homepage class finder. You can still use the full hub pages below.</p>
+      <p><a class="button primary" href="/bls.html">BLS</a> <a class="button secondary" href="/acls.html">ACLS</a> <a class="button secondary" href="/pals.html">PALS</a> <a class="button secondary" href="/heartsaver.html">Heartsaver</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG</a> <a class="button secondary" href="/group-training.html">Group Training</a></p>
+    </div>
+  </div>
+</noscript>
+
+<script src="/assets/booking-home.js"></script>
+{telemetry_script("home", "910CPR Booking Homepage")}
 </body>
 </html>"""
 
@@ -778,65 +890,7 @@ def build():
     # -----------------------------------------------------------------
     # Root index
     # -----------------------------------------------------------------
-    course_links = []
-    for course_name, items in sorted(course_groups.items(), key=lambda x: x[0].lower()):
-        slug = short_slug(course_name)
-        course_links.append(
-            f'<li><a href="/courses/{slug}.html">{html_escape(course_name)}</a> ({len(items)})</li>'
-        )
-
-    location_links = []
-    for location_name, items in sorted(location_groups.items(), key=lambda x: x[0].lower()):
-        slug = short_slug(location_name)
-        location_links.append(
-            f'<li><a href="/locations/{slug}.html">{html_escape(location_name)}</a> ({len(items)})</li>'
-        )
-
-    root_body = f"""
-<h1>910CPR Class Reference Index</h1>
-<p class="meta">This index is built from the actual HTML class pages found in <code>/docs/classes/</code>.</p>
-
-<div class="section">
-  <p><a href="/classes/index.html">Browse all class pages</a></p>
-  <p><a href="/courses/index.html">Browse course-type index</a></p>
-</div>
-
-<div class="section columns">
-  <div class="plain-card">
-    <h2>Course Types</h2>
-    <ul>
-      {''.join(course_links)}
-    </ul>
-  </div>
-
-  <div class="plain-card">
-    <h2>Locations</h2>
-    <ul>
-      {''.join(location_links)}
-    </ul>
-  </div>
-
-  <div class="plain-card">
-    <h2>Stats</h2>
-    <ul>
-      <li>Total class pages found: {len(sessions)}</li>
-      <li>Course groups: {len(course_groups)}</li>
-      <li>Location groups: {len(location_groups)}</li>
-    </ul>
-  </div>
-</div>
-"""
-    INDEX_FILE.write_text(
-        page_template(
-            title="910CPR Class Reference Index",
-            description="Class index built from actual generated class pages.",
-            body_html=root_body,
-            page_type="home",
-            page_name="910CPR Class Reference Index",
-            canonical_path="/",
-        ),
-        encoding="utf-8",
-    )
+    INDEX_FILE.write_text(render_homepage(), encoding="utf-8")
 
     # -----------------------------------------------------------------
     # Classes index
@@ -860,10 +914,10 @@ def build():
     CLASSES_INDEX_FILE.write_text(
         page_template(
             title="All Class Pages | 910CPR",
-            description="Index of all generated class pages.",
+            description="Archive support index of generated class pages.",
             body_html=f"""
 <h1>All Class Pages</h1>
-<p class="meta">Built directly from files in <code>/docs/classes/</code>.</p>
+<p class="meta">Archive support page for generated class files. Current booking paths live on the homepage, hubs, and exact-course schedule pages.</p>
 <ul>
 {''.join(class_lines)}
 </ul>
@@ -871,6 +925,7 @@ def build():
             page_type="classes_index",
             page_name="All Class Pages",
             canonical_path="/classes/index.html",
+            robots_content="noindex,follow",
         ),
         encoding="utf-8",
     )
@@ -908,15 +963,16 @@ def build():
     COURSES_INDEX_FILE.write_text(
         page_template(
             title="Course Index | 910CPR",
-            description="Course-type index built from actual class pages.",
+            description="Archive support index of generated course pages.",
             body_html=f"""
 <h1>Course Index</h1>
-<p class="meta">Grouped from the generated class pages in <code>/docs/classes/</code>.</p>
+<p class="meta">Archive support page for generated course files. For current booking options, use the homepage, family hubs, or exact-course schedule pages.</p>
 {''.join(course_sections)}
 """,
             page_type="courses_index",
             page_name="Course Index",
             canonical_path="/courses/index.html",
+            robots_content="noindex,follow",
         ),
         encoding="utf-8",
     )
@@ -965,18 +1021,38 @@ def build():
         (LOCATIONS_DIR / f"{slug}.html").write_text(
             page_template(
                 title=f"Classes in {location_name} | 910CPR",
-                description=f"Index of generated class pages in {location_name}.",
+                description=f"Archive support index of generated class pages in {location_name}.",
                 body_html=f"""
 <h1>Classes in {html_escape(location_name)}</h1>
-<p class="meta">Grouped from the generated class pages.</p>
-<p><a href="/index.html">Back to main index</a></p>
-<ul>
+<p class="meta">Archive support page for generated location listings. Use the homepage and hub pages for current public availability.</p>
+<section class="course-hero">
+  <div class="course-hero-copy">
+    <p class="course-eyebrow">Archive Support Page</p>
+    <h2>Looking for a current class instead of historical listings?</h2>
+    <p class="course-description">This page remains available for archive support and crawl coverage, but current public booking flows live on the homepage and family hubs.</p>
+    <div class="course-cta-row">
+      <a class="course-primary-cta" href="/index.html">Find current classes</a>
+      <a class="course-secondary-cta" href="{ENROLLWARE_SCHEDULE_URL}">Open full Enrollware schedule</a>
+    </div>
+  </div>
+</section>
+<section class="course-sessions">
+  <div class="course-section-head">
+    <h2>Archive listings</h2>
+    <p>These are preserved support links, not the recommended path for booking.</p>
+  </div>
+  <details>
+    <summary>View archived location sessions</summary>
+    <ul>
 {''.join(lines)}
-</ul>
+    </ul>
+  </details>
+</section>
 """,
                 page_type="location",
                 page_name=location_name,
                 canonical_path=f"/locations/{slug}.html",
+                robots_content="noindex,follow",
             ),
             encoding="utf-8",
         )

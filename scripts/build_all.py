@@ -6,12 +6,20 @@ print("====================================")
 print("910CPR MASTER LANDER BUILD")
 print("====================================")
 
+complete_rebuild = any(arg in {"--complete", "--full"} for arg in sys.argv[1:])
+
 steps = [
     ("Build Public Schedule", "scripts/build_public_schedule.py"),
     ("Build Course Pages", "scripts/build_course_pages.py"),
     ("Build Class Landers", "scripts/build_class_landers.py"),
-    ("Build Index and Sitemap", "scripts/build_index_and_sitemap.py"),
 ]
+
+if complete_rebuild:
+    steps.append(("Build Index and Sitemap", "scripts/build_index_and_sitemap.py"))
+
+mode_label = "COMPLETE REBUILD" if complete_rebuild else "STANDARD REBUILD"
+print("Mode:", mode_label)
+print("Note: build_sessions_current is not part of this run.")
 
 for name, script in steps:
     print("")

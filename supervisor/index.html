@@ -171,6 +171,56 @@ h1,h2,h3,p{margin:0}
   display:grid;
   gap:18px;
 }
+.run-controls{
+  display:grid;
+  gap:14px;
+}
+.run-option{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:14px;
+  border-radius:14px;
+  background:var(--panel-soft);
+  border:1px solid #243752;
+}
+.run-option input{
+  margin-top:3px;
+  width:18px;
+  height:18px;
+  accent-color:var(--accent);
+}
+.run-option-label{
+  display:grid;
+  gap:4px;
+}
+.run-option-label strong{
+  font-size:15px;
+}
+.run-help{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+.run-command{
+  display:grid;
+  gap:8px;
+  padding:14px;
+  border-radius:14px;
+  background:#0f1724;
+  border:1px solid #243752;
+}
+.run-command-label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--muted);
+}
+.run-command-note{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
 .empty{
   padding:14px;
   border:1px dashed #334966;
@@ -196,7 +246,7 @@ h1,h2,h3,p{margin:0}
       <div class="hero-top">
         <div class="tight">
           <h1>Supervisor</h1>
-          <p class="muted">Builder and status viewer for the lander system. This page is read-only by design so it answers what happened before we add more controls.</p>
+          <p class="muted">Builder and status viewer for the lander system. This page stays lightweight, but it can now define whether the next local rebuild should include the index and sitemap pass.</p>
         </div>
         <div id="overall-pill" class="status-pill status-neutral">Loading</div>
       </div>
@@ -224,6 +274,29 @@ h1,h2,h3,p{margin:0}
         <div class="metric">
           <div class="metric-label">Git Working Tree</div>
           <div id="git-state" class="metric-value small">Waiting…</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel-pad">
+      <div class="section-head">
+        <div>
+          <h2>Next Run</h2>
+          <p class="section-copy">This controls the local rebuild command the operator should run. The dashboard itself does not execute Python.</p>
+        </div>
+      </div>
+      <div class="run-controls">
+        <label class="run-option">
+          <input id="complete-rebuild" type="checkbox">
+          <span class="run-option-label">
+            <strong>Complete rebuild</strong>
+            <span class="run-help">Adds <span class="code">python -m scripts.build_index_and_sitemap</span> at the end of the run. It does not add <span class="code">python -m scripts.build_sessions_current</span>.</span>
+          </span>
+        </label>
+        <div class="run-command">
+          <div class="run-command-label">Run From Repo Root</div>
+          <div id="run-command" class="code">BUILD_ALL.bat</div>
+          <div id="run-command-note" class="run-command-note">Standard rebuild.</div>
         </div>
       </div>
     </section>
@@ -359,6 +432,30 @@ function statusLabel(status) {
 
 function setText(id, value) {
   document.getElementById(id).textContent = value ?? "n/a";
+}
+
+function renderRunCommand() {
+  const checkbox = document.getElementById("complete-rebuild");
+  const complete = checkbox.checked;
+  const command = complete ? "BUILD_ALL.bat --complete" : "BUILD_ALL.bat";
+  document.getElementById("run-command").textContent = command;
+  document.getElementById("run-command-note").textContent = complete
+    ? "Complete rebuild adds the index and sitemap step after the normal build stack."
+    : "Standard rebuild skips the index and sitemap step.";
+  try {
+    localStorage.setItem("supervisor.completeRebuild", complete ? "1" : "0");
+  } catch {}
+}
+
+function initRunControls() {
+  const checkbox = document.getElementById("complete-rebuild");
+  try {
+    checkbox.checked = localStorage.getItem("supervisor.completeRebuild") === "1";
+  } catch {
+    checkbox.checked = false;
+  }
+  checkbox.addEventListener("change", renderRunCommand);
+  renderRunCommand();
 }
 
 function renderKv(targetId, rows) {
@@ -571,6 +668,7 @@ async function refresh() {
   render(data);
 }
 
+initRunControls();
 refresh();
 setInterval(refresh, POLL_MS);
 </script>

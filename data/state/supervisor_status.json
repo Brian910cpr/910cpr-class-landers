@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24T22:47:12.328350-04:00",
+  "generated_at": "2026-04-26T10:49:14.092997-04:00",
   "monitored_repo_path": "E:\\GitHub\\910cpr-class-landers",
   "build_summary": {
     "summary_file": "data\\state\\last_build_summary.json",
@@ -43,6 +43,17 @@
   },
   "runtime_statuses": [
     {
+      "phase_name": "build_index_and_sitemap",
+      "label": "Build Index And Sitemap",
+      "status": "done",
+      "timestamp": "2026-04-26T10:49:13.528003-04:00",
+      "current_count": 27651,
+      "total_count": 27651,
+      "percent_complete": 100.0,
+      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
+      "runtime_file": "data\\runtime\\build_index_and_sitemap.json"
+    },
+    {
       "phase_name": "build_slug_hubs",
       "label": "Build Hub Pages",
       "status": "done",
@@ -52,17 +63,6 @@
       "percent_complete": 100.0,
       "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
       "runtime_file": "data\\runtime\\build_slug_hubs.json"
-    },
-    {
-      "phase_name": "build_index_and_sitemap",
-      "label": "Build Index And Sitemap",
-      "status": "done",
-      "timestamp": "2026-04-24T22:38:03.966926-04:00",
-      "current_count": 27603,
-      "total_count": 27603,
-      "percent_complete": 100.0,
-      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
-      "runtime_file": "data\\runtime\\build_index_and_sitemap.json"
     },
     {
       "phase_name": "build_schedule_future",
@@ -144,6 +144,11 @@
   ],
   "files_written": [
     {
+      "phase": "Build Index And Sitemap",
+      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
+      "timestamp": "2026-04-26T10:49:13.528003-04:00"
+    },
+    {
       "phase": "Build Hub Pages",
       "path": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
       "timestamp": "2026-04-24T22:47:11.852010-04:00"
@@ -179,11 +184,6 @@
       "timestamp": "2026-04-24T22:47:11.218938-04:00"
     },
     {
-      "phase": "Build Index And Sitemap",
-      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
-      "timestamp": "2026-04-24T22:38:03.966926-04:00"
-    },
-    {
       "phase": "Build Future Schedule Feed",
       "path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
       "timestamp": "2026-04-24T22:13:31.625872-04:00"
@@ -216,8 +216,8 @@
     "location_pages": 254,
     "course_at_city_pages": 4,
     "topic_pages": 13,
-    "topic_year_pages": 63,
-    "year_pages": 7
+    "topic_year_pages": 64,
+    "year_pages": 8
   },
   "current_config_source": "data\\config\\slug_hubs.json",
   "current_schedule_json_source": {
@@ -241,7 +241,7 @@
         "modified_at": "2026-04-24T22:47:11.218938-04:00",
         "size_bytes": 36618,
         "session_marker_count": 36,
-        "expired_session_markers": 0,
+        "expired_session_markers": 3,
         "stale_vs_schedule_feed": false
       },
       {
@@ -251,7 +251,7 @@
         "modified_at": "2026-04-24T22:47:11.306865-04:00",
         "size_bytes": 37359,
         "session_marker_count": 36,
-        "expired_session_markers": 0,
+        "expired_session_markers": 1,
         "stale_vs_schedule_feed": false
       },
       {
@@ -271,7 +271,7 @@
         "modified_at": "2026-04-24T22:47:11.680628-04:00",
         "size_bytes": 31282,
         "session_marker_count": 24,
-        "expired_session_markers": 0,
+        "expired_session_markers": 1,
         "stale_vs_schedule_feed": false
       },
       {
@@ -281,7 +281,7 @@
         "modified_at": "2026-04-24T22:47:11.852010-04:00",
         "size_bytes": 61140,
         "session_marker_count": 60,
-        "expired_session_markers": 0,
+        "expired_session_markers": 6,
         "stale_vs_schedule_feed": false
       },
       {
@@ -291,29 +291,28 @@
         "modified_at": "2026-04-24T22:47:11.751656-04:00",
         "size_bytes": 14306,
         "session_marker_count": 12,
-        "expired_session_markers": 0,
+        "expired_session_markers": 1,
         "stale_vs_schedule_feed": false
       }
     ],
     "stale_hub_count": 0,
     "stale_hubs": [],
-    "expired_session_markers_total": 0,
-    "warnings": [],
+    "expired_session_markers_total": 12,
+    "warnings": [
+      "expired_session_markers_detected:12"
+    ],
     "schedule_session_count": 1504
   },
   "git": {
     "repo_root": "E:/GitHub/910cpr-class-landers",
     "branch": "main",
-    "head": "bb5eb0c9bb2",
+    "head": "c7ef09b360a",
     "has_uncommitted_changes": true,
-    "changed_files_count": 27990,
+    "changed_files_count": 26536,
     "changed_files_preview": [
-      " M data/config/slug_hubs.json",
-      " M data/runtime/acls_hub_debug.json",
-      " M data/runtime/build_slug_hubs.json",
+      " M BUILD_ALL.bat",
+      " M data/runtime/build_index_and_sitemap.json",
       " M data/state/supervisor_status.json",
-      " M docs/acls.html",
-      " M docs/bls.html",
       " M docs/classes/10000418.html",
       " M docs/classes/10002547.html",
       " M docs/classes/10004935.html",
@@ -332,7 +331,10 @@
       " M docs/classes/10009271.html",
       " M docs/classes/10009275.html",
       " M docs/classes/10009276.html",
-      " M docs/classes/10009277.html"
+      " M docs/classes/10009277.html",
+      " M docs/classes/10010462.html",
+      " M docs/classes/10012307.html",
+      " M docs/classes/10012308.html"
     ]
   },
   "detected_settings": {
@@ -349,7 +351,8 @@
     "config_source": "data\\config\\slug_hubs.json"
   },
   "warnings": [
-    "git_dirty:27990"
+    "expired_session_markers_detected:12",
+    "git_dirty:26536"
   ],
   "errors": []
 }
