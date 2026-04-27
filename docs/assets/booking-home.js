@@ -198,6 +198,42 @@
       .filter(Boolean);
   }
 
+  function buildPrimarySessionsFromFuture(futureSchedule) {
+    return (futureSchedule.sessions || [])
+      .map((row) => {
+        const seats = Number(row.available_seats || 0);
+        if (row.session_status !== "active" || row.is_full || seats <= 0) return null;
+
+        const name = normalizeSpace(`${row.course_name || ""} ${row.course_subtitle || ""}`);
+        const familyHint = normalizeSpace(row.course_code || "");
+        const match = inferSectionAndSubtype(name, familyHint);
+        if (!match) return null;
+
+        return {
+          name,
+          sectionId: match.sectionId,
+          subtype: match.subtype,
+          formatLabel: inferFormatLabel(name, familyHint),
+          start: row.start_at,
+          startDate: parseDate(row.start_at),
+          locationRaw: row.location_display || row.location_name,
+          locationClean: cleanLocation(row.location_display || row.location_name),
+          source: "future-primary",
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function dedupePrimarySessions(primarySessions) {
+    const seen = new Set();
+    return primarySessions.filter((session) => {
+      const key = recordKey(session.start, session.locationClean, session.sectionId, session.subtype);
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
   function buildEnrichmentMap(legacyPublic, futureSchedule) {
     const map = new Map();
 
@@ -476,7 +512,10 @@
     fetch("/data/schedule_future.json").then((response) => response.json()),
   ])
     .then(([primaryFeed, legacyPublic, futureSchedule]) => {
-      const primarySessions = buildPrimarySessions(Array.isArray(primaryFeed) ? primaryFeed : []);
+      const primarySessions = dedupePrimarySessions([
+        ...buildPrimarySessions(Array.isArray(primaryFeed) ? primaryFeed : []),
+        ...buildPrimarySessionsFromFuture(futureSchedule || {}),
+      ]);
       const enrichmentMap = buildEnrichmentMap(legacyPublic || {}, futureSchedule || {});
       const enrichedSessions = enrichSessions(primarySessions, enrichmentMap);
       const groupedSessions = buildGroupedSessions(enrichedSessions);
