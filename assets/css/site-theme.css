@@ -1,0 +1,47 @@
+:root {
+  --site-hero-surface:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(247, 250, 252, 0.96) 100%);
+  --site-hero-orb: radial-gradient(circle, rgba(126, 201, 200, 0.18) 0%, rgba(126, 201, 200, 0) 72%);
+  --site-guidance-surface: linear-gradient(135deg, rgba(240, 251, 252, 0.96) 0%, rgba(255, 247, 235, 0.98) 100%);
+  --site-sidebar-surface: linear-gradient(180deg, #ffffff 0%, #fff9ef 100%);
+  --site-card-surface: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
+  --site-preview-accent: #26a9c2;
+  --site-preview-contrast: #1f87af;
+  --site-preview-highlight: rgba(38, 169, 194, 0.12);
+}
+
+[data-site-theme-scope="hero"] .slug-hero {
+  background: var(--site-hero-surface);
+}
+
+[data-site-theme-scope="hero"] .slug-hero::after {
+  background: var(--site-hero-orb);
+}
+
+[data-site-theme-scope="guidance"] .slug-guidance-banner {
+  border-color: color-mix(in srgb, var(--site-preview-contrast) 20%, white);
+  background: var(--site-guidance-surface);
+}
+
+[data-site-theme-scope="guidance"] .slug-guidance-eyebrow,
+[data-site-theme-scope="sidebar"] .slug-banner-eyebrow,
+[data-site-theme-scope="card"] .slug-pill-chip-format {
+  background: var(--site-preview-highlight);
+  color: var(--site-preview-contrast);
+}
+
+[data-site-theme-scope="card"] .slug-pill,
+[data-site-theme-scope="card"] .slug-day-card {
+  background: var(--site-card-surface);
+}
+
+[data-site-theme-scope="sidebar"] .slug-training-options,
+[data-site-theme-scope="sidebar"] .training-option-card {
+  background: var(--site-sidebar-surface);
+}
+
+[data-site-theme-scope] .button.primary,
+[data-site-theme-scope] .tab-btn.active {
+  background: linear-gradient(180deg, var(--site-preview-accent) 0%, var(--site-preview-contrast) 100%);
+  border-color: var(--site-preview-contrast);
+}

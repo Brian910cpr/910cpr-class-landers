@@ -3,674 +3,833 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>910CPR Supervisor</title>
+<title>910CPR Theme Preview Supervisor</title>
+<link rel="stylesheet" href="/docs/css/lander.css">
+<link rel="stylesheet" href="/assets/css/site-theme.css">
 <style>
 :root{
-  --bg:#0f1724;
-  --panel:#162131;
-  --panel-soft:#1b293d;
-  --border:#2b3c56;
-  --text:#e5eefb;
-  --muted:#9fb0c8;
-  --accent:#6fb1ff;
-  --good:#2ec27e;
-  --warn:#ffb648;
-  --bad:#ff6b6b;
-  --shadow:0 18px 42px rgba(0,0,0,.24);
+  --ui-bg:#0b1320;
+  --ui-panel:#132033;
+  --ui-panel-soft:#18283d;
+  --ui-border:#27415d;
+  --ui-text:#ebf2fb;
+  --ui-muted:#9bb0c7;
+  --ui-accent:#66b2d7;
+  --ui-good:#73d7a5;
+  --ui-warn:#ffc76b;
+  --ui-bad:#ff8a8a;
+  --ui-shadow:0 20px 50px rgba(0,0,0,.22);
 }
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:linear-gradient(180deg,#0b1320 0%,#111b2b 100%);
-  color:var(--text);
   font-family:Inter,Segoe UI,Arial,sans-serif;
+  color:var(--ui-text);
+  background:
+    radial-gradient(circle at top right, rgba(74, 123, 200, .16), transparent 20%),
+    linear-gradient(180deg, #08111d 0%, #0d1727 100%);
 }
-.wrap{
-  max-width:1280px;
+.supervisor-shell{
+  max-width:1540px;
   margin:0 auto;
-  padding:24px 16px 56px;
-}
-.stack{display:grid;gap:18px}
-.panel{
-  background:rgba(22,33,49,.96);
-  border:1px solid var(--border);
-  border-radius:18px;
-  box-shadow:var(--shadow);
-}
-.hero{
-  padding:22px;
+  padding:24px 18px 48px;
   display:grid;
   gap:18px;
 }
-.hero-top{
+.supervisor-card{
+  background:rgba(19,32,51,.94);
+  border:1px solid var(--ui-border);
+  border-radius:22px;
+  box-shadow:var(--ui-shadow);
+}
+.supervisor-hero{
+  padding:24px;
+  display:grid;
+  gap:18px;
+}
+.supervisor-hero-top{
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
   gap:16px;
   flex-wrap:wrap;
 }
+.supervisor-kicker{
+  margin:0 0 8px;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ui-accent);
+  font-weight:800;
+}
 h1,h2,h3,p{margin:0}
-.muted{color:var(--muted)}
-.status-pill{
+.supervisor-title{
+  display:grid;
+  gap:8px;
+  max-width:72ch;
+}
+.supervisor-title p,
+.supervisor-copy,
+.field-help,
+.validation-note{
+  color:var(--ui-muted);
+  line-height:1.6;
+}
+.supervisor-pill{
   display:inline-flex;
   align-items:center;
   gap:8px;
   padding:10px 14px;
   border-radius:999px;
-  font-size:13px;
+  font-size:12px;
   font-weight:800;
-  letter-spacing:.03em;
+  letter-spacing:.04em;
   text-transform:uppercase;
+  background:rgba(102,178,215,.16);
+  color:#dff5ff;
 }
-.status-good{background:rgba(46,194,126,.18); color:#b9f2d4}
-.status-warn{background:rgba(255,182,72,.18); color:#ffe0a8}
-.status-bad{background:rgba(255,107,107,.18); color:#ffc4c4}
-.status-neutral{background:rgba(159,176,200,.16); color:#d6e2f3}
-.overview{
+.supervisor-layout{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  grid-template-columns:minmax(340px, 430px) minmax(0, 1fr);
+  gap:18px;
+  align-items:start;
+}
+.panel-pad{
+  padding:20px;
+}
+.stack{
+  display:grid;
+  gap:16px;
+}
+.controls-grid{
+  display:grid;
+  gap:16px;
+}
+.field-group{
+  display:grid;
+  gap:10px;
+}
+.field-group h3{
+  font-size:16px;
+}
+.field-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
   gap:12px;
 }
-.metric{
-  padding:14px;
-  border-radius:14px;
-  background:var(--panel-soft);
-  border:1px solid #23344c;
-}
-.metric-label{
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  color:var(--muted);
-  margin-bottom:8px;
-}
-.metric-value{
-  font-size:24px;
-  font-weight:800;
-  line-height:1.2;
-}
-.metric-value.small{
-  font-size:15px;
-  word-break:break-word;
-}
-.grid{
+.field{
   display:grid;
-  grid-template-columns:1.35fr .9fr;
-  gap:18px;
+  gap:6px;
 }
-.panel-pad{padding:18px}
-.section-head{
+.field.span-2{
+  grid-column:1 / -1;
+}
+.field label,
+.checkbox-grid legend{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:#d6e6f6;
+}
+.field input,
+.field select{
+  width:100%;
+  min-height:44px;
+  border-radius:14px;
+  border:1px solid #34506f;
+  background:#0d1725;
+  color:var(--ui-text);
+  padding:10px 12px;
+  font:inherit;
+}
+.field input[type="color"]{
+  padding:6px;
+}
+.checkbox-grid{
+  margin:0;
+  padding:0;
+  border:0;
+  display:grid;
+  gap:10px;
+}
+.checkbox-list{
+  display:grid;
+  gap:10px;
+}
+.checkbox-item{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:12px 14px;
+  border-radius:14px;
+  background:var(--ui-panel-soft);
+  border:1px solid #233a55;
+}
+.checkbox-item input{
+  margin-top:3px;
+  accent-color:var(--ui-accent);
+}
+.checkbox-copy{
+  display:grid;
+  gap:4px;
+}
+.checkbox-copy strong{
+  font-size:14px;
+}
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.toolbar button{
+  appearance:none;
+  border:1px solid #34506f;
+  background:#10203a;
+  color:var(--ui-text);
+  border-radius:999px;
+  padding:10px 14px;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+}
+.toolbar button:hover{
+  border-color:#4f7da8;
+  transform:translateY(-1px);
+}
+.validation-list{
+  display:grid;
+  gap:10px;
+}
+.validation-item{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid #28425f;
+  background:#0d1725;
+}
+.validation-text{
+  display:grid;
+  gap:4px;
+  min-width:0;
+}
+.validation-path{
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:12px;
+  color:#dce8f8;
+  word-break:break-all;
+}
+.status-chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:86px;
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.status-ok{
+  background:rgba(115, 215, 165, .16);
+  color:var(--ui-good);
+}
+.status-missing{
+  background:rgba(255, 138, 138, .16);
+  color:var(--ui-bad);
+}
+.status-warning{
+  background:rgba(255, 199, 107, .16);
+  color:var(--ui-warn);
+}
+.preview-panel{
+  padding:18px;
+  display:grid;
+  gap:14px;
+}
+.preview-top{
   display:flex;
   justify-content:space-between;
   align-items:flex-end;
   gap:12px;
-  margin-bottom:14px;
+  flex-wrap:wrap;
 }
-.section-copy{
-  color:var(--muted);
-  font-size:14px;
-}
-.phase-list,.list{
-  display:grid;
-  gap:12px;
-}
-.phase-card,.list-card{
-  border:1px solid #243752;
-  background:var(--panel-soft);
-  border-radius:14px;
-  padding:14px;
-}
-.phase-top,.list-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-  margin-bottom:10px;
-}
-.phase-name,.list-title{
-  font-weight:800;
-}
-.kv{
-  display:grid;
-  grid-template-columns:160px minmax(0,1fr);
-  gap:8px 12px;
-  font-size:14px;
-}
-.kv .k{
-  color:var(--muted);
-}
-.code{
-  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
-  font-size:12px;
-  background:#0f1724;
-  border:1px solid #243752;
-  border-radius:8px;
-  padding:5px 7px;
-  color:#dfe9f7;
-  word-break:break-all;
-}
-.chips{
+.preview-meta{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
 }
-.chip{
+.preview-chip{
   display:inline-flex;
   align-items:center;
-  padding:7px 10px;
+  min-height:28px;
+  padding:6px 10px;
   border-radius:999px;
-  background:#0f1724;
-  border:1px solid #243752;
-  color:#dfe9f7;
+  background:#10203a;
+  color:#e5f3fd;
+  border:1px solid #294562;
   font-size:12px;
+  font-weight:700;
 }
-.chip.warn{border-color:rgba(255,182,72,.45); color:#ffe0a8}
-.chip.bad{border-color:rgba(255,107,107,.45); color:#ffc4c4}
-.chip.good{border-color:rgba(46,194,126,.45); color:#b9f2d4}
-.subgrid{
+.preview-canvas{
+  padding:16px;
+  border-radius:22px;
+  border:1px solid #26415b;
+  background:
+    linear-gradient(180deg, rgba(244, 249, 255, .98) 0%, rgba(255, 250, 244, .98) 100%);
+}
+.preview-canvas .wrap{
+  max-width:none;
+  padding:0;
+}
+.preview-canvas .page-shell{
+  max-width:none;
+}
+.preview-canvas .slug-tabs-block{
+  margin-bottom:18px;
+}
+.preview-grid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 320px;
+  gap:18px;
+  align-items:start;
+}
+.preview-sidebar{
   display:grid;
   gap:18px;
 }
-.run-controls{
-  display:grid;
-  gap:14px;
+.theme-note{
+  padding:14px 16px;
+  border-radius:16px;
+  background:var(--ui-panel-soft);
+  border:1px solid #233a55;
 }
-.run-option{
-  display:flex;
-  align-items:flex-start;
-  gap:12px;
-  padding:14px;
-  border-radius:14px;
-  background:var(--panel-soft);
-  border:1px solid #243752;
+.theme-note strong{
+  display:block;
+  margin-bottom:4px;
 }
-.run-option input{
-  margin-top:3px;
-  width:18px;
-  height:18px;
-  accent-color:var(--accent);
+.sidebar-image{
+  display:block;
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:16px;
+  margin-bottom:12px;
 }
-.run-option-label{
-  display:grid;
-  gap:4px;
-}
-.run-option-label strong{
-  font-size:15px;
-}
-.run-help{
-  color:var(--muted);
+.sidebar-mini{
   font-size:13px;
-  line-height:1.5;
-}
-.run-command{
-  display:grid;
-  gap:8px;
-  padding:14px;
-  border-radius:14px;
-  background:#0f1724;
-  border:1px solid #243752;
-}
-.run-command-label{
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
   color:var(--muted);
 }
-.run-command-note{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
+.preview-canvas .slug-training-options{
+  margin:0;
 }
-.empty{
-  padding:14px;
-  border:1px dashed #334966;
-  border-radius:12px;
-  color:var(--muted);
+.preview-canvas .training-option-grid{
+  grid-template-columns:1fr;
 }
-.tight{display:grid; gap:8px}
-.mono-list{
-  display:grid;
-  gap:8px;
-  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
-  font-size:12px;
+@media (max-width: 1180px){
+  .supervisor-layout,
+  .preview-grid{
+    grid-template-columns:1fr;
+  }
 }
-@media (max-width: 980px){
-  .grid{grid-template-columns:1fr}
+@media (max-width: 760px){
+  .supervisor-shell{
+    padding:16px 12px 40px;
+  }
+  .supervisor-hero,
+  .panel-pad,
+  .preview-panel{
+    padding:16px;
+  }
+  .field-grid{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="stack">
-    <section class="panel hero">
-      <div class="hero-top">
-        <div class="tight">
-          <h1>Supervisor</h1>
-          <p class="muted">Builder and status viewer for the lander system. This page stays lightweight, but it can now define whether the next local rebuild should include the index and sitemap pass.</p>
-        </div>
-        <div id="overall-pill" class="status-pill status-neutral">Loading</div>
+<div class="supervisor-shell">
+  <section class="supervisor-card supervisor-hero">
+    <div class="supervisor-hero-top">
+      <div class="supervisor-title">
+        <div class="supervisor-kicker">Supervisor Preview Lab</div>
+        <h1>Theme Preview Environment</h1>
+        <p>This page is a local preview canvas for seasonal and brand treatments. It is not a production hub. Use it to preview hero, guidance, schedule card, CTA, and sidebar changes live before any rebuild.</p>
       </div>
-      <div class="overview">
-        <div class="metric">
-          <div class="metric-label">Monitored Repo Path</div>
-          <div id="repo-path" class="metric-value small">Waiting…</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Last Run Time</div>
-          <div id="last-run" class="metric-value small">Waiting…</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Schedule JSON Source</div>
-          <div id="schedule-source" class="metric-value small">Waiting…</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Current Config Source</div>
-          <div id="config-source" class="metric-value small">Waiting…</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Hub Staleness</div>
-          <div id="hub-stale" class="metric-value small">Waiting…</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Git Working Tree</div>
-          <div id="git-state" class="metric-value small">Waiting…</div>
-        </div>
-      </div>
-    </section>
+      <div class="supervisor-pill">Live local preview only</div>
+    </div>
+  </section>
 
-    <section class="panel panel-pad">
-      <div class="section-head">
+  <div class="supervisor-layout">
+    <aside class="stack">
+      <section class="supervisor-card panel-pad">
+        <div class="controls-grid">
+          <div class="field-group">
+            <h2>Preview Controls</h2>
+            <p class="supervisor-copy">Everything below updates the canvas immediately. It does not fetch schedule JSON and it does not rewrite production pages.</p>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="simulate-date">Simulate Date</label>
+              <input id="simulate-date" type="date">
+            </div>
+            <div class="field">
+              <label for="simulate-time">Start Time</label>
+              <input id="simulate-time" type="time" value="08:30">
+            </div>
+            <div class="field">
+              <label for="theme-select">Force Theme</label>
+              <select id="theme-select">
+                <option value="default">Default</option>
+                <option value="summer">Summer / Beach</option>
+                <option value="holiday">Holiday</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="preview-page">Preview Page</label>
+              <select id="preview-page">
+                <option value="bls">BLS</option>
+                <option value="acls">ACLS</option>
+                <option value="pals">PALS</option>
+                <option value="heartsaver">Heartsaver</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <h3>Theme Colors</h3>
+            <div class="field-grid">
+              <div class="field">
+                <label for="accent-color">Accent</label>
+                <input id="accent-color" type="color" value="#26a9c2">
+              </div>
+              <div class="field">
+                <label for="contrast-color">Contrast</label>
+                <input id="contrast-color" type="color" value="#1f87af">
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <h3>Image Inputs</h3>
+            <div class="field-grid">
+              <div class="field span-2">
+                <label for="hero-image-input">Hero Image Path</label>
+                <input id="hero-image-input" type="text" value="/docs/images/bls_general.png" spellcheck="false">
+              </div>
+              <div class="field span-2">
+                <label for="sidebar-image-input">Sidebar Image Path</label>
+                <input id="sidebar-image-input" type="text" value="/docs/images/heartsaver_general.png" spellcheck="false">
+              </div>
+            </div>
+            <p class="field-help">Asset checks run live against local paths so missing images can be caught before a themed rebuild.</p>
+          </div>
+
+          <div class="field-group">
+            <fieldset class="checkbox-grid">
+              <legend>Apply To</legend>
+              <div class="checkbox-list">
+                <label class="checkbox-item">
+                  <input type="checkbox" value="hero" checked>
+                  <span class="checkbox-copy">
+                    <strong>Hero</strong>
+                    <span class="field-help">Header surface, orb accent, and hero image framing.</span>
+                  </span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" value="guidance" checked>
+                  <span class="checkbox-copy">
+                    <strong>Guidance Banner</strong>
+                    <span class="field-help">Shared reusable banner treatment used below the hero.</span>
+                  </span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" value="card" checked>
+                  <span class="checkbox-copy">
+                    <strong>Session / Day Card</strong>
+                    <span class="field-help">Date card, session row surface, and primary register CTA.</span>
+                  </span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" value="sidebar" checked>
+                  <span class="checkbox-copy">
+                    <strong>Sidebar Card</strong>
+                    <span class="field-help">Other Training Options support panel and its supporting image.</span>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="toolbar">
+            <button id="apply-preset" type="button">Apply Preset</button>
+            <button id="reset-theme" type="button">Reset To Default</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="supervisor-card panel-pad">
+        <div class="field-group">
+          <h2>Asset Validation</h2>
+          <p class="validation-note">Theme assets are checked without touching production data. Missing files show here immediately.</p>
+        </div>
+        <div id="asset-validation" class="validation-list"></div>
+      </section>
+
+      <section class="supervisor-card panel-pad">
+        <div class="theme-note">
+          <strong>No duplicate theme logic</strong>
+          <p class="supervisor-copy">The preview uses the same shared theme loader and CSS variable surface each time. If production hubs adopt this theme layer later, they can include the same assets instead of copy-pasting page-specific styling rules.</p>
+        </div>
+      </section>
+    </aside>
+
+    <section class="supervisor-card preview-panel">
+      <div class="preview-top">
         <div>
-          <h2>Next Run</h2>
-          <p class="section-copy">This controls the local rebuild command the operator should run. The dashboard itself does not execute Python.</p>
+          <div class="supervisor-kicker">Preview Canvas</div>
+          <h2>Representative hub view</h2>
+          <p class="supervisor-copy">This mirrors the real hub structure: hero, reusable guidance banner, grouped session card, register CTA, and sidebar support card.</p>
+        </div>
+        <div class="preview-meta">
+          <span id="preview-theme-label" class="preview-chip">Theme: Default</span>
+          <span id="preview-date-label" class="preview-chip">Date: Loading</span>
         </div>
       </div>
-      <div class="run-controls">
-        <label class="run-option">
-          <input id="complete-rebuild" type="checkbox">
-          <span class="run-option-label">
-            <strong>Complete rebuild</strong>
-            <span class="run-help">Adds <span class="code">python -m scripts.build_index_and_sitemap</span> at the end of the run. It does not add <span class="code">python -m scripts.build_sessions_current</span>.</span>
-          </span>
-        </label>
-        <div class="run-command">
-          <div class="run-command-label">Run From Repo Root</div>
-          <div id="run-command" class="code">BUILD_ALL.bat</div>
-          <div id="run-command-note" class="run-command-note">Standard rebuild.</div>
+
+      <div id="preview-canvas" class="preview-canvas">
+        <div class="wrap">
+          <div class="page-shell">
+            <div class="card slug-hub-shell">
+              <section class="hero slug-hero" data-site-theme-scope="hero">
+                <div class="hero-main">
+                  <div class="eyebrow">Healthcare CPR Training</div>
+                  <h1 id="preview-hero-title">Choose Your BLS Class</h1>
+                  <p id="preview-hero-copy" class="subhead">Compare the main training paths, see an example day card, and preview how a seasonal treatment feels before the build pipeline touches a public page.</p>
+                  <div class="slug-hero-actions">
+                    <a class="button primary" href="#">Register Now</a>
+                    <a class="button secondary" href="#">See Full Schedule</a>
+                  </div>
+                </div>
+                <div class="hero-side">
+                  <div class="slug-hero-image-wrap">
+                    <img data-preview-hero-image class="slug-hero-image" src="/docs/images/bls_general.png" alt="Preview hero image" loading="lazy">
+                  </div>
+                </div>
+              </section>
+
+              <div class="slug-guidance-stack" data-site-theme-scope="guidance">
+                <section class="slug-guidance-banner" data-guidance-banner="preview_combo_guidance">
+                  <div class="slug-guidance-copy">
+                    <div class="slug-guidance-eyebrow">Not Sure This Is The Right Class?</div>
+                    <h2 id="preview-guidance-title">Need BLS with another cert for the same renewal cycle?</h2>
+                    <p id="preview-guidance-copy">Use this reusable banner zone to test combo guidance, redirect uncertain shoppers to the right care level, and preview spacing without rebuilding a live hub.</p>
+                  </div>
+                  <div class="slug-guidance-actions">
+                    <a class="button primary" href="#">Compare Related Options</a>
+                    <a class="button secondary" href="#">Ask For Help</a>
+                  </div>
+                </section>
+              </div>
+
+              <div class="preview-grid">
+                <div>
+                  <section class="section-box slug-tabs-block">
+                    <div class="tabs hub-tabs">
+                      <button class="tab-btn active" type="button" aria-selected="true">
+                        <img class="hub-tab-icon" src="/images/tab_classroom.png" alt="">
+                        <span class="hub-tab-copy">
+                          <span class="hub-tab-label" id="preview-tab-label">BLS Provider</span>
+                          <span class="hub-tab-tag" id="preview-tab-badge">In-Person</span>
+                        </span>
+                      </button>
+                    </div>
+
+                    <section class="tab-panel">
+                      <div class="slug-panel-card">
+                        <div class="slug-panel-head">
+                          <div>
+                            <div class="slug-panel-kicker">Preview day card</div>
+                            <h2 id="preview-panel-title">Representative Upcoming Date</h2>
+                            <p class="slug-panel-copy">This is a static preview block, not a schedule feed. It exists so you can judge spacing, surfaces, badges, and button tone live in the browser.</p>
+                          </div>
+                        </div>
+
+                        <div data-site-theme-scope="card">
+                          <article class="slug-day-card">
+                            <div class="slug-pill-date">
+                              <div id="preview-month" class="slug-pill-month">APR</div>
+                              <div id="preview-day" class="slug-pill-day">26</div>
+                              <div id="preview-weekday" class="slug-pill-weekday">SUN</div>
+                            </div>
+                            <div class="slug-day-main">
+                              <h3 id="preview-day-title" class="slug-day-title">Sunday, April 26</h3>
+                              <div class="slug-time-list">
+                                <div class="slug-time-row">
+                                  <div class="slug-time-copy">
+                                    <div class="slug-pill-meta-row slug-time-meta">
+                                      <span id="preview-time-chip" class="slug-pill-chip">8:30 AM</span>
+                                      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd</span>
+                                      <span class="slug-pill-chip slug-pill-chip-format" id="preview-format-chip">In-Person</span>
+                                    </div>
+                                    <div class="slug-time-subtitle" id="preview-session-title">AHA BLS Provider</div>
+                                  </div>
+                                  <div class="slug-time-actions">
+                                    <div class="slug-pill-hint">Register button preview</div>
+                                    <a class="button small primary" href="#">Register</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </article>
+                        </div>
+                      </div>
+                    </section>
+                  </section>
+                </div>
+
+                <aside class="preview-sidebar" data-site-theme-scope="sidebar">
+                  <section class="slug-training-options">
+                    <div class="slug-banner-copy">
+                      <div class="slug-banner-eyebrow">Other Training Options</div>
+                      <h2>Keep alternate paths visible without crowding the main schedule.</h2>
+                    </div>
+                    <div class="training-option-grid">
+                      <article class="training-option-card">
+                        <img data-preview-sidebar-image class="sidebar-image" src="/docs/images/heartsaver_general.png" alt="Sidebar preview image" loading="lazy">
+                        <h3>Group / Workplace Training</h3>
+                        <p>Use this persistent support card to guide team buyers toward a private training path while the main hub stays focused on individual registrations.</p>
+                        <a class="text-link strong-link" href="#">Request group training</a>
+                      </article>
+                    </div>
+                  </section>
+                  <div class="sidebar-mini">Preview sidebar is static and intentionally local. It does not pull counts, dates, or schedule JSON.</div>
+                </aside>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-
-    <div class="grid">
-      <section class="panel panel-pad">
-        <div class="section-head">
-          <div>
-            <h2>Build Activity</h2>
-            <p class="section-copy">What the builder ran, what it wrote, and whether the current site looks fresh.</p>
-          </div>
-        </div>
-        <div id="runtime-list" class="phase-list"></div>
-      </section>
-
-      <div class="subgrid">
-        <section class="panel panel-pad">
-          <div class="section-head">
-            <div>
-              <h2>Detected Settings</h2>
-              <p class="section-copy">Read-only for now. This is the future-ready config surface, not a theme editor.</p>
-            </div>
-          </div>
-          <div id="settings-kv" class="kv"></div>
-        </section>
-
-        <section class="panel panel-pad">
-          <div class="section-head">
-            <div>
-              <h2>Warnings & Errors</h2>
-              <p class="section-copy">Problems that could block trust in the public build.</p>
-            </div>
-          </div>
-          <div id="alerts"></div>
-        </section>
-      </div>
-    </div>
-
-    <div class="grid">
-      <section class="panel panel-pad">
-        <div class="section-head">
-          <div>
-            <h2>Files Written</h2>
-            <p class="section-copy">Most recent builder outputs and hub files touched.</p>
-          </div>
-        </div>
-        <div id="files-list" class="list"></div>
-      </section>
-
-      <section class="panel panel-pad">
-        <div class="section-head">
-          <div>
-            <h2>Generated Output</h2>
-            <p class="section-copy">Actual generated page counts and core hub freshness checks.</p>
-          </div>
-        </div>
-        <div id="output-summary" class="tight"></div>
-        <div id="hub-list" class="list" style="margin-top:14px;"></div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section class="panel panel-pad">
-        <div class="section-head">
-          <div>
-            <h2>Build Summary</h2>
-            <p class="section-copy">High-level pipeline result from the supervisor summary artifact.</p>
-          </div>
-        </div>
-        <div id="summary-kv" class="kv"></div>
-      </section>
-
-      <section class="panel panel-pad">
-        <div class="section-head">
-          <div>
-            <h2>Git Status</h2>
-            <p class="section-copy">Commit readiness for the monitored repo.</p>
-          </div>
-        </div>
-        <div id="git-panel" class="tight"></div>
-      </section>
-    </div>
   </div>
 </div>
 
+<script src="/assets/js/theme-loader.js"></script>
 <script>
-const POLL_MS = 5000;
-const SOURCES = [
-  "../data/state/supervisor_status.json",
-  "data/state/supervisor_status.json"
-];
+const PAGE_PRESETS = {
+  bls: {
+    heroTitle: "Choose Your BLS Class",
+    heroCopy: "Compare BLS provider, renewal, or HeartCode options and preview how a customer will experience the page before any generated HTML is touched.",
+    guidanceTitle: "Need BLS with another cert for the same renewal cycle?",
+    guidanceCopy: "Use this reusable banner zone to help people compare BLS with ACLS or PALS before they book the wrong level of care.",
+    tabLabel: "BLS Provider",
+    tabBadge: "In-Person",
+    panelTitle: "Representative Upcoming BLS Date",
+    sessionTitle: "AHA BLS Provider",
+    formatChip: "In-Person",
+    heroImage: "/docs/images/bls_general.png",
+    sidebarImage: "/docs/images/heartsaver_general.png",
+  },
+  acls: {
+    heroTitle: "Find The Right ACLS Option",
+    heroCopy: "Preview how ACLS initial, renewal, and HeartCode guidance sits against the real hub shell without waiting for a build run.",
+    guidanceTitle: "Need ACLS together with BLS or PALS?",
+    guidanceCopy: "Use the same banner component to route uncertain clinicians toward the companion certifications they may need for the same role.",
+    tabLabel: "ACLS Provider",
+    tabBadge: "Initial",
+    panelTitle: "Representative Upcoming ACLS Date",
+    sessionTitle: "AHA ACLS Provider - In-person (Initial)",
+    formatChip: "Initial",
+    heroImage: "/docs/images/acls_general.png",
+    sidebarImage: "/docs/images/pals_general.png",
+  },
+  pals: {
+    heroTitle: "Choose Your PALS Class",
+    heroCopy: "Preview PALS guidance, day-card spacing, and cross-sell tone before a branded update reaches the public hub.",
+    guidanceTitle: "Need PALS along with ACLS or BLS?",
+    guidanceCopy: "This keeps the message reusable while helping pediatric and emergency care teams choose the right combination.",
+    tabLabel: "PALS Provider",
+    tabBadge: "In-Person",
+    panelTitle: "Representative Upcoming PALS Date",
+    sessionTitle: "AHA PALS Provider - In-Person - Initial",
+    formatChip: "In-Person",
+    heroImage: "/docs/images/pals_general.png",
+    sidebarImage: "/docs/images/acls_general.png",
+  },
+  heartsaver: {
+    heroTitle: "Find The Right Heartsaver Class",
+    heroCopy: "Preview a public-facing Heartsaver treatment with grouped day cards and support-side cross-sell, without relying on live class feed data.",
+    guidanceTitle: "Need the broadest workplace-friendly path?",
+    guidanceCopy: "This same banner component can also carry choice guidance for Heartsaver without changing the production data model.",
+    tabLabel: "First Aid + CPR + AED",
+    tabBadge: "In-Person",
+    panelTitle: "Representative Upcoming Heartsaver Date",
+    sessionTitle: "Heartsaver First Aid CPR AED",
+    formatChip: "In-Person",
+    heroImage: "/docs/images/heartsaver_general.png",
+    sidebarImage: "/docs/images/bls_general.png",
+  },
+};
 
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+function formatTimeDisplay(value) {
+  if (!value) return "8:30 AM";
+  const [hourRaw, minuteRaw] = value.split(":");
+  const hour = Number(hourRaw);
+  const minute = Number(minuteRaw);
+  if (!Number.isFinite(hour) || !Number.isFinite(minute)) return value;
+  const date = new Date();
+  date.setHours(hour, minute, 0, 0);
+  return new Intl.DateTimeFormat(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
 }
 
-async function fetchFirstJson(paths) {
-  for (const path of paths) {
-    try {
-      const response = await fetch(`${path}?ts=${Date.now()}`, { cache: "no-store" });
-      if (!response.ok) continue;
-      return await response.json();
-    } catch {
-      continue;
-    }
-  }
-  return null;
+function applyDatePreview() {
+  const dateInput = document.getElementById("simulate-date");
+  const timeInput = document.getElementById("simulate-time");
+  const dateValue = dateInput.value;
+  const timeValue = timeInput.value || "08:30";
+  const now = new Date();
+  const date = dateValue ? new Date(`${dateValue}T12:00:00`) : now;
+
+  const weekday = new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date).toUpperCase();
+  const month = new Intl.DateTimeFormat(undefined, { month: "short" }).format(date).toUpperCase();
+  const day = String(date.getDate());
+  const dayTitle = new Intl.DateTimeFormat(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+
+  document.getElementById("preview-month").textContent = month;
+  document.getElementById("preview-day").textContent = day;
+  document.getElementById("preview-weekday").textContent = weekday;
+  document.getElementById("preview-day-title").textContent = dayTitle;
+  document.getElementById("preview-date-label").textContent = `Date: ${dayTitle}`;
+  document.getElementById("preview-time-chip").textContent = formatTimeDisplay(timeValue);
 }
 
-function pillClass(kind) {
-  if (kind === "good") return "status-pill status-good";
-  if (kind === "warn") return "status-pill status-warn";
-  if (kind === "bad") return "status-pill status-bad";
-  return "status-pill status-neutral";
+function selectedApplyTo() {
+  return Array.from(document.querySelectorAll('.checkbox-list input[type="checkbox"]:checked'))
+    .map((node) => node.value);
 }
 
-function statusTone(status) {
-  if (status === "done" || status === "completed") return "good";
-  if (status === "running") return "warn";
-  if (status === "error" || status === "failed") return "bad";
-  return "neutral";
+function currentThemeOverrides() {
+  return {
+    themeName: document.getElementById("theme-select").value,
+    accent: document.getElementById("accent-color").value,
+    contrast: document.getElementById("contrast-color").value,
+    highlight: `${document.getElementById("accent-color").value}1f`,
+    heroImage: document.getElementById("hero-image-input").value.trim(),
+    sidebarImage: document.getElementById("sidebar-image-input").value.trim(),
+  };
 }
 
-function statusLabel(status) {
-  if (!status) return "Unknown";
-  return String(status).replaceAll("_", " ");
+function applyPagePreset() {
+  const page = PAGE_PRESETS[document.getElementById("preview-page").value] || PAGE_PRESETS.bls;
+  document.getElementById("preview-hero-title").textContent = page.heroTitle;
+  document.getElementById("preview-hero-copy").textContent = page.heroCopy;
+  document.getElementById("preview-guidance-title").textContent = page.guidanceTitle;
+  document.getElementById("preview-guidance-copy").textContent = page.guidanceCopy;
+  document.getElementById("preview-tab-label").textContent = page.tabLabel;
+  document.getElementById("preview-tab-badge").textContent = page.tabBadge;
+  document.getElementById("preview-panel-title").textContent = page.panelTitle;
+  document.getElementById("preview-session-title").textContent = page.sessionTitle;
+  document.getElementById("preview-format-chip").textContent = page.formatChip;
+  document.getElementById("hero-image-input").value = page.heroImage;
+  document.getElementById("sidebar-image-input").value = page.sidebarImage;
 }
 
-function setText(id, value) {
-  document.getElementById(id).textContent = value ?? "n/a";
+function applyThemePreview() {
+  const theme = window.SiteThemeLoader.applyTheme(
+    document.getElementById("preview-canvas"),
+    currentThemeOverrides(),
+    selectedApplyTo()
+  );
+  document.getElementById("preview-theme-label").textContent = `Theme: ${theme.themeName}`;
 }
 
-function renderRunCommand() {
-  const checkbox = document.getElementById("complete-rebuild");
-  const complete = checkbox.checked;
-  const command = complete ? "BUILD_ALL.bat --complete" : "BUILD_ALL.bat";
-  document.getElementById("run-command").textContent = command;
-  document.getElementById("run-command-note").textContent = complete
-    ? "Complete rebuild adds the index and sitemap step after the normal build stack."
-    : "Standard rebuild skips the index and sitemap step.";
-  try {
-    localStorage.setItem("supervisor.completeRebuild", complete ? "1" : "0");
-  } catch {}
-}
-
-function initRunControls() {
-  const checkbox = document.getElementById("complete-rebuild");
-  try {
-    checkbox.checked = localStorage.getItem("supervisor.completeRebuild") === "1";
-  } catch {
-    checkbox.checked = false;
-  }
-  checkbox.addEventListener("change", renderRunCommand);
-  renderRunCommand();
-}
-
-function renderKv(targetId, rows) {
-  const el = document.getElementById(targetId);
-  if (!rows.length) {
-    el.innerHTML = `<div class="empty">No data available yet.</div>`;
-    return;
-  }
-  el.innerHTML = rows.map(([key, value]) => `
-    <div class="k">${escapeHtml(key)}</div>
-    <div>${value}</div>
-  `).join("");
-}
-
-function renderAlerts(data) {
-  const warnings = Array.isArray(data?.warnings) ? data.warnings : [];
-  const errors = Array.isArray(data?.errors) ? data.errors : [];
-  const el = document.getElementById("alerts");
-  if (!warnings.length && !errors.length) {
-    el.innerHTML = `<div class="chips"><span class="chip good">No active warnings or errors</span></div>`;
-    return;
-  }
-  el.innerHTML = `
-    <div class="chips">
-      ${errors.map(item => `<span class="chip bad">${escapeHtml(item)}</span>`).join("")}
-      ${warnings.map(item => `<span class="chip warn">${escapeHtml(item)}</span>`).join("")}
-    </div>
-  `;
-}
-
-function renderRuntime(data) {
-  const phases = Array.isArray(data?.runtime_statuses) ? data.runtime_statuses : [];
-  const el = document.getElementById("runtime-list");
-  if (!phases.length) {
-    el.innerHTML = `<div class="empty">No runtime status files found yet.</div>`;
-    return;
-  }
-  el.innerHTML = phases.map(item => `
-    <article class="phase-card">
-      <div class="phase-top">
-        <div class="phase-name">${escapeHtml(item.label || item.phase_name)}</div>
-        <div class="${pillClass(statusTone(item.status))}">${escapeHtml(statusLabel(item.status))}</div>
-      </div>
-      <div class="kv">
-        <div class="k">Runtime File</div>
-        <div><span class="code">${escapeHtml(item.runtime_file || "n/a")}</span></div>
-        <div class="k">Timestamp</div>
-        <div>${escapeHtml(item.timestamp || "n/a")}</div>
-        <div class="k">Progress</div>
-        <div>${escapeHtml(`${item.current_count ?? "?"} / ${item.total_count ?? "?"}`)}</div>
-        <div class="k">Last Output</div>
-        <div><span class="code">${escapeHtml(item.last_output_file || "n/a")}</span></div>
-      </div>
-    </article>
-  `).join("");
-}
-
-function renderFiles(data) {
-  const files = Array.isArray(data?.files_written) ? data.files_written : [];
-  const el = document.getElementById("files-list");
-  if (!files.length) {
-    el.innerHTML = `<div class="empty">No files written recorded yet.</div>`;
-    return;
-  }
-  el.innerHTML = files.map(item => `
-    <article class="list-card">
-      <div class="list-top">
-        <div class="list-title">${escapeHtml(item.phase || "Output")}</div>
-        <div class="muted">${escapeHtml(item.timestamp || "n/a")}</div>
-      </div>
-      <div class="code">${escapeHtml(item.path || "n/a")}</div>
-    </article>
-  `).join("");
-}
-
-function renderOutputs(data) {
-  const counts = data?.generated_page_counts || {};
-  const hubState = data?.hub_state || {};
-  renderKv("output-summary", [
-    ["Hub Pages", escapeHtml(counts.hub_pages ?? "n/a")],
-    ["Class Pages", escapeHtml(counts.class_pages ?? "n/a")],
-    ["Course Pages", escapeHtml(counts.course_pages ?? "n/a")],
-    ["Location Pages", escapeHtml(counts.location_pages ?? "n/a")],
-    ["Course-at-City Pages", escapeHtml(counts.course_at_city_pages ?? "n/a")],
-    ["Schedule Feed Sessions", escapeHtml(hubState.schedule_session_count ?? "n/a")],
-    ["Expired Session Markers", `<span class="chip ${hubState.expired_session_markers_total ? "warn" : "good"}">${escapeHtml(hubState.expired_session_markers_total ?? 0)}</span>`],
+async function validateAssets() {
+  const container = document.getElementById("asset-validation");
+  const checks = await Promise.all([
+    window.SiteThemeLoader.validateAssetPath(document.getElementById("hero-image-input").value.trim()),
+    window.SiteThemeLoader.validateAssetPath(document.getElementById("sidebar-image-input").value.trim()),
   ]);
 
-  const hubs = Array.isArray(hubState.core_hubs) ? hubState.core_hubs : [];
-  const hubList = document.getElementById("hub-list");
-  if (!hubs.length) {
-    hubList.innerHTML = `<div class="empty">No hub output data found.</div>`;
-    return;
-  }
-  hubList.innerHTML = hubs.map(item => `
-    <article class="list-card">
-      <div class="list-top">
-        <div class="list-title">/${escapeHtml(item.slug)}.html</div>
-        <div class="chips">
-          <span class="chip ${item.stale_vs_schedule_feed ? "warn" : "good"}">${item.stale_vs_schedule_feed ? "Stale" : "Fresh"}</span>
-          <span class="chip ${item.expired_session_markers ? "warn" : "good"}">Expired markers: ${escapeHtml(item.expired_session_markers ?? 0)}</span>
+  container.innerHTML = checks.map((result, index) => {
+    const label = index === 0 ? "Hero image" : "Sidebar image";
+    const tone = result.exists ? "status-ok" : result.warning === "Could not verify asset" ? "status-warning" : "status-missing";
+    const status = result.exists ? "Found" : result.warning || "Missing";
+    return `
+      <div class="validation-item">
+        <div class="validation-text">
+          <strong>${label}</strong>
+          <div class="validation-path">${result.path || "No file path provided"}</div>
         </div>
+        <span class="status-chip ${tone}">${status}</span>
       </div>
-      <div class="kv">
-        <div class="k">Path</div>
-        <div><span class="code">${escapeHtml(item.path || "n/a")}</span></div>
-        <div class="k">Modified</div>
-        <div>${escapeHtml(item.modified_at || "n/a")}</div>
-        <div class="k">Session Markers</div>
-        <div>${escapeHtml(item.session_marker_count ?? 0)}</div>
-      </div>
-    </article>
-  `).join("");
+    `;
+  }).join("");
 }
 
-function renderSummary(data) {
-  const summary = data?.build_summary || {};
-  renderKv("summary-kv", [
-    ["Summary Status", `<span class="${pillClass(statusTone(summary.status))}">${escapeHtml(statusLabel(summary.status || "unknown"))}</span>`],
-    ["Started At", escapeHtml(summary.started_at || "n/a")],
-    ["Finished At", escapeHtml(summary.finished_at || "n/a")],
-    ["Pipeline Status", escapeHtml(summary.pipeline_status || "n/a")],
-    ["Schedule Path", `<span class="code">${escapeHtml(summary.schedule_path || "n/a")}</span>`],
-    ["Manifest Path", `<span class="code">${escapeHtml(summary.manifest_path || "n/a")}</span>`],
-    ["Future Active Count", escapeHtml(summary.classification_counts?.future_active ?? "n/a")],
-    ["Build Plan To Build", escapeHtml(summary.build_plan_counts?.to_build ?? "n/a")],
-  ]);
+function applyThemePreset() {
+  const selected = document.getElementById("theme-select").value;
+  const preset = window.SiteThemeLoader.PRESETS[selected] || window.SiteThemeLoader.PRESETS.default;
+  document.getElementById("accent-color").value = preset.accent;
+  document.getElementById("contrast-color").value = preset.contrast;
+  document.getElementById("hero-image-input").value = preset.heroImage;
+  document.getElementById("sidebar-image-input").value = preset.sidebarImage;
+  applyThemePreview();
+  validateAssets();
 }
 
-function renderSettings(data) {
-  const settings = data?.detected_settings || {};
-  const heroPaths = settings.active_hero_image_paths || {};
-  const heroHtml = Object.entries(heroPaths).map(([slug, path]) => `
-    <span class="chip">${escapeHtml(slug)}: ${escapeHtml(path || "n/a")}</span>
-  `).join("");
-
-  renderKv("settings-kv", [
-    ["hub_upcoming_session_limit", escapeHtml(settings.hub_upcoming_session_limit ?? "n/a")],
-    ["active_hero_image_paths", heroHtml ? `<div class="chips">${heroHtml}</div>` : "n/a"],
-    ["active_json_feed_path", `<span class="code">${escapeHtml(settings.active_json_feed_path || "n/a")}</span>`],
-    ["current_output_folder", `<span class="code">${escapeHtml(settings.current_output_folder || "n/a")}</span>`],
-    ["gtm_container_id", escapeHtml(settings.gtm_container_id || "n/a")],
-  ]);
+function resetTheme() {
+  document.getElementById("theme-select").value = "default";
+  document.getElementById("preview-page").value = "bls";
+  applyPagePreset();
+  applyThemePreset();
+  applyDatePreview();
 }
 
-function renderGit(data) {
-  const git = data?.git || {};
-  const state = git.has_uncommitted_changes === true ? "Dirty" : git.has_uncommitted_changes === false ? "Clean" : "Unknown";
-  const tone = git.has_uncommitted_changes === true ? "warn" : git.has_uncommitted_changes === false ? "good" : "neutral";
-
-  document.getElementById("git-panel").innerHTML = `
-    <div class="chips">
-      <span class="chip ${tone}">${escapeHtml(state)}</span>
-      ${git.branch ? `<span class="chip">Branch: ${escapeHtml(git.branch)}</span>` : ""}
-      ${git.head ? `<span class="chip">HEAD: ${escapeHtml(git.head)}</span>` : ""}
-      ${git.changed_files_count != null ? `<span class="chip">Changed files: ${escapeHtml(git.changed_files_count)}</span>` : ""}
-    </div>
-    <div class="mono-list">
-      ${(git.changed_files_preview || []).map(line => `<div>${escapeHtml(line)}</div>`).join("") || "<div>No changed files preview.</div>"}
-    </div>
-  `;
+function attachEvents() {
+  document.getElementById("simulate-date").addEventListener("input", applyDatePreview);
+  document.getElementById("simulate-time").addEventListener("input", applyDatePreview);
+  document.getElementById("theme-select").addEventListener("change", applyThemePreset);
+  document.getElementById("preview-page").addEventListener("change", () => {
+    applyPagePreset();
+    applyThemePreview();
+    validateAssets();
+  });
+  document.getElementById("apply-preset").addEventListener("click", applyThemePreset);
+  document.getElementById("reset-theme").addEventListener("click", resetTheme);
+  document.querySelectorAll('#accent-color, #contrast-color, #hero-image-input, #sidebar-image-input').forEach((node) => {
+    node.addEventListener("input", () => {
+      applyThemePreview();
+      validateAssets();
+    });
+  });
+  document.querySelectorAll('.checkbox-list input[type="checkbox"]').forEach((node) => {
+    node.addEventListener("change", applyThemePreview);
+  });
 }
 
-function renderTopline(data) {
-  const staleCount = data?.hub_state?.stale_hub_count ?? 0;
-  const expiredMarkers = data?.hub_state?.expired_session_markers_total ?? 0;
-  const gitDirty = data?.git?.has_uncommitted_changes === true;
-  const errors = Array.isArray(data?.errors) ? data.errors : [];
-
-  let tone = "good";
-  let label = "Healthy";
-  if (errors.length) {
-    tone = "bad";
-    label = "Build Errors";
-  } else if (staleCount || expiredMarkers || gitDirty) {
-    tone = "warn";
-    label = "Needs Attention";
-  }
-
-  const pill = document.getElementById("overall-pill");
-  pill.className = pillClass(tone);
-  pill.textContent = label;
-
-  setText("repo-path", data?.monitored_repo_path || "n/a");
-  setText("last-run", data?.build_summary?.finished_at || data?.generated_at || "n/a");
-  setText("schedule-source", data?.current_schedule_json_source?.path || "n/a");
-  setText("config-source", data?.current_config_source || "n/a");
-  setText("hub-stale", staleCount ? `${staleCount} stale hub(s)` : "All core hubs fresh");
-  setText("git-state", gitDirty ? "Uncommitted changes present" : "Working tree clean");
+function init() {
+  const today = new Date();
+  const isoDate = today.toISOString().slice(0, 10);
+  document.getElementById("simulate-date").value = isoDate;
+  applyPagePreset();
+  applyThemePreset();
+  applyDatePreview();
+  attachEvents();
 }
 
-function render(data) {
-  renderTopline(data);
-  renderRuntime(data);
-  renderFiles(data);
-  renderOutputs(data);
-  renderSummary(data);
-  renderSettings(data);
-  renderGit(data);
-  renderAlerts(data);
-}
-
-async function refresh() {
-  const data = await fetchFirstJson(SOURCES);
-  if (!data) {
-    document.getElementById("overall-pill").className = pillClass("bad");
-    document.getElementById("overall-pill").textContent = "No Snapshot";
-    return;
-  }
-  render(data);
-}
-
-initRunControls();
-refresh();
-setInterval(refresh, POLL_MS);
+document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>
