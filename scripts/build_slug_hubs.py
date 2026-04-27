@@ -591,6 +591,58 @@ def render_hero_actions(page: dict[str, Any], first_tab: dict[str, Any], *, grou
     )
 
 
+def resolve_guidance_banners(page: dict[str, Any], banner_library: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    resolved: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for banner_id in page.get("guidance_banner_ids", []):
+        key = str(banner_id).strip()
+        if not key or key in seen:
+            continue
+        banner = banner_library.get(key)
+        if not banner or not banner.get("enabled", True):
+            continue
+        seen.add(key)
+        resolved.append({"id": key, **banner})
+    return resolved
+
+
+def render_guidance_banners(page: dict[str, Any], banner_library: dict[str, dict[str, Any]]) -> str:
+    banners = resolve_guidance_banners(page, banner_library)
+    if not banners:
+        return ""
+
+    rendered: list[str] = []
+    for banner in banners:
+        eyebrow = escape(banner.get("eyebrow") or "Guidance")
+        title = escape(banner.get("title") or "")
+        body = escape(banner.get("body") or "")
+        actions: list[str] = []
+        for action in banner.get("actions", []):
+            href = str(action.get("href") or "").strip()
+            label = str(action.get("label") or "").strip()
+            if not href or not label:
+                continue
+            variant = "secondary" if action.get("variant") == "secondary" else "primary"
+            actions.append(
+                f"<a class=\"button {variant}\" href=\"{escape(href, quote=True)}\">{escape(label)}</a>"
+            )
+
+        rendered.append(
+            f"""
+  <section class=\"slug-guidance-banner\" data-guidance-banner=\"{escape(banner['id'], quote=True)}\">
+    <div class=\"slug-guidance-copy\">
+      <div class=\"slug-guidance-eyebrow\">{eyebrow}</div>
+      <h2>{title}</h2>
+      <p>{body}</p>
+    </div>
+    {f'<div class=\"slug-guidance-actions\">{"".join(actions)}</div>' if actions else ''}
+  </section>
+""".strip()
+        )
+
+    return f"<div class=\"slug-guidance-stack\">{''.join(rendered)}</div>"
+
+
 def render_banner(page: dict[str, Any], first_tab: dict[str, Any]) -> str:
     return f"""
   <section class="slug-banner">
@@ -633,7 +685,7 @@ def render_other_training_options(page: dict[str, Any]) -> str:
 """.strip()
 
 
-def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
+def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_library: dict[str, dict[str, Any]]) -> str:
     group_mode = bool(page.get("group_mode"))
     now = datetime.now(TZ)
     tabs = page.get("tabs", [])
@@ -693,6 +745,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
       {render_hero_image(page)}
     </div>
   </section>
+  {render_guidance_banners(page, banner_library)}
   {tabs_html}
   {render_banner(page, first_tab)}
   {render_other_training_options(page)}
@@ -744,7 +797,14 @@ document.addEventListener("DOMContentLoaded", function () {{
 def build() -> None:
     reporter = BuildStatusReporter("build_slug_hubs")
     reporter.waiting(total=0)
-    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest_payload = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    if isinstance(manifest_payload, dict):
+        manifest = manifest_payload.get("pages", [])
+        banner_library = manifest_payload.get("guidance_banners", {})
+    else:
+        manifest = manifest_payload
+        banner_library = {}
+
     schedule = json.loads(SCHEDULE_PATH.read_text(encoding="utf-8"))
     sessions = schedule.get("sessions", [])
     now = datetime.now(TZ)
@@ -753,7 +813,7 @@ def build() -> None:
     last_output: Path | None = None
     try:
         for index, page in enumerate(manifest, start=1):
-            html = render_page(page, sessions)
+            html = render_page(page, sessions, banner_library)
             last_output = OUTPUT_DIR / f"{page['slug']}.html"
             last_output.write_text(html, encoding="utf-8")
             if page.get("slug") == "acls":
