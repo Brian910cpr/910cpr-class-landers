@@ -1,23 +1,9 @@
 {
-  "generated_at": "2026-04-24T22:47:11.169268-04:00",
+  "generated_at": "2026-04-26T22:11:37.712249-04:00",
   "source_sessions_current_path": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "page_slug": "acls",
   "records": [
-    {
-      "session_id": "12774070",
-      "course_number": "209811",
-      "raw_course_name": "AHA ACLS Provider - HeartCode (Online + Skills Session)",
-      "start_datetime": "2026-04-25T08:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774070",
-      "included_in_schedule_future": true,
-      "normalized_hub": "acls",
-      "normalized_tab": "acls-heartcode",
-      "included_in_acls_hub": true,
-      "exclusion_reason": null,
-      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
-    },
     {
       "session_id": "12774060",
       "course_number": "209811",
