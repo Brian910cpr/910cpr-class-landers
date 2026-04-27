@@ -327,16 +327,37 @@
       ],
       "tabs": [
         {
-          "id": "hs-fa-cpr-aed",
+          "id": "hs-fa-cpr-aed-ip",
           "label": "First Aid + CPR + AED",
-          "tab_badge": "In-Person + Online + Skills",
+          "tab_badge": "In-Person",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "First Aid / CPR / AED",
+          "description": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
+          "description_short": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
+          "description_more": "Choose this classroom path when you want the full Heartsaver First Aid CPR AED course taught in person from start to finish.",
+          "course_codes": [
+            "AHA_HS_FA_CPR_IP"
+          ],
+          "name_contains": [
+            "Heartsaver\u00ae First Aid CPR AED"
+          ],
+          "exclude_name_contains": [
+            "Pediatric"
+          ],
+          "full_schedule_url": "/heartsaver.html",
+          "full_schedule_label": "See full Heartsaver First Aid CPR AED schedule",
+          "primary_cta_label": "See in-person class page"
+        },
+        {
+          "id": "hs-fa-cpr-aed-bl",
+          "label": "First Aid + CPR + AED",
+          "tab_badge": "Online + Skills",
           "tab_icon": "/images/tab_blended.png",
           "program": "First Aid / CPR / AED",
           "description": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
           "description_short": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
-          "description_more": "Choose this path when you need the most complete workplace-friendly Heartsaver option. Public dates can include both traditional in-person classes and blended online-plus-skills sessions, and each session row shows the actual format.",
+          "description_more": "Choose this blended path when you want to complete the coursework online first and then finish with an in-person skills session.",
           "course_codes": [
-            "AHA_HS_FA_CPR_IP",
             "AHA_HS_FA_CPR_BL"
           ],
           "name_contains": [
@@ -347,17 +368,17 @@
           ],
           "full_schedule_url": "/heartsaver.html",
           "full_schedule_label": "See full Heartsaver First Aid CPR AED schedule",
-          "primary_cta_label": "See full class page"
+          "primary_cta_label": "See blended class page"
         },
         {
-          "id": "hs-cpr-aed",
+          "id": "hs-cpr-aed-ip",
           "label": "CPR + AED Only",
-          "tab_badge": "CPR Focus",
+          "tab_badge": "In-Person",
           "tab_icon": "/images/tab_classroom.png",
           "program": "Heartsaver CPR AED",
           "description": "Best when you need CPR and AED training without the added first aid component.",
           "description_short": "Best when you need CPR and AED training without the added first aid component.",
-          "description_more": "This is the leaner Heartsaver option for teams and individuals who do not need the first aid module. Private or onsite-only sessions are excluded from the public hub, so only bookable public inventory should appear here.",
+          "description_more": "This is the leaner classroom option for teams and individuals who do not need the first aid module.",
           "name_contains": [
             "Heartsaver\u00ae CPR AED"
           ],
@@ -370,14 +391,53 @@
           "primary_cta_label": "See CPR AED page"
         },
         {
-          "id": "hs-pediatric",
+          "id": "hs-cpr-aed-bl",
+          "label": "CPR + AED Only",
+          "tab_badge": "Online + Skills",
+          "tab_icon": "/images/tab_blended.png",
+          "program": "Heartsaver CPR AED",
+          "description": "Best when you need CPR and AED training without the added first aid component.",
+          "description_short": "Best when you need CPR and AED training without the added first aid component.",
+          "description_more": "This blended path is for learners who want to complete the knowledge portion online and come in only for the skills check.",
+          "name_contains": [
+            "Heartsaver\u00ae CPR AED"
+          ],
+          "exclude_name_contains": [
+            "Pediatric",
+            "First Aid"
+          ],
+          "full_schedule_url": "/heartsaver.html",
+          "full_schedule_label": "See full Heartsaver CPR AED schedule",
+          "primary_cta_label": "See blended CPR AED page"
+        },
+        {
+          "id": "hs-pediatric-ip",
           "label": "Pediatric First Aid",
-          "tab_badge": "Childcare",
+          "tab_badge": "In-Person",
           "tab_icon": "/images/tab_classroom.png",
           "program": "Pediatric First Aid CPR AED",
           "description": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
           "description_short": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
-          "description_more": "Use this tab for childcare, camp, school, and caregiver requirements. If the visible sessions are blended, the row badges will show that clearly so the tab does not mislead anyone into expecting a classroom-only format.",
+          "description_more": "Use this classroom path when your school, camp, childcare, or caregiver requirement specifically calls for a traditional in-person Pediatric Heartsaver class.",
+          "course_codes": [
+            "AHA_HS_PED_FA_CPR_IP"
+          ],
+          "name_contains": [
+            "Heartsaver\u00ae Pediatric First Aid CPR AED"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
+          "full_schedule_label": "See full pediatric Heartsaver schedule",
+          "primary_cta_label": "See pediatric page"
+        },
+        {
+          "id": "hs-pediatric-bl",
+          "label": "Pediatric First Aid",
+          "tab_badge": "Online + Skills",
+          "tab_icon": "/images/tab_blended.png",
+          "program": "Pediatric First Aid CPR AED",
+          "description": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
+          "description_short": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
+          "description_more": "Use this blended path when you want the pediatric coursework online first and a shorter in-person skills session to finish the class.",
           "course_codes": [
             "AHA_HS_PED_FA_CPR_BL"
           ],

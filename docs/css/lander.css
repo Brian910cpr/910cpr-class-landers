@@ -977,6 +977,40 @@ a {
   gap: 12px;
 }
 
+.finder-subgroups {
+  display: grid;
+  gap: 16px;
+}
+
+.finder-subgroup {
+  display: grid;
+  gap: 12px;
+}
+
+.finder-subgroup + .finder-subgroup {
+  padding-top: 14px;
+  border-top: 1px solid rgba(219, 231, 240, 0.9);
+}
+
+.finder-subgroup-head {
+  display: grid;
+  gap: 4px;
+}
+
+.finder-subgroup-head h4 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.finder-subgroup-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .finder-pill-link {
   display: block;
 }
@@ -994,8 +1028,35 @@ a {
 
 .finder-pill-subtitle {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.5;
+  margin-top: 4px;
+}
+
+.finder-pill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 2px;
+}
+
+.finder-pill-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #eef7ef;
+  color: #2f6a3d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.finder-pill-tag-format {
+  background: #e8f3ff;
+  color: #1f4f95;
 }
 
 .finder-pill-side {

@@ -123,8 +123,8 @@ def classify_heartsaver_session(session: dict[str, Any]) -> tuple[dict[str, str]
     if "pediatric" in haystack:
         return (
             {
-                "tab_id": "hs-pediatric",
-                "format_badge": "Online + Skills / Childcare" if is_blended else "In-Person",
+                "tab_id": "hs-pediatric-bl" if is_blended else "hs-pediatric-ip",
+                "format_badge": "Online + Skills" if is_blended else "In-Person",
                 "format_icon": format_icon,
                 "family_badge": "Childcare",
             },
@@ -134,7 +134,7 @@ def classify_heartsaver_session(session: dict[str, Any]) -> tuple[dict[str, str]
     if "first aid" in haystack and "cpr aed" in haystack:
         return (
             {
-                "tab_id": "hs-fa-cpr-aed",
+                "tab_id": "hs-fa-cpr-aed-bl" if is_blended else "hs-fa-cpr-aed-ip",
                 "format_badge": format_badge,
                 "format_icon": format_icon,
                 "family_badge": "",
@@ -145,7 +145,7 @@ def classify_heartsaver_session(session: dict[str, Any]) -> tuple[dict[str, str]
     if "cpr aed" in haystack and "first aid" not in haystack:
         return (
             {
-                "tab_id": "hs-cpr-aed",
+                "tab_id": "hs-cpr-aed-bl" if is_blended else "hs-cpr-aed-ip",
                 "format_badge": format_badge,
                 "format_icon": format_icon,
                 "family_badge": "CPR Focus",
@@ -408,12 +408,6 @@ def enrich_session_for_page(session: dict[str, Any], page: dict[str, Any], tab: 
 
 
 def heartsaver_tab_display(tab: dict[str, Any], sessions: list[dict[str, Any]]) -> dict[str, str]:
-    icons = {str(session.get("_format_icon") or "").strip() for session in sessions if session.get("_format_icon")}
-    if len(icons) == 1:
-        return {
-            "tab_icon": next(iter(icons)),
-            "tab_badge": tab.get("tab_badge") or "",
-        }
     return {
         "tab_icon": tab.get("tab_icon") or "/images/tab_classroom.png",
         "tab_badge": tab.get("tab_badge") or "",

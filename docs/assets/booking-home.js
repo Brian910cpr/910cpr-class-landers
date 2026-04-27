@@ -55,6 +55,12 @@
   ];
 
   const EASTERN_TIMEZONE = "America/New_York";
+  const HEARTSAVER_SUBTYPE_ORDER = ["First Aid + CPR + AED", "Pediatric First Aid", "CPR + AED"];
+  const HEARTSAVER_SUBTYPE_COPY = {
+    "First Aid + CPR + AED": "Best for general workplace first aid, CPR, and AED certification.",
+    "Pediatric First Aid": "Best for childcare, camps, schools, and caregiver teams.",
+    "CPR + AED": "Best when first aid is not required and CPR/AED only is enough.",
+  };
   const dtfMonth = new Intl.DateTimeFormat("en-US", { month: "short", timeZone: EASTERN_TIMEZONE });
   const dtfDay = new Intl.DateTimeFormat("en-US", { day: "numeric", timeZone: EASTERN_TIMEZONE });
   const dtfWeekday = new Intl.DateTimeFormat("en-US", { weekday: "short", timeZone: EASTERN_TIMEZONE });
@@ -102,10 +108,19 @@
     return normalizeSpace(value).toLowerCase();
   }
 
+  function isInstructorOnlyCourse(name, familyHint) {
+    const text = `${normalizeSpace(name)} ${normalizeSpace(familyHint)}`.toUpperCase();
+    if (!text) return false;
+    return (
+      /\bINSTRUCTOR\s+(?:COURSE|RENEWAL|UPDATE|ESSENTIALS)\b/.test(text) ||
+      /\bINSTRUCTOR-LED\b/.test(text) === false && /\bAHA\s*-\s*.*\bINSTRUCTOR\b/.test(text)
+    );
+  }
+
   function inferSectionAndSubtype(name, familyHint) {
     const text = `${normalizeSpace(name)} ${normalizeSpace(familyHint)}`.toUpperCase();
     if (!text) return null;
-    if (text.includes("INSTRUCTOR")) return null;
+    if (isInstructorOnlyCourse(name, familyHint)) return null;
     if (text.includes("USCG") || text.includes("ELEMENTARY FIRST AID")) {
       return { sectionId: "uscg", subtype: "USCG" };
     }
@@ -116,14 +131,27 @@
       return { sectionId: "acls", subtype: text.includes("HEARTCODE") ? "HeartCode Skills" : text.includes("RENEW") ? "Renewal" : "Provider" };
     }
     if (text.includes("HEARTSAVER")) {
-      if (text.includes("PEDIATRIC")) return { sectionId: "heartsaver", subtype: "Pediatric First Aid" };
-      if (text.includes("CPR AED") && !text.includes("FIRST AID")) return { sectionId: "heartsaver", subtype: "CPR + AED" };
+      if (text.includes("PEDIATRIC") || text.includes("AHA_HS_PED_FA_CPR")) return { sectionId: "heartsaver", subtype: "Pediatric First Aid" };
+      if ((text.includes("CPR AED") && !text.includes("FIRST AID")) || text.includes("344085")) return { sectionId: "heartsaver", subtype: "CPR + AED" };
+      if (text.includes("329495") || text.includes("209809") || text.includes("AHA_HS_FA_CPR")) return { sectionId: "heartsaver", subtype: "First Aid + CPR + AED" };
       return { sectionId: "heartsaver", subtype: "First Aid + CPR + AED" };
     }
     if (text.includes("BLS")) {
       return { sectionId: "bls", subtype: text.includes("HEARTCODE") ? "HeartCode Skills" : text.includes("RENEW") ? "Renewal" : "Provider" };
     }
     return null;
+  }
+
+  function inferFormatLabel(name, familyHint) {
+    const text = `${normalizeSpace(name)} ${normalizeSpace(familyHint)}`.toUpperCase();
+    if (!text) return "";
+    if (text.includes("HEARTCODE") || text.includes("ONLINE + SKILLS") || text.includes("ONLINE COURSE + IN-PERSON SKILLS") || text.includes("SKILLS SESSION") || text.includes("AHA_HS_FA_CPR_BL") || text.includes("AHA_HS_PED_FA_CPR_BL")) {
+      return "Online + Skills";
+    }
+    if (text.includes("IN-PERSON") || text.includes("CLASSROOM") || text.includes("AHA_HS_FA_CPR_IP") || text.includes("AHA_BLS_IP") || text.includes("AHA_ACLS_PROVIDER") || text.includes("AHA_PALS_") || text.includes("ILT")) {
+      return "In-Person";
+    }
+    return "";
   }
 
   function recordKey(start, location, sectionId, subtype) {
@@ -159,6 +187,7 @@
           name,
           sectionId: match.sectionId,
           subtype: match.subtype,
+          formatLabel: inferFormatLabel(name, familyHint),
           start: row.start,
           startDate: parseDate(row.start),
           locationRaw: row.location,
@@ -185,6 +214,7 @@
         registerUrl: base.registerUrl,
         sectionId: match.sectionId,
         subtype: match.subtype,
+        formatLabel: inferFormatLabel(base.name, base.familyHint),
         start: base.start,
         startDate,
         locationRaw: base.locationRaw,
@@ -242,10 +272,19 @@
           locationClean: enrichment.locationClean || session.locationClean,
           registerUrl: enrichment.registerUrl,
           name: enrichment.name || session.name,
+          formatLabel: enrichment.formatLabel || session.formatLabel,
         };
       })
       .filter(Boolean)
-      .sort((a, b) => a.startDate - b.startDate);
+      .sort((a, b) => {
+        if (a.sectionId === "heartsaver" && b.sectionId === "heartsaver") {
+          const subtypeDelta = HEARTSAVER_SUBTYPE_ORDER.indexOf(a.subtype) - HEARTSAVER_SUBTYPE_ORDER.indexOf(b.subtype);
+          if (subtypeDelta !== 0) return subtypeDelta;
+          const formatDelta = (a.formatLabel || "").localeCompare(b.formatLabel || "");
+          if (formatDelta !== 0) return formatDelta;
+        }
+        return a.startDate - b.startDate;
+      });
   }
 
   function buildGroupedSessions(enrichedSessions) {
@@ -308,7 +347,11 @@
   }
 
   function renderPill(section, session) {
-    const subtype = session.subtype ? `<div class="finder-pill-subtitle">${escapeHtml(session.subtype)}</div>` : "";
+    const chips = [];
+    if (session.subtype) chips.push(`<span class="finder-pill-tag">${escapeHtml(session.subtype)}</span>`);
+    if (session.formatLabel) chips.push(`<span class="finder-pill-tag finder-pill-tag-format">${escapeHtml(session.formatLabel)}</span>`);
+    const metaTags = chips.length ? `<div class="finder-pill-tags">${chips.join("")}</div>` : "";
+    const subtype = session.subtype ? `<div class="finder-pill-subtitle">${escapeHtml(session.name)}</div>` : "";
     return `
       <a class="finder-pill-link" href="${escapeAttribute(pillHref(section, session))}">
         <article class="slug-pill finder-pill" data-session-start="${escapeAttribute(session.startDate ? session.startDate.toISOString() : "")}">
@@ -320,6 +363,7 @@
           <div class="slug-pill-main">
             <div class="slug-pill-title">${escapeHtml(dateLine(session.startDate))}</div>
             <div class="slug-pill-meta">${escapeHtml(timeLine(session.startDate))} · ${escapeHtml(session.locationClean || "Location TBA")}</div>
+            ${metaTags}
             ${subtype}
           </div>
           <div class="finder-pill-side">${pillCtaLabel(section)}</div>
@@ -330,6 +374,47 @@
 
   function renderSection(section, sessions) {
     const preview = sessions.slice(0, MAX_SESSIONS);
+    if (section.id === "heartsaver" && preview.length) {
+      const buckets = new Map(HEARTSAVER_SUBTYPE_ORDER.map((label) => [label, []]));
+      preview.forEach((session) => {
+        const bucket = buckets.get(session.subtype) || buckets.get("First Aid + CPR + AED");
+        bucket.push(session);
+      });
+      const groupedContent = HEARTSAVER_SUBTYPE_ORDER
+        .map((subtype) => {
+          const items = buckets.get(subtype) || [];
+          if (!items.length) return "";
+          return `
+            <section class="finder-subgroup">
+              <div class="finder-subgroup-head">
+                <h4>${escapeHtml(subtype)}</h4>
+                <p>${escapeHtml(HEARTSAVER_SUBTYPE_COPY[subtype] || "")}</p>
+              </div>
+              <div class="finder-pills">
+                ${items.map((session) => renderPill(section, session)).join("")}
+              </div>
+            </section>
+          `;
+        })
+        .filter(Boolean)
+        .join("");
+
+      return `
+        <section class="finder-card" id="${escapeAttribute(section.id)}">
+          <div class="finder-card-head">
+            <div>
+              <h3>${escapeHtml(section.title)}</h3>
+              <p class="finder-card-copy">${escapeHtml(section.audience)}</p>
+            </div>
+            <a class="button secondary" href="${escapeAttribute(section.fullScheduleUrl)}">${escapeHtml(section.fullScheduleLabel)}</a>
+          </div>
+          <div class="finder-subgroups">
+            ${groupedContent}
+          </div>
+        </section>
+      `;
+    }
+
     const content = preview.length
       ? preview.map((session) => renderPill(section, session)).join("")
       : `
