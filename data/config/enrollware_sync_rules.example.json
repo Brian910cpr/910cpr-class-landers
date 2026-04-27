@@ -1,0 +1,35 @@
+{
+  "closed_dates": [
+    "2026-12-25",
+    "2026-01-01"
+  ],
+  "closed_weekdays": [],
+  "expected_duration_hours": {
+    "AHA_BLS_IP_RENEWAL": { "min": 1.5, "max": 3.5 },
+    "AHA_BLS_BL_SKILLS": { "min": 0.5, "max": 1.25 },
+    "AHA_HS_FA_CPR_IP": { "min": 2.0, "max": 3.5 },
+    "AHA_ACLS_HEARTCODE": { "min": 0.5, "max": 1.25 },
+    "AHA_PALS_INITIAL": { "min": 4.0, "max": 8.5 }
+  },
+  "instructor_unavailable": {
+    "Example Instructor": [
+      { "start": "2026-05-01T08:00:00-04:00", "end": "2026-05-01T17:00:00-04:00" }
+    ]
+  },
+  "location_unavailable": {
+    "Example Location": [
+      { "start": "2026-05-02T09:00:00-04:00", "end": "2026-05-02T12:00:00-04:00" }
+    ]
+  },
+  "playwright": {
+    "create_url": "https://coastalcprtraining.enrollware.com/admin/classes/new",
+    "selectors": {
+      "course_title": "[name='courseTitle']",
+      "start_at": "[name='startDateTime']",
+      "end_at": "[name='endDateTime']",
+      "location": "[name='location']",
+      "instructor": "[name='instructor']",
+      "save": "button[type='submit']"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "generated_at": "2026-04-27T07:48:44.088592-04:00",
+  "phase": "playwright_scaffold",
+  "apply_requested": false,
+  "actions_attempted": [],
+  "blockers": [
+    "Playwright is not available: No module named 'playwright'"
+  ],
+  "dry_run_report": "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\enrollware_sync\\20260427-074805\\sync_report.json"
+}
