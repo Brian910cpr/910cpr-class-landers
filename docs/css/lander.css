@@ -1826,6 +1826,32 @@ textarea {
 
 .request-tabs {
   margin-bottom: 18px;
+  gap: 14px;
+}
+
+.request-tab-btn {
+  grid-template-columns: 84px minmax(0, 1fr);
+  align-items: center;
+  min-height: 96px;
+  padding: 12px 14px;
+}
+
+.request-tab-image {
+  display: block;
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 4px;
+}
+
+.request-tab-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: left;
 }
 
 .request-program-card {
@@ -1887,7 +1913,7 @@ textarea {
 
 .request-sidebar {
   display: grid;
-  gap: 16px;
+  gap: 0;
   align-content: start;
 }
 
@@ -1905,6 +1931,7 @@ textarea {
 .request-link-list {
   display: grid;
   gap: 10px;
+  margin-top: 14px;
 }
 
 .request-link-list a {
@@ -1925,6 +1952,21 @@ textarea {
 .request-link-list a:hover {
   border-color: rgba(53, 95, 218, 0.28);
   background: #f9fbff;
+}
+
+.request-seat-board {
+  border-width: 2px;
+  border-color: #b8d0e7;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(102, 199, 203, 0.10), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+  box-shadow: 0 16px 28px rgba(22, 42, 66, 0.06);
+}
+
+.request-seat-board strong {
+  display: block;
+  margin-bottom: 6px;
 }
 
 @media (max-width: 980px) {
@@ -1969,6 +2011,16 @@ textarea {
     grid-template-columns: 36px minmax(0, 1fr);
     min-width: min(100%, 260px);
     width: 100%;
+  }
+
+  .request-tab-btn {
+    grid-template-columns: 68px minmax(0, 1fr);
+    min-height: 88px;
+  }
+
+  .request-tab-image {
+    width: 56px;
+    height: 56px;
   }
 
   .slug-guidance-stack {

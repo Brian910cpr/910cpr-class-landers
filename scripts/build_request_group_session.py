@@ -6,12 +6,48 @@ from scripts.hub_utils import render_page
 OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "request_group_session.html"
 
 TABS = [
-    ("BLS On-Site", "bls", "<h2>BLS On-Site</h2><p>American Heart Association BLS Provider training delivered at your location. Ideal for healthcare offices, dental teams, clinics, and medical groups.</p><ul><li><strong>$700 for up to 12 participants</strong></li><li>We come to your location</li><li>Flexible scheduling</li><li>Most classes run about 3.5 to 4 hours</li></ul>"),
-    ("HeartCode BLS Group Skills", "heartcode", "<h2>HeartCode BLS Group Skills</h2><p>Blended package for offices that want online coursework plus a private on-site skills session.</p><ul><li><strong>$999 for up to 12 participants</strong></li><li>Includes HeartCode access and group skills testing</li><li>Completion certificates must be completed before the in-person session</li></ul>"),
-    ("First Aid / CPR / AED", "fa_cpr_aed", "<h2>First Aid / CPR / AED</h2><p>Workplace-friendly group training for offices, schools, churches, and general workplace responders.</p><ul><li><strong>$400 + $35 per participant</strong> (up to 20)</li><li>Delivered at your location</li><li>Approx. 2.25 hours depending on program/body</li></ul>"),
-    ("ACLS", "acls", "<h2>ACLS</h2><p>Advanced Cardiac Life Support group options for clinical teams. Best handled as a custom quote based on provider count, experience level, and desired format.</p>"),
-    ("PALS", "pals", "<h2>PALS</h2><p>Pediatric Advanced Life Support group options for teams caring for infants and children. Custom scheduling available for appropriate groups.</p>"),
-    ("USCG Elementary First Aid | CPR", "uscg", "<h2>USCG Elementary First Aid | CPR</h2><p>Maritime-focused training options for teams needing USCG-aligned certification. Request details and preferred scheduling window below.</p>"),
+    {
+        "label": "BLS On-Site",
+        "slug": "bls",
+        "icon": "/images/25-bls-new.png",
+        "icon_alt": "BLS on-site training",
+        "panel_html": "<h2>BLS On-Site</h2><p>American Heart Association BLS Provider training delivered at your location. Ideal for healthcare offices, dental teams, clinics, and medical groups.</p><ul><li><strong>$700 for up to 12 participants</strong></li><li>We come to your location</li><li>Flexible scheduling</li><li>Approximately 2.5 hours</li></ul>",
+    },
+    {
+        "label": "HeartCode BLS Group Skills",
+        "slug": "heartcode",
+        "icon": "/images/hc_b.png",
+        "icon_alt": "HeartCode BLS skills testing",
+        "panel_html": "<h2>HeartCode BLS Group Skills</h2><p>Blended package for offices that want online coursework plus a private on-site skills session.</p><ul><li><strong>$999 for up to 12 participants</strong></li><li>Includes HeartCode access and group skills testing</li><li>Completion certificates must be completed before the in-person session</li></ul>",
+    },
+    {
+        "label": "First Aid / CPR / AED",
+        "slug": "fa_cpr_aed",
+        "icon": "/images/heartsaver_general.png",
+        "icon_alt": "Heartsaver on-site training",
+        "panel_html": "<h2>First Aid / CPR / AED</h2><p>Workplace-friendly group training for offices, schools, churches, and general workplace responders.</p><ul><li><strong>$400 + $35 per participant</strong> (up to 20)</li><li>Delivered at your location</li><li>Approximately 2.25 hours depending on program body</li></ul>",
+    },
+    {
+        "label": "ACLS",
+        "slug": "acls",
+        "icon": "/images/25-acls-new.png",
+        "icon_alt": "ACLS on-site training",
+        "panel_html": "<h2>ACLS</h2><p>Advanced Cardiac Life Support group options for clinical teams. Best handled as a custom quote based on provider count, experience level, and desired format.</p>",
+    },
+    {
+        "label": "PALS",
+        "slug": "pals",
+        "icon": "/images/25-pals-new.png",
+        "icon_alt": "PALS on-site training",
+        "panel_html": "<h2>PALS</h2><p>Pediatric Advanced Life Support group options for teams caring for infants and children. Custom scheduling available for appropriate groups.</p>",
+    },
+    {
+        "label": "USCG Elementary First Aid | CPR",
+        "slug": "uscg",
+        "icon": "/images/stripes.png",
+        "icon_alt": "USCG maritime training",
+        "panel_html": "<h2>USCG Elementary First Aid | CPR</h2><p>Maritime-focused training options for teams needing USCG-aligned certification. Request details and preferred scheduling window below.</p>",
+    },
 ]
 
 def build():
@@ -22,9 +58,19 @@ def build():
         print("Building request group session page")
         tab_buttons = []
         tab_panels = []
-        for i, (label, slug, html) in enumerate(TABS):
+        for i, tab in enumerate(TABS):
             active = " active" if i == 0 else ""
-            tab_buttons.append(f"<button class='tab-btn{active}' data-program='{label}' data-tab-target='#{slug}' type='button'>{label}</button>")
+            label = tab["label"]
+            slug = tab["slug"]
+            icon = tab["icon"]
+            icon_alt = tab["icon_alt"]
+            html = tab["panel_html"]
+            tab_buttons.append(
+                f"<button class='tab-btn request-tab-btn{active}' data-program='{label}' data-tab-target='#{slug}' type='button'>"
+                f"<img class='request-tab-image' src='{icon}' alt='{icon_alt}' loading='lazy' onerror=\"this.style.display='none'\">"
+                f"<span class='request-tab-label'>{label}</span>"
+                "</button>"
+            )
             tab_panels.append(f"<section class='tab-panel{active}' id='{slug}'><div class='request-program-card'>{html}</div></section>")
 
         body = f"""
@@ -33,34 +79,16 @@ def build():
     <div class='hero-main'>
       <div class='eyebrow'>Private Team Training</div>
       <h1>Request On-Site Group Training</h1>
-      <p class='subhead'>Tell us what your team needs, where you need it, and when you’d like it. We’ll match the right program, certifying body, and schedule without making you guess which option to choose.</p>
+      <p class='subhead'>Tell us what your team needs, where you need it, and when you’d like it. We’ll help match the right training option and scheduling path for your group.</p>
       <div class='request-hero-actions'>
         <a class='button primary' href='#request-form'>Start your request</a>
-        <a class='button secondary' href='/group-training.html'>See public group options</a>
+        <a class='button secondary' href='/index.html'>See individual seat schedule</a>
       </div>
     </div>
     <div class='hero-side'>
-      <div class='trust-badge'>
-        <strong>Transparent Baseline Pricing</strong>
-        <span>We show starting structure where it makes sense, then quote larger groups or unusual travel honestly instead of hiding everything behind “call for pricing.”</span>
-      </div>
-      <div class='trust-badge'>
-        <strong>Program Matching Help</strong>
-        <span>Use the tabs below to preselect BLS, Heartsaver, ACLS, PALS, HeartCode group skills, or USCG-aligned training before you submit.</span>
-      </div>
-      <div class='slug-stat-grid request-stat-grid'>
-        <div class='slug-stat'>
-          <strong>6</strong>
-          <span>program types</span>
-        </div>
-        <div class='slug-stat'>
-          <strong>On-site</strong>
-          <span>delivered at your location</span>
-        </div>
-        <div class='slug-stat'>
-          <strong>Fast</strong>
-          <span>quote-ready request form</span>
-        </div>
+      <div class='trust-badge request-hero-note'>
+        <strong>Choose the training type below, then fill in the request form.</strong>
+        <span>The tabs help prefill the right program so you do not have to guess which group option to ask for.</span>
       </div>
     </div>
   </section>
@@ -85,7 +113,7 @@ def build():
           <div class='eyebrow'>Request Details</div>
           <h2>Tell us about your group</h2>
         </div>
-        <p class='muted'>This is still a placeholder form endpoint, but the request fields below are production-ready for a form handler or CRM handoff.</p>
+        <p class='muted'>Share the basics below and we’ll follow up with the best scheduling path for your team.</p>
       </div>
       <form method='post' action='#'>
         <div class='grid-2'>
@@ -102,32 +130,24 @@ def build():
         <label class='field'><span>Comments / Special Requests</span>
           <textarea name='comments' placeholder='We have 12 for BLS, and 4 who need ACLS too.&#10;Any Thursday in May could work.&#10;Morning is better than afternoon.&#10;We may need training at our office in Morehead City.&#10;Some staff need Heartsaver, others need BLS.&#10;We already have AHA online completed, just need skills testing.'></textarea>
         </label>
-        <p class='form-note'>Current placeholder form only. Wire this to your preferred form handler or CRM next.</p>
         <div class='request-submit-row'>
           <button class='button primary' type='submit'>Send Request</button>
-          <a class='button secondary' href='/group-training.html'>Compare public options first</a>
+          <a class='button secondary' href='/index.html'>Compare individual seat options</a>
         </div>
       </form>
     </section>
 
     <aside class='section-box request-sidebar'>
-      <h2>What helps us quote faster</h2>
-      <ul class='request-checklist'>
-        <li>Approximate headcount and whether everyone needs the same credential</li>
-        <li>Your preferred city or full on-site address</li>
-        <li>Date windows that work for your team</li>
-        <li>Whether anyone already completed online HeartCode coursework</li>
-      </ul>
-      <div class='callout'>
-        <strong>Need individual seats instead?</strong>
-        <p class='muted'>If private scheduling is not the right fit, the public booking hubs below will usually get someone into class faster.</p>
-      </div>
-      <div class='request-link-list'>
-        <a href='/bls.html'>Public BLS options</a>
-        <a href='/heartsaver.html'>Public Heartsaver options</a>
-        <a href='/acls.html'>Public ACLS options</a>
-        <a href='/pals.html'>Public PALS options</a>
-        <a href='/uscg-elementary-first-aid-cpr.html'>Public USCG options</a>
+      <div class='callout request-seat-board'>
+        <strong>Need an individual seat schedule?</strong>
+        <p class='muted'>If private group scheduling is not the right fit, use the public booking pages below to find the next available class.</p>
+        <div class='request-link-list'>
+          <a href='/bls.html'>Public BLS options</a>
+          <a href='/heartsaver.html'>Public Heartsaver options</a>
+          <a href='/acls.html'>Public ACLS options</a>
+          <a href='/pals.html'>Public PALS options</a>
+          <a href='/uscg-elementary-first-aid-cpr.html'>Public USCG options</a>
+        </div>
       </div>
     </aside>
   </section>
