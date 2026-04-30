@@ -12,11 +12,22 @@ except ModuleNotFoundError:
 OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "courses"
 OUTPUT.mkdir(parents=True, exist_ok=True)
 
+
+def purge_stale_outputs(output_dir: Path) -> int:
+    removed = 0
+    for path in output_dir.glob("*.html"):
+        path.unlink(missing_ok=True)
+        removed += 1
+    return removed
+
 def build():
     reporter = BuildStatusReporter("build_courses")
     last_output = None
     try:
         sessions = load_sessions()
+        removed = purge_stale_outputs(OUTPUT)
+        if removed:
+            print(f"Removed {removed} stale course hub pages from {OUTPUT}")
         families = sorted({s.course_family for s in sessions if s.course_family})
         reporter.waiting(total=len(families))
         reporter.start(total=len(families))

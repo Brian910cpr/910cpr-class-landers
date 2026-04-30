@@ -27,6 +27,18 @@ def valid_city(city: str) -> bool:
     return True
 
 
+def purge_stale_outputs(output_dir: str) -> int:
+    removed = 0
+    for name in os.listdir(output_dir):
+        if not name.lower().endswith(".html"):
+            continue
+        path = os.path.join(output_dir, name)
+        if os.path.isfile(path):
+            os.remove(path)
+            removed += 1
+    return removed
+
+
 def build_locations():
     reporter = BuildStatusReporter("build_locations")
     count = 0
@@ -50,6 +62,9 @@ def build_locations():
             location_map.setdefault(city, []).append(s)
 
         os.makedirs(OUTPUT_DIR, exist_ok=True)
+        removed = purge_stale_outputs(OUTPUT_DIR)
+        if removed:
+            print(f"Removed {removed} stale location pages from {OUTPUT_DIR}")
 
         cities = sorted(location_map.items())
         reporter.waiting(total=len(cities))
