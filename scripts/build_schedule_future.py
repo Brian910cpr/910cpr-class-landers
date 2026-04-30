@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 from scripts.build_status import BuildStatusReporter
@@ -9,8 +10,11 @@ from supervisor.status_snapshot import write_status_snapshot
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
 
+from openpyxl import load_workbook
+
 
 TZ = ZoneInfo("America/New_York")
+ID_FROM_LINK_RE = re.compile(r"[?&]id=(\d+)")
 
 
 def clean_string(value: Any) -> Optional[str]:
@@ -24,6 +28,52 @@ def parse_iso_dt(value: Any) -> Optional[datetime]:
     s = clean_string(value)
     if not s:
         return None
+
+
+def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
+    requested_path = (repo_root / requested).resolve()
+    if requested_path.exists():
+        return requested_path
+    candidates = [
+        repo_root / "data" / "Class Report.xlsx",
+        repo_root / "data" / "raw" / "Class Report.xlsx",
+        repo_root / "data" / "raw" / "class_report.xlsx",
+    ]
+    for path in candidates:
+        if path.exists():
+            return path.resolve()
+    return requested_path
+
+
+def extract_id_from_report_row(row: tuple[Any, ...], reg_idx: int | None, id_idx: int | None) -> str:
+    sid = ""
+    if reg_idx is not None and reg_idx < len(row):
+        reg_val = row[reg_idx]
+        if reg_val:
+            m = ID_FROM_LINK_RE.search(str(reg_val))
+            if m:
+                sid = m.group(1)
+    if not sid and id_idx is not None and id_idx < len(row):
+        raw_id = row[id_idx]
+        sid = str(raw_id or "").strip()
+    return sid
+
+
+def read_class_report_ids(path: Path) -> set[str]:
+    wb = load_workbook(filename=path, data_only=True)
+    ws = wb.active
+    rows = list(ws.iter_rows(values_only=True))
+    if not rows:
+        return set()
+    headers = [str(h or "").strip() for h in rows[0]]
+    reg_idx = headers.index("Registration Link") if "Registration Link" in headers else None
+    id_idx = headers.index("ID") if "ID" in headers else None
+    ids: set[str] = set()
+    for row in rows[1:]:
+        sid = extract_id_from_report_row(row, reg_idx, id_idx)
+        if sid:
+            ids.add(sid)
+    return ids
     try:
         dt = datetime.fromisoformat(s)
         if dt.tzinfo is None:
@@ -89,21 +139,31 @@ def main() -> int:
         default="docs/data/schedule_future.json",
         help="Relative path from repo root to output future schedule JSON",
     )
+    parser.add_argument(
+        "--class-report",
+        default="data/Class Report.xlsx",
+        help="Relative path from repo root to Class Report.xlsx used for hard reconciliation",
+    )
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
     input_path = (repo_root / args.input).resolve()
     output_path = (repo_root / args.output).resolve()
+    class_report_path = resolve_class_report_path(repo_root, args.class_report)
 
     if not input_path.exists():
         raise SystemExit(f"Input file not found: {input_path}")
+    if not class_report_path.exists():
+        raise SystemExit(f"Class report not found: {class_report_path}")
 
     reporter.waiting(total=0)
     try:
+        class_report_ids = read_class_report_ids(class_report_path)
         raw = json.loads(input_path.read_text(encoding="utf-8"))
         sessions = raw.get("sessions", [])
         reporter.start(total=len(sessions))
         print(f"Loaded {len(sessions)} sessions from {input_path}")
+        print(f"Loaded {len(class_report_ids)} session IDs from {class_report_path}")
         print("Filtering future sessions")
 
         now_dt = datetime.now(TZ)
@@ -112,8 +172,20 @@ def main() -> int:
         future_sessions_raw: list[dict[str, Any]] = []
         skipped_missing_start = 0
         skipped_past = 0
+        skipped_orphan = 0
 
         for index, session in enumerate(sessions, start=1):
+            session_id = str(session.get("session_id") or "").strip()
+            if not session_id:
+                print("ORPHAN SESSION DETECTED: missing session_id in sessions_current row")
+                skipped_orphan += 1
+                reporter.update(current=index, total=len(sessions))
+                continue
+            if session_id not in class_report_ids:
+                print(f"ORPHAN SESSION DETECTED: {session_id} not present in current Class Report")
+                skipped_orphan += 1
+                reporter.update(current=index, total=len(sessions))
+                continue
             start_dt = parse_iso_dt(session.get("timing", {}).get("start_at"))
             if start_dt is None:
                 skipped_missing_start += 1
@@ -144,7 +216,9 @@ def main() -> int:
                     "sessions_output": len(future_sessions),
                     "skipped_missing_start": skipped_missing_start,
                     "skipped_past": skipped_past,
+                    "skipped_orphan": skipped_orphan,
                 },
+                "class_report": str(class_report_path),
             },
             "sessions": future_sessions,
         }
@@ -162,6 +236,7 @@ def main() -> int:
         print(f"Future sessions written: {len(future_sessions)}")
         print(f"Skipped missing start: {skipped_missing_start}")
         print(f"Skipped past: {skipped_past}")
+        print(f"Skipped orphan: {skipped_orphan}")
 
         return 0
     except Exception:

@@ -1,0 +1,15 @@
+{
+  "build": {
+    "generated_at": "2026-04-30T11:30:50.989487-04:00",
+    "source_file": "E:\\GitHub\\910cpr-class-landers\\debug\\raw_sessions_current.json",
+    "counts": {
+      "sessions_input": 1504,
+      "sessions_output": 0,
+      "skipped_missing_start": 1446,
+      "skipped_past": 0,
+      "skipped_orphan": 58
+    },
+    "class_report": "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx"
+  },
+  "sessions": []
+}

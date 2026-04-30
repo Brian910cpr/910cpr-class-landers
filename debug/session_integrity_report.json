@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-04-30T11:29:58.750529",
+  "class_report_path": "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx",
+  "total_sessions_expected": 1558,
+  "total_sessions_built": 1558,
+  "total_future_sessions_built": 0,
+  "missing_sessions": [],
+  "extra_sessions": [],
+  "future_orphan_sessions": [],
+  "deleted_docs_data_json": [
+    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\course_archive_mirrored.json",
+    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\course_image_manifest.json",
+    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\public_schedule.json",
+    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule.json",
+    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future----Revert!!.json",
+    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json"
+  ],
+  "deleted_cached_schedule_files": [
+    "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\build_schedule_future.json"
+  ]
+}

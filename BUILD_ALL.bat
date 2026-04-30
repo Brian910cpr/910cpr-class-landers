@@ -18,13 +18,10 @@ echo ========================================
 echo FULL STACK BUILD START
 echo ========================================
 
-python -m scripts.build_sessions_current
+python -m scripts.prebuild_cleanup_validate
 if errorlevel 1 goto :fail
 
 python -m scripts.build_schedule
-if errorlevel 1 goto :fail
-
-python -m scripts.build_schedule_future
 if errorlevel 1 goto :fail
 
 python -m scripts.audit_stale_sessions --warn-only

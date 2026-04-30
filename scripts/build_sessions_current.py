@@ -24,10 +24,10 @@ def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
         return requested_path
 
     candidates = [
+        repo_root / "data" / "Class Report.xlsx",
         repo_root / "data" / "raw" / "Class Report.xlsx",
         repo_root / "data" / "raw" / "class_report.xlsx",
         repo_root / "Class Report (37).xlsx",
-        repo_root / "data" / "Class Report.xlsx",
         repo_root / "class-report.xlsx",
     ]
     for candidate in candidates:
@@ -464,7 +464,7 @@ def build_session_from_class_report(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build merged sessions_current.json from raw files.")
     parser.add_argument("--repo-root", default=".", help="Path to repo root.")
-    parser.add_argument("--class-report", default="data/raw/class_report.xlsx")
+    parser.add_argument("--class-report", default="data/Class Report.xlsx")
     parser.add_argument("--classes-csv", default="data/raw/classes_raw_live.csv")
     parser.add_argument("--students-csv", default="data/raw/students_raw_live.csv")
     parser.add_argument("--output", default="data/sessions_current.json")
