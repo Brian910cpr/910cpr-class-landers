@@ -9,7 +9,7 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_REPORT = ROOT / "data" / "raw" / "Class Report.xlsx"
+RAW_REPORT = ROOT / "data" / "Class Report.xlsx"
 CSS_PATH = "/css/lander.css"
 GROUP_URL = "/request_group_session.html"
 NEARBY_MAP_PATH = ROOT / "data" / "config" / "nearby_cities.json"
