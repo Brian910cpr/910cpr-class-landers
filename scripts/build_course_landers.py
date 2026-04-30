@@ -7,12 +7,19 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from scripts.hybrid_inventory import (
+    build_appointment_page_url,
+    parse_dt as parse_future_dt,
+    session_enrolled_count,
+    sort_by_momentum,
+    sort_by_start,
+)
 from zoneinfo import ZoneInfo
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE_PATH = REPO_ROOT / "raw" / "course_archive_v4.json"
-SCHEDULE_PATH = REPO_ROOT / "public_schedule.json"
+SCHEDULE_PATH = REPO_ROOT / "docs" / "data" / "schedule_future.json"
 OUTPUT_DIR = REPO_ROOT / "docs" / "courses"
 INDEX_JSON_PATH = OUTPUT_DIR / "index.json"
 
@@ -338,18 +345,22 @@ def course_aliases(course: dict[str, Any]) -> list[str]:
 
 
 def match_sessions(course: dict[str, Any], sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    course_id = safe_text(course.get("course_id")).strip()
     alias_norms = {normalize_course_name(a) for a in course_aliases(course)}
     now = datetime.now(TZ)
 
     matched = []
     for session in sessions:
-        session_name_raw = safe_text(session.get("course")).strip()
+        session_course_id = safe_text(session.get("course_id") or session.get("course_number")).strip()
+        session_name_raw = safe_text(session.get("course_name")).strip()
         session_name = normalize_course_name(session_name_raw)
-        if not session_name:
+        if not session_name and not session_course_id:
             continue
 
-        ok = session_name in alias_norms
-        if not ok:
+        ok = bool(course_id and session_course_id == course_id)
+        if not ok and session_name:
+            ok = session_name in alias_norms
+        if not ok and session_name:
             for alias in alias_norms:
                 if alias and (alias in session_name or session_name in alias):
                     ok = True
@@ -358,15 +369,13 @@ def match_sessions(course: dict[str, Any], sessions: list[dict[str, Any]]) -> li
         if not ok:
             continue
 
-        dt = parse_dt(safe_text(session.get("start")).strip())
+        dt = parse_future_dt(safe_text(session.get("start_at")).strip())
         if not is_future_session(dt, now):
             continue
 
-        session["_parsed_start"] = dt
-        matched.append(session)
+        matched.append({**session, "_parsed_start": dt})
 
-    matched.sort(key=lambda s: s.get("_parsed_start") or datetime.max.replace(tzinfo=TZ))
-    return matched
+    return sort_by_start(matched)
 
 
 def human_location(value: str) -> str:
@@ -409,22 +418,30 @@ def session_card(session: dict[str, Any]) -> str:
     dt = session.get("_parsed_start")
     date_label = format_date(dt)
     time_label = format_time(dt)
-    location_label = human_location(safe_text(session.get("location")))
-    register_url = safe_text(session.get("register_url")).strip() or "#"
+    location_label = human_location(safe_text(session.get("location_display") or session.get("location_name")))
+    register_url = safe_text(session.get("registration_url")).strip() or "#"
+    enrolled = session_enrolled_count(session)
+    momentum = ""
+    if enrolled >= 1:
+        label = "1 student already enrolled" if enrolled == 1 else f"{enrolled} students already enrolled"
+        momentum = f'<span class="session-badge">{html.escape(label)}</span>'
 
     return f"""
     <a class="session-pill js-session-item" href="{html.escape(register_url)}" data-session-start="{html.escape(dt.isoformat() if dt else '', quote=True)}">
       <span class="session-date">{html.escape(date_label)}</span>
       <span class="session-time">{html.escape(time_label)}</span>
       <span class="session-location">{html.escape(location_label)}</span>
+      {momentum}
       <span class="session-cta">Register</span>
     </a>
     """
 
 
 def build_session_blocks(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
+    schedule_url = safe_text(course.get("schedule_url")).strip()
+    appointment_url = build_appointment_page_url("101560", safe_text(course.get("course_id")).strip()) if safe_text(course.get("course_id")).strip() else ""
+
     if not sessions:
-        schedule_url = safe_text(course.get("schedule_url")).strip()
         if schedule_url:
             return f"""
             <section class="sessions js-live-session-group" data-empty-link="{html.escape(schedule_url)}" data-empty-link-label="See the full class calendar">
@@ -433,15 +450,24 @@ def build_session_blocks(course: dict[str, Any], sessions: list[dict[str, Any]])
                 New dates are added regularly.
                 <a href="{html.escape(schedule_url)}">View the full class calendar</a>.
               </p>
+              {f'<p class="empty-note"><a href="{html.escape(appointment_url)}">Need a different time? View all available open seats.</a></p>' if appointment_url else ''}
             </section>
             """
         return ""
 
-    visible = sessions[:VISIBLE_SESSION_COUNT]
-    curtain = sessions[VISIBLE_SESSION_COUNT:VISIBLE_SESSION_COUNT + CURTAIN_SESSION_COUNT]
-    schedule_url = safe_text(course.get("schedule_url")).strip()
+    popular = sort_by_momentum([session for session in sessions if session_enrolled_count(session) >= 1])[:5]
+    popular_keys = {safe_text(session.get("session_id")) or safe_text(session.get("registration_url")) for session in popular}
+    remaining = [
+        session
+        for session in sort_by_start(sessions)
+        if (safe_text(session.get("session_id")) or safe_text(session.get("registration_url"))) not in popular_keys
+    ]
+
+    visible = remaining[:VISIBLE_SESSION_COUNT]
+    curtain = remaining[VISIBLE_SESSION_COUNT:VISIBLE_SESSION_COUNT + CURTAIN_SESSION_COUNT]
 
     visible_html = "".join(session_card(s) for s in visible)
+    popular_html = "".join(session_card(s) for s in popular)
 
     curtain_html = ""
     if curtain:
@@ -462,15 +488,29 @@ def build_session_blocks(course: dict[str, Any], sessions: list[dict[str, Any]])
         </div>
         """
 
+    flexible_html = ""
+    if appointment_url:
+        flexible_html = f"""
+        <section class="sessions hybrid-flex-callout">
+          <div class="section-label">Flexible Available Times</div>
+          <p class="empty-note">Need a different time? View all available open seats for this course on the live schedule.</p>
+          <div class="full-schedule-row">
+            <a class="full-schedule-link" href="{html.escape(appointment_url)}">View all available open seats</a>
+          </div>
+        </section>
+        """
+
     return f"""
     <section class="sessions js-live-session-group" data-empty-link="{html.escape(schedule_url)}" data-empty-link-label="See the full class calendar">
-      <div class="section-label">Upcoming Classes</div>
+      {f'<div class="section-label">Popular Upcoming Classes</div><div class="session-grid">{popular_html}</div>' if popular_html else ''}
+      <div class="section-label">Next Scheduled Classes</div>
       <div class="session-grid">
         {visible_html}
       </div>
       {curtain_html}
       {full_schedule_html}
     </section>
+    {flexible_html}
     """
 
 
@@ -648,6 +688,17 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
       font-size: 0.92rem;
       color: #4f5f71;
     }}
+    .session-badge {{
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #fff1e5;
+      color: #b65d33;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }}
     .session-cta {{
       margin-top: 6px;
       font-size: 0.92rem;
@@ -668,6 +719,13 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     }}
     .full-schedule-row {{
       margin-top: 14px;
+    }}
+    .hybrid-flex-callout {{
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #f5fbff 0%, #fff8ef 100%);
+      border: 1px solid #d9e7f4;
     }}
     .full-schedule-link {{
       font-weight: 700;
@@ -754,7 +812,7 @@ def main() -> None:
     if not ARCHIVE_PATH.exists():
         raise FileNotFoundError(f"Archive not found: {ARCHIVE_PATH}")
     if not SCHEDULE_PATH.exists():
-        raise FileNotFoundError(f"Schedule feed not found: {SCHEDULE_PATH}")
+        raise FileNotFoundError(f"Future schedule feed not found: {SCHEDULE_PATH}")
 
     ensure_dir(OUTPUT_DIR)
 
@@ -762,7 +820,7 @@ def main() -> None:
     schedule_payload = load_json(SCHEDULE_PATH)
     sessions = schedule_payload.get("sessions", [])
     if not isinstance(sessions, list):
-        raise ValueError("public_schedule.json must contain a top-level 'sessions' list.")
+        raise ValueError("schedule_future.json must contain a top-level 'sessions' list.")
 
     courses = archive.get("courses", [])
     if not isinstance(courses, list):

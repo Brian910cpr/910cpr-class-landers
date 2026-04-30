@@ -128,6 +128,17 @@
       font-size: 0.92rem;
       color: #4f5f71;
     }
+    .session-badge {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #fff1e5;
+      color: #b65d33;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
     .session-cta {
       margin-top: 6px;
       font-size: 0.92rem;
@@ -148,6 +159,13 @@
     }
     .full-schedule-row {
       margin-top: 14px;
+    }
+    .hybrid-flex-callout {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #f5fbff 0%, #fff8ef 100%);
+      border: 1px solid #d9e7f4;
     }
     .full-schedule-link {
       font-weight: 700;
@@ -209,62 +227,103 @@
 
     
     <section class="sessions js-live-session-group" data-empty-link="https://coastalcprtraining.enrollware.com/schedule#ct210549" data-empty-link-label="See the full class calendar">
-      <div class="section-label">Upcoming Classes</div>
-      <div class="session-grid">
-        
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776256" data-session-start="2026-04-28T08:30:00-04:00">
-      <span class="session-date">Tue Apr 28</span>
-      <span class="session-time">8:30 AM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776406" data-session-start="2026-04-28T11:45:00-04:00">
-      <span class="session-date">Tue Apr 28</span>
-      <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776539" data-session-start="2026-04-28T17:30:00-04:00">
-      <span class="session-date">Tue Apr 28</span>
-      <span class="session-time">5:30 PM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
+      <div class="section-label">Popular Upcoming Classes</div><div class="session-grid">
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776411" data-session-start="2026-04-30T11:45:00-04:00">
       <span class="session-date">Thu Apr 30</span>
       <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      <span class="session-badge">1 student already enrolled</span>
       <span class="session-cta">Register</span>
     </a>
     
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776545" data-session-start="2026-04-30T17:30:00-04:00">
-      <span class="session-date">Thu Apr 30</span>
-      <span class="session-time">5:30 PM</span>
-      <span class="session-location">Wilmington</span>
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774313" data-session-start="2026-05-06T12:30:00-04:00">
+      <span class="session-date">Wed May 6</span>
+      <span class="session-time">12:30 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      <span class="session-badge">1 student already enrolled</span>
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776386" data-session-start="2026-05-09T11:45:00-04:00">
+      <span class="session-date">Sat May 9</span>
+      <span class="session-time">11:45 AM</span>
+      <span class="session-location">:: Wilmington</span>
+      <span class="session-badge">1 student already enrolled</span>
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774319" data-session-start="2026-05-15T12:30:00-04:00">
+      <span class="session-date">Fri May 15</span>
+      <span class="session-time">12:30 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      <span class="session-badge">1 student already enrolled</span>
+      <span class="session-cta">Register</span>
+    </a>
+    </div>
+      <div class="section-label">Next Scheduled Classes</div>
+      <div class="session-grid">
+        
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774302" data-session-start="2026-04-29T12:30:00-04:00">
+      <span class="session-date">Wed Apr 29</span>
+      <span class="session-time">12:30 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776331" data-session-start="2026-05-01T08:30:00-04:00">
       <span class="session-date">Fri May 1</span>
       <span class="session-time">8:30 AM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774317" data-session-start="2026-05-01T12:30:00-04:00">
+      <span class="session-date">Fri May 1</span>
+      <span class="session-time">12:30 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774550" data-session-start="2026-05-01T18:15:00-04:00">
+      <span class="session-date">Fri May 1</span>
+      <span class="session-time">6:15 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776385" data-session-start="2026-05-02T11:45:00-04:00">
       <span class="session-date">Sat May 2</span>
       <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776275" data-session-start="2026-05-05T08:30:00-04:00">
-      <span class="session-date">Tue May 5</span>
-      <span class="session-time">8:30 AM</span>
-      <span class="session-location">Wilmington</span>
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776627" data-session-start="2026-05-02T12:30:00-04:00">
+      <span class="session-date">Sat May 2</span>
+      <span class="session-time">12:30 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774549" data-session-start="2026-05-02T18:15:00-04:00">
+      <span class="session-date">Sat May 2</span>
+      <span class="session-time">6:15 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774309" data-session-start="2026-05-04T12:30:00-04:00">
+      <span class="session-date">Mon May 4</span>
+      <span class="session-time">12:30 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
@@ -274,115 +333,131 @@
           <summary>More upcoming classes</summary>
           <div class="session-grid extra">
             
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774561" data-session-start="2026-05-04T18:15:00-04:00">
+      <span class="session-date">Mon May 4</span>
+      <span class="session-time">6:15 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776275" data-session-start="2026-05-05T08:30:00-04:00">
+      <span class="session-date">Tue May 5</span>
+      <span class="session-time">8:30 AM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776377" data-session-start="2026-05-05T11:45:00-04:00">
       <span class="session-date">Tue May 5</span>
       <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776546" data-session-start="2026-05-05T17:30:00-04:00">
       <span class="session-date">Tue May 5</span>
       <span class="session-time">5:30 PM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774559" data-session-start="2026-05-06T18:15:00-04:00">
+      <span class="session-date">Wed May 6</span>
+      <span class="session-time">6:15 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776381" data-session-start="2026-05-07T11:45:00-04:00">
       <span class="session-date">Thu May 7</span>
       <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776550" data-session-start="2026-05-07T17:30:00-04:00">
       <span class="session-date">Thu May 7</span>
       <span class="session-time">5:30 PM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776333" data-session-start="2026-05-08T08:30:00-04:00">
       <span class="session-date">Fri May 8</span>
       <span class="session-time">8:30 AM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776386" data-session-start="2026-05-09T11:45:00-04:00">
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774318" data-session-start="2026-05-08T12:30:00-04:00">
+      <span class="session-date">Fri May 8</span>
+      <span class="session-time">12:30 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774552" data-session-start="2026-05-08T18:15:00-04:00">
+      <span class="session-date">Fri May 8</span>
+      <span class="session-time">6:15 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776628" data-session-start="2026-05-09T12:30:00-04:00">
       <span class="session-date">Sat May 9</span>
-      <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-time">12:30 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774551" data-session-start="2026-05-09T18:15:00-04:00">
+      <span class="session-date">Sat May 9</span>
+      <span class="session-time">6:15 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774311" data-session-start="2026-05-11T12:30:00-04:00">
+      <span class="session-date">Mon May 11</span>
+      <span class="session-time">12:30 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
+      <span class="session-cta">Register</span>
+    </a>
+    
+    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12774562" data-session-start="2026-05-11T18:15:00-04:00">
+      <span class="session-date">Mon May 11</span>
+      <span class="session-time">6:15 PM</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776276" data-session-start="2026-05-12T08:30:00-04:00">
       <span class="session-date">Tue May 12</span>
       <span class="session-time">8:30 AM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
     <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776378" data-session-start="2026-05-12T11:45:00-04:00">
       <span class="session-date">Tue May 12</span>
       <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776547" data-session-start="2026-05-12T17:30:00-04:00">
-      <span class="session-date">Tue May 12</span>
-      <span class="session-time">5:30 PM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776382" data-session-start="2026-05-14T11:45:00-04:00">
-      <span class="session-date">Thu May 14</span>
-      <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776551" data-session-start="2026-05-14T17:30:00-04:00">
-      <span class="session-date">Thu May 14</span>
-      <span class="session-time">5:30 PM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776332" data-session-start="2026-05-15T08:30:00-04:00">
-      <span class="session-date">Fri May 15</span>
-      <span class="session-time">8:30 AM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776389" data-session-start="2026-05-16T11:45:00-04:00">
-      <span class="session-date">Sat May 16</span>
-      <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776277" data-session-start="2026-05-19T08:30:00-04:00">
-      <span class="session-date">Tue May 19</span>
-      <span class="session-time">8:30 AM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776379" data-session-start="2026-05-19T11:45:00-04:00">
-      <span class="session-date">Tue May 19</span>
-      <span class="session-time">11:45 AM</span>
-      <span class="session-location">Wilmington</span>
-      <span class="session-cta">Register</span>
-    </a>
-    
-    <a class="session-pill js-session-item" href="https://coastalcprtraining.enrollware.com/enroll?id=12776548" data-session-start="2026-05-19T17:30:00-04:00">
-      <span class="session-date">Tue May 19</span>
-      <span class="session-time">5:30 PM</span>
-      <span class="session-location">Wilmington</span>
+      <span class="session-location">:: Wilmington</span>
+      
       <span class="session-cta">Register</span>
     </a>
     
@@ -395,6 +470,15 @@
         </div>
         
     </section>
+    
+        <section class="sessions hybrid-flex-callout">
+          <div class="section-label">Flexible Available Times</div>
+          <p class="empty-note">Need a different time? View all available open seats for this course on the live schedule.</p>
+          <div class="full-schedule-row">
+            <a class="full-schedule-link" href="https://coastalcprtraining.enrollware.com/reg/appointment.aspx?locationId=101560&amp;courseId=210549">View all available open seats</a>
+          </div>
+        </section>
+        
     
 
     <section class="content">

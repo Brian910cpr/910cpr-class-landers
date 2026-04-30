@@ -777,6 +777,25 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .slug-popular-section .slug-inventory-head h3::after {
+    display: block;
+    content: "Popular session momentum";
+    margin-top: 4px;
+  }
+
+  .slug-flex-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .slug-flex-row-actions {
+    width: 100%;
+  }
+
+  .slug-flex-row-actions .button {
+    width: 100%;
+  }
+
   .slug-panel-cta {
     min-width: 0;
   }
@@ -1057,6 +1076,11 @@ a {
 .finder-pill-tag-format {
   background: #e8f3ff;
   color: #1f4f95;
+}
+
+.finder-pill-tag-popular {
+  background: #fff1e5;
+  color: #b65d33;
 }
 
 .finder-pill-side {
@@ -1683,6 +1707,106 @@ textarea {
   display: grid;
   justify-items: end;
   gap: 8px;
+}
+
+.slug-inventory-section + .slug-inventory-section {
+  margin-top: 18px;
+}
+
+.slug-inventory-head {
+  margin-bottom: 14px;
+}
+
+.slug-inventory-head h3 {
+  margin-bottom: 6px;
+  font-size: 22px;
+}
+
+.slug-inventory-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.slug-popular-section .slug-inventory-head h3::after {
+  content: "  ·  Popular session momentum";
+  color: #d26c3d;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.slug-pill-chip-momentum {
+  background: #fff2e8;
+  color: #b85e34;
+}
+
+.slug-flexible-section {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid #d9e5ef;
+  background: linear-gradient(180deg, rgba(245, 251, 255, 0.96) 0%, rgba(255, 250, 244, 0.98) 100%);
+}
+
+.slug-flexible-shell {
+  display: grid;
+  gap: 14px;
+}
+
+.slug-flexible-copy p,
+.slug-flexible-note {
+  margin: 0;
+  color: var(--muted);
+}
+
+.slug-flexible-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.slug-flexible-results[hidden] {
+  display: none;
+}
+
+.slug-flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid #dbe7f0;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.slug-flex-row + .slug-flex-row {
+  margin-top: 10px;
+}
+
+.slug-flex-row-title {
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.slug-flex-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.slug-flex-row-actions {
+  flex-shrink: 0;
+}
+
+.slug-flexible-empty {
+  padding: 14px 0 4px;
+}
+
+.slug-flexible-empty p {
+  color: var(--muted);
 }
 
 .slug-pill-hint {

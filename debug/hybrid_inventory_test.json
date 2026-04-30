@@ -1,0 +1,82 @@
+{
+  "generated_at": "2026-04-28T00:27:05.320613-04:00",
+  "schedule_counts": {
+    "sessions_total": 1486,
+    "sessions_with_enrolled_count": 17,
+    "sessions_with_real_enroll_url": 1486
+  },
+  "hub_checks": {
+    "bls": {
+      "exists": true,
+      "has_popular_section": true,
+      "has_scheduled_section": true,
+      "has_flexible_section": true
+    },
+    "acls": {
+      "exists": true,
+      "has_popular_section": true,
+      "has_scheduled_section": true,
+      "has_flexible_section": true
+    },
+    "pals": {
+      "exists": true,
+      "has_popular_section": false,
+      "has_scheduled_section": true,
+      "has_flexible_section": true
+    },
+    "heartsaver": {
+      "exists": true,
+      "has_popular_section": true,
+      "has_scheduled_section": true,
+      "has_flexible_section": true
+    }
+  },
+  "appointment_tests": {
+    "may_31_2026": {
+      "payload": {
+        "d": "<div id='enraccordion'><div class='enrpanel'><div class='enrpanel-heading'><div class='enrpanel-body'><ul class='enrclass-list'><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=12:00 AM&courseId=463119'>Sunday, May 31, 2026 at 12:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=2:00 AM&courseId=463119'>Sunday, May 31, 2026 at 2:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=4:00 AM&courseId=463119'>Sunday, May 31, 2026 at 4:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=6:00 AM&courseId=463119'>Sunday, May 31, 2026 at 6:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=8:00 AM&courseId=463119'>Sunday, May 31, 2026 at 8:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=10:00 AM&courseId=463119'>Sunday, May 31, 2026 at 10:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=12:00 PM&courseId=463119'>Sunday, May 31, 2026 at 12:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=2:00 PM&courseId=463119'>Sunday, May 31, 2026 at 2:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=4:00 PM&courseId=463119'>Sunday, May 31, 2026 at 4:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=6:00 PM&courseId=463119'>Sunday, May 31, 2026 at 6:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=8:00 PM&courseId=463119'>Sunday, May 31, 2026 at 8:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=10:00 PM&courseId=463119'>Sunday, May 31, 2026 at 10:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li></ul></div></div></div>"
+      },
+      "status": 200,
+      "access_control_allow_origin": null,
+      "urls": [
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=12:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=2:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=4:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=6:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=8:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=10:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=12:00 PM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=2:00 PM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=4:00 PM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=6:00 PM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=8:00 PM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514&startTime=10:00 PM&courseId=463119"
+      ],
+      "raw_response_preview": "{\"d\":\"\\u003cdiv id=\\u0027enraccordion\\u0027\\u003e\\u003cdiv class=\\u0027enrpanel\\u0027\\u003e\\u003cdiv class=\\u0027enrpanel-heading\\u0027\\u003e\\u003cdiv class=\\u0027enrpanel-body\\u0027\\u003e\\u003cul class=\\u0027enrclass-list\\u0027\\u003e\\u003cli\\u003e\\u003ca title=\\u0027Click to choose this time\\u0027 href=\\u0027https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514\\u0026startTime=12:00 AM\\u0026courseId=463119\\u0027\\u003eSunday, May 31, 2026 at 12:00 AM\\u003cspan\\u003eNC - Wilmington: 4018 Shipyard Blvd @ 910CPR\\u0027s Office\\u003c/span\\u003e\\u003c/a\\u003e\\u003c/li\\u003e\\u003cli\\u003e\\u003ca title=\\u0027Click to choose this time\\u0027 href=\\u0027https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250514\\u0026startTime=2:00 AM\\u0026courseId=463119\\u0027\\u003eSun"
+    },
+    "jan_1_2027": {
+      "payload": {
+        "d": "<div id='enraccordion'><div class='enrpanel'><div class='enrpanel-heading'><div class='enrpanel-body'><ul class='enrclass-list'><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=12:00 AM&courseId=463119'>Friday, January 1, 2027 at 12:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=2:00 AM&courseId=463119'>Friday, January 1, 2027 at 2:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=4:00 AM&courseId=463119'>Friday, January 1, 2027 at 4:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=6:00 AM&courseId=463119'>Friday, January 1, 2027 at 6:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=8:00 AM&courseId=463119'>Friday, January 1, 2027 at 8:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=10:00 AM&courseId=463119'>Friday, January 1, 2027 at 10:00 AM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=4:00 PM&courseId=463119'>Friday, January 1, 2027 at 4:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=6:00 PM&courseId=463119'>Friday, January 1, 2027 at 6:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=8:00 PM&courseId=463119'>Friday, January 1, 2027 at 8:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li><li><a title='Click to choose this time' href='https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=10:00 PM&courseId=463119'>Friday, January 1, 2027 at 10:00 PM<span>NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office</span></a></li></ul></div></div></div>"
+      },
+      "status": 200,
+      "access_control_allow_origin": null,
+      "urls": [
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=12:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=2:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=4:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=6:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=8:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=10:00 AM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=4:00 PM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=6:00 PM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=8:00 PM&courseId=463119",
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513&startTime=10:00 PM&courseId=463119"
+      ],
+      "raw_response_preview": "{\"d\":\"\\u003cdiv id=\\u0027enraccordion\\u0027\\u003e\\u003cdiv class=\\u0027enrpanel\\u0027\\u003e\\u003cdiv class=\\u0027enrpanel-heading\\u0027\\u003e\\u003cdiv class=\\u0027enrpanel-body\\u0027\\u003e\\u003cul class=\\u0027enrclass-list\\u0027\\u003e\\u003cli\\u003e\\u003ca title=\\u0027Click to choose this time\\u0027 href=\\u0027https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513\\u0026startTime=12:00 AM\\u0026courseId=463119\\u0027\\u003eFriday, January 1, 2027 at 12:00 AM\\u003cspan\\u003eNC - Wilmington: 4018 Shipyard Blvd @ 910CPR\\u0027s Office\\u003c/span\\u003e\\u003c/a\\u003e\\u003c/li\\u003e\\u003cli\\u003e\\u003ca title=\\u0027Click to choose this time\\u0027 href=\\u0027https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=250513\\u0026startTime=2:00 AM\\u0026courseId=463119\\u0027\\u003e"
+    }
+  },
+  "notes": {
+    "browser_cors_direct_fetch_supported": false,
+    "caveat": "Enrollware did not advertise Access-Control-Allow-Origin in the tested response headers, so the on-page flexible inventory widget must fail gracefully and offer the live open-seat page when the browser blocks cross-origin POSTs."
+  }
+}

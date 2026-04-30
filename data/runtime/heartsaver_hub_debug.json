@@ -1,44 +1,8 @@
 {
-  "generated_at": "2026-04-27T01:02:36.072542-04:00",
+  "generated_at": "2026-04-29T22:48:17.390421-04:00",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "page_slug": "heartsaver",
   "records": [
-    {
-      "session_id": "12776116",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-04-27T11:45:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776851",
-      "raw_course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver®)",
-      "start_datetime": "2026-04-29T09:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": null,
-      "normalized_format": null,
-      "icon_selected": null,
-      "included": false,
-      "exclusion_reason": "excluded:uscg_routed_elsewhere"
-    },
-    {
-      "session_id": "12776121",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-04-29T11:45:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
     {
       "session_id": "12776691",
       "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",

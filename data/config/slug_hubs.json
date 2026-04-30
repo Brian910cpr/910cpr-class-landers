@@ -69,6 +69,8 @@
       "hero_image": "/images/bls_general.png",
       "hero_image_alt": "AHA BLS Basic Life Support course",
       "full_schedule_banner": "Need more BLS options? Jump to the full page for this format and browse the full schedule.",
+      "flexible_location_id": "101560",
+      "flexible_cache_seconds": 180,
       "tabs": [
         {
           "id": "bls-provider",
@@ -142,6 +144,8 @@
       "hero_image": "/images/acls_general.png",
       "hero_image_alt": "AHA ACLS Advanced Cardiac Life Support course",
       "full_schedule_banner": "Need more ACLS dates or details? Open the full page for the format you want.",
+      "flexible_location_id": "101560",
+      "flexible_cache_seconds": 180,
       "tabs": [
         {
           "id": "acls-provider",
@@ -218,6 +222,8 @@
       "hero_image": "/images/pals_general.png",
       "hero_image_alt": "AHA PALS Pediatric Advanced Life Support course",
       "full_schedule_banner": "Need more PALS times? Open the full page for the tab you selected.",
+      "flexible_location_id": "101560",
+      "flexible_cache_seconds": 180,
       "tabs": [
         {
           "id": "pals-provider",
@@ -288,6 +294,8 @@
       "hero_image": "/images/heartsaver_general.png",
       "hero_image_alt": "AHA Heartsaver CPR and first aid course",
       "full_schedule_banner": "Want more Heartsaver dates? Open the full schedule page for the tab you selected.",
+      "flexible_location_id": "101560",
+      "flexible_cache_seconds": 180,
       "other_training_options": [
         {
           "label": "AHA Courses",

@@ -9,6 +9,15 @@ from typing import Any
 from urllib.parse import quote
 
 from scripts.build_status import BuildStatusReporter
+from scripts.hybrid_inventory import (
+    APPOINTMENT_ENDPOINT,
+    build_appointment_page_url,
+    extract_schedule_course_id,
+    seed_dates_from_sessions,
+    session_enrolled_count,
+    sort_by_momentum,
+    sort_by_start,
+)
 from supervisor.status_snapshot import write_status_snapshot
 from zoneinfo import ZoneInfo
 
@@ -442,6 +451,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     session_start = escape(start_dt.isoformat() if start_dt else "", quote=True)
     format_badge = normalize_space(session.get("_format_badge"))
     family_badge = normalize_space(session.get("_family_badge"))
+    enrolled_count = session_enrolled_count(session)
 
     action_label = "See Public Class" if group_mode else "Register"
     action_hint = "Preview the closest public option" if group_mode else "Secure this class time"
@@ -450,6 +460,11 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
         badge_html += f'<span class="slug-pill-chip slug-pill-chip-format">{escape(format_badge)}</span>'
     if family_badge:
         badge_html += f'<span class="slug-pill-chip slug-pill-chip-family">{escape(family_badge)}</span>'
+    if enrolled_count >= 1 and not group_mode:
+        badge_html += (
+            f'<span class="slug-pill-chip slug-pill-chip-momentum">{escape(momentum_label(enrolled_count))}</span>'
+        )
+        action_hint = "Join a class that already has students enrolled"
 
     return f"""
 <article class="slug-pill" data-session-start="{session_start}">
@@ -484,6 +499,97 @@ def render_empty_state(*, group_mode: bool) -> str:
     )
 
 
+def momentum_label(enrolled_count: int) -> str:
+    if enrolled_count <= 0:
+        return ""
+    if enrolled_count == 1:
+        return "1 student already enrolled"
+    return f"{enrolled_count} students already enrolled"
+
+
+def render_inventory_section(
+    title: str,
+    body: str,
+    sessions: list[dict[str, Any]],
+    *,
+    group_mode: bool,
+    limit: int | None = None,
+    empty_copy: str | None = None,
+    section_class: str = "",
+) -> str:
+    selected = sessions[:limit] if limit is not None else sessions
+    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in selected)
+    if not cards and empty_copy:
+        cards = f"<div class=\"slug-section-empty\"><p>{escape(empty_copy)}</p></div>"
+    return f"""
+<section class="slug-inventory-section {escape(section_class, quote=True)}">
+  <div class="slug-inventory-head">
+    <h3>{escape(title)}</h3>
+    <p>{escape(body)}</p>
+  </div>
+  <div class="slug-pill-list">
+    {cards}
+  </div>
+</section>
+""".strip()
+
+
+def build_flexible_lookup(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]]) -> dict[str, Any] | None:
+    location_id = str(tab.get("flexible_location_id") or page.get("flexible_location_id") or "").strip()
+    course_id = str(tab.get("flexible_course_id") or "").strip() or extract_schedule_course_id(tab.get("full_schedule_url"))
+    if not location_id or not course_id:
+        return None
+
+    appointment_page_url = build_appointment_page_url(location_id, course_id)
+    seed_dates = tab.get("flexible_seed_dates") or seed_dates_from_sessions(sessions)
+    return {
+        "endpoint": APPOINTMENT_ENDPOINT,
+        "appointment_page_url": appointment_page_url,
+        "location_id": location_id,
+        "course_id": course_id,
+        "cache_seconds": int(tab.get("flexible_cache_seconds") or page.get("flexible_cache_seconds") or 180),
+        "seed_dates": seed_dates,
+        "label": tab.get("label"),
+    }
+
+
+def render_flexible_section(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
+    lookup = build_flexible_lookup(page, tab, sessions)
+    if not lookup:
+        return ""
+
+    payload = {
+        "endpoint": lookup["endpoint"],
+        "locationId": lookup["location_id"],
+        "courseId": lookup["course_id"],
+        "appointmentPageUrl": lookup["appointment_page_url"],
+        "cacheSeconds": lookup["cache_seconds"],
+        "seedDates": lookup["seed_dates"],
+        "label": lookup["label"],
+    }
+    attrs = escape(json.dumps(payload), quote=True)
+    return f"""
+<section class="slug-inventory-section slug-flexible-section" data-flexible-availability="{attrs}">
+  <div class="slug-inventory-head">
+    <h3>Flexible Available Times</h3>
+    <p>Need a different time? Check flexible availability and view all available open seats for this class path.</p>
+  </div>
+  <div class="slug-flexible-shell">
+    <div class="slug-flexible-copy">
+      <strong>Don’t see a scheduled time that works?</strong>
+      <p>Open the live flexible-time view for this course, or load the latest available open seats here when supported.</p>
+    </div>
+    <div class="slug-flexible-actions">
+      <button class="button secondary" type="button" data-flexible-load>Check flexible availability</button>
+      <a class="button secondary" href="{escape(lookup['appointment_page_url'], quote=True)}">View all available open seats</a>
+    </div>
+    <div class="slug-flexible-results" data-flexible-results hidden></div>
+    <p class="slug-flexible-note" data-flexible-note>Flexible times are loaded live and may change quickly.</p>
+  </div>
+</section>
+""".strip()
+
+
 def render_tab_button(tab: dict[str, Any], *, active: bool) -> str:
     active_class = " active" if active else ""
     icon = escape(tab.get("tab_icon") or "/images/tab_classroom.png", quote=True)
@@ -515,13 +621,47 @@ def render_panel_description(tab: dict[str, Any]) -> str:
     )
 
 
-def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
+def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
-    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in sessions[:DATE_LIMIT])
-    if not cards:
-        cards = render_empty_state(group_mode=group_mode)
+    popular_sessions = sort_by_momentum([session for session in sessions if session_enrolled_count(session) >= 1])[:5]
+    highlighted_keys = {
+        str(session.get("session_id") or session.get("registration_url") or "")
+        for session in popular_sessions
+    }
+    remaining_sessions = [
+        session
+        for session in sort_by_start(sessions)
+        if str(session.get("session_id") or session.get("registration_url") or "") not in highlighted_keys
+    ]
 
-    full_schedule_url = escape(tab["full_schedule_url"], quote=True)
+    section_html: list[str] = []
+    if popular_sessions:
+        section_html.append(
+            render_inventory_section(
+                "Popular Upcoming Classes",
+                "Join a class that already has students enrolled. These sessions are already forming.",
+                popular_sessions,
+                group_mode=group_mode,
+                limit=5,
+                section_class="slug-popular-section",
+            )
+        )
+
+    if remaining_sessions:
+        section_html.append(
+            render_inventory_section(
+                "Next Scheduled Classes",
+                "Real scheduled inventory from the current class feed. These are the next scheduled class options.",
+                remaining_sessions,
+                group_mode=group_mode,
+                limit=DATE_LIMIT,
+                section_class="slug-scheduled-section",
+            )
+        )
+    elif not popular_sessions:
+        section_html.append(render_empty_state(group_mode=group_mode))
+
+    flexible_html = render_flexible_section(page, tab, sessions)
     full_schedule_data = escape(
         json.dumps(
             {
@@ -543,9 +683,8 @@ def render_tab_panel(tab: dict[str, Any], sessions: list[dict[str, Any]], *, act
         {render_panel_description(tab)}
       </div>
     </div>
-    <div class="slug-pill-list">
-      {cards}
-    </div>
+    {' '.join(section_html)}
+    {flexible_html}
   </div>
 </section>
 """.strip()
@@ -704,7 +843,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 
     for index, (tab, matched) in enumerate(visible_tabs):
         buttons.append(render_tab_button(tab, active=index == 0))
-        panels.append(render_tab_panel(tab, matched, active=index == 0, group_mode=group_mode))
+        panels.append(render_tab_panel(page, tab, matched, active=index == 0, group_mode=group_mode))
 
     tabs_html = (
         f"""
@@ -764,6 +903,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 </div>
 <script src="/assets/hub-ui.js"></script>
 <script src="/assets/live-sessions.js"></script>
+<script src="/assets/hybrid-inventory.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {{
   document.querySelectorAll("[data-more-toggle]").forEach(function (button) {{

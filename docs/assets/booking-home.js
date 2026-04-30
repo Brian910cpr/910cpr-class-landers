@@ -214,6 +214,7 @@
           sectionId: match.sectionId,
           subtype: match.subtype,
           formatLabel: inferFormatLabel(name, familyHint),
+          enrolledCount: Number(row.enrolled_count || row.registered_count || 0),
           start: row.start_at,
           startDate: parseDate(row.start_at),
           locationRaw: row.location_display || row.location_name,
@@ -251,6 +252,7 @@
         sectionId: match.sectionId,
         subtype: match.subtype,
         formatLabel: inferFormatLabel(base.name, base.familyHint),
+        enrolledCount: Number(base.enrolledCount || 0),
         start: base.start,
         startDate,
         locationRaw: base.locationRaw,
@@ -269,6 +271,7 @@
         start: row.start,
         locationRaw: row.location,
         registerUrl: row.register_url,
+        enrolledCount: 0,
       });
     });
 
@@ -281,6 +284,7 @@
         start: row.start_at,
         locationRaw: row.location_display || row.location_name,
         registerUrl: row.registration_url,
+        enrolledCount: Number(row.enrolled_count || row.registered_count || 0),
       });
     });
 
@@ -309,10 +313,13 @@
           registerUrl: enrichment.registerUrl,
           name: enrichment.name || session.name,
           formatLabel: enrichment.formatLabel || session.formatLabel,
+          enrolledCount: Math.max(Number(session.enrolledCount || 0), Number(enrichment.enrolledCount || 0)),
         };
       })
       .filter(Boolean)
       .sort((a, b) => {
+        const enrolledDelta = Number(b.enrolledCount || 0) - Number(a.enrolledCount || 0);
+        if (enrolledDelta !== 0) return enrolledDelta;
         if (a.sectionId === "heartsaver" && b.sectionId === "heartsaver") {
           const subtypeDelta = HEARTSAVER_SUBTYPE_ORDER.indexOf(a.subtype) - HEARTSAVER_SUBTYPE_ORDER.indexOf(b.subtype);
           if (subtypeDelta !== 0) return subtypeDelta;
@@ -386,6 +393,9 @@
     const chips = [];
     if (session.subtype) chips.push(`<span class="finder-pill-tag">${escapeHtml(session.subtype)}</span>`);
     if (session.formatLabel) chips.push(`<span class="finder-pill-tag finder-pill-tag-format">${escapeHtml(session.formatLabel)}</span>`);
+    if (Number(session.enrolledCount || 0) >= 1) {
+      chips.push(`<span class="finder-pill-tag finder-pill-tag-popular">${escapeHtml(Number(session.enrolledCount) === 1 ? "1 already enrolled" : `${Number(session.enrolledCount)} already enrolled`)}</span>`);
+    }
     const metaTags = chips.length ? `<div class="finder-pill-tags">${chips.join("")}</div>` : "";
     const subtype = session.subtype ? `<div class="finder-pill-subtitle">${escapeHtml(session.name)}</div>` : "";
     return `

@@ -63,6 +63,7 @@ def build_public_future_session(session: dict[str, Any]) -> dict[str, Any]:
         "price": commerce.get("price"),
         "max_students": capacity.get("max_students"),
         "registered_count": capacity.get("registered_count"),
+        "enrolled_count": capacity.get("registered_count"),
         "available_seats": capacity.get("available_seats"),
         "is_full": capacity.get("is_full"),
         "registration_url": commerce.get("registration_url"),
