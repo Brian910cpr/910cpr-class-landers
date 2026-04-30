@@ -333,8 +333,10 @@ def build_session_from_class_report(
     if not course_id:
         course_id = parsed.course_number
 
-    start_at = parse_datetime_flexible(report_row.get("Start Date / Time"))
-    end_at = parse_datetime_flexible(report_row.get("End Date / Time"))
+    start_source = report_row.get("Start Date / Time")
+    end_source = report_row.get("End Date / Time")
+    start_at = parse_datetime_flexible(start_source)
+    end_at = parse_datetime_flexible(end_source)
 
     max_students = None
     if class_patch:
@@ -399,6 +401,10 @@ def build_session_from_class_report(
 
     return {
         "session_id": session_id,
+        "start": start_at,
+        "end": end_at,
+        "start_datetime": start_at,
+        "end_datetime": end_at,
         "source_keys": {
             "class_report_id": clean_string(report_row.get("ID")),
             "class_sheet_internal_id": clean_string(class_patch.get("Internal ID")) if class_patch else None,
@@ -424,6 +430,12 @@ def build_session_from_class_report(
         "timing": {
             "start_at": start_at,
             "end_at": end_at,
+            "start": start_at,
+            "end": end_at,
+            "start_datetime": start_at,
+            "end_datetime": end_at,
+            "start_source": clean_string(start_source),
+            "end_source": clean_string(end_source),
             "timezone": "America/New_York",
             "is_future": is_future,
             "is_past": is_past,

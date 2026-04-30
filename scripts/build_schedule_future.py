@@ -28,6 +28,70 @@ def parse_iso_dt(value: Any) -> Optional[datetime]:
     s = clean_string(value)
     if not s:
         return None
+    try:
+        dt = datetime.fromisoformat(s)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=TZ)
+        else:
+            dt = dt.astimezone(TZ)
+        return dt
+    except Exception:
+        return None
+
+
+def first_present(mapping: dict[str, Any], keys: list[str]) -> Any:
+    for key in keys:
+        if key in mapping and mapping.get(key) not in (None, ""):
+            return mapping.get(key)
+    return None
+
+
+def session_start_candidate(session: dict[str, Any]) -> Any:
+    timing = session.get("timing", {}) if isinstance(session.get("timing"), dict) else {}
+    start_val = first_present(
+        session,
+        [
+            "start",
+            "start_datetime",
+            "Start Date / Time",
+            "start_at",
+        ],
+    )
+    if start_val is not None:
+        return start_val
+    return first_present(
+        timing,
+        [
+            "start",
+            "start_datetime",
+            "Start Date / Time",
+            "start_at",
+        ],
+    )
+
+
+def session_end_candidate(session: dict[str, Any]) -> Any:
+    timing = session.get("timing", {}) if isinstance(session.get("timing"), dict) else {}
+    end_val = first_present(
+        session,
+        [
+            "end",
+            "end_datetime",
+            "End Date / Time",
+            "end_at",
+        ],
+    )
+    if end_val is not None:
+        return end_val
+    return first_present(
+        timing,
+        [
+            "end",
+            "end_datetime",
+            "End Date / Time",
+            "end_at",
+        ],
+    )
 
 
 def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
@@ -74,15 +138,6 @@ def read_class_report_ids(path: Path) -> set[str]:
         if sid:
             ids.add(sid)
     return ids
-    try:
-        dt = datetime.fromisoformat(s)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=TZ)
-        else:
-            dt = dt.astimezone(TZ)
-        return dt
-    except Exception:
-        return None
 
 
 def build_public_future_session(session: dict[str, Any]) -> dict[str, Any]:
@@ -94,6 +149,8 @@ def build_public_future_session(session: dict[str, Any]) -> dict[str, Any]:
     commerce = session.get("commerce", {})
     status = session.get("status", {})
 
+    start_raw = session_start_candidate(session)
+    end_raw = session_end_candidate(session)
     return {
         "session_id": session.get("session_id"),
         "course_id": course.get("course_id"),
@@ -103,8 +160,8 @@ def build_public_future_session(session: dict[str, Any]) -> dict[str, Any]:
         "course_code": course.get("course_code_hint"),
         "certifying_body": course.get("certifying_body_hint"),
         "delivery_mode": course.get("delivery_mode_hint"),
-        "start_at": timing.get("start_at"),
-        "end_at": timing.get("end_at"),
+        "start_at": start_raw,
+        "end_at": end_raw,
         "timezone": timing.get("timezone"),
         "location_name": location.get("location_name"),
         "location_display": location.get("location_display"),
@@ -186,7 +243,7 @@ def main() -> int:
                 skipped_orphan += 1
                 reporter.update(current=index, total=len(sessions))
                 continue
-            start_dt = parse_iso_dt(session.get("timing", {}).get("start_at"))
+            start_dt = parse_iso_dt(session_start_candidate(session))
             if start_dt is None:
                 skipped_missing_start += 1
                 reporter.update(current=index, total=len(sessions))
