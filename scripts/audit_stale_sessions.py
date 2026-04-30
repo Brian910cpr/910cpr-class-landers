@@ -28,6 +28,8 @@ class ScanResult:
     class_file_ids: set[str]
     class_file_map: dict[str, list[Path]]
     hub_html_ref_ids: set[str]
+    stale_hub_files: dict[str, list[str]]
+    stale_hub_file_counts: dict[str, int]
     stale_json_ids: list[str]
     stale_html_ids: list[str]
     stale_hub_ref_ids: list[str]
@@ -37,7 +39,7 @@ def normalize_id(value: Any) -> str:
     digits = "".join(ID_RE.findall(str(value or "")))
     if not digits:
         return ""
-    return digits[-7:] if len(digits) >= 7 else digits
+    return digits
 
 
 def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
@@ -112,23 +114,54 @@ def scan_class_html_ids(classes_dir: Path) -> tuple[set[str], dict[str, list[Pat
     return out, file_map
 
 
-def scan_hub_html_ref_ids(docs_dir: Path) -> set[str]:
+def is_public_hub_file(path: Path, docs_dir: Path) -> bool:
+    try:
+        rel = path.relative_to(docs_dir)
+    except Exception:
+        return False
+    parts = rel.parts
+    if not parts:
+        return False
+    # Never treat class detail trees or internal assets/data as hub inputs.
+    blocked_roots = {"classes", "data", "assets", "images", "css", "js"}
+    if parts[0].lower() in blocked_roots:
+        return False
+    # Public hub pages live at root and these generated folders.
+    if len(parts) == 1:
+        return True
+    return parts[0].lower() in {"courses", "locations", "course-at-city"}
+
+
+def scan_hub_html_refs(docs_dir: Path, valid_ids: set[str]) -> tuple[set[str], dict[str, list[str]], dict[str, int]]:
     refs: set[str] = set()
+    stale_file_ids: dict[str, list[str]] = {}
+    stale_file_counts: dict[str, int] = {}
     if not docs_dir.exists():
-        return refs
+        return refs, stale_file_ids, stale_file_counts
+
     for path in docs_dir.rglob("*.html"):
-        if path.parent.name == "classes":
+        if not is_public_hub_file(path, docs_dir):
             continue
         text = path.read_text(encoding="utf-8", errors="ignore")
+        stale_hits: list[str] = []
         for m in CLASS_LINK_RE.finditer(text):
             norm = normalize_id(m.group(1))
             if norm:
                 refs.add(norm)
+                if norm not in valid_ids:
+                    stale_hits.append(norm)
         for m in LINK_ID_RE.finditer(text):
             norm = normalize_id(m.group(1))
             if norm:
                 refs.add(norm)
-    return refs
+                if norm not in valid_ids:
+                    stale_hits.append(norm)
+        if stale_hits:
+            rel = str(path.relative_to(docs_dir)).replace("\\", "/")
+            deduped = sorted(set(stale_hits))
+            stale_file_ids[rel] = deduped
+            stale_file_counts[rel] = len(stale_hits)
+    return refs, stale_file_ids, stale_file_counts
 
 
 def now_stamp() -> str:
@@ -151,7 +184,7 @@ def scan(repo_root: Path, class_report_path: Path) -> ScanResult:
     json_ids = read_schedule_ids(schedule_path)
     future_ids = read_schedule_ids(schedule_future_path)
     class_file_ids, class_file_map = scan_class_html_ids(classes_dir)
-    hub_html_ref_ids = scan_hub_html_ref_ids(docs_dir)
+    hub_html_ref_ids, stale_hub_files, stale_hub_file_counts = scan_hub_html_refs(docs_dir, report_ids)
 
     combined_json_ids = json_ids | future_ids
     stale_json_ids = sorted(i for i in combined_json_ids if i not in report_ids)
@@ -168,6 +201,8 @@ def scan(repo_root: Path, class_report_path: Path) -> ScanResult:
         class_file_ids=class_file_ids,
         class_file_map=class_file_map,
         hub_html_ref_ids=hub_html_ref_ids,
+        stale_hub_files=stale_hub_files,
+        stale_hub_file_counts=stale_hub_file_counts,
         stale_json_ids=stale_json_ids,
         stale_html_ids=stale_html_ids,
         stale_hub_ref_ids=stale_hub_ref_ids,
@@ -240,6 +275,8 @@ def main() -> int:
         "stale_json_ids": effective.stale_json_ids,
         "stale_html_ids": effective.stale_html_ids,
         "stale_hub_ref_ids": effective.stale_hub_ref_ids,
+        "stale_hub_files": effective.stale_hub_files,
+        "stale_hub_file_counts": effective.stale_hub_file_counts,
         "cleanup": {
             "requested": bool(args.cleanup),
             "quarantine_count": quarantine_count,
