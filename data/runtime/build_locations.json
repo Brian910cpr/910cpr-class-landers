@@ -1,9 +1,9 @@
 {
   "phase_name": "build_locations",
-  "status": "done",
-  "current_count": 1,
-  "total_count": 1,
-  "percent_complete": 100.0,
-  "last_output_file": "docs\\locations\\wilmington.html",
-  "timestamp": "2026-04-29T23:33:13.742948-04:00"
+  "status": "error",
+  "current_count": 0,
+  "total_count": null,
+  "percent_complete": null,
+  "last_output_file": null,
+  "timestamp": "2026-04-30T15:46:06.934423-04:00"
 }

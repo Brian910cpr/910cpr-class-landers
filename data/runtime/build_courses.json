@@ -1,9 +1,9 @@
 {
   "phase_name": "build_courses",
-  "status": "done",
-  "current_count": 6,
-  "total_count": 6,
-  "percent_complete": 100.0,
-  "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\courses\\uscg-elementary-first-aid-cpr.html",
-  "timestamp": "2026-04-29T23:33:12.544527-04:00"
+  "status": "error",
+  "current_count": null,
+  "total_count": null,
+  "percent_complete": null,
+  "last_output_file": null,
+  "timestamp": "2026-04-30T15:46:06.242938-04:00"
 }
