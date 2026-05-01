@@ -1087,11 +1087,38 @@ a {
 }
 
 .finder-pill-side {
-  min-width: 92px;
+  min-width: 104px;
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.finder-pill-image-wrap {
+  width: 96px;
+  height: 86px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #ffffff;
+}
+
+.finder-pill-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.finder-pill-side-label {
   color: #2a56cf;
   font-size: 13px;
   font-weight: 700;
   text-align: right;
+}
+
+.finder-pill .slug-pill-title {
+  font-size: 18px;
+  font-weight: 800;
 }
 
 .finder-empty {
@@ -1169,6 +1196,18 @@ a {
 
   .finder-pill-side {
     min-width: 0;
+    justify-items: start;
+    grid-template-columns: 84px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+  }
+
+  .finder-pill-image-wrap {
+    width: 84px;
+    height: 76px;
+  }
+
+  .finder-pill-side-label {
     text-align: left;
   }
 }

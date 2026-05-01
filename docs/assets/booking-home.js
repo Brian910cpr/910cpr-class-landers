@@ -66,6 +66,15 @@
   const dtfWeekday = new Intl.DateTimeFormat("en-US", { weekday: "short", timeZone: EASTERN_TIMEZONE });
   const dtfDateLine = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: EASTERN_TIMEZONE });
   const dtfTime = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: EASTERN_TIMEZONE });
+  const COURSE_IMAGE_MAP = {
+    bls: "/images/bls_general.png",
+    acls: "/images/acls_general.png",
+    pals: "/images/pals_general.png",
+    heartsaver: "/images/heartsaver_general.png",
+    uscg: "/images/heartsaver_general.png",
+    group: "/images/bls_general.png",
+  };
+  const COURSE_IMAGE_FALLBACK = "/images/bls_general.png";
 
   function stripHtml(value) {
     return String(value || "")
@@ -389,6 +398,11 @@
     return section.id === "group" ? "Request team training" : "Book now";
   }
 
+  function pillImageSrc(section, session) {
+    const sectionKey = (session.sectionId || section.id || "").toLowerCase();
+    return COURSE_IMAGE_MAP[sectionKey] || COURSE_IMAGE_MAP[(section.id || "").toLowerCase()] || COURSE_IMAGE_FALLBACK;
+  }
+
   function renderPill(section, session) {
     const chips = [];
     if (session.subtype) chips.push(`<span class="finder-pill-tag">${escapeHtml(session.subtype)}</span>`);
@@ -412,7 +426,12 @@
             ${metaTags}
             ${subtype}
           </div>
-          <div class="finder-pill-side">${pillCtaLabel(section)}</div>
+          <div class="finder-pill-side">
+            <div class="finder-pill-image-wrap">
+              <img class="finder-pill-image" src="${escapeAttribute(pillImageSrc(section, session))}" alt="${escapeAttribute(section.title)} class" loading="lazy" onerror="this.src='${escapeAttribute(COURSE_IMAGE_FALLBACK)}';this.onerror=null;">
+            </div>
+            <div class="finder-pill-side-label">${pillCtaLabel(section)}</div>
+          </div>
         </article>
       </a>
     `;
