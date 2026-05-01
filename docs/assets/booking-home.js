@@ -415,21 +415,21 @@
     return `
       <a class="finder-pill-link" href="${escapeAttribute(pillHref(section, session))}">
         <article class="slug-pill finder-pill" data-session-start="${escapeAttribute(session.startDate ? session.startDate.toISOString() : "")}">
-          <div class="slug-pill-date">
-            <div class="slug-pill-month">${monthLabel(session.startDate)}</div>
-            <div class="slug-pill-day">${dayLabel(session.startDate)}</div>
-            <div class="slug-pill-weekday">${weekdayLabel(session.startDate)}</div>
-          </div>
           <div class="slug-pill-main">
+            <div class="class-card-top-row">
+              <div class="slug-pill-date">
+                <div class="slug-pill-month">${monthLabel(session.startDate)}</div>
+                <div class="slug-pill-day">${dayLabel(session.startDate)}</div>
+                <div class="slug-pill-weekday">${weekdayLabel(session.startDate)}</div>
+              </div>
+              <img class="class-card-course-image" src="${escapeAttribute(pillImageSrc(section, session))}" alt="${escapeAttribute(section.title)} class" loading="lazy" onerror="this.src='${escapeAttribute(COURSE_IMAGE_FALLBACK)}';this.onerror=null;">
+            </div>
             <div class="slug-pill-title">${escapeHtml(dateLine(session.startDate))}</div>
             <div class="slug-pill-meta">${escapeHtml(timeLine(session.startDate))} · ${escapeHtml(session.locationClean || "Location TBA")}</div>
             ${metaTags}
             ${subtype}
           </div>
           <div class="finder-pill-side">
-            <div class="finder-pill-image-wrap">
-              <img class="finder-pill-image" src="${escapeAttribute(pillImageSrc(section, session))}" alt="${escapeAttribute(section.title)} class" loading="lazy" onerror="this.src='${escapeAttribute(COURSE_IMAGE_FALLBACK)}';this.onerror=null;">
-            </div>
             <div class="finder-pill-side-label">${pillCtaLabel(section)}</div>
           </div>
         </article>
