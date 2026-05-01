@@ -374,20 +374,11 @@
   }
 
   function pillHref(section, session) {
-    if (section.id === "group") {
-      const params = new URLSearchParams({ program: section.title === "Group / Onsite Training" ? "BLS On-Site" : section.title });
-      if (session.sectionId === "heartsaver") params.set("program", "First Aid / CPR / AED");
-      if (session.sectionId === "acls") params.set("program", "ACLS");
-      if (session.sectionId === "pals") params.set("program", "PALS");
-      if (session.sectionId === "uscg") params.set("program", "USCG Elementary First Aid | CPR");
-      if (session.sectionId === "bls") params.set("program", "BLS On-Site");
-      return `/request_group_session.html?${params.toString()}`;
-    }
     return session.registerUrl || section.fullScheduleUrl;
   }
 
   function pillCtaLabel(section) {
-    return section.id === "group" ? "Request team training" : "Book now";
+    return "Book now";
   }
 
   function pillImageSrc(section, session) {
