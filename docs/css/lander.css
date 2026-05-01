@@ -835,8 +835,21 @@ a {
 }
 
 .home-hero {
+  display: block;
   grid-template-columns: minmax(0, 1fr) 280px;
   padding: 28px 28px 14px;
+}
+
+.home-hero .hero-side {
+  float: right;
+  width: 280px;
+  margin: 0 0 10px 20px;
+}
+
+.home-hero::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .hero-actions {
@@ -1194,6 +1207,13 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .home-hero .hero-side,
+  .slug-hero .hero-side {
+    float: none;
+    width: auto;
+    margin: 0;
+  }
+
   .hero-actions .button,
   .finder-card-head .button {
     width: 100%;
@@ -1329,11 +1349,18 @@ textarea {
 
 .slug-hero {
   position: relative;
+  display: block;
   grid-template-columns: minmax(0, 1fr) 296px;
   gap: 26px;
   padding: 34px 32px 18px;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(247, 250, 252, 0.96) 100%);
+}
+
+.slug-hero .hero-side {
+  float: right;
+  width: 296px;
+  margin: 0 0 10px 20px;
 }
 
 .slug-hero::after {
