@@ -876,17 +876,19 @@ a {
 }
 
 .home-status {
-  margin: 8px 28px 0;
+  margin: 8px auto 0;
   padding: 18px 20px;
+  width: calc(100% - 56px);
+  max-width: 980px;
   border-radius: 24px;
   border: 1px solid var(--border);
   background:
     radial-gradient(circle at top right, rgba(126, 201, 200, 0.14), transparent 26%),
     linear-gradient(180deg, #fdfefe 0%, #f7fafc 100%);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 20px;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: stretch;
 }
 
 .home-status-label {
@@ -900,6 +902,7 @@ a {
 
 .home-status p {
   margin: 0;
+  max-width: 860px;
   color: var(--muted);
   line-height: 1.7;
 }
@@ -907,8 +910,8 @@ a {
 .home-status-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  justify-content: flex-end;
+  gap: 12px;
+  justify-content: flex-start;
 }
 
 .home-stat {

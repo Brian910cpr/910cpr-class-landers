@@ -1,0 +1,149 @@
+[
+  {
+    "viewport": {
+      "name": "mobile390",
+      "width": 390,
+      "height": 844
+    },
+    "normal": {
+      "h1": "CPR, BLS, ACLS, PALS, First Aid & Workplace Safety Training",
+      "ctasVisible": {
+        "find": true,
+        "group": true,
+        "call": true
+      },
+      "ctaRects": {
+        "find": {
+          "top": 320.546875,
+          "bottom": 368.546875,
+          "left": 31,
+          "right": 359,
+          "width": 328,
+          "height": 48
+        },
+        "group": {
+          "top": 380.546875,
+          "bottom": 428.546875,
+          "left": 31,
+          "right": 359,
+          "width": 328,
+          "height": 48
+        },
+        "call": {
+          "top": 440.546875,
+          "bottom": 488.546875,
+          "left": 31,
+          "right": 359,
+          "width": 328,
+          "height": 48
+        }
+      },
+      "finderTop": 1681,
+      "finderVisibleAboveFold": false,
+      "heroHeight": 688.5
+    },
+    "failure": {
+      "hasFallbackMessage": true,
+      "hasHubLinks": true,
+      "snippet": "Live schedule unavailable The homepage class finder could not load the current schedule data. Use the hub pages below while we reload the feed. BLS · ACLS · PALS · Heartsaver · USCG · Group Training"
+    }
+  },
+  {
+    "viewport": {
+      "name": "tablet768",
+      "width": 768,
+      "height": 1024
+    },
+    "normal": {
+      "h1": "CPR, BLS, ACLS, PALS, First Aid & Workplace Safety Training",
+      "ctasVisible": {
+        "find": true,
+        "group": true,
+        "call": true
+      },
+      "ctaRects": {
+        "find": {
+          "top": 396.875,
+          "bottom": 444.875,
+          "left": 45,
+          "right": 175.25,
+          "width": 130.25,
+          "height": 48
+        },
+        "group": {
+          "top": 396.875,
+          "bottom": 444.875,
+          "left": 187.25,
+          "right": 407.484375,
+          "width": 220.234375,
+          "height": 48
+        },
+        "call": {
+          "top": 456.875,
+          "bottom": 504.875,
+          "left": 45,
+          "right": 216.4375,
+          "width": 171.4375,
+          "height": 48
+        }
+      },
+      "finderTop": 1319.140625,
+      "finderVisibleAboveFold": false,
+      "heroHeight": 733.390625
+    },
+    "failure": {
+      "hasFallbackMessage": true,
+      "hasHubLinks": true,
+      "snippet": "Live schedule unavailable The homepage class finder could not load the current schedule data. Use the hub pages below while we reload the feed. BLS · ACLS · PALS · Heartsaver · USCG · Group Training"
+    }
+  },
+  {
+    "viewport": {
+      "name": "desktop1440",
+      "width": 1440,
+      "height": 900
+    },
+    "normal": {
+      "h1": "CPR, BLS, ACLS, PALS, First Aid & Workplace Safety Training",
+      "ctasVisible": {
+        "find": true,
+        "group": true,
+        "call": true
+      },
+      "ctaRects": {
+        "find": {
+          "top": 293.53125,
+          "bottom": 341.53125,
+          "left": 205,
+          "right": 335.25,
+          "width": 130.25,
+          "height": 48
+        },
+        "group": {
+          "top": 293.53125,
+          "bottom": 341.53125,
+          "left": 347.25,
+          "right": 567.484375,
+          "width": 220.234375,
+          "height": 48
+        },
+        "call": {
+          "top": 293.53125,
+          "bottom": 341.53125,
+          "left": 579.484375,
+          "right": 750.921875,
+          "width": 171.4375,
+          "height": 48
+        }
+      },
+      "finderTop": 1737.40625,
+      "finderVisibleAboveFold": false,
+      "heroHeight": 318.53125
+    },
+    "failure": {
+      "hasFallbackMessage": true,
+      "hasHubLinks": true,
+      "snippet": "Live schedule unavailable The homepage class finder could not load the current schedule data. Use the hub pages below while we reload the feed. BLS · ACLS · PALS · Heartsaver · USCG · Group Training"
+    }
+  }
+]

@@ -1,0 +1,164 @@
+[
+  {
+    "viewport": {
+      "name": "mobile390",
+      "width": 390,
+      "height": 844
+    },
+    "normal": {
+      "title": "910CPR | CPR, BLS, ACLS, PALS, First Aid & Workplace Safety Training",
+      "h1": "CPR, BLS, ACLS, PALS, First Aid & Workplace Safety Training",
+      "viewport": {
+        "w": 390,
+        "h": 844
+      },
+      "ctasVisible": {
+        "find": true,
+        "group": true,
+        "call": true
+      },
+      "ctaRects": {
+        "find": {
+          "top": 267.875,
+          "bottom": 284.875,
+          "left": 8,
+          "right": 87.125,
+          "width": 79.125,
+          "height": 17
+        },
+        "group": {
+          "top": 267.875,
+          "bottom": 284.875,
+          "left": 91.125,
+          "right": 245.796875,
+          "width": 154.671875,
+          "height": 17
+        },
+        "call": {
+          "top": 267.875,
+          "bottom": 284.875,
+          "left": 249.796875,
+          "right": 371.125,
+          "width": 121.328125,
+          "height": 17
+        }
+      },
+      "finderTop": 745.875,
+      "finderVisibleAboveFold": true,
+      "heroHeight": 385.875
+    },
+    "failure": {
+      "hasFallbackMessage": false,
+      "hasHubLinks": false,
+      "snippet": "Loading current classes Pulling the latest upcoming options now."
+    }
+  },
+  {
+    "viewport": {
+      "name": "tablet768",
+      "width": 768,
+      "height": 1024
+    },
+    "normal": {
+      "title": "910CPR | CPR, BLS, ACLS, PALS, First Aid & Workplace Safety Training",
+      "h1": "CPR, BLS, ACLS, PALS, First Aid & Workplace Safety Training",
+      "viewport": {
+        "w": 768,
+        "h": 1024
+      },
+      "ctasVisible": {
+        "find": true,
+        "group": true,
+        "call": true
+      },
+      "ctaRects": {
+        "find": {
+          "top": 194.875,
+          "bottom": 211.875,
+          "left": 8,
+          "right": 87.125,
+          "width": 79.125,
+          "height": 17
+        },
+        "group": {
+          "top": 194.875,
+          "bottom": 211.875,
+          "left": 91.125,
+          "right": 245.796875,
+          "width": 154.671875,
+          "height": 17
+        },
+        "call": {
+          "top": 194.875,
+          "bottom": 211.875,
+          "left": 249.796875,
+          "right": 371.125,
+          "width": 121.328125,
+          "height": 17
+        }
+      },
+      "finderTop": 528.875,
+      "finderVisibleAboveFold": true,
+      "heroHeight": 276.875
+    },
+    "failure": {
+      "hasFallbackMessage": false,
+      "hasHubLinks": false,
+      "snippet": "Loading current classes Pulling the latest upcoming options now."
+    }
+  },
+  {
+    "viewport": {
+      "name": "desktop1440",
+      "width": 1440,
+      "height": 900
+    },
+    "normal": {
+      "title": "910CPR | CPR, BLS, ACLS, PALS, First Aid & Workplace Safety Training",
+      "h1": "CPR, BLS, ACLS, PALS, First Aid & Workplace Safety Training",
+      "viewport": {
+        "w": 1440,
+        "h": 900
+      },
+      "ctasVisible": {
+        "find": true,
+        "group": true,
+        "call": true
+      },
+      "ctaRects": {
+        "find": {
+          "top": 139.875,
+          "bottom": 156.875,
+          "left": 8,
+          "right": 87.125,
+          "width": 79.125,
+          "height": 17
+        },
+        "group": {
+          "top": 139.875,
+          "bottom": 156.875,
+          "left": 91.125,
+          "right": 245.796875,
+          "width": 154.671875,
+          "height": 17
+        },
+        "call": {
+          "top": 139.875,
+          "bottom": 156.875,
+          "left": 249.796875,
+          "right": 371.125,
+          "width": 121.328125,
+          "height": 17
+        }
+      },
+      "finderTop": 383.875,
+      "finderVisibleAboveFold": true,
+      "heroHeight": 185.875
+    },
+    "failure": {
+      "hasFallbackMessage": false,
+      "hasHubLinks": false,
+      "snippet": "Loading current classes Pulling the latest upcoming options now."
+    }
+  }
+]

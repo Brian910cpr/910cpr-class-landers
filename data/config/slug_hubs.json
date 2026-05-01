@@ -130,9 +130,7 @@
           "primary_cta_label": "See HeartCode skills page"
         }
       ],
-      "guidance_banner_ids": [
-        "bls_combo_guidance"
-      ]
+      "guidance_banner_ids": []
     },
     {
       "slug": "acls",
@@ -208,17 +206,15 @@
           "primary_cta_label": "See ACLS HeartCode page"
         }
       ],
-      "guidance_banner_ids": [
-        "acls_combo_guidance"
-      ]
+      "guidance_banner_ids": []
     },
     {
       "slug": "pals",
       "title": "PALS Classes | 910CPR",
       "description": "Compare PALS initial, renewal, and HeartCode skills options with upcoming dates from 910CPR.",
       "eyebrow": "Pediatric Advanced Life Support",
-      "hero_title": "Choose Your PALS Class",
-      "hero_copy": "Compare the main PALS options, see which class days are currently listed, and register from the path that fits your certification needs.",
+      "hero_title": "PALS Classes",
+      "hero_copy": "View upcoming PALS provider, renewal, and HeartCode skills options, then register from the path that matches your certification status.",
       "hero_image": "/images/pals_general.png",
       "hero_image_alt": "AHA PALS Pediatric Advanced Life Support course",
       "full_schedule_banner": "Need more PALS times? Open the full page for the tab you selected.",
@@ -280,9 +276,7 @@
           "primary_cta_label": "See PALS HeartCode page"
         }
       ],
-      "guidance_banner_ids": [
-        "pals_combo_guidance"
-      ]
+      "guidance_banner_ids": []
     },
     {
       "slug": "heartsaver",
