@@ -522,23 +522,33 @@
     return escapeHtml(value);
   }
 
+  function loadJsonOptional(url) {
+    return fetch(url)
+      .then((response) => {
+        if (!response.ok) return null;
+        return response.json().catch(() => null);
+      })
+      .catch(() => null);
+  }
+
   Promise.all([
-    fetch("/data/public_schedule.json").then((response) => response.json()),
-    fetch("/public_schedule.json").then((response) => response.json()),
-    fetch("/data/schedule_future.json").then((response) => response.json()),
-  ])
-    .then(([primaryFeed, legacyPublic, futureSchedule]) => {
-      const primarySessions = dedupePrimarySessions([
-        ...buildPrimarySessions(Array.isArray(primaryFeed) ? primaryFeed : []),
-        ...buildPrimarySessionsFromFuture(futureSchedule || {}),
-      ]);
-      const enrichmentMap = buildEnrichmentMap(legacyPublic || {}, futureSchedule || {});
-      const enrichedSessions = enrichSessions(primarySessions, enrichmentMap);
-      const groupedSessions = buildGroupedSessions(enrichedSessions);
-      sectionsRoot.innerHTML = SECTION_CONFIG.map((section) => renderSection(section, groupedSessions.get(section.id) || [])).join("");
-    })
-    .catch((error) => {
-      console.error(error);
+    loadJsonOptional("/data/public_schedule.json"),
+    loadJsonOptional("/public_schedule.json"),
+    loadJsonOptional("/data/schedule_future.json"),
+  ]).then(([primaryFeed, legacyPublic, futureSchedule]) => {
+    const primarySessions = dedupePrimarySessions([
+      ...buildPrimarySessions(Array.isArray(primaryFeed) ? primaryFeed : []),
+      ...buildPrimarySessions(Array.isArray(legacyPublic) ? legacyPublic : []),
+      ...buildPrimarySessionsFromFuture(futureSchedule || {}),
+    ]);
+    const enrichmentMap = buildEnrichmentMap(legacyPublic || {}, futureSchedule || {});
+    const enrichedSessions = enrichSessions(primarySessions, enrichmentMap);
+    const groupedSessions = buildGroupedSessions(enrichedSessions);
+    const hasAnySessions = SECTION_CONFIG.some((section) => (groupedSessions.get(section.id) || []).length > 0);
+    if (!hasAnySessions) {
       renderError();
-    });
+      return;
+    }
+    sectionsRoot.innerHTML = SECTION_CONFIG.map((section) => renderSection(section, groupedSessions.get(section.id) || [])).join("");
+  });
 })();
