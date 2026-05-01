@@ -491,13 +491,19 @@
       <article class="finder-card">
         <div class="finder-card-head">
           <div>
-            <h3>Live schedule unavailable</h3>
-            <p class="finder-card-copy">The homepage class finder could not load the current schedule data.</p>
+            <h3>Choose a course page</h3>
+            <p class="finder-card-copy">Select the training type you need below. Each course page includes upcoming dates, class details, and direct registration links.</p>
           </div>
         </div>
         <div class="finder-empty">
-          <strong>Use the hub pages below while we reload the feed.</strong>
-          <p><a href="/bls.html">BLS</a> · <a href="/acls.html">ACLS</a> · <a href="/pals.html">PALS</a> · <a href="/heartsaver.html">Heartsaver</a> · <a href="/uscg-elementary-first-aid-cpr.html">USCG</a> · <a href="/group-training.html">Group Training</a></p>
+          <p class="home-status-badges">
+            <a class="home-stat" href="/bls.html">BLS</a>
+            <a class="home-stat" href="/acls.html">ACLS</a>
+            <a class="home-stat" href="/pals.html">PALS</a>
+            <a class="home-stat" href="/heartsaver.html">Heartsaver &amp; First Aid</a>
+            <a class="home-stat" href="/uscg-elementary-first-aid-cpr.html">USCG First Aid/CPR</a>
+            <a class="home-stat" href="/group-training.html">Group Training</a>
+          </p>
         </div>
       </article>
     `;
