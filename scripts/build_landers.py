@@ -425,7 +425,7 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
 
         cards.append(
             f"""
-<div class="upcoming-card js-session-item" data-session-start="{escape(dt.isoformat(), quote=True)}">
+<div class="upcoming-card js-session-item" data-session-id="{escape(str(session.get('session_id') or ''), quote=True)}" data-start="{escape(dt.isoformat(), quote=True)}" data-end="{escape(str(session.get('end_at') or ''), quote=True)}" data-session-start="{escape(dt.isoformat(), quote=True)}">
   <div class="upcoming-date">{escape(date_label)}</div>
   <div class="upcoming-time">{escape(time_label)}</div>
   <div class="upcoming-location">{escape(location_label)}</div>
@@ -815,6 +815,7 @@ window.dataLayer.push({{
 }});
 </script>
 <script src="/assets/live-sessions.js"></script>
+<script src="/assets/session-expiry.js"></script>
 
 </body>
 </html>

@@ -314,9 +314,11 @@ def render_course_session_rows(sessions: list[dict]) -> str:
             if register_url
             else ""
         )
+        session_id = str(session.get("session_id", "")).strip()
+        end_raw = str(session.get("end_at", "")).strip()
         rows.append(
             f"""
-<article class="course-session-row js-session-item" data-session-start="{html_escape(start.isoformat())}" data-course-session{hidden_attr}>
+<article class="course-session-row js-session-item" data-session-id="{html_escape(session_id)}" data-start="{html_escape(start.isoformat())}" data-end="{html_escape(end_raw)}" data-session-start="{html_escape(start.isoformat())}" data-course-session{hidden_attr}>
   <div class="course-session-when">
     <div class="course-session-date">{html_escape(date_label)}</div>
     <div class="course-session-time">{html_escape(time_label)}</div>
@@ -615,6 +617,7 @@ ul {{
 
 {telemetry_script(page_type, page_name)}
 <script src="/assets/live-sessions.js"></script>
+<script src="/assets/session-expiry.js"></script>
 </body>
 </html>"""
 
@@ -716,6 +719,7 @@ def render_homepage() -> str:
 </noscript>
 
 <script src="/assets/booking-home.js"></script>
+<script src="/assets/session-expiry.js"></script>
 {telemetry_script("home", "910CPR Booking Homepage")}
 </body>
 </html>"""
@@ -909,7 +913,9 @@ def build():
         detail_link = f'<a href="{s["local_path"]}">Details</a>'
         register_link = f' | <a href="{s["register_url"]}">Register</a>' if s["register_url"] else ""
 
-        class_lines.append(f"<li>{line} | {detail_link}{register_link}</li>")
+        class_lines.append(
+            f"<li class=\"js-session-item\" data-session-id=\"{html_escape(str(s.get('session_id', '')).strip())}\" data-start=\"{html_escape(str(s.get('display_date', '')).strip())}\">{line} | {detail_link}{register_link}</li>"
+        )
 
     CLASSES_INDEX_FILE.write_text(
         page_template(
@@ -948,7 +954,9 @@ def build():
                 bits.append(s["location_name"])
 
             line = " | ".join(html_escape(x) for x in bits if x)
-            preview.append(f'<li>{line} | <a href="{s["local_path"]}">Details</a></li>')
+            preview.append(
+                f'<li class="js-session-item" data-session-id="{html_escape(str(s.get("session_id", "")).strip())}" data-start="{html_escape(str(s.get("display_date", "")).strip())}">{line} | <a href="{s["local_path"]}">Details</a></li>'
+            )
 
         course_sections.append(f"""
 <section class="section plain-card">
@@ -1016,7 +1024,9 @@ def build():
             detail_link = f'<a href="{s["local_path"]}">Details</a>'
             register_link = f' | <a href="{s["register_url"]}">Register</a>' if s["register_url"] else ""
 
-            lines.append(f"<li>{line} | {detail_link}{register_link}</li>")
+            lines.append(
+                f"<li class=\"js-session-item\" data-session-id=\"{html_escape(str(s.get('session_id', '')).strip())}\" data-start=\"{html_escape(str(s.get('display_date', '')).strip())}\">{line} | {detail_link}{register_link}</li>"
+            )
 
         (LOCATIONS_DIR / f"{slug}.html").write_text(
             page_template(

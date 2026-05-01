@@ -445,10 +445,13 @@ def format_time_line(dt: datetime | None) -> str:
 
 def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     start_dt = parse_dt(session.get("start_at"))
+    end_dt = parse_dt(session.get("end_at"))
     location = clean_location(session.get("location_display") or session.get("location_name"))
     title = normalize_space(session.get("course_name"))
     register_url = escape(session.get("registration_url") or "#", quote=True)
     session_start = escape(start_dt.isoformat() if start_dt else "", quote=True)
+    session_end = escape(end_dt.isoformat() if end_dt else "", quote=True)
+    session_id = escape(str(session.get("session_id") or ""), quote=True)
     format_badge = normalize_space(session.get("_format_badge"))
     family_badge = normalize_space(session.get("_family_badge"))
     enrolled_count = session_enrolled_count(session)
@@ -467,7 +470,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
         action_hint = "Join a class that already has students enrolled"
 
     return f"""
-<article class="slug-pill" data-session-start="{session_start}">
+<article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}">
   <div class="slug-pill-date">
     <div class="slug-pill-month">{format_month(start_dt)}</div>
     <div class="slug-pill-day">{format_day(start_dt)}</div>
@@ -903,6 +906,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 </div>
 <script src="/assets/hub-ui.js"></script>
 <script src="/assets/live-sessions.js"></script>
+<script src="/assets/session-expiry.js"></script>
 <script src="/assets/hybrid-inventory.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {{

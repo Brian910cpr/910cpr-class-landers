@@ -204,6 +204,7 @@ def render_page(title: str, body: str, description: str = "") -> str:
   </div>
 </div>
 <script src="/assets/hub-ui.js"></script>
+<script src="/assets/session-expiry.js"></script>
 </body>
 </html>"""
 
@@ -218,5 +219,10 @@ def session_rows(rows: list[SessionRecord], limit=20):
         return '<p class="muted">No upcoming public sessions are listed right now.</p>'
     tr = []
     for s in rows:
-        tr.append(f"<tr><td>{fmt_dt(s.start_at)}</td><td>{s.city}</td><td>{s.cert_body or ''} {s.course_family}</td><td><a class='button secondary' href='{s.registration_link}'>Register</a></td></tr>")
-    return "<table class='table-lite'><thead><tr><th>Date / Time</th><th>City</th><th>Program</th><th></th></tr></thead><tbody>" + "".join(tr) + "</tbody></table>"
+        start_iso = s.start_at.isoformat() if s.start_at else ""
+        end_iso = s.end_at.isoformat() if s.end_at else ""
+        tr.append(
+            f"<tr class='js-session-item' data-session-id='{s.session_id}' data-start='{start_iso}' data-end='{end_iso}' data-session-start='{start_iso}'>"
+            f"<td>{fmt_dt(s.start_at)}</td><td>{s.city}</td><td>{s.cert_body or ''} {s.course_family}</td><td><a class='button secondary' href='{s.registration_link}'>Register</a></td></tr>"
+        )
+    return "<table class='table-lite'><thead><tr><th>Date / Time</th><th>City</th><th>Program</th><th></th></tr></thead><tbody data-session-container>" + "".join(tr) + "</tbody></table>"

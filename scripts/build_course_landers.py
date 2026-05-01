@@ -427,7 +427,7 @@ def session_card(session: dict[str, Any]) -> str:
         momentum = f'<span class="session-badge">{html.escape(label)}</span>'
 
     return f"""
-    <a class="session-pill js-session-item" href="{html.escape(register_url)}" data-session-start="{html.escape(dt.isoformat() if dt else '', quote=True)}">
+    <a class="session-pill js-session-item" href="{html.escape(register_url)}" data-session-id="{html.escape(str(session.get('session_id') or ''), quote=True)}" data-start="{html.escape(dt.isoformat() if dt else '', quote=True)}" data-end="{html.escape(str(session.get('end_at') or ''), quote=True)}" data-session-start="{html.escape(dt.isoformat() if dt else '', quote=True)}">
       <span class="session-date">{html.escape(date_label)}</span>
       <span class="session-time">{html.escape(time_label)}</span>
       <span class="session-location">{html.escape(location_label)}</span>
@@ -788,6 +788,7 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     </section>
   </div>
 <script src="/assets/live-sessions.js"></script>
+<script src="/assets/session-expiry.js"></script>
 </body>
 </html>
 """
