@@ -1109,12 +1109,12 @@ a {
   white-space: nowrap;
 }
 
-.finder-pill .slug-pill-title {
+.home-finder .finder-pill .slug-pill-title {
   font-size: 18px;
   font-weight: 800;
 }
 
-.class-card-top-row {
+.home-finder .class-card-top-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1122,13 +1122,13 @@ a {
   margin-bottom: 8px;
 }
 
-.class-card-top-row .slug-pill-date {
+.home-finder .class-card-top-row .slug-pill-date {
   width: 78px;
   flex: 0 0 78px;
   max-width: none;
 }
 
-.class-card-course-image {
+.home-finder .class-card-course-image {
   width: 96px;
   height: 86px;
   border-radius: 14px;
@@ -1207,8 +1207,7 @@ a {
     grid-template-columns: 1fr;
   }
 
-  .home-hero .hero-side,
-  .slug-hero .hero-side {
+  .home-hero .hero-side {
     float: none;
     width: auto;
     margin: 0;
@@ -1228,12 +1227,12 @@ a {
     text-align: left;
   }
 
-  .class-card-top-row .slug-pill-date {
+  .home-finder .class-card-top-row .slug-pill-date {
     width: 74px;
     flex-basis: 74px;
   }
 
-  .class-card-course-image {
+  .home-finder .class-card-course-image {
     width: 84px;
     height: 76px;
   }
@@ -1349,18 +1348,11 @@ textarea {
 
 .slug-hero {
   position: relative;
-  display: block;
   grid-template-columns: minmax(0, 1fr) 296px;
   gap: 26px;
   padding: 34px 32px 18px;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(247, 250, 252, 0.96) 100%);
-}
-
-.slug-hero .hero-side {
-  float: right;
-  width: 296px;
-  margin: 0 0 10px 20px;
 }
 
 .slug-hero::after {

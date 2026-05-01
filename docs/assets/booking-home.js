@@ -71,7 +71,7 @@
     acls: "/images/acls_general.png",
     pals: "/images/pals_general.png",
     heartsaver: "/images/heartsaver_general.png",
-    uscg: "/images/heartsaver_general.png",
+    uscg: "/images/stripes.png",
     group: "/images/bls_general.png",
   };
   const COURSE_IMAGE_FALLBACK = "/images/bls_general.png";
