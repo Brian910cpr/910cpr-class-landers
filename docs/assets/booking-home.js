@@ -44,14 +44,6 @@
       fullScheduleLabel: "See full schedule",
       emptyLabel: "No upcoming public USCG dates are listed right now.",
     },
-    {
-      id: "group",
-      title: "Group / Onsite Training",
-      audience: "For offices, clinics, schools, churches, and employers who want private training coordinated for a team.",
-      fullScheduleUrl: "/group-training.html",
-      fullScheduleLabel: "See full schedule",
-      emptyLabel: "No current public preview dates are available for group-training matches.",
-    },
   ];
 
   const EASTERN_TIMEZONE = "America/New_York";
@@ -511,7 +503,7 @@
         <div class="finder-card-head">
           <div>
             <h3>Choose a course page</h3>
-            <p class="finder-card-copy">Select the training type you need below. Each course page includes upcoming dates, class details, and direct registration links.</p>
+            <p class="finder-card-copy">View current CPR class options below or call 910-395-5193 for help choosing the right class.</p>
           </div>
         </div>
         <div class="finder-empty">
@@ -521,7 +513,7 @@
             <a class="home-stat" href="/pals.html">PALS</a>
             <a class="home-stat" href="/heartsaver.html">Heartsaver &amp; First Aid</a>
             <a class="home-stat" href="/uscg-elementary-first-aid-cpr.html">USCG First Aid/CPR</a>
-            <a class="home-stat" href="/group-training.html">Group Training</a>
+            <a class="home-stat" href="/request_group_session.html">Request Group Training</a>
           </p>
         </div>
       </article>
