@@ -416,6 +416,44 @@ h1,h2,h3,p{margin:0}
           </div>
 
           <div class="field-group">
+            <h3>Theme Definition</h3>
+            <div class="field-grid">
+              <div class="field">
+                <label for="theme-name">Theme Name</label>
+                <input id="theme-name" type="text" value="default">
+              </div>
+              <div class="field">
+                <label for="theme-enabled">Enabled</label>
+                <select id="theme-enabled">
+                  <option value="true" selected>true</option>
+                  <option value="false">false</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="theme-start-date">Start Date</label>
+                <input id="theme-start-date" type="date">
+              </div>
+              <div class="field">
+                <label for="theme-end-date">End Date</label>
+                <input id="theme-end-date" type="date">
+              </div>
+              <div class="field">
+                <label for="theme-priority">Priority</label>
+                <input id="theme-priority" type="number" value="100">
+              </div>
+              <div class="field span-2">
+                <label for="theme-notes">Notes</label>
+                <input id="theme-notes" type="text" value="Local preview editor">
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <h3>CSS Variables (HEX)</h3>
+            <div id="theme-variable-grid" class="field-grid"></div>
+          </div>
+
+          <div class="field-group">
             <h3>Image Inputs</h3>
             <div class="field-grid">
               <div class="field span-2">
@@ -428,6 +466,11 @@ h1,h2,h3,p{margin:0}
               </div>
             </div>
             <p class="field-help">Asset checks run live against local paths so missing images can be caught before a themed rebuild.</p>
+          </div>
+
+          <div class="field-group">
+            <h3>Theme Image Slots</h3>
+            <div id="theme-image-slot-grid" class="field-grid"></div>
           </div>
 
           <div class="field-group">
@@ -469,6 +512,17 @@ h1,h2,h3,p{margin:0}
           <div class="toolbar">
             <button id="apply-preset" type="button">Apply Preset</button>
             <button id="reset-theme" type="button">Reset To Default</button>
+            <button id="save-theme" type="button" data-placeholder-action="true">Save Theme (Placeholder)</button>
+            <button id="preview-theme" type="button" data-placeholder-action="true">Preview Theme (Placeholder)</button>
+            <button id="set-active-theme" type="button" data-placeholder-action="true">Set as Active Theme (Placeholder)</button>
+            <button id="disable-theme" type="button" data-placeholder-action="true">Disable Theme (Placeholder)</button>
+            <button id="duplicate-theme" type="button" data-placeholder-action="true">Duplicate Theme (Placeholder)</button>
+            <button id="validate-images" type="button">Validate Images</button>
+            <button id="export-css-vars" type="button" data-placeholder-action="true">Export CSS Variables (Placeholder)</button>
+            <button id="rebuild-pages" type="button" data-placeholder-action="true">Rebuild Affected Pages (Placeholder)</button>
+            <button id="rebuild-index" type="button" data-placeholder-action="true">Rebuild Index Only (Placeholder)</button>
+            <button id="rebuild-hubs" type="button" data-placeholder-action="true">Rebuild Hubs Only (Placeholder)</button>
+            <button id="rebuild-all-public" type="button" data-placeholder-action="true">Rebuild All Public Pages (Placeholder)</button>
           </div>
         </div>
       </section>
@@ -476,9 +530,10 @@ h1,h2,h3,p{margin:0}
       <section class="supervisor-card panel-pad">
         <div class="field-group">
           <h2>Asset Validation</h2>
-          <p class="validation-note">Theme assets are checked without touching production data. Missing files show here immediately.</p>
+          <p class="validation-note">Theme assets and schedule rules are checked without touching production data. Missing files and invalid values show here immediately.</p>
         </div>
         <div id="asset-validation" class="validation-list"></div>
+        <div id="theme-validation" class="validation-list" style="margin-top:12px;"></div>
       </section>
 
       <section class="supervisor-card panel-pad">
@@ -676,6 +731,184 @@ const PAGE_PRESETS = {
   },
 };
 
+const REQUIRED_THEME_VARIABLES = [
+  "--brand-primary",
+  "--brand-secondary",
+  "--brand-accent",
+  "--brand-accent-2",
+  "--page-bg",
+  "--hero-bg",
+  "--card-bg",
+  "--card-border",
+  "--text-main",
+  "--text-muted",
+  "--button-primary-bg",
+  "--button-primary-text",
+  "--button-secondary-bg",
+  "--button-secondary-text",
+  "--badge-bg",
+  "--badge-text",
+  "--popular-bg",
+  "--popular-border",
+  "--danger-color",
+  "--success-color",
+];
+
+const THEME_IMAGE_SLOTS = [
+  "logo_primary",
+  "logo_secondary",
+  "hero_image",
+  "bls_image",
+  "acls_image",
+  "pals_image",
+  "heartsaver_image",
+  "first_aid_image",
+  "fallback_course_image",
+  "seasonal_hero_image",
+  "holiday_background_image",
+  "ems_week_image",
+  "christmas_image",
+  "generic_fallback_image",
+];
+
+const HEX_COLOR_RE = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+let loadedThemeConfig = null;
+
+function renderVariableInputs(values = {}) {
+  const grid = document.getElementById("theme-variable-grid");
+  if (!grid) return;
+  grid.innerHTML = REQUIRED_THEME_VARIABLES.map((key) => {
+    const fallback = "#123a57";
+    const value = values[key] || fallback;
+    return `
+      <div class="field">
+        <label for="var-${key.replace(/[^a-z0-9]+/gi, "-")}">${key}</label>
+        <input data-theme-variable="${key}" id="var-${key.replace(/[^a-z0-9]+/gi, "-")}" type="text" value="${value}" spellcheck="false">
+      </div>
+    `;
+  }).join("");
+}
+
+function renderImageSlotInputs(values = {}) {
+  const grid = document.getElementById("theme-image-slot-grid");
+  if (!grid) return;
+  grid.innerHTML = THEME_IMAGE_SLOTS.map((slot) => `
+    <div class="field span-2">
+      <label for="slot-${slot}">${slot}</label>
+      <input data-theme-image-slot="${slot}" id="slot-${slot}" type="text" value="${values[slot] || ""}" spellcheck="false">
+    </div>
+  `).join("");
+}
+
+async function loadThemeConfig() {
+  try {
+    const response = await fetch("/data/config/themes.json", { cache: "no-store" });
+    if (!response.ok) return null;
+    loadedThemeConfig = await response.json();
+    const defaultThemeName = loadedThemeConfig.default_theme || "default";
+    const active = (loadedThemeConfig.themes || []).find((item) => item.name === defaultThemeName) || (loadedThemeConfig.themes || [])[0] || null;
+    if (active) {
+      document.getElementById("theme-name").value = active.name || "default";
+      document.getElementById("theme-enabled").value = String(Boolean(active.enabled));
+      document.getElementById("theme-start-date").value = active.start_date || "";
+      document.getElementById("theme-end-date").value = active.end_date || "";
+      document.getElementById("theme-priority").value = String(active.priority ?? 100);
+      document.getElementById("theme-notes").value = active.notes || "";
+      renderVariableInputs(active.variables || {});
+      renderImageSlotInputs(active.images || {});
+    }
+    return loadedThemeConfig;
+  } catch (error) {
+    return null;
+  }
+}
+
+function collectVariableValues() {
+  const values = {};
+  document.querySelectorAll("[data-theme-variable]").forEach((node) => {
+    values[node.getAttribute("data-theme-variable")] = (node.value || "").trim();
+  });
+  return values;
+}
+
+function collectImageSlots() {
+  const values = {};
+  document.querySelectorAll("[data-theme-image-slot]").forEach((node) => {
+    values[node.getAttribute("data-theme-image-slot")] = (node.value || "").trim();
+  });
+  return values;
+}
+
+function validateThemeFields() {
+  const list = [];
+  const vars = collectVariableValues();
+  const invalidHex = Object.entries(vars).filter(([, value]) => value && !HEX_COLOR_RE.test(value)).map(([name]) => name);
+  if (invalidHex.length) {
+    list.push({ label: "Invalid HEX colors", status: "warning", detail: invalidHex.join(", ") });
+  } else {
+    list.push({ label: "HEX color validation", status: "ok", detail: "All color fields are valid HEX values." });
+  }
+
+  const start = document.getElementById("theme-start-date").value;
+  const end = document.getElementById("theme-end-date").value;
+  if (start && end && start > end) {
+    list.push({ label: "Theme schedule range", status: "missing", detail: "End date is before start date." });
+  } else {
+    list.push({ label: "Theme schedule range", status: "ok", detail: "Date range is valid." });
+  }
+
+  if (loadedThemeConfig && Array.isArray(loadedThemeConfig.themes)) {
+    const enabledThemes = loadedThemeConfig.themes.filter((theme) => theme.enabled && theme.start_date && theme.end_date);
+    let overlapDetected = false;
+    for (let i = 0; i < enabledThemes.length; i += 1) {
+      for (let j = i + 1; j < enabledThemes.length; j += 1) {
+        const a = enabledThemes[i];
+        const b = enabledThemes[j];
+        if (a.start_date <= b.end_date && b.start_date <= a.end_date) {
+          overlapDetected = true;
+        }
+      }
+    }
+    list.push({
+      label: "Overlapping enabled themes",
+      status: overlapDetected ? "warning" : "ok",
+      detail: overlapDetected ? "One or more enabled seasonal themes overlap." : "No enabled overlap detected.",
+    });
+  } else {
+    list.push({ label: "Theme config", status: "warning", detail: "Config file not loaded; overlap check unavailable." });
+  }
+
+  const nowIso = new Date().toISOString().slice(0, 10);
+  let activeName = document.getElementById("theme-name").value || "default";
+  if (loadedThemeConfig && Array.isArray(loadedThemeConfig.themes)) {
+    const activeToday = loadedThemeConfig.themes
+      .filter((theme) => theme.enabled)
+      .filter((theme) => (!theme.start_date || theme.start_date <= nowIso) && (!theme.end_date || theme.end_date >= nowIso))
+      .sort((a, b) => Number(b.priority || 0) - Number(a.priority || 0));
+    if (activeToday.length) activeName = activeToday[0].name;
+  }
+  list.push({ label: "Active theme today", status: "ok", detail: activeName });
+  list.push({ label: "Config file path", status: "ok", detail: "/data/config/themes.json" });
+  list.push({ label: "Last saved time", status: "warning", detail: "Placeholder until backend save wiring is connected." });
+
+  const panel = document.getElementById("theme-validation");
+  if (panel) {
+    panel.innerHTML = list.map((item) => {
+      const tone = item.status === "ok" ? "status-ok" : item.status === "warning" ? "status-warning" : "status-missing";
+      const statusText = item.status === "ok" ? "OK" : item.status === "warning" ? "Warning" : "Fail";
+      return `
+      <div class="validation-item">
+        <div class="validation-text">
+          <strong>${item.label}</strong>
+          <div class="validation-path">${item.detail}</div>
+        </div>
+        <span class="status-chip ${tone}">${statusText}</span>
+      </div>
+      `;
+    }).join("");
+  }
+}
+
 function formatTimeDisplay(value) {
   if (!value) return "8:30 AM";
   const [hourRaw, minuteRaw] = value.split(":");
@@ -757,12 +990,14 @@ function applyThemePreview() {
 
 async function validateAssets() {
   const container = document.getElementById("asset-validation");
+  const slotValues = collectImageSlots();
+  const slotChecks = await Promise.all(THEME_IMAGE_SLOTS.map((slot) => window.SiteThemeLoader.validateAssetPath(slotValues[slot] || "")));
   const checks = await Promise.all([
     window.SiteThemeLoader.validateAssetPath(document.getElementById("hero-image-input").value.trim()),
     window.SiteThemeLoader.validateAssetPath(document.getElementById("sidebar-image-input").value.trim()),
   ]);
 
-  container.innerHTML = checks.map((result, index) => {
+  const coreChecksHtml = checks.map((result, index) => {
     const label = index === 0 ? "Hero image" : "Sidebar image";
     const tone = result.exists ? "status-ok" : result.warning === "Could not verify asset" ? "status-warning" : "status-missing";
     const status = result.exists ? "Found" : result.warning || "Missing";
@@ -776,6 +1011,24 @@ async function validateAssets() {
       </div>
     `;
   }).join("");
+
+  const slotChecksHtml = slotChecks.map((result, index) => {
+    const label = THEME_IMAGE_SLOTS[index];
+    const tone = result.exists ? "status-ok" : result.warning === "Could not verify asset" ? "status-warning" : "status-missing";
+    const status = result.exists ? "Found" : result.warning || "Missing (Fallback will be used)";
+    return `
+      <div class="validation-item">
+        <div class="validation-text">
+          <strong>${label}</strong>
+          <div class="validation-path">${result.path || "No file path provided"}</div>
+        </div>
+        <span class="status-chip ${tone}">${status}</span>
+      </div>
+    `;
+  }).join("");
+
+  container.innerHTML = coreChecksHtml + slotChecksHtml;
+  validateThemeFields();
 }
 
 function applyThemePreset() {
@@ -808,24 +1061,41 @@ function attachEvents() {
   });
   document.getElementById("apply-preset").addEventListener("click", applyThemePreset);
   document.getElementById("reset-theme").addEventListener("click", resetTheme);
+  document.getElementById("validate-images").addEventListener("click", validateAssets);
   document.querySelectorAll('#accent-color, #contrast-color, #hero-image-input, #sidebar-image-input').forEach((node) => {
     node.addEventListener("input", () => {
       applyThemePreview();
       validateAssets();
     });
   });
+  document.addEventListener("input", (event) => {
+    if (event.target.matches("[data-theme-variable], [data-theme-image-slot], #theme-name, #theme-enabled, #theme-start-date, #theme-end-date, #theme-priority, #theme-notes")) {
+      validateThemeFields();
+      if (event.target.matches("[data-theme-image-slot]")) validateAssets();
+    }
+  });
   document.querySelectorAll('.checkbox-list input[type="checkbox"]').forEach((node) => {
     node.addEventListener("change", applyThemePreview);
   });
+  document.querySelectorAll("[data-placeholder-action='true']").forEach((button) => {
+    button.addEventListener("click", () => {
+      window.alert("Placeholder action only in this pass. Backend wiring is not connected yet.");
+    });
+  });
 }
 
-function init() {
+async function init() {
   const today = new Date();
   const isoDate = today.toISOString().slice(0, 10);
   document.getElementById("simulate-date").value = isoDate;
+  renderVariableInputs();
+  renderImageSlotInputs();
+  await loadThemeConfig();
   applyPagePreset();
   applyThemePreset();
   applyDatePreview();
+  validateThemeFields();
+  validateAssets();
   attachEvents();
 }
 

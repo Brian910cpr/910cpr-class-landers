@@ -718,6 +718,12 @@ TEMPLATE = """<!DOCTYPE html>
 {gtm_body}
 <div class="wrap">
   <div class="page-shell">
+    <header class="site-brand-bar">
+      <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+        <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+        <span class="site-brand-wordmark">910CPR</span>
+      </a>
+    </header>
 
     {state_notice}
 

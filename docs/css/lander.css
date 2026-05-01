@@ -67,6 +67,37 @@ a {
   box-shadow: var(--shadow);
 }
 
+.site-brand-bar {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px 4px;
+}
+
+.site-brand-bar-inline {
+  padding: 0;
+}
+
+.site-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+  color: var(--heading);
+}
+
+.site-brand-logo {
+  width: auto;
+  height: 44px;
+  object-fit: contain;
+}
+
+.site-brand-wordmark {
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
 .slug-hub-shell {
   background:
     radial-gradient(circle at top right, rgba(255, 222, 160, 0.16), transparent 22%),
@@ -835,21 +866,15 @@ a {
 }
 
 .home-hero {
-  display: block;
+  display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 18px;
   padding: 28px 28px 14px;
 }
 
 .home-hero .hero-side {
-  float: right;
-  width: 280px;
-  margin: 0 0 10px 20px;
-}
-
-.home-hero::after {
-  content: "";
-  display: table;
-  clear: both;
+  width: 100%;
+  margin: 0;
 }
 
 .hero-actions {
@@ -1139,6 +1164,28 @@ a {
   flex: 0 0 auto;
 }
 
+.home-finder .finder-pill-group .slug-pill-main {
+  width: 100%;
+}
+
+.home-finder .group-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #5f7ff0 0%, #2f5dde 100%);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-finder .finder-pill-group .slug-pill-subtitle {
+  margin-top: 6px;
+}
+
 .finder-empty {
   border: 1px dashed var(--border-strong);
   border-radius: 18px;
@@ -1208,8 +1255,7 @@ a {
   }
 
   .home-hero .hero-side {
-    float: none;
-    width: auto;
+    width: 100%;
     margin: 0;
   }
 
@@ -1641,17 +1687,17 @@ textarea {
 }
 
 .slug-panel-card {
-  padding: 24px;
-  border-radius: 26px;
+  padding: 16px;
+  border-radius: 18px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 250, 242, 0.98) 100%);
   border: 1px solid var(--border);
-  box-shadow: 0 16px 32px rgba(22, 42, 66, 0.06);
+  box-shadow: 0 10px 22px rgba(22, 42, 66, 0.06);
 }
 
 .slug-panel-head {
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .slug-panel-kicker {
@@ -1670,7 +1716,7 @@ textarea {
 }
 
 .slug-panel-head h2 {
-  font-size: 28px;
+  font-size: 24px;
 }
 
 .slug-panel-copy {
@@ -1701,17 +1747,19 @@ textarea {
 }
 
 .slug-panel-cta {
-  min-width: 230px;
+  min-width: 190px;
 }
 
 .slug-pill-list {
-  gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .slug-pill {
-  gap: 16px;
-  padding: 16px;
-  border-radius: 22px;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 16px;
   background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
   border: 1px solid #dbe7f0;
   box-shadow: 0 10px 22px rgba(22, 42, 66, 0.04);
@@ -1726,11 +1774,13 @@ textarea {
 }
 
 .slug-pill-date {
-  border-radius: 18px;
+  border-radius: 14px;
+  padding: 7px 6px;
 }
 
 .slug-pill-title {
-  font-size: 18px;
+  font-size: 16px;
+  margin-bottom: 2px;
 }
 
 .slug-pill-meta-row {
@@ -1743,12 +1793,12 @@ textarea {
 .slug-pill-chip {
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
-  padding: 6px 10px;
+  min-height: 24px;
+  padding: 4px 8px;
   border-radius: 999px;
   background: #f5f9fc;
   color: #345173;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -1778,25 +1828,26 @@ textarea {
 }
 
 .slug-inventory-section + .slug-inventory-section {
-  margin-top: 18px;
+  margin-top: 12px;
 }
 
 .slug-inventory-head {
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 
 .slug-inventory-head h3 {
-  margin-bottom: 6px;
-  font-size: 22px;
+  margin-bottom: 2px;
+  font-size: 18px;
 }
 
 .slug-inventory-head p {
   margin: 0;
   color: var(--muted);
+  font-size: 13px;
 }
 
 .slug-popular-section .slug-inventory-head h3::after {
-  content: "  ·  Popular session momentum";
+  content: "";
   color: #d26c3d;
   font-size: 13px;
   font-weight: 700;
@@ -1807,6 +1858,21 @@ textarea {
 .slug-pill-chip-momentum {
   background: #fff2e8;
   color: #b85e34;
+}
+
+.slug-escape-hatch {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.slug-escape-copy {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .slug-flexible-section {
@@ -2242,6 +2308,10 @@ textarea {
   }
 
   .slug-pill {
+    grid-template-columns: 1fr;
+  }
+
+  .slug-pill-list {
     grid-template-columns: 1fr;
   }
 

@@ -1,20 +1,8 @@
 {
-  "generated_at": "2026-05-01T00:46:12.048806-04:00",
+  "generated_at": "2026-05-01T16:29:54.433585-04:00",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "page_slug": "heartsaver",
   "records": [
-    {
-      "session_id": "12776134",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-05-01T11:45:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
     {
       "session_id": "12775759",
       "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",

@@ -1,0 +1,69 @@
+{
+  "default_theme": "default",
+  "themes": [
+    {
+      "name": "default",
+      "enabled": true,
+      "priority": 100,
+      "start_date": "",
+      "end_date": "",
+      "notes": "Primary brand theme used when no seasonal theme is active.",
+      "variables": {
+        "--brand-primary": "#123a57",
+        "--brand-secondary": "#66c7cb",
+        "--brand-accent": "#ef8a5b",
+        "--brand-accent-2": "#f1ab3d",
+        "--page-bg": "#eef8ff",
+        "--hero-bg": "#f5fbff",
+        "--card-bg": "#ffffff",
+        "--card-border": "#d7e8ef",
+        "--text-main": "#17324a",
+        "--text-muted": "#5d7488",
+        "--button-primary-bg": "#eb7b4d",
+        "--button-primary-text": "#ffffff",
+        "--button-secondary-bg": "#f8fcff",
+        "--button-secondary-text": "#123a57",
+        "--badge-bg": "#eef4ff",
+        "--badge-text": "#284ca5",
+        "--popular-bg": "#fff0e7",
+        "--popular-border": "#ffc9ad",
+        "--danger-color": "#c53e3e",
+        "--success-color": "#2f855a"
+      },
+      "images": {
+        "logo_primary": "/images/logo.png",
+        "logo_secondary": "/images/910CPR_wave.jpg",
+        "hero_image": "/images/bls_general.png",
+        "bls_image": "/images/bls_general.png",
+        "acls_image": "/images/acls_general.png",
+        "pals_image": "/images/pals_general.png",
+        "heartsaver_image": "/images/heartsaver_general.png",
+        "first_aid_image": "/images/heartsaver_general.png",
+        "fallback_course_image": "/images/stripes.png",
+        "seasonal_hero_image": "",
+        "holiday_background_image": "",
+        "ems_week_image": "",
+        "christmas_image": "",
+        "generic_fallback_image": "/images/stripes.png"
+      },
+      "fallbacks": {
+        "missing_image_behavior": "use_fallback_course_image"
+      }
+    },
+    {
+      "name": "ems-week",
+      "enabled": false,
+      "priority": 50,
+      "start_date": "2026-05-17",
+      "end_date": "2026-05-23",
+      "notes": "Planned EMS Week treatment.",
+      "variables": {},
+      "images": {
+        "ems_week_image": "/images/stripes.png"
+      },
+      "fallbacks": {
+        "missing_image_behavior": "use_default_theme"
+      }
+    }
+  ]
+}

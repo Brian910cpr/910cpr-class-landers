@@ -30,7 +30,8 @@ STATE_DIR = ROOT / "data" / "state"
 RUNTIME_DIR = ROOT / "data" / "runtime"
 SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
 TZ = ZoneInfo("America/New_York")
-DATE_LIMIT = 12
+DATE_LIMIT = 6
+POPULAR_LIMIT = 4
 EMPTY_FALLBACK_TITLE = "No upcoming dates are currently listed for this course."
 EMPTY_FALLBACK_BODY = "Please contact us and we'll help you find the right class."
 PRIVATE_HINTS = (
@@ -456,18 +457,21 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     family_badge = normalize_space(session.get("_family_badge"))
     enrolled_count = session_enrolled_count(session)
 
-    action_label = "See Public Class" if group_mode else "Register"
-    action_hint = "Preview the closest public option" if group_mode else "Secure this class time"
+    action_label = "See Public Class" if group_mode else "Book Seat"
+    action_hint = ""
     badge_html = ""
     if format_badge:
         badge_html += f'<span class="slug-pill-chip slug-pill-chip-format">{escape(format_badge)}</span>'
     if family_badge:
         badge_html += f'<span class="slug-pill-chip slug-pill-chip-family">{escape(family_badge)}</span>'
     if enrolled_count >= 1 and not group_mode:
+        badge_html += '<span class="slug-pill-chip slug-pill-chip-momentum">Already Enrolled</span>'
+        badge_html += f'<span class="slug-pill-chip slug-pill-chip-momentum">{escape(momentum_label(enrolled_count))}</span>'
         badge_html += (
-            f'<span class="slug-pill-chip slug-pill-chip-momentum">{escape(momentum_label(enrolled_count))}</span>'
+            '<span class="slug-pill-chip slug-pill-chip-momentum">'
+            + ("Filling" if enrolled_count >= 2 else "Popular Time")
+            + "</span>"
         )
-        action_hint = "Join a class that already has students enrolled"
 
     return f"""
 <article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}">
@@ -486,7 +490,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     <div class="slug-pill-subtitle">{escape(title)}</div>
   </div>
   <div class="slug-pill-actions">
-    <div class="slug-pill-hint">{escape(action_hint)}</div>
+    {f'<div class="slug-pill-hint">{escape(action_hint)}</div>' if action_hint else ''}
     <a class="button small primary" href="{register_url}">{action_label}</a>
   </div>
 </article>
@@ -506,8 +510,8 @@ def momentum_label(enrolled_count: int) -> str:
     if enrolled_count <= 0:
         return ""
     if enrolled_count == 1:
-        return "1 student already enrolled"
-    return f"{enrolled_count} students already enrolled"
+        return "1 enrolled"
+    return f"{enrolled_count} enrolled"
 
 
 def render_inventory_section(
@@ -626,7 +630,44 @@ def render_panel_description(tab: dict[str, Any]) -> str:
 
 def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
-    popular_sessions = sort_by_momentum([session for session in sessions if session_enrolled_count(session) >= 1])[:5]
+    if group_mode:
+        request_href = f"/request_group_session.html?program={quote(tab['program'])}"
+        full_schedule_data = escape(
+            json.dumps(
+                {
+                    "url": tab["full_schedule_url"],
+                    "label": tab["full_schedule_label"],
+                }
+            ),
+            quote=True,
+        )
+        return f"""
+<section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}">
+  <div class="slug-panel-card">
+    <div class="slug-panel-head">
+      <div>
+        <h2>{escape(tab['label'])}</h2>
+        {render_panel_description(tab)}
+      </div>
+    </div>
+    <section class="slug-inventory-section slug-scheduled-section">
+      <div class="slug-pill-list">
+        <article class="slug-pill slug-group-request-pill">
+          <div class="slug-pill-main">
+            <div class="slug-pill-title">{escape(tab['label'])}</div>
+            <div class="slug-pill-subtitle">Private request-based training at your location. Share your preferred date, location, and group size and we’ll confirm availability.</div>
+          </div>
+          <div class="slug-pill-actions">
+            <a class="button small primary" href="{escape(request_href, quote=True)}">Request This Training</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>
+""".strip()
+
+    popular_sessions = sort_by_momentum([session for session in sessions if session_enrolled_count(session) >= 1])[:POPULAR_LIMIT]
     highlighted_keys = {
         str(session.get("session_id") or session.get("registration_url") or "")
         for session in popular_sessions
@@ -642,10 +683,10 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
         section_html.append(
             render_inventory_section(
                 "Popular Upcoming Classes",
-                "Join a class that already has students enrolled. These sessions are already forming.",
+                "Classes that already have students enrolled.",
                 popular_sessions,
                 group_mode=group_mode,
-                limit=5,
+                limit=POPULAR_LIMIT,
                 section_class="slug-popular-section",
             )
         )
@@ -654,7 +695,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
         section_html.append(
             render_inventory_section(
                 "Next Scheduled Classes",
-                "Real scheduled inventory from the current class feed. These are the next scheduled class options.",
+                "Next available class options.",
                 remaining_sessions,
                 group_mode=group_mode,
                 limit=DATE_LIMIT,
@@ -664,7 +705,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
     elif not popular_sessions:
         section_html.append(render_empty_state(group_mode=group_mode))
 
-    flexible_html = render_flexible_section(page, tab, sessions)
+    flexible_html = ""
     full_schedule_data = escape(
         json.dumps(
             {
@@ -675,6 +716,17 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
         quote=True,
     )
     inventory_label = f"{len(sessions)} upcoming option" + ("" if len(sessions) == 1 else "s")
+
+    escape_hatch_html = (
+        f"""
+<section class="slug-escape-hatch">
+  <div class="slug-escape-copy">Need a different time?</div>
+  <a class="button secondary" href="{escape(tab['full_schedule_url'], quote=True)}">View Full {escape(page['slug'].upper())} Schedule</a>
+</section>
+""".strip()
+        if not group_mode
+        else ""
+    )
 
     return f"""
 <section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}">
@@ -688,6 +740,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
     </div>
     {' '.join(section_html)}
     {flexible_html}
+    {escape_hatch_html}
   </div>
 </section>
 """.strip()
@@ -715,16 +768,7 @@ def render_hero_actions(page: dict[str, Any], first_tab: dict[str, Any], *, grou
             "</div>"
         )
 
-    primary_href = first_tab["full_schedule_url"]
-    primary_label = first_tab["primary_cta_label"]
-    secondary_href = first_tab["full_schedule_url"]
-    secondary_label = first_tab["full_schedule_label"]
-    return (
-        "<div class=\"slug-hero-actions\">"
-        f"<a class=\"button primary\" href=\"{escape(primary_href, quote=True)}\">{escape(primary_label)}</a>"
-        f"<a class=\"button secondary\" href=\"{escape(secondary_href, quote=True)}\">{escape(secondary_label)}</a>"
-        "</div>"
-    )
+    return ""
 
 
 def resolve_guidance_banners(page: dict[str, Any], banner_library: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
@@ -821,6 +865,17 @@ def render_other_training_options(page: dict[str, Any]) -> str:
 """.strip()
 
 
+def render_brand_bar() -> str:
+    return """
+<header class="site-brand-bar">
+  <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+    <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+    <span class="site-brand-wordmark">910CPR</span>
+  </a>
+</header>
+""".strip()
+
+
 def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_library: dict[str, dict[str, Any]]) -> str:
     group_mode = bool(page.get("group_mode"))
     now = datetime.now(TZ)
@@ -870,6 +925,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 
     body = f"""
 <div class="card slug-hub-shell">
+  {render_brand_bar()}
   <section class="hero slug-hero">
     <div class="hero-main">
       <div class="eyebrow">{escape(page['eyebrow'])}</div>
@@ -883,7 +939,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
   </section>
   {render_guidance_banners(page, banner_library)}
   {tabs_html}
-  {render_banner(page, first_tab)}
+  
   {render_other_training_options(page)}
 </div>
 """

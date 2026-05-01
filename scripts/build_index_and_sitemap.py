@@ -590,7 +590,12 @@ ul {{
 {render_gtm_body()}
 <header>
   <div class="wrap">
-    <div><strong><a href="/index.html">910CPR</a></strong></div>
+    <div class="site-brand-bar site-brand-bar-inline">
+      <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+        <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+        <span class="site-brand-wordmark">910CPR</span>
+      </a>
+    </div>
     <div class="nav small" style="margin-top:8px;">
       <a href="/index.html">Home</a>
       <a href="/bls.html">BLS</a>
@@ -640,6 +645,12 @@ def render_homepage() -> str:
 <div class="wrap">
   <div class="page-shell">
     <main class="card home-shell">
+      <header class="site-brand-bar">
+        <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+          <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+          <span class="site-brand-wordmark">910CPR</span>
+        </a>
+      </header>
       <section class="hero home-hero">
         <div class="hero-main">
           <div class="eyebrow">910CPR Booking Homepage</div>
