@@ -201,6 +201,11 @@ def main() -> int:
         default="data/Class Report.xlsx",
         help="Relative path from repo root to Class Report.xlsx used for hard reconciliation",
     )
+    parser.add_argument(
+        "--include-past",
+        action="store_true",
+        help="Include past sessions instead of filtering them out. Used for full class-page rebuilds.",
+    )
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
@@ -221,12 +226,12 @@ def main() -> int:
         reporter.start(total=len(sessions))
         print(f"Loaded {len(sessions)} sessions from {input_path}")
         print(f"Loaded {len(class_report_ids)} session IDs from {class_report_path}")
-        print("Filtering future sessions")
+        print("Filtering future sessions" if not args.include_past else "Classifying all sessions")
 
         now_dt = datetime.now(TZ)
         now_iso = now_dt.isoformat()
 
-        future_sessions_raw: list[dict[str, Any]] = []
+        output_sessions_raw: list[dict[str, Any]] = []
         skipped_missing_start = 0
         skipped_past = 0
         skipped_orphan = 0
@@ -248,21 +253,27 @@ def main() -> int:
                 skipped_missing_start += 1
                 reporter.update(current=index, total=len(sessions))
                 continue
-            if start_dt < now_dt:
+            is_past = start_dt < now_dt
+            if is_past and not args.include_past:
                 skipped_past += 1
                 reporter.update(current=index, total=len(sessions))
                 continue
-            future_sessions_raw.append(session)
+            session["_build_classification"] = "past" if is_past else "future"
+            output_sessions_raw.append(session)
             reporter.update(current=index, total=len(sessions))
 
-        future_sessions_raw.sort(
+        output_sessions_raw.sort(
             key=lambda s: (
                 s.get("timing", {}).get("start_at") or "",
                 s.get("session_id") or "",
             )
         )
 
-        future_sessions = [build_public_future_session(s) for s in future_sessions_raw]
+        future_sessions = []
+        for s in output_sessions_raw:
+            row = build_public_future_session(s)
+            row["build_classification"] = s.get("_build_classification", "future")
+            future_sessions.append(row)
 
         output = {
             "build": {
@@ -274,6 +285,7 @@ def main() -> int:
                     "skipped_missing_start": skipped_missing_start,
                     "skipped_past": skipped_past,
                     "skipped_orphan": skipped_orphan,
+                    "include_past": args.include_past,
                 },
                 "class_report": str(class_report_path),
             },

@@ -1,9 +1,9 @@
 {
   "phase_name": "build_schedule_future",
   "status": "done",
-  "current_count": 1559,
-  "total_count": 1559,
+  "current_count": 26042,
+  "total_count": 26042,
   "percent_complete": 100.0,
-  "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
-  "timestamp": "2026-05-01T00:45:07.594328-04:00"
+  "last_output_file": "E:\\GitHub\\910cpr-class-landers\\data\\schedule_all.json",
+  "timestamp": "2026-05-03T15:15:21.883040-04:00"
 }

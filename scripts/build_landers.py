@@ -4,6 +4,7 @@ import hashlib
 import random
 import argparse
 from datetime import datetime
+from functools import lru_cache
 from html import escape, unescape
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -17,8 +18,10 @@ except ModuleNotFoundError:
 
 try:
     from scripts.title_cleaner import normalize_course_title, seo_title_for_session
+    from scripts.build_metadata import apply_build_metadata, current_build_metadata
 except ModuleNotFoundError:
     from title_cleaner import normalize_course_title, seo_title_for_session
+    from build_metadata import apply_build_metadata, current_build_metadata
 
 TZ = ZoneInfo("America/New_York")
 
@@ -271,6 +274,7 @@ def sanitize_description_html(html_text: str) -> str:
     return re.sub(r"\s+", " ", html_text).strip()
 
 
+@lru_cache(maxsize=512)
 def load_course_description_html(course_id: str, course_name: str) -> str:
     candidate_dirs = [
         ROOT / "data" / "course_descriptions",
@@ -315,6 +319,7 @@ def load_course_description_html(course_id: str, course_name: str) -> str:
     return ""
 
 
+@lru_cache(maxsize=256)
 def first_existing_image(*names: str) -> str:
     for name in names:
         path = IMAGES_DIR / name
@@ -363,6 +368,64 @@ def get_course_type_image(course_name: str) -> str:
     return ""
 
 
+def course_family_label(course_name: str) -> str:
+    lower = display_course_name(course_name).lower()
+    if "acls" in lower:
+        return "ACLS"
+    if "pals" in lower:
+        return "PALS"
+    if "heartcode" in lower and "bls" in lower:
+        return "BLS"
+    if "bls" in lower:
+        return "BLS"
+    if "heartsaver" in lower or "first aid" in lower or "cpr aed" in lower or "cpr/aed" in lower:
+        return "Heartsaver"
+    return display_course_name(course_name)
+
+
+def course_type_url(course_name: str) -> str:
+    label = course_family_label(course_name)
+    if label == "ACLS":
+        return "/acls.html"
+    if label == "PALS":
+        return "/pals.html"
+    if label == "BLS":
+        return "/bls.html"
+    if label == "Heartsaver":
+        return "/heartsaver.html"
+    return "/schedule.html"
+
+
+def subtype_tokens(course_name: str) -> set[str]:
+    lower = display_course_name(course_name).lower()
+    tokens = set()
+    for token in ("renewal", "initial", "heartcode", "skills", "blended", "instructor"):
+        if token in lower:
+            tokens.add(token)
+    if "new or expired" in lower:
+        tokens.add("initial")
+    return tokens
+
+
+def session_city(session: dict) -> str:
+    location = clean_location_display(session.get("location_display", "") or session.get("location_name", ""))
+    city, _state = location_to_city_state(location)
+    return city.lower()
+
+
+def is_cancelled_or_full(session: dict) -> bool:
+    status = str(session.get("session_status") or "").lower()
+    if "cancel" in status:
+        return True
+    if session.get("is_full") is True:
+        return True
+    seats = session.get("available_seats")
+    try:
+        return seats is not None and int(seats) <= 0
+    except Exception:
+        return False
+
+
 def same_course(session_a: dict, session_b: dict) -> bool:
     a_course_id = str(session_a.get("course_id", "")).strip()
     b_course_id = str(session_b.get("course_id", "")).strip()
@@ -375,27 +438,121 @@ def same_course(session_a: dict, session_b: dict) -> bool:
     return a_name == b_name
 
 
-def get_upcoming_sessions(current_session: dict, sessions: list[dict], now_dt: datetime, limit: int = UPCOMING_LIMIT) -> list[dict]:
+def same_course_family(session_a: dict, session_b: dict) -> bool:
+    return course_family_label(session_a.get("course_name", "")) == course_family_label(session_b.get("course_name", ""))
+
+
+def replacement_score(current_session: dict, candidate: dict, now_dt: datetime) -> int:
+    current_name = display_course_name(current_session.get("course_name", ""))
+    candidate_name = display_course_name(candidate.get("course_name", ""))
+    current_start = parse_dt(current_session.get("start_at"))
+    candidate_start = candidate.get("_parsed_dt") or parse_dt(candidate.get("start_at"))
+    score = 0
+
+    if same_course(current_session, candidate):
+        score += 120
+    if subtype_tokens(current_name) & subtype_tokens(candidate_name):
+        score += 45
+    if str(current_session.get("certifying_body") or "").upper() == str(candidate.get("certifying_body") or "").upper():
+        score += 25
+    if current_start and candidate_start and current_start.weekday() == candidate_start.weekday():
+        score += 15
+    if current_start and candidate_start:
+        minutes = abs((current_start.hour * 60 + current_start.minute) - (candidate_start.hour * 60 + candidate_start.minute))
+        if minutes <= 60:
+            score += 18
+        elif minutes <= 180:
+            score += 8
+        days_out = max(0, (candidate_start - now_dt).days)
+        score += max(0, 30 - min(days_out, 30))
+    try:
+        if int(candidate.get("registered_count") or candidate.get("enrolled_count") or 0) > 0:
+            score += 10
+    except Exception:
+        pass
+    if session_city(current_session) and session_city(current_session) == session_city(candidate):
+        score += 18
+    try:
+        if int(candidate.get("available_seats") or 0) > 0:
+            score += 15
+    except Exception:
+        pass
+    return score
+
+
+def build_future_replacement_index(sessions: list[dict], now_dt: datetime) -> dict[str, dict[str, list[dict]]]:
+    index: dict[str, dict[str, list[dict]]] = {"family": {}, "course_id": {}, "course_name": {}}
+    for session in sessions:
+        dt = parse_dt(session.get("start_at"))
+        if not is_future_session(dt, now_dt):
+            continue
+        if is_cancelled_or_full(session):
+            continue
+        copy = dict(session)
+        copy["_parsed_dt"] = dt
+        family = course_family_label(copy.get("course_name", ""))
+        index["family"].setdefault(family, []).append(copy)
+        course_id = str(copy.get("course_id") or "").strip()
+        if course_id:
+            index["course_id"].setdefault(course_id, []).append(copy)
+        course_name = display_course_name(copy.get("course_name", "")).lower()
+        if course_name:
+            index["course_name"].setdefault(course_name, []).append(copy)
+    for bucket in index.values():
+        for rows in bucket.values():
+            rows.sort(key=lambda item: item["_parsed_dt"])
+    return index
+
+
+def get_upcoming_sessions(
+    current_session: dict,
+    sessions: list[dict],
+    now_dt: datetime,
+    limit: int = UPCOMING_LIMIT,
+    future_index: dict[str, dict[str, list[dict]]] | None = None,
+) -> list[dict]:
     current_id = str(current_session.get("session_id", "")).strip()
     matches = []
+    family = course_family_label(current_session.get("course_name", ""))
+    if future_index is not None:
+        course_id = str(current_session.get("course_id") or "").strip()
+        course_name = display_course_name(current_session.get("course_name", "")).lower()
+        exact = []
+        if course_id:
+            exact.extend(future_index["course_id"].get(course_id, []))
+        if course_name:
+            exact.extend(future_index["course_name"].get(course_name, []))
+        seen_ids = set()
+        candidates = []
+        for item in exact + future_index["family"].get(family, [])[:200]:
+            sid = str(item.get("session_id") or "")
+            if sid in seen_ids:
+                continue
+            seen_ids.add(sid)
+            candidates.append(item)
+    else:
+        candidates = sessions
 
-    for session in sessions:
-        if not same_course(current_session, session):
+    for session in candidates:
+        if not same_course_family(current_session, session):
             continue
 
         sid = str(session.get("session_id", "")).strip()
         if sid == current_id:
             continue
 
-        dt = parse_dt(session.get("start_at"))
+        dt = session.get("_parsed_dt") or parse_dt(session.get("start_at"))
         if not is_future_session(dt, now_dt):
+            continue
+        if is_cancelled_or_full(session):
             continue
 
         copy = dict(session)
         copy["_parsed_dt"] = dt
+        copy["_replacement_score"] = replacement_score(current_session, copy, now_dt)
         matches.append(copy)
 
-    matches.sort(key=lambda item: item["_parsed_dt"])
+    matches.sort(key=lambda item: (-item["_replacement_score"], item["_parsed_dt"]))
     return matches[:limit]
 
 
@@ -403,14 +560,16 @@ def is_future_session(session_start: datetime | None, now_dt: datetime) -> bool:
     return bool(session_start and session_start > now_dt)
 
 
-def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: str) -> str:
+def render_upcoming_sessions_html(upcoming_sessions: list[dict], course_url: str, course_label: str, full_schedule_url: str = "/schedule.html") -> str:
+    primary_label = f"See upcoming {course_label} classes"
     if not upcoming_sessions:
         return f"""
-<section id="upcoming-times" class="section-box js-live-session-group" data-empty-link="{escape(schedule_url)}" data-empty-link-label="See full schedule for this course">
-  <h2>Upcoming Classes</h2>
-  <p>No upcoming public sessions are listed right now.</p>
+<section id="upcoming-times" class="section-box js-live-session-group" data-empty-link="{escape(course_url)}" data-empty-link-label="{escape(primary_label)}" data-full-schedule-link="{escape(full_schedule_url)}">
+  <h2>No upcoming sessions available</h2>
+  <p>No upcoming sessions are available for this class type right now.</p>
   <div class="upcoming-footer-link">
-    <a class="text-link strong-link" href="{escape(schedule_url)}">See full schedule for this course</a>
+    <a class="button primary" href="{escape(course_url)}">{escape(primary_label)}</a>
+    <a class="button secondary" href="{escape(full_schedule_url)}">See all 910CPR classes</a>
   </div>
 </section>
 """
@@ -422,6 +581,10 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
         time_label = dt.strftime("%I:%M %p").lstrip("0")
         location_label = clean_location_display(session.get("location_display", "")) or "Location TBD"
         register_url = session.get("registration_url", "#")
+        seats = session.get("available_seats")
+        seats_label = ""
+        if seats not in (None, ""):
+            seats_label = f"<div class=\"upcoming-seats\">{escape(str(seats))} seats available</div>"
 
         cards.append(
             f"""
@@ -429,6 +592,7 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
   <div class="upcoming-date">{escape(date_label)}</div>
   <div class="upcoming-time">{escape(time_label)}</div>
   <div class="upcoming-location">{escape(location_label)}</div>
+  {seats_label}
   <div class="upcoming-actions">
     <a class="button small primary" href="{escape(register_url)}">Register</a>
   </div>
@@ -437,15 +601,16 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
         )
 
     return f"""
-<section id="upcoming-times" class="section-box js-live-session-group" data-empty-link="{escape(schedule_url)}" data-empty-link-label="See full schedule for this course">
+<section id="upcoming-times" class="section-box js-live-session-group" data-empty-link="{escape(course_url)}" data-empty-link-label="{escape(primary_label)}" data-full-schedule-link="{escape(full_schedule_url)}">
   <div class="upcoming-head">
-    <h2>Upcoming Classes</h2>
+    <h2>Best replacement options</h2>
   </div>
   <div class="upcoming-grid">
     {''.join(cards)}
   </div>
   <div class="upcoming-footer-link">
-    <a class="text-link strong-link" href="{escape(schedule_url)}">See full schedule for this course</a>
+    <a class="text-link strong-link" href="{escape(course_url)}">{escape(primary_label)}</a>
+    <a class="text-link" href="{escape(full_schedule_url)}">See all 910CPR classes</a>
   </div>
 </section>
 """
@@ -854,6 +1019,13 @@ def main() -> None:
         default="",
         help="Accepted for compatibility with existing build commands. Not used by this builder.",
     )
+    parser.add_argument(
+        "--resume-stamped",
+        action="store_true",
+        help="Skip class pages that already contain BUILD_CODE from this generator.",
+    )
+    parser.add_argument("--shard-index", type=int, default=0, help="Zero-based shard index for parallel rebuilds.")
+    parser.add_argument("--shard-count", type=int, default=1, help="Total shard count for parallel rebuilds.")
     args = parser.parse_args()
 
     data_file = resolve_data_file(args.dataset, args.data_file.strip() or None)
@@ -863,13 +1035,25 @@ def main() -> None:
 
     sessions = data["sessions"]
     all_reviews = load_reviews()
-    build_stamp = datetime.now(TZ).strftime("%Y-%m-%d %I:%M %p").lstrip("0")
+    build_meta = current_build_metadata("scripts/build_landers.py", str(data_file))
+    build_stamp = build_meta.visible
     now_dt = datetime.now(TZ)
+    future_replacement_index = build_future_replacement_index(sessions, now_dt)
 
     count = 0
 
-    for session in tqdm(sessions, desc="Building landers", unit="page", miniters=50):
+    shard_count = max(1, int(args.shard_count or 1))
+    shard_index = max(0, min(shard_count - 1, int(args.shard_index or 0)))
+
+    for idx, session in enumerate(tqdm(sessions, desc="Building landers", unit="page", miniters=50)):
+        if shard_count > 1 and idx % shard_count != shard_index:
+            continue
         session_id = str(session.get("session_id", "")).strip()
+        output_path = OUTPUT_DIR / f"{session_id}.html"
+        if args.resume_stamped and output_path.exists():
+            existing = output_path.read_text(encoding="utf-8", errors="ignore")
+            if "<!-- BUILD_CODE:" in existing and "scripts/build_landers.py" in existing:
+                continue
         course_raw = session.get("course_name", "")
         course_display = display_course_name(course_raw)
         course_seo = seo_course_phrase(course_raw)
@@ -901,6 +1085,8 @@ def main() -> None:
 
         course_id = str(session.get("course_id", "")).strip()
         course_number = str(session.get("course_number", "")).strip()
+        course_label = course_family_label(course_display)
+        type_page_url = course_type_url(course_display)
         schedule_anchor = course_id if is_valid_schedule_anchor(course_id) else course_number
         if is_valid_schedule_anchor(schedule_anchor):
             schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
@@ -914,11 +1100,11 @@ def main() -> None:
         if is_past:
             state_notice = """
 <div class="notice">
-  This specific session has passed. See upcoming classes below.
+  This class has passed. Choose a current option below.
 </div>
 """
-            button_html = '<a class="button secondary" href="#upcoming-times">See Upcoming Classes</a>'
-            hero_subhead = "Use the upcoming list below to pick the next available class."
+            button_html = f'<a class="button secondary" href="{escape(type_page_url)}">See upcoming {escape(course_label)} classes</a>'
+            hero_subhead = "This class is no longer bookable. Use the replacement options below to choose a current class."
         else:
             state_notice = ""
             button_html = f'<a class="button primary" href="{escape(register)}">Register Now</a>'
@@ -977,8 +1163,14 @@ def main() -> None:
 </section>
 """
 
-        upcoming_sessions = get_upcoming_sessions(session, sessions, now_dt, limit=UPCOMING_LIMIT)
-        upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, schedule_url)
+        upcoming_sessions = get_upcoming_sessions(
+            session,
+            sessions,
+            now_dt,
+            limit=UPCOMING_LIMIT,
+            future_index=future_replacement_index,
+        )
+        upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, type_page_url, course_label)
 
         selected_reviews = pick_reviews_for_session(
             session_id=session_id,
@@ -1025,8 +1217,8 @@ def main() -> None:
             schedule_url=escape(schedule_url),
             course_page_url=escape(course_page_url),
         )
+        html_doc = apply_build_metadata(html_doc, build_meta)
 
-        output_path = OUTPUT_DIR / f"{session_id}.html"
         output_path.write_text(html_doc, encoding="utf-8")
         count += 1
 

@@ -78,7 +78,7 @@
     empty.className = "js-live-session-empty";
 
     var message = document.createElement("p");
-    message.textContent = "No upcoming times are currently listed.";
+    message.textContent = "No upcoming sessions available";
     empty.appendChild(message);
 
     var link = group.getAttribute("data-empty-link");
@@ -87,9 +87,20 @@
       var anchor = document.createElement("a");
       anchor.className = "text-link strong-link";
       anchor.href = link;
-      anchor.textContent = group.getAttribute("data-empty-link-label") || "See full schedule for this course";
+      anchor.textContent = group.getAttribute("data-empty-link-label") || "See upcoming classes";
       footer.appendChild(anchor);
       empty.appendChild(footer);
+    }
+
+    var fullSchedule = group.getAttribute("data-full-schedule-link");
+    if (fullSchedule) {
+      var scheduleFooter = document.createElement("p");
+      var scheduleAnchor = document.createElement("a");
+      scheduleAnchor.className = "text-link";
+      scheduleAnchor.href = fullSchedule;
+      scheduleAnchor.textContent = "See all 910CPR classes";
+      scheduleFooter.appendChild(scheduleAnchor);
+      empty.appendChild(scheduleFooter);
     }
 
     var targetGrid = group.querySelector(".upcoming-grid, .session-grid");

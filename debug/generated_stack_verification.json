@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-05-03T16:50:33.663521-04:00",
+  "counts": {
+    "html_files": 26576,
+    "future_sessions_runtime_valid": 1396,
+    "past_sessions_in_full_dataset": 24646,
+    "missing_build_code": 0,
+    "missing_meta_build_date": 0,
+    "missing_visible_build": 0,
+    "past_pages_missing_banner": 0,
+    "future_pages_missing_enroll": 0,
+    "empty_schedule_sections": 0,
+    "expired_rendered_items": 0
+  },
+  "failures": {
+    "missing_build_code": [],
+    "missing_meta_build_date": [],
+    "missing_visible_build": [],
+    "past_pages_missing_banner": [],
+    "future_pages_missing_enroll": [],
+    "empty_schedule_sections": [],
+    "expired_rendered_items": []
+  }
+}
