@@ -27,12 +27,13 @@ TZ = ZoneInfo("America/New_York")
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
-PRIMARY_FULL_DATA_FILE = ROOT / "data" / "schedule.json"
+PRIMARY_FULL_DATA_FILE = ROOT / "data" / "sessions_current.json"
 FALLBACK_FULL_DATA_FILE = ROOT / "docs" / "data" / "schedule.json"
 FULL_DATA_FILE = PRIMARY_FULL_DATA_FILE if PRIMARY_FULL_DATA_FILE.exists() else FALLBACK_FULL_DATA_FILE
 OUTPUT_DIR = ROOT / "docs" / "classes"
 IMAGES_DIR = ROOT / "docs" / "images"
 REVIEWS_SOURCE = ROOT / "data" / "raw" / "reviews"
+COURSE_MAP_FILE = ROOT / "data" / "config" / "course_map.json"
 
 GTM_ID = "GTM-PQS8DCBH"
 UPCOMING_LIMIT = 10
@@ -84,6 +85,142 @@ def display_course_name(course_raw: str) -> str:
         flags=re.I,
     ).strip(" -–—,:;/")
     return cleaned or "Course"
+
+
+def compact_course_name(course_raw: str) -> str:
+    cleaned = display_course_name(course_raw)
+    cleaned = re.sub(r"\s*\([^)]*\)\s*$", "", cleaned).strip()
+    return cleaned or display_course_name(course_raw)
+
+
+@lru_cache(maxsize=1)
+def load_course_map() -> dict:
+    if not COURSE_MAP_FILE.exists():
+        return {"courses_by_id": {}, "courses_by_number": {}}
+    try:
+        return json.loads(COURSE_MAP_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {"courses_by_id": {}, "courses_by_number": {}}
+
+
+def course_map_entry(course_id: str, course_number: str = "") -> dict:
+    course_map = load_course_map()
+    by_id = course_map.get("courses_by_id", {}) if isinstance(course_map, dict) else {}
+    by_number = course_map.get("courses_by_number", {}) if isinstance(course_map, dict) else {}
+    cid = str(course_id or "").strip()
+    cnum = str(course_number or "").strip()
+    if cid and isinstance(by_id.get(cid), dict):
+        return by_id[cid]
+    mapped_id = by_number.get(cnum) if cnum else ""
+    if mapped_id and isinstance(by_id.get(str(mapped_id)), dict):
+        return by_id[str(mapped_id)]
+    return {}
+
+
+def nested_value(mapping: dict, path: tuple[str, ...], default=""):
+    current = mapping
+    for key in path:
+        if not isinstance(current, dict):
+            return default
+        current = current.get(key)
+    return current if current not in (None, "") else default
+
+
+def normalize_session_record(session: dict) -> dict:
+    if "course_name" in session and "registration_url" in session:
+        return session
+
+    course = session.get("course", {}) if isinstance(session.get("course"), dict) else {}
+    timing = session.get("timing", {}) if isinstance(session.get("timing"), dict) else {}
+    location = session.get("location", {}) if isinstance(session.get("location"), dict) else {}
+    capacity = session.get("capacity", {}) if isinstance(session.get("capacity"), dict) else {}
+    commerce = session.get("commerce", {}) if isinstance(session.get("commerce"), dict) else {}
+    status = session.get("status", {}) if isinstance(session.get("status"), dict) else {}
+    staffing = session.get("staffing", {}) if isinstance(session.get("staffing"), dict) else {}
+
+    normalized = dict(session)
+    normalized.update(
+        {
+            "session_id": str(session.get("session_id") or "").strip(),
+            "course_id": str(course.get("course_id") or session.get("source_course_id") or "").strip(),
+            "course_number": str(course.get("course_number") or course.get("course_id") or session.get("source_course_id") or "").strip(),
+            "course_name": course.get("mapped_clean_title")
+            or session.get("mapped_clean_title")
+            or course.get("course_name_primary_clean")
+            or course.get("course_name_primary_raw")
+            or course.get("course_name_raw")
+            or session.get("title")
+            or "",
+            "course_subtitle": course.get("course_subtitle_text") or "",
+            "course_code": course.get("course_code_hint") or "",
+            "certifying_body": session.get("mapped_certifying_body") or course.get("mapped_certifying_body") or "",
+            "delivery_mode": session.get("mapped_delivery_mode") or course.get("mapped_delivery_mode") or course.get("delivery_mode_hint") or "",
+            "start_at": timing.get("start_at") or session.get("start_at") or session.get("start") or session.get("start_datetime") or "",
+            "end_at": timing.get("end_at") or session.get("end_at") or session.get("end") or session.get("end_datetime") or "",
+            "location_name": location.get("location_name") or session.get("location_name") or session.get("location") or "",
+            "location_display": location.get("location_display") or session.get("location_display") or session.get("location") or "",
+            "lead_instructor_name": staffing.get("lead_instructor_name") or session.get("lead_instructor_name") or session.get("instructor") or "",
+            "price": commerce.get("price") if commerce.get("price") not in (None, "") else session.get("price"),
+            "max_students": capacity.get("max_students") if capacity.get("max_students") not in (None, "") else session.get("max_students"),
+            "registered_count": capacity.get("registered_count") if capacity.get("registered_count") not in (None, "") else session.get("registered_count"),
+            "enrolled_count": capacity.get("registered_count") if capacity.get("registered_count") not in (None, "") else session.get("enrolled_count"),
+            "available_seats": capacity.get("available_seats") if capacity.get("available_seats") not in (None, "") else session.get("available_seats"),
+            "is_full": capacity.get("is_full") if capacity.get("is_full") not in (None, "") else session.get("is_full"),
+            "registration_url": commerce.get("registration_url") or session.get("registration_url") or session.get("registration_link") or "",
+            "session_status": status.get("session_status") or session.get("session_status") or "",
+            "mapped_family": session.get("mapped_family") or course.get("mapped_family") or "",
+            "mapped_subtype": session.get("mapped_subtype") or course.get("mapped_subtype") or "",
+            "mapped_certifying_body": session.get("mapped_certifying_body") or course.get("mapped_certifying_body") or "",
+            "mapped_delivery_mode": session.get("mapped_delivery_mode") or course.get("mapped_delivery_mode") or "",
+            "mapped_logo_key": session.get("mapped_logo_key") or course.get("mapped_logo_key") or "",
+            "mapped_clean_title": session.get("mapped_clean_title") or course.get("mapped_clean_title") or "",
+            "mapping_status": session.get("mapping_status") or course.get("mapping_status") or "unmapped",
+            "mapping_notes": session.get("mapping_notes") or course.get("mapping_notes") or [],
+        }
+    )
+    return normalized
+
+
+def is_mapped(session: dict) -> bool:
+    return str(session.get("mapping_status") or "").strip().lower() == "mapped"
+
+
+def structured_family(session: dict) -> str:
+    return str(session.get("mapped_family") or "").strip()
+
+
+def structured_certifying_body(session: dict) -> str:
+    return str(session.get("mapped_certifying_body") or session.get("certifying_body") or "").strip()
+
+
+def structured_subtype(session: dict) -> str:
+    return str(session.get("mapped_subtype") or "").strip()
+
+
+def structured_delivery(session: dict) -> str:
+    return str(session.get("mapped_delivery_mode") or session.get("delivery_mode") or "").strip()
+
+
+def certifying_body_label(value: str) -> str:
+    key = str(value or "").strip().upper()
+    return {
+        "AHA": "American Heart Association",
+        "ARC": "American Red Cross",
+        "HSI": "Health & Safety Institute",
+        "ASHI": "American Safety & Health Institute",
+        "USCG": "U.S. Coast Guard",
+    }.get(key, str(value or "").strip() or "Unmapped - needs review")
+
+
+def delivery_type_label(value: str) -> str:
+    key = str(value or "").strip().upper()
+    return {
+        "IP": "In-person classroom",
+        "ILT": "In-person classroom",
+        "BL": "Blended learning",
+        "SS": "Online course + in-person skills session",
+        "ONLINE": "Online",
+    }.get(key, str(value or "").strip() or "Unmapped - needs review")
 
 
 def seo_course_phrase(course_name: str) -> str:
@@ -368,7 +505,12 @@ def get_course_type_image(course_name: str) -> str:
     return ""
 
 
-def course_family_label(course_name: str) -> str:
+def course_family_label(course_name: str, session: dict | None = None) -> str:
+    if session and is_mapped(session):
+        mapped_family = structured_family(session)
+        if mapped_family:
+            return mapped_family
+
     lower = display_course_name(course_name).lower()
     if "acls" in lower:
         return "ACLS"
@@ -394,6 +536,26 @@ def course_type_url(course_name: str) -> str:
     if label == "Heartsaver":
         return "/heartsaver.html"
     return "/schedule.html"
+
+
+def course_type_url_for_session(session: dict, course_name: str) -> str:
+    if is_mapped(session):
+        entry = course_map_entry(session.get("course_id", ""), session.get("course_number", ""))
+        url = str(entry.get("public_schedule_url") or "").strip()
+        if url:
+            return url
+        label = structured_family(session)
+        if label == "ACLS":
+            return "/acls.html"
+        if label == "PALS":
+            return "/pals.html"
+        if label == "BLS":
+            return "/bls.html"
+        if label == "Heartsaver":
+            return "/heartsaver.html"
+        if label == "USCG":
+            return "/uscg-elementary-first-aid-cpr.html"
+    return course_type_url(course_name)
 
 
 def subtype_tokens(course_name: str) -> set[str]:
@@ -439,7 +601,12 @@ def same_course(session_a: dict, session_b: dict) -> bool:
 
 
 def same_course_family(session_a: dict, session_b: dict) -> bool:
-    return course_family_label(session_a.get("course_name", "")) == course_family_label(session_b.get("course_name", ""))
+    if is_mapped(session_a) and is_mapped(session_b):
+        return (
+            structured_certifying_body(session_a).upper() == structured_certifying_body(session_b).upper()
+            and structured_family(session_a).lower() == structured_family(session_b).lower()
+        )
+    return same_course(session_a, session_b)
 
 
 def replacement_score(current_session: dict, candidate: dict, now_dt: datetime) -> int:
@@ -453,8 +620,10 @@ def replacement_score(current_session: dict, candidate: dict, now_dt: datetime) 
         score += 120
     if subtype_tokens(current_name) & subtype_tokens(candidate_name):
         score += 45
-    if str(current_session.get("certifying_body") or "").upper() == str(candidate.get("certifying_body") or "").upper():
+    if structured_certifying_body(current_session).upper() == structured_certifying_body(candidate).upper():
         score += 25
+    if structured_subtype(current_session).lower() and structured_subtype(current_session).lower() == structured_subtype(candidate).lower():
+        score += 22
     if current_start and candidate_start and current_start.weekday() == candidate_start.weekday():
         score += 15
     if current_start and candidate_start:
@@ -490,7 +659,7 @@ def build_future_replacement_index(sessions: list[dict], now_dt: datetime) -> di
             continue
         copy = dict(session)
         copy["_parsed_dt"] = dt
-        family = course_family_label(copy.get("course_name", ""))
+        family = course_family_label(copy.get("course_name", ""), copy)
         index["family"].setdefault(family, []).append(copy)
         course_id = str(copy.get("course_id") or "").strip()
         if course_id:
@@ -513,7 +682,7 @@ def get_upcoming_sessions(
 ) -> list[dict]:
     current_id = str(current_session.get("session_id", "")).strip()
     matches = []
-    family = course_family_label(current_session.get("course_name", ""))
+    family = course_family_label(current_session.get("course_name", ""), current_session)
     if future_index is not None:
         course_id = str(current_session.get("course_id") or "").strip()
         course_name = display_course_name(current_session.get("course_name", "")).lower()
@@ -600,10 +769,12 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], course_url: str
 """
         )
 
+    heading = f"Other upcoming {course_label} class times" if course_label and course_label != "Course" else "Need a different time?"
     return f"""
 <section id="upcoming-times" class="section-box js-live-session-group" data-empty-link="{escape(course_url)}" data-empty-link-label="{escape(primary_label)}" data-full-schedule-link="{escape(full_schedule_url)}">
   <div class="upcoming-head">
-    <h2>Best replacement options</h2>
+    <h2>{escape(heading)}</h2>
+    <p>These are nearby options from the same mapped course family and certifying body when that metadata is available.</p>
   </div>
   <div class="upcoming-grid">
     {''.join(cards)}
@@ -841,6 +1012,257 @@ def render_reviews_html(selected_reviews: list[dict]) -> str:
 </section>
 """
 
+
+def render_review_snippet_html(selected_reviews: list[dict]) -> str:
+    if selected_reviews:
+        review = selected_reviews[0]
+        author = review.get("author", "Google Review")
+        comment = truncate_review(review.get("comment", ""), 150)
+        return f"""
+<section class="trust-snippet" aria-label="Student review">
+  <div class="trust-snippet-score">
+    <span class="review-stars" aria-label="Five star review">★★★★★</span>
+    <strong>Trusted by local students and teams</strong>
+  </div>
+  <p>“{escape(comment)}” <span>{escape(author)}</span></p>
+</section>
+"""
+
+    return """
+<section class="trust-snippet" aria-label="Student trust">
+  <div class="trust-snippet-score">
+    <span class="review-stars" aria-label="Five star review">★★★★★</span>
+    <strong>Clear instruction. Direct registration. Local training.</strong>
+  </div>
+  <p>910CPR helps individuals, schools, healthcare teams, and workplaces keep certification current.</p>
+</section>
+"""
+
+
+def certification_outcome(session: dict) -> str:
+    if not is_mapped(session):
+        return "Outcome not mapped - review course metadata before making certification claims."
+
+    family = structured_family(session)
+    body = structured_certifying_body(session).upper()
+    subtype = structured_subtype(session).lower()
+    delivery = structured_delivery(session).upper()
+
+    if body == "AHA" and family in {"BLS", "ACLS", "PALS"}:
+        if "heartcode" in subtype or delivery in {"BL", "SS"}:
+            return "Provider eCard after successful online coursework and in-person skills completion; commonly valid for 2 years."
+        return "Provider eCard after successful completion; commonly valid for 2 years."
+
+    if body == "AHA" and family == "Heartsaver":
+        return "Heartsaver completion card after successful completion; commonly valid for 2 years."
+
+    if family == "USCG":
+        return "Course documentation for the listed USCG-aligned first aid and CPR session."
+
+    return "Certification or completion documentation as listed for this mapped course."
+
+
+def same_day_note(session: dict) -> str:
+    if not is_mapped(session):
+        return ""
+    family = structured_family(session)
+    body = structured_certifying_body(session).upper()
+    if body == "AHA" and family in {"BLS", "ACLS", "PALS", "Heartsaver"}:
+        return "Same-day card processing when course requirements and roster details are complete."
+    return ""
+
+
+def render_confidence_block(session: dict) -> str:
+    if is_mapped(session):
+        family = structured_family(session) or "Mapped course"
+        subtype = structured_subtype(session)
+        course_type = f"{family} - {subtype}" if subtype else family
+        cert_body = certifying_body_label(structured_certifying_body(session))
+        delivery = delivery_type_label(structured_delivery(session))
+        outcome = certification_outcome(session)
+        same_day = same_day_note(session)
+    else:
+        cert_body = "Unmapped - needs review"
+        course_type = "Unmapped course metadata"
+        delivery = "Unmapped - needs review"
+        outcome = "Course outcome not shown because the structured course mapping is missing."
+        same_day = ""
+
+    same_day_html = f"<li>{escape(same_day)}</li>" if same_day else ""
+    return f"""
+<section class="confidence-block" aria-label="Course confidence">
+  <div class="confidence-item">
+    <span>Certifying body</span>
+    <strong>{escape(cert_body)}</strong>
+  </div>
+  <div class="confidence-item">
+    <span>Course type</span>
+    <strong>{escape(course_type)}</strong>
+  </div>
+  <div class="confidence-item">
+    <span>Delivery</span>
+    <strong>{escape(delivery)}</strong>
+  </div>
+  <div class="confidence-item confidence-outcome">
+    <span>What you receive</span>
+    <ul>
+      <li>{escape(outcome)}</li>
+      {same_day_html}
+    </ul>
+  </div>
+</section>
+"""
+
+
+def course_description_paragraphs(session: dict) -> list[str]:
+    if not is_mapped(session):
+        return [
+            "This session is present in the 910CPR schedule, but its structured course mapping is missing or uncertain.",
+            "To avoid routing students to the wrong certifying body or course family, this page does not infer certification details from the raw Enrollware title.",
+        ]
+
+    body = structured_certifying_body(session).upper()
+    family = structured_family(session)
+    subtype = structured_subtype(session).lower()
+    delivery = structured_delivery(session).upper()
+
+    if body == "AHA" and family == "BLS":
+        if "heartcode" in subtype or delivery in {"BL", "SS"}:
+            return [
+                "This is the American Heart Association BLS Provider HeartCode skills session. Students complete the AHA online HeartCode BLS coursework first, then use this appointment for hands-on skills practice and testing.",
+                "It is built for healthcare and clinical roles that need AHA BLS Provider certification while using the blended-learning pathway.",
+            ]
+        if "renewal" in subtype:
+            return [
+                "This is the American Heart Association BLS Provider renewal class for students who already work at the healthcare-provider level and need to keep their BLS current.",
+                "The class focuses on high-quality CPR, AED use, ventilations, and team response for adult, child, and infant emergencies.",
+            ]
+        return [
+            "This is the American Heart Association BLS Provider course for healthcare providers and students entering clinical programs.",
+            "The class covers high-quality CPR, AED use, ventilations, choking response, and team-based basic life support for adult, child, and infant patients.",
+        ]
+
+    if body == "AHA" and family == "ACLS":
+        if "heartcode" in subtype or delivery in {"BL", "SS"}:
+            return [
+                "This is the American Heart Association ACLS HeartCode skills session. Students complete the online ACLS portion first, then attend this session for hands-on skills testing.",
+                "It is intended for clinicians who manage or participate in adult cardiovascular emergency response and need the AHA ACLS Provider pathway.",
+            ]
+        return [
+            "This is the American Heart Association ACLS Provider course for clinicians involved in adult cardiovascular emergency care.",
+            "The class reinforces systematic assessment, effective team dynamics, rhythm recognition, pharmacology concepts, and management of cardiac arrest and peri-arrest situations.",
+        ]
+
+    if body == "AHA" and family == "PALS":
+        return [
+            "This is the American Heart Association PALS Provider course for clinicians who respond to pediatric respiratory, shock, and cardiac emergencies.",
+            "The class emphasizes pediatric assessment, high-performance team response, and treatment priorities for infants and children in urgent care settings.",
+        ]
+
+    if body == "AHA" and family == "Heartsaver":
+        if "pediatric" in subtype:
+            return [
+                "This AHA Heartsaver Pediatric First Aid CPR AED session is designed for childcare providers, caregivers, teachers, and others responsible for children.",
+                "It combines practical first aid, CPR, and AED training in the format listed for this session.",
+            ]
+        if "cpr" in subtype and "first aid" not in subtype:
+            return [
+                "This AHA Heartsaver CPR AED class is for workplace and community responders who need CPR and AED training without the first aid module.",
+                "It is a practical non-healthcare-provider course for adults who need a recognized CPR AED credential for work, school, or volunteering.",
+            ]
+        return [
+            "This AHA Heartsaver First Aid CPR AED class is for workplace, school, childcare, fitness, church, and community responders.",
+            "It combines first aid, CPR, and AED training in a practical format for people who need a recognized non-healthcare-provider certification.",
+        ]
+
+    if family == "USCG":
+        return [
+            "This USCG Elementary First Aid | CPR session is the maritime-focused first aid and CPR option listed in the 910CPR schedule.",
+            "It is intended for students who need the specific USCG-aligned course shown here, with the delivery format and registration link preserved from the source session.",
+        ]
+
+    return [
+        f"This is a mapped {certifying_body_label(body)} {family} session from the 910CPR schedule.",
+        "The page uses structured course metadata for certifying body, course family, delivery type, and registration routing.",
+    ]
+
+
+def who_for_paragraphs(session: dict, course_display: str) -> list[str]:
+    if not is_mapped(session):
+        return [
+            "This page needs course mapping review before a specific audience recommendation is shown.",
+            "Use the registration link only after confirming the course is the version your employer, school, or agency requested.",
+        ]
+
+    body = structured_certifying_body(session).upper()
+    family = structured_family(session)
+    subtype = structured_subtype(session).lower()
+
+    if body == "AHA" and family == "BLS":
+        return [
+            "This is the class most nursing, EMS, dental, hospital, and clinical programs mean when they ask for AHA BLS.",
+            "Good fit if your employer or school specifically asked for American Heart Association BLS Provider. If you are not sure which version you need, BLS is usually the safer choice for healthcare roles.",
+        ]
+    if body == "AHA" and family == "ACLS":
+        return [
+            "Good fit for nurses, paramedics, respiratory therapists, physicians, advanced-practice providers, and clinical teams involved in adult cardiac emergency response.",
+            "Choose this when your employer, hospital, or program specifically asks for American Heart Association ACLS Provider.",
+        ]
+    if body == "AHA" and family == "PALS":
+        return [
+            "Good fit for pediatric, emergency, transport, ICU, and clinical roles that may respond to seriously ill or injured infants and children.",
+            "Choose this when your employer, hospital, or program specifically asks for American Heart Association PALS Provider.",
+        ]
+    if body == "AHA" and family == "Heartsaver":
+        if "pediatric" in subtype:
+            return [
+                "Good fit for childcare providers, teachers, camp staff, babysitters, foster/adoptive parents, and teams responsible for children.",
+                "If your requirement says AHA Heartsaver Pediatric First Aid CPR AED, this is the right family to compare against.",
+            ]
+        return [
+            "Good fit for teachers, childcare staff, fitness professionals, security teams, office staff, church teams, construction crews, and other workplace responders.",
+            "If your role is not healthcare but you need a recognized CPR, AED, and first aid card, Heartsaver is usually the version employers mean.",
+        ]
+    if family == "USCG":
+        return [
+            "Good fit for maritime students and working crews who were told to complete Elementary First Aid | CPR for a Coast Guard-related requirement.",
+            "Use this page when the requested course specifically matches the USCG Elementary First Aid | CPR wording shown here.",
+        ]
+    return [audience_blurb(course_display), corporate_blurb("your area", course_display)]
+
+
+def render_course_description_section(session: dict, fallback_html: str) -> str:
+    description_html = fallback_html if is_mapped(session) else ""
+    if description_html:
+        return f"""
+<section class="section-box course-description-priority">
+  <h2>Course Description</h2>
+  <div class="description-html">
+    {description_html}
+  </div>
+</section>
+"""
+
+    paragraphs = "\n".join(f"    <p>{escape(text)}</p>" for text in course_description_paragraphs(session))
+    return f"""
+<section class="section-box course-description-priority">
+  <h2>Course Description</h2>
+  <div class="description-html">
+{paragraphs}
+  </div>
+</section>
+"""
+
+
+def render_who_for_section(session: dict, course_display: str) -> str:
+    paragraphs = "\n".join(f"  <p>{escape(text)}</p>" for text in who_for_paragraphs(session, course_display))
+    return f"""
+<section class="section-box">
+  <h2>Who This Class Is For</h2>
+{paragraphs}
+</section>
+"""
+
     cards = []
     for review in selected_reviews:
         stars = "★" * int(review.get("stars", 5))
@@ -875,6 +1297,9 @@ TEMPLATE = """<!DOCTYPE html>
 <meta name="description" content="{meta_description}">
 <meta name="robots" content="{robots_value}">
 <link rel="canonical" href="{canonical_url}">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
 <link rel="stylesheet" href="/css/lander.css">
 {gtm_head}
 {schema_block}
@@ -909,8 +1334,8 @@ TEMPLATE = """<!DOCTYPE html>
       <div class="hero-side">
         {cert_logo_html}
         <div class="trust-badge">
-          <strong>Same-Day Certification</strong>
-          <span>Most students receive their certification the same day.</span>
+          <strong>{trust_badge_title}</strong>
+          <span>{trust_badge_copy}</span>
         </div>
       </div>
 
@@ -944,19 +1369,19 @@ TEMPLATE = """<!DOCTYPE html>
 
     </div>
 
+    {confidence_block_html}
+
+    {review_snippet_html}
+
+    {course_description_section}
+
     {upcoming_sessions_html}
 
     {brand_strip_html}
 
+    {who_for_section}
+
     {reviews_html}
-
-    {course_description_section}
-
-    <section class="section-box">
-      <h2>Who This Class Is For</h2>
-      <p>{audience_text}</p>
-      <p>{corporate_text}</p>
-    </section>
 
     <div class="build-stamp">build: {build_stamp}</div>
 
@@ -1024,6 +1449,11 @@ def main() -> None:
         action="store_true",
         help="Skip class pages that already contain BUILD_CODE from this generator.",
     )
+    parser.add_argument(
+        "--resume-product-layout",
+        action="store_true",
+        help="Skip class pages that already contain the upgraded product-page layout markers.",
+    )
     parser.add_argument("--shard-index", type=int, default=0, help="Zero-based shard index for parallel rebuilds.")
     parser.add_argument("--shard-count", type=int, default=1, help="Total shard count for parallel rebuilds.")
     args = parser.parse_args()
@@ -1033,7 +1463,7 @@ def main() -> None:
     with open(data_file, "r", encoding="utf-8") as handle:
         data = json.load(handle)
 
-    sessions = data["sessions"]
+    sessions = [normalize_session_record(item) for item in data["sessions"]]
     all_reviews = load_reviews()
     build_meta = current_build_metadata("scripts/build_landers.py", str(data_file))
     build_stamp = build_meta.visible
@@ -1050,17 +1480,31 @@ def main() -> None:
             continue
         session_id = str(session.get("session_id", "")).strip()
         output_path = OUTPUT_DIR / f"{session_id}.html"
+        if args.resume_product_layout and output_path.exists():
+            existing = output_path.read_text(encoding="utf-8", errors="ignore")
+            if all(marker in existing for marker in ("confidence-block", "trust-snippet", "course-description-priority")):
+                continue
         if args.resume_stamped and output_path.exists():
             existing = output_path.read_text(encoding="utf-8", errors="ignore")
             if "<!-- BUILD_CODE:" in existing and "scripts/build_landers.py" in existing:
                 continue
         course_raw = session.get("course_name", "")
-        course_display = display_course_name(course_raw)
+        course_id = str(session.get("course_id", "")).strip()
+        course_number = str(session.get("course_number", "")).strip()
+        mapped_entry = course_map_entry(course_id, course_number)
+        if is_mapped(session):
+            course_display = (
+                str(mapped_entry.get("official_title") or "").strip()
+                or str(session.get("mapped_clean_title") or "").strip()
+                or display_course_name(course_raw)
+            )
+        else:
+            course_display = display_course_name(course_raw)
         course_seo = seo_course_phrase(course_raw)
 
         raw_location = str(session.get("location_display", "")).strip()
         location = clean_location_display(raw_location) or "Wilmington; Shipyard Blvd"
-        register = session.get("registration_url", "#")
+        register = session.get("registration_url", "#") or "#"
         dt = parse_dt(session.get("start_at"))
 
         if dt:
@@ -1083,10 +1527,8 @@ def main() -> None:
             f"and register online with 910CPR."
         )
 
-        course_id = str(session.get("course_id", "")).strip()
-        course_number = str(session.get("course_number", "")).strip()
-        course_label = course_family_label(course_display)
-        type_page_url = course_type_url(course_display)
+        course_label = course_family_label(course_display, session)
+        type_page_url = course_type_url_for_session(session, course_display)
         schedule_anchor = course_id if is_valid_schedule_anchor(course_id) else course_number
         if is_valid_schedule_anchor(schedule_anchor):
             schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
@@ -1100,17 +1542,27 @@ def main() -> None:
         if is_past:
             state_notice = """
 <div class="notice">
-  This class has passed. Choose a current option below.
+  This class has passed. The registration link is preserved for source validation; choose a current option below if you need a future date.
 </div>
 """
-            button_html = f'<a class="button secondary" href="{escape(type_page_url)}">See upcoming {escape(course_label)} classes</a>'
+            button_html = f'<a class="button primary" href="{escape(register)}">Register Now</a>'
             hero_subhead = "This class is no longer bookable. Use the replacement options below to choose a current class."
         else:
             state_notice = ""
             button_html = f'<a class="button primary" href="{escape(register)}">Register Now</a>'
             hero_subhead = "Use the register button for this session or the upcoming list below for other dates and times."
 
-        cert_logo = detect_cert_logo(course_display)
+        logo_key = str(session.get("mapped_logo_key") or mapped_entry.get("logo_key") or "").strip().lower()
+        if logo_key == "aha":
+            cert_logo = first_existing_image("0aha.png", "0AHA.png", "aha.png", "AHA.png")
+        elif logo_key == "arc":
+            cert_logo = first_existing_image("0arc.png", "0ARC.png", "arc.png", "ARC.png")
+        elif logo_key == "hsi":
+            cert_logo = first_existing_image("0hsi.png", "0HSI.png", "hsi.png", "HSI.png")
+        elif logo_key == "uscg":
+            cert_logo = first_existing_image("stripes.png", "uscg.png", "USCG.png")
+        else:
+            cert_logo = detect_cert_logo(course_display)
         if cert_logo:
             cert_logo_html = f"""
 <div class="cert-badge">
@@ -1144,24 +1596,7 @@ def main() -> None:
             brand_strip_html = ""
 
         description_html = load_course_description_html(course_id or course_number, course_display)
-        if description_html:
-            course_description_section = f"""
-<section class="section-box">
-  <h2>Course Description</h2>
-  <div class="description-html">
-    {description_html}
-  </div>
-</section>
-"""
-        else:
-            course_description_section = f"""
-<section class="section-box">
-  <h2>Course Description</h2>
-  <div class="description-html">
-    <p>{escape(audience_blurb(course_display))}</p>
-  </div>
-</section>
-"""
+        course_description_section = render_course_description_section(session, description_html)
 
         upcoming_sessions = get_upcoming_sessions(
             session,
@@ -1180,6 +1615,11 @@ def main() -> None:
             count=REVIEWS_PER_PAGE,
         )
         reviews_html = render_reviews_html(selected_reviews)
+        review_snippet_html = render_review_snippet_html(selected_reviews)
+        confidence_block_html = render_confidence_block(session)
+        who_for_section = render_who_for_section(session, course_display)
+        trust_badge_title = "Mapped course details" if is_mapped(session) else "Mapping review needed"
+        trust_badge_copy = same_day_note(session) or "Structured course metadata is shown before schedule alternatives."
 
         html_doc = TEMPLATE.format(
             page_title=escape(page_title),
@@ -1196,16 +1636,19 @@ def main() -> None:
             course=escape(course_display),
             hero_subhead=escape(hero_subhead),
             cert_logo_html=cert_logo_html,
+            trust_badge_title=escape(trust_badge_title),
+            trust_badge_copy=escape(trust_badge_copy),
             date=escape(date),
             time=escape(time),
             location=escape(location),
             button_html=button_html,
+            confidence_block_html=confidence_block_html,
+            review_snippet_html=review_snippet_html,
             upcoming_sessions_html=upcoming_sessions_html,
             brand_strip_html=brand_strip_html,
             reviews_html=reviews_html,
             course_description_section=course_description_section,
-            audience_text=escape(audience_blurb(course_display)),
-            corporate_text=escape(corporate_blurb(city, course_display)),
+            who_for_section=who_for_section,
             build_stamp=escape(build_stamp),
             session_id=escape(session_id),
             course_id=escape(course_id or course_number),

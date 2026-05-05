@@ -1,0 +1,8 @@
+{
+  "generated_at": "2026-05-04T23:22:26.285361-04:00",
+  "summary": {},
+  "alerts": [],
+  "warnings": [
+    "Input CSV not found: E:\\GitHub\\910cpr-class-landers\\data\\inventory\\910cpr_inventory_events.csv. Wrote empty inventory outputs."
+  ]
+}

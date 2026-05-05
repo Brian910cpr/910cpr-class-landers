@@ -22,12 +22,14 @@ CLASSES_INDEX_FILE = CLASSES_DIR / "index.html"
 COURSES_INDEX_FILE = COURSES_DIR / "index.html"
 SITEMAP_FILE = DOCS_DIR / "sitemap.xml"
 SCHEDULE_FUTURE_FILE = DOCS_DIR / "data" / "schedule_future.json"
+REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
 
 SITE_BASE = "https://www.910cpr.com"
 GTM_ID = "GTM-PQS8DCBH"
 PHONE_DISPLAY = "910-395-5193"
 PHONE_LINK = "tel:+19103955193"
 ENROLLWARE_SCHEDULE_URL = "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule"
+GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403"
 LOCAL_TZ = ZoneInfo("America/New_York")
 COURSE_PAGE_VISIBLE_BATCH = 10
 
@@ -81,6 +83,65 @@ def html_escape(text: str) -> str:
         .replace(">", "&gt;")
         .replace('"', "&quot;")
     )
+
+
+def load_google_review_stats() -> dict:
+    fallback = {"label": "450+ 5-star reviews on Google", "themes": review_theme_summaries()}
+    if not REVIEWS_FILE.exists():
+        return fallback
+
+    try:
+        payload = json.loads(REVIEWS_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return fallback
+
+    reviews = payload.get("reviews", payload) if isinstance(payload, dict) else payload
+    if not isinstance(reviews, list):
+        return fallback
+
+    five_star = [
+        review
+        for review in reviews
+        if review.get("rating") == 5 or str(review.get("starRating", "")).upper() == "FIVE"
+    ]
+    label = f"{len(five_star)} 5-star reviews on Google" if five_star else fallback["label"]
+    return {"label": label, "themes": review_theme_summaries()}
+
+
+def review_theme_summaries() -> list[str]:
+    return [
+        "Students often mention knowledgeable instructors who keep CPR, BLS, ACLS, and PALS requirements clear.",
+        "Renewing providers regularly describe the classes as organized, direct, and respectful of their time.",
+        "Reviewers commonly point to clear explanations, hands-on practice, and a class experience that feels manageable.",
+    ]
+
+
+def render_google_trust_block() -> str:
+    stats = load_google_review_stats()
+    themes = "".join(
+        f"""
+          <article class="review-snippet">
+            <p>{html_escape(theme)}</p>
+          </article>
+""".rstrip()
+        for theme in stats["themes"]
+    )
+    themes_html = f'<div class="review-snippets" aria-label="AI summaries of common review themes"><div class="review-theme-label">AI summary of common review themes</div>{themes}</div>' if themes else ""
+    return f"""
+      <section class="top-trust" aria-label="910CPR trust and reviews">
+        <div class="top-trust-copy">
+          <div class="home-status-label">Serving North And South Carolina</div>
+          <p>From the mountains to the coast, 910CPR helps healthcare teams, dental offices, schools, workplaces, and students meet real certification requirements with clear, organized classes.</p>
+        </div>
+        <a class="google-review-card" href="{GOOGLE_REVIEWS_URL}" target="_blank" rel="noopener noreferrer" aria-label="Open 910CPR Google reviews in a new tab">
+          <span class="review-stars review-stars-large" aria-hidden="true">★★★★★</span>
+          <strong>Trusted by {html_escape(stats['label'])}</strong>
+          <em>As of May 5, 2026</em>
+          <span>Read 910CPR reviews on Google</span>
+        </a>
+        {themes_html}
+      </section>
+""".rstrip()
 
 
 def strip_html(text: str) -> str:
@@ -442,6 +503,9 @@ def page_template(
 <meta name="description" content="{html_escape(description)}">
 <meta name="robots" content="{html_escape(robots_content)}">
 <link rel="canonical" href="{SITE_BASE}{canonical_path}">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
 {render_gtm_head()}
 <style>
 body {{
@@ -633,10 +697,13 @@ def render_homepage() -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Find Your CPR Class Fast | 910CPR</title>
-<meta name="description" content="Find the right 910CPR class fast. Compare BLS, ACLS, PALS, Heartsaver, USCG, and group training options with real upcoming availability and direct booking links.">
+<title>CPR Certification That Actually Counts | 910CPR</title>
+<meta name="description" content="AHA, Red Cross, and HSI CPR certification for healthcare, dental, school, workplace, and professional requirements. Book scheduled group classes at 910CPR training sites.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="{SITE_BASE}/">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
 <link rel="stylesheet" href="/css/lander.css">
 {render_gtm_head()}
 </head>
@@ -653,25 +720,26 @@ def render_homepage() -> str:
       </header>
       <section class="hero home-hero">
         <div class="hero-main">
-          <div class="eyebrow">910CPR Booking Homepage</div>
-          <h1>Find the right CPR class in a minute, not a spreadsheet.</h1>
-          <p class="subhead">Choose the training type you need, review a short list of real upcoming openings, and jump straight into the correct 910CPR booking flow powered by Enrollware checkout.</p>
+          <div class="eyebrow">CPR, BLS, ACLS, PALS, First Aid</div>
+          <h1>CPR Certification That Actually Counts</h1>
+          <p class="subhead">AHA, Red Cross, and HSI training for nurses, EMTs, dental teams, healthcare students, workplaces, and professional requirements.</p>
           <div class="hero-actions">
-            <a class="button primary" href="#class-finder">Browse live class openings</a>
+            <a class="button primary" href="#class-finder">Find a class time</a>
             <a class="button secondary" href="/group-training.html">Need training for a team?</a>
           </div>
         </div>
         <div class="hero-side">
           <div class="trust-badge">
-            <strong>Live Public Inventory</strong>
-            <span>Only future, bookable classes with approved public-facing locations are surfaced here.</span>
+            <strong>Scheduled Group Classes</strong>
+            <span>Pick a time and show up at the listed 910CPR training site.</span>
           </div>
           <div class="trust-badge">
-            <strong>Fastest Route To Checkout</strong>
-            <span>Every session pill is the CTA, so you can jump directly into the right Enrollware enroll page.</span>
+            <strong>No Wasted Time</strong>
+            <span>No back-and-forth or complicated coordination. Reserve your seat and get it done in one visit.</span>
           </div>
         </div>
       </section>
+      {render_google_trust_block()}
 
       <section class="home-jumps" aria-label="Quick jumps">
         <a class="jump-chip" href="#bls">Healthcare CPR</a>
@@ -685,31 +753,31 @@ def render_homepage() -> str:
 
       <section class="home-status">
         <div>
-          <div class="home-status-label">How this page works</div>
-          <p>Browse by public class type instead of internal Enrollware naming. Each section stays concise, and the full schedule button takes you to the relevant hub page when you want more options.</p>
+          <div class="home-status-label">Accepted Training Options</div>
+          <p>Choose the CPR, BLS, ACLS, PALS, first aid, or workplace course that matches your employer, school, licensing, or professional requirement.</p>
         </div>
         <div class="home-status-badges">
-          <span class="home-stat">Upcoming only</span>
-          <span class="home-stat">Approved locations only</span>
-          <span class="home-stat">Enrollware checkout preserved</span>
+          <span class="home-stat">AHA</span>
+          <span class="home-stat">Red Cross</span>
+          <span class="home-stat">HSI</span>
         </div>
       </section>
 
       <section class="home-finder" id="class-finder">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Class Finder</div>
-            <h2>Book by the class type students actually search for</h2>
+            <div class="eyebrow">Scheduled Classes</div>
+            <h2>Reserve a seat in the class you need</h2>
           </div>
-          <p class="section-copy">We keep the homepage focused on the next few relevant openings for each category, then hand off to the right hub page or enroll URL when you’re ready.</p>
+          <p class="section-copy">Start with the most common certification paths, then choose the date and location that work for you.</p>
         </div>
 
         <div class="finder-grid" data-home-sections>
           <article class="finder-card finder-card-loading">
             <div class="finder-card-head">
               <div>
-                <h3>Loading live class availability</h3>
-                <p class="finder-card-copy">Pulling the current public schedule now.</p>
+                <h3>Loading class times</h3>
+                <p class="finder-card-copy">Loading the current 910CPR class schedule.</p>
               </div>
             </div>
           </article>

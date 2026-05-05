@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>910CPR Inventory</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d7dee8;
+      --out: #b42318;
+      --critical: #c2410c;
+      --low: #a16207;
+      --watch: #1769aa;
+      --ok: #157347;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.4;
+    }
+    main {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    h1, h2 { margin: 0; letter-spacing: 0; }
+    h1 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+    h2 { font-size: 1rem; }
+    .muted { color: var(--muted); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .metric, section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .metric {
+      min-height: 86px;
+      padding: 14px;
+    }
+    .metric strong {
+      display: block;
+      font-size: 1.8rem;
+      line-height: 1.1;
+      margin-top: 6px;
+    }
+    section {
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    section > .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+    th, td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.93rem;
+    }
+    th {
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+    tr:last-child td { border-bottom: 0; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .OUT { background: var(--out); }
+    .CRITICAL { background: var(--critical); }
+    .LOW { background: var(--low); }
+    .WATCH { background: var(--watch); }
+    .OK { background: var(--ok); }
+    .SERVICE_FAILURE_RISK, .SERVICE_FAILURE_EVENT { background: #6f2c91; }
+    .empty { padding: 18px 16px; color: var(--muted); }
+    @media (max-width: 760px) {
+      header { display: block; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      main { width: min(100% - 18px, 1180px); padding-top: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>910CPR Inventory</h1>
+        <div class="muted">Internal operator dashboard</div>
+      </div>
+      <div class="muted" id="updated">Loading...</div>
+    </header>
+
+    <div class="grid" id="metrics"></div>
+    <div id="alert-sections"></div>
+
+    <section>
+      <div class="section-head">
+        <h2>Latest Inventory by Product</h2>
+        <span class="muted" id="product-count"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Product</th>
+              <th>Calculated</th>
+              <th>Reported</th>
+              <th>Days Remaining</th>
+              <th>Burn 14d</th>
+              <th>Suggested Action</th>
+              <th>Last Seen</th>
+            </tr>
+          </thead>
+          <tbody id="products"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const statusOrder = ["OUT", "CRITICAL", "LOW", "WATCH"];
+
+    function fmt(value) {
+      return value === null || value === undefined || value === "" ? "n/a" : value;
+    }
+
+    function badge(label) {
+      return `<span class="badge ${label}">${label.replaceAll("_", " ")}</span>`;
+    }
+
+    function tableRows(items, columns) {
+      if (!items.length) return `<div class="empty">No items.</div>`;
+      const rows = items.map(item => `<tr>${columns.map(col => `<td>${col(item)}</td>`).join("")}</tr>`).join("");
+      return `<div class="table-wrap"><table><tbody>${rows}</tbody></table></div>`;
+    }
+
+    Promise.all([
+      fetch("/data/inventory_status.json").then(r => r.json()),
+      fetch("/data/inventory_alerts.json").then(r => r.json())
+    ]).then(([status, alerts]) => {
+      const products = status.products || [];
+      document.getElementById("updated").textContent = `Last updated ${fmt(status.generated_at)}`;
+      document.getElementById("product-count").textContent = `${products.length} products`;
+
+      const counts = status.summary?.status_counts || {};
+      const riskCount = status.summary?.service_failure_risk_count || 0;
+      document.getElementById("metrics").innerHTML = [
+        ["OUT", counts.OUT || 0],
+        ["CRITICAL", counts.CRITICAL || 0],
+        ["LOW", counts.LOW || 0],
+        ["WATCH", counts.WATCH || 0],
+        ["SERVICE FAILURE RISK", riskCount]
+      ].map(([label, value]) => `<div class="metric"><span class="muted">${label}</span><strong>${value}</strong></div>`).join("");
+
+      document.getElementById("alert-sections").innerHTML = statusOrder.map(name => {
+        const items = products.filter(product => product.latest_status === name);
+        return `<section><div class="section-head"><h2>${name} Items</h2><span class="muted">${items.length}</span></div>${
+          tableRows(items, [
+            item => badge(item.latest_status),
+            item => `<strong>${fmt(item.product_name_raw_latest)}</strong><br><span class="muted">${fmt(item.product_key)}</span>`,
+            item => fmt(item.calculated_inventory),
+            item => fmt(item.latest_remaining_reported),
+            item => fmt(item.days_remaining_14d),
+            item => fmt(item.suggested_action)
+          ])
+        }</section>`;
+      }).join("") + `<section><div class="section-head"><h2>Service Failure Risk Items</h2><span class="muted">${riskCount}</span></div>${
+        tableRows(products.filter(product => product.service_failure_risk), [
+          item => badge("SERVICE_FAILURE_RISK"),
+          item => `<strong>${fmt(item.product_name_raw_latest)}</strong><br><span class="muted">${fmt(item.product_key)}</span>`,
+          item => fmt(item.needs_assignment_count),
+          item => fmt(item.suggested_action)
+        ])
+      }</section>`;
+
+      document.getElementById("products").innerHTML = products.map(item => `<tr>
+        <td>${badge(item.latest_status)}</td>
+        <td><strong>${fmt(item.product_name_raw_latest)}</strong><br><span class="muted">${fmt(item.product_key)}</span></td>
+        <td>${fmt(item.calculated_inventory)}</td>
+        <td>${fmt(item.latest_remaining_reported)}</td>
+        <td>${fmt(item.days_remaining_14d)}</td>
+        <td>${fmt(item.estimated_daily_burn_14d)}</td>
+        <td>${fmt(item.suggested_action)}</td>
+        <td>${fmt(item.last_seen_timestamp)}</td>
+      </tr>`).join("") || `<tr><td colspan="8" class="empty">No inventory events loaded.</td></tr>`;
+    }).catch(error => {
+      document.getElementById("updated").textContent = "Unable to load inventory JSON.";
+      document.getElementById("products").innerHTML = `<tr><td colspan="8" class="empty">${error}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

@@ -175,6 +175,24 @@ def build_public_future_session(session: dict[str, Any]) -> dict[str, Any]:
         "is_full": capacity.get("is_full"),
         "registration_url": commerce.get("registration_url"),
         "session_status": status.get("session_status"),
+        "mapped_family": session.get("mapped_family") or course.get("mapped_family"),
+        "mapped_subtype": session.get("mapped_subtype") or course.get("mapped_subtype"),
+        "mapped_certifying_body": session.get("mapped_certifying_body") or course.get("mapped_certifying_body"),
+        "mapped_delivery_mode": session.get("mapped_delivery_mode") or course.get("mapped_delivery_mode"),
+        "mapped_logo_key": session.get("mapped_logo_key") or course.get("mapped_logo_key"),
+        "mapped_price": session.get("mapped_price") if session.get("mapped_price") is not None else course.get("mapped_price"),
+        "mapped_clean_title": session.get("mapped_clean_title") or course.get("mapped_clean_title"),
+        "mapped_short_description": session.get("mapped_short_description") or course.get("mapped_short_description"),
+        "mapped_long_description": session.get("mapped_long_description") or course.get("mapped_long_description"),
+        "mapped_who_class_for": session.get("mapped_who_class_for") or course.get("mapped_who_class_for"),
+        "mapped_prerequisites": session.get("mapped_prerequisites") or course.get("mapped_prerequisites"),
+        "mapped_what_to_expect": session.get("mapped_what_to_expect") or course.get("mapped_what_to_expect"),
+        "mapped_certification_card": session.get("mapped_certification_card") or course.get("mapped_certification_card"),
+        "mapped_renewal_info": session.get("mapped_renewal_info") or course.get("mapped_renewal_info"),
+        "mapped_official_description_source": session.get("mapped_official_description_source") or course.get("mapped_official_description_source"),
+        "mapped_description_status": session.get("mapped_description_status") or course.get("mapped_description_status"),
+        "mapping_status": session.get("mapping_status") or course.get("mapping_status") or "unmapped",
+        "mapping_notes": session.get("mapping_notes") or course.get("mapping_notes") or [],
     }
 
 
@@ -206,6 +224,11 @@ def main() -> int:
         action="store_true",
         help="Include past sessions instead of filtering them out. Used for full class-page rebuilds.",
     )
+    parser.add_argument(
+        "--fail-on-unmapped",
+        action="store_true",
+        help="Fail build if any output session is unmapped.",
+    )
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
@@ -235,6 +258,7 @@ def main() -> int:
         skipped_missing_start = 0
         skipped_past = 0
         skipped_orphan = 0
+        skipped_unmapped = 0
 
         for index, session in enumerate(sessions, start=1):
             session_id = str(session.get("session_id") or "").strip()
@@ -246,6 +270,12 @@ def main() -> int:
             if session_id not in class_report_ids:
                 print(f"ORPHAN SESSION DETECTED: {session_id} not present in current Class Report")
                 skipped_orphan += 1
+                reporter.update(current=index, total=len(sessions))
+                continue
+            mapping_status = str(session.get("mapping_status") or "").strip().lower()
+            if mapping_status not in {"mapped"}:
+                print(f"UNMAPPED COURSE DETECTED: session_id={session_id} mapping_status={session.get('mapping_status')}")
+                skipped_unmapped += 1
                 reporter.update(current=index, total=len(sessions))
                 continue
             start_dt = parse_iso_dt(session_start_candidate(session))
@@ -285,6 +315,7 @@ def main() -> int:
                     "skipped_missing_start": skipped_missing_start,
                     "skipped_past": skipped_past,
                     "skipped_orphan": skipped_orphan,
+                    "skipped_unmapped": skipped_unmapped,
                     "include_past": args.include_past,
                 },
                 "class_report": str(class_report_path),
@@ -306,6 +337,12 @@ def main() -> int:
         print(f"Skipped missing start: {skipped_missing_start}")
         print(f"Skipped past: {skipped_past}")
         print(f"Skipped orphan: {skipped_orphan}")
+        print(f"Skipped unmapped: {skipped_unmapped}")
+
+        if skipped_unmapped > 0:
+            print("UNMAPPED COURSE DETECTED: one or more sessions were excluded due to missing structured mapping.")
+            if args.fail_on_unmapped:
+                return 2
 
         return 0
     except Exception:

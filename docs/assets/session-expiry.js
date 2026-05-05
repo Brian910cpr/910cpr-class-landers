@@ -51,6 +51,11 @@
     if (msg) msg.remove();
   }
 
+  function hubSectionOf(container) {
+    if (!container || !container.closest(".slug-hub-shell")) return null;
+    return container.closest(".slug-inventory-section");
+  }
+
   function sortVisible(container) {
     if (!container) return;
     var rows = itemsIn(container).filter(function (node) {
@@ -137,8 +142,15 @@
       var visible = itemsIn(container).some(function (node) {
         return !node.hidden && node.style.display !== "none";
       });
-      if (!visible) ensureEmptyMessage(container);
-      else removeEmptyMessage(container);
+      var hubSection = hubSectionOf(container);
+      if (hubSection) {
+        hubSection.hidden = !visible;
+        removeEmptyMessage(container);
+      } else if (!visible) {
+        ensureEmptyMessage(container);
+      } else {
+        removeEmptyMessage(container);
+      }
     });
 
     showDebug(hiddenCount);

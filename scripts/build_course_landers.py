@@ -566,6 +566,9 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
   <title>{html.escape(title)} | {SITE_NAME}</title>
   <meta name="description" content="{html.escape(meta_desc)}">
   <link rel="canonical" href="{html.escape(canonical)}">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/images/logo.png">
+  <link rel="apple-touch-icon" href="/images/logo.png">
   <style>
     body {{
       margin: 0;

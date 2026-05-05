@@ -468,7 +468,7 @@
       : `
         <div class="finder-empty">
           <strong>${escapeHtml(section.emptyLabel)}</strong>
-          <p>Use the full schedule page for this category or check back after the next schedule refresh.</p>
+          <p>Use the full schedule page for more dates in this category.</p>
         </div>
       `;
 

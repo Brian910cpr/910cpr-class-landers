@@ -180,6 +180,9 @@ def page_shell(title: str, description: str, body_html: str, canonical_path: str
   <meta name="description" content="{escape(description)}">
   <meta name="robots" content="noindex,follow">
   <link rel="canonical" href="https://www.910cpr.com{canonical_path}">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="shortcut icon" href="/images/logo.png">
+  <link rel="apple-touch-icon" href="/images/logo.png">
   <link rel="stylesheet" href="/css/lander.css">
   {render_gtm_head()}
   <style>

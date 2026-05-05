@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-05-04T23:22:26.285361-04:00",
+  "source_csv": "E:\\GitHub\\910cpr-class-landers\\data\\inventory\\910cpr_inventory_events.csv",
+  "google_sheet_url": "https://docs.google.com/spreadsheets/d/1FLM1RPeoU30IXAMgaJjo1FehH8bRlrInvcHifB0Hlkg/edit",
+  "summary": {
+    "total_rows_read": 0,
+    "total_events_processed": 0,
+    "total_products_processed": 0,
+    "status_counts": {
+      "OUT": 0,
+      "CRITICAL": 0,
+      "LOW": 0,
+      "WATCH": 0,
+      "OK": 0
+    },
+    "service_failure_risk_count": 0
+  },
+  "warnings": [
+    "Input CSV not found: E:\\GitHub\\910cpr-class-landers\\data\\inventory\\910cpr_inventory_events.csv. Wrote empty inventory outputs."
+  ],
+  "products": []
+}

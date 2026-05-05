@@ -16,6 +16,26 @@ from openpyxl import load_workbook
 
 
 TZ = ZoneInfo("America/New_York")
+DESCRIPTION_FIELDS = [
+    "short_description",
+    "long_description",
+    "who_class_for",
+    "prerequisites",
+    "what_to_expect",
+    "certification_card",
+    "renewal_info",
+    "official_description_source",
+    "description_status",
+]
+DESCRIPTION_REQUIRED_FIELDS = [
+    "short_description",
+    "long_description",
+    "who_class_for",
+]
+DESCRIPTION_PLACEHOLDER_PATTERN = re.compile(
+    r"^(tbd|todo|placeholder|lorem ipsum|coming soon|n/?a|na|unknown)$",
+    flags=re.IGNORECASE,
+)
 
 
 def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
@@ -48,6 +68,25 @@ def clean_whitespace(value: Optional[str]) -> Optional[str]:
     if value is None:
         return None
     return re.sub(r"\s+", " ", value).strip() or None
+
+
+def normalize_description_status(value: Optional[str]) -> str:
+    status = clean_string(value)
+    if not status:
+        return "missing"
+    status = status.strip().lower()
+    if status in {"official", "draft", "needs_review", "missing"}:
+        return status
+    if status in {"need_review", "needs review"}:
+        return "needs_review"
+    return "needs_review"
+
+
+def is_placeholder_text(value: Optional[str]) -> bool:
+    text = clean_whitespace(value)
+    if not text:
+        return False
+    return bool(DESCRIPTION_PLACEHOLDER_PATTERN.match(text))
 
 
 def parse_int(value: Any) -> Optional[int]:
@@ -306,11 +345,50 @@ def compute_registered_count(student_rows: list[dict[str, Any]]) -> int:
     return len(student_rows)
 
 
+def load_course_map(repo_root: Path, relative_path: str) -> dict[str, Any]:
+    path = (repo_root / relative_path).resolve()
+    if not path.exists():
+        raise SystemExit(f"Required course map not found: {path}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["_path"] = str(path)
+    payload.setdefault("courses_by_id", {})
+    payload.setdefault("courses_by_number", {})
+    return payload
+
+
+def resolve_course_mapping(
+    course_map: dict[str, Any],
+    *,
+    course_id: Optional[str],
+    course_number: Optional[str],
+) -> tuple[Optional[dict[str, Any]], str, list[str]]:
+    by_id = course_map.get("courses_by_id", {})
+    by_number = course_map.get("courses_by_number", {})
+    notes: list[str] = []
+    id_key = clean_string(course_id)
+    num_key = clean_string(course_number)
+    map_by_id = by_id.get(id_key) if id_key else None
+    map_by_number = by_number.get(num_key) if num_key else None
+    if isinstance(map_by_number, str):
+        map_by_number = by_id.get(map_by_number)
+    if map_by_id and map_by_number:
+        if clean_string(map_by_id.get("course_id")) != clean_string(map_by_number.get("course_id")):
+            notes.append("course_map_conflict:id_and_number_resolve_different_courses")
+            return map_by_id, "mapped_conflict", notes
+        return map_by_id, "mapped", notes
+    if map_by_id:
+        return map_by_id, "mapped", notes
+    if map_by_number:
+        return map_by_number, "mapped", notes
+    return None, "unmapped", notes
+
+
 def build_session_from_class_report(
     report_row: dict[str, Any],
     class_patch: Optional[dict[str, Any]],
     student_rows: list[dict[str, Any]],
     now_iso: str,
+    course_map: dict[str, Any],
 ) -> Optional[dict[str, Any]]:
     registration_url_report = clean_string(report_row.get("Registration Link"))
     session_id = extract_enroll_id_from_url(registration_url_report)
@@ -332,6 +410,30 @@ def build_session_from_class_report(
     course_id = clean_string(class_patch.get("Course Id")) if class_patch else None
     if not course_id:
         course_id = parsed.course_number
+    course_number = parsed.course_number or course_id
+
+    mapped, mapping_status, mapping_notes = resolve_course_mapping(
+        course_map,
+        course_id=course_id,
+        course_number=course_number,
+    )
+
+    mapped_family = clean_string(mapped.get("family")) if mapped else None
+    mapped_subtype = clean_string(mapped.get("subtype")) if mapped else None
+    mapped_certifying_body = clean_string(mapped.get("certifying_body")) if mapped else None
+    mapped_delivery_mode = clean_string(mapped.get("delivery_mode")) if mapped else None
+    mapped_logo_key = clean_string(mapped.get("logo_key")) if mapped else None
+    mapped_price = parse_float(mapped.get("price")) if mapped else None
+    mapped_clean_title = clean_string(mapped.get("clean_title")) if mapped else None
+    mapped_short_description = clean_string(mapped.get("short_description")) if mapped else None
+    mapped_long_description = clean_string(mapped.get("long_description")) if mapped else None
+    mapped_who_class_for = clean_string(mapped.get("who_class_for") or mapped.get("who_for")) if mapped else None
+    mapped_prerequisites = clean_string(mapped.get("prerequisites")) if mapped else None
+    mapped_what_to_expect = clean_string(mapped.get("what_to_expect")) if mapped else None
+    mapped_certification_card = clean_string(mapped.get("certification_card")) if mapped else None
+    mapped_renewal_info = clean_string(mapped.get("renewal_info")) if mapped else None
+    mapped_official_description_source = clean_string(mapped.get("official_description_source")) if mapped else None
+    mapped_description_status = normalize_description_status(mapped.get("description_status") if mapped else None)
 
     start_source = report_row.get("Start Date / Time")
     end_source = report_row.get("End Date / Time")
@@ -360,7 +462,9 @@ def build_session_from_class_report(
             available_seats = 0
         is_full = available_seats <= 0
 
-    price = parse_float(class_patch.get("Price")) if class_patch else None
+    price = mapped_price
+    if price is None and class_patch:
+        price = parse_float(class_patch.get("Price"))
     if price is None:
         price = parsed.price_hint
 
@@ -417,7 +521,7 @@ def build_session_from_class_report(
             "course_name_primary_clean": parsed.course_name_primary_clean,
             "course_tail_raw": parsed.course_tail_raw,
             "course_subtitle_text": parsed.course_subtitle_text,
-            "course_number": parsed.course_number or course_id,
+            "course_number": course_number,
             "course_code_hint": parsed.course_code_hint,
             "certifying_body_hint": parsed.certifying_body_hint,
             "source_hint": parsed.source_hint,
@@ -426,7 +530,43 @@ def build_session_from_class_report(
             "image_src": parsed.image_src,
             "parse_confidence": parsed.parse_confidence,
             "parse_notes": parsed.parse_notes,
+            "mapped_family": mapped_family,
+            "mapped_subtype": mapped_subtype,
+            "mapped_certifying_body": mapped_certifying_body,
+            "mapped_delivery_mode": mapped_delivery_mode,
+            "mapped_logo_key": mapped_logo_key,
+            "mapped_price": mapped_price,
+            "mapped_clean_title": mapped_clean_title,
+            "mapped_short_description": mapped_short_description,
+            "mapped_long_description": mapped_long_description,
+            "mapped_who_class_for": mapped_who_class_for,
+            "mapped_prerequisites": mapped_prerequisites,
+            "mapped_what_to_expect": mapped_what_to_expect,
+            "mapped_certification_card": mapped_certification_card,
+            "mapped_renewal_info": mapped_renewal_info,
+            "mapped_official_description_source": mapped_official_description_source,
+            "mapped_description_status": mapped_description_status,
+            "mapping_status": mapping_status,
+            "mapping_notes": mapping_notes,
         },
+        "mapped_family": mapped_family,
+        "mapped_subtype": mapped_subtype,
+        "mapped_certifying_body": mapped_certifying_body,
+        "mapped_delivery_mode": mapped_delivery_mode,
+        "mapped_logo_key": mapped_logo_key,
+        "mapped_price": mapped_price,
+        "mapped_clean_title": mapped_clean_title,
+        "mapped_short_description": mapped_short_description,
+        "mapped_long_description": mapped_long_description,
+        "mapped_who_class_for": mapped_who_class_for,
+        "mapped_prerequisites": mapped_prerequisites,
+        "mapped_what_to_expect": mapped_what_to_expect,
+        "mapped_certification_card": mapped_certification_card,
+        "mapped_renewal_info": mapped_renewal_info,
+        "mapped_official_description_source": mapped_official_description_source,
+        "mapped_description_status": mapped_description_status,
+        "mapping_status": mapping_status,
+        "mapping_notes": mapping_notes,
         "timing": {
             "start_at": start_at,
             "end_at": end_at,
@@ -480,6 +620,9 @@ def main() -> int:
     parser.add_argument("--classes-csv", default="data/raw/classes_raw_live.csv")
     parser.add_argument("--students-csv", default="data/raw/students_raw_live.csv")
     parser.add_argument("--output", default="data/sessions_current.json")
+    parser.add_argument("--course-map", default="data/config/course_map.json")
+    parser.add_argument("--audit-dir", default="data/audit")
+    parser.add_argument("--fail-on-unmapped", action="store_true")
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
@@ -487,6 +630,8 @@ def main() -> int:
     classes_csv_path = (repo_root / args.classes_csv).resolve()
     students_csv_path = (repo_root / args.students_csv).resolve()
     output_path = (repo_root / args.output).resolve()
+    audit_dir = (repo_root / args.audit_dir).resolve()
+    course_map = load_course_map(repo_root, args.course_map)
 
     for path in [class_report_path, classes_csv_path, students_csv_path]:
         if not path.exists():
@@ -509,6 +654,9 @@ def main() -> int:
 
     sessions: list[dict[str, Any]] = []
     skipped_no_session_id = 0
+    unmapped_rows: list[dict[str, Any]] = []
+    conflict_rows: list[dict[str, Any]] = []
+    mapped_course_rollup: dict[str, dict[str, Any]] = {}
 
     for report_row in class_report_rows:
         report_reg_link = clean_string(report_row.get("Registration Link"))
@@ -528,9 +676,67 @@ def main() -> int:
             class_patch=class_patch,
             student_rows=student_rows_for_session,
             now_iso=now_iso,
+            course_map=course_map,
         )
         if session:
             sessions.append(session)
+            if session.get("mapping_status") == "mapped":
+                course_obj = session.get("course", {})
+                course_key = (
+                    clean_string(course_obj.get("course_id"))
+                    or clean_string(course_obj.get("course_number"))
+                    or f"session:{session.get('session_id')}"
+                )
+                rollup = mapped_course_rollup.setdefault(
+                    course_key,
+                    {
+                        "course_id": clean_string(course_obj.get("course_id")),
+                        "course_number": clean_string(course_obj.get("course_number")),
+                        "clean_title": clean_string(session.get("mapped_clean_title")),
+                        "official_title": clean_string(course_obj.get("course_name_primary_clean")),
+                        "family": clean_string(session.get("mapped_family")),
+                        "subtype": clean_string(session.get("mapped_subtype")),
+                        "certifying_body": clean_string(session.get("mapped_certifying_body")),
+                        "delivery_mode": clean_string(session.get("mapped_delivery_mode")),
+                        "description_status": normalize_description_status(session.get("mapped_description_status")),
+                        "fields": {
+                            "short_description": clean_string(session.get("mapped_short_description")),
+                            "long_description": clean_string(session.get("mapped_long_description")),
+                            "who_class_for": clean_string(session.get("mapped_who_class_for")),
+                            "prerequisites": clean_string(session.get("mapped_prerequisites")),
+                            "what_to_expect": clean_string(session.get("mapped_what_to_expect")),
+                            "certification_card": clean_string(session.get("mapped_certification_card")),
+                            "renewal_info": clean_string(session.get("mapped_renewal_info")),
+                            "official_description_source": clean_string(session.get("mapped_official_description_source")),
+                        },
+                        "example_session_ids": [],
+                        "affected_session_count": 0,
+                    },
+                )
+                rollup["affected_session_count"] += 1
+                if len(rollup["example_session_ids"]) < 5:
+                    rollup["example_session_ids"].append(session.get("session_id"))
+            if session.get("mapping_status") != "mapped":
+                unmapped_rows.append(
+                    {
+                        "session_id": session.get("session_id"),
+                        "course_id": session.get("course", {}).get("course_id"),
+                        "course_number": session.get("course", {}).get("course_number"),
+                        "course_name_display": session.get("course", {}).get("course_name_primary_clean"),
+                        "mapping_status": session.get("mapping_status"),
+                        "mapping_notes": session.get("mapping_notes", []),
+                        "registration_url": session.get("commerce", {}).get("registration_url"),
+                    }
+                )
+            if session.get("mapping_status") == "mapped_conflict":
+                conflict_rows.append(
+                    {
+                        "session_id": session.get("session_id"),
+                        "course_id": session.get("course", {}).get("course_id"),
+                        "course_number": session.get("course", {}).get("course_number"),
+                        "mapping_notes": session.get("mapping_notes", []),
+                    }
+                )
         else:
             skipped_no_session_id += 1
 
@@ -545,6 +751,7 @@ def main() -> int:
         "build": {
             "generated_at": now_iso,
             "repo_root": str(repo_root),
+            "course_map_path": course_map.get("_path"),
             "inputs": {
                 "class_report": str(class_report_path),
                 "classes_csv": str(classes_csv_path),
@@ -557,6 +764,8 @@ def main() -> int:
                 "students_csv_rows": len(students_rows),
                 "sessions_written": len(sessions),
                 "skipped_no_session_id": skipped_no_session_id,
+                "unmapped_sessions": len(unmapped_rows),
+                "mapping_conflicts": len(conflict_rows),
             },
         },
         "sessions": sessions,
@@ -565,9 +774,145 @@ def main() -> int:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    audit_dir.mkdir(parents=True, exist_ok=True)
+    unmapped_payload = {
+        "generated_at": now_iso,
+        "count": len(unmapped_rows),
+        "items": unmapped_rows,
+    }
+    conflicts_payload = {
+        "generated_at": now_iso,
+        "count": len(conflict_rows),
+        "items": conflict_rows,
+    }
+    missing_descriptions_items: list[dict[str, Any]] = []
+    missing_field_counts: defaultdict[str, int] = defaultdict(int)
+    complete_descriptions_count = 0
+    for course_key in sorted(mapped_course_rollup.keys()):
+        item = mapped_course_rollup[course_key]
+        fields = item.get("fields", {})
+        missing_fields: list[str] = []
+        placeholder_fields: list[str] = []
+
+        for field_name in DESCRIPTION_REQUIRED_FIELDS:
+            value = clean_string(fields.get(field_name))
+            if not value:
+                missing_fields.append(field_name)
+        for field_name in DESCRIPTION_FIELDS:
+            if field_name in {"description_status"}:
+                continue
+            value = clean_string(fields.get(field_name))
+            if value and is_placeholder_text(value):
+                placeholder_fields.append(field_name)
+
+        description_status = normalize_description_status(item.get("description_status"))
+        if description_status in {"missing", "needs_review"}:
+            missing_fields.append("description_status")
+
+        if missing_fields or placeholder_fields:
+            for field_name in set(missing_fields + placeholder_fields):
+                missing_field_counts[field_name] += 1
+            missing_descriptions_items.append(
+                {
+                    "course_id": item.get("course_id"),
+                    "course_number": item.get("course_number"),
+                    "clean_title": item.get("clean_title"),
+                    "official_title": item.get("official_title"),
+                    "family": item.get("family"),
+                    "subtype": item.get("subtype"),
+                    "certifying_body": item.get("certifying_body"),
+                    "delivery_mode": item.get("delivery_mode"),
+                    "description_status": description_status,
+                    "missing_fields": sorted(set(missing_fields)),
+                    "placeholder_fields": sorted(set(placeholder_fields)),
+                    "example_session_ids": item.get("example_session_ids", []),
+                    "count_of_affected_sessions": item.get("affected_session_count", 0),
+                }
+            )
+        else:
+            complete_descriptions_count += 1
+
+    missing_descriptions_payload = {
+        "generated_at": now_iso,
+        "counts": {
+            "mapped_courses": len(mapped_course_rollup),
+            "courses_with_complete_descriptions": complete_descriptions_count,
+            "courses_needing_review_or_missing": len(missing_descriptions_items),
+            "sessions_affected": sum(int(i.get("count_of_affected_sessions", 0)) for i in missing_descriptions_items),
+        },
+        "missing_field_counts": dict(sorted(missing_field_counts.items(), key=lambda kv: (-kv[1], kv[0]))),
+        "items": missing_descriptions_items,
+    }
+    (audit_dir / "unmapped_courses.json").write_text(
+        json.dumps(unmapped_payload, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (audit_dir / "course_map_conflicts.json").write_text(
+        json.dumps(conflicts_payload, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    (audit_dir / "missing_descriptions.json").write_text(
+        json.dumps(missing_descriptions_payload, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    missing_report_lines = [
+        "# Missing Descriptions Report",
+        "",
+        f"- Generated at: `{now_iso}`",
+        f"- Total mapped courses: `{len(mapped_course_rollup)}`",
+        f"- Courses with complete descriptions: `{complete_descriptions_count}`",
+        f"- Courses needing review: `{len(missing_descriptions_items)}`",
+        f"- Sessions affected: `{missing_descriptions_payload['counts']['sessions_affected']}`",
+        "",
+        "## Top Missing Fields",
+        "",
+    ]
+    if missing_field_counts:
+        for field_name, count in sorted(missing_field_counts.items(), key=lambda kv: (-kv[1], kv[0])):
+            missing_report_lines.append(f"- `{field_name}`: `{count}`")
+    else:
+        missing_report_lines.append("- None")
+    missing_report_lines.extend(
+        [
+            "",
+            "## Next Cleanup Recommendations",
+            "",
+            "- Fill required fields first: short_description, long_description, who_class_for.",
+            "- Mark reviewed courses with description_status=official only after QA.",
+            "- Keep unmapped courses blocked from public routing until mapped.",
+            "",
+        ]
+    )
+    (audit_dir / "missing_descriptions_report.md").write_text("\n".join(missing_report_lines), encoding="utf-8")
+    name_dependency_report = (
+        "# Name Dependency Report\n\n"
+        "This build keeps legacy Course HTML parsing for backward compatibility, but mapping is authoritative for operational metadata.\n\n"
+        f"- Course map: `{course_map.get('_path')}`\n"
+        f"- Sessions written: `{len(sessions)}`\n"
+        f"- Unmapped sessions: `{len(unmapped_rows)}`\n"
+        f"- Mapping conflicts: `{len(conflict_rows)}`\n\n"
+        "## Phase 1 Rules\n\n"
+        "- Do not infer certifying body/family/delivery from display name when mapping is missing.\n"
+        "- Display text may come from cleaned course name.\n"
+        "- Operational fields must come from course map when available.\n"
+    )
+    (audit_dir / "name_dependency_report.md").write_text(name_dependency_report, encoding="utf-8")
+
     print(f"Wrote {output_path}")
     print(f"Sessions written: {len(sessions)}")
     print(f"Skipped no session id: {skipped_no_session_id}")
+    print(f"Unmapped sessions: {len(unmapped_rows)}")
+    print(f"Course map conflicts: {len(conflict_rows)}")
+    print(f"Wrote {audit_dir / 'unmapped_courses.json'}")
+    print(f"Wrote {audit_dir / 'course_map_conflicts.json'}")
+    print(f"Wrote {audit_dir / 'missing_descriptions.json'}")
+    print(f"Wrote {audit_dir / 'missing_descriptions_report.md'}")
+    print(f"Wrote {audit_dir / 'name_dependency_report.md'}")
+
+    if unmapped_rows:
+        print("UNMAPPED COURSE DETECTED: one or more sessions are missing structured course mapping.")
+        if args.fail_on_unmapped:
+            return 2
 
     return 0
 

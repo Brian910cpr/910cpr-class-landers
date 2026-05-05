@@ -1,0 +1,439 @@
+{
+  "sessions_source": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
+  "generated_class_pages": 26052,
+  "source_sessions": 26042,
+  "pages_updated": 26042,
+  "extra_numeric_class_pages_not_in_source": [
+    "13295705",
+    "13295706",
+    "13295708",
+    "13295725",
+    "13295726",
+    "13295746",
+    "13295749",
+    "13295769",
+    "13295770",
+    "13295772"
+  ],
+  "mapped_sessions": 19708,
+  "unmapped_or_uncertain_course_mappings": 6334,
+  "unmapped_examples": [
+    {
+      "session_id": "3504839",
+      "course_id": "",
+      "course_name": "Heartsaver\u00ae First Aid",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3504839",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3740043",
+      "course_id": "",
+      "course_name": "Heartsaver\u00ae First Aid (No CPR AED) - Online c\u0304 In-person Skills [AHA]",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3740043",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4780529",
+      "course_id": "",
+      "course_name": "Phlebotomy Technician Program (80 Hr - 13 Weeks - Saturday)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4780529",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3769586",
+      "course_id": "",
+      "course_name": "Heartsaver First Aid CPR AED for K-12 Schools [AHA]",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3769586",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3897928",
+      "course_id": "",
+      "course_name": "Heartsaver First Aid CPR AED for K-12 Schools [AHA]",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3897928",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3971114",
+      "course_id": "",
+      "course_name": "Take your AHA CPR programs online!",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3971114",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3953080",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3953080",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3953029",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3953029",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3953099",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3953099",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3953113",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3953113",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3953125",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3953125",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4028031",
+      "course_id": "",
+      "course_name": "AHA - Heartsaver\u00ae CPR AED - Online c\u0304 In-person Skills",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4028031",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3953156",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3953156",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3953172",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3953172",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3953181",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3953181",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4028032",
+      "course_id": "",
+      "course_name": "AHA - Heartsaver\u00ae CPR AED - Online c\u0304 In-person Skills",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4028032",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3953192",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3953192",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4021954",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4021954",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4047802",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4047802",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4028033",
+      "course_id": "",
+      "course_name": "AHA - Heartsaver\u00ae CPR AED - Online c\u0304 In-person Skills",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4028033",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4047806",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4047806",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4073626",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4073626",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4047849",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4047849",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4028034",
+      "course_id": "",
+      "course_name": "AHA - Heartsaver\u00ae CPR AED - Online c\u0304 In-person Skills",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4028034",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4047816",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4047816",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4133502",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4133502",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4028035",
+      "course_id": "",
+      "course_name": "AHA - Heartsaver\u00ae CPR AED - Online c\u0304 In-person Skills",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4028035",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138200",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138200",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138914",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138914",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4047861",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4047861",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138201",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138201",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "3881518",
+      "course_id": "",
+      "course_name": "AHA - Heartsaver\u00ae CPR AED - Online c\u0304 In-person Skills",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=3881518",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4028036",
+      "course_id": "",
+      "course_name": "AHA - Heartsaver\u00ae CPR AED - Online c\u0304 In-person Skills",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4028036",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138928",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138928",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4133505",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4133505",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4047863",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4047863",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138202",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138202",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4047879",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4047879",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138221",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138221",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138941",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138941",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138203",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138203",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138159",
+      "course_id": "",
+      "course_name": "AHA - Heartsaver\u00ae CPR AED - Online c\u0304 In-person Skills",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138159",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138947",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138947",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138226",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138226",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138208",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138208",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138958",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138958",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138222",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138222",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138981",
+      "course_id": "209812",
+      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode\u00ae (Online + Skills Session)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138981",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138204",
+      "course_id": "248287",
+      "course_name": "ARC - BLS - Blended Learning (Online + Skills)",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138204",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    },
+    {
+      "session_id": "4138160",
+      "course_id": "",
+      "course_name": "AHA - Heartsaver\u00ae CPR AED - Online c\u0304 In-person Skills",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=4138160",
+      "mapping_status": "unmapped",
+      "mapping_notes": []
+    }
+  ],
+  "missing_pages": [],
+  "sessions_missing_validation_fields": [],
+  "main_registration_link_mismatches": [],
+  "alternate_registration_link_mismatches": [],
+  "alternate_cross_family_or_body": [],
+  "favicon_missing_class_pages": [],
+  "favicon_missing_hub_pages": [],
+  "product_layout_missing_pages": [],
+  "sample_pages": {
+    "aha_bls_provider": "E:\\GitHub\\910cpr-class-landers\\docs\\classes\\3504972.html",
+    "aha_acls": "E:\\GitHub\\910cpr-class-landers\\docs\\classes\\3564424.html",
+    "aha_pals": "E:\\GitHub\\910cpr-class-landers\\docs\\classes\\5314225.html",
+    "heartsaver": "E:\\GitHub\\910cpr-class-landers\\docs\\classes\\3505004.html",
+    "arc": null,
+    "hsi": null,
+    "uscg_elementary_first_aid": "E:\\GitHub\\910cpr-class-landers\\docs\\classes\\4138153.html"
+  }
+}

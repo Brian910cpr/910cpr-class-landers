@@ -25,6 +25,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
+REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
 OUTPUT_DIR = ROOT / "docs"
 STATE_DIR = ROOT / "data" / "state"
 RUNTIME_DIR = ROOT / "data" / "runtime"
@@ -34,6 +35,7 @@ DATE_LIMIT = 6
 POPULAR_LIMIT = 4
 EMPTY_FALLBACK_TITLE = "No upcoming dates are currently listed for this course."
 EMPTY_FALLBACK_BODY = "Please contact us and we'll help you find the right class."
+GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403"
 PRIVATE_HINTS = (
     "private",
     "onsite",
@@ -75,6 +77,71 @@ def clean_location(value: str | None) -> str:
 
 def normalize_space(value: str | None) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def strip_review_text(value: str | None) -> str:
+    text = unescape(str(value or ""))
+    text = re.sub(r"<[^>]+>", " ", text)
+    return normalize_space(text)
+
+
+def load_google_review_stats() -> dict[str, Any]:
+    fallback = {"label": "450+ 5-star reviews on Google", "themes": review_theme_summaries()}
+    if not REVIEWS_FILE.exists():
+        return fallback
+
+    try:
+        payload = json.loads(REVIEWS_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return fallback
+
+    reviews = payload.get("reviews", payload) if isinstance(payload, dict) else payload
+    if not isinstance(reviews, list):
+        return fallback
+
+    five_star = [
+        review
+        for review in reviews
+        if review.get("rating") == 5 or str(review.get("starRating", "")).upper() == "FIVE"
+    ]
+    label = f"{len(five_star)} 5-star reviews on Google" if five_star else fallback["label"]
+    return {"label": label, "themes": review_theme_summaries()}
+
+
+def review_theme_summaries() -> list[str]:
+    return [
+        "Students often mention knowledgeable instructors who keep CPR, BLS, ACLS, and PALS requirements clear.",
+        "Renewing providers regularly describe the classes as organized, direct, and respectful of their time.",
+        "Reviewers commonly point to clear explanations, hands-on practice, and a class experience that feels manageable.",
+    ]
+
+
+def render_google_trust_block() -> str:
+    stats = load_google_review_stats()
+    themes = "".join(
+        f"""
+          <article class="review-snippet">
+            <p>{escape(theme)}</p>
+          </article>
+""".rstrip()
+        for theme in stats["themes"]
+    )
+    themes_html = f'<div class="review-snippets" aria-label="AI summaries of common review themes"><div class="review-theme-label">AI summary of common review themes</div>{themes}</div>' if themes else ""
+    return f"""
+  <section class="top-trust" aria-label="910CPR trust and reviews">
+    <div class="top-trust-copy">
+      <div class="home-status-label">Serving North And South Carolina</div>
+      <p>From the mountains to the coast, 910CPR helps healthcare teams, dental offices, schools, workplaces, and students meet real certification requirements with clear, organized classes.</p>
+    </div>
+    <a class="google-review-card" href="{GOOGLE_REVIEWS_URL}" target="_blank" rel="noopener noreferrer" aria-label="Open 910CPR Google reviews in a new tab">
+      <span class="review-stars review-stars-large" aria-hidden="true">★★★★★</span>
+      <strong>Trusted by {escape(stats['label'])}</strong>
+      <em>As of May 5, 2026</em>
+      <span>Read 910CPR reviews on Google</span>
+    </a>
+    {themes_html}
+  </section>
+""".rstrip()
 
 
 def normalize_match_text(value: str | None) -> str:
@@ -628,6 +695,17 @@ def render_panel_description(tab: dict[str, Any]) -> str:
     )
 
 
+def full_schedule_short_label(page: dict[str, Any]) -> str:
+    labels = {
+        "bls": "BLS",
+        "acls": "ACLS",
+        "pals": "PALS",
+        "heartsaver": "Heartsaver",
+        "uscg-elementary-first-aid-cpr": "USCG",
+    }
+    return labels.get(str(page.get("slug") or ""), "Class")
+
+
 def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
     if group_mode:
@@ -715,13 +793,16 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
         ),
         quote=True,
     )
-    inventory_label = f"{len(sessions)} upcoming option" + ("" if len(sessions) == 1 else "s")
-
+    inventory_label = "Scheduled group classes"
+    schedule_short_label = full_schedule_short_label(page)
     escape_hatch_html = (
         f"""
 <section class="slug-escape-hatch">
-  <div class="slug-escape-copy">Need a different time?</div>
-  <a class="button secondary" href="{escape(tab['full_schedule_url'], quote=True)}">View Full {escape(page['slug'].upper())} Schedule</a>
+  <div class="slug-escape-copy">
+    <strong>Need more dates or locations?</strong>
+    <span>This page highlights selected upcoming class times. Open the full schedule for the complete list.</span>
+  </div>
+  <a class="button primary slug-full-schedule-button" href="{escape(tab['full_schedule_url'], quote=True)}">Open Full {escape(schedule_short_label)} Schedule</a>
 </section>
 """.strip()
         if not group_mode
@@ -937,6 +1018,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
       {render_hero_image(page)}
     </div>
   </section>
+  {render_google_trust_block()}
   {render_guidance_banners(page, banner_library)}
   {tabs_html}
   
@@ -952,6 +1034,9 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 <title>{escape(page['title'])}</title>
 <meta name="description" content="{escape(page['description'])}">
 <link rel="canonical" href="https://www.910cpr.com/{escape(page['slug'])}">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
 <link rel="stylesheet" href="/css/lander.css">
 </head>
 <body>
