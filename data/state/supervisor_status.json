@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T23:28:25.892890-04:00",
+  "generated_at": "2026-05-05T23:45:12.904952-04:00",
   "monitored_repo_path": "E:\\GitHub\\910cpr-class-landers",
   "build_summary": {
     "summary_file": "data\\state\\last_build_summary.json",
@@ -43,6 +43,50 @@
   },
   "runtime_statuses": [
     {
+      "phase_name": "build_index_and_sitemap",
+      "label": "Build Index And Sitemap",
+      "status": "done",
+      "timestamp": "2026-05-05T23:45:12.401128-04:00",
+      "current_count": 26052,
+      "total_count": 26052,
+      "percent_complete": 100.0,
+      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
+      "runtime_file": "data\\runtime\\build_index_and_sitemap.json"
+    },
+    {
+      "phase_name": "build_locations",
+      "label": "Build Location Pages",
+      "status": "done",
+      "timestamp": "2026-05-05T23:44:56.418797-04:00",
+      "current_count": 1,
+      "total_count": 1,
+      "percent_complete": 100.0,
+      "last_output_file": "docs\\locations\\wilmington.html",
+      "runtime_file": "data\\runtime\\build_locations.json"
+    },
+    {
+      "phase_name": "build_courses",
+      "label": "Build Course Pages",
+      "status": "done",
+      "timestamp": "2026-05-05T23:44:56.382214-04:00",
+      "current_count": 23,
+      "total_count": 23,
+      "percent_complete": 100.0,
+      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\courses\\z-personal-event-not-availible.html",
+      "runtime_file": "data\\runtime\\build_courses.json"
+    },
+    {
+      "phase_name": "build_course_at_city",
+      "label": "Build Course At City Pages",
+      "status": "done",
+      "timestamp": "2026-05-05T23:44:56.283885-04:00",
+      "current_count": 4,
+      "total_count": 4,
+      "percent_complete": 100.0,
+      "last_output_file": "docs\\course-at-city\\uscg-elementary-first-aid-cpr-wilmington.html",
+      "runtime_file": "data\\runtime\\build_course_at_city.json"
+    },
+    {
       "phase_name": "build_slug_hubs",
       "label": "Build Hub Pages",
       "status": "done",
@@ -65,28 +109,6 @@
       "runtime_file": "data\\runtime\\build_schedule_future.json"
     },
     {
-      "phase_name": "build_index_and_sitemap",
-      "label": "Build Index And Sitemap",
-      "status": "done",
-      "timestamp": "2026-05-05T22:09:51.738339-04:00",
-      "current_count": 26052,
-      "total_count": 26052,
-      "percent_complete": 100.0,
-      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
-      "runtime_file": "data\\runtime\\build_index_and_sitemap.json"
-    },
-    {
-      "phase_name": "build_course_at_city",
-      "label": "Build Course At City Pages",
-      "status": "done",
-      "timestamp": "2026-05-03T16:44:28.360524-04:00",
-      "current_count": 4,
-      "total_count": 4,
-      "percent_complete": 100.0,
-      "last_output_file": "docs\\course-at-city\\uscg-elementary-first-aid-cpr-wilmington.html",
-      "runtime_file": "data\\runtime\\build_course_at_city.json"
-    },
-    {
       "phase_name": "build_request_group_session",
       "label": "Build Group Request Page",
       "status": "done",
@@ -96,28 +118,6 @@
       "percent_complete": 100.0,
       "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\request_group_session.html",
       "runtime_file": "data\\runtime\\build_request_group_session.json"
-    },
-    {
-      "phase_name": "build_locations",
-      "label": "Build Location Pages",
-      "status": "done",
-      "timestamp": "2026-05-03T16:44:12.533865-04:00",
-      "current_count": 1,
-      "total_count": 1,
-      "percent_complete": 100.0,
-      "last_output_file": "docs\\locations\\wilmington.html",
-      "runtime_file": "data\\runtime\\build_locations.json"
-    },
-    {
-      "phase_name": "build_courses",
-      "label": "Build Course Pages",
-      "status": "done",
-      "timestamp": "2026-05-03T16:44:06.631833-04:00",
-      "current_count": 23,
-      "total_count": 23,
-      "percent_complete": 100.0,
-      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\courses\\z-personal-event-not-availible.html",
-      "runtime_file": "data\\runtime\\build_courses.json"
     },
     {
       "phase_name": "acls_hub_debug",
@@ -144,9 +144,54 @@
   ],
   "files_written": [
     {
+      "phase": "Build Index And Sitemap",
+      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
+      "timestamp": "2026-05-05T23:45:12.401128-04:00"
+    },
+    {
+      "phase": "Build Location Pages",
+      "path": "docs\\locations\\wilmington.html",
+      "timestamp": "2026-05-05T23:44:56.418797-04:00"
+    },
+    {
+      "phase": "Build Course Pages",
+      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\courses\\z-personal-event-not-availible.html",
+      "timestamp": "2026-05-05T23:44:56.382214-04:00"
+    },
+    {
+      "phase": "Build Course At City Pages",
+      "path": "docs\\course-at-city\\uscg-elementary-first-aid-cpr-wilmington.html",
+      "timestamp": "2026-05-05T23:44:56.283885-04:00"
+    },
+    {
+      "phase": "Hub Output",
+      "path": "docs\\uscg-elementary-first-aid-cpr.html",
+      "timestamp": "2026-05-05T23:44:12.715134-04:00"
+    },
+    {
+      "phase": "Hub Output",
+      "path": "docs\\pals.html",
+      "timestamp": "2026-05-05T23:44:12.684127-04:00"
+    },
+    {
+      "phase": "Hub Output",
+      "path": "docs\\heartsaver.html",
+      "timestamp": "2026-05-05T23:44:12.515542-04:00"
+    },
+    {
       "phase": "Hub Output",
       "path": "docs\\group-training.html",
-      "timestamp": "2026-05-05T23:28:25.404751-04:00"
+      "timestamp": "2026-05-05T23:44:12.514506-04:00"
+    },
+    {
+      "phase": "Hub Output",
+      "path": "docs\\bls.html",
+      "timestamp": "2026-05-05T23:43:42.633122-04:00"
+    },
+    {
+      "phase": "Hub Output",
+      "path": "docs\\acls.html",
+      "timestamp": "2026-05-05T23:43:42.632123-04:00"
     },
     {
       "phase": "Build Hub Pages",
@@ -154,65 +199,20 @@
       "timestamp": "2026-05-05T23:28:25.404750-04:00"
     },
     {
-      "phase": "Hub Output",
-      "path": "docs\\uscg-elementary-first-aid-cpr.html",
-      "timestamp": "2026-05-05T23:28:25.300193-04:00"
-    },
-    {
-      "phase": "Hub Output",
-      "path": "docs\\heartsaver.html",
-      "timestamp": "2026-05-05T23:28:25.200638-04:00"
-    },
-    {
-      "phase": "Hub Output",
-      "path": "docs\\pals.html",
-      "timestamp": "2026-05-05T23:28:24.467300-04:00"
-    },
-    {
-      "phase": "Hub Output",
-      "path": "docs\\acls.html",
-      "timestamp": "2026-05-05T23:28:22.086357-04:00"
-    },
-    {
-      "phase": "Hub Output",
-      "path": "docs\\bls.html",
-      "timestamp": "2026-05-05T23:28:21.893744-04:00"
-    },
-    {
       "phase": "Build Future Schedule Feed",
       "path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
       "timestamp": "2026-05-05T23:28:05.814994-04:00"
     },
     {
-      "phase": "Build Index And Sitemap",
-      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
-      "timestamp": "2026-05-05T22:09:51.738339-04:00"
-    },
-    {
-      "phase": "Build Course At City Pages",
-      "path": "docs\\course-at-city\\uscg-elementary-first-aid-cpr-wilmington.html",
-      "timestamp": "2026-05-03T16:44:28.360524-04:00"
-    },
-    {
       "phase": "Build Group Request Page",
       "path": "E:\\GitHub\\910cpr-class-landers\\docs\\request_group_session.html",
       "timestamp": "2026-05-03T16:44:22.371136-04:00"
-    },
-    {
-      "phase": "Build Location Pages",
-      "path": "docs\\locations\\wilmington.html",
-      "timestamp": "2026-05-03T16:44:12.533865-04:00"
-    },
-    {
-      "phase": "Build Course Pages",
-      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\courses\\z-personal-event-not-availible.html",
-      "timestamp": "2026-05-03T16:44:06.631833-04:00"
     }
   ],
   "generated_page_counts": {
     "hub_pages": 6,
     "class_pages": 26053,
-    "course_pages": 118,
+    "course_pages": 93,
     "location_pages": 266,
     "course_at_city_pages": 4,
     "topic_pages": 13,
@@ -238,8 +238,8 @@
         "slug": "bls",
         "path": "docs\\bls.html",
         "exists": true,
-        "modified_at": "2026-05-05T23:28:21.893744-04:00",
-        "size_bytes": 32076,
+        "modified_at": "2026-05-05T23:43:42.633122-04:00",
+        "size_bytes": 32318,
         "session_marker_count": 22,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -248,8 +248,8 @@
         "slug": "acls",
         "path": "docs\\acls.html",
         "exists": true,
-        "modified_at": "2026-05-05T23:28:22.086357-04:00",
-        "size_bytes": 29539,
+        "modified_at": "2026-05-05T23:43:42.632123-04:00",
+        "size_bytes": 29781,
         "session_marker_count": 19,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -258,8 +258,8 @@
         "slug": "pals",
         "path": "docs\\pals.html",
         "exists": true,
-        "modified_at": "2026-05-05T23:28:24.467300-04:00",
-        "size_bytes": 18942,
+        "modified_at": "2026-05-05T23:44:12.684127-04:00",
+        "size_bytes": 19184,
         "session_marker_count": 10,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -268,8 +268,8 @@
         "slug": "heartsaver",
         "path": "docs\\heartsaver.html",
         "exists": true,
-        "modified_at": "2026-05-05T23:28:25.200638-04:00",
-        "size_bytes": 31622,
+        "modified_at": "2026-05-05T23:44:12.515542-04:00",
+        "size_bytes": 31864,
         "session_marker_count": 18,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -278,8 +278,8 @@
         "slug": "group-training",
         "path": "docs\\group-training.html",
         "exists": true,
-        "modified_at": "2026-05-05T23:28:25.404751-04:00",
-        "size_bytes": 11811,
+        "modified_at": "2026-05-05T23:44:12.514506-04:00",
+        "size_bytes": 12053,
         "session_marker_count": 0,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -288,8 +288,8 @@
         "slug": "uscg-elementary-first-aid-cpr",
         "path": "docs\\uscg-elementary-first-aid-cpr.html",
         "exists": true,
-        "modified_at": "2026-05-05T23:28:25.300193-04:00",
-        "size_bytes": 12439,
+        "modified_at": "2026-05-05T23:44:12.715134-04:00",
+        "size_bytes": 12681,
         "session_marker_count": 6,
         "expired_session_markers": 0,
         "stale_vs_schedule_feed": false
@@ -304,20 +304,17 @@
   "git": {
     "repo_root": "E:/GitHub/910cpr-class-landers",
     "branch": "main",
-    "head": "09beb5af867",
+    "head": "94f4dff018",
     "has_uncommitted_changes": true,
-    "changed_files_count": 26628,
+    "changed_files_count": 26620,
     "changed_files_preview": [
-      " M data/runtime/acls_hub_debug.json",
-      " M data/runtime/build_schedule_future.json",
-      " M data/runtime/build_slug_hubs.json",
-      " M data/runtime/heartsaver_hub_debug.json",
-      " M data/schedule_all.json",
-      " M data/state/supervisor_status.json",
+      " M data/runtime/build_course_at_city.json",
+      " M data/runtime/build_courses.json",
+      " M data/runtime/build_index_and_sitemap.json",
+      " M data/runtime/build_locations.json",
       " M debug/generated_stack_verification.json",
       " M docs/404.html",
       " M docs/acls.html",
-      " M docs/assets/hub-ui.js",
       " M docs/bls.html",
       " M docs/classes/10000418.html",
       " M docs/classes/10002547.html",
@@ -332,7 +329,10 @@
       " M docs/classes/10009257.html",
       " M docs/classes/10009258.html",
       " M docs/classes/10009261.html",
-      " M docs/classes/10009262.html"
+      " M docs/classes/10009262.html",
+      " M docs/classes/10009265.html",
+      " M docs/classes/10009271.html",
+      " M docs/classes/10009275.html"
     ]
   },
   "detected_settings": {
@@ -344,7 +344,7 @@
     "config_source": "data\\config\\slug_hubs.json"
   },
   "warnings": [
-    "git_dirty:26628"
+    "git_dirty:26620"
   ],
   "errors": []
 }

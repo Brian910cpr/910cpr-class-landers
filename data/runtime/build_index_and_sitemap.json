@@ -1,9 +1,9 @@
 {
   "phase_name": "build_index_and_sitemap",
-  "status": "running",
-  "current_count": 0,
+  "status": "done",
+  "current_count": 26052,
   "total_count": 26052,
-  "percent_complete": 0.0,
-  "last_output_file": null,
-  "timestamp": "2026-05-05T23:45:01.975606-04:00"
+  "percent_complete": 100.0,
+  "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
+  "timestamp": "2026-05-05T23:45:12.401128-04:00"
 }

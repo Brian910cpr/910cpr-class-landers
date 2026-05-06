@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-05-05T23:44:17.951066-04:00",
+  "generated_at": "2026-05-05T23:45:51.134722-04:00",
   "counts": {
-    "html_files": 26612,
+    "html_files": 26587,
     "future_sessions_runtime_valid": 1380,
     "past_sessions_in_full_dataset": 18328,
     "missing_build_code": 0,
@@ -10,7 +10,7 @@
     "past_pages_missing_banner": 0,
     "future_pages_missing_enroll": 0,
     "empty_schedule_sections": 0,
-    "expired_rendered_items": 6
+    "expired_rendered_items": 0
   },
   "failures": {
     "missing_build_code": [],
@@ -19,31 +19,6 @@
     "past_pages_missing_banner": [],
     "future_pages_missing_enroll": [],
     "empty_schedule_sections": [],
-    "expired_rendered_items": [
-      {
-        "file": "docs\\course-at-city\\bls-wilmington.html",
-        "start": "2026-05-04T12:30:00"
-      },
-      {
-        "file": "docs\\courses\\aha-bls-provider-renewal.html",
-        "start": "2026-05-05T18:45:00-04:00"
-      },
-      {
-        "file": "docs\\courses\\bls-renewal.html",
-        "start": "2026-05-04T18:15:00-04:00"
-      },
-      {
-        "file": "docs\\courses\\bls.html",
-        "start": "2026-05-04T12:30:00"
-      },
-      {
-        "file": "docs\\courses\\heartcode-bls.html",
-        "start": "2026-05-04T18:15:00-04:00"
-      },
-      {
-        "file": "docs\\courses\\heartsaver-first-aid-cpr-aed.html",
-        "start": "2026-05-04T17:30:00"
-      }
-    ]
+    "expired_rendered_items": []
   }
 }
