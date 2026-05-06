@@ -35,6 +35,8 @@ DATE_LIMIT = 6
 POPULAR_LIMIT = 4
 EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options."
 EMPTY_FALLBACK_BODY = "View the full schedule for additional dates, request a class time, or ask about on-site training for your team."
+EMERGENCY_EMAIL_REGISTRATION_MODE = True
+EMERGENCY_REGISTRATION_EMAIL = "info@910cpr.com"
 EMERGENCY_ALERT_TITLE = "⚠️ Our Schedule Platform Vendor Is Experiencing Technical Difficulties"
 EMERGENCY_ALERT_LINES = (
     "Classes listed on this page WILL still be held.",
@@ -518,7 +520,38 @@ def format_time_line(dt: datetime | None) -> str:
     return dt.strftime("%I:%M %p").lstrip("0") if dt else "Time TBA"
 
 
-def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
+def render_emergency_mailto(session: dict[str, Any], *, page_slug: str) -> str:
+    start_dt = parse_dt(session.get("start_at"))
+    location = clean_location(session.get("location_display") or session.get("location_name"))
+    title = normalize_space(session.get("course_name")) or "910CPR Class"
+    date_text = format_date_line(start_dt)
+    time_text = format_time_line(start_dt)
+    date_time = normalize_space(f"{date_text} {time_text}")
+    session_id = str(session.get("session_id") or "")
+    page_url = f"https://www.910cpr.com/{page_slug}"
+    subject = f"910CPR Registration Help - {title} - {date_time}"
+    body = "\n".join(
+        [
+            "Hi 910CPR,",
+            "",
+            "I would like help registering for this class:",
+            "",
+            f"Class: {title}",
+            f"Date/Time: {date_time}",
+            f"Location: {location}",
+            f"Session ID: {session_id}",
+            f"Page: {page_url}",
+            "",
+            "My name:",
+            "My phone number:",
+            "",
+            "Thank you.",
+        ]
+    )
+    return f"mailto:{EMERGENCY_REGISTRATION_EMAIL}?subject={quote(subject)}&body={quote(body)}"
+
+
+def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug: str) -> str:
     start_dt = parse_dt(session.get("start_at"))
     end_dt = parse_dt(session.get("end_at"))
     location = clean_location(session.get("location_display") or session.get("location_name"))
@@ -532,6 +565,10 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
     enrolled_count = session_enrolled_count(session)
 
     action_label = "See Public Class" if group_mode else "Book Seat"
+    action_url = register_url
+    if EMERGENCY_EMAIL_REGISTRATION_MODE and not group_mode:
+        action_label = "Email Us To Register"
+        action_url = escape(render_emergency_mailto(session, page_slug=page_slug), quote=True)
     action_hint = ""
     badge_html = ""
     if format_badge:
@@ -565,7 +602,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
   </div>
   <div class="slug-pill-actions">
     {f'<div class="slug-pill-hint">{escape(action_hint)}</div>' if action_hint else ''}
-    <a class="button small primary" href="{register_url}" data-original-href="{register_url}">{action_label}</a>
+    <a class="button small primary" href="{action_url}" data-original-href="{register_url}">{action_label}</a>
   </div>
 </article>
 """.strip()
@@ -609,9 +646,10 @@ def render_inventory_section(
     limit: int | None = None,
     empty_copy: str | None = None,
     section_class: str = "",
+    page_slug: str = "",
 ) -> str:
     selected = sessions[:limit] if limit is not None else sessions
-    cards = "\n".join(render_session_card(session, group_mode=group_mode) for session in selected)
+    cards = "\n".join(render_session_card(session, group_mode=group_mode, page_slug=page_slug) for session in selected)
     if not cards and empty_copy:
         cards = f"<div class=\"slug-section-empty\"><p>{escape(empty_copy)}</p></div>"
     return f"""
@@ -785,6 +823,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
                 group_mode=group_mode,
                 limit=POPULAR_LIMIT,
                 section_class="slug-popular-section",
+                page_slug=str(page.get("slug") or ""),
             )
         )
 
@@ -797,6 +836,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
                 group_mode=group_mode,
                 limit=DATE_LIMIT,
                 section_class="slug-scheduled-section",
+                page_slug=str(page.get("slug") or ""),
             )
         )
     elif not popular_sessions:
