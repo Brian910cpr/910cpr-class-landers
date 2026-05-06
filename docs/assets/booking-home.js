@@ -37,6 +37,16 @@
       emptyLabel: "No Heartsaver dates are posted here right now.",
     },
     {
+      id: "pediatric",
+      title: "Pediatric First Aid CPR AED",
+      audience: "For childcare providers, teachers, babysitters, foster parents, and caregivers of children.",
+      fullScheduleUrl: "/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended",
+      fullScheduleLabel: "Blended dates",
+      secondaryScheduleUrl: "/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20In-Person",
+      secondaryScheduleLabel: "In-person dates",
+      emptyLabel: "No Pediatric First Aid CPR AED dates are posted here right now.",
+    },
+    {
       id: "uscg",
       title: "USCG Elementary First Aid",
       audience: "For mariners, crews, and maritime employers who need the USCG-aligned first aid and CPR option.",
@@ -47,7 +57,7 @@
   ];
 
   const EASTERN_TIMEZONE = "America/New_York";
-  const HEARTSAVER_SUBTYPE_ORDER = ["First Aid + CPR + AED", "Pediatric First Aid", "CPR + AED"];
+  const HEARTSAVER_SUBTYPE_ORDER = ["First Aid + CPR + AED", "CPR + AED"];
   const HEARTSAVER_SUBTYPE_COPY = {
     "First Aid + CPR + AED": "Best for general workplace first aid, CPR, and AED certification.",
     "Pediatric First Aid": "Best for childcare, camps, schools, and caregiver teams.",
@@ -63,6 +73,7 @@
     acls: "/images/acls_general.png",
     pals: "/images/pals_general.png",
     heartsaver: "/images/heartsaver_general.png",
+    pediatric: "/images/heartsaver_general.png",
     uscg: "/images/stripes.png",
     group: "/images/bls_general.png",
   };
@@ -132,7 +143,7 @@
       return { sectionId: "acls", subtype: text.includes("HEARTCODE") ? "HeartCode Skills" : text.includes("RENEW") ? "Renewal" : "Provider" };
     }
     if (text.includes("HEARTSAVER")) {
-      if (text.includes("PEDIATRIC") || text.includes("AHA_HS_PED_FA_CPR")) return { sectionId: "heartsaver", subtype: "Pediatric First Aid" };
+      if (text.includes("PEDIATRIC") || text.includes("AHA_HS_PED_FA_CPR")) return { sectionId: "pediatric", subtype: inferFormatLabel(name, familyHint) || "Pediatric First Aid" };
       if ((text.includes("CPR AED") && !text.includes("FIRST AID")) || text.includes("344085")) return { sectionId: "heartsaver", subtype: "CPR + AED" };
       if (text.includes("329495") || text.includes("209809") || text.includes("AHA_HS_FA_CPR")) return { sectionId: "heartsaver", subtype: "First Aid + CPR + AED" };
       return { sectionId: "heartsaver", subtype: "First Aid + CPR + AED" };
@@ -339,7 +350,7 @@
     });
 
     const groupPreview = [];
-    ["bls", "heartsaver", "acls", "pals", "uscg"].forEach((sectionId) => {
+    ["bls", "heartsaver", "pediatric", "acls", "pals", "uscg"].forEach((sectionId) => {
       const source = groups.get(sectionId) || [];
       source.slice(0, 2).forEach((item) => {
         groupPreview.push({
@@ -422,6 +433,9 @@
 
   function renderSection(section, sessions) {
     const preview = sessions.slice(0, MAX_SESSIONS);
+    const scheduleActions = section.secondaryScheduleUrl
+      ? `<div class="finder-card-actions"><a class="button secondary" href="${escapeAttribute(section.fullScheduleUrl)}">${escapeHtml(section.fullScheduleLabel)}</a><a class="button secondary" href="${escapeAttribute(section.secondaryScheduleUrl)}">${escapeHtml(section.secondaryScheduleLabel)}</a></div>`
+      : `<a class="button secondary" href="${escapeAttribute(section.fullScheduleUrl)}">${escapeHtml(section.fullScheduleLabel)}</a>`;
     if (section.id === "heartsaver" && preview.length) {
       const buckets = new Map(HEARTSAVER_SUBTYPE_ORDER.map((label) => [label, []]));
       preview.forEach((session) => {
@@ -454,7 +468,7 @@
               <h3>${escapeHtml(section.title)}</h3>
               <p class="finder-card-copy">${escapeHtml(section.audience)}</p>
             </div>
-            <a class="button secondary" href="${escapeAttribute(section.fullScheduleUrl)}">${escapeHtml(section.fullScheduleLabel)}</a>
+            ${scheduleActions}
           </div>
           <div class="finder-subgroups">
             ${groupedContent}
@@ -479,7 +493,7 @@
             <h3>${escapeHtml(section.title)}</h3>
             <p class="finder-card-copy">${escapeHtml(section.audience)}</p>
           </div>
-          <a class="button secondary" href="${escapeAttribute(section.fullScheduleUrl)}">${escapeHtml(section.fullScheduleLabel)}</a>
+          ${scheduleActions}
         </div>
         <div class="finder-pills">
           ${content}

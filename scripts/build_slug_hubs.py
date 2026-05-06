@@ -728,31 +728,7 @@ def render_curated_offer_item(
 
 
 def render_curated_offers_section(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
-    selected = curated_offer_sessions(sessions)
-    if not selected:
-        return ""
-    label = full_schedule_short_label(page)
-    offer_count = min(len(selected), CURATED_OFFER_LIMIT)
-    count_copy = "5 to 8" if offer_count >= CURATED_OFFER_MIN else str(offer_count)
-    cards = "\n".join(
-        render_curated_offer_item(session, tab, page=page, index=index)
-        for index, session in enumerate(selected)
-    )
-    return f"""
-<section class="curated-offers-section" data-curated-offers>
-  <div class="slug-inventory-head curated-offers-head">
-    <h3>Upcoming {escape(label)} Options</h3>
-    <p>Here are the next {escape(count_copy)} hand-picked {escape(label)} options. Need a different day or time? See the full schedule below.</p>
-  </div>
-  <div class="curated-offer-list">
-    {cards}
-  </div>
-  <div class="curated-offer-footer">
-    <span>Need more options?</span>
-    <a class="button small primary" href="{escape(tab['full_schedule_url'], quote=True)}">See the full {escape(label)} schedule</a>
-  </div>
-</section>
-""".strip()
+    return ""
 
 
 def group_request_href(program: str | None = None) -> str:
@@ -893,8 +869,7 @@ def render_panel_description(tab: dict[str, Any]) -> str:
     return (
         "<div class=\"slug-panel-description\">"
         f"<p class=\"slug-panel-copy\">{short_text}</p>"
-        "<button class=\"slug-more-toggle\" type=\"button\" data-more-toggle>More</button>"
-        f"<div class=\"slug-more-copy\" data-more-copy hidden><p>{more_text}</p></div>"
+        f"<p class=\"slug-panel-copy slug-panel-copy-extra\">{more_text}</p>"
         "</div>"
     )
 
@@ -912,6 +887,7 @@ def full_schedule_short_label(page: dict[str, Any]) -> str:
 
 def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
+    keep_empty_attr = ' data-keep-empty-tab="true"' if page.get("slug") == "heartsaver" and tab.get("id") in {"hs-pediatric-ip", "hs-pediatric-bl"} else ""
     if group_mode:
         request_href = group_request_href(tab["program"])
         full_schedule_data = escape(
@@ -924,7 +900,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
             quote=True,
         )
         return f"""
-<section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}">
+<section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}"{keep_empty_attr}>
   <div class="slug-panel-card">
     <div class="slug-panel-head">
       <div>
@@ -975,6 +951,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
             )
         )
 
+    remaining_limit = None if tab.get("id") == "hs-pediatric-bl" else DATE_LIMIT
     if remaining_sessions:
         section_html.append(
             render_inventory_section(
@@ -982,7 +959,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
                 "More selected class times to help you compare dates.",
                 remaining_sessions,
                 group_mode=group_mode,
-                limit=DATE_LIMIT,
+                limit=remaining_limit,
                 section_class="slug-scheduled-section",
                 page_slug=str(page.get("slug") or ""),
             )
@@ -1018,7 +995,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
     panel_sections = "\n    ".join(part for part in [" ".join(section_html), flexible_html, escape_hatch_html] if part)
 
     return f"""
-<section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}">
+<section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}"{keep_empty_attr}>
   <div class="slug-panel-card">
     <div class="slug-panel-head">
       <div>
@@ -1210,7 +1187,8 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
             if enriched:
                 matched.append(enriched)
         matched = sort_sessions(matched)
-        if matched:
+        keep_empty_tab = page.get("slug") == "heartsaver" and tab.get("id") in {"hs-pediatric-ip", "hs-pediatric-bl"}
+        if matched or keep_empty_tab:
             if page.get("slug") == "heartsaver":
                 display = heartsaver_tab_display(tab, matched)
                 tab = {**tab, **display}
@@ -1289,26 +1267,6 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 <script src="/assets/live-sessions.js"></script>
 <script src="/assets/session-expiry.js"></script>
 <script src="/assets/hybrid-inventory.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {{
-  document.querySelectorAll("[data-more-toggle]").forEach(function (button) {{
-    button.addEventListener("click", function () {{
-      var wrap = button.closest(".slug-panel-description");
-      if (!wrap) return;
-      var more = wrap.querySelector("[data-more-copy]");
-      if (!more) return;
-      var hidden = more.hasAttribute("hidden");
-      if (hidden) {{
-        more.removeAttribute("hidden");
-        button.textContent = "Less";
-      }} else {{
-        more.setAttribute("hidden", "");
-        button.textContent = "More";
-      }}
-    }});
-  }});
-}});
-</script>
 </body>
 </html>"""
 

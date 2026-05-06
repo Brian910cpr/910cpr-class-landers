@@ -747,6 +747,7 @@ def render_homepage() -> str:
         <a class="jump-chip" href="#bls">BLS Renewal</a>
         <a class="jump-chip" href="#bls">HeartCode Skills</a>
         <a class="jump-chip" href="#heartsaver">Workplace CPR</a>
+        <a class="jump-chip" href="#pediatric">Pediatric First Aid</a>
         <a class="jump-chip" href="#acls">ACLS</a>
         <a class="jump-chip" href="#pals">PALS</a>
         <a class="jump-chip" href="#uscg">USCG</a>
@@ -793,7 +794,7 @@ def render_homepage() -> str:
     <div class="card home-noscript">
       <h2>Quick class links</h2>
       <p>Class times could not load in this browser. You can still choose a course page below.</p>
-      <p><a class="button primary" href="/bls.html">BLS</a> <a class="button secondary" href="/acls.html">ACLS</a> <a class="button secondary" href="/pals.html">PALS</a> <a class="button secondary" href="/heartsaver.html">Heartsaver</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG</a> <a class="button secondary" href="/group-training.html">Group Training</a></p>
+      <p><a class="button primary" href="/bls.html">BLS</a> <a class="button secondary" href="/acls.html">ACLS</a> <a class="button secondary" href="/pals.html">PALS</a> <a class="button secondary" href="/heartsaver.html">Heartsaver</a> <a class="button secondary" href="/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended">Pediatric First Aid CPR AED</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG</a> <a class="button secondary" href="/group-training.html">Group Training</a></p>
     </div>
   </div>
 </noscript>

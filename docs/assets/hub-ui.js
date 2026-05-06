@@ -439,16 +439,18 @@
       const targetSelector = `#${panel.id}`;
       const count = countVisibleSessions(panel);
       const hasSessions = panelHasSessions(panel);
-      panel.hidden = !hasSessions;
+      const keepEmptyTab = panel.getAttribute("data-keep-empty-tab") === "true";
+      const shouldShowPanel = hasSessions || keepEmptyTab;
+      panel.hidden = !shouldShowPanel;
       panel.classList.toggle("is-empty-panel", !hasSessions);
       syncTriggerInventory(targetSelector, count);
 
       getTriggersForTarget(targetSelector).forEach((trigger) => {
-        trigger.hidden = !hasSessions;
-        trigger.classList.toggle("is-hidden", !hasSessions);
+        trigger.hidden = !shouldShowPanel;
+        trigger.classList.toggle("is-hidden", !shouldShowPanel);
       });
 
-      if (hasSessions) visibleTargets.push(targetSelector);
+      if (shouldShowPanel) visibleTargets.push(targetSelector);
     });
 
     const fallback = ensureScopeEmptyFallback(scope);

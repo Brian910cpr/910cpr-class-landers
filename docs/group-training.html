@@ -189,25 +189,5 @@
 <script src="/assets/live-sessions.js"></script>
 <script src="/assets/session-expiry.js"></script>
 <script src="/assets/hybrid-inventory.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll("[data-more-toggle]").forEach(function (button) {
-    button.addEventListener("click", function () {
-      var wrap = button.closest(".slug-panel-description");
-      if (!wrap) return;
-      var more = wrap.querySelector("[data-more-copy]");
-      if (!more) return;
-      var hidden = more.hasAttribute("hidden");
-      if (hidden) {
-        more.removeAttribute("hidden");
-        button.textContent = "Less";
-      } else {
-        more.setAttribute("hidden", "");
-        button.textContent = "More";
-      }
-    });
-  });
-});
-</script>
 </body>
 </html>
