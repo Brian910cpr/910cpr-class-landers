@@ -1486,7 +1486,10 @@ def main() -> None:
                 continue
         if args.resume_stamped and output_path.exists():
             existing = output_path.read_text(encoding="utf-8", errors="ignore")
-            if "<!-- BUILD_CODE:" in existing and "scripts/build_landers.py" in existing:
+            session_dt_for_resume = parse_dt(session.get("start_at"))
+            became_past = bool(session_dt_for_resume and session_dt_for_resume <= now_dt)
+            needs_past_refresh = became_past and "This class has passed" not in existing
+            if "<!-- BUILD_CODE:" in existing and "scripts/build_landers.py" in existing and not needs_past_refresh:
                 continue
         course_raw = session.get("course_name", "")
         course_id = str(session.get("course_id", "")).strip()

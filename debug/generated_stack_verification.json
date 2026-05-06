@@ -1,24 +1,229 @@
 {
-  "generated_at": "2026-05-03T16:50:33.663521-04:00",
+  "generated_at": "2026-05-05T23:26:28.544314-04:00",
   "counts": {
-    "html_files": 26576,
-    "future_sessions_runtime_valid": 1396,
-    "past_sessions_in_full_dataset": 24646,
+    "html_files": 26612,
+    "future_sessions_runtime_valid": 1380,
+    "past_sessions_in_full_dataset": 24653,
     "missing_build_code": 0,
     "missing_meta_build_date": 0,
     "missing_visible_build": 0,
-    "past_pages_missing_banner": 0,
+    "past_pages_missing_banner": 3,
     "future_pages_missing_enroll": 0,
     "empty_schedule_sections": 0,
-    "expired_rendered_items": 0
+    "expired_rendered_items": 443
   },
   "failures": {
     "missing_build_code": [],
     "missing_meta_build_date": [],
     "missing_visible_build": [],
-    "past_pages_missing_banner": [],
+    "past_pages_missing_banner": [
+      "docs\\classes\\12774561.html",
+      "docs\\classes\\12775273.html",
+      "docs\\classes\\12776762.html"
+    ],
     "future_pages_missing_enroll": [],
     "empty_schedule_sections": [],
-    "expired_rendered_items": []
+    "expired_rendered_items": [
+      {
+        "file": "docs\\classes\\12774310.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774311.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774312.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774322.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774323.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774324.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774325.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774326.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774335.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774336.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774337.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774338.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774349.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774350.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774351.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774352.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774353.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774371.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774372.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774373.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774374.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774383.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774384.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774385.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774386.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774387.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774397.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774398.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774399.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774400.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774410.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774411.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774412.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774413.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774530.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774531.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774532.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774533.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774534.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774535.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774536.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774537.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774538.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774539.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774540.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774541.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774542.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774543.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774544.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774545.html",
+        "start": "2026-05-04T18:15:00-04:00"
+      }
+    ]
   }
 }
