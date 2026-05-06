@@ -35,6 +35,13 @@ DATE_LIMIT = 6
 POPULAR_LIMIT = 4
 EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options."
 EMPTY_FALLBACK_BODY = "View the full schedule for additional dates, request a class time, or ask about on-site training for your team."
+EMERGENCY_ALERT_TITLE = "⚠️ Our Schedule Platform Vendor Is Experiencing Technical Difficulties"
+EMERGENCY_ALERT_LINES = (
+    "Classes listed on this page WILL still be held.",
+    "If a registration button does not load, stalls, or fails, please email us at info@910cpr.com with your name, phone number, and the class date/time you want.",
+    "We will help get you registered manually and make sure you can still get your certification.",
+    "Sorry for the inconvenience. We will help you get your cert.",
+)
 GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403"
 PRIVATE_HINTS = (
     "private",
@@ -558,7 +565,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
   </div>
   <div class="slug-pill-actions">
     {f'<div class="slug-pill-hint">{escape(action_hint)}</div>' if action_hint else ''}
-    <a class="button small primary" href="{register_url}">{action_label}</a>
+    <a class="button small primary" href="{register_url}" data-original-href="{register_url}">{action_label}</a>
   </div>
 </article>
 """.strip()
@@ -939,6 +946,16 @@ def render_guidance_banners(page: dict[str, Any], banner_library: dict[str, dict
     return f"<div class=\"slug-guidance-stack\">{''.join(rendered)}</div>"
 
 
+def render_emergency_alert() -> str:
+    body = "".join(f"<p>{escape(line)}</p>" for line in EMERGENCY_ALERT_LINES)
+    return f"""
+  <section class="slug-emergency-alert" role="status" aria-live="polite">
+    <h2>{escape(EMERGENCY_ALERT_TITLE)}</h2>
+    {body}
+  </section>
+""".strip()
+
+
 def render_banner(page: dict[str, Any], first_tab: dict[str, Any]) -> str:
     return f"""
   <section class="slug-banner">
@@ -1053,6 +1070,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
       {render_hero_image(page)}
     </div>
   </section>
+  {render_emergency_alert()}
   {render_guidance_banners(page, banner_library)}
   {tabs_html}
   {render_google_trust_block()}
