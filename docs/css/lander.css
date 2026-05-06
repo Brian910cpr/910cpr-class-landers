@@ -1652,7 +1652,7 @@ textarea {
   position: relative;
   grid-template-columns: minmax(0, 1fr) 296px;
   gap: 26px;
-  padding: 34px 32px 18px;
+  padding: 24px 32px 12px;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(247, 250, 252, 0.96) 100%);
 }
@@ -1695,7 +1695,7 @@ textarea {
 .slug-hero-image {
   display: block;
   width: 100%;
-  height: 220px;
+  height: 172px;
   object-fit: cover;
 }
 
@@ -1795,8 +1795,8 @@ textarea {
 }
 
 .slug-tabs-block {
-  margin: 0 32px;
-  padding: 18px;
+  margin: 10px 32px 0;
+  padding: 14px;
   background:
     linear-gradient(180deg, rgba(248, 251, 253, 0.9) 0%, rgba(255, 255, 255, 0.94) 100%);
 }
@@ -1855,6 +1855,10 @@ textarea {
   gap: 10px;
   justify-content: center;
   align-items: center;
+}
+
+.below-inventory-trust {
+  margin-top: 22px;
 }
 
 .slug-guidance-actions .button {

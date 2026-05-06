@@ -28,6 +28,15 @@
     december: 11,
   };
 
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function getTriggersForTarget(targetSelector) {
     if (!targetSelector) return [];
     return Array.from(document.querySelectorAll(`[data-tab-target="${targetSelector}"]`));

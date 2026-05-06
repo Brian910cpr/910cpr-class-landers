@@ -126,9 +126,9 @@ def render_google_trust_block() -> str:
 """.rstrip()
         for theme in stats["themes"]
     )
-    themes_html = f'<div class="review-snippets" aria-label="AI summaries of common review themes"><div class="review-theme-label">AI summary of common review themes</div>{themes}</div>' if themes else ""
+    themes_html = f'<div class="review-snippets" aria-label="Common student review themes"><div class="review-theme-label">What students mention</div>{themes}</div>' if themes else ""
     return f"""
-  <section class="top-trust" aria-label="910CPR trust and reviews">
+  <section class="top-trust below-inventory-trust" aria-label="910CPR trust and reviews">
     <div class="top-trust-copy">
       <div class="home-status-label">Serving North And South Carolina</div>
       <p>From the mountains to the coast, 910CPR helps healthcare teams, dental offices, schools, workplaces, and students meet real certification requirements with clear, organized classes.</p>
@@ -772,8 +772,8 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
     if popular_sessions:
         section_html.append(
             render_inventory_section(
-                "Popular Upcoming Classes",
-                "Classes that already have students enrolled.",
+                "Popular upcoming classes",
+                "Selected upcoming class times with active registrations.",
                 popular_sessions,
                 group_mode=group_mode,
                 limit=POPULAR_LIMIT,
@@ -784,8 +784,8 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
     if remaining_sessions:
         section_html.append(
             render_inventory_section(
-                "Next Scheduled Classes",
-                "Next available class options.",
+                "Next available classes",
+                "More selected class times to help you compare dates.",
                 remaining_sessions,
                 group_mode=group_mode,
                 limit=DATE_LIMIT,
@@ -814,7 +814,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
     <strong>Need a different date or time?</strong>
     <span>These are selected upcoming classes. We have more dates, times, and locations available on the full schedule.</span>
   </div>
-  <a class="button primary slug-full-schedule-button" href="{escape(tab['full_schedule_url'], quote=True)}">View All Available Dates</a>
+  <a class="button primary slug-full-schedule-button" href="{escape(tab['full_schedule_url'], quote=True)}">See all {escape(tab['label'])} dates</a>
 </section>
 """.strip()
         if not group_mode
@@ -1053,11 +1053,10 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
       {render_hero_image(page)}
     </div>
   </section>
-  {render_google_trust_block()}
-  {render_group_training_push(page, first_tab, group_mode=group_mode)}
   {render_guidance_banners(page, banner_library)}
   {tabs_html}
-  
+  {render_google_trust_block()}
+  {render_group_training_push(page, first_tab, group_mode=group_mode)}
   {render_other_training_options(page)}
 </div>
 """
