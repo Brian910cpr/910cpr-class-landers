@@ -37,6 +37,16 @@
     return Array.from(container.querySelectorAll(":scope > [data-start], :scope > [data-session-start]"));
   }
 
+  function visibleSessionItemsIn(container) {
+    if (!container) return [];
+    var selector = container.closest(".slug-hub-shell")
+      ? ".js-session-item, .slug-time-row, [data-start], [data-session-start]"
+      : ":scope > [data-start], :scope > [data-session-start]";
+    return Array.from(container.querySelectorAll(selector)).filter(function (node) {
+      return !node.hidden && node.style.display !== "none";
+    });
+  }
+
   function ensureEmptyMessage(container) {
     if (!container || container.querySelector(":scope > .session-expiry-empty")) return;
     var p = document.createElement("p");
@@ -139,9 +149,7 @@
 
     touched.forEach(function (container) {
       sortVisible(container);
-      var visible = itemsIn(container).some(function (node) {
-        return !node.hidden && node.style.display !== "none";
-      });
+      var visible = visibleSessionItemsIn(container).length > 0;
       var hubSection = hubSectionOf(container);
       if (hubSection) {
         hubSection.hidden = !visible;
