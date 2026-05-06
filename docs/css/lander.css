@@ -1555,10 +1555,14 @@ a {
 }
 
 .tab-panel {
+  display: block;
+}
+
+.slug-tabs-ready > .tab-panel {
   display: none;
 }
 
-.tab-panel.active {
+.slug-tabs-ready > .tab-panel.active {
   display: block;
 }
 
@@ -2010,6 +2014,32 @@ textarea {
 
 .slug-more-copy p {
   margin-top: 10px;
+}
+
+.slug-emergency-alert {
+  margin: 0 24px 24px;
+  padding: 18px 20px;
+  border: 4px solid #111827;
+  border-radius: 14px;
+  background: #ffea00;
+  color: #0b0b0b;
+  box-shadow: 0 16px 30px rgba(17, 24, 39, 0.14);
+}
+
+.slug-emergency-alert h2 {
+  margin: 0 0 10px;
+  color: #0b0b0b;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+.slug-emergency-alert p {
+  margin: 8px 0 0;
+  color: #0b0b0b;
+  font-size: 16px;
+  line-height: 1.45;
+  font-weight: 800;
 }
 
 .slug-panel-cta {
@@ -2691,6 +2721,20 @@ textarea {
 
   .slug-pill-actions .button.small {
     width: 100%;
+  }
+
+  .slug-emergency-alert {
+    margin: 0 14px 18px;
+    padding: 14px;
+    border-width: 3px;
+  }
+
+  .slug-emergency-alert h2 {
+    font-size: 19px;
+  }
+
+  .slug-emergency-alert p {
+    font-size: 14px;
   }
 
   .slug-time-actions .button.small {
