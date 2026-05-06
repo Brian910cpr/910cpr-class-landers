@@ -1,4 +1,6 @@
 (function () {
+  const EMERGENCY_EMAIL_REGISTRATION_MODE = true;
+  const EMERGENCY_REGISTRATION_EMAIL = "info@910cpr.com";
   const EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options.";
   const EMPTY_FALLBACK_BODY = "View the full schedule for additional dates, request a class time, or ask about on-site training for your team.";
   const MONTHS = {
@@ -35,6 +37,115 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  function encodeMailto(value) {
+    return encodeURIComponent(String(value || "")).replace(/%20/g, "+");
+  }
+
+  function visibleText(node) {
+    return node ? node.textContent.replace(/\s+/g, " ").trim() : "";
+  }
+
+  function firstTimeChip(scope) {
+    if (!scope) return "";
+    return visibleText(Array.from(scope.querySelectorAll(".slug-pill-chip")).find((chip) => {
+      return !chip.classList.contains("slug-pill-chip-location")
+        && !chip.classList.contains("slug-pill-chip-format")
+        && !chip.classList.contains("slug-pill-chip-family")
+        && !chip.classList.contains("slug-pill-chip-momentum");
+    }));
+  }
+
+  function courseNameForButton(button) {
+    const row = button.closest(".slug-time-row");
+    const pill = button.closest(".slug-pill");
+    const panel = button.closest(".tab-panel");
+    return (
+      visibleText(row && row.querySelector(".slug-time-subtitle")) ||
+      visibleText(pill && pill.querySelector(".slug-pill-subtitle")) ||
+      visibleText(panel && panel.querySelector("h2")) ||
+      document.title.replace(/\s*\|\s*910CPR\s*$/i, "").trim() ||
+      "910CPR Class"
+    );
+  }
+
+  function dateForButton(button) {
+    const dayCard = button.closest(".slug-day-card");
+    const pill = button.closest(".slug-pill");
+    return (
+      visibleText(dayCard && dayCard.querySelector(".slug-day-title")) ||
+      visibleText(pill && pill.querySelector(".slug-pill-title")) ||
+      button.getAttribute("data-session-date") ||
+      ""
+    );
+  }
+
+  function locationForButton(button) {
+    const row = button.closest(".slug-time-row");
+    const pill = button.closest(".slug-pill");
+    return (
+      visibleText(row && row.querySelector(".slug-pill-chip-location")) ||
+      visibleText(pill && pill.querySelector(".slug-pill-chip-location")) ||
+      ""
+    );
+  }
+
+  function sessionIdForButton(button) {
+    const row = button.closest(".slug-time-row");
+    const pill = button.closest(".slug-pill");
+    return (
+      button.getAttribute("data-session-id") ||
+      (row && row.getAttribute("data-session-id")) ||
+      (pill && pill.getAttribute("data-session-id")) ||
+      ""
+    );
+  }
+
+  function buildEmergencyMailto(button) {
+    const row = button.closest(".slug-time-row");
+    const pill = button.closest(".slug-pill");
+    const course = courseNameForButton(button);
+    const date = dateForButton(button);
+    const time = firstTimeChip(row || pill);
+    const location = locationForButton(button);
+    const sessionId = sessionIdForButton(button);
+    const pageUrl = window.location.href;
+    const dateTime = [date, time].filter(Boolean).join(" ");
+    const subject = `910CPR Registration Help - ${course} - ${dateTime}`.trim();
+    const body = [
+      "Hi 910CPR,",
+      "",
+      "I would like help registering for this class:",
+      "",
+      `Class: ${course}`,
+      `Date/Time: ${dateTime}`,
+      `Location: ${location}`,
+      `Session ID: ${sessionId}`,
+      `Page: ${pageUrl}`,
+      "",
+      "My name:",
+      "My phone number:",
+      "",
+      "Thank you.",
+    ].join("\n");
+
+    return `mailto:${EMERGENCY_REGISTRATION_EMAIL}?subject=${encodeMailto(subject)}&body=${encodeMailto(body)}`;
+  }
+
+  function applyEmergencyEmailFallback(root) {
+    if (!EMERGENCY_EMAIL_REGISTRATION_MODE) return;
+    const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll(".slug-hub-shell .slug-pill-actions a.button, .slug-hub-shell .slug-time-actions a.button").forEach((button) => {
+      const href = button.getAttribute("href") || "";
+      if (!button.getAttribute("data-original-href") && href && !href.startsWith("mailto:")) {
+        button.setAttribute("data-original-href", href);
+      }
+      if (!sessionIdForButton(button)) return;
+      button.textContent = "Email Us To Register";
+      button.setAttribute("href", buildEmergencyMailto(button));
+      button.setAttribute("data-emergency-email-fallback", "true");
+    });
   }
 
   function getTriggersForTarget(targetSelector) {
@@ -261,6 +372,7 @@
 
   function syncScopeVisibility(scope) {
     if (!scope) return;
+    scope.classList.add("slug-tabs-ready");
 
     const panels = Array.from(scope.querySelectorAll(".tab-panel"));
     const visibleTargets = [];
@@ -312,8 +424,10 @@
       time: timeNode ? timeNode.textContent.trim() : "",
       location: locationNode ? locationNode.textContent.trim() : "",
       href: buttonNode ? buttonNode.getAttribute("href") : "",
+      originalHref: buttonNode ? (buttonNode.getAttribute("data-original-href") || buttonNode.getAttribute("href") || "") : "",
       buttonText: buttonNode ? buttonNode.textContent.trim() : "Register",
       hint: hintNode ? hintNode.textContent.trim() : "Reserve this class time",
+      sessionId: pill.getAttribute("data-session-id") || "",
       sessionStart: start ? start.toISOString() : "",
       sessionDate: start ? formatSessionDateKey(start) : "",
     };
@@ -363,17 +477,17 @@
 
       list.innerHTML = groups.map((group) => {
         const rowsMarkup = group.rows.map((row) => `
-          <div class="slug-time-row" data-session-start="${row.sessionStart}">
+          <div class="slug-time-row" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}">
             <div class="slug-time-copy">
               <div class="slug-pill-meta-row slug-time-meta">
-                ${row.time ? `<span class="slug-pill-chip">${row.time}</span>` : ""}
-                ${row.location ? `<span class="slug-pill-chip slug-pill-chip-location">${row.location}</span>` : ""}
+                ${row.time ? `<span class="slug-pill-chip">${escapeHtml(row.time)}</span>` : ""}
+                ${row.location ? `<span class="slug-pill-chip slug-pill-chip-location">${escapeHtml(row.location)}</span>` : ""}
               </div>
-              ${row.subtitle ? `<div class="slug-time-subtitle">${row.subtitle}</div>` : ""}
+              ${row.subtitle ? `<div class="slug-time-subtitle">${escapeHtml(row.subtitle)}</div>` : ""}
             </div>
             <div class="slug-time-actions">
-              <div class="slug-pill-hint">${row.hint}</div>
-              ${row.href ? `<a class="button small primary" href="${row.href}">${row.buttonText}</a>` : ""}
+              <div class="slug-pill-hint">${escapeHtml(row.hint)}</div>
+              ${row.href ? `<a class="button small primary" href="${escapeHtml(row.href)}" data-original-href="${escapeHtml(row.originalHref || row.href)}" data-session-id="${escapeHtml(row.sessionId)}">${escapeHtml(row.buttonText)}</a>` : ""}
             </div>
           </div>
         `).join("");
@@ -512,9 +626,11 @@
     pruneExpiredSessions(document);
     initializeScopes();
     activateProgramFromQuery();
+    applyEmergencyEmailFallback(document);
   }
 
   window.pruneExpiredSessions = window.pruneExpiredSessions || pruneExpiredSessions;
+  window.applyEmergencyEmailFallback = applyEmergencyEmailFallback;
 
   bindTriggers();
   if (document.readyState === "loading") {
