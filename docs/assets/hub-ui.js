@@ -102,6 +102,61 @@
     );
   }
 
+  function setCuratedOfferState(card, open) {
+    if (!card) return;
+    const button = card.querySelector("[data-curated-offer-toggle]");
+    const body = card.querySelector("[data-curated-offer-body]");
+    if (!button || !body) return;
+
+    card.classList.toggle("is-open", open);
+    button.setAttribute("aria-expanded", open ? "true" : "false");
+
+    if (open) {
+      body.hidden = false;
+      body.style.maxHeight = `${body.scrollHeight}px`;
+      body.setAttribute("data-open", "true");
+      return;
+    }
+
+    body.style.maxHeight = `${body.scrollHeight}px`;
+    window.requestAnimationFrame(() => {
+      body.style.maxHeight = "0px";
+      body.removeAttribute("data-open");
+    });
+  }
+
+  function closeCuratedOfferBody(body) {
+    if (!body || body.getAttribute("data-open") === "true") return;
+    body.hidden = true;
+  }
+
+  function bindCuratedOffers() {
+    document.querySelectorAll("[data-curated-offers]").forEach((section) => {
+      const cards = Array.from(section.querySelectorAll(".curated-offer-card"));
+      cards.forEach((card, index) => {
+        const button = card.querySelector("[data-curated-offer-toggle]");
+        const body = card.querySelector("[data-curated-offer-body]");
+        if (!button || !body || button.dataset.curatedOfferBound === "true") return;
+
+        button.dataset.curatedOfferBound = "true";
+        body.addEventListener("transitionend", () => closeCuratedOfferBody(body));
+        setCuratedOfferState(card, index === 0);
+
+        button.addEventListener("click", () => {
+          const shouldOpen = button.getAttribute("aria-expanded") !== "true";
+          cards.forEach((item) => setCuratedOfferState(item, item === card && shouldOpen));
+        });
+      });
+    });
+  }
+
+  function refreshCuratedOfferHeights(root) {
+    const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll(".curated-offer-card.is-open [data-curated-offer-body]").forEach((body) => {
+      body.style.maxHeight = `${body.scrollHeight}px`;
+    });
+  }
+
   function buildEmergencyMailto(button) {
     const row = button.closest(".slug-time-row");
     const pill = button.closest(".slug-pill");
@@ -624,15 +679,18 @@
 
   function boot() {
     pruneExpiredSessions(document);
+    bindCuratedOffers();
     initializeScopes();
     activateProgramFromQuery();
     applyEmergencyEmailFallback(document);
+    refreshCuratedOfferHeights(document);
   }
 
   window.pruneExpiredSessions = window.pruneExpiredSessions || pruneExpiredSessions;
   window.applyEmergencyEmailFallback = applyEmergencyEmailFallback;
 
   bindTriggers();
+  window.addEventListener("resize", () => refreshCuratedOfferHeights(document));
   if (document.readyState === "loading") {
     window.addEventListener("DOMContentLoaded", boot);
   } else {

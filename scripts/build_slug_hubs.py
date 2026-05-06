@@ -33,6 +33,8 @@ SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
 TZ = ZoneInfo("America/New_York")
 DATE_LIMIT = 6
 POPULAR_LIMIT = 4
+CURATED_OFFER_LIMIT = 8
+CURATED_OFFER_MIN = 5
 EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options."
 EMPTY_FALLBACK_BODY = "View the full schedule for additional dates, request a class time, or ask about on-site training for your team."
 EMERGENCY_EMAIL_REGISTRATION_MODE = True
@@ -583,6 +585,8 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
             + ("Filling" if enrolled_count >= 2 else "Popular Time")
             + "</span>"
         )
+    badge_line = f"      {badge_html}" if badge_html else ""
+    action_hint_html = f'    <div class="slug-pill-hint">{escape(action_hint)}</div>' if action_hint else ""
 
     return f"""
 <article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}">
@@ -596,15 +600,158 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
     <div class="slug-pill-meta-row">
       <span class="slug-pill-chip">{escape(format_time_line(start_dt))}</span>
       <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
-      {badge_html}
+{badge_line}
     </div>
     <div class="slug-pill-subtitle">{escape(title)}</div>
   </div>
   <div class="slug-pill-actions">
-    {f'<div class="slug-pill-hint">{escape(action_hint)}</div>' if action_hint else ''}
+{action_hint_html}
     <a class="button small primary" href="{action_url}" data-original-href="{register_url}">{action_label}</a>
   </div>
 </article>
+""".strip()
+
+
+def session_key(session: dict[str, Any]) -> str:
+    return str(session.get("session_id") or session.get("registration_url") or "")
+
+
+def session_action(session: dict[str, Any], *, page_slug: str) -> tuple[str, str, str]:
+    register_url = escape(session.get("registration_url") or "#", quote=True)
+    action_label = "Book Seat"
+    action_url = register_url
+    if EMERGENCY_EMAIL_REGISTRATION_MODE:
+        action_label = "Email Us To Register"
+        action_url = escape(render_emergency_mailto(session, page_slug=page_slug), quote=True)
+    return action_label, action_url, register_url
+
+
+def seats_copy(enrolled_count: int) -> str:
+    if enrolled_count >= 3:
+        return "Popular class"
+    if enrolled_count >= 1:
+        return "Students already enrolled"
+    return "Open registration"
+
+
+def offer_benefit_copy(tab: dict[str, Any], session: dict[str, Any]) -> str:
+    format_badge = normalize_space(session.get("_format_badge") or tab.get("tab_badge"))
+    if "heartcode" in format_badge.lower() or "skills" in format_badge.lower():
+        return "Finish the online portion, then complete your in-person skills check."
+    if "renewal" in normalize_space(tab.get("label")).lower():
+        return "A focused renewal path for currently certified providers."
+    if format_badge:
+        return f"{format_badge} option with a clear class time and registration path."
+    return "Hand-picked upcoming option with a clear seat reservation path."
+
+
+def curated_offer_sessions(sessions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_key: dict[str, dict[str, Any]] = {}
+    for session in sort_by_momentum([item for item in sessions if session_enrolled_count(item) >= 1]):
+        key = session_key(session)
+        if key:
+            by_key[key] = session
+        if len(by_key) >= CURATED_OFFER_LIMIT:
+            return list(by_key.values())
+
+    for session in sort_by_start(sessions):
+        key = session_key(session)
+        if key and key not in by_key:
+            by_key[key] = session
+        if len(by_key) >= CURATED_OFFER_LIMIT:
+            break
+
+    return list(by_key.values())
+
+
+def render_curated_offer_item(
+    session: dict[str, Any],
+    tab: dict[str, Any],
+    *,
+    page: dict[str, Any],
+    index: int,
+) -> str:
+    page_slug = str(page.get("slug") or "")
+    start_dt = parse_dt(session.get("start_at"))
+    end_dt = parse_dt(session.get("end_at"))
+    title = normalize_space(session.get("course_name")) or normalize_space(tab.get("label")) or "910CPR Class"
+    location = clean_location(session.get("location_display") or session.get("location_name"))
+    image_src = escape(tab.get("tab_icon") or page.get("hero_image") or "/images/logo.png", quote=True)
+    image_alt = escape(tab.get("label") or page.get("hero_title") or "910CPR class")
+    session_id = escape(str(session.get("session_id") or ""), quote=True)
+    session_start = escape(start_dt.isoformat() if start_dt else "", quote=True)
+    action_label, action_url, register_url = session_action(session, page_slug=page_slug)
+    expanded = index == 0
+    body_id = f"{tab.get('id')}-curated-offer-{index + 1}"
+    enrolled_count = session_enrolled_count(session)
+    benefit = offer_benefit_copy(tab, session)
+    time_range = format_time_line(start_dt)
+    if end_dt:
+        time_range = f"{time_range} to {format_time_line(end_dt)}"
+    detail_parts = [
+        f"Class runs {time_range}.",
+        f"Location: {location}.",
+        "Use the registration button to reserve this specific session.",
+    ]
+    if enrolled_count >= 1:
+        detail_parts.insert(1, momentum_label(enrolled_count).capitalize() + ".")
+
+    return f"""
+<article class="curated-offer-card{' is-open' if expanded else ''} js-session-item" data-session-id="{session_id}" data-session-start="{session_start}" data-start="{session_start}">
+  <button class="curated-offer-header" type="button" aria-expanded="{'true' if expanded else 'false'}" aria-controls="{escape(body_id, quote=True)}" data-curated-offer-toggle>
+    <span class="curated-offer-media">
+      <img src="{image_src}" alt="{image_alt}" loading="lazy" onerror="this.style.display='none'">
+    </span>
+    <span class="curated-offer-main">
+      <span class="curated-offer-title">{escape(title)}</span>
+      <span class="curated-offer-meta">
+        <span>{escape(format_date_line(start_dt))}</span>
+        <span>{escape(format_time_line(start_dt))}</span>
+        <span>{escape(location)}</span>
+      </span>
+      <span class="curated-offer-benefit">{escape(benefit)}</span>
+    </span>
+    <span class="curated-offer-status">{escape(seats_copy(enrolled_count))}</span>
+    <span class="curated-offer-icon" aria-hidden="true"></span>
+  </button>
+  <div class="curated-offer-body" id="{escape(body_id, quote=True)}" {'data-open="true"' if expanded else 'hidden'} data-curated-offer-body>
+    <div class="curated-offer-body-inner">
+      <p>{escape(' '.join(detail_parts))}</p>
+      <div class="curated-offer-actions">
+        <a class="button small primary" href="{action_url}" data-original-href="{register_url}" data-session-id="{session_id}">{escape(action_label)}</a>
+        <a class="button small secondary" href="{escape(tab['full_schedule_url'], quote=True)}">More dates</a>
+      </div>
+    </div>
+  </div>
+</article>
+""".strip()
+
+
+def render_curated_offers_section(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
+    selected = curated_offer_sessions(sessions)
+    if not selected:
+        return ""
+    label = full_schedule_short_label(page)
+    offer_count = min(len(selected), CURATED_OFFER_LIMIT)
+    count_copy = "5 to 8" if offer_count >= CURATED_OFFER_MIN else str(offer_count)
+    cards = "\n".join(
+        render_curated_offer_item(session, tab, page=page, index=index)
+        for index, session in enumerate(selected)
+    )
+    return f"""
+<section class="curated-offers-section" data-curated-offers>
+  <div class="slug-inventory-head curated-offers-head">
+    <h3>Upcoming {escape(label)} Options</h3>
+    <p>Here are the next {escape(count_copy)} hand-picked {escape(label)} options. Need a different day or time? See the full schedule below.</p>
+  </div>
+  <div class="curated-offer-list">
+    {cards}
+  </div>
+  <div class="curated-offer-footer">
+    <span>Need more options?</span>
+    <a class="button small primary" href="{escape(tab['full_schedule_url'], quote=True)}">See the full {escape(label)} schedule</a>
+  </div>
+</section>
 """.strip()
 
 
@@ -803,10 +950,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
 """.strip()
 
     popular_sessions = sort_by_momentum([session for session in sessions if session_enrolled_count(session) >= 1])[:POPULAR_LIMIT]
-    highlighted_keys = {
-        str(session.get("session_id") or session.get("registration_url") or "")
-        for session in popular_sessions
-    }
+    highlighted_keys = {session_key(session) for session in popular_sessions}
     remaining_sessions = [
         session
         for session in sort_by_start(sessions)
@@ -814,6 +958,10 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
     ]
 
     section_html: list[str] = []
+    curated_html = render_curated_offers_section(page, tab, sessions)
+    if curated_html:
+        section_html.append(curated_html)
+
     if popular_sessions:
         section_html.append(
             render_inventory_section(
@@ -867,6 +1015,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
         if not group_mode
         else ""
     )
+    panel_sections = "\n    ".join(part for part in [" ".join(section_html), flexible_html, escape_hatch_html] if part)
 
     return f"""
 <section class="{panel_class}" id="{escape(tab['id'], quote=True)}" data-banner="{full_schedule_data}">
@@ -878,9 +1027,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
         {render_panel_description(tab)}
       </div>
     </div>
-    {' '.join(section_html)}
-    {flexible_html}
-    {escape_hatch_html}
+    {panel_sections}
   </div>
 </section>
 """.strip()

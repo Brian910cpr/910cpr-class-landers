@@ -397,6 +397,7 @@ def render_course_page_body(course_meta: dict, future_sessions: list[dict]) -> s
     description = course_description(title)
     parent_hub = course_meta.get("parent_hub") or infer_parent_hub(title)
     schedule_url = course_meta.get("schedule_url") or parent_hub
+    course_lander_cta_url = parent_hub
 
     if future_sessions:
         sessions_html = render_course_session_rows(future_sessions)
@@ -404,7 +405,7 @@ def render_course_page_body(course_meta: dict, future_sessions: list[dict]) -> s
         if len(future_sessions) > COURSE_PAGE_VISIBLE_BATCH:
             load_more_html = '<button class="course-load-more" type="button" data-load-more>Load 10 more</button>'
         schedule_block = f"""
-<section class="course-sessions js-live-session-group" data-empty-link="{html_escape(schedule_url)}" data-empty-link-label="See full schedule for this course">
+<section class="course-sessions js-live-session-group" data-empty-link="{html_escape(course_lander_cta_url)}" data-empty-link-label="See related course hub">
   <div class="course-section-head">
     <h2>Upcoming Dates</h2>
     <p>Only future sessions for this exact course are shown here.</p>
@@ -417,13 +418,13 @@ def render_course_page_body(course_meta: dict, future_sessions: list[dict]) -> s
 """
     else:
         schedule_block = f"""
-<section class="course-sessions course-empty js-live-session-group" data-empty-link="{html_escape(schedule_url)}" data-empty-link-label="See full schedule for this course">
+<section class="course-sessions course-empty js-live-session-group" data-empty-link="{html_escape(course_lander_cta_url)}" data-empty-link-label="See related course hub">
   <div class="course-section-head">
     <h2>Upcoming Dates</h2>
   </div>
   <div class="js-live-session-empty">
     <p>No upcoming dates are currently listed for this course. Please contact us and we'll help you find the right class.</p>
-    <p><a class="course-help-cta" href="{html_escape(schedule_url)}">See full schedule for this course</a></p>
+    <p><a class="course-help-cta" href="{html_escape(course_lander_cta_url)}">See related course hub</a></p>
   </div>
 </section>
 """
@@ -435,7 +436,7 @@ def render_course_page_body(course_meta: dict, future_sessions: list[dict]) -> s
     <h1>{html_escape(title)}</h1>
     <p class="course-description">{html_escape(description)}</p>
     <div class="course-cta-row">
-      <a class="course-primary-cta" href="{html_escape(schedule_url)}">See full schedule for this course</a>
+      <a class="course-primary-cta" href="{html_escape(course_lander_cta_url)}">See related course hub</a>
       <a class="course-secondary-cta" href="{html_escape(parent_hub)}">Back to related hub</a>
     </div>
   </div>
