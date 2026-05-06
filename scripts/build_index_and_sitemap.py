@@ -110,7 +110,7 @@ def load_google_review_stats() -> dict:
 
 def review_theme_summaries() -> list[str]:
     return [
-        "Students often mention knowledgeable instructors who keep CPR, BLS, ACLS, and PALS requirements clear.",
+        "Students often mention knowledgeable instructors who make certification requirements easy to understand.",
         "Renewing providers regularly describe the classes as organized, direct, and respectful of their time.",
         "Reviewers commonly point to clear explanations, hands-on practice, and a class experience that feels manageable.",
     ]
@@ -126,7 +126,7 @@ def render_google_trust_block() -> str:
 """.rstrip()
         for theme in stats["themes"]
     )
-    themes_html = f'<div class="review-snippets" aria-label="AI summaries of common review themes"><div class="review-theme-label">AI summary of common review themes</div>{themes}</div>' if themes else ""
+    themes_html = f'<div class="review-snippets" aria-label="Common themes from Google reviews"><div class="review-theme-label">Common themes from Google reviews</div>{themes}</div>' if themes else ""
     return f"""
       <section class="top-trust" aria-label="910CPR trust and reviews">
         <div class="top-trust-copy">
@@ -697,8 +697,8 @@ def render_homepage() -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CPR Certification That Actually Counts | 910CPR</title>
-<meta name="description" content="AHA, Red Cross, and HSI CPR certification for healthcare, dental, school, workplace, and professional requirements. Book scheduled group classes at 910CPR training sites.">
+<title>Find a CPR Class and Get Certified | 910CPR</title>
+<meta name="description" content="Find CPR, BLS, ACLS, PALS, Heartsaver, First Aid, and group training from 910CPR. Pick a date, register online, and get certified.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="{SITE_BASE}/">
 <link rel="icon" type="image/png" href="/images/logo.png">
@@ -721,21 +721,21 @@ def render_homepage() -> str:
       <section class="hero home-hero">
         <div class="hero-main">
           <div class="eyebrow">CPR, BLS, ACLS, PALS, First Aid</div>
-          <h1>CPR Certification That Actually Counts</h1>
-          <p class="subhead">AHA, Red Cross, and HSI training for nurses, EMTs, dental teams, healthcare students, workplaces, and professional requirements.</p>
+          <h1>Find the CPR Class You Need</h1>
+          <p class="subhead">Pick a date, register online, and get certified with AHA, Red Cross, or HSI training for work, school, licensing, or healthcare requirements.</p>
           <div class="hero-actions">
-            <a class="button primary" href="#class-finder">Find a class time</a>
+            <a class="button primary" href="#class-finder">Find a class</a>
             <a class="button secondary" href="/group-training.html">Need training for a team?</a>
           </div>
         </div>
         <div class="hero-side">
           <div class="trust-badge">
-            <strong>Scheduled Group Classes</strong>
-            <span>Pick a time and show up at the listed 910CPR training site.</span>
+            <strong>Scheduled Classes</strong>
+            <span>Choose a posted class time and come to the listed 910CPR training site.</span>
           </div>
           <div class="trust-badge">
-            <strong>No Wasted Time</strong>
-            <span>No back-and-forth or complicated coordination. Reserve your seat and get it done in one visit.</span>
+            <strong>Simple Online Registration</strong>
+            <span>Reserve your seat online and get the certification you need without back-and-forth coordination.</span>
           </div>
         </div>
       </section>
@@ -754,7 +754,7 @@ def render_homepage() -> str:
       <section class="home-status">
         <div>
           <div class="home-status-label">Accepted Training Options</div>
-          <p>Choose the CPR, BLS, ACLS, PALS, first aid, or workplace course that matches your employer, school, licensing, or professional requirement.</p>
+          <p>Choose the CPR, BLS, ACLS, PALS, First Aid, Heartsaver, or workplace course that matches your employer, school, licensing, or professional requirement.</p>
         </div>
         <div class="home-status-badges">
           <span class="home-stat">AHA</span>
@@ -766,18 +766,18 @@ def render_homepage() -> str:
       <section class="home-finder" id="class-finder">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Scheduled Classes</div>
-            <h2>Reserve a seat in the class you need</h2>
+            <div class="eyebrow">Find A Class</div>
+            <h2>Choose your certification path</h2>
           </div>
-          <p class="section-copy">Start with the most common certification paths, then choose the date and location that work for you.</p>
+          <p class="section-copy">Start with the training type you need, then choose the date and location that work for you.</p>
         </div>
 
         <div class="finder-grid" data-home-sections>
           <article class="finder-card finder-card-loading">
             <div class="finder-card-head">
               <div>
-                <h3>Loading class times</h3>
-                <p class="finder-card-copy">Loading the current 910CPR class schedule.</p>
+                <h3>Finding available class times</h3>
+                <p class="finder-card-copy">Class dates will appear here in a moment.</p>
               </div>
             </div>
           </article>
@@ -791,7 +791,7 @@ def render_homepage() -> str:
   <div class="wrap">
     <div class="card home-noscript">
       <h2>Quick class links</h2>
-      <p>JavaScript is required for the live homepage class finder. You can still use the full hub pages below.</p>
+      <p>Class times could not load in this browser. You can still choose a course page below.</p>
       <p><a class="button primary" href="/bls.html">BLS</a> <a class="button secondary" href="/acls.html">ACLS</a> <a class="button secondary" href="/pals.html">PALS</a> <a class="button secondary" href="/heartsaver.html">Heartsaver</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG</a> <a class="button secondary" href="/group-training.html">Group Training</a></p>
     </div>
   </div>
@@ -799,7 +799,7 @@ def render_homepage() -> str:
 
 <script src="/assets/booking-home.js"></script>
 <script src="/assets/session-expiry.js"></script>
-{telemetry_script("home", "910CPR Booking Homepage")}
+{telemetry_script("home", "910CPR Homepage")}
 </body>
 </html>"""
 

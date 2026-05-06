@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04T23:32:30.592155-04:00",
+  "generated_at": "2026-05-05T22:09:52.332105-04:00",
   "monitored_repo_path": "E:\\GitHub\\910cpr-class-landers",
   "build_summary": {
     "summary_file": "data\\state\\last_build_summary.json",
@@ -43,6 +43,17 @@
   },
   "runtime_statuses": [
     {
+      "phase_name": "build_index_and_sitemap",
+      "label": "Build Index And Sitemap",
+      "status": "done",
+      "timestamp": "2026-05-05T22:09:51.738339-04:00",
+      "current_count": 26052,
+      "total_count": 26052,
+      "percent_complete": 100.0,
+      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
+      "runtime_file": "data\\runtime\\build_index_and_sitemap.json"
+    },
+    {
       "phase_name": "build_slug_hubs",
       "label": "Build Hub Pages",
       "status": "done",
@@ -52,17 +63,6 @@
       "percent_complete": 100.0,
       "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
       "runtime_file": "data\\runtime\\build_slug_hubs.json"
-    },
-    {
-      "phase_name": "build_index_and_sitemap",
-      "label": "Build Index And Sitemap",
-      "status": "done",
-      "timestamp": "2026-05-04T20:35:12.396798-04:00",
-      "current_count": 26052,
-      "total_count": 26052,
-      "percent_complete": 100.0,
-      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
-      "runtime_file": "data\\runtime\\build_index_and_sitemap.json"
     },
     {
       "phase_name": "build_schedule_future",
@@ -144,6 +144,11 @@
   ],
   "files_written": [
     {
+      "phase": "Build Index And Sitemap",
+      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
+      "timestamp": "2026-05-05T22:09:51.738339-04:00"
+    },
+    {
       "phase": "Build Hub Pages",
       "path": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
       "timestamp": "2026-05-04T23:32:30.071673-04:00"
@@ -177,11 +182,6 @@
       "phase": "Hub Output",
       "path": "docs\\bls.html",
       "timestamp": "2026-05-04T23:32:27.024773-04:00"
-    },
-    {
-      "phase": "Build Index And Sitemap",
-      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
-      "timestamp": "2026-05-04T20:35:12.396798-04:00"
     },
     {
       "phase": "Build Future Schedule Feed",
@@ -241,7 +241,7 @@
         "modified_at": "2026-05-04T23:32:27.024773-04:00",
         "size_bytes": 32247,
         "session_marker_count": 23,
-        "expired_session_markers": 0,
+        "expired_session_markers": 1,
         "stale_vs_schedule_feed": false
       },
       {
@@ -297,42 +297,24 @@
     ],
     "stale_hub_count": 0,
     "stale_hubs": [],
-    "expired_session_markers_total": 0,
-    "warnings": [],
+    "expired_session_markers_total": 1,
+    "warnings": [
+      "expired_session_markers_detected:1"
+    ],
     "schedule_session_count": 1381
   },
   "git": {
     "repo_root": "E:/GitHub/910cpr-class-landers",
     "branch": "main",
-    "head": "54cea763c8e",
+    "head": "6668c41b0c9",
     "has_uncommitted_changes": true,
-    "changed_files_count": 26456,
+    "changed_files_count": 5,
     "changed_files_preview": [
-      " M data/config/slug_hubs.json",
-      " M data/runtime/acls_hub_debug.json",
       " M data/runtime/build_index_and_sitemap.json",
-      " M data/runtime/build_schedule_future.json",
-      " M data/runtime/build_slug_hubs.json",
-      " M data/runtime/heartsaver_hub_debug.json",
-      " M data/sessions_current.json",
-      " M data/state/supervisor_status.json",
-      " M docs/acls.html",
       " M docs/assets/booking-home.js",
-      " M docs/assets/session-expiry.js",
-      " M docs/bls.html",
-      " M docs/classes/10000418.html",
-      " M docs/classes/10002547.html",
-      " M docs/classes/10004935.html",
-      " M docs/classes/10005545.html",
-      " M docs/classes/10005558.html",
-      " M docs/classes/10008140.html",
-      " M docs/classes/10008989.html",
-      " M docs/classes/10009253.html",
-      " M docs/classes/10009255.html",
-      " M docs/classes/10009256.html",
-      " M docs/classes/10009257.html",
-      " M docs/classes/10009258.html",
-      " M docs/classes/10009261.html"
+      " M docs/index.html",
+      " M scripts/__pycache__/build_index_and_sitemap.cpython-312.pyc",
+      " M scripts/build_index_and_sitemap.py"
     ]
   },
   "detected_settings": {
@@ -344,7 +326,8 @@
     "config_source": "data\\config\\slug_hubs.json"
   },
   "warnings": [
-    "git_dirty:26456"
+    "expired_session_markers_detected:1",
+    "git_dirty:5"
   ],
   "errors": []
 }

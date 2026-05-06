@@ -9,40 +9,40 @@
       title: "BLS",
       audience: "For healthcare workers, dental teams, nursing students, and clinical staff who need professional-level CPR certification.",
       fullScheduleUrl: "/bls.html",
-      fullScheduleLabel: "See full schedule",
-      emptyLabel: "No upcoming public BLS dates are listed right now.",
+      fullScheduleLabel: "See all BLS dates",
+      emptyLabel: "No BLS dates are posted here right now.",
     },
     {
       id: "acls",
       title: "ACLS",
       audience: "For nurses, paramedics, respiratory therapists, and other clinicians who need advanced cardiac life support training.",
       fullScheduleUrl: "/acls.html",
-      fullScheduleLabel: "See full schedule",
-      emptyLabel: "No upcoming public ACLS dates are listed right now.",
+      fullScheduleLabel: "See all ACLS dates",
+      emptyLabel: "No ACLS dates are posted here right now.",
     },
     {
       id: "pals",
       title: "PALS",
       audience: "For providers who care for infants and children and need pediatric advanced life support training.",
       fullScheduleUrl: "/pals.html",
-      fullScheduleLabel: "See full schedule",
-      emptyLabel: "No upcoming public PALS dates are listed right now.",
+      fullScheduleLabel: "See all PALS dates",
+      emptyLabel: "No PALS dates are posted here right now.",
     },
     {
       id: "heartsaver",
       title: "Heartsaver",
       audience: "For workplaces, schools, childcare teams, fitness staff, and general responders who need CPR, AED, and first aid training.",
       fullScheduleUrl: "/heartsaver.html",
-      fullScheduleLabel: "See full schedule",
-      emptyLabel: "No upcoming public Heartsaver dates are listed right now.",
+      fullScheduleLabel: "See all Heartsaver dates",
+      emptyLabel: "No Heartsaver dates are posted here right now.",
     },
     {
       id: "uscg",
       title: "USCG Elementary First Aid",
       audience: "For mariners, crews, and maritime employers who need the USCG-aligned first aid and CPR option.",
       fullScheduleUrl: "/uscg-elementary-first-aid-cpr.html",
-      fullScheduleLabel: "See full schedule",
-      emptyLabel: "No upcoming public USCG dates are listed right now.",
+      fullScheduleLabel: "See all USCG dates",
+      emptyLabel: "No USCG dates are posted here right now.",
     },
   ];
 
@@ -468,7 +468,7 @@
       : `
         <div class="finder-empty">
           <strong>${escapeHtml(section.emptyLabel)}</strong>
-          <p>Use the full schedule page for more dates in this category.</p>
+          <p>Open the course page for more dates, locations, and registration options.</p>
         </div>
       `;
 
@@ -493,8 +493,8 @@
       <article class="finder-card">
         <div class="finder-card-head">
           <div>
-            <h3>Choose a course page</h3>
-            <p class="finder-card-copy">View current CPR class options below or call 910-395-5193 for help choosing the right class.</p>
+            <h3>Choose your training type</h3>
+            <p class="finder-card-copy">Use the links below to find CPR, BLS, ACLS, PALS, First Aid, or group training.</p>
           </div>
         </div>
         <div class="finder-empty">
