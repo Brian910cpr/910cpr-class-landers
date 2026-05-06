@@ -1,5 +1,5 @@
 (function () {
-  var EMPTY_MESSAGE = "No upcoming sessions available";
+  var EMPTY_MESSAGE = "No selected class times are showing here.";
 
   function parseStart(value) {
     if (!value) return null;

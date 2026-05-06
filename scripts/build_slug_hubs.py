@@ -33,8 +33,8 @@ SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
 TZ = ZoneInfo("America/New_York")
 DATE_LIMIT = 6
 POPULAR_LIMIT = 4
-EMPTY_FALLBACK_TITLE = "No upcoming dates are currently listed for this course."
-EMPTY_FALLBACK_BODY = "Please contact us and we'll help you find the right class."
+EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options."
+EMPTY_FALLBACK_BODY = "View the full schedule for additional dates, request a class time, or ask about on-site training for your team."
 GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403"
 PRIVATE_HINTS = (
     "private",
@@ -564,11 +564,23 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool) -> str:
 """.strip()
 
 
-def render_empty_state(*, group_mode: bool) -> str:
+def group_request_href(program: str | None = None) -> str:
+    if program:
+        return f"/request_group_session.html?program={quote(program)}"
+    return "/request_group_session.html"
+
+
+def render_empty_state(page: dict[str, Any], tab: dict[str, Any], *, group_mode: bool) -> str:
+    full_schedule_url = str(tab.get("full_schedule_url") or page.get("full_schedule_url") or "#")
+    onsite_href = group_request_href(tab.get("program") or page.get("hero_title"))
     return (
         "<div class='slug-empty'>"
         f"<strong>{EMPTY_FALLBACK_TITLE}</strong>"
         f"<p>{EMPTY_FALLBACK_BODY}</p>"
+        "<div class='slug-empty-actions'>"
+        f"<a class='button primary' href='{escape(full_schedule_url, quote=True)}'>View Full Schedule</a>"
+        f"<a class='button secondary' href='{escape(onsite_href, quote=True)}'>Request On-Site Training</a>"
+        "</div>"
         "</div>"
     )
 
@@ -709,7 +721,7 @@ def full_schedule_short_label(page: dict[str, Any]) -> str:
 def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
     if group_mode:
-        request_href = f"/request_group_session.html?program={quote(tab['program'])}"
+        request_href = group_request_href(tab["program"])
         full_schedule_data = escape(
             json.dumps(
                 {
@@ -781,7 +793,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
             )
         )
     elif not popular_sessions:
-        section_html.append(render_empty_state(group_mode=group_mode))
+        section_html.append(render_empty_state(page, tab, group_mode=group_mode))
 
     flexible_html = ""
     full_schedule_data = escape(
@@ -793,16 +805,16 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
         ),
         quote=True,
     )
-    inventory_label = "Scheduled group classes"
+    inventory_label = "Start here, more dates available"
     schedule_short_label = full_schedule_short_label(page)
     escape_hatch_html = (
         f"""
 <section class="slug-escape-hatch">
   <div class="slug-escape-copy">
-    <strong>Need more dates or locations?</strong>
-    <span>This page highlights selected upcoming class times. Open the full schedule for the complete list.</span>
+    <strong>Need a different date or time?</strong>
+    <span>These are selected upcoming classes. We have more dates, times, and locations available on the full schedule.</span>
   </div>
-  <a class="button primary slug-full-schedule-button" href="{escape(tab['full_schedule_url'], quote=True)}">Open Full {escape(schedule_short_label)} Schedule</a>
+  <a class="button primary slug-full-schedule-button" href="{escape(tab['full_schedule_url'], quote=True)}">View All Available Dates</a>
 </section>
 """.strip()
         if not group_mode
@@ -850,6 +862,29 @@ def render_hero_actions(page: dict[str, Any], first_tab: dict[str, Any], *, grou
         )
 
     return ""
+
+
+def render_group_training_push(page: dict[str, Any], first_tab: dict[str, Any], *, group_mode: bool) -> str:
+    if group_mode:
+        return ""
+    onsite_href = group_request_href(first_tab.get("program") or page.get("hero_title"))
+    classes_href = f"#slug-tabs-{escape(page['slug'], quote=True)}"
+    return f"""
+  <section class="group-training-push" aria-label="On-site group training">
+    <div class="group-training-copy">
+      <div class="home-status-label">Group Training</div>
+      <h2>Training for your team? We come to you.</h2>
+      <p>No travel. No scheduling headaches. Your team already knows where to go.</p>
+    </div>
+    <div class="group-training-actions">
+      <a class="button primary group-training-primary" href="{escape(onsite_href, quote=True)}">Schedule On-Site Training</a>
+      <div class="group-training-individual">
+        <p>Just need a seat for yourself? Scroll down. We’ve got you covered.</p>
+        <a class="button secondary" href="{classes_href}">View Upcoming Classes</a>
+      </div>
+    </div>
+  </section>
+""".rstrip()
 
 
 def resolve_guidance_banners(page: dict[str, Any], banner_library: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
@@ -1019,6 +1054,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
     </div>
   </section>
   {render_google_trust_block()}
+  {render_group_training_push(page, first_tab, group_mode=group_mode)}
   {render_guidance_banners(page, banner_library)}
   {tabs_html}
   

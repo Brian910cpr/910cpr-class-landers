@@ -1,6 +1,6 @@
 (function () {
-  const EMPTY_FALLBACK_TITLE = "No upcoming dates are currently listed for this course.";
-  const EMPTY_FALLBACK_BODY = "Please contact us and we'll help you find the right class.";
+  const EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options.";
+  const EMPTY_FALLBACK_BODY = "View the full schedule for additional dates, request a class time, or ask about on-site training for your team.";
   const MONTHS = {
     jan: 0,
     january: 0,
@@ -196,7 +196,7 @@
     if (!fallback) {
       fallback = document.createElement("div");
       fallback.className = "slug-empty hub-empty-state";
-      fallback.innerHTML = `<strong>${EMPTY_FALLBACK_TITLE}</strong><p>${EMPTY_FALLBACK_BODY}</p>`;
+      fallback.innerHTML = `<strong>${EMPTY_FALLBACK_TITLE}</strong><p>${EMPTY_FALLBACK_BODY}</p><div class="slug-empty-actions"><a class="button primary" href="/index.html">View Full Schedule</a><a class="button secondary" href="/request_group_session.html">Request On-Site Training</a></div>`;
       scope.appendChild(fallback);
     }
     return fallback;
@@ -215,10 +215,20 @@
     }
 
     if (!existing) {
+      const banner = panel.getAttribute("data-banner");
+      let fullScheduleUrl = "/index.html";
+      try {
+        const parsed = JSON.parse(banner || "{}");
+        fullScheduleUrl = parsed.url || fullScheduleUrl;
+      } catch (error) {}
       list.innerHTML = (
         "<div class='slug-empty'>"
         + `<strong>${EMPTY_FALLBACK_TITLE}</strong>`
         + `<p>${EMPTY_FALLBACK_BODY}</p>`
+        + "<div class='slug-empty-actions'>"
+        + `<a class='button primary' href='${escapeHtml(fullScheduleUrl)}'>View Full Schedule</a>`
+        + "<a class='button secondary' href='/request_group_session.html'>Request On-Site Training</a>"
+        + "</div>"
         + "</div>"
       );
     }
@@ -227,8 +237,7 @@
   function syncPanelInventory(panel) {
     const kicker = panel ? panel.querySelector(".slug-panel-kicker") : null;
     if (!kicker) return;
-    const count = countVisibleSessions(panel);
-    kicker.textContent = `${count} upcoming option${count === 1 ? "" : "s"}`;
+    kicker.textContent = "Start here, more dates available";
   }
 
   function syncTriggerInventory(targetSelector, count) {

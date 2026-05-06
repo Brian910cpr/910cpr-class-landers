@@ -78,7 +78,7 @@
     empty.className = "js-live-session-empty";
 
     var message = document.createElement("p");
-    message.textContent = "No upcoming sessions available";
+    message.textContent = "No selected class times are showing here.";
     empty.appendChild(message);
 
     var link = group.getAttribute("data-empty-link");
