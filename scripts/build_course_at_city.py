@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from scripts.build_status import BuildStatusReporter
 try:
     from tqdm import tqdm
@@ -14,6 +15,8 @@ from scripts.hub_utils import (
 )
 
 OUTPUT_DIR = os.path.join("docs", "course-at-city")
+ROOT = Path(__file__).resolve().parents[1]
+SESSIONS_INPUT = ROOT / "data" / "sessions_current.json"
 
 
 def valid_city(city: str) -> bool:
@@ -52,6 +55,7 @@ def purge_stale_outputs(output_dir: str) -> int:
 
 def build_course_at_city():
     reporter = BuildStatusReporter("build_course_at_city")
+    reporter.set_context(inputs=[SESSIONS_INPUT], outputs=[ROOT / OUTPUT_DIR])
     count = 0
     last_output = None
     try:
@@ -109,7 +113,17 @@ def build_course_at_city():
             count += 1
             reporter.update(current=count, total=len(combos), last_output_file=last_output)
 
-        reporter.done(current=count, total=len(combos), last_output_file=last_output)
+        reporter.done(
+            current=count,
+            total=len(combos),
+            last_output_file=last_output,
+            pages_generated=count,
+            counts={
+                "sessions_loaded": len(sessions),
+                "future_public_sessions": len(future_public),
+                "course_at_city_pages": count,
+            },
+        )
         print(f"Wrote {count} filtered course-at-city pages to {OUTPUT_DIR}")
     except Exception:
         reporter.error(current=count, last_output_file=last_output)

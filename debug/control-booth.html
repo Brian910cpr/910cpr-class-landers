@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>910CPR Lander Control Booth</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #1f2933;
+      --muted: #64748b;
+      --line: #d8dee8;
+      --ok: #157347;
+      --warn: #9a6700;
+      --error: #b42318;
+      --running: #1d4ed8;
+      --stale: #7c3aed;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0;
+    }
+    .top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 6px; font-size: 28px; }
+    h2 { margin-bottom: 14px; font-size: 18px; }
+    h3 { margin-bottom: 8px; font-size: 15px; }
+    .muted { color: var(--muted); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 92px;
+    }
+    .metric strong { font-size: 26px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      width: max-content;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #eef2f7;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .status-ok { background: #e8f5ee; color: var(--ok); }
+    .status-warning { background: #fff4d6; color: var(--warn); }
+    .status-error { background: #fde8e6; color: var(--error); }
+    .status-running { background: #e8efff; color: var(--running); }
+    .status-stale { background: #f1eafe; color: var(--stale); }
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    li + li { margin-top: 8px; }
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+    .empty {
+      color: var(--muted);
+      font-style: italic;
+    }
+    .breakdown {
+      display: grid;
+      gap: 8px;
+    }
+    .breakdown div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+    }
+    @media (max-width: 860px) {
+      .top, .section-grid { display: block; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .panel { margin-top: 12px; }
+    }
+    @media (max-width: 540px) {
+      .grid { grid-template-columns: 1fr; }
+      th:nth-child(3), td:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap top">
+      <div>
+        <h1>910CPR Lander Control Booth</h1>
+        <p class="muted">Monitor-first view of build output, status files, warnings, and review queues.</p>
+      </div>
+      <span id="overallBadge" class="badge">Loading</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="grid" aria-label="Build summary">
+      <article class="panel metric">
+        <span class="muted">Last successful run</span>
+        <strong id="lastSuccessful">--</strong>
+      </article>
+      <article class="panel metric">
+        <span class="muted">Current sessions</span>
+        <strong id="sessionsCurrent">--</strong>
+      </article>
+      <article class="panel metric">
+        <span class="muted">Future schedule</span>
+        <strong id="scheduleFuture">--</strong>
+      </article>
+      <article class="panel metric">
+        <span class="muted">Pages generated</span>
+        <strong id="pagesGenerated">--</strong>
+      </article>
+    </section>
+    <p id="countsSource" class="muted" style="margin:10px 0 0;"></p>
+
+    <section class="section-grid">
+      <article class="panel">
+        <h2>Build Scripts</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Script</th>
+              <th>Status</th>
+              <th>Progress</th>
+              <th>Last Output</th>
+            </tr>
+          </thead>
+          <tbody id="scriptRows"></tbody>
+        </table>
+      </article>
+
+      <aside class="panel">
+        <h2>Page Breakdown</h2>
+        <div id="pageBreakdown" class="breakdown"></div>
+      </aside>
+    </section>
+
+    <section class="section-grid">
+      <article class="panel">
+        <h2>Warnings</h2>
+        <ul id="warnings"></ul>
+      </article>
+      <article class="panel">
+        <h2>Errors</h2>
+        <ul id="errors"></ul>
+      </article>
+    </section>
+
+    <section class="panel" style="margin-top:16px;">
+      <h2>Files Needing Review</h2>
+      <ul id="reviewFiles"></ul>
+    </section>
+  </main>
+
+  <script>
+    const statusClass = (status) => {
+      const normalized = String(status || "").toLowerCase();
+      if (normalized === "ok" || normalized === "done") return "status-ok";
+      if (normalized === "error" || normalized === "failed" || normalized === "invalid_status_file") return "status-error";
+      if (normalized === "running") return "status-running";
+      if (normalized === "stale") return "status-stale";
+      return "status-warning";
+    };
+
+    const fmtDate = (value) => {
+      if (!value) return "--";
+      const parsed = new Date(value);
+      if (Number.isNaN(parsed.getTime())) return value;
+      return parsed.toLocaleString();
+    };
+
+    const setList = (id, items, emptyText) => {
+      const node = document.getElementById(id);
+      node.innerHTML = "";
+      if (!items || items.length === 0) {
+        const li = document.createElement("li");
+        li.className = "empty";
+        li.textContent = emptyText;
+        node.appendChild(li);
+        return;
+      }
+      items.forEach((item) => {
+        const li = document.createElement("li");
+        const code = document.createElement("code");
+        code.textContent = item;
+        li.appendChild(code);
+        node.appendChild(li);
+      });
+    };
+
+    fetch("control_booth_data.json", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error("Missing debug/control_booth_data.json");
+        return response.json();
+      })
+      .then((data) => {
+        const badge = document.getElementById("overallBadge");
+        badge.textContent = data.overall_status || "unknown";
+        badge.className = `badge ${statusClass(data.overall_status)}`;
+
+        document.getElementById("lastSuccessful").textContent = fmtDate(data.last_successful_run);
+        document.getElementById("sessionsCurrent").textContent = data.counts?.sessions_current ?? "--";
+        document.getElementById("scheduleFuture").textContent = data.counts?.schedule_future ?? "--";
+        document.getElementById("pagesGenerated").textContent = data.counts?.pages_generated ?? "--";
+        document.getElementById("countsSource").textContent = data.counts?.source_label
+          ? `Counts source: ${data.counts.source_label}`
+          : "";
+
+        const rows = document.getElementById("scriptRows");
+        rows.innerHTML = "";
+        (data.build_scripts || []).forEach((script) => {
+          const tr = document.createElement("tr");
+          const progress = script.total_count ? `${script.current_count || 0} / ${script.total_count}` : "--";
+          const scriptCell = document.createElement("td");
+          const scriptCode = document.createElement("code");
+          scriptCode.textContent = script.script || script.phase_name || "";
+          scriptCell.appendChild(scriptCode);
+
+          const statusCell = document.createElement("td");
+          const statusBadge = document.createElement("span");
+          statusBadge.className = `badge ${statusClass(script.status)}`;
+          statusBadge.textContent = script.status || "unknown";
+          statusCell.appendChild(statusBadge);
+
+          const progressCell = document.createElement("td");
+          progressCell.textContent = progress;
+
+          const outputCell = document.createElement("td");
+          const outputCode = document.createElement("code");
+          outputCode.textContent = script.last_output_file || "";
+          outputCell.appendChild(outputCode);
+
+          tr.append(scriptCell, statusCell, progressCell, outputCell);
+          rows.appendChild(tr);
+        });
+
+        const breakdown = document.getElementById("pageBreakdown");
+        breakdown.innerHTML = "";
+        Object.entries(data.counts?.page_breakdown || {}).forEach(([label, count]) => {
+          const row = document.createElement("div");
+          const labelNode = document.createElement("span");
+          labelNode.textContent = label.replaceAll("_", " ");
+          const countNode = document.createElement("strong");
+          countNode.textContent = count;
+          row.append(labelNode, countNode);
+          breakdown.appendChild(row);
+        });
+
+        setList("warnings", data.warnings, "No warnings reported.");
+        setList("errors", data.errors, "No errors reported.");
+        setList("reviewFiles", data.files_needing_review, "No review files reported.");
+      })
+      .catch((error) => {
+        const badge = document.getElementById("overallBadge");
+        badge.textContent = "error";
+        badge.className = "badge status-error";
+        setList("errors", [error.message], "No errors reported.");
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+{
+  "generated_at": "2026-05-07T16:39:29.711394-04:00",
+  "overall_status": "warning",
+  "last_successful_run": null,
+  "counts": {
+    "source_label": "current filesystem counts",
+    "source_is_build_status_bound": false,
+    "sessions_current": 26042,
+    "schedule_future": 1378,
+    "pages_generated": 26421,
+    "page_breakdown": {
+      "class_pages": 26053,
+      "course_pages": 93,
+      "location_pages": 266,
+      "course_at_city_pages": 4,
+      "slug_hub_pages": 5
+    }
+  },
+  "warnings": [
+    "Missing descriptions: 14 item(s) need review.",
+    "No debug status file found for build_all_v4.",
+    "No debug status file found for build_course_at_city.",
+    "No debug status file found for build_courses.",
+    "No debug status file found for build_index_and_sitemap.",
+    "No debug status file found for build_locations.",
+    "No debug status file found for build_request_group_session.",
+    "No debug status file found for build_schedule_future.",
+    "No debug status file found for build_sessions_current.",
+    "No debug status file found for build_slug_hubs.",
+    "Unmapped courses: 6334 item(s) need review."
+  ],
+  "errors": [],
+  "files_needing_review": [
+    "data/audit/missing_descriptions.json",
+    "data/audit/unmapped_courses.json"
+  ],
+  "review_files": [
+    {
+      "label": "Unmapped courses",
+      "path": "data/audit/unmapped_courses.json",
+      "count": 6334
+    },
+    {
+      "label": "Missing descriptions",
+      "path": "data/audit/missing_descriptions.json",
+      "count": 14
+    }
+  ],
+  "build_scripts": [
+    {
+      "phase_name": "build_all_v4",
+      "worker": "build_all_v4",
+      "script": "scripts/build_all_v4.py",
+      "status": "never_run",
+      "raw_status": "missing",
+      "status_file": "debug/status/build_all_v4.json",
+      "warnings": [
+        "No debug status file found for build_all_v4."
+      ],
+      "errors": [],
+      "files_needing_review": [],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "phase_name": "build_course_at_city",
+      "worker": "build_course_at_city",
+      "script": "scripts/build_course_at_city.py",
+      "status": "never_run",
+      "raw_status": "missing",
+      "status_file": "debug/status/build_course_at_city.json",
+      "warnings": [
+        "No debug status file found for build_course_at_city."
+      ],
+      "errors": [],
+      "files_needing_review": [],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "phase_name": "build_courses",
+      "worker": "build_courses",
+      "script": "scripts/build_courses.py",
+      "status": "never_run",
+      "raw_status": "missing",
+      "status_file": "debug/status/build_courses.json",
+      "warnings": [
+        "No debug status file found for build_courses."
+      ],
+      "errors": [],
+      "files_needing_review": [],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "phase_name": "build_index_and_sitemap",
+      "worker": "build_index_and_sitemap",
+      "script": "scripts/build_index_and_sitemap.py",
+      "status": "never_run",
+      "raw_status": "missing",
+      "status_file": "debug/status/build_index_and_sitemap.json",
+      "warnings": [
+        "No debug status file found for build_index_and_sitemap."
+      ],
+      "errors": [],
+      "files_needing_review": [],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "phase_name": "build_locations",
+      "worker": "build_locations",
+      "script": "scripts/build_locations.py",
+      "status": "never_run",
+      "raw_status": "missing",
+      "status_file": "debug/status/build_locations.json",
+      "warnings": [
+        "No debug status file found for build_locations."
+      ],
+      "errors": [],
+      "files_needing_review": [],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "phase_name": "build_request_group_session",
+      "worker": "build_request_group_session",
+      "script": "scripts/build_request_group_session.py",
+      "status": "never_run",
+      "raw_status": "missing",
+      "status_file": "debug/status/build_request_group_session.json",
+      "warnings": [
+        "No debug status file found for build_request_group_session."
+      ],
+      "errors": [],
+      "files_needing_review": [],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "phase_name": "build_schedule_future",
+      "worker": "build_schedule_future",
+      "script": "scripts/build_schedule_future.py",
+      "status": "never_run",
+      "raw_status": "missing",
+      "status_file": "debug/status/build_schedule_future.json",
+      "warnings": [
+        "No debug status file found for build_schedule_future."
+      ],
+      "errors": [],
+      "files_needing_review": [],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "phase_name": "build_sessions_current",
+      "worker": "build_sessions_current",
+      "script": "scripts/build_sessions_current.py",
+      "status": "never_run",
+      "raw_status": "missing",
+      "status_file": "debug/status/build_sessions_current.json",
+      "warnings": [
+        "No debug status file found for build_sessions_current."
+      ],
+      "errors": [],
+      "files_needing_review": [],
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "phase_name": "build_slug_hubs",
+      "worker": "build_slug_hubs",
+      "script": "scripts/build_slug_hubs.py",
+      "status": "never_run",
+      "raw_status": "missing",
+      "status_file": "debug/status/build_slug_hubs.json",
+      "warnings": [
+        "No debug status file found for build_slug_hubs."
+      ],
+      "errors": [],
+      "files_needing_review": [],
+      "inputs": [],
+      "outputs": []
+    }
+  ]
+}

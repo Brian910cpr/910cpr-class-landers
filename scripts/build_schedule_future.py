@@ -235,6 +235,7 @@ def main() -> int:
     input_path = (repo_root / args.input).resolve()
     output_path = (repo_root / args.output).resolve()
     class_report_path = resolve_class_report_path(repo_root, args.class_report)
+    reporter.set_context(inputs=[input_path, class_report_path], outputs=[output_path])
 
     if not input_path.exists():
         raise SystemExit(f"Input file not found: {input_path}")
@@ -329,7 +330,28 @@ def main() -> int:
             encoding="utf-8",
         )
 
-        reporter.done(current=len(sessions), total=len(sessions), last_output_file=output_path)
+        warnings = []
+        files_needing_review = []
+        if skipped_orphan:
+            warnings.append(f"{skipped_orphan} sessions were skipped because they were not present in the current Class Report.")
+        if skipped_unmapped:
+            warnings.append(f"{skipped_unmapped} sessions were skipped because course mapping was missing.")
+            files_needing_review.append(repo_root / "data" / "audit" / "unmapped_courses.json")
+        reporter.done(
+            current=len(sessions),
+            total=len(sessions),
+            last_output_file=output_path,
+            counts={
+                "sessions_input": len(sessions),
+                "sessions_output": len(future_sessions),
+                "skipped_missing_start": skipped_missing_start,
+                "skipped_past": skipped_past,
+                "skipped_orphan": skipped_orphan,
+                "skipped_unmapped": skipped_unmapped,
+            },
+            warnings=warnings,
+            files_needing_review=files_needing_review,
+        )
         write_status_snapshot()
         print("Future schedule build complete")
         print(f"Wrote {output_path}")

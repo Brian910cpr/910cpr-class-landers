@@ -743,26 +743,12 @@ def render_homepage() -> str:
       {render_google_trust_block()}
 
       <section class="home-jumps" aria-label="Quick jumps">
-        <a class="jump-chip" href="#bls">Healthcare CPR</a>
         <a class="jump-chip" href="#bls">BLS Renewal</a>
-        <a class="jump-chip" href="#bls">HeartCode Skills</a>
         <a class="jump-chip" href="#heartsaver">Workplace CPR</a>
         <a class="jump-chip" href="#pediatric">Pediatric First Aid</a>
         <a class="jump-chip" href="#acls">ACLS</a>
         <a class="jump-chip" href="#pals">PALS</a>
         <a class="jump-chip" href="#uscg">USCG</a>
-      </section>
-
-      <section class="home-status">
-        <div>
-          <div class="home-status-label">Accepted Training Options</div>
-          <p>Choose the CPR, BLS, ACLS, PALS, First Aid, Heartsaver, or workplace course that matches your employer, school, licensing, or professional requirement.</p>
-        </div>
-        <div class="home-status-badges">
-          <span class="home-stat">AHA</span>
-          <span class="home-stat">Red Cross</span>
-          <span class="home-stat">HSI</span>
-        </div>
       </section>
 
       <section class="home-finder" id="class-finder">
@@ -908,6 +894,10 @@ def parse_class_page(path: Path) -> dict | None:
 
 def build():
     reporter = BuildStatusReporter("build_index_and_sitemap")
+    reporter.set_context(
+        inputs=[CLASSES_DIR, SCHEDULE_FUTURE_FILE, REVIEWS_FILE],
+        outputs=[INDEX_FILE, CLASSES_INDEX_FILE, COURSES_INDEX_FILE, COURSES_DIR, LOCATIONS_DIR, SITEMAP_FILE],
+    )
     reporter.waiting(total=0)
     if not CLASSES_DIR.exists():
         raise FileNotFoundError(f"Missing classes directory: {CLASSES_DIR}")
@@ -1186,7 +1176,19 @@ def build():
     sitemap_xml.append("</urlset>")
 
     SITEMAP_FILE.write_text("\n".join(sitemap_xml), encoding="utf-8")
-    reporter.done(current=len(class_files), total=len(class_files), last_output_file=SITEMAP_FILE)
+    reporter.done(
+        current=len(class_files),
+        total=len(class_files),
+        last_output_file=SITEMAP_FILE,
+        pages_generated=3 + len(course_groups) + len(location_groups),
+        counts={
+            "class_pages_scanned": len(class_files),
+            "valid_class_pages": len(sessions),
+            "course_pages": len(course_groups),
+            "location_pages": len(location_groups),
+            "sitemap_urls": len(deduped_urls),
+        },
+    )
     write_status_snapshot()
 
     print(f"Scanned class pages: {len(class_files)}")

@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 from typing import Iterable, Optional
 
+from scripts.build_status import BuildStatusReporter
+
 
 def run_command(command: str, cwd: Path) -> int:
     print(f"$ {command}")
@@ -23,6 +25,7 @@ def find_first_existing(root: Path, candidates: Iterable[str]) -> Optional[Path]
 
 
 def main() -> int:
+    reporter = BuildStatusReporter("build_all_v4")
     parser = argparse.ArgumentParser(description="Combined 910CPR build runner")
     parser.add_argument("--root", default=".", help="Repo root")
     parser.add_argument("--skip-landers", action="store_true", help="Skip the lander build phase")
@@ -49,6 +52,12 @@ def main() -> int:
         print("ERROR: Missing class report in data/")
         return 1
 
+    total_steps = 1 if args.skip_landers else 2
+    reporter.set_context(
+        inputs=[course_file, class_file],
+        outputs=[root / "docs", root / "data" / "runtime", root / "debug" / "status"],
+    )
+    reporter.waiting(total=total_steps)
     print("=== 910CPR BUILD ALL V4 ===")
     print(f"Repo root    : {root}")
     print(f"Course export: {course_file}")
@@ -56,6 +65,7 @@ def main() -> int:
     print()
 
     if not args.skip_landers:
+        reporter.start(total=total_steps)
         print("=== LANDER BUILD PHASE ===")
         lander_cmd = args.lander_cmd.strip() or os.environ.get("LANDER_CMD", "").strip()
 
@@ -75,17 +85,30 @@ def main() -> int:
             rc = run_command(lander_cmd, root)
             if rc != 0:
                 print("\nLANDER BUILD FAILED.")
+                reporter.error(current=0, total=total_steps, message="Lander build phase failed.")
                 return rc
         else:
             print("No lander command found. Skipping lander phase.")
+        reporter.update(current=1, total=total_steps, counts={"lander_phase_completed": True})
         print()
+    else:
+        reporter.start(total=total_steps)
 
     print("=== INDEX / DATA PHASE ===")
     rc = run_command(args.index_cmd, root)
     if rc != 0:
         print("\nINDEX PIPELINE FAILED.")
+        reporter.error(current=total_steps - 1, total=total_steps, message="Index/data phase failed.")
         return rc
 
+    reporter.done(
+        current=total_steps,
+        total=total_steps,
+        counts={
+            "skip_landers": args.skip_landers,
+            "phases_completed": total_steps,
+        },
+    )
     print("\nDONE.")
     return 0
 

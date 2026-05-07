@@ -11,6 +11,7 @@ except ModuleNotFoundError:
 
 OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "courses"
 OUTPUT.mkdir(parents=True, exist_ok=True)
+SESSIONS_INPUT = Path(__file__).resolve().parents[1] / "data" / "sessions_current.json"
 
 
 def purge_stale_outputs(output_dir: Path) -> int:
@@ -22,6 +23,7 @@ def purge_stale_outputs(output_dir: Path) -> int:
 
 def build():
     reporter = BuildStatusReporter("build_courses")
+    reporter.set_context(inputs=[SESSIONS_INPUT], outputs=[OUTPUT])
     last_output = None
     try:
         sessions = load_sessions()
@@ -40,7 +42,13 @@ def build():
             last_output = OUTPUT / f"{slugify(family)}.html"
             last_output.write_text(html, encoding='utf-8')
             reporter.update(current=index, total=len(families), last_output_file=last_output)
-        reporter.done(current=len(families), total=len(families), last_output_file=last_output)
+        reporter.done(
+            current=len(families),
+            total=len(families),
+            last_output_file=last_output,
+            pages_generated=len(families),
+            counts={"sessions_loaded": len(sessions), "course_hub_pages": len(families)},
+        )
         print(f"Wrote {len(families)} course hub pages to {OUTPUT}")
     except Exception:
         reporter.error(last_output_file=last_output)

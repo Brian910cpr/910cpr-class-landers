@@ -1273,6 +1273,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 
 def build() -> None:
     reporter = BuildStatusReporter("build_slug_hubs")
+    reporter.set_context(inputs=[MANIFEST_PATH, SCHEDULE_PATH], outputs=[OUTPUT_DIR])
     reporter.waiting(total=0)
     manifest_payload = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     if isinstance(manifest_payload, dict):
@@ -1299,7 +1300,13 @@ def build() -> None:
                 write_heartsaver_runtime_debug(page, sessions, now=now)
             reporter.update(current=index, total=len(manifest), last_output_file=last_output)
             print(f"Wrote {last_output}")
-        reporter.done(current=len(manifest), total=len(manifest), last_output_file=last_output)
+        reporter.done(
+            current=len(manifest),
+            total=len(manifest),
+            last_output_file=last_output,
+            pages_generated=len(manifest),
+            counts={"sessions_loaded": len(sessions), "slug_hub_pages": len(manifest)},
+        )
         write_status_snapshot()
     except Exception:
         reporter.error(last_output_file=last_output)

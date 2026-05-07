@@ -13,6 +13,7 @@ from typing import Any, Optional
 from zoneinfo import ZoneInfo
 
 from openpyxl import load_workbook
+from scripts.build_status import BuildStatusReporter
 
 
 TZ = ZoneInfo("America/New_York")
@@ -614,6 +615,7 @@ def build_session_from_class_report(
 
 
 def main() -> int:
+    reporter = BuildStatusReporter("build_sessions_current")
     parser = argparse.ArgumentParser(description="Build merged sessions_current.json from raw files.")
     parser.add_argument("--repo-root", default=".", help="Path to repo root.")
     parser.add_argument("--class-report", default="data/Class Report.xlsx")
@@ -632,11 +634,23 @@ def main() -> int:
     output_path = (repo_root / args.output).resolve()
     audit_dir = (repo_root / args.audit_dir).resolve()
     course_map = load_course_map(repo_root, args.course_map)
+    reporter.set_context(
+        inputs=[class_report_path, classes_csv_path, students_csv_path, repo_root / args.course_map],
+        outputs=[
+            output_path,
+            audit_dir / "unmapped_courses.json",
+            audit_dir / "course_map_conflicts.json",
+            audit_dir / "missing_descriptions.json",
+            audit_dir / "missing_descriptions_report.md",
+            audit_dir / "name_dependency_report.md",
+        ],
+    )
 
     for path in [class_report_path, classes_csv_path, students_csv_path]:
         if not path.exists():
             raise SystemExit(f"Required input file not found: {path}")
 
+    reporter.waiting(total=0)
     print(f"Reading class report: {class_report_path}")
     class_report_rows = read_class_report_rows(class_report_path)
 
@@ -658,7 +672,8 @@ def main() -> int:
     conflict_rows: list[dict[str, Any]] = []
     mapped_course_rollup: dict[str, dict[str, Any]] = {}
 
-    for report_row in class_report_rows:
+    reporter.start(total=len(class_report_rows))
+    for index, report_row in enumerate(class_report_rows, start=1):
         report_reg_link = clean_string(report_row.get("Registration Link"))
         session_id = extract_enroll_id_from_url(report_reg_link)
         if not session_id:
@@ -666,6 +681,7 @@ def main() -> int:
 
         if not session_id:
             skipped_no_session_id += 1
+            reporter.update(current=index, total=len(class_report_rows))
             continue
 
         class_patch = classes_index.get(session_id)
@@ -739,6 +755,7 @@ def main() -> int:
                 )
         else:
             skipped_no_session_id += 1
+        reporter.update(current=index, total=len(class_report_rows))
 
     sessions.sort(
         key=lambda s: (
@@ -912,8 +929,39 @@ def main() -> int:
     if unmapped_rows:
         print("UNMAPPED COURSE DETECTED: one or more sessions are missing structured course mapping.")
         if args.fail_on_unmapped:
+            reporter.error(
+                current=len(class_report_rows),
+                total=len(class_report_rows),
+                last_output_file=output_path,
+                message="Unmapped sessions found and --fail-on-unmapped was set.",
+            )
             return 2
 
+    warnings = []
+    files_needing_review = []
+    if unmapped_rows:
+        warnings.append(f"{len(unmapped_rows)} unmapped sessions need course mapping.")
+        files_needing_review.append(audit_dir / "unmapped_courses.json")
+    if conflict_rows:
+        warnings.append(f"{len(conflict_rows)} course map conflicts need review.")
+        files_needing_review.append(audit_dir / "course_map_conflicts.json")
+    if missing_descriptions_items:
+        warnings.append(f"{len(missing_descriptions_items)} mapped courses need description review.")
+        files_needing_review.append(audit_dir / "missing_descriptions.json")
+    reporter.done(
+        current=len(class_report_rows),
+        total=len(class_report_rows),
+        last_output_file=output_path,
+        counts={
+            "sessions_written": len(sessions),
+            "class_report_rows": len(class_report_rows),
+            "unmapped_sessions": len(unmapped_rows),
+            "mapping_conflicts": len(conflict_rows),
+            "courses_needing_description_review": len(missing_descriptions_items),
+        },
+        warnings=warnings,
+        files_needing_review=files_needing_review,
+    )
     return 0
 
 

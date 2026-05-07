@@ -52,6 +52,7 @@ TABS = [
 
 def build():
     reporter = BuildStatusReporter("build_request_group_session")
+    reporter.set_context(outputs=[OUTPUT])
     reporter.waiting(total=1)
     try:
         reporter.start(total=1)
@@ -155,7 +156,13 @@ def build():
 """
         html = render_page("Request On-Site Group Training | 910CPR", body, "Request on-site BLS, HeartCode BLS, First Aid/CPR/AED, ACLS, PALS, or USCG group training.")
         OUTPUT.write_text(html, encoding='utf-8')
-        reporter.done(current=1, total=1, last_output_file=OUTPUT)
+        reporter.done(
+            current=1,
+            total=1,
+            last_output_file=OUTPUT,
+            pages_generated=1,
+            counts={"request_tabs": len(TABS), "request_pages": 1},
+        )
         print(f"Configured {len(TABS)} request tabs")
         print(f"Wrote {OUTPUT}")
     except Exception:

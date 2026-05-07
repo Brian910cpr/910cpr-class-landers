@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from scripts.build_status import BuildStatusReporter
 try:
     from tqdm import tqdm
@@ -14,6 +15,8 @@ from scripts.hub_utils import (
 )
 
 OUTPUT_DIR = os.path.join("docs", "locations")
+ROOT = Path(__file__).resolve().parents[1]
+SESSIONS_INPUT = ROOT / "data" / "sessions_current.json"
 
 
 def valid_city(city: str) -> bool:
@@ -41,6 +44,7 @@ def purge_stale_outputs(output_dir: str) -> int:
 
 def build_locations():
     reporter = BuildStatusReporter("build_locations")
+    reporter.set_context(inputs=[SESSIONS_INPUT], outputs=[ROOT / OUTPUT_DIR])
     count = 0
     last_output = None
     try:
@@ -90,7 +94,17 @@ def build_locations():
             count += 1
             reporter.update(current=count, total=len(cities), last_output_file=last_output)
 
-        reporter.done(current=count, total=len(cities), last_output_file=last_output)
+        reporter.done(
+            current=count,
+            total=len(cities),
+            last_output_file=last_output,
+            pages_generated=count,
+            counts={
+                "sessions_loaded": len(sessions),
+                "future_public_sessions": len(future_public),
+                "location_pages": count,
+            },
+        )
         print(f"Wrote {count} filtered location hub pages to {OUTPUT_DIR}")
     except Exception:
         reporter.error(current=count, last_output_file=last_output)
