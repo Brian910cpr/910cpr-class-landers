@@ -129,6 +129,18 @@
     return emergencyAppliesToHubs(settings) && emergency.hub_email_fallback && emergency.hub_email_fallback.enabled === true;
   }
 
+  function isEmergencyFallbackLabel(value) {
+    return String(value || "").trim().toLowerCase() === "email us to register";
+  }
+
+  function normalButtonLabel(button) {
+    const existing = button.getAttribute("data-normal-label");
+    if (existing && !isEmergencyFallbackLabel(existing)) return existing;
+    const current = button.textContent.trim();
+    if (isEmergencyFallbackLabel(current)) return sessionIdForButton(button) ? "Book Seat" : current;
+    return current || (sessionIdForButton(button) ? "Book Seat" : "Register");
+  }
+
   function loadEmergencySettings() {
     return fetch(EMERGENCY_SETTINGS_URL, { cache: "no-store" })
       .then((response) => {
@@ -326,13 +338,13 @@
       const href = button.getAttribute("href") || "";
       const originalHref = button.getAttribute("data-original-href") || "";
       if (!button.getAttribute("data-normal-label")) {
-        button.setAttribute("data-normal-label", button.textContent.trim() || "Book Seat");
+        button.setAttribute("data-normal-label", normalButtonLabel(button));
       }
       if (!hubEmailFallbackEnabled(settings)) {
         if (originalHref && href.startsWith("mailto:")) {
           button.setAttribute("href", originalHref);
         }
-        button.textContent = button.getAttribute("data-normal-label") || "Book Seat";
+        button.textContent = normalButtonLabel(button);
         button.removeAttribute("data-emergency-email-fallback");
         return;
       }
@@ -347,7 +359,7 @@
   }
 
   function syncEmergencyOutageBanner(settings) {
-    const existing = document.querySelector("[data-emergency-outage-banner]");
+    const existing = document.querySelector("[data-emergency-outage-banner], .slug-hub-shell .slug-emergency-alert");
     if (!outageBannerEnabled(settings)) {
       if (existing) existing.remove();
       return;
