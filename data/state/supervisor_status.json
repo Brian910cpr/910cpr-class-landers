@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T14:35:49.119866-04:00",
+  "generated_at": "2026-05-08T00:53:32.176341-04:00",
   "monitored_repo_path": "E:\\GitHub\\910cpr-class-landers",
   "build_summary": {
     "summary_file": "data\\state\\last_build_summary.json",
@@ -43,21 +43,32 @@
   },
   "runtime_statuses": [
     {
-      "phase_name": "build_slug_hubs",
-      "label": "Build Hub Pages",
+      "phase_name": "build_schedule_future",
+      "label": "Build Future Schedule Feed",
       "status": "done",
-      "timestamp": "2026-05-06T14:35:48.545030-04:00",
-      "current_count": 6,
-      "total_count": 6,
+      "timestamp": "2026-05-08T00:53:31.795157-04:00",
+      "current_count": 26042,
+      "total_count": 26042,
       "percent_complete": 100.0,
-      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
-      "runtime_file": "data\\runtime\\build_slug_hubs.json"
+      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
+      "runtime_file": "data\\runtime\\build_schedule_future.json"
+    },
+    {
+      "phase_name": "build_sessions_current",
+      "label": "Build Sessions Current",
+      "status": "done",
+      "timestamp": "2026-05-08T00:53:26.548845-04:00",
+      "current_count": 26042,
+      "total_count": 26042,
+      "percent_complete": 100.0,
+      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
+      "runtime_file": "data\\runtime\\build_sessions_current.json"
     },
     {
       "phase_name": "build_index_and_sitemap",
       "label": "Build Index And Sitemap",
       "status": "done",
-      "timestamp": "2026-05-06T14:34:49.750528-04:00",
+      "timestamp": "2026-05-08T00:47:07.712015-04:00",
       "current_count": 26052,
       "total_count": 26052,
       "percent_complete": 100.0,
@@ -68,7 +79,7 @@
       "phase_name": "build_course_at_city",
       "label": "Build Course At City Pages",
       "status": "done",
-      "timestamp": "2026-05-06T11:29:28.301509-04:00",
+      "timestamp": "2026-05-08T00:46:58.799006-04:00",
       "current_count": 4,
       "total_count": 4,
       "percent_complete": 100.0,
@@ -79,7 +90,7 @@
       "phase_name": "build_locations",
       "label": "Build Location Pages",
       "status": "done",
-      "timestamp": "2026-05-06T11:29:22.432376-04:00",
+      "timestamp": "2026-05-08T00:46:53.329567-04:00",
       "current_count": 1,
       "total_count": 1,
       "percent_complete": 100.0,
@@ -90,7 +101,7 @@
       "phase_name": "build_courses",
       "label": "Build Course Pages",
       "status": "done",
-      "timestamp": "2026-05-06T11:29:16.150466-04:00",
+      "timestamp": "2026-05-08T00:46:47.614353-04:00",
       "current_count": 23,
       "total_count": 23,
       "percent_complete": 100.0,
@@ -98,26 +109,26 @@
       "runtime_file": "data\\runtime\\build_courses.json"
     },
     {
+      "phase_name": "build_slug_hubs",
+      "label": "Build Hub Pages",
+      "status": "done",
+      "timestamp": "2026-05-08T00:46:41.422832-04:00",
+      "current_count": 6,
+      "total_count": 6,
+      "percent_complete": 100.0,
+      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
+      "runtime_file": "data\\runtime\\build_slug_hubs.json"
+    },
+    {
       "phase_name": "build_request_group_session",
       "label": "Build Group Request Page",
       "status": "done",
-      "timestamp": "2026-05-06T11:29:06.569392-04:00",
+      "timestamp": "2026-05-08T00:46:38.522490-04:00",
       "current_count": 1,
       "total_count": 1,
       "percent_complete": 100.0,
       "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\request_group_session.html",
       "runtime_file": "data\\runtime\\build_request_group_session.json"
-    },
-    {
-      "phase_name": "build_schedule_future",
-      "label": "Build Future Schedule Feed",
-      "status": "done",
-      "timestamp": "2026-05-06T11:22:50.397305-04:00",
-      "current_count": 26042,
-      "total_count": 26042,
-      "percent_complete": 100.0,
-      "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
-      "runtime_file": "data\\runtime\\build_schedule_future.json"
     },
     {
       "phase_name": "acls_hub_debug",
@@ -144,69 +155,74 @@
   ],
   "files_written": [
     {
-      "phase": "Build Hub Pages",
-      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
-      "timestamp": "2026-05-06T14:35:48.545030-04:00"
+      "phase": "Build Future Schedule Feed",
+      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
+      "timestamp": "2026-05-08T00:53:31.795157-04:00"
     },
     {
-      "phase": "Hub Output",
-      "path": "docs\\group-training.html",
-      "timestamp": "2026-05-06T14:35:48.545030-04:00"
+      "phase": "Build Sessions Current",
+      "path": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
+      "timestamp": "2026-05-08T00:53:26.548845-04:00"
     },
     {
       "phase": "Hub Output",
       "path": "docs\\uscg-elementary-first-aid-cpr.html",
-      "timestamp": "2026-05-06T14:35:48.444395-04:00"
-    },
-    {
-      "phase": "Hub Output",
-      "path": "docs\\heartsaver.html",
-      "timestamp": "2026-05-06T14:35:48.368816-04:00"
+      "timestamp": "2026-05-08T00:53:15.023779-04:00"
     },
     {
       "phase": "Hub Output",
       "path": "docs\\pals.html",
-      "timestamp": "2026-05-06T14:35:47.809368-04:00"
+      "timestamp": "2026-05-08T00:53:14.996252-04:00"
     },
     {
       "phase": "Hub Output",
-      "path": "docs\\acls.html",
-      "timestamp": "2026-05-06T14:35:45.739563-04:00"
+      "path": "docs\\heartsaver.html",
+      "timestamp": "2026-05-08T00:53:14.839727-04:00"
+    },
+    {
+      "phase": "Hub Output",
+      "path": "docs\\group-training.html",
+      "timestamp": "2026-05-08T00:53:14.838726-04:00"
     },
     {
       "phase": "Hub Output",
       "path": "docs\\bls.html",
-      "timestamp": "2026-05-06T14:35:45.643042-04:00"
+      "timestamp": "2026-05-08T00:52:58.334730-04:00"
+    },
+    {
+      "phase": "Hub Output",
+      "path": "docs\\acls.html",
+      "timestamp": "2026-05-08T00:52:58.333729-04:00"
     },
     {
       "phase": "Build Index And Sitemap",
       "path": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
-      "timestamp": "2026-05-06T14:34:49.750528-04:00"
+      "timestamp": "2026-05-08T00:47:07.712015-04:00"
     },
     {
       "phase": "Build Course At City Pages",
       "path": "docs\\course-at-city\\uscg-elementary-first-aid-cpr-wilmington.html",
-      "timestamp": "2026-05-06T11:29:28.301509-04:00"
+      "timestamp": "2026-05-08T00:46:58.799006-04:00"
     },
     {
       "phase": "Build Location Pages",
       "path": "docs\\locations\\wilmington.html",
-      "timestamp": "2026-05-06T11:29:22.432376-04:00"
+      "timestamp": "2026-05-08T00:46:53.329567-04:00"
     },
     {
       "phase": "Build Course Pages",
       "path": "E:\\GitHub\\910cpr-class-landers\\docs\\courses\\z-personal-event-not-availible.html",
-      "timestamp": "2026-05-06T11:29:16.150466-04:00"
+      "timestamp": "2026-05-08T00:46:47.614353-04:00"
+    },
+    {
+      "phase": "Build Hub Pages",
+      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
+      "timestamp": "2026-05-08T00:46:41.422832-04:00"
     },
     {
       "phase": "Build Group Request Page",
       "path": "E:\\GitHub\\910cpr-class-landers\\docs\\request_group_session.html",
-      "timestamp": "2026-05-06T11:29:06.569392-04:00"
-    },
-    {
-      "phase": "Build Future Schedule Feed",
-      "path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
-      "timestamp": "2026-05-06T11:22:50.397305-04:00"
+      "timestamp": "2026-05-08T00:46:38.522490-04:00"
     }
   ],
   "generated_page_counts": {
@@ -222,112 +238,126 @@
   "current_config_source": "data\\config\\slug_hubs.json",
   "current_schedule_json_source": {
     "path": "docs\\data\\schedule_future.json",
-    "generated_at": "2026-05-06T11:22:50.258748-04:00",
+    "generated_at": "2026-05-08T00:53:31.268580-04:00",
     "source_file": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
-    "session_count": 1378
+    "session_count": 1370
   },
   "hub_state": {
     "schedule_file": {
       "path": "docs\\data\\schedule_future.json",
       "exists": true,
-      "modified_at": "2026-05-06T11:22:50.396307-04:00",
-      "size_bytes": 2474138
+      "modified_at": "2026-05-08T00:53:31.794158-04:00",
+      "size_bytes": 2459631
     },
     "core_hubs": [
       {
         "slug": "bls",
         "path": "docs\\bls.html",
         "exists": true,
-        "modified_at": "2026-05-06T14:35:45.643042-04:00",
-        "size_bytes": 43687,
+        "modified_at": "2026-05-08T00:52:58.334730-04:00",
+        "size_bytes": 33236,
         "session_marker_count": 22,
         "expired_session_markers": 0,
-        "stale_vs_schedule_feed": false
+        "stale_vs_schedule_feed": true
       },
       {
         "slug": "acls",
         "path": "docs\\acls.html",
         "exists": true,
-        "modified_at": "2026-05-06T14:35:45.739563-04:00",
-        "size_bytes": 39096,
+        "modified_at": "2026-05-08T00:52:58.333729-04:00",
+        "size_bytes": 29232,
         "session_marker_count": 18,
         "expired_session_markers": 0,
-        "stale_vs_schedule_feed": false
+        "stale_vs_schedule_feed": true
       },
       {
         "slug": "pals",
         "path": "docs\\pals.html",
         "exists": true,
-        "modified_at": "2026-05-06T14:35:47.809368-04:00",
-        "size_bytes": 26058,
+        "modified_at": "2026-05-08T00:53:14.996252-04:00",
+        "size_bytes": 19220,
         "session_marker_count": 10,
         "expired_session_markers": 0,
-        "stale_vs_schedule_feed": false
+        "stale_vs_schedule_feed": true
       },
       {
         "slug": "heartsaver",
         "path": "docs\\heartsaver.html",
         "exists": true,
-        "modified_at": "2026-05-06T14:35:48.368816-04:00",
-        "size_bytes": 93216,
-        "session_marker_count": 46,
+        "modified_at": "2026-05-08T00:53:14.839727-04:00",
+        "size_bytes": 66211,
+        "session_marker_count": 45,
         "expired_session_markers": 0,
-        "stale_vs_schedule_feed": false
+        "stale_vs_schedule_feed": true
       },
       {
         "slug": "group-training",
         "path": "docs\\group-training.html",
         "exists": true,
-        "modified_at": "2026-05-06T14:35:48.545030-04:00",
-        "size_bytes": 11719,
+        "modified_at": "2026-05-08T00:53:14.838726-04:00",
+        "size_bytes": 11375,
         "session_marker_count": 0,
         "expired_session_markers": 0,
-        "stale_vs_schedule_feed": false
+        "stale_vs_schedule_feed": true
       },
       {
         "slug": "uscg-elementary-first-aid-cpr",
         "path": "docs\\uscg-elementary-first-aid-cpr.html",
         "exists": true,
-        "modified_at": "2026-05-06T14:35:48.444395-04:00",
-        "size_bytes": 16225,
+        "modified_at": "2026-05-08T00:53:15.023779-04:00",
+        "size_bytes": 12429,
         "session_marker_count": 6,
         "expired_session_markers": 0,
-        "stale_vs_schedule_feed": false
+        "stale_vs_schedule_feed": true
       }
     ],
-    "stale_hub_count": 0,
-    "stale_hubs": [],
+    "stale_hub_count": 6,
+    "stale_hubs": [
+      "bls",
+      "acls",
+      "pals",
+      "heartsaver",
+      "group-training",
+      "uscg-elementary-first-aid-cpr"
+    ],
     "expired_session_markers_total": 0,
-    "warnings": [],
-    "schedule_session_count": 1378
+    "warnings": [
+      "stale_hubs:bls, acls, pals, heartsaver, group-training, uscg-elementary-first-aid-cpr"
+    ],
+    "schedule_session_count": 1370
   },
   "git": {
     "repo_root": "E:/GitHub/910cpr-class-landers",
     "branch": "main",
-    "head": "5151448380",
+    "head": "9caa0f1d64",
     "has_uncommitted_changes": true,
-    "changed_files_count": 20,
+    "changed_files_count": 26621,
     "changed_files_preview": [
-      " M data/config/slug_hubs.json",
+      " M data/audit/course_map_conflicts.json",
+      " M data/audit/missing_descriptions.json",
+      " M data/audit/missing_descriptions_report.md",
+      " M data/audit/unmapped_courses.json",
       " M data/runtime/acls_hub_debug.json",
+      " M data/runtime/build_course_at_city.json",
+      " M data/runtime/build_courses.json",
       " M data/runtime/build_index_and_sitemap.json",
+      " M data/runtime/build_locations.json",
+      " M data/runtime/build_request_group_session.json",
+      " M data/runtime/build_schedule_future.json",
       " M data/runtime/build_slug_hubs.json",
       " M data/runtime/heartsaver_hub_debug.json",
       " M data/state/supervisor_status.json",
+      " M debug/control_booth_data.json",
+      " M debug/latest_build_health.json",
+      " M debug/session_integrity_report.json",
+      " M debug/stale_sessions_audit.json",
+      " M docs/404.html",
       " M docs/acls.html",
-      " M docs/assets/booking-home.js",
-      " M docs/assets/hub-ui.js",
       " M docs/bls.html",
-      " M docs/css/lander.css",
-      " M docs/group-training.html",
-      " M docs/heartsaver.html",
-      " M docs/index.html",
-      " M docs/pals.html",
-      " M docs/uscg-elementary-first-aid-cpr.html",
-      " M scripts/__pycache__/build_index_and_sitemap.cpython-312.pyc",
-      " M scripts/__pycache__/build_slug_hubs.cpython-312.pyc",
-      " M scripts/build_index_and_sitemap.py",
-      " M scripts/build_slug_hubs.py"
+      " M docs/classes/10000418.html",
+      " M docs/classes/10002547.html",
+      " M docs/classes/10004935.html",
+      " M docs/classes/10005545.html"
     ]
   },
   "detected_settings": {
@@ -339,7 +369,8 @@
     "config_source": "data\\config\\slug_hubs.json"
   },
   "warnings": [
-    "git_dirty:20"
+    "stale_hubs:bls, acls, pals, heartsaver, group-training, uscg-elementary-first-aid-cpr",
+    "git_dirty:26621"
   ],
   "errors": []
 }

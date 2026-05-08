@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-06T11:29:52.444329",
+  "timestamp": "2026-05-08T00:53:42.084392",
   "repo_path": "E:\\GitHub\\910cpr-class-landers",
   "class_report": {
     "path": "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx",
@@ -13,8 +13,8 @@
   },
   "schedule_future": {
     "path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
-    "modified_at": "2026-05-06T11:22:50.396307",
-    "session_count": 1378
+    "modified_at": "2026-05-08T00:53:31.794158",
+    "session_count": 1370
   },
   "classes_html_count": 26052,
   "stale_json_ids": [],

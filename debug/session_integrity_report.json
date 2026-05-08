@@ -1,19 +1,17 @@
 {
-  "timestamp": "2026-05-06T11:22:55.889442",
+  "timestamp": "2026-05-08T00:53:36.816682",
   "class_report_path": "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx",
   "total_sessions_expected": 26042,
   "total_sessions_built": 26042,
-  "total_future_sessions_built": 1378,
+  "total_future_sessions_built": 1370,
   "missing_sessions": [],
   "extra_sessions": [],
   "future_orphan_sessions": [],
   "deleted_docs_data_json": [
-    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\inventory_alerts.json",
-    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\inventory_events_latest.json",
-    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\inventory_status.json",
     "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json"
   ],
   "deleted_cached_schedule_files": [
-    "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\build_schedule_future.json"
+    "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\build_schedule_future.json",
+    "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\build_sessions_current.json"
   ]
 }

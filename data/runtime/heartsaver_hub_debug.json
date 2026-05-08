@@ -1,44 +1,8 @@
 {
-  "generated_at": "2026-05-06T14:35:45.573508-04:00",
+  "generated_at": "2026-05-08T00:46:38.731544-04:00",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "page_slug": "heartsaver",
   "records": [
-    {
-      "session_id": "12776692",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-05-07T08:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12783391",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
-      "start_datetime": "2026-05-07T08:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-pediatric-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776766",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "start_datetime": "2026-05-07T18:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-ip",
-      "normalized_format": "In-Person",
-      "icon_selected": "/images/tab_classroom.png",
-      "included": true,
-      "exclusion_reason": null
-    },
     {
       "session_id": "12776010",
       "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
