@@ -16,6 +16,12 @@ def run_command(command: str, cwd: Path) -> int:
     return completed.returncode
 
 
+def run_python_script(script: Path, cwd: Path) -> int:
+    print(f"$ {sys.executable} {script}")
+    completed = subprocess.run([sys.executable, str(script)], cwd=str(cwd))
+    return completed.returncode
+
+
 def find_first_existing(root: Path, candidates: Iterable[str]) -> Optional[Path]:
     for rel in candidates:
         candidate = root / rel
@@ -52,10 +58,11 @@ def main() -> int:
         print("ERROR: Missing class report in data/")
         return 1
 
-    total_steps = 1 if args.skip_landers else 2
+    public_steps = 1 if args.skip_landers else 2
+    total_steps = public_steps + 1
     reporter.set_context(
         inputs=[course_file, class_file],
-        outputs=[root / "docs", root / "data" / "runtime", root / "debug" / "status"],
+        outputs=[root / "docs", root / "data" / "runtime", root / "debug" / "status", root / "debug" / "control_booth_data.json"],
     )
     reporter.waiting(total=total_steps)
     print("=== 910CPR BUILD ALL V4 ===")
@@ -100,6 +107,15 @@ def main() -> int:
         print("\nINDEX PIPELINE FAILED.")
         reporter.error(current=total_steps - 1, total=total_steps, message="Index/data phase failed.")
         return rc
+    reporter.update(current=public_steps, total=total_steps, counts={"public_build_completed": True})
+
+    print("=== CONTROL BOOTH RECEIPT PHASE ===")
+    rc = run_python_script(root / "scripts" / "build_control_booth.py", root)
+    if rc != 0:
+        print("\nCONTROL BOOTH RECEIPT FAILED.")
+        print("Public build completed, but debug/control_booth_data.json was not regenerated.")
+        reporter.error(current=public_steps, total=total_steps, message="Control Booth receipt generation failed after public build.")
+        return rc
 
     reporter.done(
         current=total_steps,
@@ -107,6 +123,8 @@ def main() -> int:
         counts={
             "skip_landers": args.skip_landers,
             "phases_completed": total_steps,
+            "public_build_completed": True,
+            "control_booth_receipt_completed": True,
         },
     )
     print("\nDONE.")

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "updated_at": "",
+  "updated_by": "",
+  "note": "",
+  "emergency": {
+    "enabled": false,
+    "approved_page_groups": {
+      "hubs": true,
+      "home": false,
+      "course_landers": false,
+      "legacy_pages": false
+    },
+    "outage_banner": {
+      "enabled": false,
+      "title": "Our schedule platform is experiencing technical difficulties",
+      "lines": [
+        "Classes listed on this page will still be held.",
+        "If registration does not load, email us and we will help manually."
+      ]
+    },
+    "hub_email_fallback": {
+      "enabled": false,
+      "email": "info@910cpr.com",
+      "button_label": "Email Us To Register"
+    }
+  }
+}

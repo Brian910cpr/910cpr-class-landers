@@ -1,6 +1,33 @@
 (function () {
-  const EMERGENCY_EMAIL_REGISTRATION_MODE = true;
-  const EMERGENCY_REGISTRATION_EMAIL = "info@910cpr.com";
+  const EMERGENCY_SETTINGS_URL = "/data/site-emergency-settings.json";
+  const DEFAULT_EMERGENCY_SETTINGS = Object.freeze({
+    version: 1,
+    updated_at: "",
+    updated_by: "",
+    note: "",
+    emergency: {
+      enabled: false,
+      approved_page_groups: {
+        hubs: true,
+        home: false,
+        course_landers: false,
+        legacy_pages: false,
+      },
+      outage_banner: {
+        enabled: false,
+        title: "Our schedule platform is experiencing technical difficulties",
+        lines: [
+          "Classes listed on this page will still be held.",
+          "If registration does not load, email us and we will help manually.",
+        ],
+      },
+      hub_email_fallback: {
+        enabled: false,
+        email: "info@910cpr.com",
+        button_label: "Email Us To Register",
+      },
+    },
+  });
   const EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options.";
   const EMPTY_FALLBACK_BODY = "View the full schedule for additional dates, request a class time, or ask about on-site training for your team.";
   const MONTHS = {
@@ -43,6 +70,75 @@
     return encodeURIComponent(String(value || "")).replace(/%20/g, "+");
   }
 
+  function isPlainObject(value) {
+    return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function normalizeEmergencySettings(value) {
+    if (!isPlainObject(value) || !isPlainObject(value.emergency)) return DEFAULT_EMERGENCY_SETTINGS;
+
+    const emergency = value.emergency;
+    const approved = isPlainObject(emergency.approved_page_groups) ? emergency.approved_page_groups : {};
+    const banner = isPlainObject(emergency.outage_banner) ? emergency.outage_banner : {};
+    const fallback = isPlainObject(emergency.hub_email_fallback) ? emergency.hub_email_fallback : {};
+
+    return {
+      version: Number(value.version) || DEFAULT_EMERGENCY_SETTINGS.version,
+      updated_at: typeof value.updated_at === "string" ? value.updated_at : "",
+      updated_by: typeof value.updated_by === "string" ? value.updated_by : "",
+      note: typeof value.note === "string" ? value.note : "",
+      emergency: {
+        enabled: emergency.enabled === true,
+        approved_page_groups: {
+          hubs: approved.hubs === true,
+          home: approved.home === true,
+          course_landers: approved.course_landers === true,
+          legacy_pages: approved.legacy_pages === true,
+        },
+        outage_banner: {
+          enabled: banner.enabled === true,
+          title: typeof banner.title === "string" ? banner.title : DEFAULT_EMERGENCY_SETTINGS.emergency.outage_banner.title,
+          lines: Array.isArray(banner.lines) ? banner.lines.filter((line) => typeof line === "string") : [],
+        },
+        hub_email_fallback: {
+          enabled: fallback.enabled === true,
+          email: typeof fallback.email === "string" && fallback.email.trim()
+            ? fallback.email.trim()
+            : DEFAULT_EMERGENCY_SETTINGS.emergency.hub_email_fallback.email,
+          button_label: typeof fallback.button_label === "string" && fallback.button_label.trim()
+            ? fallback.button_label.trim()
+            : DEFAULT_EMERGENCY_SETTINGS.emergency.hub_email_fallback.button_label,
+        },
+      },
+    };
+  }
+
+  function emergencyAppliesToHubs(settings) {
+    const emergency = (settings || DEFAULT_EMERGENCY_SETTINGS).emergency || {};
+    const approved = emergency.approved_page_groups || {};
+    return emergency.enabled === true && approved.hubs === true;
+  }
+
+  function outageBannerEnabled(settings) {
+    const emergency = (settings || DEFAULT_EMERGENCY_SETTINGS).emergency || {};
+    return emergencyAppliesToHubs(settings) && emergency.outage_banner && emergency.outage_banner.enabled === true;
+  }
+
+  function hubEmailFallbackEnabled(settings) {
+    const emergency = (settings || DEFAULT_EMERGENCY_SETTINGS).emergency || {};
+    return emergencyAppliesToHubs(settings) && emergency.hub_email_fallback && emergency.hub_email_fallback.enabled === true;
+  }
+
+  function loadEmergencySettings() {
+    return fetch(EMERGENCY_SETTINGS_URL, { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error("Emergency settings unavailable");
+        return response.json();
+      })
+      .then(normalizeEmergencySettings)
+      .catch(() => DEFAULT_EMERGENCY_SETTINGS);
+  }
+
   function visibleText(node) {
     return node ? node.textContent.replace(/\s+/g, " ").trim() : "";
   }
@@ -55,6 +151,21 @@
         && !chip.classList.contains("slug-pill-chip-family")
         && !chip.classList.contains("slug-pill-chip-momentum");
     }));
+  }
+
+  function formatClock(date) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
+    return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  }
+
+  function parseOptionalDate(value) {
+    if (!value) return null;
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  function sessionElementForButton(button) {
+    return button.closest(".slug-time-row") || button.closest(".slug-pill");
   }
 
   function courseNameForButton(button) {
@@ -79,6 +190,27 @@
       button.getAttribute("data-session-date") ||
       ""
     );
+  }
+
+  function timeForButton(button) {
+    const row = button.closest(".slug-time-row");
+    const pill = button.closest(".slug-pill");
+    const sessionElement = sessionElementForButton(button);
+    const visibleTime = firstTimeChip(row || pill);
+    if (visibleTime && /\bto\b/i.test(visibleTime)) return visibleTime;
+
+    const start = parseOptionalDate(
+      button.getAttribute("data-session-start") ||
+      (sessionElement && sessionElement.getAttribute("data-session-start")) ||
+      (sessionElement && sessionElement.getAttribute("data-start"))
+    );
+    const end = parseOptionalDate(
+      button.getAttribute("data-session-end") ||
+      (sessionElement && sessionElement.getAttribute("data-session-end")) ||
+      (sessionElement && sessionElement.getAttribute("data-end"))
+    );
+    if (start && end) return `${formatClock(start)} to ${formatClock(end)}`;
+    return visibleTime || (start ? formatClock(start) : "");
   }
 
   function locationForButton(button) {
@@ -157,12 +289,10 @@
     });
   }
 
-  function buildEmergencyMailto(button) {
-    const row = button.closest(".slug-time-row");
-    const pill = button.closest(".slug-pill");
+  function buildEmergencyMailto(button, settings) {
     const course = courseNameForButton(button);
     const date = dateForButton(button);
-    const time = firstTimeChip(row || pill);
+    const time = timeForButton(button);
     const location = locationForButton(button);
     const sessionId = sessionIdForButton(button);
     const pageUrl = window.location.href;
@@ -174,7 +304,8 @@
       "I would like help registering for this class:",
       "",
       `Class: ${course}`,
-      `Date/Time: ${dateTime}`,
+      `Date: ${date}`,
+      `Time: ${time}`,
       `Location: ${location}`,
       `Session ID: ${sessionId}`,
       `Page: ${pageUrl}`,
@@ -185,22 +316,59 @@
       "Thank you.",
     ].join("\n");
 
-    return `mailto:${EMERGENCY_REGISTRATION_EMAIL}?subject=${encodeMailto(subject)}&body=${encodeMailto(body)}`;
+    const email = settings.emergency.hub_email_fallback.email;
+    return `mailto:${email}?subject=${encodeMailto(subject)}&body=${encodeMailto(body)}`;
   }
 
-  function applyEmergencyEmailFallback(root) {
-    if (!EMERGENCY_EMAIL_REGISTRATION_MODE) return;
+  function applyEmergencyEmailFallback(root, settings) {
     const scope = root && root.querySelectorAll ? root : document;
     scope.querySelectorAll(".slug-hub-shell .slug-pill-actions a.button, .slug-hub-shell .slug-time-actions a.button").forEach((button) => {
       const href = button.getAttribute("href") || "";
+      const originalHref = button.getAttribute("data-original-href") || "";
+      if (!button.getAttribute("data-normal-label")) {
+        button.setAttribute("data-normal-label", button.textContent.trim() || "Book Seat");
+      }
+      if (!hubEmailFallbackEnabled(settings)) {
+        if (originalHref && href.startsWith("mailto:")) {
+          button.setAttribute("href", originalHref);
+        }
+        button.textContent = button.getAttribute("data-normal-label") || "Book Seat";
+        button.removeAttribute("data-emergency-email-fallback");
+        return;
+      }
+      if (!sessionIdForButton(button)) return;
       if (!button.getAttribute("data-original-href") && href && !href.startsWith("mailto:")) {
         button.setAttribute("data-original-href", href);
       }
-      if (!sessionIdForButton(button)) return;
-      button.textContent = "Email Us To Register";
-      button.setAttribute("href", buildEmergencyMailto(button));
+      button.textContent = settings.emergency.hub_email_fallback.button_label;
+      button.setAttribute("href", buildEmergencyMailto(button, settings));
       button.setAttribute("data-emergency-email-fallback", "true");
     });
+  }
+
+  function syncEmergencyOutageBanner(settings) {
+    const existing = document.querySelector("[data-emergency-outage-banner]");
+    if (!outageBannerEnabled(settings)) {
+      if (existing) existing.remove();
+      return;
+    }
+
+    const bannerSettings = settings.emergency.outage_banner;
+    const banner = existing || document.createElement("section");
+    banner.className = "slug-emergency-alert";
+    banner.setAttribute("role", "status");
+    banner.setAttribute("aria-live", "polite");
+    banner.setAttribute("data-emergency-outage-banner", "true");
+    banner.innerHTML = `<h2>${escapeHtml(bannerSettings.title)}</h2>${bannerSettings.lines.map((line) => `<p>${escapeHtml(line)}</p>`).join("")}`;
+
+    if (existing) return;
+    const hero = document.querySelector(".slug-hub-shell .slug-hero");
+    const shell = document.querySelector(".slug-hub-shell");
+    if (hero && hero.parentNode) {
+      hero.insertAdjacentElement("afterend", banner);
+    } else if (shell) {
+      shell.prepend(banner);
+    }
   }
 
   function getTriggersForTarget(targetSelector) {
@@ -486,6 +654,7 @@
       hint: hintNode ? hintNode.textContent.trim() : "Reserve this class time",
       sessionId: pill.getAttribute("data-session-id") || "",
       sessionStart: start ? start.toISOString() : "",
+      sessionEnd: pill.getAttribute("data-end") || pill.getAttribute("data-session-end") || "",
       sessionDate: start ? formatSessionDateKey(start) : "",
     };
   }
@@ -534,7 +703,7 @@
 
       list.innerHTML = groups.map((group) => {
         const rowsMarkup = group.rows.map((row) => `
-          <div class="slug-time-row" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}">
+          <div class="slug-time-row" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}">
             <div class="slug-time-copy">
               <div class="slug-pill-meta-row slug-time-meta">
                 ${row.time ? `<span class="slug-pill-chip">${escapeHtml(row.time)}</span>` : ""}
@@ -544,7 +713,7 @@
             </div>
             <div class="slug-time-actions">
               <div class="slug-pill-hint">${escapeHtml(row.hint)}</div>
-              ${row.href ? `<a class="button small primary" href="${escapeHtml(row.href)}" data-original-href="${escapeHtml(row.originalHref || row.href)}" data-session-id="${escapeHtml(row.sessionId)}">${escapeHtml(row.buttonText)}</a>` : ""}
+              ${row.href ? `<a class="button small primary" href="${escapeHtml(row.href)}" data-original-href="${escapeHtml(row.originalHref || row.href)}" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}">${escapeHtml(row.buttonText)}</a>` : ""}
             </div>
           </div>
         `).join("");
@@ -679,23 +848,28 @@
     });
   }
 
-  function boot() {
+  function boot(settings) {
     pruneExpiredSessions(document);
     bindCuratedOffers();
     initializeScopes();
     activateProgramFromQuery();
-    applyEmergencyEmailFallback(document);
+    syncEmergencyOutageBanner(settings);
+    applyEmergencyEmailFallback(document, settings);
     refreshCuratedOfferHeights(document);
   }
 
   window.pruneExpiredSessions = window.pruneExpiredSessions || pruneExpiredSessions;
-  window.applyEmergencyEmailFallback = applyEmergencyEmailFallback;
+  window.applyEmergencyEmailFallback = function (root, settings) {
+    applyEmergencyEmailFallback(root || document, normalizeEmergencySettings(settings || DEFAULT_EMERGENCY_SETTINGS));
+  };
 
   bindTriggers();
   window.addEventListener("resize", () => refreshCuratedOfferHeights(document));
   if (document.readyState === "loading") {
-    window.addEventListener("DOMContentLoaded", boot);
+    window.addEventListener("DOMContentLoaded", () => {
+      loadEmergencySettings().then(boot);
+    });
   } else {
-    boot();
+    loadEmergencySettings().then(boot);
   }
 })();

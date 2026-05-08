@@ -45,6 +45,12 @@
     h2 { margin-bottom: 14px; font-size: 18px; }
     h3 { margin-bottom: 8px; font-size: 15px; }
     .muted { color: var(--muted); }
+    a {
+      color: #0b63ce;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    a:hover, a:focus-visible { text-decoration: underline; }
     .grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -109,6 +115,78 @@
       padding-left: 18px;
     }
     li + li { margin-top: 8px; }
+    .item-message {
+      display: block;
+      margin-bottom: 6px;
+    }
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .action-link {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: #eff6ff;
+      font-size: 13px;
+    }
+    .action-link.primary {
+      background: #0b63ce;
+      border-color: #0b63ce;
+      color: #fff;
+    }
+    .action-link.primary:hover,
+    .action-link.primary:focus-visible { color: #fff; }
+    .checklist-table td:first-child { width: 42%; }
+    .ga-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .ga-metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #f8fafc;
+    }
+    .ga-metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    .ga-metric strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 20px;
+    }
+    .emergency-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .emergency-detail {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #f8fafc;
+    }
+    .emergency-detail span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    .emergency-detail strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 16px;
+    }
     code {
       font-family: Consolas, "Courier New", monospace;
       font-size: 13px;
@@ -136,7 +214,10 @@
     }
     @media (max-width: 540px) {
       .grid { grid-template-columns: 1fr; }
-      th:nth-child(3), td:nth-child(3) { display: none; }
+      .build-scripts-table th:nth-child(3),
+      .build-scripts-table td:nth-child(3) { display: none; }
+      .ga-metrics { grid-template-columns: 1fr; }
+      .emergency-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -172,10 +253,37 @@
     </section>
     <p id="countsSource" class="muted" style="margin:10px 0 0;"></p>
 
+    <section class="panel" style="margin-top:16px;">
+      <div class="top">
+        <div>
+          <h2>Emergency Site Controls</h2>
+          <p class="muted">Read-only view of the public emergency settings JSON. Toggle controls are intentionally not included yet.</p>
+        </div>
+        <span id="emergencyModeBadge" class="badge">Loading</span>
+      </div>
+      <div class="emergency-grid">
+        <div class="emergency-detail">
+          <span>Outage banner</span>
+          <strong id="outageBannerStatus">--</strong>
+        </div>
+        <div class="emergency-detail">
+          <span>Hub email fallback</span>
+          <strong id="hubEmailFallbackStatus">--</strong>
+        </div>
+        <div class="emergency-detail">
+          <span>Updated at</span>
+          <strong id="emergencyUpdatedAt">--</strong>
+        </div>
+      </div>
+      <p id="emergencyNote" class="muted" style="margin:12px 0 0;"></p>
+      <div id="emergencyGroups" class="breakdown" style="margin-top:12px;"></div>
+      <div id="emergencyLinks" class="links" style="margin-top:12px;"></div>
+    </section>
+
     <section class="section-grid">
       <article class="panel">
         <h2>Build Scripts</h2>
-        <table>
+        <table class="build-scripts-table">
           <thead>
             <tr>
               <th>Script</th>
@@ -206,6 +314,43 @@
     </section>
 
     <section class="panel" style="margin-top:16px;">
+      <h2>Post-Stack Human Checklist</h2>
+      <table class="checklist-table">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Status</th>
+            <th>Action Surface</th>
+          </tr>
+        </thead>
+        <tbody id="postStackChecklist"></tbody>
+      </table>
+    </section>
+
+    <section class="section-grid">
+      <article class="panel">
+        <h2>Review Panels</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Queue</th>
+              <th>Count</th>
+              <th>Action Surface</th>
+            </tr>
+          </thead>
+          <tbody id="reviewPanelRows"></tbody>
+        </table>
+      </article>
+
+      <article class="panel">
+        <h2>Google Analytics Summary</h2>
+        <p id="gaSummaryMessage" class="muted"></p>
+        <div id="gaSummaryLinks" class="links"></div>
+        <div id="gaMetrics" class="ga-metrics"></div>
+      </article>
+    </section>
+
+    <section class="panel" style="margin-top:16px;">
       <h2>Files Needing Review</h2>
       <ul id="reviewFiles"></ul>
     </section>
@@ -214,8 +359,8 @@
   <script>
     const statusClass = (status) => {
       const normalized = String(status || "").toLowerCase();
-      if (normalized === "ok" || normalized === "done") return "status-ok";
-      if (normalized === "error" || normalized === "failed" || normalized === "invalid_status_file") return "status-error";
+      if (normalized === "ok" || normalized === "done" || normalized === "ready" || normalized === "clear") return "status-ok";
+      if (normalized === "error" || normalized === "failed" || normalized === "invalid_status_file" || normalized === "blocked") return "status-error";
       if (normalized === "running") return "status-running";
       if (normalized === "stale") return "status-stale";
       return "status-warning";
@@ -226,6 +371,25 @@
       const parsed = new Date(value);
       if (Number.isNaN(parsed.getTime())) return value;
       return parsed.toLocaleString();
+    };
+
+    const appendLinks = (node, links) => {
+      const usableLinks = (links || []).filter((link) => link && link.href);
+      if (usableLinks.length === 0) return;
+      const wrap = document.createElement("div");
+      wrap.className = "links";
+      usableLinks.forEach((item) => {
+        const a = document.createElement("a");
+        a.href = item.href;
+        a.textContent = item.label || item.href;
+        a.className = `action-link${item.primary ? " primary" : ""}`;
+        if (item.kind === "external") {
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+        }
+        wrap.appendChild(a);
+      });
+      node.appendChild(wrap);
     };
 
     const setList = (id, items, emptyText) => {
@@ -240,11 +404,36 @@
       }
       items.forEach((item) => {
         const li = document.createElement("li");
-        const code = document.createElement("code");
-        code.textContent = item;
-        li.appendChild(code);
+        const message = document.createElement("span");
+        message.className = "item-message";
+        if (typeof item === "string") {
+          const code = document.createElement("code");
+          code.textContent = item;
+          message.appendChild(code);
+        } else {
+          message.textContent = item.message || item.path || "";
+        }
+        li.appendChild(message);
+        appendLinks(li, item.links);
         node.appendChild(li);
       });
+    };
+
+    const setTableEmpty = (tbody, colSpan, message) => {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = colSpan;
+      td.className = "empty";
+      td.textContent = message;
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    };
+
+    const renderActionLinksCell = (links) => {
+      const td = document.createElement("td");
+      appendLinks(td, links);
+      if (!td.hasChildNodes()) td.textContent = "--";
+      return td;
     };
 
     fetch("control_booth_data.json", { cache: "no-store" })
@@ -264,6 +453,32 @@
         document.getElementById("countsSource").textContent = data.counts?.source_label
           ? `Counts source: ${data.counts.source_label}`
           : "";
+
+        const emergencySettings = data.emergency_settings || {};
+        const emergencyBadge = document.getElementById("emergencyModeBadge");
+        const emergencyOn = emergencySettings.emergency_mode === true;
+        emergencyBadge.textContent = emergencyOn ? "ON" : "OFF";
+        emergencyBadge.className = `badge ${emergencyOn ? "status-error" : "status-ok"}`;
+        document.getElementById("outageBannerStatus").textContent = emergencySettings.outage_banner ? "ON" : "OFF";
+        document.getElementById("hubEmailFallbackStatus").textContent = emergencySettings.hub_email_fallback ? "ON" : "OFF";
+        document.getElementById("emergencyUpdatedAt").textContent = fmtDate(emergencySettings.updated_at);
+        document.getElementById("emergencyNote").textContent = emergencySettings.note
+          ? `Note: ${emergencySettings.note}`
+          : "Note: none";
+        const emergencyGroups = document.getElementById("emergencyGroups");
+        emergencyGroups.innerHTML = "";
+        Object.entries(emergencySettings.approved_page_groups || {}).forEach(([label, enabled]) => {
+          const row = document.createElement("div");
+          const labelNode = document.createElement("span");
+          labelNode.textContent = label.replaceAll("_", " ");
+          const valueNode = document.createElement("strong");
+          valueNode.textContent = enabled ? "approved" : "off";
+          row.append(labelNode, valueNode);
+          emergencyGroups.appendChild(row);
+        });
+        const emergencyLinks = document.getElementById("emergencyLinks");
+        emergencyLinks.innerHTML = "";
+        appendLinks(emergencyLinks, emergencySettings.links);
 
         const rows = document.getElementById("scriptRows");
         rows.innerHTML = "";
@@ -285,9 +500,12 @@
           progressCell.textContent = progress;
 
           const outputCell = document.createElement("td");
-          const outputCode = document.createElement("code");
-          outputCode.textContent = script.last_output_file || "";
-          outputCell.appendChild(outputCode);
+          if (script.last_output_file) {
+            const outputCode = document.createElement("code");
+            outputCode.textContent = script.last_output_file;
+            outputCell.appendChild(outputCode);
+          }
+          appendLinks(outputCell, script.last_output_file ? [{ label: "Open output", href: `../${script.last_output_file}` }] : []);
 
           tr.append(scriptCell, statusCell, progressCell, outputCell);
           rows.appendChild(tr);
@@ -308,6 +526,66 @@
         setList("warnings", data.warnings, "No warnings reported.");
         setList("errors", data.errors, "No errors reported.");
         setList("reviewFiles", data.files_needing_review, "No review files reported.");
+
+        const checklist = document.getElementById("postStackChecklist");
+        checklist.innerHTML = "";
+        const checklistItems = data.post_stack_checklist || [];
+        if (checklistItems.length === 0) {
+          setTableEmpty(checklist, 3, "No post-stack checklist items reported.");
+        }
+        checklistItems.forEach((item) => {
+          const tr = document.createElement("tr");
+          const taskCell = document.createElement("td");
+          taskCell.textContent = item.label || "";
+          if (item.detail) {
+            const detail = document.createElement("div");
+            detail.className = "muted";
+            detail.style.marginTop = "5px";
+            detail.textContent = item.detail;
+            taskCell.appendChild(detail);
+          }
+          const statusCell = document.createElement("td");
+          const statusBadge = document.createElement("span");
+          statusBadge.className = `badge ${statusClass(item.status)}`;
+          statusBadge.textContent = item.status || "unknown";
+          statusCell.appendChild(statusBadge);
+          tr.append(taskCell, statusCell, renderActionLinksCell(item.links));
+          checklist.appendChild(tr);
+        });
+
+        const reviewRows = document.getElementById("reviewPanelRows");
+        reviewRows.innerHTML = "";
+        const reviewFiles = data.review_files || [];
+        if (reviewFiles.length === 0) {
+          setTableEmpty(reviewRows, 3, "No active review queues reported.");
+        }
+        reviewFiles.forEach((item) => {
+          const tr = document.createElement("tr");
+          const labelCell = document.createElement("td");
+          labelCell.textContent = item.label || item.path || "";
+          const countCell = document.createElement("td");
+          countCell.textContent = item.count ?? "--";
+          tr.append(labelCell, countCell, renderActionLinksCell(item.links));
+          reviewRows.appendChild(tr);
+        });
+
+        const gaSummary = data.ga4_summary || {};
+        document.getElementById("gaSummaryMessage").textContent = gaSummary.message || "No GA4 export found yet.";
+        const gaLinks = document.getElementById("gaSummaryLinks");
+        gaLinks.innerHTML = "";
+        appendLinks(gaLinks, gaSummary.links);
+        const gaMetrics = document.getElementById("gaMetrics");
+        gaMetrics.innerHTML = "";
+        (gaSummary.metrics || []).forEach((metric) => {
+          const card = document.createElement("div");
+          card.className = "ga-metric";
+          const label = document.createElement("span");
+          label.textContent = String(metric.label || "").replaceAll("_", " ");
+          const value = document.createElement("strong");
+          value.textContent = metric.value ?? "--";
+          card.append(label, value);
+          gaMetrics.appendChild(card);
+        });
       })
       .catch((error) => {
         const badge = document.getElementById("overallBadge");

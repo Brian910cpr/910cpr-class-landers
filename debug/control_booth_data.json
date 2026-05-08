@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-05-07T16:39:29.711394-04:00",
+  "generated_at": "2026-05-08T00:07:54.899930-04:00",
   "overall_status": "warning",
-  "last_successful_run": null,
+  "last_successful_run": "2026-05-08T00:04:36.679130-04:00",
   "counts": {
     "source_label": "current filesystem counts",
     "source_is_build_status_bound": false,
@@ -17,35 +17,447 @@
     }
   },
   "warnings": [
-    "Missing descriptions: 14 item(s) need review.",
-    "No debug status file found for build_all_v4.",
-    "No debug status file found for build_course_at_city.",
-    "No debug status file found for build_courses.",
-    "No debug status file found for build_index_and_sitemap.",
-    "No debug status file found for build_locations.",
-    "No debug status file found for build_request_group_session.",
-    "No debug status file found for build_schedule_future.",
-    "No debug status file found for build_sessions_current.",
-    "No debug status file found for build_slug_hubs.",
-    "Unmapped courses: 6334 item(s) need review."
+    {
+      "message": "Missing descriptions: 14 item(s) need review.",
+      "links": [
+        {
+          "label": "Open missing descriptions review file",
+          "href": "../data/audit/missing_descriptions.json",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open missing descriptions report",
+          "href": "../data/audit/missing_descriptions_report.md",
+          "kind": "local",
+          "primary": false
+        },
+        {
+          "label": "Edit course map on GitHub",
+          "href": "https://github.com/Brian910cpr/910cpr-class-landers/blob/main/data/config/course_map.json",
+          "kind": "external",
+          "primary": false
+        }
+      ]
+    },
+    {
+      "message": "No debug status file found for build_all_v4.",
+      "links": [
+        {
+          "label": "Open debug status folder",
+          "href": "../debug/status",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open build_all_v4.json",
+          "href": "../debug/status/build_all_v4.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "No debug status file found for build_course_at_city.",
+      "links": [
+        {
+          "label": "Open debug status folder",
+          "href": "../debug/status",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open build_course_at_city.json",
+          "href": "../debug/status/build_course_at_city.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "No debug status file found for build_courses.",
+      "links": [
+        {
+          "label": "Open debug status folder",
+          "href": "../debug/status",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open build_courses.json",
+          "href": "../debug/status/build_courses.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "No debug status file found for build_index_and_sitemap.",
+      "links": [
+        {
+          "label": "Open Google Search Console Sitemap Submission",
+          "href": "https://search.google.com/search-console/sitemaps?resource_id=https%3A%2F%2Fwww.910cpr.com%2F",
+          "kind": "external",
+          "primary": true
+        },
+        {
+          "label": "Verify generated sitemap.xml",
+          "href": "../docs/sitemap.xml",
+          "kind": "local",
+          "primary": false
+        },
+        {
+          "label": "Open debug status folder",
+          "href": "../debug/status",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open build_index_and_sitemap.json",
+          "href": "../debug/status/build_index_and_sitemap.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "No debug status file found for build_locations.",
+      "links": [
+        {
+          "label": "Open debug status folder",
+          "href": "../debug/status",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open build_locations.json",
+          "href": "../debug/status/build_locations.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "No debug status file found for build_request_group_session.",
+      "links": [
+        {
+          "label": "Open debug status folder",
+          "href": "../debug/status",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open build_request_group_session.json",
+          "href": "../debug/status/build_request_group_session.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "No debug status file found for build_schedule_future.",
+      "links": [
+        {
+          "label": "Open debug status folder",
+          "href": "../debug/status",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open build_schedule_future.json",
+          "href": "../debug/status/build_schedule_future.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "No debug status file found for build_sessions_current.",
+      "links": [
+        {
+          "label": "Open debug status folder",
+          "href": "../debug/status",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open build_sessions_current.json",
+          "href": "../debug/status/build_sessions_current.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "Unmapped courses: 6334 item(s) need review.",
+      "links": [
+        {
+          "label": "Open unmapped courses review file",
+          "href": "../data/audit/unmapped_courses.json",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Edit course map on GitHub",
+          "href": "https://github.com/Brian910cpr/910cpr-class-landers/blob/main/data/config/course_map.json",
+          "kind": "external",
+          "primary": false
+        }
+      ]
+    }
   ],
   "errors": [],
   "files_needing_review": [
-    "data/audit/missing_descriptions.json",
-    "data/audit/unmapped_courses.json"
+    {
+      "path": "data/audit/missing_descriptions.json",
+      "links": [
+        {
+          "label": "Open missing descriptions review file",
+          "href": "../data/audit/missing_descriptions.json",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open missing descriptions report",
+          "href": "../data/audit/missing_descriptions_report.md",
+          "kind": "local",
+          "primary": false
+        },
+        {
+          "label": "Edit course map on GitHub",
+          "href": "https://github.com/Brian910cpr/910cpr-class-landers/blob/main/data/config/course_map.json",
+          "kind": "external",
+          "primary": false
+        }
+      ]
+    },
+    {
+      "path": "data/audit/unmapped_courses.json",
+      "links": [
+        {
+          "label": "Open unmapped courses review file",
+          "href": "../data/audit/unmapped_courses.json",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Edit course map on GitHub",
+          "href": "https://github.com/Brian910cpr/910cpr-class-landers/blob/main/data/config/course_map.json",
+          "kind": "external",
+          "primary": false
+        }
+      ]
+    }
   ],
   "review_files": [
     {
       "label": "Unmapped courses",
       "path": "data/audit/unmapped_courses.json",
-      "count": 6334
+      "count": 6334,
+      "links": [
+        {
+          "label": "Open unmapped courses review file",
+          "href": "../data/audit/unmapped_courses.json",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Edit course map on GitHub",
+          "href": "https://github.com/Brian910cpr/910cpr-class-landers/blob/main/data/config/course_map.json",
+          "kind": "external",
+          "primary": false
+        }
+      ]
     },
     {
       "label": "Missing descriptions",
       "path": "data/audit/missing_descriptions.json",
-      "count": 14
+      "count": 14,
+      "links": [
+        {
+          "label": "Open missing descriptions review file",
+          "href": "../data/audit/missing_descriptions.json",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open missing descriptions report",
+          "href": "../data/audit/missing_descriptions_report.md",
+          "kind": "local",
+          "primary": false
+        },
+        {
+          "label": "Edit course map on GitHub",
+          "href": "https://github.com/Brian910cpr/910cpr-class-landers/blob/main/data/config/course_map.json",
+          "kind": "external",
+          "primary": false
+        }
+      ]
     }
   ],
+  "post_stack_checklist": [
+    {
+      "label": "Submit or re-check sitemap in Google Search Console",
+      "status": "ready",
+      "links": [
+        {
+          "label": "Open Google Search Console Sitemap Submission",
+          "href": "https://search.google.com/search-console/sitemaps?resource_id=https%3A%2F%2Fwww.910cpr.com%2F",
+          "kind": "external",
+          "primary": true
+        },
+        {
+          "label": "Verify generated sitemap.xml",
+          "href": "../docs/sitemap.xml",
+          "kind": "local",
+          "primary": false
+        }
+      ]
+    },
+    {
+      "label": "Review Google Analytics traffic after publish",
+      "status": "waiting for export",
+      "links": [
+        {
+          "label": "Open Google Analytics Dashboard",
+          "href": "https://analytics.google.com/analytics/web/",
+          "kind": "external",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "label": "Resolve courses needing description review",
+      "status": "action required",
+      "detail": "14 course(s) need review.",
+      "links": [
+        {
+          "label": "Open missing descriptions review file",
+          "href": "../data/audit/missing_descriptions.json",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Open missing descriptions report",
+          "href": "../data/audit/missing_descriptions_report.md",
+          "kind": "local",
+          "primary": false
+        },
+        {
+          "label": "Edit course map on GitHub",
+          "href": "https://github.com/Brian910cpr/910cpr-class-landers/blob/main/data/config/course_map.json",
+          "kind": "external",
+          "primary": false
+        }
+      ]
+    },
+    {
+      "label": "Resolve unmapped course rows",
+      "status": "action required",
+      "detail": "6334 unmapped row(s) need review.",
+      "links": [
+        {
+          "label": "Open unmapped courses review file",
+          "href": "../data/audit/unmapped_courses.json",
+          "kind": "local",
+          "primary": true
+        },
+        {
+          "label": "Edit course map on GitHub",
+          "href": "https://github.com/Brian910cpr/910cpr-class-landers/blob/main/data/config/course_map.json",
+          "kind": "external",
+          "primary": false
+        }
+      ]
+    },
+    {
+      "label": "Review public hub pages for customer-facing layout and content",
+      "status": "manual review",
+      "links": [
+        {
+          "label": "BLS hub",
+          "href": "https://www.910cpr.com/bls",
+          "kind": "external",
+          "primary": false
+        },
+        {
+          "label": "ACLS hub",
+          "href": "https://www.910cpr.com/acls",
+          "kind": "external",
+          "primary": false
+        },
+        {
+          "label": "PALS hub",
+          "href": "https://www.910cpr.com/pals",
+          "kind": "external",
+          "primary": false
+        },
+        {
+          "label": "Heartsaver hub",
+          "href": "https://www.910cpr.com/heartsaver",
+          "kind": "external",
+          "primary": false
+        },
+        {
+          "label": "Group training hub",
+          "href": "https://www.910cpr.com/group-training",
+          "kind": "external",
+          "primary": false
+        }
+      ]
+    },
+    {
+      "label": "Inspect generated build health report",
+      "status": "ready",
+      "links": [
+        {
+          "label": "Open latest build health report",
+          "href": "../debug/latest_build_health.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    }
+  ],
+  "ga4_summary": {
+    "exists": false,
+    "path": "data/analytics/ga4_latest.csv",
+    "message": "No GA4 export found yet.",
+    "links": [
+      {
+        "label": "Open Google Analytics Dashboard",
+        "href": "https://analytics.google.com/analytics/web/",
+        "kind": "external",
+        "primary": true
+      }
+    ]
+  },
+  "emergency_settings": {
+    "path": "docs/data/site-emergency-settings.json",
+    "exists": true,
+    "error": null,
+    "version": 1,
+    "updated_at": "",
+    "updated_by": "",
+    "note": "",
+    "emergency_mode": false,
+    "outage_banner": false,
+    "hub_email_fallback": false,
+    "approved_page_groups": {
+      "hubs": true,
+      "home": false,
+      "course_landers": false,
+      "legacy_pages": false
+    },
+    "links": [
+      {
+        "label": "Open site-emergency-settings.json",
+        "href": "../docs/data/site-emergency-settings.json",
+        "kind": "local",
+        "primary": true
+      }
+    ]
+  },
   "build_scripts": [
     {
       "phase_name": "build_all_v4",
@@ -171,16 +583,31 @@
       "phase_name": "build_slug_hubs",
       "worker": "build_slug_hubs",
       "script": "scripts/build_slug_hubs.py",
-      "status": "never_run",
-      "raw_status": "missing",
-      "status_file": "debug/status/build_slug_hubs.json",
-      "warnings": [
-        "No debug status file found for build_slug_hubs."
+      "status": "done",
+      "last_run": "2026-05-08T00:04:36.679130-04:00",
+      "current_count": 6,
+      "total_count": 6,
+      "percent_complete": 100.0,
+      "last_output_file": "docs/group-training.html",
+      "timestamp": "2026-05-08T00:04:36.679130-04:00",
+      "last_successful_run": "2026-05-08T00:04:36.679130-04:00",
+      "inputs": [
+        "data/config/slug_hubs.json",
+        "docs/data/schedule_future.json"
       ],
+      "outputs": [
+        "docs"
+      ],
+      "counts": {
+        "sessions_loaded": 1378,
+        "slug_hub_pages": 6
+      },
+      "pages_generated": 6,
+      "warnings": [],
       "errors": [],
       "files_needing_review": [],
-      "inputs": [],
-      "outputs": []
+      "status_file": "debug/status/build_slug_hubs.json",
+      "raw_status": "done"
     }
   ]
 }

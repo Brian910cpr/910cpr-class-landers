@@ -129,5 +129,15 @@ if exist "build\build_all_v3.bat" (
 )
 
 echo.
+echo === CONTROL BOOTH RECEIPT PHASE ===
+python "scripts\build_control_booth.py"
+if errorlevel 1 (
+  echo.
+  echo CONTROL BOOTH RECEIPT FAILED.
+  echo Public build completed, but debug\control_booth_data.json was not regenerated.
+  exit /b 1
+)
+
+echo.
 echo DONE.
 exit /b 0

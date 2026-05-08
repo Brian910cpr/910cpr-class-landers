@@ -37,7 +37,6 @@ CURATED_OFFER_LIMIT = 8
 CURATED_OFFER_MIN = 5
 EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options."
 EMPTY_FALLBACK_BODY = "View the full schedule for additional dates, request a class time, or ask about on-site training for your team."
-EMERGENCY_EMAIL_REGISTRATION_MODE = True
 EMERGENCY_REGISTRATION_EMAIL = "info@910cpr.com"
 EMERGENCY_ALERT_TITLE = "⚠️ Our Schedule Platform Vendor Is Experiencing Technical Difficulties"
 EMERGENCY_ALERT_LINES = (
@@ -568,9 +567,6 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
 
     action_label = "See Public Class" if group_mode else "Book Seat"
     action_url = register_url
-    if EMERGENCY_EMAIL_REGISTRATION_MODE and not group_mode:
-        action_label = "Email Us To Register"
-        action_url = escape(render_emergency_mailto(session, page_slug=page_slug), quote=True)
     action_hint = ""
     badge_html = ""
     if format_badge:
@@ -620,9 +616,6 @@ def session_action(session: dict[str, Any], *, page_slug: str) -> tuple[str, str
     register_url = escape(session.get("registration_url") or "#", quote=True)
     action_label = "Book Seat"
     action_url = register_url
-    if EMERGENCY_EMAIL_REGISTRATION_MODE:
-        action_label = "Email Us To Register"
-        action_url = escape(render_emergency_mailto(session, page_slug=page_slug), quote=True)
     return action_label, action_url, register_url
 
 
@@ -1111,13 +1104,7 @@ def render_guidance_banners(page: dict[str, Any], banner_library: dict[str, dict
 
 
 def render_emergency_alert() -> str:
-    body = "".join(f"<p>{escape(line)}</p>" for line in EMERGENCY_ALERT_LINES)
-    return f"""
-  <section class="slug-emergency-alert" role="status" aria-live="polite">
-    <h2>{escape(EMERGENCY_ALERT_TITLE)}</h2>
-    {body}
-  </section>
-""".strip()
+    return ""
 
 
 def render_banner(page: dict[str, Any], first_tab: dict[str, Any]) -> str:
