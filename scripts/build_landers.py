@@ -787,6 +787,215 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], course_url: str
 """
 
 
+def session_enrolled_count(session: dict) -> int:
+    try:
+        return max(0, int(session.get("enrolled_count") or session.get("registered_count") or 0))
+    except Exception:
+        return 0
+
+
+def certifying_body_key(session: dict) -> str:
+    logo_key = str(session.get("mapped_logo_key") or "").strip().lower()
+    if logo_key in {"aha", "arc", "hsi"}:
+        return logo_key
+    body = structured_certifying_body(session).upper()
+    haystack = " ".join(
+        str(session.get(key) or "")
+        for key in ("course_name", "mapped_clean_title", "course_subtitle", "course_code")
+    ).upper()
+    text = f"{body} {haystack}"
+    if "AMERICAN RED CROSS" in text or re.search(r"\bARC\b", text):
+        return "arc"
+    if "HEALTH & SAFETY INSTITUTE" in text or "HEALTH AND SAFETY INSTITUTE" in text or re.search(r"\bHSI\b", text):
+        return "hsi"
+    if "AMERICAN HEART ASSOCIATION" in text or re.search(r"\bAHA\b", text):
+        return "aha"
+    return ""
+
+
+def certifying_logo_src(session: dict) -> str:
+    return {
+        "aha": "/images/0aha.png",
+        "arc": "/images/0arc.png",
+        "hsi": "/images/0hsi.png",
+    }.get(certifying_body_key(session), "")
+
+
+def format_slug_month(dt: datetime | None) -> str:
+    return dt.strftime("%b").upper() if dt else "TBD"
+
+
+def format_slug_day(dt: datetime | None) -> str:
+    return dt.strftime("%d").lstrip("0") if dt else "--"
+
+
+def format_slug_weekday(dt: datetime | None) -> str:
+    return dt.strftime("%a") if dt else ""
+
+
+def format_slug_date_line(dt: datetime | None) -> str:
+    return dt.strftime("%A, %B ") + str(dt.day) if dt else "Date TBA"
+
+
+def format_slug_time_line(dt: datetime | None) -> str:
+    return dt.strftime("%I:%M %p").lstrip("0") if dt else "Time TBA"
+
+
+def render_modern_day_groups(sessions: list[dict]) -> str:
+    groups: list[dict] = []
+    by_key: dict[str, dict] = {}
+    for session in sessions:
+        dt = session.get("_parsed_dt") or parse_dt(session.get("start_at"))
+        key = dt.date().isoformat() if dt else f"unknown-{len(groups)}"
+        if key not in by_key:
+            group = {"key": key, "dt": dt, "sessions": []}
+            by_key[key] = group
+            groups.append(group)
+        by_key[key]["sessions"].append(session)
+
+    cards = []
+    for group in groups:
+        dt = group["dt"]
+        cert_logos: dict[str, str] = {}
+        rows = []
+        for session in sorted(group["sessions"], key=lambda item: item.get("_parsed_dt") or parse_dt(item.get("start_at")) or datetime.max.replace(tzinfo=TZ)):
+            row_dt = session.get("_parsed_dt") or parse_dt(session.get("start_at"))
+            location = clean_location_display(session.get("location_display", "")) or "Location TBD"
+            title = display_course_name(session.get("course_name", "")) or "910CPR Class"
+            register_url = session.get("registration_url") or "#"
+            session_id = str(session.get("session_id") or "")
+            body_key = certifying_body_key(session)
+            logo = certifying_logo_src(session)
+            if body_key and logo and body_key not in cert_logos:
+                cert_logos[body_key] = logo
+            rows.append(
+                f"""
+          <div class="slug-time-row js-session-item" data-session-id="{escape(session_id, quote=True)}" data-session-start="{escape(row_dt.isoformat() if row_dt else '', quote=True)}" data-session-end="{escape(str(session.get('end_at') or ''), quote=True)}">
+            <div class="slug-time-copy">
+              <div class="slug-pill-meta-row slug-time-meta">
+                <span class="slug-pill-chip">{escape(format_slug_time_line(row_dt))}</span>
+                <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
+              </div>
+              <div class="slug-time-subtitle">{escape(title)}</div>
+            </div>
+            <div class="slug-time-actions">
+              <a class="button small primary" href="{escape(register_url, quote=True)}" data-original-href="{escape(register_url, quote=True)}" data-session-id="{escape(session_id, quote=True)}">Book Seat</a>
+            </div>
+          </div>
+"""
+            )
+        cert_html = ""
+        if cert_logos:
+            cert_html = (
+                '<div class="slug-day-cert-logos" aria-label="Certifying body">'
+                + "".join(
+                    f'<img class="slug-day-cert-logo" src="{escape(src, quote=True)}" alt="" loading="lazy" data-certifying-body="{escape(body, quote=True)}">'
+                    for body, src in cert_logos.items()
+                )
+                + "</div>"
+            )
+        cert_attr = f' data-certifying-body="{escape(next(iter(cert_logos)), quote=True)}"' if len(cert_logos) == 1 else ""
+        cards.append(
+            f"""
+        <article class="slug-day-card"{f' data-session-date="{escape(group["key"], quote=True)}"' if dt else ''}{cert_attr}>
+          {cert_html}
+          <div class="slug-pill-date">
+            <div class="slug-pill-month">{escape(format_slug_month(dt))}</div>
+            <div class="slug-pill-day">{escape(format_slug_day(dt))}</div>
+            <div class="slug-pill-weekday">{escape(format_slug_weekday(dt))}</div>
+          </div>
+          <div class="slug-day-main">
+            <div class="slug-day-title">{escape(format_slug_date_line(dt))}</div>
+            <div class="slug-time-list">{''.join(rows)}</div>
+          </div>
+        </article>
+"""
+        )
+    return "".join(cards)
+
+
+def render_modern_inventory_section(title: str, body: str, sessions: list[dict], section_class: str) -> str:
+    if not sessions:
+        return ""
+    return f"""
+<section class="slug-inventory-section {escape(section_class, quote=True)}">
+  <div class="slug-inventory-head">
+    <h3>{escape(title)}</h3>
+    <p>{escape(body)}</p>
+  </div>
+  <div class="slug-pill-list">
+    {render_modern_day_groups(sessions)}
+  </div>
+</section>
+""".strip()
+
+
+def render_past_current_inventory_html(upcoming_sessions: list[dict], course_url: str, course_label: str, full_schedule_url: str = "/schedule.html") -> str:
+    full_label = f"See all {course_label} dates" if course_label and course_label != "Course" else "See all current dates"
+    if not upcoming_sessions:
+        return f"""
+<section id="upcoming-times" class="section-box past-current-inventory js-live-session-group" data-empty-link="{escape(course_url, quote=True)}" data-empty-link-label="{escape(full_label, quote=True)}" data-full-schedule-link="{escape(full_schedule_url, quote=True)}">
+  <div class="slug-empty">
+    <strong>Need this class?</strong>
+    <p>This session has passed, but we can help you find the right current option.</p>
+    <div class="slug-empty-actions">
+      <a class="button primary" href="{escape(course_url, quote=True)}">{escape(full_label)}</a>
+      <a class="button secondary" href="tel:+19103955193">Call 910-395-5193</a>
+    </div>
+  </div>
+</section>
+""".strip()
+
+    popular: list[dict] = []
+    seen: set[str] = set()
+    for session in sorted(upcoming_sessions, key=lambda item: (-session_enrolled_count(item), item.get("_parsed_dt") or parse_dt(item.get("start_at")) or datetime.max.replace(tzinfo=TZ))):
+        if session_enrolled_count(session) <= 0:
+            continue
+        sid = str(session.get("session_id") or session.get("registration_url") or "")
+        if sid in seen:
+            continue
+        seen.add(sid)
+        popular.append(session)
+        if len(popular) >= 4:
+            break
+
+    next_available: list[dict] = []
+    for session in sorted(upcoming_sessions, key=lambda item: item.get("_parsed_dt") or parse_dt(item.get("start_at")) or datetime.max.replace(tzinfo=TZ)):
+        sid = str(session.get("session_id") or session.get("registration_url") or "")
+        if sid in seen:
+            continue
+        seen.add(sid)
+        next_available.append(session)
+        if len(next_available) >= 6:
+            break
+
+    popular_html = render_modern_inventory_section(
+        "Popular upcoming classes",
+        "Selected upcoming class times with active registrations.",
+        popular,
+        "slug-popular-section",
+    )
+    next_html = render_modern_inventory_section(
+        "Next available classes",
+        "More selected class times to help you compare dates.",
+        next_available,
+        "slug-scheduled-section",
+    )
+    return f"""
+<section id="upcoming-times" class="section-box past-current-inventory js-live-session-group" data-empty-link="{escape(course_url, quote=True)}" data-empty-link-label="{escape(full_label, quote=True)}" data-full-schedule-link="{escape(full_schedule_url, quote=True)}">
+  {popular_html}
+  {next_html}
+  <section class="slug-escape-hatch">
+    <div class="slug-escape-copy">
+      <strong>Need a different date or time?</strong>
+      <span>These are selected current options. More dates and locations may be available on the full schedule.</span>
+    </div>
+    <a class="button primary slug-full-schedule-button" href="{escape(course_url, quote=True)}">{escape(full_label)}</a>
+  </section>
+</section>
+""".strip()
+
+
 def clean_review_text(text: str) -> str:
     text = strip_html(text)
     text = normalize_whitespace(text)
@@ -1317,6 +1526,8 @@ TEMPLATE = """<!DOCTYPE html>
 
     {state_notice}
 
+    {top_inventory_html}
+
     <section class="hero">
 
       <div class="date-badge">
@@ -1359,7 +1570,7 @@ TEMPLATE = """<!DOCTYPE html>
       </div>
 
       <div class="cta-panel">
-        <p class="cta-panel-label">Reserve your seat</p>
+        <p class="cta-panel-label">{cta_panel_label}</p>
         <p class="cta-panel-copy">{hero_subhead}</p>
 
         <div class="cta-row">
@@ -1488,7 +1699,7 @@ def main() -> None:
             existing = output_path.read_text(encoding="utf-8", errors="ignore")
             session_dt_for_resume = parse_dt(session.get("start_at"))
             became_past = bool(session_dt_for_resume and session_dt_for_resume <= now_dt)
-            needs_past_refresh = became_past and "This class has passed" not in existing
+            needs_past_refresh = became_past and "past-current-inventory" not in existing
             if "<!-- BUILD_CODE:" in existing and "scripts/build_landers.py" in existing and not needs_past_refresh:
                 continue
         course_raw = session.get("course_name", "")
@@ -1545,14 +1756,16 @@ def main() -> None:
         if is_past:
             state_notice = """
 <div class="notice">
-  This class has passed. The registration link is preserved for source validation; choose a current option below if you need a future date.
+  This class has passed. Choose a current option below.
 </div>
 """
-            button_html = f'<a class="button primary" href="{escape(register)}">Register Now</a>'
-            hero_subhead = "This class is no longer bookable. Use the replacement options below to choose a current class."
+            button_html = f'<a class="button secondary" href="{escape(register, quote=True)}">Source registration record</a>'
+            cta_panel_label = "Historical class record"
+            hero_subhead = "This class is no longer bookable. Current options are shown above; this record remains for validation."
         else:
             state_notice = ""
             button_html = f'<a class="button primary" href="{escape(register)}">Register Now</a>'
+            cta_panel_label = "Reserve your seat"
             hero_subhead = "Use the register button for this session or the upcoming list below for other dates and times."
 
         logo_key = str(session.get("mapped_logo_key") or mapped_entry.get("logo_key") or "").strip().lower()
@@ -1608,7 +1821,12 @@ def main() -> None:
             limit=UPCOMING_LIMIT,
             future_index=future_replacement_index,
         )
-        upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, type_page_url, course_label)
+        if is_past:
+            top_inventory_html = render_past_current_inventory_html(upcoming_sessions, type_page_url, course_label)
+            upcoming_sessions_html = ""
+        else:
+            top_inventory_html = ""
+            upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, type_page_url, course_label)
 
         selected_reviews = pick_reviews_for_session(
             session_id=session_id,
@@ -1633,6 +1851,7 @@ def main() -> None:
             gtm_body=render_gtm_body(),
             schema_block=make_schema(course_seo, dt, location, city, state, register),
             state_notice=state_notice,
+            top_inventory_html=top_inventory_html,
             month_abbr=escape(month_abbr),
             day_num=escape(day_num),
             weekday=escape(weekday),
@@ -1644,6 +1863,7 @@ def main() -> None:
             date=escape(date),
             time=escape(time),
             location=escape(location),
+            cta_panel_label=escape(cta_panel_label),
             button_html=button_html,
             confidence_block_html=confidence_block_html,
             review_snippet_html=review_snippet_html,

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+from scripts.build_metadata import apply_build_metadata, current_build_metadata
 from scripts.build_status import BuildStatusReporter
 from scripts.hybrid_inventory import (
     APPOINTMENT_ENDPOINT,
@@ -521,6 +522,32 @@ def format_time_line(dt: datetime | None) -> str:
     return dt.strftime("%I:%M %p").lstrip("0") if dt else "Time TBA"
 
 
+def certifying_body_key(session: dict[str, Any]) -> str:
+    body = normalize_space(session.get("mapped_certifying_body") or session.get("certifying_body")).upper()
+    haystack = normalize_space(
+        " ".join(
+            str(session.get(key) or "")
+            for key in ("course_name", "course_name_raw", "course_subtitle", "course_code")
+        )
+    ).upper()
+    text = f"{body} {haystack}"
+    if "AMERICAN RED CROSS" in text or re.search(r"\bARC\b", text):
+        return "arc"
+    if "HEALTH & SAFETY INSTITUTE" in text or "HEALTH AND SAFETY INSTITUTE" in text or re.search(r"\bHSI\b", text):
+        return "hsi"
+    if "AMERICAN HEART ASSOCIATION" in text or re.search(r"\bAHA\b", text):
+        return "aha"
+    return ""
+
+
+def certifying_logo_src(session: dict[str, Any]) -> str:
+    return {
+        "aha": "/images/0aha.png",
+        "arc": "/images/0arc.png",
+        "hsi": "/images/0hsi.png",
+    }.get(certifying_body_key(session), "")
+
+
 def render_emergency_mailto(session: dict[str, Any], *, page_slug: str) -> str:
     start_dt = parse_dt(session.get("start_at"))
     location = clean_location(session.get("location_display") or session.get("location_name"))
@@ -564,6 +591,14 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
     format_badge = normalize_space(session.get("_format_badge"))
     family_badge = normalize_space(session.get("_family_badge"))
     enrolled_count = session_enrolled_count(session)
+    cert_body = certifying_body_key(session)
+    cert_logo = certifying_logo_src(session)
+    cert_attrs = ""
+    if cert_body and cert_logo:
+        cert_attrs = (
+            f' data-certifying-body="{escape(cert_body, quote=True)}"'
+            f' data-certifying-logo="{escape(cert_logo, quote=True)}"'
+        )
 
     action_label = "See Public Class" if group_mode else "Book Seat"
     action_url = register_url
@@ -585,7 +620,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
     action_hint_html = f'    <div class="slug-pill-hint">{escape(action_hint)}</div>' if action_hint else ""
 
     return f"""
-<article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}">
+<article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}"{cert_attrs}>
   <div class="slug-pill-date">
     <div class="slug-pill-month">{format_month(start_dt)}</div>
     <div class="slug-pill-day">{format_day(start_dt)}</div>
@@ -1273,12 +1308,14 @@ def build() -> None:
     schedule = json.loads(SCHEDULE_PATH.read_text(encoding="utf-8"))
     sessions = schedule.get("sessions", [])
     now = datetime.now(TZ)
+    build_meta = current_build_metadata("scripts/build_slug_hubs.py", "slug hub rebuild")
 
     reporter.start(total=len(manifest))
     last_output: Path | None = None
     try:
         for index, page in enumerate(manifest, start=1):
             html = render_page(page, sessions, banner_library)
+            html = apply_build_metadata(html, build_meta)
             last_output = OUTPUT_DIR / f"{page['slug']}.html"
             last_output.write_text(html, encoding="utf-8")
             if page.get("slug") == "acls":

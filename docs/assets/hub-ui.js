@@ -668,7 +668,18 @@
       sessionStart: start ? start.toISOString() : "",
       sessionEnd: pill.getAttribute("data-end") || pill.getAttribute("data-session-end") || "",
       sessionDate: start ? formatSessionDateKey(start) : "",
+      certifyingBody: pill.getAttribute("data-certifying-body") || "",
+      certifyingLogo: pill.getAttribute("data-certifying-logo") || "",
     };
+  }
+
+  function groupCertifyingLogos(rows) {
+    const byBody = new Map();
+    rows.forEach((row) => {
+      if (!row.certifyingBody || !row.certifyingLogo || byBody.has(row.certifyingBody)) return;
+      byBody.set(row.certifyingBody, row.certifyingLogo);
+    });
+    return Array.from(byBody, ([body, logo]) => ({ body, logo }));
   }
 
   function pruneDirectPills(scope) {
@@ -729,9 +740,17 @@
             </div>
           </div>
         `).join("");
+        const certLogos = groupCertifyingLogos(group.rows);
+        const certMarkup = certLogos.length ? `
+          <div class="slug-day-cert-logos" aria-label="Certifying body">
+            ${certLogos.map((item) => `<img class="slug-day-cert-logo" src="${escapeHtml(item.logo)}" alt="" loading="lazy" data-certifying-body="${escapeHtml(item.body)}">`).join("")}
+          </div>
+        ` : "";
+        const certAttr = certLogos.length === 1 ? ` data-certifying-body="${escapeHtml(certLogos[0].body)}"` : "";
 
         return `
-          <article class="slug-day-card" ${group.sessionDate ? `data-session-date="${group.sessionDate}"` : ""}>
+          <article class="slug-day-card"${group.sessionDate ? ` data-session-date="${group.sessionDate}"` : ""}${certAttr}>
+            ${certMarkup}
             ${group.dateHtml}
             <div class="slug-day-main">
               <div class="slug-day-title">${group.title}</div>

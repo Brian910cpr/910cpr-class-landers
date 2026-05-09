@@ -2584,14 +2584,34 @@ textarea {
 }
 
 .slug-day-card {
+  position: relative;
   display: grid;
   grid-template-columns: 78px minmax(0, 1fr);
   gap: 16px;
   padding: 16px;
+  padding-right: 52px;
   border-radius: 22px;
   background: #ffffff;
   border: 1px solid #dbe7f0;
   box-shadow: 0 10px 22px rgba(22, 42, 66, 0.04);
+}
+
+.slug-day-cert-logos {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+  pointer-events: none;
+}
+
+.slug-day-cert-logo {
+  display: block;
+  width: 28px;
+  max-height: 28px;
+  object-fit: contain;
+  opacity: 0.94;
 }
 
 .slug-day-main {
@@ -2959,6 +2979,20 @@ textarea {
   .slug-day-card,
   .slug-time-row {
     grid-template-columns: 1fr;
+  }
+
+  .slug-day-card {
+    padding: 14px 44px 14px 14px;
+  }
+
+  .slug-day-cert-logos {
+    top: 14px;
+    right: 14px;
+  }
+
+  .slug-day-cert-logo {
+    width: 24px;
+    max-height: 24px;
   }
 
   .slug-time-actions {
