@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lander Builder - 910CPR Control Center</title>
+  <link rel="stylesheet" href="../control-center.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="eyebrow">Control Center Module</div>
+        <h1>Lander / Hub Builder</h1>
+        <p class="subhead">Operational controls and instructions for schedule refreshes, hub generation, full stack rebuilds, previews, and build records.</p>
+      </div>
+      <nav class="nav">
+        <a class="secondary" href="../index.html">Dashboard</a>
+        <a class="secondary" href="audit-center.html">Audit Center</a>
+        <a class="secondary" href="diagnostics.html">Diagnostics</a>
+      </nav>
+    </header>
+
+    <section class="section grid">
+      <article class="card span-6" id="class-report">
+        <div class="card-header">
+          <h2>Class Report Intake</h2>
+          <span class="status due">🟡 DUE SOON</span>
+        </div>
+        <div class="facts">
+          <div class="fact"><span class="label">Source file</span><span class="value">data/Class Report.xlsx</span></div>
+          <div class="fact"><span class="label">Normal condition</span><span class="value">Latest Enrollware export is less than 4 days old.</span></div>
+          <div class="fact"><span class="label">Risk</span><span class="value">Generated public schedules drift from real class inventory.</span></div>
+          <div class="fact"><span class="label">Correction</span><span class="value">Replace the spreadsheet, then run schedule and hub builders.</span></div>
+        </div>
+        <div class="actions">
+          <button>Upload New Class Report</button>
+          <button class="secondary">Mark Updated</button>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-header">
+          <h2>Builder Commands</h2>
+          <span class="status opportunity">🔵 OPPORTUNITY</span>
+        </div>
+        <p class="muted">Static pages cannot execute local scripts directly. Use these controls as the operational front door and run the matching local command until automation is connected.</p>
+        <div class="facts">
+          <div class="fact"><span class="label">Run Hubs Builder</span><span class="value">Schedule and content refresh only.</span></div>
+          <div class="fact"><span class="label">Rebuild Full Stack</span><span class="value">Major layout, theme, template, or code rebuild.</span></div>
+        </div>
+        <pre class="code">python -m scripts.build_schedule_future
+python -m scripts.build_sessions_current
+python -m scripts.build_slug_hubs
+python -m scripts.build_index_and_sitemap</pre>
+        <div class="actions">
+          <button>Run Hubs Builder</button>
+          <button class="secondary">Rebuild Full Stack</button>
+          <a class="button secondary" href="../../">Open Site Preview</a>
+        </div>
+      </article>
+
+      <article class="card span-12">
+        <div class="card-header">
+          <h2>Build Record Contract</h2>
+          <span class="status none">⚫ NOT CONFIGURED</span>
+        </div>
+        <p class="muted">Write this shape to debug/control_center_status.json after each build so Overwatch can detect invisible failure.</p>
+        <pre class="code">{
+  "last_successful_build": "2026-05-09 11:42 AM",
+  "last_failed_build": null,
+  "result": "SUCCESS",
+  "pages_generated": 26411,
+  "full_rebuild": "2026-05-08 03:20 PM",
+  "theme": {
+    "active": "TH000 Default",
+    "upcoming": "TH002 EMS Week",
+    "days_until_activation": 7
+  },
+  "seo": {
+    "canonical_warnings": 0,
+    "missing_sitemap_references": 0
+  },
+  "recent_changes": [
+    { "date": "May 9", "items": ["Uploaded new Class Report", "Ran Hubs Builder"] }
+  ],
+  "last_known_good": {
+    "date": "2026-05-02",
+    "pages_generated": 26220,
+    "broken_assets": 0,
+    "canonical_warnings": 0
+  }
+}</pre>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

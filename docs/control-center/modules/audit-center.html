@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audit Center - 910CPR Control Center</title>
+  <link rel="stylesheet" href="../control-center.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="eyebrow">Control Center Module</div>
+        <h1>Audit Center</h1>
+        <p class="subhead">Central entry point for stale sessions, missing assets, theme assets, SEO diagnostics, and generated page health.</p>
+      </div>
+      <nav class="nav"><a class="secondary" href="../index.html">Dashboard</a><a class="secondary" href="diagnostics.html">Diagnostics</a></nav>
+    </header>
+    <section class="section grid">
+      <article class="card span-4"><div class="card-header"><h2>Stale Sessions</h2><span class="status none">⚫ NOT CONFIGURED</span></div><p class="muted">Expected source: debug/stale_sessions_audit.json</p><div class="actions"><button>Run Stale Session Audit</button></div></article>
+      <article class="card span-4"><div class="card-header"><h2>Missing Assets</h2><span class="status none">⚫ NOT CONFIGURED</span></div><p class="muted">Expected source: debug/missing_assets_audit.json</p><div class="actions"><button>Run Asset Audit</button></div></article>
+      <article class="card span-4"><div class="card-header"><h2>Theme Assets</h2><span class="status none">⚫ NOT CONFIGURED</span></div><p class="muted">Expected source: debug/theme_asset_audit.json</p><div class="actions"><button>Run Theme Asset Audit</button><a class="button secondary" href="theme-builder.html">Open Theme Builder</a></div></article>
+      <article class="card span-12">
+        <h2>Audit Output Contract</h2>
+        <pre class="code">{
+  "stale_pages": 0,
+  "expired_sessions": 0,
+  "orphaned_pages": 0,
+  "missing_hero_images": 0,
+  "broken_image_references": 0,
+  "missing_theme_assets": 0,
+  "oversized_images": 0
+}</pre>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

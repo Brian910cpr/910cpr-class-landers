@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagnostics - 910CPR Control Center</title>
+  <link rel="stylesheet" href="../control-center.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><div class="eyebrow">Control Center Module</div><h1>Diagnostics</h1><p class="subhead">Structured sources, warning files, and support snapshot guidance for troubleshooting with ChatGPT.</p></div>
+      <nav class="nav"><a class="secondary" href="../index.html">Dashboard</a><a class="secondary" href="audit-center.html">Audit Center</a></nav>
+    </header>
+    <section class="section grid">
+      <article class="card span-6">
+        <div class="card-header"><h2>Expected Diagnostic Sources</h2><span class="status none">⚫ FILE-BASED</span></div>
+        <div class="list">
+          <div class="list-item"><span>debug/control_center_status.json</span><span>Build status and timeline</span></div>
+          <div class="list-item"><span>debug/theme_asset_audit.json</span><span>Theme asset health</span></div>
+          <div class="list-item"><span>debug/missing_assets_audit.json</span><span>Broken and missing images</span></div>
+          <div class="list-item"><span>debug/stale_sessions_audit.json</span><span>Expired and orphaned sessions</span></div>
+          <div class="list-item"><span>docs/data/schedule_future.json</span><span>Public future inventory</span></div>
+          <div class="list-item"><span>data/Class Report.xlsx</span><span>Enrollware source export</span></div>
+        </div>
+      </article>
+      <article class="card span-6">
+        <div class="card-header"><h2>Support Snapshot Workflow</h2><span class="status normal">🟢 READY</span></div>
+        <div class="facts">
+          <div class="fact"><span class="label">Step 1</span><span class="value">Open the dashboard and export control-center-report.txt.</span></div>
+          <div class="fact"><span class="label">Step 2</span><span class="value">Paste the report into ChatGPT with Search Console emails, screenshots, or indexing warnings.</span></div>
+          <div class="fact"><span class="label">Step 3</span><span class="value">Use the recommended corrections to update source data, builders, audits, or themes.</span></div>
+        </div>
+        <div class="actions"><a class="button" href="../index.html">Return to Export Button</a></div>
+      </article>
+      <article class="card span-12">
+        <h2>Example Snapshot Sections</h2>
+        <pre class="code">SYSTEM STATUS
+Class Report Age
+schedule_future.json Age
+Last Build
+Pages Generated
+
+SEO HEALTH
+Canonical warnings
+Missing sitemap references
+
+ASSET HEALTH
+Missing hero images
+Broken image references
+
+FEATURE STATUS
+Theme system
+Emergency outage banner
+
+RECENT WARNINGS
+Ranked current operational warnings</pre>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>910CPR Control Center / Overwatch</title>
+  <link rel="stylesheet" href="control-center.css">
+</head>
+<body data-page="dashboard">
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="eyebrow">910CPR Internal Operations</div>
+        <h1>Control Center / Overwatch</h1>
+        <p class="subhead">Operational awareness and maintenance cockpit for the 910CPR lander, hub, schedule, theme, audit, and diagnostics ecosystem.</p>
+      </div>
+      <nav class="nav" aria-label="Control center modules">
+        <a class="secondary" href="modules/lander-builder.html">Lander Builder</a>
+        <a class="secondary" href="modules/theme-builder.html">Theme Builder</a>
+        <a class="secondary" href="modules/audit-center.html">Audit Center</a>
+        <a class="secondary" href="modules/feature-registry.html">Feature Registry</a>
+        <a class="secondary" href="modules/task-prompter.html">Task Prompter</a>
+        <a class="secondary" href="modules/diagnostics.html">Diagnostics</a>
+      </nav>
+    </header>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card span-8">
+          <div class="card-header">
+            <div>
+              <h2>What Should I Do Next?</h2>
+              <p class="muted">Top recommendations ranked by warning severity from available status files and freshness checks.</p>
+            </div>
+            <span class="status opportunity">🔵 OPPORTUNITY</span>
+          </div>
+          <div id="next-actions" class="list">
+            <div class="list-item"><span>Loading status sources...</span><span class="status none">⚫ NOT CONFIGURED</span></div>
+          </div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <div>
+              <h2>Export Support Snapshot</h2>
+              <p class="muted">Generate a pasteable report for ChatGPT, Google Search Console emails, screenshots, and indexing warnings.</p>
+            </div>
+            <span class="status normal">🟢 READY</span>
+          </div>
+          <div class="actions">
+            <button data-export-snapshot>Export Support Snapshot</button>
+            <a class="button secondary" href="modules/diagnostics.html">Open Diagnostics</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Critical Status</h2>
+      <div class="grid">
+        <article class="card span-4">
+          <div class="card-header">
+            <h3>Class Report Freshness</h3>
+            <span data-status-for="class-report" class="status none">⚫ NOT CONFIGURED</span>
+          </div>
+          <div class="facts">
+            <div class="fact"><span class="label">Current condition</span><span id="class-report-modified" class="value">Checking data/Class Report.xlsx</span></div>
+            <div class="fact"><span class="label">Age</span><span id="class-report-age" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Expected</span><span class="value">0-3 days normal, 4-7 due soon, 8+ action needed</span></div>
+            <div class="fact"><span class="label">Risk if ignored</span><span class="value">Public schedule may be stale.</span></div>
+            <div class="fact"><span class="label">Suggested correction</span><span class="value">Upload new Enrollware Class Report, then run Hubs Builder.</span></div>
+            <div class="fact"><span class="label">Where to fix</span><span class="value">data/Class Report.xlsx</span></div>
+          </div>
+          <div class="actions">
+            <button type="button">Upload New Class Report</button>
+            <a class="button secondary" href="modules/lander-builder.html#class-report">Open Instructions</a>
+            <button class="secondary" type="button">Mark Updated</button>
+          </div>
+          <p class="warn">Static page limitation: upload and mark-updated actions are exposed as operator controls, but file changes still happen locally until automation is connected.</p>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <h3>Future Schedule JSON Status</h3>
+            <span data-status-for="future-schedule" class="status none">⚫ NOT CONFIGURED</span>
+          </div>
+          <div class="facts">
+            <div class="fact"><span class="label">Current condition</span><span id="future-schedule-modified" class="value">Checking docs/data/schedule_future.json</span></div>
+            <div class="fact"><span class="label">Age</span><span id="future-schedule-age" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Expected</span><span class="value">Fresh after Class Report import and hub rebuild.</span></div>
+            <div class="fact"><span class="label">Risk if ignored</span><span class="value">Public-facing sessions may not match actual inventory.</span></div>
+            <div class="fact"><span class="label">Suggested correction</span><span class="value">Regenerate future schedule JSON and rebuild hub pages.</span></div>
+            <div class="fact"><span class="label">Where to fix</span><span class="value">docs/data/schedule_future.json</span></div>
+          </div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <h3>Lander / Hub Builder System</h3>
+            <span class="status opportunity">🔵 OPPORTUNITY</span>
+          </div>
+          <div class="facts">
+            <div class="fact"><span class="label">Last hub build</span><span class="value" id="last-successful-build">Checking...</span></div>
+            <div class="fact"><span class="label">Last full rebuild</span><span class="value">Use debug/control_center_status.json full_rebuild timestamp when available.</span></div>
+            <div class="fact"><span class="label">Pages generated</span><span class="value" id="pages-generated">Checking...</span></div>
+            <div class="fact"><span class="label">Run Hubs Builder</span><span class="value">Schedule/content refresh only.</span></div>
+            <div class="fact"><span class="label">Rebuild Full Stack</span><span class="value">Major site, layout, theme, or code rebuild.</span></div>
+          </div>
+          <div class="actions">
+            <button>Run Hubs Builder</button>
+            <button class="secondary">Rebuild Full Stack</button>
+            <a class="button secondary" href="../../debug/">View Last Build Log</a>
+            <a class="button secondary" href="../">Open Site Preview</a>
+            <a class="button secondary" href="modules/lander-builder.html">Open Builder Module</a>
+          </div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <h3>Last Build Status</h3>
+            <span data-status-for="last-build" class="status none">⚫ NOT CONFIGURED</span>
+          </div>
+          <div class="facts">
+            <div class="fact"><span class="label">Last successful build</span><span id="last-successful-build-duplicate" class="value">See builder card</span></div>
+            <div class="fact"><span class="label">Last failed build</span><span id="last-failed-build" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Result</span><span id="last-build-result" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Expected</span><span class="value">Most recent run completed successfully and wrote page count.</span></div>
+            <div class="fact"><span class="label">Risk if ignored</span><span class="value">Broken or partial generation may remain invisible.</span></div>
+            <div class="fact"><span class="label">Where to fix</span><span class="value">debug/control_center_status.json and builder logs.</span></div>
+          </div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <h3>Asset / Image Health</h3>
+            <span data-status-for="asset-health" class="status none">⚫ NOT CONFIGURED</span>
+          </div>
+          <div class="facts">
+            <div class="fact"><span class="label">Missing hero images</span><span id="missing-hero-images" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Broken references</span><span id="broken-image-references" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Missing theme assets</span><span id="missing-theme-assets" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Oversized images</span><span id="oversized-images" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Expected</span><span class="value">No broken references, no required theme blanks, optimized image sizes.</span></div>
+            <div class="fact"><span class="label">Where to fix</span><span class="value">debug/missing_assets_audit.json and Theme Builder.</span></div>
+          </div>
+          <div class="actions">
+            <button>Run Asset Audit</button>
+            <a class="button secondary" href="modules/theme-builder.html">Open Theme Builder</a>
+          </div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <h3>Stale Session Audit</h3>
+            <span data-status-for="stale-sessions" class="status none">⚫ NOT CONFIGURED</span>
+          </div>
+          <div class="facts">
+            <div class="fact"><span class="label">Stale pages</span><span id="stale-pages" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Expired sessions</span><span id="expired-sessions" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Orphaned pages</span><span id="orphaned-pages" class="value">Checking...</span></div>
+            <div class="fact"><span class="label">Risk if ignored</span><span class="value">Expired URLs may confuse users or search engines.</span></div>
+            <div class="fact"><span class="label">Where to fix</span><span class="value">debug/stale_sessions_audit.json and generated session pages.</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card span-6">
+          <div class="card-header">
+            <h2>Theme System Status</h2>
+            <span class="status opportunity">🔵 OPPORTUNITY</span>
+          </div>
+          <div class="facts">
+            <div class="fact"><span class="label">Active theme</span><span id="active-theme" class="value">TH000 Default</span></div>
+            <div class="fact"><span class="label">Upcoming theme</span><span id="upcoming-theme" class="value">Not configured</span></div>
+            <div class="fact"><span class="label">Days until activation</span><span id="theme-activation" class="value">Not configured</span></div>
+            <div class="fact"><span class="label">Missing required assets</span><span class="value">Falls back to TH000 until audit data reports otherwise.</span></div>
+            <div class="fact"><span class="label">Guardrail</span><span class="value">Themes may modify colors and visuals, not business logic, booking behavior, filters, or structure.</span></div>
+          </div>
+          <div class="actions">
+            <a class="button" href="modules/theme-builder.html">Open Theme Builder</a>
+            <a class="button secondary" href="../">Preview Active Theme</a>
+            <a class="button secondary" href="modules/theme-builder.html#upcoming">Preview Upcoming Theme</a>
+          </div>
+        </article>
+
+        <article class="card span-6">
+          <div class="card-header">
+            <h2>Last Known Good State</h2>
+            <span class="status none">⚫ NOT CONFIGURED</span>
+          </div>
+          <div class="facts">
+            <div class="fact"><span class="label">Healthy build</span><span class="value">Use debug/control_center_status.json last_known_good.date</span></div>
+            <div class="fact"><span class="label">Pages generated</span><span class="value">Use last_known_good.pages_generated</span></div>
+            <div class="fact"><span class="label">Broken assets</span><span class="value">Use last_known_good.broken_assets</span></div>
+            <div class="fact"><span class="label">Canonical warnings</span><span class="value">Use last_known_good.canonical_warnings</span></div>
+            <div class="fact"><span class="label">Purpose</span><span class="value">Compare current warnings against the last healthy baseline during regressions.</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card span-6">
+          <div class="card-header">
+            <h2>Recurring Task Prompter</h2>
+            <a class="button secondary" href="modules/task-prompter.html">Open Module</a>
+          </div>
+          <div class="checklist">
+            <div class="checkrow"><span>□</span><span>Daily / active days: check Class Report freshness, verify schedule JSON freshness, spot-check one random hub page.</span><span class="status due">🟡 DUE SOON</span></div>
+            <div class="checkrow"><span>□</span><span>Weekly: run stale session audit, review missing images, check Search Console warnings, review upcoming theme windows.</span><span class="status opportunity">🔵 OPPORTUNITY</span></div>
+            <div class="checkrow"><span>□</span><span>Monthly: audit feature registry, review analytics trends, review class mappings, archive old logs.</span><span class="status opportunity">🔵 OPPORTUNITY</span></div>
+          </div>
+        </article>
+
+        <article class="card span-6">
+          <div class="card-header">
+            <h2>Recent Changes Timeline</h2>
+            <span class="status none">⚫ FILE-BASED</span>
+          </div>
+          <div id="recent-timeline" class="timeline">
+            <div class="timeline-day"><strong>Loading...</strong><span class="muted">Checking debug/control_center_status.json recent_changes.</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <article class="card span-12">
+        <div class="card-header">
+          <h2>Feature Registry</h2>
+          <a class="button secondary" href="modules/feature-registry.html">Open Full Registry</a>
+        </div>
+        <div id="feature-registry-list" class="list"></div>
+      </article>
+    </section>
+  </main>
+  <script src="control-center.js"></script>
+</body>
+</html>
