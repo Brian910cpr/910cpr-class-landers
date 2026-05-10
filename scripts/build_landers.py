@@ -168,6 +168,7 @@ def normalize_session_record(session: dict) -> dict:
             "is_full": capacity.get("is_full") if capacity.get("is_full") not in (None, "") else session.get("is_full"),
             "registration_url": commerce.get("registration_url") or session.get("registration_url") or session.get("registration_link") or "",
             "session_status": status.get("session_status") or session.get("session_status") or "",
+            "last_updated_at": status.get("last_updated_at") or session.get("last_updated_at") or "",
             "mapped_family": session.get("mapped_family") or course.get("mapped_family") or "",
             "mapped_subtype": session.get("mapped_subtype") or course.get("mapped_subtype") or "",
             "mapped_certifying_body": session.get("mapped_certifying_body") or course.get("mapped_certifying_body") or "",
@@ -360,40 +361,93 @@ def corporate_blurb(city: str, course_name: str) -> str:
     )
 
 
-def make_schema(course_name: str, session_dt, location_name: str, city: str, state: str, register_url: str) -> str:
+def absolute_site_url(url: str) -> str:
+    raw = str(url or "").strip()
+    if not raw:
+        return ""
+    if re.match(r"^https?://", raw, flags=re.I):
+        return raw
+    if raw.startswith("/"):
+        return f"https://www.910cpr.com{raw}"
+    return f"https://www.910cpr.com/{raw.lstrip('./')}"
+
+
+def schema_price(value) -> str:
+    if value is None:
+        return ""
+    raw = str(value).strip()
+    if not raw:
+        return ""
+    raw = raw.replace("$", "").replace(",", "").strip()
+    try:
+        amount = float(raw)
+    except ValueError:
+        return raw
+    return f"{amount:.2f}"
+
+
+def make_schema(
+    course_name: str,
+    session_dt,
+    location_name: str,
+    city: str,
+    state: str,
+    register_url: str,
+    *,
+    end_dt=None,
+    image_url: str = "",
+    description: str = "",
+    price=None,
+    valid_from_dt=None,
+) -> str:
     start_iso = session_dt.isoformat() if session_dt else ""
+    end_iso = (end_dt or session_dt).isoformat() if (end_dt or session_dt) else ""
+    valid_from_iso = (valid_from_dt or session_dt).isoformat() if (valid_from_dt or session_dt) else ""
     schema_name = seo_course_phrase(course_name)
+    performer = {
+        "@type": "Organization",
+        "name": "910CPR",
+        "url": "https://www.910cpr.com/",
+    }
+    offer = {
+        "@type": "Offer",
+        "url": register_url,
+        "availability": "https://schema.org/InStock",
+        "priceCurrency": "USD",
+    }
+    price_value = schema_price(price)
+    if price_value:
+        offer["price"] = price_value
+    if valid_from_iso:
+        offer["validFrom"] = valid_from_iso
+
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": schema_name,
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "startDate": start_iso,
+        "endDate": end_iso,
+        "image": absolute_site_url(image_url or default_logo_url()),
+        "description": normalize_whitespace(strip_html(description)),
+        "performer": performer,
+        "location": {
+            "@type": "Place",
+            "name": location_name,
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": city,
+                "addressRegion": state,
+                "addressCountry": "US",
+            },
+        },
+        "organizer": performer,
+        "offers": offer,
+    }
     return f"""
 <script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@type": "Event",
-  "name": {json.dumps(schema_name)},
-  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-  "eventStatus": "https://schema.org/EventScheduled",
-  "startDate": {json.dumps(start_iso)},
-  "location": {{
-    "@type": "Place",
-    "name": {json.dumps(location_name)},
-    "address": {{
-      "@type": "PostalAddress",
-      "addressLocality": {json.dumps(city)},
-      "addressRegion": {json.dumps(state)},
-      "addressCountry": "US"
-    }}
-  }},
-  "organizer": {{
-    "@type": "Organization",
-    "name": "910CPR",
-    "url": "https://www.910cpr.com/"
-  }},
-  "offers": {{
-    "@type": "Offer",
-    "url": {json.dumps(register_url)},
-    "availability": "https://schema.org/InStock",
-    "priceCurrency": "USD"
-  }}
-}}
+{json.dumps(schema, indent=2)}
 </script>
 """.strip()
 
@@ -1813,6 +1867,20 @@ def main() -> None:
 
         description_html = load_course_description_html(course_id or course_number, course_display)
         course_description_section = render_course_description_section(session, description_html)
+        schema_description = strip_html(description_html)
+        if not schema_description:
+            schema_description = " ".join(course_description_paragraphs(session))
+        if not schema_description:
+            schema_description = meta_description
+        schema_valid_from_dt = (
+            parse_dt(session.get("published_at"))
+            or parse_dt(session.get("publish_at"))
+            or parse_dt(session.get("created_at"))
+            or parse_dt(session.get("last_updated_at"))
+            or build_meta.dt
+            or dt
+        )
+        schema_image_url = course_image_url or cert_logo or logo_url
 
         upcoming_sessions = get_upcoming_sessions(
             session,
@@ -1849,7 +1917,19 @@ def main() -> None:
             canonical_url=escape(canonical_url),
             gtm_head=render_gtm_head(),
             gtm_body=render_gtm_body(),
-            schema_block=make_schema(course_seo, dt, location, city, state, register),
+            schema_block=make_schema(
+                course_seo,
+                dt,
+                location,
+                city,
+                state,
+                register,
+                end_dt=parse_dt(session.get("end_at")),
+                image_url=schema_image_url,
+                description=schema_description,
+                price=session.get("price"),
+                valid_from_dt=schema_valid_from_dt,
+            ),
             state_notice=state_notice,
             top_inventory_html=top_inventory_html,
             month_abbr=escape(month_abbr),
