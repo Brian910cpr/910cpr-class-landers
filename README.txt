@@ -29,3 +29,4 @@ Notes
 - These builders are intentionally conservative starter files.
 - They do not yet wire into your supervisor main.py automatically.
 - They are meant to get tonight’s stack moving without changing your stable class/session builder.
+- After `python -m scripts.build_schedule_future`, run `python scripts/summarize_unmatched_courses.py` to create `debug/unmatched_courses_grouped.json` and `debug/unmatched_courses_grouped.csv` for course alias review. This review step does not change public course names.

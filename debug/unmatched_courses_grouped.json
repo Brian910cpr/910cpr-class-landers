@@ -1,0 +1,1356 @@
+{
+  "generated_at": "2026-05-09T23:12:06-04:00",
+  "source": "debug/unmatched_courses.json",
+  "group_count": 59,
+  "record_count": 5535,
+  "groups": [
+    {
+      "raw_course": "ARC - BLS - Blended Learning (Online + Skills) <br><i>Complete online course, then attend in-person skills session</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" width=\"18\" alt=\"ARC\" title=\"ARC BLS Blended Learning\" name=\"248287\" longdesc=\"r:248287|t:ARC_BLS_BLENDED|cb:ARC|src:EW|p:99|d:BL\">",
+      "normalized_course": "arc bls blended learning online skills complete online course then attend in person skills session",
+      "count": 1058,
+      "earliest_start_datetime": "2020-09-18T11:00:00-04:00",
+      "latest_start_datetime": "2025-12-31T12:45:00-04:00",
+      "future_count": 0,
+      "past_count": 1058,
+      "total_students": 26,
+      "sample_session_ids": [
+        "4133502",
+        "4138200",
+        "4138201",
+        "4133505",
+        "4138202"
+      ],
+      "sample_locations": [
+        ":: 115-3",
+        ":: Wilmington; Shipyard Blvd",
+        ":: Holly Ridge; Sound Rd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "arc_bls_blended_learning_online_skills_complete_online_course_then_attend_in_per",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "ARC - BLS - In-Person Classroom <br><i>Instructor-led classroom for initial or renewal certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" width=\"18\" alt=\"ARC\" title=\"ARC BLS In-Person Classroom\" name=\"248288\" longdesc=\"r:248288|t:ARC_BLS_IP_INITIAL|cb:ARC|src:EW|p:99|d:IP\">",
+      "normalized_course": "arc bls in person classroom instructor led classroom for initial or renewal certification",
+      "count": 687,
+      "earliest_start_datetime": "2023-03-17T12:30:00-04:00",
+      "latest_start_datetime": "2025-12-18T13:30:00-04:00",
+      "future_count": 0,
+      "past_count": 687,
+      "total_students": 6,
+      "sample_session_ids": [
+        "7811232",
+        "7811233",
+        "7815321",
+        "7811231",
+        "7815330"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "arc_bls_in_person_classroom_instructor_led_classroom_for_initial_or_renewal_cert",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "ARC Adult CPR AED - Blended <br><i>Online course + in-person skills session for workplace and general certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" width=\"18\" alt=\"ARC\" title=\"ARC Adult CPR AED Blended\" name=\"372258\" longdesc=\"r:372258|t:ARC_CPRAED_ADULT_BL|cb:ARC|src:EW|p:90|d:BL\">",
+      "normalized_course": "arc adult cpr aed blended online course in person skills session for workplace and general certification",
+      "count": 584,
+      "earliest_start_datetime": "2023-08-04T08:30:00-04:00",
+      "latest_start_datetime": "2025-12-17T19:30:00-04:00",
+      "future_count": 0,
+      "past_count": 584,
+      "total_students": 2,
+      "sample_session_ids": [
+        "8259787",
+        "8628856",
+        "8629026",
+        "8629027",
+        "8628863"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "arc_adult_cpr_aed_blended_online_course_in_person_skills_session_for_workplace_a",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode® (Online + Skills Session) <br><i>Complete online training, then attend an in-person skills session</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA PALS HeartCode Skills Session\" name=\"209812\" longdesc=\"r:209812|t:AHA_PALS_HEARTCODE|cb:AHA|src:EW|p:100|d:BL\">",
+      "normalized_course": "american heart association pediatric advanced life support pals provider heartcode online skills session complete online training then attend an in person skills session",
+      "count": 409,
+      "earliest_start_datetime": "2020-08-05T17:00:00-04:00",
+      "latest_start_datetime": "2026-01-19T11:30:00-04:00",
+      "future_count": 0,
+      "past_count": 409,
+      "total_students": 79,
+      "sample_session_ids": [
+        "3953080",
+        "3953029",
+        "3953099",
+        "3953113",
+        "3953125"
+      ],
+      "sample_locations": [
+        ":: 809",
+        ":: 115-3",
+        "Country Inn & Suites Myrtle Beach",
+        ":: Holly Ridge; Sound Rd",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "american_heart_association_pediatric_advanced_life_support_pals_provider_heartco",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AHA - BLS - Become an American Heart Association Instructor <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_course": "aha bls become an american heart association instructor",
+      "count": 347,
+      "earliest_start_datetime": "2020-11-18T10:00:00-04:00",
+      "latest_start_datetime": "2026-01-26T10:00:00-04:00",
+      "future_count": 0,
+      "past_count": 347,
+      "total_students": 119,
+      "sample_session_ids": [
+        "4279491",
+        "4347182",
+        "4347183",
+        "4387576",
+        "4470992"
+      ],
+      "sample_locations": [
+        ":: 115-3",
+        ":: Holly Ridge; Sound Rd",
+        ":: Wilmington; Shipyard Blvd",
+        "CHVFD",
+        "SCFD #25 <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/SCFD.png\" style=\"width: 40px;\"></img>"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_bls_become_an_american_heart_association_instructor",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "American Red Cross Advanced Life Support (ALS) - Blended Learning <br><i>Complete online training, then attend in-person skills testing</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" width=\"18\" alt=\"ARC\" title=\"American Red Cross ALS Blended\" name=\"248290\" longdesc=\"r:248290|t:ARC_ALS_BLENDED|cb:ARC|src:EW|p:290|d:BL\">",
+      "normalized_course": "american red cross advanced life support als blended learning complete online training then attend in person skills testing",
+      "count": 305,
+      "earliest_start_datetime": "2023-10-02T16:00:00-04:00",
+      "latest_start_datetime": "2025-07-05T16:00:00-04:00",
+      "future_count": 0,
+      "past_count": 305,
+      "total_students": 0,
+      "sample_session_ids": [
+        "8295582",
+        "8629553",
+        "8629555",
+        "8629550",
+        "8629554"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "american_red_cross_advanced_life_support_als_blended_learning_complete_online_tr",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "C̯͍̖̠̦̍ͩ̋́͗A̘͈͎̅̚R̐D̗I̙̪̎O̻̺͍̣̬ͬ͋̓P͑͒̆̑̄A̯͇̔̓͂R̬̙͈̗̭̍̊̉Ť͔̭͍̓̓ͭN͍̰̬͖̈E͍͙ͩ̇̎̃R̗̳̹͎̺S̻ͅ ̣̬̃̊͊̽ͫ",
+      "normalized_course": "c a r d i o p a r t n e r s",
+      "count": 291,
+      "earliest_start_datetime": "2021-01-25T10:30:00-04:00",
+      "latest_start_datetime": "2026-04-15T10:00:00-04:00",
+      "future_count": 0,
+      "past_count": 291,
+      "total_students": 0,
+      "sample_session_ids": [
+        "4691719",
+        "4691731",
+        "4692995",
+        "5428701",
+        "4691779"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/Lowes.png\" style=\"width: 40px;\"></img> N. Myrtle Bch",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/Walgreens.png\" style=\"width: 20px;\"></img> Morrisville / District",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/Walgreens.png\" style=\"width: 20px;\"></img> Leland / Village",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/Lowes.png\" style=\"width: 40px;\"></img> Hope Mills",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/Walgreens.png\" style=\"width: 20px;\"></img> Fairmont"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "c_a_r_d_i_o_p_a_r_t_n_e_r_s",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "ARC Adult | Pediatric First Aid CPR AED - In-person <br><i>Full certification for adults, children, and infants</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" width=\"18\" alt=\"ARC\" title=\"ARC Adult and Pediatric First Aid CPR AED\" name=\"369209\" longdesc=\"r:369209|t:ARC_FACPRAED_FULL|cb:ARC|src:EW|p:110|d:ILT\">",
+      "normalized_course": "arc adult pediatric first aid cpr aed in person full certification for adults children and infants",
+      "count": 229,
+      "earliest_start_datetime": "2024-08-03T12:30:00-04:00",
+      "latest_start_datetime": "2025-12-31T10:15:00-04:00",
+      "future_count": 0,
+      "past_count": 229,
+      "total_students": 5,
+      "sample_session_ids": [
+        "9948658",
+        "9948649",
+        "9948622",
+        "9948726",
+        "9948654"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "arc_adult_pediatric_first_aid_cpr_aed_in_person_full_certification_for_adults_ch",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "Take your AHA CPR programs online!",
+      "normalized_course": "take your aha cpr programs online",
+      "count": 223,
+      "earliest_start_datetime": "2020-07-20T18:00:00-04:00",
+      "latest_start_datetime": "2022-12-02T19:00:00-04:00",
+      "future_count": 0,
+      "past_count": 223,
+      "total_students": 32,
+      "sample_session_ids": [
+        "3971114",
+        "4247347",
+        "4423340",
+        "4423371",
+        "4423417"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/may-logo.png\" style=\"width: 100px;\"></img>",
+        ":: 115-3",
+        ":: Wilmington; Shipyard Blvd",
+        ":: Holly Ridge; Sound Rd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "take_your_aha_cpr_programs_online",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "AHA - Heartsaver® CPR AED - <b>Online</b> c̄ In-person Skills <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_course": "aha heartsaver cpr aed online c in person skills",
+      "count": 196,
+      "earliest_start_datetime": "2020-08-21T13:00:00-04:00",
+      "latest_start_datetime": "2023-11-18T18:45:00-04:00",
+      "future_count": 0,
+      "past_count": 196,
+      "total_students": 13,
+      "sample_session_ids": [
+        "4028031",
+        "4028032",
+        "4028033",
+        "4028034",
+        "4028035"
+      ],
+      "sample_locations": [
+        ":: 115-3",
+        ":: Wilmington; Shipyard Blvd",
+        ":: Holly Ridge; Sound Rd",
+        "Jacksonville: Catalyst Church"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_heartsaver_cpr_aed_online_c_in_person_skills",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "ARC BLS Challenge - Renewal for Experienced Providers <br><i>Assessment-only session for experienced providers</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" width=\"18\" alt=\"ARC\" title=\"ARC BLS Challenge\" name=\"444919\" longdesc=\"r:444919|t:ARC_BLS_CHALLENGE_RENEWAL|cb:ARC|src:EW|p:99|d:IP\">",
+      "normalized_course": "arc bls challenge renewal for experienced providers assessment only session for experienced providers",
+      "count": 177,
+      "earliest_start_datetime": "2025-06-02T08:30:00-04:00",
+      "latest_start_datetime": "2025-12-31T12:45:00-04:00",
+      "future_count": 0,
+      "past_count": 177,
+      "total_students": 0,
+      "sample_session_ids": [
+        "11772905",
+        "11772992",
+        "11773041",
+        "11773086",
+        "11772996"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "arc_bls_challenge_renewal_for_experienced_providers_assessment_only_session_for_",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AED Maintenance Program <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/AED.png\" style=\"float:right;width:50px;vertical-align:top;\"><br><i>... an easy-to-understand and even simpler-to-implement plan to get an AED in your facility...</i>",
+      "normalized_course": "aed maintenance program an easy to understand and even simpler to implement plan to get an aed in your facility",
+      "count": 147,
+      "earliest_start_datetime": "2021-04-15T09:30:00-04:00",
+      "latest_start_datetime": "2025-05-28T11:00:00-04:00",
+      "future_count": 0,
+      "past_count": 147,
+      "total_students": 0,
+      "sample_session_ids": [
+        "4780503",
+        "7183651",
+        "7870597",
+        "7908972",
+        "7909056"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/GRC.png \" style=\"width: 125px;\"></img>",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BalfourBe.png\" style=\"width: 100px;\"></img><br>Rincon",
+        "Ogden Park",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HomeDepot.png\" style=\"width: 40px;\"></img> Murrells Inlet, SC",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HomeDepot.png\" style=\"width: 40px;\"></img> Myrtle Beach"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aed_maintenance_program_an_easy_to_understand_and_even_simpler_to_implement_plan",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "HSI BLS and Adult First Aid | Blended Learning <br><i>Online coursework with in-person skills testing</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" width=\"18\" alt=\"HSI\" title=\"HSI BLS and Adult First Aid | Blended Learning\" name=\"445670\" longdesc=\"r:445670|t:HSI_BLS_ADULT_FA_BLENDED|cb:HSI|src:EW|p:90|d:BL\">",
+      "normalized_course": "hsi bls and adult first aid blended learning online coursework with in person skills testing",
+      "count": 129,
+      "earliest_start_datetime": "2025-06-02T17:45:00-04:00",
+      "latest_start_datetime": "2026-05-01T11:45:00-04:00",
+      "future_count": 0,
+      "past_count": 129,
+      "total_students": 14,
+      "sample_session_ids": [
+        "11799544",
+        "11799556",
+        "11799575",
+        "11799340",
+        "11799604"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd",
+        ":: Holly Ridge; Sound Rd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_bls_and_adult_first_aid_blended_learning_online_coursework_with_in_person_sk",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "Heartsaver® First Aid (No CPR AED) - <b>Online</b> c̄ In-person Skills [AHA]",
+      "normalized_course": "heartsaver first aid no cpr aed online c in person skills aha",
+      "count": 124,
+      "earliest_start_datetime": "2020-04-01T11:00:00-04:00",
+      "latest_start_datetime": "2023-11-06T18:00:00-04:00",
+      "future_count": 0,
+      "past_count": 124,
+      "total_students": 15,
+      "sample_session_ids": [
+        "3740043",
+        "4479709",
+        "4524431",
+        "5466961",
+        "5485084"
+      ],
+      "sample_locations": [
+        ":: 115-3",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "heartsaver_first_aid_no_cpr_aed_online_c_in_person_skills_aha",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "HSI Adult First Aid CPR AED - In-Person <br><i>Instructor-led classroom training for workplace certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" width=\"18\" alt=\"HSI\" title=\"HSI Adult First Aid CPR AED In Person\" name=\"374378\" longdesc=\"r:374378|t:HSI_FA_CPR_IP|cb:HSI|src:EW|p:90|d:IP\">",
+      "normalized_course": "hsi adult first aid cpr aed in person instructor led classroom training for workplace certification",
+      "count": 108,
+      "earliest_start_datetime": "2023-08-29T08:00:00-04:00",
+      "latest_start_datetime": "2025-12-31T10:15:00-04:00",
+      "future_count": 0,
+      "past_count": 108,
+      "total_students": 30,
+      "sample_session_ids": [
+        "8381082",
+        "10005545",
+        "10012311",
+        "10005558",
+        "10012312"
+      ],
+      "sample_locations": [
+        "Brookfield, 109 Pier Master Pt, Wilm",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/SSDC.jpg\" style=\"width: 75px;\"></img><br>3825 Wisconsin Ave, DC",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BM.png\" style=\"width: 125px;\"></img><br>5613 Barbados Blvd",
+        ":: Wilmington; Shipyard Blvd",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/bsh.png\" style=\"width: 150px;\"></img><br>5710 Oleander Dr #100"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_adult_first_aid_cpr_aed_in_person_instructor_led_classroom_training_for_work",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "BLS Provider (NHCSO)",
+      "normalized_course": "bls provider nhcso",
+      "count": 89,
+      "earliest_start_datetime": "2022-03-29T13:00:00-04:00",
+      "latest_start_datetime": "2026-04-29T13:00:00-04:00",
+      "future_count": 0,
+      "past_count": 89,
+      "total_students": 1099,
+      "sample_session_ids": [
+        "6209902",
+        "6207503",
+        "6218505",
+        "6250887",
+        "6250890"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/cfcc.png \" style=\"width: 125px;\"></img><br>North Campus",
+        "NHCSO",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "bls_provider_nhcso",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "z<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Japan_road_sign_302.png\" width=\"75px\"> Personal Event - Not Availible",
+      "normalized_course": "z personal event not availible",
+      "count": 85,
+      "earliest_start_datetime": "2021-09-26T14:00:00-04:00",
+      "latest_start_datetime": "2026-03-31T09:30:00-04:00",
+      "future_count": 0,
+      "past_count": 85,
+      "total_students": 0,
+      "sample_session_ids": [
+        "5222914",
+        "7238916",
+        "7304598",
+        "7311790",
+        "7459357"
+      ],
+      "sample_locations": [
+        "___TBD___",
+        ":: 809",
+        ":: Wilmington; Shipyard Blvd",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/REZ.jpg\" style=\"width:150px;\"></img>Residence",
+        "Ogden Park"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "z_personal_event_not_availible",
+      "suggested_status": "likely_custom_or_corporate"
+    },
+    {
+      "raw_course": "HSI Adult First Aid CPR AED - Blended <br><i>Online course + in-person skills session for workplace certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" width=\"18\" alt=\"HSI\" title=\"HSI Adult First Aid CPR AED Blended\" name=\"371954\" longdesc=\"r:371954|t:HSI_FA_CPR_BL|cb:HSI|src:EW|p:90|d:BL\">",
+      "normalized_course": "hsi adult first aid cpr aed blended online course in person skills session for workplace certification",
+      "count": 72,
+      "earliest_start_datetime": "2023-08-10T09:00:00-04:00",
+      "latest_start_datetime": "2025-12-17T19:30:00-04:00",
+      "future_count": 0,
+      "past_count": 72,
+      "total_students": 5,
+      "sample_session_ids": [
+        "8253674",
+        "8256125",
+        "8256140",
+        "8256133",
+        "8256142"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/FSoW.jpg\" style=\"width:75px;\"></img>",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/SSDC.jpg\" style=\"width: 75px;\"></img><br>3825 Wisconsin Ave, DC",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_adult_first_aid_cpr_aed_blended_online_course_in_person_skills_session_for_w",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "HSI BLS Challenge - Renewal for Experienced Providers <br><i>Assessment-only session for experienced providers ready to test out</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" width=\"18\" alt=\"HSI\" title=\"HSI BLS Challenge\" name=\"463743\" longdesc=\"r:463743|t:HSI_BLS_CHALLENGE_RENEWAL|cb:HSI|src:EW|p:80|d:IP\">",
+      "normalized_course": "hsi bls challenge renewal for experienced providers assessment only session for experienced providers ready to test out",
+      "count": 38,
+      "earliest_start_datetime": "2025-11-01T08:30:00-04:00",
+      "latest_start_datetime": "2025-12-31T12:45:00-04:00",
+      "future_count": 0,
+      "past_count": 38,
+      "total_students": 0,
+      "sample_session_ids": [
+        "12474141",
+        "12474108",
+        "12474075",
+        "12474135",
+        "12474168"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_bls_challenge_renewal_for_experienced_providers_assessment_only_session_for_",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "HSI Pediatric First Aid CPR AED - Blended <br><i>Online course + in-person skills session for childcare and caregivers</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" width=\"18\" alt=\"HSI\" title=\"HSI Pediatric First Aid CPR AED Blended\" name=\"449422\" longdesc=\"r:449422|t:HSI_PED_FA_CPR_BL|cb:HSI|src:EW|p:80|d:BL\">",
+      "normalized_course": "hsi pediatric first aid cpr aed blended online course in person skills session for childcare and caregivers",
+      "count": 34,
+      "earliest_start_datetime": "2025-07-19T17:00:00-04:00",
+      "latest_start_datetime": "2025-12-17T18:45:00-04:00",
+      "future_count": 0,
+      "past_count": 34,
+      "total_students": 1,
+      "sample_session_ids": [
+        "11930598",
+        "11930596",
+        "11930599",
+        "11930597",
+        "11930604"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_pediatric_first_aid_cpr_aed_blended_online_course_in_person_skills_session_f",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AHA Heartsaver First Aid CPR AED <br><i>In-person training for workplace, OSHA, and general public certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"Heartsaver First Aid CPR AED\" name=\"355327\" longdesc=\"r:355327|t:AHA_HS_FACPRAED|cb:AHA|src:EW\">",
+      "normalized_course": "aha heartsaver first aid cpr aed in person training for workplace osha and general public certification",
+      "count": 32,
+      "earliest_start_datetime": "2023-03-10T10:00:00-04:00",
+      "latest_start_datetime": "2026-02-27T19:00:00-04:00",
+      "future_count": 0,
+      "past_count": 32,
+      "total_students": 267,
+      "sample_session_ids": [
+        "7853817",
+        "7763887",
+        "8006147",
+        "8006149",
+        "7881541"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/tff.png\" style=\"width: 200px;\"></img>",
+        "SCFD #25 <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/SCFD.png\" style=\"width: 40px;\"></img>",
+        "River Run Clubhouse",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/ADR.png\" style=\"width: 40px;\"></img>&nbsp;&nbsp;A•D•R F-R",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_heartsaver_first_aid_cpr_aed_in_person_training_for_workplace_osha_and_gener",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "HSI Adult First Aid CPR AED - In-person <br><i>Traditional classroom training for workplace and general certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" width=\"18\" alt=\"HSI\" title=\"HSI Adult First Aid CPR AED In-person\" name=\"422270\" longdesc=\"r:422270|t:HSI_FACPRAED_ADULT|cb:HSI|src:EW|p:80|d:ILT\">",
+      "normalized_course": "hsi adult first aid cpr aed in person traditional classroom training for workplace and general certification",
+      "count": 21,
+      "earliest_start_datetime": "2024-10-24T12:00:00-04:00",
+      "latest_start_datetime": "2026-02-24T09:00:00-04:00",
+      "future_count": 0,
+      "past_count": 21,
+      "total_students": 112,
+      "sample_session_ids": [
+        "10560115",
+        "10679057",
+        "9950050",
+        "11091786",
+        "11061876"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/SNP.jpg \" style=\"width: 200px;\"></img><br>5320 U.S. Highway 421 N.",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/FUF.png\" style=\"width: 100px;\"></img><br> 715 Greenfield, Wilm",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/CMC.png \" style=\"width: 150px;\"></img><br>4008 Comfort Lane, Durham",
+        "Flores Welding",
+        "___TBD___"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_adult_first_aid_cpr_aed_in_person_traditional_classroom_training_for_workpla",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AHA - Heartsaver® Pediatric First Aid / CPR / AED <b>In-person</b><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\"><br><span style=\"color:#D32F2F; font-size:85%; font-weight:bold; font-style:italic;\"> ✔ Fulfills the CPR/First Aid component of NC DCDEE (10A NCAC 09 .1102); additional NC trainings required for full compliance<br> ✔ Fulfills the CPR/First Aid requirement in CT OEC (Sec. 19a-79-4a); center policies/modules may apply </span>",
+      "normalized_course": "aha heartsaver pediatric first aid cpr aed in person fulfills the cpr first aid component of nc dcdee 10a ncac 09 1102 additional nc trainings required for full compliance fulfills the cpr first aid requirement in ct oec sec 19a 79 4a center policies modules may apply",
+      "count": 21,
+      "earliest_start_datetime": "2023-02-13T17:30:00-04:00",
+      "latest_start_datetime": "2026-02-23T13:45:00-04:00",
+      "future_count": 0,
+      "past_count": 21,
+      "total_students": 92,
+      "sample_session_ids": [
+        "7657438",
+        "7694353",
+        "7825663",
+        "7832897",
+        "7694411"
+      ],
+      "sample_locations": [
+        ":: CT - Oak Ridge Dr, Colchester",
+        ":: Colchester Town Hall",
+        ":: CT - Colchester",
+        "Quality Care; Salem, CT",
+        "Enchanted Jungle Daycare, 67 Hayward Ave, Colchester, CT 06415"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_in_person_fulfills_the_cpr_first_aid_",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "Heartsaver® TOTAL In-Person",
+      "normalized_course": "heartsaver total in person",
+      "count": 17,
+      "earliest_start_datetime": "2022-12-03T12:00:00-04:00",
+      "latest_start_datetime": "2023-01-05T19:00:00-04:00",
+      "future_count": 0,
+      "past_count": 17,
+      "total_students": 3,
+      "sample_session_ids": [
+        "7273067",
+        "7272994",
+        "7273054",
+        "7272962",
+        "7273020"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd",
+        ":: Holly Ridge; Sound Rd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "heartsaver_total_in_person",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "BLS Provider (On-site; Group; Fully In-person) <div style=\"font-weight: normal; font-size: 85%; color: gray;\"> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; horizontal-align:left;\"></img> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" style=\"width:25px; horizontal-align:left;\"></img> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" style=\"width:25px; horizontal-align:left;\"></img> <br> <i>Need a reliable CPR class for your team? 910 CPR brings expert AHA, HSI, or ARC BLS training directly to your office. Flexible scheduling, simple pricing, and a proven track record of reliability. We show up—on time, every time. Contact us today!</i> </div>",
+      "normalized_course": "bls provider on site group fully in person need a reliable cpr class for your team 910 cpr brings expert aha hsi or arc bls training directly to your office flexible scheduling simple pricing and a proven track record of reliability we show up on time every time contact us today",
+      "count": 16,
+      "earliest_start_datetime": "2024-03-05T20:00:00-04:00",
+      "latest_start_datetime": "2025-01-18T13:30:00-04:00",
+      "future_count": 0,
+      "past_count": 16,
+      "total_students": 159,
+      "sample_session_ids": [
+        "9240508",
+        "9346010",
+        "9380068",
+        "9684172",
+        "9846798"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/cd.png \" style=\"width: 125px;\"></img><br>Wilmington / The Pointe",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/RFD.png\" style=\"width: 75px;\"></img><br>Gallery Park",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/CSC.png\" style=\"width: 75px;\"></img><br>&nbsp;&nbsp;Wilmington",
+        "Dental Care at Leland Town Center",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BA.png\" style=\"width:75px;\"></img><br> Mayfair"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "bls_provider_on_site_group_fully_in_person_need_a_reliable_cpr_class_for_your_te",
+      "suggested_status": "likely_custom_or_corporate"
+    },
+    {
+      "raw_course": "AHA - RCP para Familiares y Amigos<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_course": "aha rcp para familiares y amigos",
+      "count": 13,
+      "earliest_start_datetime": "2020-10-18T13:00:00-04:00",
+      "latest_start_datetime": "2020-11-14T13:00:00-04:00",
+      "future_count": 0,
+      "past_count": 13,
+      "total_students": 2,
+      "sample_session_ids": [
+        "4123133",
+        "4146397",
+        "4146398",
+        "4146400",
+        "4146399"
+      ],
+      "sample_locations": [
+        "Wallace Woman’s Club",
+        ":: Long Leaf Park"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_rcp_para_familiares_y_amigos",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "AHA - ACLS - Become an American Heart Association Instructor <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_course": "aha acls become an american heart association instructor",
+      "count": 8,
+      "earliest_start_datetime": "2023-10-04T04:00:00-04:00",
+      "latest_start_datetime": "2025-04-07T08:00:00-04:00",
+      "future_count": 0,
+      "past_count": 8,
+      "total_students": 11,
+      "sample_session_ids": [
+        "8872830",
+        "9176093",
+        "9602617",
+        "9690243",
+        "9887885"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd",
+        ":: Holly Ridge; Sound Rd",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/cfcc.png \" style=\"width: 125px;\"></img><br>North Campus"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_acls_become_an_american_heart_association_instructor",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AHA Heartsaver K-12 - In-person 🚌 <br><i>Instructor-led CPR AED and First Aid training for schools and students</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"Heartsaver K-12 In-person\" name=\"396266\" longdesc=\"r:396266|t:AHA_HS_K12|cb:AHA|src:EW|p:15|d:ILT\">",
+      "normalized_course": "aha heartsaver k 12 in person instructor led cpr aed and first aid training for schools and students",
+      "count": 6,
+      "earliest_start_datetime": "2024-03-08T13:00:00-04:00",
+      "latest_start_datetime": "2024-08-15T12:30:00-04:00",
+      "future_count": 0,
+      "past_count": 6,
+      "total_students": 17,
+      "sample_session_ids": [
+        "9387329",
+        "9387384",
+        "9433615",
+        "9698649",
+        "9706887"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BEA.png\" style=\"width: 75px;\"></img>Emereau: Bladen Charter",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_heartsaver_k_12_in_person_instructor_led_cpr_aed_and_first_aid_training_for_",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "HSI Adult/Child/Infant CPR AED<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" style=\"width:25px; float:left; margin-right:5px;\"><br><i>Traditional Classroom</i>",
+      "normalized_course": "hsi adult child infant cpr aed traditional classroom",
+      "count": 5,
+      "earliest_start_datetime": "2023-08-30T08:00:00-04:00",
+      "latest_start_datetime": "2025-03-05T18:00:00-04:00",
+      "future_count": 0,
+      "past_count": 5,
+      "total_students": 16,
+      "sample_session_ids": [
+        "8372946",
+        "9439767",
+        "9660586",
+        "11045494",
+        "10658982"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HCD.png\" style=\"width: 150px;\"></img><br>17 Three Sisters Rd, New York",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/ATI.png\" style=\"width: 150px;\"></img><br>1041 Goodworth, Apex",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/if.jpg\" style=\"width: 125px;\"></img><br>Wilmington",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_adult_child_infant_cpr_aed_traditional_classroom",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "WALL PRINTING",
+      "normalized_course": "wall printing",
+      "count": 5,
+      "earliest_start_datetime": "2021-03-24T12:00:00-04:00",
+      "latest_start_datetime": "2022-12-19T11:00:00-04:00",
+      "future_count": 0,
+      "past_count": 5,
+      "total_students": 0,
+      "sample_session_ids": [
+        "4704780",
+        "4744626",
+        "4744628",
+        "5609226",
+        "7311788"
+      ],
+      "sample_locations": [
+        "WALL PRINTING",
+        "Paul's Of Oak Island",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "wall_printing",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "Phlebotomy - National Cert Test Prep",
+      "normalized_course": "phlebotomy national cert test prep",
+      "count": 5,
+      "earliest_start_datetime": "2021-04-28T09:00:00-04:00",
+      "latest_start_datetime": "2021-06-02T13:00:00-04:00",
+      "future_count": 0,
+      "past_count": 5,
+      "total_students": 1,
+      "sample_session_ids": [
+        "4780536",
+        "4780538",
+        "4780546",
+        "4780540",
+        "4823808"
+      ],
+      "sample_locations": [
+        "4018 PHLEB",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "phlebotomy_national_cert_test_prep",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "HSI Adult/Child/Infant CPR AED | Blended Learning<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" style=\"width:25px; float:left; margin-right:5px;\"><br><i>Blended Learning with In-Person, Instructor-Led Skills Session</i>",
+      "normalized_course": "hsi adult child infant cpr aed blended learning blended learning with in person instructor led skills session",
+      "count": 4,
+      "earliest_start_datetime": "2023-08-31T09:00:00-04:00",
+      "latest_start_datetime": "2025-07-12T11:45:00-04:00",
+      "future_count": 0,
+      "past_count": 4,
+      "total_students": 0,
+      "sample_session_ids": [
+        "8372949",
+        "11820904",
+        "11820906",
+        "11820916"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/OLMC.png\" style=\"width: 200px;\"></img><br>Doylestown, PA",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_adult_child_infant_cpr_aed_blended_learning_blended_learning_with_in_person_",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AHA - PALS Provider - Online or Skills Session - Initial or Renewal",
+      "normalized_course": "aha pals provider online or skills session initial or renewal",
+      "count": 4,
+      "earliest_start_datetime": "2025-01-08T14:00:00-04:00",
+      "latest_start_datetime": "2025-01-27T14:30:00-04:00",
+      "future_count": 0,
+      "past_count": 4,
+      "total_students": 1,
+      "sample_session_ids": [
+        "10833662",
+        "10833661",
+        "10833663",
+        "10833670"
+      ],
+      "sample_locations": [
+        "NC - Holly Ridge: 325 Sound Rd, Unit 204; 910CPR's Office @ Parkhill Village (across the street from Holly Ridge Community Center)"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_pals_provider_online_or_skills_session_initial_or_renewal",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AED Maintenance Program<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/AED.png\" style=\"float:right;width:50px;vertical-align:top;\"><br><i>... an easy-to-understand and even simpler-to-implement plan to get an AED in your facility...</i>",
+      "normalized_course": "aed maintenance program an easy to understand and even simpler to implement plan to get an aed in your facility",
+      "count": 4,
+      "earliest_start_datetime": "2024-12-09T13:00:00-04:00",
+      "latest_start_datetime": "2024-12-09T13:30:00-04:00",
+      "future_count": 0,
+      "past_count": 4,
+      "total_students": 0,
+      "sample_session_ids": [
+        "10889311",
+        "10890168",
+        "10884785",
+        "10890184"
+      ],
+      "sample_locations": [
+        "Williams Love Grove Baptist Church - Herbert Estelle <hestelle@yahoo.com>",
+        "Northchase Family Dentistry",
+        "Figure Eight Island Yacht Club",
+        "St. Stanislaus Catholic Church"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aed_maintenance_program_an_easy_to_understand_and_even_simpler_to_implement_plan",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "AHA - PALS - Become an American Heart Association Instructor <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_course": "aha pals become an american heart association instructor",
+      "count": 4,
+      "earliest_start_datetime": "2023-08-14T01:00:00-04:00",
+      "latest_start_datetime": "2024-07-12T12:00:00-04:00",
+      "future_count": 0,
+      "past_count": 4,
+      "total_students": 5,
+      "sample_session_ids": [
+        "8318156",
+        "9583787",
+        "9690245",
+        "9887884"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd",
+        ":: Holly Ridge; Sound Rd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_pals_become_an_american_heart_association_instructor",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "HSI Adult First Aid | Blended Learning <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" style=\"width:25px !important; float:left !important; margin-right:5px !important; vertical-align: middle !important;\"> <div style=\"font-weight: normal !important; font-size: 85% !important; color: gray !important; clear: both !important;\"> <i>Online Coursework with In-Person Skills Testing</i> </div>",
+      "normalized_course": "hsi adult first aid blended learning online coursework with in person skills testing",
+      "count": 3,
+      "earliest_start_datetime": "2026-01-19T12:45:00-04:00",
+      "latest_start_datetime": "2026-04-27T17:30:00-04:00",
+      "future_count": 0,
+      "past_count": 3,
+      "total_students": 3,
+      "sample_session_ids": [
+        "12776078",
+        "13188552",
+        "12775737"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_adult_first_aid_blended_learning_online_coursework_with_in_person_skills_tes",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AHA Heartsaver® Primeros Auxilios con RCP y DEA - Blended <br><i>Curso en línea + sesión práctica presencial (en español)</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA Heartsaver Primeros Auxilios RCP DEA Español Blended\" name=\"438230\" longdesc=\"r:438230|t:AHA_HS_FA_CPR_ES_BL|cb:AHA|src:EW|p:95|d:BL\">",
+      "normalized_course": "aha heartsaver primeros auxilios con rcp y dea blended curso en l nea sesi n pr ctica presencial en espa ol",
+      "count": 3,
+      "earliest_start_datetime": "2025-04-04T08:30:00-04:00",
+      "latest_start_datetime": "2025-05-02T08:30:00-04:00",
+      "future_count": 0,
+      "past_count": 3,
+      "total_students": 4,
+      "sample_session_ids": [
+        "11440652",
+        "10658578",
+        "11603459"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/AGC.png\" style=\"width: 100px;\"></img><br>445 Cornwallis Rd, Teachey",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/REZ.jpg\" style=\"width:150px;\"></img>Residence",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_heartsaver_primeros_auxilios_con_rcp_y_dea_blended_curso_en_l_nea_sesi_n_pr_",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "Heartsaver First Aid CPR AED for K-12 Schools [AHA]",
+      "normalized_course": "heartsaver first aid cpr aed for k 12 schools aha",
+      "count": 3,
+      "earliest_start_datetime": "2020-06-19T07:00:00-04:00",
+      "latest_start_datetime": "2023-11-08T10:30:00-04:00",
+      "future_count": 0,
+      "past_count": 3,
+      "total_students": 10,
+      "sample_session_ids": [
+        "3769586",
+        "3897928",
+        "8790776"
+      ],
+      "sample_locations": [
+        ":: B on the B",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BEA.png\" style=\"width: 75px;\"></img>Emereau: Bladen Charter"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "heartsaver_first_aid_cpr_aed_for_k_12_schools_aha",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "AHA - Heartsaver® - Become an American Heart Association Instructor <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\"> <!-- <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/Ihpin.png\" style=\"float:right;width: 100px;vertical-align:top;\"><div style=\"font-weight: normal; font-size: 85%; color: gray; clear: both;\"> <i>Teach Heartsaver courses at your place of employment or independently.</i><br><br> <b>Teach all Heartsaver programs, including:</b> <ul style=\"list-style-type:circle; margin-left: 15px;\"> <li>Heartsaver CPR/AED</li> <li>Heartsaver First Aid CPR/AED</li> <li>Heartsaver Pediatric First Aid CPR/AED</li> <li>Heartsaver for K–12 Schools</li> <li>Heartsaver First Aid Only</li> <li>Heartsaver Bloodborne Pathogens</li> </ul> </div> -->",
+      "normalized_course": "aha heartsaver become an american heart association instructor teach heartsaver courses at your place of employment or independently teach all heartsaver programs including heartsaver cpr aed heartsaver first aid cpr aed heartsaver pediatric first aid cpr aed heartsaver for k 12 schools heartsaver first aid only heartsaver bloodborne pathogens",
+      "count": 2,
+      "earliest_start_datetime": "2023-12-18T10:30:00-04:00",
+      "latest_start_datetime": "2025-12-29T10:00:00-04:00",
+      "future_count": 0,
+      "past_count": 2,
+      "total_students": 2,
+      "sample_session_ids": [
+        "8955334",
+        "12681832"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_heartsaver_become_an_american_heart_association_instructor_teach_heartsaver_",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "HSI Adult First Aid<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" style=\"width:25px; float:left; margin-right:5px;\"><br><i>Traditional Classroom | No CPR</i>",
+      "normalized_course": "hsi adult first aid traditional classroom no cpr",
+      "count": 2,
+      "earliest_start_datetime": "2025-08-29T08:00:00-04:00",
+      "latest_start_datetime": "2025-11-08T12:00:00-04:00",
+      "future_count": 0,
+      "past_count": 2,
+      "total_students": 6,
+      "sample_session_ids": [
+        "12019661",
+        "12396565"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BA.png\" style=\"width:75px;\"></img><br> Mayfair",
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BA.png\" style=\"width:75px;\"></img><br> New Centre"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_adult_first_aid_traditional_classroom_no_cpr",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AHA - ACLS Instructor Renewal <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_course": "aha acls instructor renewal",
+      "count": 2,
+      "earliest_start_datetime": "2025-08-01T00:00:00-04:00",
+      "latest_start_datetime": "2025-11-01T09:00:00-04:00",
+      "future_count": 0,
+      "past_count": 2,
+      "total_students": 1,
+      "sample_session_ids": [
+        "10009271",
+        "12351862"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd",
+        ":: Burgaw; 111 S Wright St"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_acls_instructor_renewal",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AHA - BLS, ACLS & PALS - Become an American Heart Association Instructor <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_course": "aha bls acls pals become an american heart association instructor",
+      "count": 2,
+      "earliest_start_datetime": "2025-04-07T08:00:00-04:00",
+      "latest_start_datetime": "2025-07-17T06:00:00-04:00",
+      "future_count": 0,
+      "past_count": 2,
+      "total_students": 5,
+      "sample_session_ids": [
+        "11384576",
+        "11903367"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/cfcc.png \" style=\"width: 125px;\"></img><br>North Campus",
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_bls_acls_pals_become_an_american_heart_association_instructor",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "CPR / AED / First Aid (On-site; Group Class) <div style=\"font-weight: normal; font-size: 85%; color: gray;\"> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; horizontal-align:left;\"></img> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" style=\"width:25px; horizontal-align:left;\"></img> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" style=\"width:25px; horizontal-align:left;\"></img> <br> <i> Need a reliable CPR class for your team? 910 CPR brings expert AHA, HSI, or ARC BLS training directly to your office. Flexible scheduling, simple pricing, and a proven track record of reliability. We show up—on time, every time. Contact us today! </i> </div>",
+      "normalized_course": "cpr aed first aid on site group class need a reliable cpr class for your team 910 cpr brings expert aha hsi or arc bls training directly to your office flexible scheduling simple pricing and a proven track record of reliability we show up on time every time contact us today",
+      "count": 2,
+      "earliest_start_datetime": "2024-08-20T10:00:00-04:00",
+      "latest_start_datetime": "2024-09-24T15:00:00-04:00",
+      "future_count": 0,
+      "past_count": 2,
+      "total_students": 13,
+      "sample_session_ids": [
+        "10066507",
+        "10361314"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/ChCC.png\" style=\"width: 125px;\"></img><br>4555 Fairview Dr. Wilm",
+        "Brothers' Steel"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "cpr_aed_first_aid_on_site_group_class_need_a_reliable_cpr_class_for_your_team_91",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "🏄 AHA - BLS Provider - Online Class with in-Person Skill Session - Initial or Renewal",
+      "normalized_course": "aha bls provider online class with in person skill session initial or renewal",
+      "count": 2,
+      "earliest_start_datetime": "2023-10-02T03:00:00-04:00",
+      "latest_start_datetime": "2024-08-10T09:00:00-04:00",
+      "future_count": 0,
+      "past_count": 2,
+      "total_students": 0,
+      "sample_session_ids": [
+        "10106333",
+        "10036813"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd",
+        ":: 808CPR"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_bls_provider_online_class_with_in_person_skill_session_initial_or_renewal",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "Phlebotomy Technician Program (80 Hr - 9 Weeks - M,T,W)",
+      "normalized_course": "phlebotomy technician program 80 hr 9 weeks m t w",
+      "count": 2,
+      "earliest_start_datetime": "2021-03-15T18:00:00-04:00",
+      "latest_start_datetime": "2021-05-17T17:00:00-04:00",
+      "future_count": 0,
+      "past_count": 2,
+      "total_students": 3,
+      "sample_session_ids": [
+        "4678669",
+        "4780571"
+      ],
+      "sample_locations": [
+        "4018 PHLEB"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "phlebotomy_technician_program_80_hr_9_weeks_m_t_w",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "Phlebotomy Technician Program (80 Hr - 13 Weeks - Saturday)",
+      "normalized_course": "phlebotomy technician program 80 hr 13 weeks saturday",
+      "count": 2,
+      "earliest_start_datetime": "2020-04-25T09:00:00-04:00",
+      "latest_start_datetime": "2021-05-01T09:00:00-04:00",
+      "future_count": 0,
+      "past_count": 2,
+      "total_students": 0,
+      "sample_session_ids": [
+        "4780529",
+        "4780558"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd",
+        "4018 PHLEB"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "phlebotomy_technician_program_80_hr_13_weeks_saturday",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "ARC - Adult and Pediatric CPR/AED Skills Session",
+      "normalized_course": "arc adult and pediatric cpr aed skills session",
+      "count": 1,
+      "earliest_start_datetime": "2026-03-27T17:45:00-04:00",
+      "latest_start_datetime": "2026-03-27T17:45:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 1,
+      "sample_session_ids": [
+        "13188702"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "arc_adult_and_pediatric_cpr_aed_skills_session",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "Infant CPR & Choking Relief Class",
+      "normalized_course": "infant cpr choking relief class",
+      "count": 1,
+      "earliest_start_datetime": "2025-11-15T11:00:00-04:00",
+      "latest_start_datetime": "2025-11-15T11:00:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 5,
+      "sample_session_ids": [
+        "12487239"
+      ],
+      "sample_locations": [
+        ":: Burgaw; 111 S Wright St"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "infant_cpr_choking_relief_class",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "STOP THE BLEED® <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/STB/STB_3MIN.jpg\" style=\"float:right;width:150px;vertical-align:top;\">",
+      "normalized_course": "stop the bleed",
+      "count": 1,
+      "earliest_start_datetime": "2025-09-27T09:30:00-04:00",
+      "latest_start_datetime": "2025-09-27T09:30:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 0,
+      "sample_session_ids": [
+        "12047628"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/ChCC.png\" style=\"width: 125px;\"></img><br>4555 Fairview Dr. Wilm"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "stop_the_bleed",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "HSI Adult CPR AED<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_HSI.png\" style=\"width:25px; float:left; margin-right:5px;\"><br><i>Traditional Classroom</i>",
+      "normalized_course": "hsi adult cpr aed traditional classroom",
+      "count": 1,
+      "earliest_start_datetime": "2025-08-07T07:00:00-04:00",
+      "latest_start_datetime": "2025-08-07T07:00:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 0,
+      "sample_session_ids": [
+        "11929388"
+      ],
+      "sample_locations": [
+        "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/PWH.jpg\" style=\"width: 100px;\"></img>"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "hsi_adult_cpr_aed_traditional_classroom",
+      "suggested_status": "needs_human_review"
+    },
+    {
+      "raw_course": "AHA - Heartsaver® - Become an American Heart Association Instructor",
+      "normalized_course": "aha heartsaver become an american heart association instructor",
+      "count": 1,
+      "earliest_start_datetime": "2024-12-02T10:00:00-04:00",
+      "latest_start_datetime": "2024-12-02T10:00:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 1,
+      "sample_session_ids": [
+        "10809812"
+      ],
+      "sample_locations": [
+        "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_heartsaver_become_an_american_heart_association_instructor",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "Cardiac and Pulmonary Dissection with 12-Lead ECG <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HLD.png\" width=\"75px\">",
+      "normalized_course": "cardiac and pulmonary dissection with 12 lead ecg",
+      "count": 1,
+      "earliest_start_datetime": "2024-08-17T09:00:00-04:00",
+      "latest_start_datetime": "2024-08-17T09:00:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 0,
+      "sample_session_ids": [
+        "9665932"
+      ],
+      "sample_locations": [],
+      "sample_instructors": [],
+      "suggested_course_key": "cardiac_and_pulmonary_dissection_with_12_lead_ecg",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "ARC - Adult and Pediatric First Aid/CPR/AED Skills Session-r.25",
+      "normalized_course": "arc adult and pediatric first aid cpr aed skills session r 25",
+      "count": 1,
+      "earliest_start_datetime": "2024-08-17T00:15:00-04:00",
+      "latest_start_datetime": "2024-08-17T00:15:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 0,
+      "sample_session_ids": [
+        "9809485"
+      ],
+      "sample_locations": [
+        "___TBD___"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "arc_adult_and_pediatric_first_aid_cpr_aed_skills_session_r_25",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "AHA Instructor Courses <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\"> <div style=\"font-weight: normal; font-size: 85%; color: gray;\"> <i>A la carte instructor program – choose your desired AHA Instructor certification and receive all required materials to start teaching.</i> </div>",
+      "normalized_course": "aha instructor courses a la carte instructor program choose your desired aha instructor certification and receive all required materials to start teaching",
+      "count": 1,
+      "earliest_start_datetime": "2024-08-10T10:00:00-04:00",
+      "latest_start_datetime": "2024-08-10T10:00:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 0,
+      "sample_session_ids": [
+        "10036783"
+      ],
+      "sample_locations": [
+        ":: 808CPR"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "aha_instructor_courses_a_la_carte_instructor_program_choose_your_desired_aha_ins",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "American Red Cross Advanced Life Support (ALS) - In-person <br><i>Instructor-led classroom for new or expired providers</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" width=\"18\" alt=\"ARC\" title=\"American Red Cross ALS\" name=\"285820\" longdesc=\"r:285820|t:ARC_ALS_PROVIDER_INITIAL|cb:ARC|src:EW|p:225|d:IP\">",
+      "normalized_course": "american red cross advanced life support als in person instructor led classroom for new or expired providers",
+      "count": 1,
+      "earliest_start_datetime": "2021-09-12T10:00:00-04:00",
+      "latest_start_datetime": "2021-09-12T10:00:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 1,
+      "sample_session_ids": [
+        "5095081"
+      ],
+      "sample_locations": [
+        ":: Holly Ridge; Sound Rd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "american_red_cross_advanced_life_support_als_in_person_instructor_led_classroom_",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "Phlebotomy Technician Program (80 Hr - 3 Weeks - Mon-Fri)",
+      "normalized_course": "phlebotomy technician program 80 hr 3 weeks mon fri",
+      "count": 1,
+      "earliest_start_datetime": "2021-05-17T09:00:00-04:00",
+      "latest_start_datetime": "2021-05-17T09:00:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 0,
+      "sample_session_ids": [
+        "4780582"
+      ],
+      "sample_locations": [
+        "4018 PHLEB"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "phlebotomy_technician_program_80_hr_3_weeks_mon_fri",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "American Red Cross Pediatric Advanced Life Support (PALS) - Blended Learning (Online + Skills Session) <br><i>Complete online training, then attend an in-person skills session</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" width=\"18\" alt=\"ARC\" title=\"ARC PALS Blended Learning\" name=\"248291\" longdesc=\"r:248291|t:ARC_PALS_BLENDED|cb:ARC|src:EW|p:225|d:BL\">",
+      "normalized_course": "american red cross pediatric advanced life support pals blended learning online skills session complete online training then attend an in person skills session",
+      "count": 1,
+      "earliest_start_datetime": "2021-02-01T13:15:00-04:00",
+      "latest_start_datetime": "2021-02-01T13:15:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 1,
+      "sample_session_ids": [
+        "4568131"
+      ],
+      "sample_locations": [
+        ":: Wilmington; Shipyard Blvd"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "american_red_cross_pediatric_advanced_life_support_pals_blended_learning_online_",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "BLS ASAP! ٩(͡๏̯͡๏)۶<br> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/CPRASAP.png\" style=\"float:right;width:125px;vertical-align:top;\"><br> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizontal-align:left;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_ARC.png\" style=\"width:25px;horizontal-align:left;\"><span style=\"font-weight: normal; font-size: 85%; color: gray;\"> <strong>Need a BLS CPR/AED Certification in the Wilmington area NOW?</strong> Can’t wait for the next scheduled class? No problem!",
+      "normalized_course": "bls asap need a bls cpr aed certification in the wilmington area now can t wait for the next scheduled class no problem",
+      "count": 1,
+      "earliest_start_datetime": "2020-11-14T01:15:00-04:00",
+      "latest_start_datetime": "2020-11-14T01:15:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 0,
+      "sample_session_ids": [
+        "4334334"
+      ],
+      "sample_locations": [
+        ":: 115-3"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "bls_asap_need_a_bls_cpr_aed_certification_in_the_wilmington_area_now_can_t_wait_",
+      "suggested_status": "likely_old_ignore"
+    },
+    {
+      "raw_course": "Heartsaver® First Aid",
+      "normalized_course": "heartsaver first aid",
+      "count": 1,
+      "earliest_start_datetime": "2020-02-03T17:00:00-04:00",
+      "latest_start_datetime": "2020-02-03T17:00:00-04:00",
+      "future_count": 0,
+      "past_count": 1,
+      "total_students": 1,
+      "sample_session_ids": [
+        "3504839"
+      ],
+      "sample_locations": [
+        ":: Merlot Crt"
+      ],
+      "sample_instructors": [],
+      "suggested_course_key": "heartsaver_first_aid",
+      "suggested_status": "likely_old_ignore"
+    }
+  ]
+}

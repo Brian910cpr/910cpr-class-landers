@@ -3,34 +3,40 @@
   "worker": "build_schedule_future",
   "script": "scripts/build_schedule_future.py",
   "status": "done",
-  "last_run": "2026-05-08T00:53:31.795157-04:00",
+  "last_run": "2026-05-09T23:11:49.202814-04:00",
   "current_count": 26042,
   "total_count": 26042,
   "percent_complete": 100.0,
   "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
-  "timestamp": "2026-05-08T00:53:31.795157-04:00",
-  "last_successful_run": "2026-05-08T00:53:31.795157-04:00",
+  "timestamp": "2026-05-09T23:11:49.202814-04:00",
+  "last_successful_run": "2026-05-09T23:11:49.202814-04:00",
   "inputs": [
     "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
-    "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx"
+    "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx",
+    "E:\\GitHub\\910cpr-class-landers\\data\\course_aliases.json",
+    "E:\\GitHub\\910cpr-class-landers\\data\\config\\course_map.json"
   ],
   "outputs": [
-    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json"
+    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
+    "E:\\GitHub\\910cpr-class-landers\\debug\\unmatched_courses.json",
+    "E:\\GitHub\\910cpr-class-landers\\debug\\course_identity_match_report.json"
   ],
   "counts": {
     "sessions_input": 26042,
-    "sessions_output": 1370,
+    "sessions_output": 1362,
     "skipped_missing_start": 0,
-    "skipped_past": 18338,
-    "skipped_orphan": 0,
-    "skipped_unmapped": 6334
+    "skipped_past": 24672,
+    "skipped_orphan": 8,
+    "included_by_legacy_mapping": 1353,
+    "included_by_course_identity_resolver": 9,
+    "skipped_unmapped_after_resolver": 0,
+    "course_identity_unmatched": 5535,
+    "course_identity_needs_review": 5535
   },
   "pages_generated": null,
   "warnings": [
-    "6334 sessions were skipped because course mapping was missing."
+    "8 sessions were skipped because they were not present in the current Class Report."
   ],
   "errors": [],
-  "files_needing_review": [
-    "E:\\GitHub\\910cpr-class-landers\\data\\audit\\unmapped_courses.json"
-  ]
+  "files_needing_review": []
 }

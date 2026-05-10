@@ -1,0 +1,310 @@
+{
+  "schema_version": "1.0",
+  "description": "Legacy Enrollware course-name aliases for stable 910CPR course identity resolution. Review before using aliases to change public copy.",
+  "aliases": [
+    {
+      "legacy_name": "AHA - PALS Provider - In Person - Initial",
+      "normalized_name": "aha pals provider in person initial",
+      "course_key": "aha_pals_provider_in_person_initial",
+      "official_course_name": "AHA PALS Provider - In-Person - Initial",
+      "course_id": "209805",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial <br><i>Instructor-led classroom training for initial or expired PALS certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA PALS In-Person Initial\" name=\"209805\" longdesc=\"r:209805|t:AHA_PALS_INITIAL|cb:AHA|src:EW|p:275|d:IP\">",
+      "normalized_name": "american heart association pediatric advanced life support pals provider in person initial instructor led classroom training for initial or expired pals certification",
+      "course_key": "aha_pals_provider_in_person_initial",
+      "official_course_name": "AHA PALS Provider - In-Person - Initial",
+      "course_id": "209805",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA - BLS Provider - In-person Initial<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/nvt.png\" style=\"float:right;width:125px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+      "normalized_name": "aha bls provider in person initial healthcare professionals first responders medical students workplace safety personnel lifeguards",
+      "course_key": "aha_bls_provider",
+      "official_course_name": "AHA BLS Provider",
+      "course_id": "209806",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA BLS Provider<br><i>Instructor-led classroom (new or expired)</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"16\" alt=\"AHA\" title=\"AHA BLS Provider\" name=\"209806\" longdesc=\"r:209806|t:AHA_BLS_IP_INITIAL|cb:AHA|src:EW|p:75|d:IP\">",
+      "normalized_name": "aha bls provider instructor led classroom new or expired",
+      "course_key": "aha_bls_provider",
+      "official_course_name": "AHA BLS Provider",
+      "course_id": "209806",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA - Heartsaver® First Aid CPR AED - <b>In-person</b> ❤️",
+      "normalized_name": "aha heartsaver first aid cpr aed in person",
+      "course_key": "aha_heartsaver_first_aid_cpr_aed_in_person",
+      "official_course_name": "AHA Heartsaver First Aid CPR AED - In-Person",
+      "course_id": "209809",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA Heartsaver® First Aid CPR AED - In-Person <br><i>Traditional classroom training for workplace and general certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA Heartsaver First Aid CPR AED In-Person\" name=\"209809\" longdesc=\"r:209809|t:AHA_HS_FA_CPR_IP|cb:AHA|src:EW|p:95|d:IP\">",
+      "normalized_name": "aha heartsaver first aid cpr aed in person traditional classroom training for workplace and general certification",
+      "course_key": "aha_heartsaver_first_aid_cpr_aed_in_person",
+      "official_course_name": "AHA Heartsaver First Aid CPR AED - In-Person",
+      "course_id": "209809",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA ACLS Provider - HeartCode (Online + Skills Session) <br><i>Complete online coursework, then schedule in-person skills testing</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA ACLS HeartCode\" name=\"209811\" longdesc=\"r:209811|t:AHA_ACLS_HEARTCODE|cb:AHA|src:EW|p:100|d:BL\">",
+      "normalized_name": "aha acls provider heartcode online skills session complete online coursework then schedule in person skills testing",
+      "course_key": "aha_acls_provider_heartcode_skills_session",
+      "official_course_name": "AHA ACLS Provider HeartCode Skills Session",
+      "course_id": "209811",
+      "certifying_body": "AHA",
+      "delivery_type": "BL",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA - ACLS Provider - Online or Skills Session<div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Perfect for both an Initial Students/first-time or a Renewal for experienced ACLS healthcare providers, including doctors, nurses, paramedics, and critical care staff.</i></div>",
+      "normalized_name": "aha acls provider online or skills session perfect for both an initial students first time or a renewal for experienced acls healthcare providers including doctors nurses paramedics and critical care staff",
+      "course_key": "aha_acls_provider_heartcode_skills_session",
+      "official_course_name": "AHA ACLS Provider HeartCode Skills Session",
+      "course_id": "209811",
+      "certifying_body": "AHA",
+      "delivery_type": "BL",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA ACLS Provider - In-person (Renewal) <br><i>Instructor-led classroom for current ACLS providers</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA ACLS Provider Renewal\" name=\"209818\" longdesc=\"r:209818|t:AHA_ACLS_PROVIDER_RENEWAL|cb:AHA|src:EW|p:225|d:IP\">",
+      "normalized_name": "aha acls provider in person renewal instructor led classroom for current acls providers",
+      "course_key": "aha_acls_provider_in_person_renewal",
+      "official_course_name": "AHA ACLS Provider - In-person (Renewal)",
+      "course_id": "209818",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA  - ACLS Provider Update - In-Person <div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>A renewal for experienced healthcare providers, including doctors, nurses, paramedics, and critical care staff, involved in managing cardiovascular emergencies.</i></div>",
+      "normalized_name": "aha acls provider update in person a renewal for experienced healthcare providers including doctors nurses paramedics and critical care staff involved in managing cardiovascular emergencies",
+      "course_key": "aha_acls_provider_in_person_renewal",
+      "official_course_name": "AHA ACLS Provider - In-person (Renewal)",
+      "course_id": "209818",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA BLS Provider HeartCode Skills <br><i>Blended learning with online course + in-person skills session</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"26\" alt=\"AHA\" title=\"AHA BLS Provider HeartCode Skills\" name=\"210549\" longdesc=\"r:210549|t:AHA_BLS_BL_SKILLS|cb:AHA|src:EW|p:55|d:SS\">",
+      "normalized_name": "aha bls provider heartcode skills blended learning with online course in person skills session",
+      "course_key": "aha_bls_provider_heartcode_skills",
+      "official_course_name": "AHA BLS Provider HeartCode Skills",
+      "course_id": "210549",
+      "certifying_body": "AHA",
+      "delivery_type": "BL",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA - BLS Provider - Online Class with in-Person Skill Session - Initial or Renewal <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+      "normalized_name": "aha bls provider online class with in person skill session initial or renewal healthcare professionals first responders medical students workplace safety personnel lifeguards",
+      "course_key": "aha_bls_provider_heartcode_skills",
+      "official_course_name": "AHA BLS Provider HeartCode Skills",
+      "course_id": "210549",
+      "certifying_body": "AHA",
+      "delivery_type": "BL",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA - ACLS Provider - In-person Initial",
+      "normalized_name": "aha acls provider in person initial",
+      "course_key": "aha_acls_provider_in_person_initial",
+      "official_course_name": "AHA ACLS Provider - In-person (Initial)",
+      "course_id": "241108",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA ACLS Provider - In-person (Initial) <br><i>Instructor-led classroom for new or expired ACLS</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA ACLS Provider\" name=\"241108\" longdesc=\"r:241108|t:AHA_ACLS_PROVIDER_INITIAL|cb:AHA|src:EW|p:225|d:IP\">",
+      "normalized_name": "aha acls provider in person initial instructor led classroom for new or expired acls",
+      "course_key": "aha_acls_provider_in_person_initial",
+      "official_course_name": "AHA ACLS Provider - In-person (Initial)",
+      "course_id": "241108",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA - PALS Provider - In-person - Renewal",
+      "normalized_name": "aha pals provider in person renewal",
+      "course_key": "aha_pals_provider_in_person_renewal",
+      "official_course_name": "AHA PALS Provider - In-Person - Renewal",
+      "course_id": "251496",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal <br><i>Instructor-led classroom training for current or recently expired PALS certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA PALS Renewal In-Person\" name=\"251496\" longdesc=\"r:251496|t:AHA_PALS_RENEWAL|cb:AHA|src:EW|p:225|d:IP\">",
+      "normalized_name": "american heart association pediatric advanced life support pals provider in person renewal instructor led classroom training for current or recently expired pals certification",
+      "course_key": "aha_pals_provider_in_person_renewal",
+      "official_course_name": "AHA PALS Provider - In-Person - Renewal",
+      "course_id": "251496",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended <br><i>Online course + in-person skills session for childcare and caregivers</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA Heartsaver Pediatric First Aid CPR AED Blended\" name=\"251545\" longdesc=\"r:251545|t:AHA_HS_PED_FA_CPR_BL|cb:AHA|src:EW|p:85|d:BL\">",
+      "normalized_name": "aha heartsaver pediatric first aid cpr aed blended online course in person skills session for childcare and caregivers",
+      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_blended",
+      "official_course_name": "AHA Heartsaver Pediatric First Aid CPR AED - Blended",
+      "course_id": "251545",
+      "certifying_body": "AHA",
+      "delivery_type": "BL",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "Elementary First Aid<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/stripes.png\" style=\"float:right;width:75px;vertical-align:top;\"></img><br><style> p { text-indent: 50px; } </style> <i>to meet \"U.S. Coast Guard Maritime Elementary First Aid and CPR\"  Requirement </i>",
+      "normalized_name": "elementary first aid p text indent 50px to meet u s coast guard maritime elementary first aid and cpr requirement",
+      "course_key": "uscg_elementary_first_aid_cpr_aha_heartsaver",
+      "official_course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver)",
+      "course_id": "253768",
+      "certifying_body": "AHA",
+      "delivery_type": "ILT",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "USCG Elementary First Aid | CPR (AHA Heartsaver®) <br><i>Meets U.S. Coast Guard Maritime Requirements (AMERHA-216)</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"USCG Elementary First Aid CPR AHA Heartsaver\" name=\"253768\" longdesc=\"r:253768|t:USCG_EFA_AHA|cb:AHA|src:EW|p:95|d:ILT\">",
+      "normalized_name": "uscg elementary first aid cpr aha heartsaver meets u s coast guard maritime requirements amerha 216",
+      "course_key": "uscg_elementary_first_aid_cpr_aha_heartsaver",
+      "official_course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver)",
+      "course_id": "253768",
+      "certifying_body": "AHA",
+      "delivery_type": "ILT",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA Heartsaver® First Aid CPR AED - Blended <br><i>Online course + in-person skills session for workplace and general certification</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"AHA Heartsaver First Aid CPR AED Blended\" name=\"329495\" longdesc=\"r:329495|t:AHA_HS_FA_CPR_BL|cb:AHA|src:EW|p:95|d:BL\">",
+      "normalized_name": "aha heartsaver first aid cpr aed blended online course in person skills session for workplace and general certification",
+      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_id": "329495",
+      "certifying_body": "AHA",
+      "delivery_type": "BL",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "American Heart Association's Online Heartsaver® Programs",
+      "normalized_name": "american heart association s online heartsaver programs",
+      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_id": "329495",
+      "certifying_body": "AHA",
+      "delivery_type": "BL",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA - Heartsaver® CPR AED (No First Aid)- <b>In-person</b>",
+      "normalized_name": "aha heartsaver cpr aed no first aid in person",
+      "course_key": "aha_heartsaver_cpr_aed_no_first_aid_in_person",
+      "official_course_name": "AHA Heartsaver CPR AED (No First Aid) - In-Person",
+      "course_id": "344085",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA - BLS Provider - In-person Renewal <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Returning Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+      "normalized_name": "aha bls provider in person renewal returning healthcare professionals first responders medical students workplace safety personnel lifeguards",
+      "course_key": "aha_bls_provider_renewal",
+      "official_course_name": "AHA BLS Provider Renewal",
+      "course_id": "359474",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA BLS Provider Renewal <br><i>For currently certified providers</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"16\" alt=\"AHA\" title=\"AHA BLS Provider Renewal\" name=\"359474\" longdesc=\"r:359474|t:AHA_BLS_IP_RENEWAL|cb:AHA|src:EW|p:75|d:IP\">",
+      "normalized_name": "aha bls provider renewal for currently certified providers",
+      "course_key": "aha_bls_provider_renewal",
+      "official_course_name": "AHA BLS Provider Renewal",
+      "course_id": "359474",
+      "certifying_body": "AHA",
+      "delivery_type": "IP",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "USCG Elementary First Aid | CPR - Blended (Online + Skills) <br><i>AHA Heartsaver® | Meets Maritime Requirements (AMERHA-216)</i> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" width=\"18\" alt=\"AHA\" title=\"USCG Elementary First Aid Online Blended\" name=\"359827\" longdesc=\"r:359827|t:USCG_EFA_BL|cb:AHA|src:EW|p:95|d:BL\">",
+      "normalized_name": "uscg elementary first aid cpr blended online skills aha heartsaver meets maritime requirements amerha 216",
+      "course_key": "uscg_elementary_first_aid_cpr_blended",
+      "official_course_name": "USCG Elementary First Aid | CPR - Blended",
+      "course_id": "359827",
+      "certifying_body": "AHA",
+      "delivery_type": "BL",
+      "status": "legacy_alias"
+    },
+    {
+      "legacy_name": "AHA - PALS Instructor Renewal <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_name": "aha pals instructor renewal",
+      "course_key": "aha_pals_instructor_renewal",
+      "official_course_name": "AHA PALS Instructor Renewal",
+      "certifying_body": "AHA",
+      "delivery_type": "instructor",
+      "status": "active_alias_needs_review"
+    },
+    {
+      "legacy_name": "AHA - BLS Instructor Renewal <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_name": "aha bls instructor renewal",
+      "course_key": "aha_bls_instructor_renewal",
+      "official_course_name": "AHA BLS Instructor Renewal",
+      "certifying_body": "AHA",
+      "delivery_type": "instructor",
+      "status": "active_alias_needs_review"
+    },
+    {
+      "legacy_name": "AHA - Heartsaver® CPR AED - <b>In-person</b> <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_name": "aha heartsaver cpr aed in person",
+      "course_key": "aha_heartsaver_cpr_aed_inperson",
+      "official_course_name": "AHA Heartsaver CPR AED",
+      "certifying_body": "AHA",
+      "delivery_type": "in_person",
+      "status": "active_alias_needs_review"
+    },
+    {
+      "legacy_name": "AHA - Family & Friends® CPR <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px; float:left; margin-right:5px;\">",
+      "normalized_name": "aha family friends cpr",
+      "course_key": "aha_family_friends_cpr",
+      "official_course_name": "AHA Family & Friends CPR",
+      "certifying_body": "AHA",
+      "delivery_type": "in_person",
+      "status": "active_alias_needs_review"
+    },
+    {
+      "legacy_name": "AHA - BLS Provider - Renewal <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width: 25px; float: left; margin-right: 5px;\" loading=\"lazy\"> <div style=\"font-weight: normal; font-size: 85%; color: gray; clear: both;\"> <i>Instructor-led Classroom program for BLS Renewal</i> </div>",
+      "normalized_name": "aha bls provider renewal instructor led classroom program for bls renewal",
+      "course_key": "aha_bls_provider_renewal_inperson",
+      "official_course_name": "AHA BLS Provider Renewal",
+      "certifying_body": "AHA",
+      "delivery_type": "in_person",
+      "status": "active_alias_needs_review"
+    },
+    {
+      "legacy_name": "2025 AHA Instructor Update",
+      "normalized_name": "2025 aha instructor update",
+      "course_key": "aha_2025_instructor_update",
+      "official_course_name": "AHA 2025 Instructor Update",
+      "certifying_body": "AHA",
+      "delivery_type": "instructor_update",
+      "status": "active_alias_needs_review"
+    }
+  ]
+}

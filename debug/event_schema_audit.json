@@ -1,14 +1,14 @@
 {
-  "total_class_pages_scanned": 26053,
-  "pages_with_jsonld": 26052,
-  "pages_with_event_schema": 26052,
+  "total_class_pages_scanned": 26043,
+  "pages_with_jsonld": 26042,
+  "pages_with_event_schema": 26042,
   "pages_missing_event_schema": 1,
   "schema_type_counts": {
-    "Event": 26052,
-    "Offer": 26052,
-    "Organization": 52094,
-    "Place": 26052,
-    "PostalAddress": 26052
+    "Event": 26042,
+    "Offer": 26042,
+    "Organization": 52084,
+    "Place": 26042,
+    "PostalAddress": 26042
   },
   "example_missing_event_schema": [
     {
@@ -45,68 +45,24 @@
   ],
   "missing_field_counts": {
     "startDate": 0,
-    "endDate": 10,
-    "image": 10,
-    "description": 10,
-    "performer": 10,
+    "endDate": 0,
+    "image": 0,
+    "description": 0,
+    "performer": 0,
     "offers": 0,
-    "offers.price": 2471,
+    "offers.price": 2461,
     "offers.priceCurrency": 0,
-    "offers.validFrom": 10,
+    "offers.validFrom": 0,
     "offers.availability": 0,
     "location": 0,
     "organizer": 0
   },
   "missing_field_examples": {
     "startDate": [],
-    "endDate": [
-      "docs/classes/13295705.html",
-      "docs/classes/13295706.html",
-      "docs/classes/13295708.html",
-      "docs/classes/13295725.html",
-      "docs/classes/13295726.html",
-      "docs/classes/13295746.html",
-      "docs/classes/13295749.html",
-      "docs/classes/13295769.html",
-      "docs/classes/13295770.html",
-      "docs/classes/13295772.html"
-    ],
-    "image": [
-      "docs/classes/13295705.html",
-      "docs/classes/13295706.html",
-      "docs/classes/13295708.html",
-      "docs/classes/13295725.html",
-      "docs/classes/13295726.html",
-      "docs/classes/13295746.html",
-      "docs/classes/13295749.html",
-      "docs/classes/13295769.html",
-      "docs/classes/13295770.html",
-      "docs/classes/13295772.html"
-    ],
-    "description": [
-      "docs/classes/13295705.html",
-      "docs/classes/13295706.html",
-      "docs/classes/13295708.html",
-      "docs/classes/13295725.html",
-      "docs/classes/13295726.html",
-      "docs/classes/13295746.html",
-      "docs/classes/13295749.html",
-      "docs/classes/13295769.html",
-      "docs/classes/13295770.html",
-      "docs/classes/13295772.html"
-    ],
-    "performer": [
-      "docs/classes/13295705.html",
-      "docs/classes/13295706.html",
-      "docs/classes/13295708.html",
-      "docs/classes/13295725.html",
-      "docs/classes/13295726.html",
-      "docs/classes/13295746.html",
-      "docs/classes/13295749.html",
-      "docs/classes/13295769.html",
-      "docs/classes/13295770.html",
-      "docs/classes/13295772.html"
-    ],
+    "endDate": [],
+    "image": [],
+    "description": [],
+    "performer": [],
     "offers": [],
     "offers.price": [
       "docs/classes/10004935.html",
@@ -136,26 +92,16 @@
       "docs/classes/10068695.html"
     ],
     "offers.priceCurrency": [],
-    "offers.validFrom": [
-      "docs/classes/13295705.html",
-      "docs/classes/13295706.html",
-      "docs/classes/13295708.html",
-      "docs/classes/13295725.html",
-      "docs/classes/13295726.html",
-      "docs/classes/13295746.html",
-      "docs/classes/13295749.html",
-      "docs/classes/13295769.html",
-      "docs/classes/13295770.html",
-      "docs/classes/13295772.html"
-    ],
+    "offers.validFrom": [],
     "offers.availability": [],
     "location": [],
     "organizer": []
   },
   "jsonld_block_count_distribution": {
     "0": 1,
-    "1": 26052
+    "1": 26042
   },
   "jsonld_parse_errors": [],
-  "jsonld_parse_error_count": 0
+  "jsonld_parse_error_count": 0,
+  "orphan_files_remaining": []
 }
