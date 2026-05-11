@@ -30,6 +30,10 @@ echo.
 echo Building index + sitemap...
 python scripts\build_index_and_sitemap.py
 
+echo.
+echo Applying emergency TBD public inventory suppression...
+python -m scripts.suppress_tbd_public_inventory
+
 if exist scripts\build_metadata.py (
     echo.
     echo Building metadata...

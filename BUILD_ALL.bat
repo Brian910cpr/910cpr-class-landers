@@ -51,6 +51,9 @@ if errorlevel 1 goto :fail
 python scripts/retrofit_live_sessions.py
 if errorlevel 1 goto :fail
 
+python -m scripts.suppress_tbd_public_inventory
+if errorlevel 1 goto :fail
+
 python -m scripts.audit_stale_sessions --warn-only
 if errorlevel 1 goto :fail
 

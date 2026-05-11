@@ -1,22 +1,33 @@
 {
-  "generated_at": "2026-05-08T00:52:55.139833-04:00",
-  "overall_status": "warning",
-  "last_successful_run": "2026-05-08T00:47:07.712015-04:00",
+  "generated_at": "2026-05-11T17:08:20.172296-04:00",
+  "overall_status": "stale",
+  "last_successful_run": "2026-05-11T17:08:16.836902-04:00",
   "counts": {
     "source_label": "current filesystem counts",
     "source_is_build_status_bound": false,
-    "sessions_current": 26042,
-    "schedule_future": 1370,
-    "pages_generated": 26421,
+    "sessions_current": 26039,
+    "schedule_future": 1034,
+    "pages_generated": 26035,
     "page_breakdown": {
-      "class_pages": 26053,
-      "course_pages": 93,
-      "location_pages": 266,
+      "class_pages": 26001,
+      "course_pages": 24,
+      "location_pages": 1,
       "course_at_city_pages": 4,
       "slug_hub_pages": 5
     }
   },
   "warnings": [
+    {
+      "message": "13550 unmapped sessions need course mapping.",
+      "links": [
+        {
+          "label": "Open build_sessions_current.json",
+          "href": "../debug/status/build_sessions_current.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
     {
       "message": "14 mapped courses need description review.",
       "links": [
@@ -47,7 +58,7 @@
       ]
     },
     {
-      "message": "6334 sessions were skipped because course mapping was missing.",
+      "message": "323 sessions were skipped because course mapping was missing after resolver fallback.",
       "links": [
         {
           "label": "Open build_schedule_future.json",
@@ -58,11 +69,44 @@
       ]
     },
     {
-      "message": "6334 unmapped sessions need course mapping.",
+      "message": "43 sessions were skipped by the emergency TBD location suppression rule.",
       "links": [
         {
-          "label": "Open build_sessions_current.json",
-          "href": "../debug/status/build_sessions_current.json",
+          "label": "Open build_schedule_future.json",
+          "href": "../debug/status/build_schedule_future.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "Declared output is missing: docs/courses/index.html",
+      "links": [
+        {
+          "label": "Open build_index_and_sitemap.json",
+          "href": "../debug/status/build_index_and_sitemap.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "Input changed after last run: docs/classes",
+      "links": [
+        {
+          "label": "Open build_index_and_sitemap.json",
+          "href": "../debug/status/build_index_and_sitemap.json",
+          "kind": "local",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "message": "Input changed after last run: docs/data/schedule_future.json",
+      "links": [
+        {
+          "label": "Open build_index_and_sitemap.json",
+          "href": "../debug/status/build_index_and_sitemap.json",
           "kind": "local",
           "primary": true
         }
@@ -109,7 +153,7 @@
       ]
     },
     {
-      "message": "Unmapped courses: 6334 item(s) need review.",
+      "message": "Unmapped courses: 13550 item(s) need review.",
       "links": [
         {
           "label": "Open unmapped courses review file",
@@ -173,7 +217,7 @@
     {
       "label": "Unmapped courses",
       "path": "data/audit/unmapped_courses.json",
-      "count": 6334,
+      "count": 13550,
       "links": [
         {
           "label": "Open unmapped courses review file",
@@ -274,7 +318,7 @@
     {
       "label": "Resolve unmapped course rows",
       "status": "action required",
-      "detail": "6334 unmapped row(s) need review.",
+      "detail": "13550 unmapped row(s) need review.",
       "links": [
         {
           "label": "Open unmapped courses review file",
@@ -394,13 +438,13 @@
       "worker": "build_course_at_city",
       "script": "scripts/build_course_at_city.py",
       "status": "done",
-      "last_run": "2026-05-08T00:46:58.799006-04:00",
+      "last_run": "2026-05-11T17:08:16.836902-04:00",
       "current_count": 4,
       "total_count": 4,
       "percent_complete": 100.0,
       "last_output_file": "docs/course-at-city/uscg-elementary-first-aid-cpr-wilmington.html",
-      "timestamp": "2026-05-08T00:46:58.799006-04:00",
-      "last_successful_run": "2026-05-08T00:46:58.799006-04:00",
+      "timestamp": "2026-05-11T17:08:16.836902-04:00",
+      "last_successful_run": "2026-05-11T17:08:16.836902-04:00",
       "inputs": [
         "data/sessions_current.json"
       ],
@@ -408,8 +452,8 @@
         "docs/course-at-city"
       ],
       "counts": {
-        "sessions_loaded": 26042,
-        "future_public_sessions": 1367,
+        "sessions_loaded": 26039,
+        "future_public_sessions": 1346,
         "course_at_city_pages": 4
       },
       "pages_generated": 4,
@@ -424,13 +468,13 @@
       "worker": "build_courses",
       "script": "scripts/build_courses.py",
       "status": "done",
-      "last_run": "2026-05-08T00:46:47.614353-04:00",
-      "current_count": 23,
-      "total_count": 23,
+      "last_run": "2026-05-11T17:07:58.683753-04:00",
+      "current_count": 24,
+      "total_count": 24,
       "percent_complete": 100.0,
       "last_output_file": "docs/courses/z-personal-event-not-availible.html",
-      "timestamp": "2026-05-08T00:46:47.614353-04:00",
-      "last_successful_run": "2026-05-08T00:46:47.614353-04:00",
+      "timestamp": "2026-05-11T17:07:58.683753-04:00",
+      "last_successful_run": "2026-05-11T17:07:58.683753-04:00",
       "inputs": [
         "data/sessions_current.json"
       ],
@@ -438,10 +482,10 @@
         "docs/courses"
       ],
       "counts": {
-        "sessions_loaded": 26042,
-        "course_hub_pages": 23
+        "sessions_loaded": 26039,
+        "course_hub_pages": 24
       },
-      "pages_generated": 23,
+      "pages_generated": 24,
       "warnings": [],
       "errors": [],
       "files_needing_review": [],
@@ -452,14 +496,14 @@
       "phase_name": "build_index_and_sitemap",
       "worker": "build_index_and_sitemap",
       "script": "scripts/build_index_and_sitemap.py",
-      "status": "done",
-      "last_run": "2026-05-08T00:47:07.712015-04:00",
-      "current_count": 26052,
-      "total_count": 26052,
+      "status": "stale",
+      "last_run": "2026-05-11T16:38:35.883068-04:00",
+      "current_count": 26042,
+      "total_count": 26042,
       "percent_complete": 100.0,
       "last_output_file": "docs/sitemap.xml",
-      "timestamp": "2026-05-08T00:47:07.712015-04:00",
-      "last_successful_run": "2026-05-08T00:47:07.712015-04:00",
+      "timestamp": "2026-05-11T16:38:35.883068-04:00",
+      "last_successful_run": "2026-05-11T16:38:35.883068-04:00",
       "inputs": [
         "docs/classes",
         "docs/data/schedule_future.json",
@@ -474,14 +518,18 @@
         "docs/sitemap.xml"
       ],
       "counts": {
-        "class_pages_scanned": 26052,
-        "valid_class_pages": 26052,
-        "course_pages": 79,
-        "location_pages": 267,
-        "sitemap_urls": 26401
+        "class_pages_scanned": 26042,
+        "valid_class_pages": 26042,
+        "course_pages": 77,
+        "location_pages": 266,
+        "sitemap_urls": 26397
       },
-      "pages_generated": 349,
-      "warnings": [],
+      "pages_generated": 346,
+      "warnings": [
+        "Declared output is missing: docs/courses/index.html",
+        "Input changed after last run: docs/classes",
+        "Input changed after last run: docs/data/schedule_future.json"
+      ],
       "errors": [],
       "files_needing_review": [],
       "status_file": "debug/status/build_index_and_sitemap.json",
@@ -492,13 +540,13 @@
       "worker": "build_locations",
       "script": "scripts/build_locations.py",
       "status": "done",
-      "last_run": "2026-05-08T00:46:53.329567-04:00",
+      "last_run": "2026-05-11T17:08:07.448025-04:00",
       "current_count": 1,
       "total_count": 1,
       "percent_complete": 100.0,
       "last_output_file": "docs/locations/wilmington.html",
-      "timestamp": "2026-05-08T00:46:53.329567-04:00",
-      "last_successful_run": "2026-05-08T00:46:53.329567-04:00",
+      "timestamp": "2026-05-11T17:08:07.448025-04:00",
+      "last_successful_run": "2026-05-11T17:08:07.448025-04:00",
       "inputs": [
         "data/sessions_current.json"
       ],
@@ -506,8 +554,8 @@
         "docs/locations"
       ],
       "counts": {
-        "sessions_loaded": 26042,
-        "future_public_sessions": 1367,
+        "sessions_loaded": 26039,
+        "future_public_sessions": 1346,
         "location_pages": 1
       },
       "pages_generated": 1,
@@ -522,13 +570,13 @@
       "worker": "build_request_group_session",
       "script": "scripts/build_request_group_session.py",
       "status": "done",
-      "last_run": "2026-05-08T00:46:38.522490-04:00",
+      "last_run": "2026-05-11T17:07:40.862775-04:00",
       "current_count": 1,
       "total_count": 1,
       "percent_complete": 100.0,
       "last_output_file": "docs/request_group_session.html",
-      "timestamp": "2026-05-08T00:46:38.522490-04:00",
-      "last_successful_run": "2026-05-08T00:46:38.522490-04:00",
+      "timestamp": "2026-05-11T17:07:40.862775-04:00",
+      "last_successful_run": "2026-05-11T17:07:40.862775-04:00",
       "inputs": [],
       "outputs": [
         "docs/request_group_session.html"
@@ -549,31 +597,42 @@
       "worker": "build_schedule_future",
       "script": "scripts/build_schedule_future.py",
       "status": "warning",
-      "last_run": "2026-05-08T00:40:35.182760-04:00",
-      "current_count": 26042,
-      "total_count": 26042,
+      "last_run": "2026-05-11T17:03:04.256954-04:00",
+      "current_count": 26039,
+      "total_count": 26039,
       "percent_complete": 100.0,
       "last_output_file": "docs/data/schedule_future.json",
-      "timestamp": "2026-05-08T00:40:35.182760-04:00",
-      "last_successful_run": "2026-05-08T00:40:35.182760-04:00",
+      "timestamp": "2026-05-11T17:03:04.256954-04:00",
+      "last_successful_run": "2026-05-11T17:03:04.256954-04:00",
       "inputs": [
         "data/sessions_current.json",
-        "data/Class Report.xlsx"
+        "data/Class Report.xlsx",
+        "data/course_aliases.json",
+        "data/config/course_map.json"
       ],
       "outputs": [
-        "docs/data/schedule_future.json"
+        "docs/data/schedule_future.json",
+        "debug/unmatched_courses.json",
+        "debug/course_identity_match_report.json"
       ],
       "counts": {
-        "sessions_input": 26042,
-        "sessions_output": 1370,
+        "sessions_input": 26039,
+        "sessions_output": 1034,
         "skipped_missing_start": 0,
-        "skipped_past": 18338,
+        "skipped_past": 24639,
         "skipped_orphan": 0,
-        "skipped_unmapped": 6334
+        "skipped_tbd_location": 43,
+        "stale_tbd_class_pages_deleted": 0,
+        "included_by_legacy_mapping": 1025,
+        "included_by_course_identity_resolver": 9,
+        "skipped_unmapped_after_resolver": 323,
+        "course_identity_unmatched": 12752,
+        "course_identity_needs_review": 12752
       },
       "pages_generated": null,
       "warnings": [
-        "6334 sessions were skipped because course mapping was missing."
+        "43 sessions were skipped by the emergency TBD location suppression rule.",
+        "323 sessions were skipped because course mapping was missing after resolver fallback."
       ],
       "errors": [],
       "files_needing_review": [
@@ -587,13 +646,13 @@
       "worker": "build_sessions_current",
       "script": "scripts/build_sessions_current.py",
       "status": "warning",
-      "last_run": "2026-05-08T00:40:29.949300-04:00",
-      "current_count": 26042,
-      "total_count": 26042,
+      "last_run": "2026-05-11T17:02:43.927995-04:00",
+      "current_count": 26039,
+      "total_count": 26039,
       "percent_complete": 100.0,
       "last_output_file": "data/sessions_current.json",
-      "timestamp": "2026-05-08T00:40:29.949300-04:00",
-      "last_successful_run": "2026-05-08T00:40:29.949300-04:00",
+      "timestamp": "2026-05-11T17:02:43.927995-04:00",
+      "last_successful_run": "2026-05-11T17:02:43.927995-04:00",
       "inputs": [
         "data/Class Report.xlsx",
         "data/raw/classes_raw_live.csv",
@@ -609,15 +668,15 @@
         "data/audit/name_dependency_report.md"
       ],
       "counts": {
-        "sessions_written": 26042,
-        "class_report_rows": 26042,
-        "unmapped_sessions": 6334,
+        "sessions_written": 26039,
+        "class_report_rows": 26039,
+        "unmapped_sessions": 13550,
         "mapping_conflicts": 0,
         "courses_needing_description_review": 14
       },
       "pages_generated": null,
       "warnings": [
-        "6334 unmapped sessions need course mapping.",
+        "13550 unmapped sessions need course mapping.",
         "14 mapped courses need description review."
       ],
       "errors": [],
@@ -633,13 +692,13 @@
       "worker": "build_slug_hubs",
       "script": "scripts/build_slug_hubs.py",
       "status": "done",
-      "last_run": "2026-05-08T00:46:41.422832-04:00",
-      "current_count": 6,
-      "total_count": 6,
+      "last_run": "2026-05-11T17:07:48.310700-04:00",
+      "current_count": 8,
+      "total_count": 8,
       "percent_complete": 100.0,
       "last_output_file": "docs/group-training.html",
-      "timestamp": "2026-05-08T00:46:41.422832-04:00",
-      "last_successful_run": "2026-05-08T00:46:41.422832-04:00",
+      "timestamp": "2026-05-11T17:07:48.310700-04:00",
+      "last_successful_run": "2026-05-11T17:07:48.310700-04:00",
       "inputs": [
         "data/config/slug_hubs.json",
         "docs/data/schedule_future.json"
@@ -648,10 +707,10 @@
         "docs"
       ],
       "counts": {
-        "sessions_loaded": 1370,
-        "slug_hub_pages": 6
+        "sessions_loaded": 1034,
+        "slug_hub_pages": 8
       },
-      "pages_generated": 6,
+      "pages_generated": 8,
       "warnings": [],
       "errors": [],
       "files_needing_review": [],

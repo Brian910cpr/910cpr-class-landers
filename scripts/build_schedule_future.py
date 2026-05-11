@@ -113,6 +113,32 @@ def debug_location_value(session: dict[str, Any]) -> str:
     return clean_string(value) or ""
 
 
+def raw_location_values(session: dict[str, Any]) -> list[str]:
+    location = session.get("location")
+    values: list[Any] = [
+        session.get("raw_location"),
+        session.get("location_raw"),
+        session.get("location_display"),
+        session.get("location_name"),
+        session.get("location"),
+    ]
+    if isinstance(location, dict):
+        values.extend(
+            [
+                location.get("raw_location"),
+                location.get("location_raw"),
+                location.get("location_display"),
+                location.get("location_name"),
+                location.get("name"),
+            ]
+        )
+    return [str(value) for value in values if value not in (None, "")]
+
+
+def has_tbd_location(session: dict[str, Any]) -> bool:
+    return any("TBD" in value.upper() for value in raw_location_values(session))
+
+
 def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
     requested_path = (repo_root / requested).resolve()
     if requested_path.exists():
@@ -323,6 +349,8 @@ def main() -> int:
         skipped_missing_start = 0
         skipped_past = 0
         skipped_orphan = 0
+        skipped_tbd_location = 0
+        skipped_tbd_session_ids: list[str] = []
         included_by_legacy_mapping = 0
         included_by_course_identity_resolver = 0
         skipped_unmapped_after_resolver = 0
@@ -362,6 +390,12 @@ def main() -> int:
             if session_id not in class_report_ids:
                 print(f"ORPHAN SESSION DETECTED: {session_id} not present in current Class Report")
                 skipped_orphan += 1
+                reporter.update(current=index, total=len(sessions))
+                continue
+            if has_tbd_location(session):
+                print(f"TBD LOCATION SUPPRESSED: session_id={session_id} location={debug_location_value(session)}")
+                skipped_tbd_location += 1
+                skipped_tbd_session_ids.append(session_id)
                 reporter.update(current=index, total=len(sessions))
                 continue
             start_dt = parse_iso_dt(session_start_candidate(session))
@@ -413,6 +447,7 @@ def main() -> int:
                     "skipped_missing_start": skipped_missing_start,
                     "skipped_past": skipped_past,
                     "skipped_orphan": skipped_orphan,
+                    "skipped_tbd_location": skipped_tbd_location,
                     "included_by_legacy_mapping": included_by_legacy_mapping,
                     "included_by_course_identity_resolver": included_by_course_identity_resolver,
                     "skipped_unmapped_after_resolver": skipped_unmapped_after_resolver,
@@ -428,6 +463,15 @@ def main() -> int:
             json.dumps(output, indent=2, ensure_ascii=False),
             encoding="utf-8",
         )
+        stale_tbd_class_pages_deleted = 0
+        classes_dir = repo_root / "docs" / "classes"
+        for session_id in skipped_tbd_session_ids:
+            stale_page = classes_dir / f"{session_id}.html"
+            if stale_page.exists():
+                stale_page.unlink()
+                stale_tbd_class_pages_deleted += 1
+                print(f"Deleted stale TBD class page: {stale_page}")
+
         debug_generated_at = datetime.now(TZ).isoformat()
         unmatched_payload = {
             "generated_at": debug_generated_at,
@@ -451,6 +495,8 @@ def main() -> int:
         files_needing_review = []
         if skipped_orphan:
             warnings.append(f"{skipped_orphan} sessions were skipped because they were not present in the current Class Report.")
+        if skipped_tbd_location:
+            warnings.append(f"{skipped_tbd_location} sessions were skipped by the emergency TBD location suppression rule.")
         if skipped_unmapped_after_resolver:
             warnings.append(f"{skipped_unmapped_after_resolver} sessions were skipped because course mapping was missing after resolver fallback.")
             files_needing_review.append(repo_root / "data" / "audit" / "unmapped_courses.json")
@@ -464,6 +510,8 @@ def main() -> int:
                 "skipped_missing_start": skipped_missing_start,
                 "skipped_past": skipped_past,
                 "skipped_orphan": skipped_orphan,
+                "skipped_tbd_location": skipped_tbd_location,
+                "stale_tbd_class_pages_deleted": stale_tbd_class_pages_deleted,
                 "included_by_legacy_mapping": included_by_legacy_mapping,
                 "included_by_course_identity_resolver": included_by_course_identity_resolver,
                 "skipped_unmapped_after_resolver": skipped_unmapped_after_resolver,
@@ -480,6 +528,8 @@ def main() -> int:
         print(f"Skipped missing start: {skipped_missing_start}")
         print(f"Skipped past: {skipped_past}")
         print(f"Skipped orphan: {skipped_orphan}")
+        print(f"Skipped TBD location: {skipped_tbd_location}")
+        print(f"Deleted stale TBD class pages: {stale_tbd_class_pages_deleted}")
         print(f"Included by legacy mapping: {included_by_legacy_mapping}")
         print(f"Included by course identity resolver: {included_by_course_identity_resolver}")
         print(f"Skipped unmapped after resolver: {skipped_unmapped_after_resolver}")

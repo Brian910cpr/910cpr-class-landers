@@ -128,7 +128,8 @@ def location_to_city_state(location: str):
 
 
 def is_public_listing_location(location: str) -> bool:
-    return str(location or "").strip().startswith("::")
+    raw = str(location or "")
+    return "TBD" not in raw.upper() and raw.strip().startswith("::")
 
 
 def clean_location_display(location: str) -> str:

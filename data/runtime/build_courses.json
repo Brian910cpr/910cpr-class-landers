@@ -3,13 +3,13 @@
   "worker": "build_courses",
   "script": "scripts/build_courses.py",
   "status": "done",
-  "last_run": "2026-05-11T16:38:15.290406-04:00",
+  "last_run": "2026-05-11T17:07:58.683753-04:00",
   "current_count": 24,
   "total_count": 24,
   "percent_complete": 100.0,
   "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\courses\\z-personal-event-not-availible.html",
-  "timestamp": "2026-05-11T16:38:15.290406-04:00",
-  "last_successful_run": "2026-05-11T16:38:15.290406-04:00",
+  "timestamp": "2026-05-11T17:07:58.683753-04:00",
+  "last_successful_run": "2026-05-11T17:07:58.683753-04:00",
   "inputs": [
     "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json"
   ],
