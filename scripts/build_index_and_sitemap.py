@@ -772,17 +772,11 @@ def render_homepage() -> str:
           <b>View course options</b>
         </a>
         <div class="course-jump-stack" aria-label="Additional certifying bodies">
-          <a class="course-jump-card course-jump-card-logo home-index-course-card home-index-course-card-small" href="#arc">
+          <a class="course-jump-logo-button" href="/arc" aria-label="Open American Red Cross training hub">
             <img src="/images/0arc.png" alt="" loading="lazy">
-            <span class="course-jump-kicker">Red Cross</span>
-            <strong>ARC</strong>
-            <b>View options</b>
           </a>
-          <a class="course-jump-card course-jump-card-logo home-index-course-card home-index-course-card-small" href="#hsi">
+          <a class="course-jump-logo-button" href="/hsi" aria-label="Open HSI training hub">
             <img src="/images/0hsi.png" alt="" loading="lazy">
-            <span class="course-jump-kicker">HSI</span>
-            <strong>HSI</strong>
-            <b>View options</b>
           </a>
         </div>
       </section>

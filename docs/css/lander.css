@@ -1073,18 +1073,34 @@ a {
 
 .course-jump-stack {
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
-.home-index-course-card-small {
-  grid-template-rows: auto auto auto;
-  gap: 7px;
+.course-jump-logo-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 14px;
+  border-radius: 8px;
+  background: #f7fafc;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.home-index-course-card-small img {
-  aspect-ratio: 2.1;
-  padding: 10px;
+.course-jump-logo-button:hover,
+.course-jump-logo-button:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(22, 42, 66, 0.12);
+}
+
+.course-jump-logo-button img {
+  display: block;
+  width: 72%;
+  max-width: 118px;
+  max-height: 86%;
+  object-fit: contain;
 }
 
 .course-jump-card:hover,
