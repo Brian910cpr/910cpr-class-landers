@@ -826,6 +826,62 @@
     }
   }
 
+  const HUB_HASH_ALIASES = {
+    bls: {
+      provider: "bls-provider",
+      renewal: "bls-renewal",
+      heartcode: "bls-heartcode",
+    },
+    acls: {
+      provider: "acls-provider",
+      renewal: "acls-renewal",
+      heartcode: "acls-heartcode",
+    },
+    pals: {
+      provider: "pals-provider",
+      renewal: "pals-renewal",
+      heartcode: "pals-heartcode",
+    },
+  };
+
+  function currentHubSlug() {
+    const fileName = window.location.pathname.split("/").filter(Boolean).pop() || "";
+    return fileName.replace(/\.html$/i, "");
+  }
+
+  function resolveHubHash(rawHash) {
+    const hash = decodeURIComponent(String(rawHash || "").replace(/^#/, "")).trim();
+    if (!hash) return "";
+
+    if (document.getElementById(hash)) return hash;
+
+    const aliases = HUB_HASH_ALIASES[currentHubSlug()];
+    return (aliases && aliases[hash]) || hash;
+  }
+
+  function activateTabFromHash(options) {
+    const panelId = resolveHubHash(window.location.hash);
+    if (!panelId) return;
+
+    const panel = document.getElementById(panelId);
+    if (!panel || !panel.matches(".tab-panel") || panel.hidden) return;
+
+    const scope = panel.closest("[data-tabs]");
+    if (!scope) return;
+
+    const trigger = Array.from(scope.querySelectorAll("[data-tab-target]")).find((element) => {
+      return element.getAttribute("data-tab-target") === `#${panelId}`;
+    });
+    if (!trigger || trigger.hidden) return;
+
+    activateTab(scope, trigger);
+
+    if (!options || options.scroll !== false) {
+      const target = scope.querySelector(".hub-tabs") || panel;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   function scopeForTrigger(trigger) {
     const explicitScope = trigger.getAttribute("data-tab-scope");
     if (explicitScope) return document.querySelector(explicitScope);
@@ -884,6 +940,7 @@
     bindCuratedOffers();
     initializeScopes();
     activateProgramFromQuery();
+    activateTabFromHash({ scroll: true });
     syncEmergencyOutageBanner(settings);
     applyEmergencyEmailFallback(document, settings);
     refreshCuratedOfferHeights(document);
@@ -895,6 +952,7 @@
   };
 
   bindTriggers();
+  window.addEventListener("hashchange", () => activateTabFromHash({ scroll: true }));
   window.addEventListener("resize", () => refreshCuratedOfferHeights(document));
   if (document.readyState === "loading") {
     window.addEventListener("DOMContentLoaded", () => {

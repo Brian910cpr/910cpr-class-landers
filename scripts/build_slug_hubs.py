@@ -942,7 +942,15 @@ def full_schedule_short_label(page: dict[str, Any]) -> str:
 
 def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
-    keep_empty_attr = ' data-keep-empty-tab="true"' if page.get("slug") == "heartsaver" and tab.get("id") in {"hs-pediatric-ip", "hs-pediatric-bl"} else ""
+    keep_empty_tab_ids = {
+        "heartsaver": {"hs-pediatric-ip", "hs-pediatric-bl"},
+        "pals": {"pals-heartcode"},
+    }
+    keep_empty_attr = (
+        ' data-keep-empty-tab="true"'
+        if tab.get("id") in keep_empty_tab_ids.get(str(page.get("slug") or ""), set())
+        else ""
+    )
     if group_mode:
         request_href = group_request_href(tab["program"])
         full_schedule_data = escape(
@@ -1393,6 +1401,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
         return render_ecosystem_page(page, sessions, banner_library)
 
     group_mode = bool(page.get("group_mode"))
+    page_slug = str(page.get("slug") or "")
     now = datetime.now(TZ)
     tabs = page.get("tabs", [])
     first_tab = tabs[0]
@@ -1405,9 +1414,11 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
             if enriched:
                 matched.append(enriched)
         matched = sort_sessions(matched)
-        keep_empty_tab = bool(page.get("keep_empty_tabs")) or (
-            page.get("slug") == "heartsaver" and tab.get("id") in {"hs-pediatric-ip", "hs-pediatric-bl"}
-        )
+        keep_empty_tab_ids = {
+            "heartsaver": {"hs-pediatric-ip", "hs-pediatric-bl"},
+            "pals": {"pals-heartcode"},
+        }
+        keep_empty_tab = bool(page.get("keep_empty_tabs")) or tab.get("id") in keep_empty_tab_ids.get(page_slug, set())
         if matched or keep_empty_tab:
             if page.get("slug") == "heartsaver":
                 display = heartsaver_tab_display(tab, matched)
