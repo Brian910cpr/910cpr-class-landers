@@ -1209,7 +1209,9 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
             if enriched:
                 matched.append(enriched)
         matched = sort_sessions(matched)
-        keep_empty_tab = page.get("slug") == "heartsaver" and tab.get("id") in {"hs-pediatric-ip", "hs-pediatric-bl"}
+        keep_empty_tab = bool(page.get("keep_empty_tabs")) or (
+            page.get("slug") == "heartsaver" and tab.get("id") in {"hs-pediatric-ip", "hs-pediatric-bl"}
+        )
         if matched or keep_empty_tab:
             if page.get("slug") == "heartsaver":
                 display = heartsaver_tab_display(tab, matched)

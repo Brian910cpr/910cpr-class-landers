@@ -37,6 +37,22 @@
       emptyLabel: "No Heartsaver dates are posted here right now.",
     },
     {
+      id: "arc",
+      title: "American Red Cross",
+      audience: "For students whose employer, school, or program specifically requests Red Cross certification.",
+      fullScheduleUrl: "/arc.html",
+      fullScheduleLabel: "Compare ARC options",
+      emptyLabel: "No ARC dates are posted here right now.",
+    },
+    {
+      id: "hsi",
+      title: "HSI",
+      audience: "For workplaces, schools, and professional requirements that accept or request HSI certification.",
+      fullScheduleUrl: "/hsi.html",
+      fullScheduleLabel: "Compare HSI options",
+      emptyLabel: "No HSI dates are posted here right now.",
+    },
+    {
       id: "pediatric",
       title: "Pediatric First Aid CPR AED",
       audience: "For childcare providers, teachers, babysitters, foster parents, and caregivers of children.",
@@ -73,6 +89,8 @@
     acls: "/images/acls_general.png",
     pals: "/images/pals_general.png",
     heartsaver: "/images/heartsaver_general.png",
+    arc: "/images/0arc.png",
+    hsi: "/images/0hsi.png",
     pediatric: "/images/heartsaver_general.png",
     uscg: "/images/stripes.png",
     group: "/images/bls_general.png",
@@ -147,6 +165,19 @@
       if ((text.includes("CPR AED") && !text.includes("FIRST AID")) || text.includes("344085")) return { sectionId: "heartsaver", subtype: "CPR + AED" };
       if (text.includes("329495") || text.includes("209809") || text.includes("AHA_HS_FA_CPR")) return { sectionId: "heartsaver", subtype: "First Aid + CPR + AED" };
       return { sectionId: "heartsaver", subtype: "First Aid + CPR + AED" };
+    }
+    if (text.includes("AMERICAN RED CROSS") || text.includes("RED CROSS") || text.includes("ARC_") || text.includes("ARC ")) {
+      if (text.includes("FIRST AID")) return { sectionId: "arc", subtype: "First Aid + CPR + AED" };
+      if (text.includes("CPR") && text.includes("AED")) return { sectionId: "arc", subtype: "CPR + AED" };
+      if (text.includes("BLS")) return { sectionId: "arc", subtype: "BLS" };
+      return { sectionId: "arc", subtype: "ARC option" };
+    }
+    if (text.includes("HSI") || text.includes("ASHI")) {
+      if (text.includes("BLS") && text.includes("FIRST AID")) return { sectionId: "hsi", subtype: "BLS + First Aid" };
+      if (text.includes("BLS") || text.includes("BASIC LIFE SUPPORT")) return { sectionId: "hsi", subtype: "BLS" };
+      if (text.includes("FIRST AID")) return { sectionId: "hsi", subtype: "First Aid + CPR + AED" };
+      if (text.includes("CPR") && text.includes("AED")) return { sectionId: "hsi", subtype: "CPR + AED" };
+      return { sectionId: "hsi", subtype: "HSI option" };
     }
     if (text.includes("BLS")) {
       return { sectionId: "bls", subtype: text.includes("HEARTCODE") ? "HeartCode Skills" : text.includes("RENEW") ? "Renewal" : "Provider" };
@@ -350,7 +381,7 @@
     });
 
     const groupPreview = [];
-    ["bls", "heartsaver", "pediatric", "acls", "pals", "uscg"].forEach((sectionId) => {
+    ["bls", "heartsaver", "pediatric", "acls", "pals", "arc", "hsi", "uscg"].forEach((sectionId) => {
       const source = groups.get(sectionId) || [];
       source.slice(0, 2).forEach((item) => {
         groupPreview.push({
@@ -517,6 +548,8 @@
             <a class="home-stat" href="/acls.html">ACLS</a>
             <a class="home-stat" href="/pals.html">PALS</a>
             <a class="home-stat" href="/heartsaver.html">Heartsaver &amp; First Aid</a>
+            <a class="home-stat" href="/arc.html">American Red Cross</a>
+            <a class="home-stat" href="/hsi.html">HSI</a>
             <a class="home-stat" href="/uscg-elementary-first-aid-cpr.html">USCG First Aid/CPR</a>
             <a class="home-stat" href="/request_group_session.html">Request Group Training</a>
           </p>

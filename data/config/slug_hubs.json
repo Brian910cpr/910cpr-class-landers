@@ -300,14 +300,14 @@
         {
           "label": "American Red Cross Courses",
           "description": "Compare Red Cross options if your employer, school, or program prefers ARC certification.",
-          "href": "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule",
-          "cta": "See ARC schedule options"
+          "href": "/arc.html",
+          "cta": "Compare ARC options"
         },
         {
           "label": "HSI Courses",
           "description": "Explore HSI workplace-focused options when you need a non-AHA certification path.",
-          "href": "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule",
-          "cta": "See HSI schedule options"
+          "href": "/hsi.html",
+          "cta": "Compare HSI options"
         },
         {
           "label": "Group / Workplace Training",
@@ -449,6 +449,181 @@
           "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
           "full_schedule_label": "See full pediatric Heartsaver schedule",
           "primary_cta_label": "See pediatric page"
+        }
+      ]
+    },
+    {
+      "slug": "arc",
+      "title": "American Red Cross CPR Classes | 910CPR",
+      "description": "American Red Cross BLS, CPR/AED, and First Aid/CPR/AED options from 910CPR for students whose employer, school, or program requires ARC certification.",
+      "eyebrow": "American Red Cross Training",
+      "hero_title": "Red Cross CPR And BLS Options",
+      "hero_copy": "Use this hub when your employer, school, or program specifically asks for American Red Cross certification instead of AHA or HSI.",
+      "hero_image": "/images/0arc.png",
+      "hero_image_alt": "American Red Cross training logo",
+      "full_schedule_banner": "Need more Red Cross options or upcoming dates? Open the full schedule for the selected ARC path.",
+      "keep_empty_tabs": true,
+      "tabs": [
+        {
+          "id": "arc-bls",
+          "label": "ARC BLS",
+          "tab_badge": "Healthcare",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "ARC BLS",
+          "description": "American Red Cross BLS options for healthcare providers and students who need ARC specifically.",
+          "name_contains": [
+            "ARC BLS",
+            "American Red Cross BLS",
+            "Red Cross BLS"
+          ],
+          "exclude_name_contains": [
+            "PALS",
+            "ALS",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/arc-bls-provider.html",
+          "full_schedule_label": "See ARC BLS course details",
+          "primary_cta_label": "See ARC BLS options"
+        },
+        {
+          "id": "arc-cpr-aed",
+          "label": "ARC CPR/AED",
+          "tab_badge": "CPR + AED",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "ARC CPR/AED",
+          "description": "Red Cross CPR/AED training for workplace and general certification needs when first aid is not required.",
+          "name_contains": [
+            "ARC CPR/AED",
+            "ARC CPR AED",
+            "American Red Cross CPR/AED",
+            "Red Cross CPR/AED",
+            "Red Cross CPR AED"
+          ],
+          "exclude_name_contains": [
+            "First Aid",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/arc-cpr-aed.html",
+          "full_schedule_label": "See ARC CPR/AED course details",
+          "primary_cta_label": "See ARC CPR/AED options"
+        },
+        {
+          "id": "arc-first-aid-cpr-aed",
+          "label": "ARC First Aid/CPR/AED",
+          "tab_badge": "First Aid",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "ARC First Aid/CPR/AED",
+          "description": "Red Cross First Aid/CPR/AED for workplaces, schools, and programs that require ARC certification.",
+          "name_contains": [
+            "ARC First Aid CPR AED",
+            "ARC First Aid/CPR/AED",
+            "American Red Cross First Aid CPR AED",
+            "American Red Cross First Aid/CPR/AED",
+            "Red Cross First Aid CPR AED",
+            "Red Cross First Aid/CPR/AED"
+          ],
+          "exclude_name_contains": [
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/arc-first-aid-cpr-aed.html",
+          "full_schedule_label": "See ARC First Aid/CPR/AED course details",
+          "primary_cta_label": "See ARC First Aid/CPR/AED options"
+        }
+      ]
+    },
+    {
+      "slug": "hsi",
+      "title": "HSI CPR And First Aid Classes | 910CPR",
+      "description": "HSI BLS, First Aid/CPR/AED, and CPR/AED options from 910CPR for workplace, school, and professional certification requirements.",
+      "eyebrow": "HSI Training",
+      "hero_title": "HSI CPR, BLS, And First Aid Options",
+      "hero_copy": "Use this hub when your employer, school, or program accepts or requests HSI certification.",
+      "hero_image": "/images/0hsi.png",
+      "hero_image_alt": "HSI training logo",
+      "full_schedule_banner": "Need more HSI options or upcoming dates? Open the full schedule for the selected HSI path.",
+      "keep_empty_tabs": true,
+      "tabs": [
+        {
+          "id": "hsi-bls",
+          "label": "HSI BLS",
+          "tab_badge": "Healthcare",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "HSI BLS",
+          "description": "HSI Basic Life Support for healthcare providers and students whose requirement accepts HSI.",
+          "name_contains": [
+            "HSI BLS",
+            "Basic Life Support"
+          ],
+          "exclude_name_contains": [
+            "First Aid",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/hsi-bls-online-skills.html",
+          "full_schedule_label": "See HSI BLS course details",
+          "primary_cta_label": "See HSI BLS options"
+        },
+        {
+          "id": "hsi-bls-fa",
+          "label": "HSI BLS With First Aid",
+          "tab_badge": "BLS + First Aid",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "HSI BLS With First Aid",
+          "description": "A combined HSI path for students who need BLS plus first aid in the same certification cycle.",
+          "name_contains": [
+            "HSI BLS with First Aid",
+            "Basic Life Support (BLS) with Adult First Aid",
+            "BLS with Adult First Aid",
+            "BLS With First Aid"
+          ],
+          "exclude_name_contains": [
+            "Instructor"
+          ],
+          "full_schedule_url": "/hsi.html",
+          "full_schedule_label": "Call/text 910-395-5193 for HSI BLS with First Aid dates",
+          "primary_cta_label": "Ask about HSI BLS with First Aid"
+        },
+        {
+          "id": "hsi-first-aid-cpr-aed",
+          "label": "HSI First Aid/CPR/AED",
+          "tab_badge": "First Aid",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "HSI First Aid/CPR/AED",
+          "description": "HSI First Aid/CPR/AED for workplace, school, and professional requirements.",
+          "name_contains": [
+            "HSI First Aid CPR AED",
+            "HSI First Aid/CPR/AED",
+            "HSI - First Aid CPR AED",
+            "First Aid CPR AED"
+          ],
+          "exclude_name_contains": [
+            "AHA",
+            "ARC",
+            "Red Cross",
+            "Heartsaver",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/hsi-first-aid-cpr-aed-in-person.html",
+          "full_schedule_label": "See HSI First Aid/CPR/AED course details",
+          "primary_cta_label": "See HSI First Aid/CPR/AED options"
+        },
+        {
+          "id": "hsi-cpr-aed",
+          "label": "HSI CPR/AED",
+          "tab_badge": "CPR + AED",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "HSI CPR/AED",
+          "description": "HSI CPR/AED for students who need CPR and AED coverage without a first aid component.",
+          "name_contains": [
+            "HSI CPR AED",
+            "HSI CPR/AED"
+          ],
+          "exclude_name_contains": [
+            "First Aid",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/hsi-cpr-aed.html",
+          "full_schedule_label": "See HSI CPR/AED course details",
+          "primary_cta_label": "See HSI CPR/AED options"
         }
       ]
     },
