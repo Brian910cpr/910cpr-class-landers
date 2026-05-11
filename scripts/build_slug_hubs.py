@@ -1388,7 +1388,7 @@ def render_ecosystem_page(page: dict[str, Any], sessions: list[dict[str, Any]], 
     {body}
   </div>
 </div>
-<script src="/assets/hub-ui.js"></script>
+<script src="/assets/hub-ui.js?v=20260511-hash-tabs"></script>
 <script src="/assets/live-sessions.js"></script>
 <script src="/assets/session-expiry.js"></script>
 <script src="/assets/hybrid-inventory.js"></script>
@@ -1494,7 +1494,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
     {body}
   </div>
 </div>
-<script src="/assets/hub-ui.js"></script>
+<script src="/assets/hub-ui.js?v=20260511-hash-tabs"></script>
 <script src="/assets/live-sessions.js"></script>
 <script src="/assets/session-expiry.js"></script>
 <script src="/assets/hybrid-inventory.js"></script>
