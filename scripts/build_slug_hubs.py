@@ -1219,6 +1219,69 @@ def render_other_training_options(page: dict[str, Any]) -> str:
 """.strip()
 
 
+def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
+    if page.get("slug") != "heartsaver":
+        return ""
+    cards = [
+        {
+            "href": "#hs-fa-cpr-aed-ip",
+            "image": "/images/HS-FA-CPR-AED.jpeg",
+            "title": "Heartsaver First Aid CPR AED",
+            "copy": "The AHA Heartsaver First Aid CPR AED course is designed for anyone who needs a course completion card for their job, regulatory requirements, OSHA, or other requirements. This course teaches first aid, CPR, and AED use for emergencies in any setting.",
+        },
+        {
+            "href": "/courses/aha-heartsaver-cpr-aed.html",
+            "image": "/images/HS-CPR-AED.jpeg",
+            "title": "Heartsaver CPR AED",
+            "copy": "This course teaches adult CPR and AED use, choking relief, and response skills for people who need CPR/AED training without first aid. It is a focused option for job, regulatory, or personal preparedness needs.",
+        },
+        {
+            "href": "/courses/heartsaver-first-aid.html",
+            "image": "/images/HS-FA.jpeg",
+            "title": "Heartsaver First Aid",
+            "copy": "The AHA Heartsaver First Aid course is designed for anyone with limited or no medical training who needs a course completion card in first aid to meet job, regulatory, or other requirements.",
+        },
+        {
+            "href": "#hs-pediatric-ip",
+            "image": "/images/HS-PEDI-FA-CPR-AED.jpeg",
+            "title": "Pediatric First Aid CPR AED",
+            "copy": "The AHA Heartsaver Pediatric First Aid CPR AED course is designed for anyone involved in childcare who has a duty to respond to illnesses and injuries in a child or infant in the first few minutes until professional help arrives. Including: childcare workers, teachers, camp counselors, etc.",
+        },
+        {
+            "href": "/request_group_session.html?program=Bloodborne%20Pathogens",
+            "image": "/images/HS-BBP.jpeg",
+            "title": "Bloodborne Pathogens",
+            "copy": "Heartsaver Bloodborne Pathogens online course teaches employees how to protect themselves and others from being exposed to blood or blood-containing materials. This course is designed to meet OSHA requirements for bloodborne pathogens training when paired with site-specific instruction.",
+        },
+    ]
+    rendered = []
+    for card in cards:
+        rendered.append(
+            f"""
+        <a class="course-jump-card heartsaver-jump-card" href="{escape(card['href'], quote=True)}">
+          <img src="{escape(card['image'], quote=True)}" alt="" loading="lazy">
+          <strong>{escape(card['title'])}</strong>
+          <span>{escape(card['copy'])}</span>
+          <b>View course options</b>
+        </a>
+""".rstrip()
+        )
+    return f"""
+  <section class="home-course-jumps heartsaver-course-jumps" aria-label="Heartsaver course options">
+    <div class="section-heading heartsaver-course-heading">
+      <div>
+        <div class="eyebrow">General Public Courses</div>
+        <h2>Jump to Heartsaver options</h2>
+      </div>
+      <p class="section-copy">Workforce, construction, childcare, health and fitness, hospitality, and general public CPR, AED, and first aid paths.</p>
+    </div>
+    <div class="heartsaver-course-grid">
+      {''.join(rendered)}
+    </div>
+  </section>
+""".rstrip()
+
+
 def render_brand_bar() -> str:
     return """
 <header class="site-brand-bar">
@@ -1468,6 +1531,7 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
   </section>
   {render_emergency_alert()}
   {render_guidance_banners(page, banner_library)}
+  {render_heartsaver_course_jumps(page)}
   {tabs_html}
   {render_google_trust_block()}
   {render_group_training_push(page, first_tab, group_mode=group_mode)}
