@@ -782,7 +782,7 @@ def render_homepage() -> str:
     <div class="card home-noscript">
       <h2>Quick class links</h2>
       <p>Class times could not load in this browser. You can still choose a course page below.</p>
-      <p><a class="button primary" href="/bls.html">BLS</a> <a class="button secondary" href="/acls.html">ACLS</a> <a class="button secondary" href="/pals.html">PALS</a> <a class="button secondary" href="/heartsaver.html">Heartsaver</a> <a class="button secondary" href="/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended">Pediatric First Aid CPR AED</a> <a class="button secondary" href="/arc.html">ARC</a> <a class="button secondary" href="/hsi.html">HSI</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG</a> <a class="button secondary" href="/group-training.html">Group Training</a></p>
+      <p><a class="button primary" href="/bls.html">BLS</a> <a class="button secondary" href="/acls.html">ACLS</a> <a class="button secondary" href="/pals.html">PALS</a> <a class="button secondary" href="/heartsaver.html">Heartsaver</a> <a class="button secondary" href="/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended">Pediatric First Aid CPR AED</a> <a class="button secondary" href="/arc">ARC</a> <a class="button secondary" href="/hsi">HSI</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG</a> <a class="button secondary" href="/group-training.html">Group Training</a></p>
     </div>
   </div>
 </noscript>
@@ -1150,8 +1150,8 @@ def build():
         f"{SITE_BASE}/acls.html",
         f"{SITE_BASE}/pals.html",
         f"{SITE_BASE}/heartsaver.html",
-        f"{SITE_BASE}/arc.html",
-        f"{SITE_BASE}/hsi.html",
+        f"{SITE_BASE}/arc",
+        f"{SITE_BASE}/hsi",
         f"{SITE_BASE}/uscg-elementary-first-aid-cpr.html",
         f"{SITE_BASE}/group-training.html",
         f"{SITE_BASE}/request_group_session.html",

@@ -1451,6 +1451,54 @@ a {
   line-height: 1.65;
 }
 
+.ecosystem-hub {
+  --ecosystem-accent: var(--cta);
+  --ecosystem-soft: #f5f8fb;
+}
+
+.ecosystem-arc {
+  --ecosystem-accent: #c8102e;
+  --ecosystem-soft: #fff4f6;
+}
+
+.ecosystem-hsi {
+  --ecosystem-accent: #0f766e;
+  --ecosystem-soft: #ecfdf7;
+}
+
+.ecosystem-hub .slug-hero-image,
+.ecosystem-card-logo {
+  object-fit: contain;
+  background: var(--ecosystem-soft);
+}
+
+.ecosystem-hub .slug-hero-image {
+  padding: 24px;
+}
+
+.ecosystem-card {
+  border-top: 4px solid var(--ecosystem-accent);
+}
+
+.ecosystem-card-logo {
+  padding: 12px;
+  border-color: color-mix(in srgb, var(--ecosystem-accent) 25%, var(--border));
+}
+
+.ecosystem-points {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.ecosystem-empty-note {
+  border-color: color-mix(in srgb, var(--ecosystem-accent) 30%, var(--border-strong));
+  background: linear-gradient(180deg, #ffffff 0%, var(--ecosystem-soft) 100%);
+}
+
 .home-noscript {
   margin-top: 18px;
 }

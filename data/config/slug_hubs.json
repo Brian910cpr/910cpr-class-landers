@@ -300,13 +300,13 @@
         {
           "label": "American Red Cross Courses",
           "description": "Compare Red Cross options if your employer, school, or program prefers ARC certification.",
-          "href": "/arc.html",
+          "href": "/arc",
           "cta": "Compare ARC options"
         },
         {
           "label": "HSI Courses",
           "description": "Explore HSI workplace-focused options when you need a non-AHA certification path.",
-          "href": "/hsi.html",
+          "href": "/hsi",
           "cta": "Compare HSI options"
         },
         {
@@ -666,7 +666,7 @@
             "First Aid",
             "Instructor"
           ],
-          "full_schedule_url": "/courses/hsi-bls-online-skills.html",
+          "full_schedule_url": "/courses/hsi-bls-blended-learning-skills-session.html",
           "full_schedule_label": "See HSI BLS course details",
           "primary_cta_label": "See HSI BLS details",
           "secondary_cta_label": "Ask about HSI BLS dates"
@@ -702,7 +702,7 @@
           "exclude_name_contains": [
             "Instructor"
           ],
-          "full_schedule_url": "/hsi.html",
+          "full_schedule_url": "/hsi",
           "full_schedule_label": "Call/text 910-395-5193 for HSI BLS with First Aid dates",
           "primary_cta_label": "Review HSI BLS + First Aid",
           "secondary_cta_label": "Ask about combo dates"
@@ -743,7 +743,7 @@
             "Heartsaver",
             "Instructor"
           ],
-          "full_schedule_url": "/courses/hsi-first-aid-cpr-aed-in-person.html",
+          "full_schedule_url": "/courses/hsi-first-aid-cpr-aed.html",
           "full_schedule_label": "See HSI First Aid/CPR/AED course details",
           "primary_cta_label": "See HSI First Aid details",
           "secondary_cta_label": "Ask about HSI First Aid dates"

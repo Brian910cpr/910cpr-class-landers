@@ -36,8 +36,9 @@ Admin mode requires `ADMIN_TOKEN`. The token is sent from the dashboard as `X-Ad
 From the repo root:
 
 ```powershell
+python -m pip install -r requirements.txt
 $env:ADMIN_TOKEN="set-a-local-token"
-C:\Users\ten77\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\fb_post_machine_admin.py
+python scripts\fb_post_machine_admin.py
 ```
 
 Open:
@@ -50,7 +51,15 @@ Enter the same admin token in the dashboard. Leave the Admin API base URL blank 
 
 ## Render Admin Mode
 
-Deploy `scripts/fb_post_machine_admin.py` as the Render web service start command. Set environment variables in the Render dashboard:
+The repo includes `render.yaml`, `requirements.txt`, and `runtime.txt` for a Render web service.
+
+Render start command:
+
+```text
+gunicorn scripts.fb_post_machine_admin:app --bind 0.0.0.0:$PORT
+```
+
+Set environment variables in the Render dashboard:
 
 ```text
 ADMIN_TOKEN=<strong random token>
@@ -66,6 +75,19 @@ https://your-service.onrender.com
 ```
 
 When the dashboard is served from GitHub Pages, browser requests go cross-origin to Render. The admin server sends CORS headers and requires `ADMIN_TOKEN` for protected endpoints.
+
+### First Deploy Checklist
+
+1. Create a Render Web Service from this repo.
+2. Use the included `render.yaml` or set the start command to `gunicorn scripts.fb_post_machine_admin:app --bind 0.0.0.0:$PORT`.
+3. Set `ADMIN_TOKEN` to a strong random value.
+4. Set `FB_POST_DRY_RUN=true`.
+5. Deploy the service.
+6. Open `/api/facebook-post-machine/status` on the Render service URL.
+7. Open the Facebook Post Machine dashboard.
+8. Enter the Render service URL as the Admin API base URL.
+9. Enter the same `ADMIN_TOKEN`.
+10. Connect dashboard to Render API URL.
 
 ## Security Notes
 

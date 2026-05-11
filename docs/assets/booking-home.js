@@ -40,7 +40,7 @@
       id: "arc",
       title: "American Red Cross",
       audience: "For students whose employer, school, or program specifically requests Red Cross certification.",
-      fullScheduleUrl: "/arc.html",
+      fullScheduleUrl: "/arc",
       fullScheduleLabel: "Compare ARC options",
       emptyLabel: "No ARC dates are posted here right now.",
     },
@@ -48,7 +48,7 @@
       id: "hsi",
       title: "HSI",
       audience: "For workplaces, schools, and professional requirements that accept or request HSI certification.",
-      fullScheduleUrl: "/hsi.html",
+      fullScheduleUrl: "/hsi",
       fullScheduleLabel: "Compare HSI options",
       emptyLabel: "No HSI dates are posted here right now.",
     },
@@ -548,8 +548,8 @@
             <a class="home-stat" href="/acls.html">ACLS</a>
             <a class="home-stat" href="/pals.html">PALS</a>
             <a class="home-stat" href="/heartsaver.html">Heartsaver &amp; First Aid</a>
-            <a class="home-stat" href="/arc.html">American Red Cross</a>
-            <a class="home-stat" href="/hsi.html">HSI</a>
+            <a class="home-stat" href="/arc">American Red Cross</a>
+            <a class="home-stat" href="/hsi">HSI</a>
             <a class="home-stat" href="/uscg-elementary-first-aid-cpr.html">USCG First Aid/CPR</a>
             <a class="home-stat" href="/request_group_session.html">Request Group Training</a>
           </p>
