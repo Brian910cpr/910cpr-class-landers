@@ -1,0 +1,56 @@
+[
+  {
+    "id": "nursing-healthcare-students",
+    "label": "Nursing / healthcare student cycle",
+    "audiences": ["nursing students", "dental hygiene students", "radiography students", "EMS students", "healthcare onboarding"],
+    "likely_courses": ["AHA BLS Provider", "AHA BLS Provider Renewal", "AHA BLS HeartCode Skills"],
+    "post_angles": ["CPR vs BLS", "What class do healthcare programs usually require?", "Do not wait until orientation week"],
+    "recommended_910cpr_link": "https://910cpr.com/courses/aha-bls-provider.html",
+    "default_image_category": "AHA/BLS healthcare"
+  },
+  {
+    "id": "church-safety-teams",
+    "label": "Churches / safety teams",
+    "audiences": ["church safety teams", "ushers", "children's ministry volunteers", "faith community leaders"],
+    "likely_courses": ["Heartsaver CPR AED", "Heartsaver First Aid CPR AED", "On-site group training"],
+    "post_angles": ["Sunday morning emergency readiness", "AED and response plan check", "Volunteer team preparedness"],
+    "recommended_910cpr_link": "https://910cpr.com/courses/cpr-aed-first-aid-on-site-group-class.html",
+    "default_image_category": "church/community safety"
+  },
+  {
+    "id": "hoa-pool-community",
+    "label": "HOAs / neighborhood pools",
+    "audiences": ["HOA boards", "pool committees", "neighborhood volunteers", "community managers"],
+    "likely_courses": ["Heartsaver CPR AED", "First Aid CPR AED", "On-site group training"],
+    "post_angles": ["Pool season CPR readiness", "AED awareness", "Choking and drowning response basics"],
+    "recommended_910cpr_link": "https://910cpr.com/courses/aha-heartsaver-first-aid-cpr-aed.html",
+    "default_image_category": "AED readiness"
+  },
+  {
+    "id": "parents-infant-choking",
+    "label": "Parents / infant choking",
+    "audiences": ["parents", "grandparents", "babysitters", "new families"],
+    "likely_courses": ["Family & Friends CPR", "Infant CPR and Choking Relief", "Pediatric First Aid CPR AED"],
+    "post_angles": ["Infant choking readiness", "Grandparent and babysitter confidence", "Practice before it is needed"],
+    "recommended_910cpr_link": "https://910cpr.com/courses/infant-cpr-and-choking-relief.html",
+    "default_image_category": "family/infant/choking"
+  },
+  {
+    "id": "workplace-first-aid",
+    "label": "Workplace / first aid kits",
+    "audiences": ["small businesses", "supervisors", "safety coordinators", "front desk teams"],
+    "likely_courses": ["HSI First Aid CPR AED", "Workplace group training", "Heartsaver First Aid CPR AED"],
+    "post_angles": ["Comfort-only kit vs emergency-ready kit", "Real response before EMS arrives", "OSHA-minded readiness"],
+    "recommended_910cpr_link": "https://910cpr.com/courses/hsi-first-aid-cpr-aed.html",
+    "default_image_category": "workplace safety"
+  },
+  {
+    "id": "hurricane-coastal-prep",
+    "label": "Hurricane / coastal NC preparedness",
+    "audiences": ["coastal families", "workplaces", "churches", "community groups"],
+    "likely_courses": ["First Aid CPR AED", "On-site group training"],
+    "post_angles": ["Delayed EMS access", "Road closures and basic first aid", "Emergency kit readiness"],
+    "recommended_910cpr_link": "https://910cpr.com/courses/hsi-first-aid-cpr-aed.html",
+    "default_image_category": "hurricane/coastal prep"
+  }
+]

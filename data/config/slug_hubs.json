@@ -462,7 +462,37 @@
       "hero_image": "/images/0arc.png",
       "hero_image_alt": "American Red Cross training logo",
       "full_schedule_banner": "Need more Red Cross options or upcoming dates? Open the full schedule for the selected ARC path.",
+      "ecosystem_hub": true,
       "keep_empty_tabs": true,
+      "primary_cta_label": "Compare Red Cross options",
+      "secondary_cta_label": "Request ARC group training",
+      "trust_title": "Red Cross training, routed clearly",
+      "trust_copy": "Use this permanent hub for renewal emails, QR codes, scheduling help, and future Red Cross class inventory.",
+      "category_eyebrow": "Red Cross Course Categories",
+      "category_title": "Choose the ARC path your requirement names",
+      "category_copy": "ARC categories remain available here even while new public dates are being added.",
+      "empty_copy": "Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance.",
+      "future_categories_title": "Future Red Cross paths can be coordinated",
+      "future_categories": [
+        {
+          "label": "ARC ALS",
+          "description": "Advanced Life Support may be coordinated when a clinical team or employer specifically needs Red Cross ALS.",
+          "href": "/request_group_session.html?program=ARC%20ALS",
+          "cta": "Ask about ARC ALS"
+        },
+        {
+          "label": "ARC Instructor Courses",
+          "description": "Instructor-level Red Cross requests should be routed through scheduling support so prerequisites and availability can be confirmed.",
+          "href": "/request_group_session.html?program=ARC%20Instructor%20Course",
+          "cta": "Ask about instructor training"
+        },
+        {
+          "label": "ARC Babysitting / Layperson",
+          "description": "Layperson and babysitting-focused Red Cross tracks may be coordinated for groups, schools, and community programs.",
+          "href": "/request_group_session.html?program=ARC%20Babysitting%20Layperson",
+          "cta": "Ask about layperson tracks"
+        }
+      ],
       "tabs": [
         {
           "id": "arc-bls",
@@ -471,10 +501,27 @@
           "tab_icon": "/images/tab_classroom.png",
           "program": "ARC BLS",
           "description": "American Red Cross BLS options for healthcare providers and students who need ARC specifically.",
+          "card_image": "/images/0arc.png",
+          "category_chips": [
+            "Healthcare",
+            "Red Cross"
+          ],
+          "ecosystem_points": [
+            "For healthcare-provider level BLS requirements that name American Red Cross.",
+            "Useful for students, clinical staff, responders, and employer-specific renewal routing.",
+            "Public dates appear here automatically when matching sessions are available."
+          ],
+          "certifying_bodies": [
+            "ARC",
+            "Red Cross",
+            "American Red Cross"
+          ],
           "name_contains": [
             "ARC BLS",
             "American Red Cross BLS",
-            "Red Cross BLS"
+            "Red Cross BLS",
+            "red cross basic life support",
+            "american red cross basic life support"
           ],
           "exclude_name_contains": [
             "PALS",
@@ -483,7 +530,8 @@
           ],
           "full_schedule_url": "/courses/arc-bls-provider.html",
           "full_schedule_label": "See ARC BLS course details",
-          "primary_cta_label": "See ARC BLS options"
+          "primary_cta_label": "See ARC BLS details",
+          "secondary_cta_label": "Ask about ARC BLS dates"
         },
         {
           "id": "arc-cpr-aed",
@@ -492,12 +540,29 @@
           "tab_icon": "/images/tab_classroom.png",
           "program": "ARC CPR/AED",
           "description": "Red Cross CPR/AED training for workplace and general certification needs when first aid is not required.",
+          "card_image": "/images/0arc.png",
+          "category_chips": [
+            "CPR/AED",
+            "Lay responder"
+          ],
+          "ecosystem_points": [
+            "For requirements that name Red Cross Adult CPR/AED or ARC CPR/AED.",
+            "Best when first aid is not part of the requested credential.",
+            "Public dates and appointment routing can be added without changing this stable URL."
+          ],
+          "certifying_bodies": [
+            "ARC",
+            "Red Cross",
+            "American Red Cross"
+          ],
           "name_contains": [
             "ARC CPR/AED",
             "ARC CPR AED",
             "American Red Cross CPR/AED",
             "Red Cross CPR/AED",
-            "Red Cross CPR AED"
+            "Red Cross CPR AED",
+            "Red Cross Adult CPR/AED",
+            "Red Cross Adult CPR AED"
           ],
           "exclude_name_contains": [
             "First Aid",
@@ -505,7 +570,8 @@
           ],
           "full_schedule_url": "/courses/arc-cpr-aed.html",
           "full_schedule_label": "See ARC CPR/AED course details",
-          "primary_cta_label": "See ARC CPR/AED options"
+          "primary_cta_label": "See ARC CPR/AED details",
+          "secondary_cta_label": "Ask about ARC CPR/AED dates"
         },
         {
           "id": "arc-first-aid-cpr-aed",
@@ -514,20 +580,38 @@
           "tab_icon": "/images/tab_classroom.png",
           "program": "ARC First Aid/CPR/AED",
           "description": "Red Cross First Aid/CPR/AED for workplaces, schools, and programs that require ARC certification.",
+          "card_image": "/images/0arc.png",
+          "category_chips": [
+            "First Aid",
+            "CPR/AED"
+          ],
+          "ecosystem_points": [
+            "For workplace, school, and program requirements that need Red Cross first aid with CPR/AED.",
+            "Useful when a non-AHA certifying body is required.",
+            "If no public date is listed, scheduling support can route the request."
+          ],
+          "certifying_bodies": [
+            "ARC",
+            "Red Cross",
+            "American Red Cross"
+          ],
           "name_contains": [
             "ARC First Aid CPR AED",
             "ARC First Aid/CPR/AED",
             "American Red Cross First Aid CPR AED",
             "American Red Cross First Aid/CPR/AED",
             "Red Cross First Aid CPR AED",
-            "Red Cross First Aid/CPR/AED"
+            "Red Cross First Aid/CPR/AED",
+            "Red Cross Adult First Aid CPR/AED",
+            "Red Cross Adult First Aid CPR AED"
           ],
           "exclude_name_contains": [
             "Instructor"
           ],
           "full_schedule_url": "/courses/arc-first-aid-cpr-aed.html",
           "full_schedule_label": "See ARC First Aid/CPR/AED course details",
-          "primary_cta_label": "See ARC First Aid/CPR/AED options"
+          "primary_cta_label": "See ARC First Aid/CPR/AED details",
+          "secondary_cta_label": "Ask about ARC First Aid dates"
         }
       ]
     },
@@ -541,7 +625,16 @@
       "hero_image": "/images/0hsi.png",
       "hero_image_alt": "HSI training logo",
       "full_schedule_banner": "Need more HSI options or upcoming dates? Open the full schedule for the selected HSI path.",
+      "ecosystem_hub": true,
       "keep_empty_tabs": true,
+      "primary_cta_label": "Compare HSI options",
+      "secondary_cta_label": "Request HSI workplace training",
+      "trust_title": "Built for workplace routing",
+      "trust_copy": "This permanent HSI hub supports renewal emails, appointment routing, QR codes, group training, and future public sessions.",
+      "category_eyebrow": "HSI Course Categories",
+      "category_title": "Choose the HSI path that fits the job requirement",
+      "category_copy": "HSI categories stay visible for workplace and group scheduling even when public inventory is temporarily sparse.",
+      "empty_copy": "Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance.",
       "tabs": [
         {
           "id": "hsi-bls",
@@ -550,8 +643,23 @@
           "tab_icon": "/images/tab_classroom.png",
           "program": "HSI BLS",
           "description": "HSI Basic Life Support for healthcare providers and students whose requirement accepts HSI.",
+          "card_image": "/images/0hsi.png",
+          "category_chips": [
+            "BLS",
+            "Healthcare"
+          ],
+          "ecosystem_points": [
+            "For healthcare-provider level BLS requirements that accept HSI.",
+            "Useful for employers, students, and teams that do not need AHA specifically.",
+            "Public dates appear automatically when matching HSI BLS sessions are available."
+          ],
+          "certifying_bodies": [
+            "HSI",
+            "ASHI"
+          ],
           "name_contains": [
             "HSI BLS",
+            "HSI Basic Life Support",
             "Basic Life Support"
           ],
           "exclude_name_contains": [
@@ -560,7 +668,8 @@
           ],
           "full_schedule_url": "/courses/hsi-bls-online-skills.html",
           "full_schedule_label": "See HSI BLS course details",
-          "primary_cta_label": "See HSI BLS options"
+          "primary_cta_label": "See HSI BLS details",
+          "secondary_cta_label": "Ask about HSI BLS dates"
         },
         {
           "id": "hsi-bls-fa",
@@ -569,18 +678,34 @@
           "tab_icon": "/images/tab_classroom.png",
           "program": "HSI BLS With First Aid",
           "description": "A combined HSI path for students who need BLS plus first aid in the same certification cycle.",
+          "card_image": "/images/0hsi.png",
+          "category_chips": [
+            "BLS",
+            "First Aid"
+          ],
+          "ecosystem_points": [
+            "For workers who need BLS and first aid aligned in the same renewal cycle.",
+            "Good fit for industrial, safety, and workplace teams with mixed requirements.",
+            "Call/text support can coordinate dates when public inventory is not listed."
+          ],
+          "certifying_bodies": [
+            "HSI",
+            "ASHI"
+          ],
           "name_contains": [
             "HSI BLS with First Aid",
             "Basic Life Support (BLS) with Adult First Aid",
             "BLS with Adult First Aid",
-            "BLS With First Aid"
+            "BLS With First Aid",
+            "HSI BLS First Aid"
           ],
           "exclude_name_contains": [
             "Instructor"
           ],
           "full_schedule_url": "/hsi.html",
           "full_schedule_label": "Call/text 910-395-5193 for HSI BLS with First Aid dates",
-          "primary_cta_label": "Ask about HSI BLS with First Aid"
+          "primary_cta_label": "Review HSI BLS + First Aid",
+          "secondary_cta_label": "Ask about combo dates"
         },
         {
           "id": "hsi-first-aid-cpr-aed",
@@ -589,10 +714,26 @@
           "tab_icon": "/images/tab_classroom.png",
           "program": "HSI First Aid/CPR/AED",
           "description": "HSI First Aid/CPR/AED for workplace, school, and professional requirements.",
+          "card_image": "/images/0hsi.png",
+          "category_chips": [
+            "First Aid",
+            "CPR/AED"
+          ],
+          "ecosystem_points": [
+            "For OSHA-style workplace first aid, CPR, and AED requirements.",
+            "Strong fit for business, industrial, school, and staff training needs.",
+            "Public and group training requests can route from this stable category."
+          ],
+          "certifying_bodies": [
+            "HSI",
+            "ASHI"
+          ],
           "name_contains": [
             "HSI First Aid CPR AED",
             "HSI First Aid/CPR/AED",
             "HSI - First Aid CPR AED",
+            "HSI Adult First Aid CPR AED",
+            "HSI Adult First Aid/CPR/AED",
             "First Aid CPR AED"
           ],
           "exclude_name_contains": [
@@ -604,7 +745,8 @@
           ],
           "full_schedule_url": "/courses/hsi-first-aid-cpr-aed-in-person.html",
           "full_schedule_label": "See HSI First Aid/CPR/AED course details",
-          "primary_cta_label": "See HSI First Aid/CPR/AED options"
+          "primary_cta_label": "See HSI First Aid details",
+          "secondary_cta_label": "Ask about HSI First Aid dates"
         },
         {
           "id": "hsi-cpr-aed",
@@ -613,9 +755,25 @@
           "tab_icon": "/images/tab_classroom.png",
           "program": "HSI CPR/AED",
           "description": "HSI CPR/AED for students who need CPR and AED coverage without a first aid component.",
+          "card_image": "/images/0hsi.png",
+          "category_chips": [
+            "CPR/AED",
+            "Workplace"
+          ],
+          "ecosystem_points": [
+            "For CPR/AED-only requirements where first aid is not needed.",
+            "Useful for teams that need a shorter workplace safety credential.",
+            "Scheduling support can coordinate public or group options."
+          ],
+          "certifying_bodies": [
+            "HSI",
+            "ASHI"
+          ],
           "name_contains": [
             "HSI CPR AED",
-            "HSI CPR/AED"
+            "HSI CPR/AED",
+            "HSI Adult CPR AED",
+            "HSI Adult CPR/AED"
           ],
           "exclude_name_contains": [
             "First Aid",
@@ -623,7 +781,8 @@
           ],
           "full_schedule_url": "/courses/hsi-cpr-aed.html",
           "full_schedule_label": "See HSI CPR/AED course details",
-          "primary_cta_label": "See HSI CPR/AED options"
+          "primary_cta_label": "See HSI CPR/AED details",
+          "secondary_cta_label": "Ask about HSI CPR/AED dates"
         }
       ]
     },

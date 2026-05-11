@@ -1,0 +1,12 @@
+{
+  "max_posts_per_week": 3,
+  "max_direct_class_promos_per_week": 1,
+  "max_same_topic_per_14_days": 1,
+  "min_days_between_bls_promos": 7,
+  "require_human_approval": true,
+  "dry_run_default": true,
+  "preferred_publish_times": ["09:15", "12:15", "18:30"],
+  "blocked_days": [],
+  "quiet_mode": false,
+  "manual_mode_only": true
+}

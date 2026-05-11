@@ -282,25 +282,52 @@ def matches_tab(session: dict[str, Any], tab: dict[str, Any], *, page_slug: str 
     course_name = normalize_space(session.get("course_name"))
     course_subtitle = normalize_space(session.get("course_subtitle"))
     course_code = normalize_space(session.get("course_code"))
-    haystack = f"{course_name} {course_subtitle}".lower()
-    course_name_lower = course_name.lower()
+    metadata_parts = [
+        course_name,
+        course_subtitle,
+        course_code,
+        normalize_space(session.get("course_key")),
+        normalize_space(session.get("official_course_name")),
+        normalize_space(session.get("raw_course_name")),
+        normalize_space(session.get("certifying_body")),
+        normalize_space(session.get("mapped_certifying_body")),
+        normalize_space(session.get("mapped_family")),
+        normalize_space(session.get("mapped_subtype")),
+        normalize_space(session.get("mapped_clean_title")),
+    ]
+    haystack_raw = " ".join(part for part in metadata_parts if part)
+    haystack = haystack_raw.lower()
+    normalized_haystack = normalize_match_text(haystack_raw)
+
+    certifying_bodies = {normalize_space(body).upper() for body in tab.get("certifying_bodies", []) if normalize_space(body)}
+    if certifying_bodies:
+        session_bodies = {
+            normalize_space(session.get("certifying_body")).upper(),
+            normalize_space(session.get("mapped_certifying_body")).upper(),
+        }
+        if not certifying_bodies.intersection(session_bodies):
+            return False
 
     codes = {normalize_space(code) for code in tab.get("course_codes", []) if normalize_space(code)}
+    needles = [str(item).lower() for item in tab.get("name_contains", []) if str(item).strip()]
+    normalized_needles = [normalize_match_text(item) for item in tab.get("name_contains", []) if str(item).strip()]
     if codes:
-        if course_code:
-            matched = course_code in codes
-        else:
-            needles = [str(item).lower() for item in tab.get("name_contains", []) if str(item).strip()]
-            matched = not needles or any(needle in haystack for needle in needles)
+        matched = course_code in codes or any(needle in haystack for needle in needles)
+        if not matched and normalized_needles:
+            matched = any(needle and needle in normalized_haystack for needle in normalized_needles)
     else:
-        needles = [str(item).lower() for item in tab.get("name_contains", []) if str(item).strip()]
         matched = not needles or any(needle in haystack for needle in needles)
+        if not matched and normalized_needles:
+            matched = any(needle and needle in normalized_haystack for needle in normalized_needles)
 
     if not matched:
         return False
 
     excludes = [str(item).lower() for item in tab.get("exclude_name_contains", []) if str(item).strip()]
-    return not any(needle in course_name_lower for needle in excludes)
+    normalized_excludes = [normalize_match_text(item) for item in tab.get("exclude_name_contains", []) if str(item).strip()]
+    return not any(needle in haystack for needle in excludes) and not any(
+        needle and needle in normalized_haystack for needle in normalized_excludes
+    )
 
 
 def build_acls_debug_records(page: dict[str, Any], sessions: list[dict[str, Any]], *, now: datetime) -> list[dict[str, Any]]:
@@ -1195,7 +1222,176 @@ def render_brand_bar() -> str:
 """.strip()
 
 
+def render_ecosystem_session_preview(sessions: list[dict[str, Any]], *, page_slug: str, empty_copy: str) -> str:
+    if not sessions:
+        return f"""
+        <div class="finder-empty ecosystem-empty">
+          <strong>{escape(empty_copy)}</strong>
+          <p>For help choosing a class path, call or text 910-395-5193.</p>
+        </div>
+""".rstrip()
+    selected = sort_by_start(sessions)[:3]
+    return "\n".join(render_session_card(session, group_mode=False, page_slug=page_slug) for session in selected)
+
+
+def render_ecosystem_category_card(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
+    card_image = escape(tab.get("card_image") or page.get("hero_image") or "/images/logo.png", quote=True)
+    card_alt = escape(tab.get("card_image_alt") or tab.get("label") or page.get("hero_title") or "", quote=True)
+    href = escape(tab.get("full_schedule_url") or f"#{tab.get('id')}", quote=True)
+    request_href = escape(group_request_href(tab.get("program") or tab.get("label")), quote=True)
+    empty_copy = tab.get("empty_copy") or page.get("empty_copy") or "Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance."
+    chips = []
+    if tab.get("tab_badge"):
+        chips.append(f"<span class=\"finder-pill-tag\">{escape(tab['tab_badge'])}</span>")
+    for chip in tab.get("category_chips", []):
+        chips.append(f"<span class=\"finder-pill-tag finder-pill-tag-format\">{escape(chip)}</span>")
+    chips_html = f"<div class=\"finder-pill-tags\">{''.join(chips)}</div>" if chips else ""
+    points_html = "".join(f"<li>{escape(point)}</li>" for point in tab.get("ecosystem_points", []))
+    points_block = f"<ul class=\"ecosystem-points\">{points_html}</ul>" if points_html else ""
+    session_count = len(sessions)
+    session_label = f"{session_count} upcoming date{'s' if session_count != 1 else ''}" if session_count else "Scheduling assistance available"
+
+    return f"""
+      <section class="finder-card ecosystem-card" id="{escape(tab['id'], quote=True)}">
+        <div class="finder-card-head ecosystem-card-head">
+          <div>
+            <div class="home-status-label">{escape(session_label)}</div>
+            <h3>{escape(tab['label'])}</h3>
+            <p class="finder-card-copy">{escape(tab.get('description') or '')}</p>
+            {chips_html}
+          </div>
+          <img class="class-card-course-image ecosystem-card-logo" src="{card_image}" alt="{card_alt}" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        {points_block}
+        <div class="finder-pills ecosystem-session-list">
+          {render_ecosystem_session_preview(sessions, page_slug=str(page.get('slug') or ''), empty_copy=empty_copy)}
+        </div>
+        <div class="finder-card-actions ecosystem-card-actions">
+          <a class="button primary" href="{href}">{escape(tab.get('primary_cta_label') or 'View Details')}</a>
+          <a class="button secondary" href="{request_href}">{escape(tab.get('secondary_cta_label') or 'Ask About Dates')}</a>
+        </div>
+      </section>
+""".rstrip()
+
+
+def render_ecosystem_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_library: dict[str, dict[str, Any]]) -> str:
+    now = datetime.now(TZ)
+    tabs = page.get("tabs", [])
+    category_cards: list[str] = []
+    jump_links: list[str] = []
+    for tab in tabs:
+        matched = []
+        for session in sessions:
+            enriched = enrich_session_for_page(session, page, tab, now=now)
+            if enriched:
+                matched.append(enriched)
+        matched = sort_sessions(matched)
+        jump_links.append(f"<a class=\"jump-chip\" href=\"#{escape(tab['id'], quote=True)}\">{escape(tab['label'])}</a>")
+        category_cards.append(render_ecosystem_category_card(page, tab, matched))
+
+    future_cards = []
+    for card in page.get("future_categories", []):
+        future_cards.append(
+            f"""
+<article class="training-option-card">
+  <h3>{escape(card['label'])}</h3>
+  <p>{escape(card['description'])}</p>
+  <a class="text-link strong-link" href="{escape(card.get('href') or group_request_href(card['label']), quote=True)}">{escape(card.get('cta') or 'Ask about this option')}</a>
+</article>
+""".strip()
+        )
+    future_block = (
+        f"""
+  <section class="slug-training-options ecosystem-future-options">
+    <div class="slug-banner-copy">
+      <div class="slug-banner-eyebrow">Additional Paths</div>
+      <h2>{escape(page.get('future_categories_title') or 'More options can be coordinated')}</h2>
+    </div>
+    <div class="training-option-grid">
+      {''.join(future_cards)}
+    </div>
+  </section>
+""".rstrip()
+        if future_cards
+        else ""
+    )
+
+    first_tab = tabs[0]
+    body = f"""
+<div class="card slug-hub-shell ecosystem-hub ecosystem-{escape(page['slug'], quote=True)}">
+  {render_brand_bar()}
+  <section class="hero slug-hero home-hero ecosystem-hero">
+    <div class="hero-main">
+      <div class="eyebrow">{escape(page['eyebrow'])}</div>
+      <h1>{escape(page['hero_title'])}</h1>
+      <p class="subhead">{escape(page['hero_copy'])}</p>
+      <div class="hero-actions">
+        <a class="button primary" href="#ecosystem-categories">{escape(page.get('primary_cta_label') or 'Compare course options')}</a>
+        <a class="button secondary" href="{escape(group_request_href(page.get('hero_title')), quote=True)}">{escape(page.get('secondary_cta_label') or 'Request group training')}</a>
+      </div>
+    </div>
+    <div class="hero-side">
+      {render_hero_image(page)}
+      <div class="trust-badge ecosystem-trust-badge">
+        <strong>{escape(page.get('trust_title') or 'Permanent training hub')}</strong>
+        <span>{escape(page.get('trust_copy') or 'Use this page for class routing, renewals, QR codes, and future scheduling updates.')}</span>
+      </div>
+    </div>
+  </section>
+  {render_guidance_banners(page, banner_library)}
+  <section class="home-jumps ecosystem-jumps" aria-label="{escape(page['hero_title'], quote=True)} quick links">
+    {''.join(jump_links)}
+  </section>
+  <section class="home-finder ecosystem-categories" id="ecosystem-categories">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">{escape(page.get('category_eyebrow') or 'Course Categories')}</div>
+        <h2>{escape(page.get('category_title') or 'Choose your training path')}</h2>
+      </div>
+      <p class="section-copy">{escape(page.get('category_copy') or 'Each category stays available even while new dates are being added.')}</p>
+    </div>
+    <div class="finder-grid">
+      {''.join(category_cards)}
+    </div>
+  </section>
+  {future_block}
+  {render_google_trust_block()}
+  {render_group_training_push(page, first_tab, group_mode=False)}
+  {render_other_training_options(page)}
+</div>
+"""
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{escape(page['title'])}</title>
+<meta name="description" content="{escape(page['description'])}">
+<link rel="canonical" href="https://www.910cpr.com/{escape(page['slug'])}">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<link rel="stylesheet" href="/css/lander.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="page-shell">
+    {body}
+  </div>
+</div>
+<script src="/assets/hub-ui.js"></script>
+<script src="/assets/live-sessions.js"></script>
+<script src="/assets/session-expiry.js"></script>
+<script src="/assets/hybrid-inventory.js"></script>
+</body>
+</html>"""
+
+
 def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_library: dict[str, dict[str, Any]]) -> str:
+    if page.get("ecosystem_hub"):
+        return render_ecosystem_page(page, sessions, banner_library)
+
     group_mode = bool(page.get("group_mode"))
     now = datetime.now(TZ)
     tabs = page.get("tabs", [])

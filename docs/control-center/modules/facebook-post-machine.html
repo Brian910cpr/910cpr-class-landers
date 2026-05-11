@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Facebook Post Machine - 910CPR Control Center</title>
+  <link rel="stylesheet" href="../control-center.css">
+  <style>
+    .notice {
+      border: 1px solid #6a5423;
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .toolbar,
+    .filter-row,
+    .admin-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: end;
+      justify-content: space-between;
+    }
+
+    .filter-row,
+    .admin-row {
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+      min-width: 180px;
+    }
+
+    .field.grow {
+      flex: 1 1 260px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #0b0e10;
+      color: var(--text);
+      font: inherit;
+      padding: 8px 10px;
+    }
+
+    input[readonly],
+    textarea[readonly],
+    select:disabled {
+      color: var(--muted);
+      border-style: dashed;
+    }
+
+    textarea {
+      min-height: 170px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .post-card {
+      min-width: 0;
+      align-content: start;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .toast {
+      min-height: 24px;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .toast.error {
+      color: var(--red);
+    }
+
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .validation {
+      min-height: 20px;
+      color: var(--red);
+      font-size: 13px;
+    }
+
+    .mode-label {
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .mode-label.static {
+      color: var(--yellow);
+    }
+
+    .admin-only[hidden] {
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      .post-grid,
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body data-page="facebook-post-machine">
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="eyebrow">910CPR Internal Operations</div>
+        <h1>Facebook Post Machine</h1>
+        <p class="subhead">Review, edit, approve, and manually publish local CPR, First Aid, AED, workplace, family, and community safety Facebook Page posts.</p>
+      </div>
+      <nav class="nav" aria-label="Control center modules">
+        <a class="secondary" href="../index.html">Dashboard</a>
+        <a class="secondary" href="lander-builder.html">Lander Builder</a>
+        <a class="secondary" href="diagnostics.html">Diagnostics</a>
+      </nav>
+    </header>
+
+    <section class="section">
+      <div class="notice">
+        <strong>Dry Run / Manual Mode</strong>
+        <span id="mode-notice">Static Mode: changes are local to this browser and not saved to repo.</span>
+        <span>Active mode: <span id="mode-label" class="mode-label static">Static GitHub Pages Mode</span></span>
+      </div>
+    </section>
+
+    <section class="section">
+      <article class="card span-12">
+        <div class="card-header">
+          <div>
+            <h2>Admin Server Connection</h2>
+            <p class="muted">Leave blank for same-origin local admin server. Use a Render base URL when running this page from GitHub Pages.</p>
+          </div>
+          <span id="api-status" class="status none">Checking</span>
+        </div>
+        <div class="admin-row">
+          <label class="field grow">
+            <span class="label">Admin API base URL</span>
+            <input id="api-base" placeholder="https://your-render-service.onrender.com">
+          </label>
+          <label class="field grow">
+            <span class="label">Admin token</span>
+            <input id="admin-token" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN">
+          </label>
+          <button type="button" data-connect-admin>Connect Admin Mode</button>
+          <button type="button" class="secondary" data-static-mode>Use Static Mode</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card span-4">
+          <div class="card-header">
+            <h2>Queue</h2>
+            <span id="queue-count" class="status none">Loading</span>
+          </div>
+          <div class="facts">
+            <div class="fact"><span class="label">Static source</span><span class="value">data/facebook_post_queue.json</span></div>
+            <div class="fact"><span class="label">Admin source</span><span class="value">GET /api/facebook-post-machine/queue</span></div>
+            <div class="fact"><span class="label">Publishing</span><span class="value">Manual copy/paste only</span></div>
+          </div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <h2>Cadence Guardrails</h2>
+            <span id="cadence-status" class="status none">Loading</span>
+          </div>
+          <div id="cadence-summary" class="facts"></div>
+        </article>
+
+        <article class="card span-4">
+          <div class="card-header">
+            <h2>History</h2>
+            <span id="history-count" class="status none">Loading</span>
+          </div>
+          <div id="history-summary" class="list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="toolbar">
+        <div>
+          <h2>Draft Queue</h2>
+          <p class="muted">Static mode is copy/local preview only. Admin mode enables JSON-backed edits and status changes.</p>
+        </div>
+        <div class="actions">
+          <button type="button" class="admin-only" data-create-draft hidden>Create New Draft</button>
+          <button type="button" class="secondary admin-only" data-export-markdown hidden>Export Approved</button>
+        </div>
+      </div>
+      <div class="filter-row" aria-label="Queue filters">
+        <label class="field">
+          <span class="label">Status</span>
+          <select id="status-filter">
+            <option value="all">All statuses</option>
+            <option value="draft">Draft</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="manually_posted">Manually posted</option>
+          </select>
+        </label>
+        <label class="field grow">
+          <span class="label">Topic</span>
+          <input id="topic-filter" type="search" placeholder="Filter by topic">
+        </label>
+        <label class="field grow">
+          <span class="label">Audience</span>
+          <input id="audience-filter" type="search" placeholder="Filter by audience">
+        </label>
+      </div>
+      <div id="toast" class="toast" aria-live="polite"></div>
+      <div id="post-grid" class="post-grid"></div>
+    </section>
+
+    <section class="section">
+      <article class="card span-12">
+        <div class="card-header">
+          <h2>Facebook Events: Experimental</h2>
+          <span class="status none">Future Lane</span>
+        </div>
+        <p class="muted">This pass intentionally targets Page post drafting and manual publishing. Facebook Events automation remains a later lane because official Events API access may be restricted and browser automation can be fragile.</p>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const PREVIEW_KEY = "910cpr.facebookPostMachine.previewStatus";
+    const API_BASE_KEY = "910cpr.facebookPostMachine.apiBase";
+    const TOKEN_KEY = "910cpr.facebookPostMachine.adminToken";
+
+    const state = {
+      queue: [],
+      cadence: null,
+      history: [],
+      apiBase: localStorage.getItem(API_BASE_KEY) || "",
+      adminToken: sessionStorage.getItem(TOKEN_KEY) || "",
+      adminMode: false,
+      previewStatus: loadPreviewStatus(),
+      filters: { status: "all", topic: "", audience: "" }
+    };
+
+    function loadPreviewStatus() {
+      try {
+        return JSON.parse(localStorage.getItem(PREVIEW_KEY) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function savePreviewStatus() {
+      localStorage.setItem(PREVIEW_KEY, JSON.stringify(state.previewStatus));
+    }
+
+    function apiUrl(path) {
+      const base = state.apiBase.trim().replace(/\/$/, "");
+      return `${base}${path}`;
+    }
+
+    function authHeaders() {
+      return state.adminToken ? { "X-Admin-Token": state.adminToken } : {};
+    }
+
+    async function readJson(paths) {
+      for (const path of paths) {
+        try {
+          const response = await fetch(path, { cache: "no-store" });
+          if (response.ok) return await response.json();
+        } catch {
+          // Try next path.
+        }
+      }
+      return null;
+    }
+
+    async function apiGet(path, expectText = false) {
+      const response = await fetch(apiUrl(path), {
+        cache: "no-store",
+        headers: authHeaders()
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error((data.errors || [`HTTP ${response.status}`]).join("; "));
+      }
+      return expectText ? response.text() : response.json();
+    }
+
+    async function apiPost(path, payload) {
+      const response = await fetch(apiUrl(path), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...authHeaders() },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || data.ok === false) {
+        throw new Error((data.errors || ["Save failed"]).join("; "));
+      }
+      return data;
+    }
+
+    function effectiveStatus(item) {
+      return state.adminMode ? item.status : (state.previewStatus[item.id] || item.status);
+    }
+
+    function statusClass(status) {
+      if (status === "approved" || status === "manually_posted") return "normal";
+      if (status === "rejected") return "action";
+      if (status === "draft") return "opportunity";
+      return "none";
+    }
+
+    function setToast(message, isError = false) {
+      const node = document.getElementById("toast");
+      node.textContent = message;
+      node.classList.toggle("error", isError);
+      if (message) setTimeout(() => {
+        if (node.textContent === message) node.textContent = "";
+      }, isError ? 5200 : 2400);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function validateDraft(item) {
+      const errors = [];
+      if (!item.message.trim()) errors.push("message is required");
+      if (!item.recommended_910cpr_link.trim()) errors.push("recommended_910cpr_link is required");
+      if (item.recommended_910cpr_link.trim() && !item.recommended_910cpr_link.trim().startsWith("https://910cpr.com/")) {
+        errors.push("link must begin with https://910cpr.com/");
+      }
+      if (!item.topic.trim()) errors.push("topic is required");
+      if (!item.audience.trim()) errors.push("audience is required");
+      return errors;
+    }
+
+    function collectItem(id) {
+      const original = state.queue.find(item => item.id === id) || {};
+      return {
+        ...original,
+        id,
+        status: document.querySelector(`[data-status-input="${CSS.escape(id)}"]`)?.value || original.status || "draft",
+        topic: document.querySelector(`[data-topic-input="${CSS.escape(id)}"]`)?.value || "",
+        audience: document.querySelector(`[data-audience-input="${CSS.escape(id)}"]`)?.value || "",
+        message: document.querySelector(`[data-message-input="${CSS.escape(id)}"]`)?.value || "",
+        recommended_910cpr_link: document.querySelector(`[data-link-input="${CSS.escape(id)}"]`)?.value || "",
+        image_category: document.querySelector(`[data-image-input="${CSS.escape(id)}"]`)?.value || "910CPR brand/wave fallback",
+        reason: document.querySelector(`[data-reason-input="${CSS.escape(id)}"]`)?.value || "Operator-created draft."
+      };
+    }
+
+    async function copyText(text, label) {
+      try {
+        await navigator.clipboard.writeText(text || "");
+      } catch {
+        const textarea = document.createElement("textarea");
+        textarea.value = text || "";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+      }
+      setToast(`${label} copied.`);
+    }
+
+    async function saveDraft(id) {
+      if (!state.adminMode) {
+        setToast("Static Mode: changes are local to this browser and not saved to repo.", true);
+        return;
+      }
+      const item = collectItem(id);
+      const errors = validateDraft(item);
+      const validation = document.querySelector(`[data-validation="${CSS.escape(id)}"]`);
+      if (validation) validation.textContent = errors.join("; ");
+      if (errors.length) {
+        setToast("Fix validation errors before saving.", true);
+        return;
+      }
+      try {
+        const data = await apiPost("/api/facebook-post-machine/save", { item });
+        state.queue = data.queue || state.queue;
+        render();
+        setToast("Draft saved to JSON.");
+      } catch (error) {
+        setToast(error.message, true);
+      }
+    }
+
+    async function updateStatus(id, status) {
+      if (!state.adminMode) {
+        state.previewStatus[id] = status;
+        savePreviewStatus();
+        render();
+        setToast(`Preview status set to ${status.replace("_", " ")} in this browser.`);
+        return;
+      }
+      const current = collectItem(id);
+      const errors = validateDraft({ ...current, status });
+      const validation = document.querySelector(`[data-validation="${CSS.escape(id)}"]`);
+      if (validation) validation.textContent = errors.join("; ");
+      if (errors.length) {
+        setToast("Fix validation errors before changing status.", true);
+        return;
+      }
+      try {
+        await apiPost("/api/facebook-post-machine/save", { item: { ...current, status } });
+        const data = await apiPost("/api/facebook-post-machine/status-update", { id, status });
+        state.queue = data.queue || state.queue;
+        state.history = data.history || state.history;
+        render();
+        setToast(`Marked ${status.replace("_", " ")} in JSON.`);
+      } catch (error) {
+        setToast(error.message, true);
+      }
+    }
+
+    async function createDraft() {
+      if (!state.adminMode) return;
+      try {
+        const data = await apiPost("/api/facebook-post-machine/create", { item: {} });
+        state.queue = data.queue || state.queue;
+        state.filters.status = "draft";
+        document.getElementById("status-filter").value = "draft";
+        render();
+        setToast("New draft created.");
+      } catch (error) {
+        setToast(error.message, true);
+      }
+    }
+
+    async function exportMarkdown() {
+      if (!state.adminMode) return;
+      try {
+        const markdown = await apiGet("/api/facebook-post-machine/export-approved", true);
+        const blob = new Blob([markdown], { type: "text/markdown" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "facebook-approved-posts.md";
+        link.click();
+        URL.revokeObjectURL(url);
+        setToast("Markdown export downloaded.");
+      } catch (error) {
+        setToast(error.message, true);
+      }
+    }
+
+    function filteredItems() {
+      return state.queue.filter(item => {
+        const status = effectiveStatus(item);
+        if (state.filters.status !== "all" && status !== state.filters.status) return false;
+        if (state.filters.topic && !item.topic.toLowerCase().includes(state.filters.topic)) return false;
+        if (state.filters.audience && !item.audience.toLowerCase().includes(state.filters.audience)) return false;
+        return true;
+      });
+    }
+
+    function renderMode() {
+      const label = document.getElementById("mode-label");
+      const notice = document.getElementById("mode-notice");
+      const apiStatus = document.getElementById("api-status");
+      document.querySelectorAll(".admin-only").forEach(node => {
+        node.hidden = !state.adminMode;
+      });
+      if (state.adminMode) {
+        label.textContent = "Admin Server Mode";
+        label.classList.remove("static");
+        notice.textContent = "Admin Server Mode: edits and status changes persist through the admin API. Meta publishing is still disabled.";
+        apiStatus.textContent = "Admin Active";
+        apiStatus.className = "status normal";
+      } else {
+        label.textContent = "Static GitHub Pages Mode";
+        label.classList.add("static");
+        notice.textContent = "Static Mode: changes are local to this browser and not saved to repo.";
+        apiStatus.textContent = "Static";
+        apiStatus.className = "status due";
+      }
+    }
+
+    function renderCadence() {
+      const status = document.getElementById("cadence-status");
+      const summary = document.getElementById("cadence-summary");
+      if (!state.cadence) {
+        status.textContent = "Missing";
+        status.className = "status action";
+        summary.innerHTML = `<p class="muted">Could not load cadence rules.</p>`;
+        return;
+      }
+      status.textContent = "Manual";
+      status.className = "status opportunity";
+      summary.innerHTML = `
+        <div class="fact"><span class="label">Max posts/week</span><span class="value">${state.cadence.max_posts_per_week}</span></div>
+        <div class="fact"><span class="label">Direct promos/week</span><span class="value">${state.cadence.max_direct_class_promos_per_week}</span></div>
+        <div class="fact"><span class="label">Human approval</span><span class="value">${state.cadence.require_human_approval ? "Required" : "Not required"}</span></div>
+        <div class="fact"><span class="label">Dry run default</span><span class="value">${state.cadence.dry_run_default ? "Enabled" : "Disabled"}</span></div>
+      `;
+    }
+
+    function renderHistory() {
+      const history = Array.isArray(state.history) ? state.history : [];
+      const count = document.getElementById("history-count");
+      const summary = document.getElementById("history-summary");
+      count.textContent = `${history.length} items`;
+      count.className = "status opportunity";
+      if (!history.length) {
+        summary.innerHTML = `<div class="list-item"><span>No persisted manual-post history yet.</span><span class="status none">Manual</span></div>`;
+        return;
+      }
+      summary.innerHTML = history.slice(-3).reverse().map(item => `
+        <div class="list-item">
+          <div><strong>${escapeHtml(item.topic)}</strong><div class="muted">${escapeHtml(item.recorded_at || "Recorded")}</div></div>
+          <span class="status normal">Manual</span>
+        </div>
+      `).join("");
+    }
+
+    function renderQueueCount(items) {
+      const count = document.getElementById("queue-count");
+      const totals = items.reduce((acc, item) => {
+        const status = effectiveStatus(item);
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      }, {});
+      count.textContent = `${items.length} posts`;
+      count.className = "status opportunity";
+      count.title = Object.entries(totals).map(([key, value]) => `${key}: ${value}`).join(", ");
+    }
+
+    function renderPosts() {
+      const grid = document.getElementById("post-grid");
+      const filtered = filteredItems();
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="empty">No posts match these filters.</div>`;
+        return;
+      }
+      grid.innerHTML = filtered.map(item => {
+        const status = effectiveStatus(item);
+        const readonly = state.adminMode ? "" : "readonly";
+        const disabled = state.adminMode ? "" : "disabled";
+        return `
+        <article class="card post-card">
+          <div class="card-header">
+            <div>
+              <h3>${escapeHtml(item.topic)}</h3>
+              <p class="muted">${escapeHtml(item.audience)}</p>
+            </div>
+            <span class="status ${statusClass(status)}">${escapeHtml(status.replace("_", " "))}</span>
+          </div>
+          <div class="meta-grid">
+            <label class="field">
+              <span class="label">Status</span>
+              <select data-status-input="${escapeHtml(item.id)}" ${disabled}>
+                ${["draft", "approved", "rejected", "manually_posted"].map(option => `<option value="${option}" ${status === option ? "selected" : ""}>${option.replace("_", " ")}</option>`).join("")}
+              </select>
+            </label>
+            <label class="field">
+              <span class="label">Image category</span>
+              <input data-image-input="${escapeHtml(item.id)}" value="${escapeHtml(item.image_category || "")}" ${readonly}>
+            </label>
+          </div>
+          <label class="field">
+            <span class="label">Topic</span>
+            <input data-topic-input="${escapeHtml(item.id)}" value="${escapeHtml(item.topic)}" ${readonly}>
+          </label>
+          <label class="field">
+            <span class="label">Audience</span>
+            <input data-audience-input="${escapeHtml(item.id)}" value="${escapeHtml(item.audience)}" ${readonly}>
+          </label>
+          <label class="field">
+            <span class="label">Recommended 910CPR link</span>
+            <input data-link-input="${escapeHtml(item.id)}" value="${escapeHtml(item.recommended_910cpr_link)}" ${readonly}>
+          </label>
+          <label class="field">
+            <span class="label">Post text</span>
+            <textarea data-message-input="${escapeHtml(item.id)}" ${readonly}>${escapeHtml(item.message)}</textarea>
+          </label>
+          <label class="field">
+            <span class="label">Reason</span>
+            <input data-reason-input="${escapeHtml(item.id)}" value="${escapeHtml(item.reason || "")}" ${readonly}>
+          </label>
+          <div class="validation" data-validation="${escapeHtml(item.id)}"></div>
+          <div class="actions">
+            <button type="button" class="admin-only" data-save="${escapeHtml(item.id)}" ${state.adminMode ? "" : "hidden"}>Save Draft Changes</button>
+            <button type="button" class="secondary" data-copy-post="${escapeHtml(item.id)}">Copy Post</button>
+            <button type="button" class="secondary" data-copy-link="${escapeHtml(item.id)}">Copy Link</button>
+            <button type="button" class="secondary" data-approve="${escapeHtml(item.id)}">Approve</button>
+            <button type="button" class="secondary" data-reject="${escapeHtml(item.id)}">Reject</button>
+            <button type="button" class="secondary" data-manual="${escapeHtml(item.id)}">Mark Manually Posted</button>
+          </div>
+        </article>`;
+      }).join("");
+      bindPostActions();
+    }
+
+    function bindPostActions() {
+      document.querySelectorAll("[data-save]").forEach(button => {
+        button.addEventListener("click", () => saveDraft(button.dataset.save));
+      });
+      document.querySelectorAll("[data-copy-post]").forEach(button => {
+        button.addEventListener("click", () => copyText(collectItem(button.dataset.copyPost).message, "Post"));
+      });
+      document.querySelectorAll("[data-copy-link]").forEach(button => {
+        button.addEventListener("click", () => copyText(collectItem(button.dataset.copyLink).recommended_910cpr_link, "Link"));
+      });
+      document.querySelectorAll("[data-approve]").forEach(button => {
+        button.addEventListener("click", () => updateStatus(button.dataset.approve, "approved"));
+      });
+      document.querySelectorAll("[data-reject]").forEach(button => {
+        button.addEventListener("click", () => updateStatus(button.dataset.reject, "rejected"));
+      });
+      document.querySelectorAll("[data-manual]").forEach(button => {
+        button.addEventListener("click", () => updateStatus(button.dataset.manual, "manually_posted"));
+      });
+    }
+
+    function bindControls() {
+      document.getElementById("api-base").value = state.apiBase;
+      document.getElementById("admin-token").value = state.adminToken;
+      document.getElementById("status-filter").addEventListener("change", event => {
+        state.filters.status = event.target.value;
+        render();
+      });
+      document.getElementById("topic-filter").addEventListener("input", event => {
+        state.filters.topic = event.target.value.trim().toLowerCase();
+        render();
+      });
+      document.getElementById("audience-filter").addEventListener("input", event => {
+        state.filters.audience = event.target.value.trim().toLowerCase();
+        render();
+      });
+      document.querySelector("[data-create-draft]").addEventListener("click", createDraft);
+      document.querySelector("[data-export-markdown]").addEventListener("click", exportMarkdown);
+      document.querySelector("[data-connect-admin]").addEventListener("click", connectAdminMode);
+      document.querySelector("[data-static-mode]").addEventListener("click", () => {
+        state.adminMode = false;
+        localStorage.removeItem(API_BASE_KEY);
+        sessionStorage.removeItem(TOKEN_KEY);
+        state.apiBase = "";
+        state.adminToken = "";
+        document.getElementById("api-base").value = "";
+        document.getElementById("admin-token").value = "";
+        loadStaticMode();
+      });
+    }
+
+    function render() {
+      renderMode();
+      renderQueueCount(state.queue);
+      renderCadence();
+      renderHistory();
+      renderPosts();
+    }
+
+    async function loadStaticMode() {
+      state.adminMode = false;
+      state.queue = await readJson(["../../../data/facebook_post_queue.json", "../../data/facebook_post_queue.json", "/data/facebook_post_queue.json"]) || [];
+      state.cadence = await readJson(["../../../data/facebook_cadence_rules.json", "../../data/facebook_cadence_rules.json", "/data/facebook_cadence_rules.json"]);
+      state.history = [];
+      render();
+    }
+
+    async function connectAdminMode() {
+      state.apiBase = document.getElementById("api-base").value.trim();
+      state.adminToken = document.getElementById("admin-token").value.trim();
+      localStorage.setItem(API_BASE_KEY, state.apiBase);
+      sessionStorage.setItem(TOKEN_KEY, state.adminToken);
+      try {
+        const status = await apiGet("/api/facebook-post-machine/status");
+        if (!status.api_available) throw new Error("Admin API did not report available");
+        if (!status.admin_token_configured) throw new Error("ADMIN_TOKEN is not configured on the admin server");
+        const queueState = await apiGet("/api/facebook-post-machine/queue");
+        state.queue = queueState.queue || [];
+        state.history = queueState.history || [];
+        state.cadence = queueState.cadence || state.cadence;
+        state.adminMode = true;
+        render();
+        setToast("Admin Server Mode connected.");
+      } catch (error) {
+        state.adminMode = false;
+        render();
+        setToast(`Admin API unavailable: ${error.message}`, true);
+      }
+    }
+
+    async function init() {
+      bindControls();
+      await loadStaticMode();
+      if (state.apiBase || state.adminToken) {
+        await connectAdminMode();
+      } else {
+        try {
+          const status = await apiGet("/api/facebook-post-machine/status");
+          if (status.api_available && status.admin_token_configured) {
+            document.getElementById("api-status").textContent = "API Found";
+            document.getElementById("api-status").className = "status opportunity";
+          }
+        } catch {
+          // Expected on GitHub Pages static hosting.
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
