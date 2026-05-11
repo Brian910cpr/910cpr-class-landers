@@ -1,0 +1,15 @@
+{
+  "total_unique_class_report_courses": 76,
+  "exact_high_confidence_matches": 49,
+  "low_confidence_matches_skipped": 12,
+  "unmatched_courses": 15,
+  "already_appointment_enabled": 9,
+  "would_be_changed": 40,
+  "inspection_failures": 0,
+  "states": {
+    "checked": 9,
+    "unchecked": 40
+  },
+  "errors": {},
+  "report": "E:\\GitHub\\910cpr-class-landers\\debug\\enrollware_appointment_course_match_report.csv"
+}

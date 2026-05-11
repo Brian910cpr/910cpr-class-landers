@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-05-08T00:53:42.084392",
+  "timestamp": "2026-05-11T16:38:45.381031",
   "repo_path": "E:\\GitHub\\910cpr-class-landers",
   "class_report": {
     "path": "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx",
-    "modified_at": "2026-05-03T14:56:41.656049",
-    "valid_session_id_count": 26042
+    "modified_at": "2026-05-11T16:28:22.860752",
+    "valid_session_id_count": 26039
   },
   "schedule": {
     "path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule.json",
@@ -13,64 +13,51 @@
   },
   "schedule_future": {
     "path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
-    "modified_at": "2026-05-08T00:53:31.794158",
-    "session_count": 1370
+    "modified_at": "2026-05-11T16:33:35.667047",
+    "session_count": 1036
   },
-  "classes_html_count": 26052,
+  "classes_html_count": 26042,
   "stale_json_ids": [],
   "stale_html_ids": [
-    "13295705",
-    "13295706",
-    "13295708",
-    "13295725",
-    "13295726",
-    "13295746",
-    "13295749",
-    "13295769",
-    "13295770",
-    "13295772"
+    "12774554",
+    "12776382",
+    "13041906",
+    "13295709",
+    "13295729",
+    "13295750",
+    "13295773",
+    "13396651",
+    "13396652"
   ],
   "stale_hub_ref_ids": [
-    "13295705",
-    "13295706",
-    "13295708",
-    "13295725",
-    "13295726",
-    "13295746",
-    "13295749",
-    "13295769",
-    "13295770",
-    "13295772"
+    "12774554",
+    "12776382",
+    "13041906",
+    "13295709",
+    "13295729",
+    "13295750",
+    "13295773",
+    "13396651",
+    "13396652"
   ],
   "stale_hub_files": {
-    "courses/index.html": [
-      "13295705",
-      "13295706",
-      "13295708",
-      "13295725",
-      "13295726",
-      "13295746",
-      "13295749",
-      "13295769",
-      "13295770",
-      "13295772"
+    "locations/1139-greenville-hwy-hendersonville.html": [
+      "13041906"
     ],
     "locations/wilmington-shipyard-blvd.html": [
-      "13295705",
-      "13295706",
-      "13295708",
-      "13295725",
-      "13295726",
-      "13295746",
-      "13295749",
-      "13295769",
-      "13295770",
-      "13295772"
+      "12774554",
+      "12776382",
+      "13295709",
+      "13295729",
+      "13295750",
+      "13295773",
+      "13396651",
+      "13396652"
     ]
   },
   "stale_hub_file_counts": {
-    "courses/index.html": 10,
-    "locations/wilmington-shipyard-blvd.html": 20
+    "locations/1139-greenville-hwy-hendersonville.html": 2,
+    "locations/wilmington-shipyard-blvd.html": 16
   },
   "cleanup": {
     "requested": false,

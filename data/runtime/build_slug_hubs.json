@@ -3,13 +3,13 @@
   "worker": "build_slug_hubs",
   "script": "scripts/build_slug_hubs.py",
   "status": "done",
-  "last_run": "2026-05-08T00:46:41.422832-04:00",
-  "current_count": 6,
-  "total_count": 6,
+  "last_run": "2026-05-11T16:38:09.686127-04:00",
+  "current_count": 8,
+  "total_count": 8,
   "percent_complete": 100.0,
   "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\group-training.html",
-  "timestamp": "2026-05-08T00:46:41.422832-04:00",
-  "last_successful_run": "2026-05-08T00:46:41.422832-04:00",
+  "timestamp": "2026-05-11T16:38:09.686127-04:00",
+  "last_successful_run": "2026-05-11T16:38:09.686127-04:00",
   "inputs": [
     "E:\\GitHub\\910cpr-class-landers\\data\\config\\slug_hubs.json",
     "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json"
@@ -18,10 +18,10 @@
     "E:\\GitHub\\910cpr-class-landers\\docs"
   ],
   "counts": {
-    "sessions_loaded": 1370,
-    "slug_hub_pages": 6
+    "sessions_loaded": 1036,
+    "slug_hub_pages": 8
   },
-  "pages_generated": 6,
+  "pages_generated": 8,
   "warnings": [],
   "errors": [],
   "files_needing_review": []

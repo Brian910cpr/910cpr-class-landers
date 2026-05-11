@@ -1,0 +1,134 @@
+  Enrollware Admin
+910CPR
+Client ID: 878
+
+Notifications | My Account
+
+Log Out
+Classes and Students
+Clients
+Reports
+EnrollwarePay
+EnrollwarePay Portal
+Settings
+Course Types
+Appointments
+Product Add-ons
+Online Keycodes
+Promo Codes
+Locations
+File Manager
+Site Settings
+Card Settings
+Certificates
+Email Campaigns
+Text Messaging
+Users
+Subscription Billing Info
+Help
+Terms of Service
+Add / Edit Course Type
+Course ID:209806
+Course Name:
+AHA BLS Provider<br><i>Instructor-led classroom (new or expired)</i> <img src="https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png" width="16" alt="AHA" title="AHA BLS Provider" name="209806" longdesc="r:209806|t:AHA_BLS_IP_INITIAL|cb:AHA|src:EW|p:75|d:IP">
+Course Type:Allow appointments to be setup with this course
+Mode:
+On-site: The course is taught in person at a physical location.
+Blended: The course has both online and in-person components.
+Online: All class instruction, assignments, and tests are asynchronous and can be completed virtually.
+Direct Schedule Link:https://coastalcprtraining.enrollware.com/schedule#ct209806
+Discipline:
+BLS
+Price Options:Allow registrations with a deposit
+Price:
+$75.00
+Add-on Prompt:
+Add-ons:
+
+Click to Select
+MANUAL: OTHER SOURCE - <br><br><br><div style="font-size: 14px; line-height: 1.5;"> <strong>Manual: Other Source</strong> <img src="https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/THUP.png" width="75" style="float:right; margin-left:10px;"> <p style="color: #828282"> <i>I already have access to the required AHA manual from a friend, employer, or previous course. I understand it's required before, during, and after class to validate certification.</i> </p> </div> - $0.00
+remove
+MANUAL: AHA BOOKSTORE - <br><br><br><div style="font-size:14px; line-height:1.5; overflow:hidden; margin-bottom:10px;"><strong>Buy from AHA.</strong><img src="https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png" width="55" style="float:right; margin-left:10px;"><p style="color:#828282; margin:0;"><i>Visit <a href="https://ebooks.heart.org" target="_blank">ebooks.heart.org</a>(not a 910CPR store) and search your course title (e.g., “BLS Provider Manual”).</i>No fees from 910CPR. </p></div> - $0.00
+remove
+AHA-SKILLS-HS_FA - <br><br>A<img src="https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/BL.png" width="75" style="float:right; margin-left:10px;">HA Heartsaver® First Aid [AHA]<br><p style="color: #828282"><i>Commonly for Rec Therapy majors. Verify with your school.. </i> - $50.00
+remove
+AHA-EBK-BLS - <br><br>B<img src="https://www.enrollware.com/sitefiles/coastalcprtraining/Class_Images/20-2803.png" width="75" style="float:right; margin-left:10px;">LS Provider Manual eBook<br> <p style="color: #828282"><i>The BLS Provider Manual eBook is the electronic equivalent of the AHA’s BLS Provider Manual. It offers an alternative to the printed manual and contains all the information students need to successfully complete the BLS Course.</b></i></p> - $17.49
+remove
+Shipping Price:
+$0.00
+Use Keycode Bank:
+None
+Course Certifying Body:
+American Heart Association
+Card Type: 
+AHA BLS Provider
+Second Card Type: 
+Heartsaver First Aid
+Image:
+
+Cover_AHABLS.jpg
+Options:Prompt for certification / recertification during registration
+Include student to instructor ratio on roster
+Include student to manikin ratio on roster
+Include electronic signature for AHA roster
+Use certificate number instead of test score (online course)
+Show the number of seats remaining on the schedule page
+Allow students to select "will call to schedule"
+Prompt for license number during registration
+Require license number during registration
+Enable Class Roster Expirations
+Enable Registration Waitlist 
+Automatic Waitlist 
+Allow students taking this course to reschedule themselves into another class on their own 
+Reschedule Price: 
+$0.00
+Reschedule Insurance Price: 
+$0.00
+Calendar Icon Color:
+ 
+CEU Credits:
+Description:
+Edit Insert View Format Table Tools 
+
+Font Sizes
+
+
+
+
+p
+Custom Sidebar:Use a custom sidebar for this course
+
+Edit Insert View Format Table Tools 
+
+Font Sizes
+
+
+
+
+div
+
+Course Confirmation Email CCs:
+Email CCs
+separate emails using a comma
+Course Confirmation Email Subject:
+Your Training Confirmation
+Payment Confirmation Email Subject:
+Your Purchase Confirmation
+Course Confirmation Email Body:
+Edit Insert View Format Table Tools 
+
+Font Sizes
+
+
+
+
+div
+Use the above email body for class registrations and general payments
+QuickBooks Item Name:
+AHABLS, AHABLS Card, PAY3750
+SEO & Rich Results Enable
+An SEO-friendly description of the course. Recommended length: 240 characters. Maximum length: 500 characters
+Train with confidence in our AHA BLS Provider course, designed for healthcare professionals. We offer hands-on, real-world CPR training and—unlike other providers—we never cancel classes due to low enrollment. Plus, we actually answer the phone when you need us! Earn your AHA BLS Provider eCard and be prepared to save lives.
+Archive:Check this box if you no longer intend to use this course type
+ 
+Enrollware © 2011-2026

@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-05-08T00:53:36.816682",
+  "timestamp": "2026-05-11T16:33:40.334297",
   "class_report_path": "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx",
-  "total_sessions_expected": 26042,
-  "total_sessions_built": 26042,
-  "total_future_sessions_built": 1370,
+  "total_sessions_expected": 26039,
+  "total_sessions_built": 26039,
+  "total_future_sessions_built": 1036,
   "missing_sessions": [],
   "extra_sessions": [],
   "future_orphan_sessions": [],

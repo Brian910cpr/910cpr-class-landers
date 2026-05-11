@@ -1,0 +1,444 @@
+[
+  {
+    "class_report_course": "2025 AHA Instructor Update",
+    "ids": [],
+    "raw_examples": 2
+  },
+  {
+    "class_report_course": "AED Maintenance Program ... an easy-to-understand and even simpler-to-implement plan to get an AED in your facility...",
+    "ids": [],
+    "raw_examples": 151
+  },
+  {
+    "class_report_course": "AHA - ACLS - Become an American Heart Association Instructor",
+    "ids": [],
+    "raw_examples": 8
+  },
+  {
+    "class_report_course": "AHA - ACLS Instructor Renewal",
+    "ids": [],
+    "raw_examples": 2
+  },
+  {
+    "class_report_course": "AHA - BLS - Become an American Heart Association Instructor",
+    "ids": [],
+    "raw_examples": 348
+  },
+  {
+    "class_report_course": "AHA - BLS Instructor Renewal",
+    "ids": [],
+    "raw_examples": 23
+  },
+  {
+    "class_report_course": "AHA - BLS Provider - Renewal Instructor-led Classroom program for BLS Renewal",
+    "ids": [],
+    "raw_examples": 9
+  },
+  {
+    "class_report_course": "AHA - BLS, ACLS & PALS - Become an American Heart Association Instructor",
+    "ids": [],
+    "raw_examples": 2
+  },
+  {
+    "class_report_course": "AHA - Family & Friends® CPR",
+    "ids": [],
+    "raw_examples": 324
+  },
+  {
+    "class_report_course": "AHA - Heartsaver® - Become an American Heart Association Instructor",
+    "ids": [],
+    "raw_examples": 3
+  },
+  {
+    "class_report_course": "AHA - Heartsaver® CPR AED - In-person",
+    "ids": [],
+    "raw_examples": 436
+  },
+  {
+    "class_report_course": "AHA - Heartsaver® CPR AED - In-person 🚒",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "AHA - Heartsaver® CPR AED - Online c̄ In-person Skills",
+    "ids": [],
+    "raw_examples": 196
+  },
+  {
+    "class_report_course": "AHA - Heartsaver® Pediatric First Aid / CPR / AED In-person ✔ Fulfills the CPR/First Aid component of NC DCDEE (10A NCAC 09 .1102); additional NC trainings required for full compliance ✔ Fulfills the CPR/First Aid requirement in CT OEC (Sec. 19a-79-4a); center policies/modules may apply",
+    "ids": [],
+    "raw_examples": 21
+  },
+  {
+    "class_report_course": "AHA - PALS - Become an American Heart Association Instructor",
+    "ids": [],
+    "raw_examples": 4
+  },
+  {
+    "class_report_course": "AHA - PALS Instructor Renewal",
+    "ids": [],
+    "raw_examples": 4
+  },
+  {
+    "class_report_course": "AHA - RCP para Familiares y Amigos",
+    "ids": [],
+    "raw_examples": 13
+  },
+  {
+    "class_report_course": "AHA ACLS Provider - HeartCode (Online + Skills Session) Complete online coursework, then schedule in-person skills testing",
+    "ids": [
+      "209811"
+    ],
+    "raw_examples": 3182
+  },
+  {
+    "class_report_course": "AHA ACLS Provider - In-person (Initial) Instructor-led classroom for new or expired ACLS",
+    "ids": [
+      "241108"
+    ],
+    "raw_examples": 104
+  },
+  {
+    "class_report_course": "AHA ACLS Provider - In-person (Renewal) Instructor-led classroom for current ACLS providers",
+    "ids": [
+      "209818"
+    ],
+    "raw_examples": 555
+  },
+  {
+    "class_report_course": "AHA BLS Provider HeartCode Skills Blended learning with online course + in-person skills session",
+    "ids": [
+      "210549"
+    ],
+    "raw_examples": 4047
+  },
+  {
+    "class_report_course": "AHA BLS Provider Instructor-led classroom (new or expired)",
+    "ids": [
+      "209806"
+    ],
+    "raw_examples": 5368
+  },
+  {
+    "class_report_course": "AHA BLS Provider Renewal For currently certified providers",
+    "ids": [
+      "359474"
+    ],
+    "raw_examples": 1613
+  },
+  {
+    "class_report_course": "AHA Heartsaver First Aid CPR AED In-person training for workplace, OSHA, and general public certification",
+    "ids": [
+      "355327"
+    ],
+    "raw_examples": 32
+  },
+  {
+    "class_report_course": "AHA Heartsaver K-12 - In-person 🚌 Instructor-led CPR AED and First Aid training for schools and students",
+    "ids": [
+      "396266"
+    ],
+    "raw_examples": 6
+  },
+  {
+    "class_report_course": "AHA Heartsaver® First Aid CPR AED - Blended Online course + in-person skills session for workplace and general certification",
+    "ids": [
+      "329495"
+    ],
+    "raw_examples": 1153
+  },
+  {
+    "class_report_course": "AHA Heartsaver® First Aid CPR AED - In-Person Traditional classroom training for workplace and general certification",
+    "ids": [
+      "209809"
+    ],
+    "raw_examples": 1902
+  },
+  {
+    "class_report_course": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended Online course + in-person skills session for childcare and caregivers",
+    "ids": [
+      "251545"
+    ],
+    "raw_examples": 245
+  },
+  {
+    "class_report_course": "AHA Heartsaver® Primeros Auxilios con RCP y DEA - Blended Curso en línea + sesión práctica presencial (en español)",
+    "ids": [
+      "438230"
+    ],
+    "raw_examples": 3
+  },
+  {
+    "class_report_course": "AHA Instructor Courses A la carte instructor program – choose your desired AHA Instructor certification and receive all required materials to start teaching.",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - HeartCode® (Online + Skills Session) Complete online training, then attend an in-person skills session",
+    "ids": [
+      "209812"
+    ],
+    "raw_examples": 414
+  },
+  {
+    "class_report_course": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial Instructor-led classroom training for initial or expired PALS certification",
+    "ids": [
+      "209805"
+    ],
+    "raw_examples": 97
+  },
+  {
+    "class_report_course": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal Instructor-led classroom training for current or recently expired PALS certification",
+    "ids": [
+      "251496"
+    ],
+    "raw_examples": 309
+  },
+  {
+    "class_report_course": "American Red Cross Advanced Life Support (ALS) - Blended Learning Complete online training, then attend in-person skills testing",
+    "ids": [
+      "248290"
+    ],
+    "raw_examples": 305
+  },
+  {
+    "class_report_course": "American Red Cross Advanced Life Support (ALS) - In-person Instructor-led classroom for new or expired providers",
+    "ids": [
+      "285820"
+    ],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "American Red Cross Pediatric Advanced Life Support (PALS) - Blended Learning (Online + Skills Session) Complete online training, then attend an in-person skills session",
+    "ids": [
+      "248291"
+    ],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "ARC - Adult and Pediatric CPR/AED Skills Session",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "ARC - Adult and Pediatric First Aid/CPR/AED Skills Session-r.25",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "ARC - BLS - Blended Learning (Online + Skills) Complete online course, then attend in-person skills session",
+    "ids": [
+      "248287"
+    ],
+    "raw_examples": 1058
+  },
+  {
+    "class_report_course": "ARC - BLS - In-Person Classroom Instructor-led classroom for initial or renewal certification",
+    "ids": [
+      "248288"
+    ],
+    "raw_examples": 687
+  },
+  {
+    "class_report_course": "ARC Adult CPR AED - Blended Online course + in-person skills session for workplace and general certification",
+    "ids": [
+      "372258"
+    ],
+    "raw_examples": 584
+  },
+  {
+    "class_report_course": "ARC Adult | Pediatric First Aid CPR AED - In-person Full certification for adults, children, and infants",
+    "ids": [
+      "369209"
+    ],
+    "raw_examples": 229
+  },
+  {
+    "class_report_course": "ARC BLS Challenge - Renewal for Experienced Providers Assessment-only session for experienced providers",
+    "ids": [
+      "444919"
+    ],
+    "raw_examples": 177
+  },
+  {
+    "class_report_course": "BLS ASAP! ٩(͡๏̯͡๏)۶ Need a BLS CPR/AED Certification in the Wilmington area NOW? Can’t wait for the next scheduled class? No problem!",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "BLS Provider (NHCSO)",
+    "ids": [],
+    "raw_examples": 92
+  },
+  {
+    "class_report_course": "BLS Provider (On-site; Group; Fully In-person) Need a reliable CPR class for your team? 910 CPR brings expert AHA, HSI, or ARC BLS training directly to your office. Flexible scheduling, simple pricing, and a proven track record of reliability. We show up—on time, every time. Contact us today!",
+    "ids": [],
+    "raw_examples": 16
+  },
+  {
+    "class_report_course": "Cardiac and Pulmonary Dissection with 12-Lead ECG",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "CPR / AED / First Aid (On-site; Group Class) Need a reliable CPR class for your team? 910 CPR brings expert AHA, HSI, or ARC BLS training directly to your office. Flexible scheduling, simple pricing, and a proven track record of reliability. We show up—on time, every time. Contact us today!",
+    "ids": [],
+    "raw_examples": 2
+  },
+  {
+    "class_report_course": "C̯͍̖̠̦̍ͩ̋́͗A̘͈͎̅̚R̐D̗I̙̪̎O̻̺͍̣̬ͬ͋̓P͑͒̆̑̄A̯͇̔̓͂R̬̙͈̗̭̍̊̉Ť͔̭͍̓̓ͭN͍̰̬͖̈E͍͙ͩ̇̎̃R̗̳̹͎̺S̻ͅ ̣̬̃̊͊̽ͫ",
+    "ids": [],
+    "raw_examples": 291
+  },
+  {
+    "class_report_course": "Heartsaver First Aid CPR AED for K-12 Schools [AHA]",
+    "ids": [],
+    "raw_examples": 3
+  },
+  {
+    "class_report_course": "Heartsaver® First Aid",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "Heartsaver® First Aid (No CPR AED) - Online c̄ In-person Skills [AHA]",
+    "ids": [],
+    "raw_examples": 124
+  },
+  {
+    "class_report_course": "Heartsaver® TOTAL In-Person",
+    "ids": [],
+    "raw_examples": 17
+  },
+  {
+    "class_report_course": "HSI Adult CPR AED Traditional Classroom",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "HSI Adult First Aid CPR AED - Blended Online course + in-person skills session for workplace certification",
+    "ids": [
+      "371954"
+    ],
+    "raw_examples": 72
+  },
+  {
+    "class_report_course": "HSI Adult First Aid CPR AED - In-Person Instructor-led classroom training for workplace certification",
+    "ids": [
+      "374378"
+    ],
+    "raw_examples": 108
+  },
+  {
+    "class_report_course": "HSI Adult First Aid CPR AED - In-person Traditional classroom training for workplace and general certification",
+    "ids": [
+      "422270"
+    ],
+    "raw_examples": 21
+  },
+  {
+    "class_report_course": "HSI Adult First Aid Traditional Classroom | No CPR",
+    "ids": [],
+    "raw_examples": 2
+  },
+  {
+    "class_report_course": "HSI Adult First Aid | Blended Learning Online Coursework with In-Person Skills Testing",
+    "ids": [],
+    "raw_examples": 3
+  },
+  {
+    "class_report_course": "HSI Adult/Child/Infant CPR AED Traditional Classroom",
+    "ids": [],
+    "raw_examples": 5
+  },
+  {
+    "class_report_course": "HSI Adult/Child/Infant CPR AED | Blended Learning Blended Learning with In-Person, Instructor-Led Skills Session",
+    "ids": [],
+    "raw_examples": 5
+  },
+  {
+    "class_report_course": "HSI BLS and Adult First Aid | Blended Learning Online coursework with in-person skills testing",
+    "ids": [
+      "445670"
+    ],
+    "raw_examples": 129
+  },
+  {
+    "class_report_course": "HSI BLS Challenge - Renewal for Experienced Providers Assessment-only session for experienced providers ready to test out",
+    "ids": [
+      "463743"
+    ],
+    "raw_examples": 38
+  },
+  {
+    "class_report_course": "HSI Pediatric First Aid CPR AED - Blended Online course + in-person skills session for childcare and caregivers",
+    "ids": [
+      "449422"
+    ],
+    "raw_examples": 34
+  },
+  {
+    "class_report_course": "Infant CPR & Choking Relief Class",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "Phlebotomy - National Cert Test Prep",
+    "ids": [],
+    "raw_examples": 5
+  },
+  {
+    "class_report_course": "Phlebotomy Technician Program (80 Hr - 13 Weeks - Saturday)",
+    "ids": [],
+    "raw_examples": 2
+  },
+  {
+    "class_report_course": "Phlebotomy Technician Program (80 Hr - 3 Weeks - Mon-Fri)",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "Phlebotomy Technician Program (80 Hr - 9 Weeks - M,T,W)",
+    "ids": [],
+    "raw_examples": 2
+  },
+  {
+    "class_report_course": "STOP THE BLEED®",
+    "ids": [],
+    "raw_examples": 1
+  },
+  {
+    "class_report_course": "Take your AHA CPR programs online!",
+    "ids": [],
+    "raw_examples": 223
+  },
+  {
+    "class_report_course": "USCG Elementary First Aid | CPR (AHA Heartsaver®) Meets U.S. Coast Guard Maritime Requirements (AMERHA-216)",
+    "ids": [
+      "253768"
+    ],
+    "raw_examples": 479
+  },
+  {
+    "class_report_course": "USCG Elementary First Aid | CPR - Blended (Online + Skills) AHA Heartsaver® | Meets Maritime Requirements (AMERHA-216)",
+    "ids": [
+      "359827"
+    ],
+    "raw_examples": 646
+  },
+  {
+    "class_report_course": "WALL PRINTING",
+    "ids": [],
+    "raw_examples": 5
+  },
+  {
+    "class_report_course": "z Personal Event - Not Availible",
+    "ids": [],
+    "raw_examples": 85
+  },
+  {
+    "class_report_course": "🏄 AHA - BLS Provider - Online Class with in-Person Skill Session - Initial or Renewal",
+    "ids": [],
+    "raw_examples": 2
+  }
+]

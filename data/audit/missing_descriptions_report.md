@@ -1,10 +1,10 @@
 # Missing Descriptions Report
 
-- Generated at: `2026-05-08T00:53:14.662642-04:00`
+- Generated at: `2026-05-11T16:33:14.528532-04:00`
 - Total mapped courses: `14`
 - Courses with complete descriptions: `0`
 - Courses needing review: `14`
-- Sessions affected: `19708`
+- Sessions affected: `12489`
 
 ## Top Missing Fields
 
