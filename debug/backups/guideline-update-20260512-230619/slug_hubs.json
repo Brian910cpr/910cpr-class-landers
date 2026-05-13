@@ -1,0 +1,922 @@
+{
+  "guidance_banners": {
+    "bls_combo_guidance": {
+      "enabled": true,
+      "type": "combo-guidance",
+      "eyebrow": "Not Sure This Is The Right Class?",
+      "title": "Need BLS with another cert for the same renewal cycle?",
+      "body": "If you also need ACLS, PALS, or workplace CPR options, compare the related training paths before you book so you do not end up registering for the wrong level of care.",
+      "actions": [
+        {
+          "label": "Compare ACLS options",
+          "href": "/acls.html",
+          "variant": "primary"
+        },
+        {
+          "label": "Compare PALS options",
+          "href": "/pals.html",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "acls_combo_guidance": {
+      "enabled": true,
+      "type": "combo-guidance",
+      "eyebrow": "Not Sure This Is The Right Class?",
+      "title": "Need ACLS together with BLS or PALS?",
+      "body": "ACLS is usually paired with BLS and sometimes with PALS depending on your role. Use the related hubs first if you are deciding between adult-only, peds-inclusive, or blended renewal needs.",
+      "actions": [
+        {
+          "label": "Compare BLS options",
+          "href": "/bls.html",
+          "variant": "primary"
+        },
+        {
+          "label": "Compare PALS options",
+          "href": "/pals.html",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "pals_combo_guidance": {
+      "enabled": true,
+      "type": "combo-guidance",
+      "eyebrow": "Not Sure This Is The Right Class?",
+      "title": "Need PALS along with ACLS or BLS?",
+      "body": "PALS is often booked alongside ACLS or BLS for pediatric and emergency care teams. Compare the companion hubs first if you are trying to line up multiple certifications without duplicating the wrong class.",
+      "actions": [
+        {
+          "label": "Compare ACLS options",
+          "href": "/acls.html",
+          "variant": "primary"
+        },
+        {
+          "label": "Compare BLS options",
+          "href": "/bls.html",
+          "variant": "secondary"
+        }
+      ]
+    }
+  },
+  "pages": [
+    {
+      "slug": "bls",
+      "title": "BLS Classes | 910CPR",
+      "description": "AHA BLS certification options for healthcare providers, dental teams, EMTs, and healthcare students with scheduled 910CPR class times.",
+      "eyebrow": "Healthcare CPR Training",
+      "hero_title": "BLS Certification That Counts",
+      "hero_copy": "AHA BLS training for nurses, EMTs, dental teams, healthcare students, and professional requirements. Choose a scheduled group class at a 910CPR training site.",
+      "hero_image": "/images/bls_general.png",
+      "hero_image_alt": "AHA BLS Basic Life Support course",
+      "full_schedule_banner": "Need more BLS options? Jump to the full page for this format and browse the full schedule.",
+      "flexible_location_id": "101560",
+      "flexible_cache_seconds": 180,
+      "tabs": [
+        {
+          "id": "bls-provider",
+          "label": "BLS Provider",
+          "tab_badge": "In-Person",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "AHA BLS Provider",
+          "description": "Instructor-led BLS for new students or anyone whose card has expired. Best fit when you want the standard classroom path.",
+          "course_codes": [
+            "AHA_BLS_IP_INITIAL"
+          ],
+          "name_contains": [
+            "AHA BLS Provider"
+          ],
+          "exclude_name_contains": [
+            "Renewal",
+            "HeartCode",
+            "Instructor"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209806",
+          "full_schedule_label": "See full BLS Provider schedule",
+          "primary_cta_label": "See BLS Provider page"
+        },
+        {
+          "id": "bls-renewal",
+          "label": "BLS Renewal",
+          "tab_badge": "Renewal",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "AHA BLS Provider Renewal",
+          "description": "For currently certified providers who need a focused recertification class instead of the full initial course.",
+          "course_codes": [
+            "AHA_BLS_IP_RENEWAL"
+          ],
+          "name_contains": [
+            "BLS Provider Renewal"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474",
+          "full_schedule_label": "See full BLS renewal schedule",
+          "primary_cta_label": "See BLS renewal page"
+        },
+        {
+          "id": "bls-heartcode",
+          "label": "BLS HeartCode",
+          "tab_badge": "Online + Skills",
+          "tab_icon": "/images/tab_blended.png",
+          "program": "HeartCode BLS Skills",
+          "description": "Complete the online HeartCode portion first, then book a short in-person skills session to finish your certification.",
+          "course_codes": [
+            "AHA_BLS_BL_SKILLS"
+          ],
+          "name_contains": [
+            "BLS Provider HeartCode Skills",
+            "HeartCode"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct210549",
+          "full_schedule_label": "See full HeartCode skills schedule",
+          "primary_cta_label": "See HeartCode skills page"
+        }
+      ],
+      "guidance_banner_ids": []
+    },
+    {
+      "slug": "acls",
+      "title": "ACLS Classes | 910CPR",
+      "description": "AHA ACLS initial, renewal, and HeartCode skills options for healthcare professionals with scheduled 910CPR class times.",
+      "eyebrow": "Advanced Cardiac Life Support",
+      "hero_title": "ACLS Certification For Clinical Requirements",
+      "hero_copy": "AHA ACLS initial, renewal, and HeartCode skills options for healthcare professionals who need accepted training and a clear class time.",
+      "hero_image": "/images/acls_general.png",
+      "hero_image_alt": "AHA ACLS Advanced Cardiac Life Support course",
+      "full_schedule_banner": "Need more ACLS dates or details? Open the full page for the format you want.",
+      "flexible_location_id": "101560",
+      "flexible_cache_seconds": 180,
+      "tabs": [
+        {
+          "id": "acls-provider",
+          "label": "ACLS Provider",
+          "tab_badge": "Initial",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "AHA ACLS Provider",
+          "description": "Standard ACLS provider training for first-time students or anyone coming back after expiration.",
+          "course_codes": [
+            "AHA_ACLS_PROVIDER_INITIAL"
+          ],
+          "name_contains": [
+            "AHA ACLS Provider - In-person (Initial)",
+            "AHA - ACLS Provider - In-person Initial",
+            "AHA ACLS Provider",
+            "ACLS Provider Initial"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct241108",
+          "full_schedule_label": "See full ACLS provider schedule",
+          "primary_cta_label": "See ACLS provider page"
+        },
+        {
+          "id": "acls-renewal",
+          "label": "ACLS Renewal",
+          "tab_badge": "Renewal",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "AHA ACLS Renewal",
+          "description": "For current ACLS providers who need renewal and want the shortest in-person path that still covers the required material.",
+          "course_codes": [
+            "AHA_ACLS_PROVIDER_RENEWAL"
+          ],
+          "name_contains": [
+            "AHA ACLS Provider - In-person (Renewal)",
+            "AHA - ACLS Provider Update - In-Person",
+            "AHA ACLS Provider Update",
+            "ACLS Renewal"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209818",
+          "full_schedule_label": "See full ACLS renewal schedule",
+          "primary_cta_label": "See ACLS renewal page"
+        },
+        {
+          "id": "acls-heartcode",
+          "label": "ACLS HeartCode",
+          "tab_badge": "Online + Skills",
+          "tab_icon": "/images/tab_blended.png",
+          "program": "HeartCode ACLS Skills",
+          "description": "Finish the online HeartCode ACLS coursework first, then choose an in-person skills session to complete the certification.",
+          "course_codes": [
+            "AHA_ACLS_HEARTCODE"
+          ],
+          "name_contains": [
+            "AHA ACLS HeartCode Skills Session",
+            "AHA - ACLS Heartcode Online/Skills",
+            "ACLS HeartCode",
+            "ACLS Skills Session"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209811",
+          "full_schedule_label": "See full ACLS HeartCode schedule",
+          "primary_cta_label": "See ACLS HeartCode page"
+        }
+      ],
+      "guidance_banner_ids": []
+    },
+    {
+      "slug": "pals",
+      "title": "PALS Classes | 910CPR",
+      "description": "AHA PALS initial, renewal, and HeartCode skills options for pediatric and emergency care professionals with scheduled 910CPR class times.",
+      "eyebrow": "Pediatric Advanced Life Support",
+      "hero_title": "PALS Certification For Pediatric Care Teams",
+      "hero_copy": "AHA PALS provider, renewal, and HeartCode skills options for clinicians who need accepted pediatric advanced life support training.",
+      "hero_image": "/images/pals_general.png",
+      "hero_image_alt": "AHA PALS Pediatric Advanced Life Support course",
+      "full_schedule_banner": "Need more PALS times? Open the full page for the tab you selected.",
+      "flexible_location_id": "101560",
+      "flexible_cache_seconds": 180,
+      "tabs": [
+        {
+          "id": "pals-provider",
+          "label": "PALS Provider",
+          "tab_badge": "In-Person",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "AHA PALS Provider",
+          "description": "Initial or expired PALS certification in a traditional instructor-led classroom format.",
+          "course_codes": [
+            "AHA_PALS_INITIAL"
+          ],
+          "name_contains": [
+            "PALS Provider - In-Person - Initial",
+            "PALS Provider Class"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209805",
+          "full_schedule_label": "See full PALS provider schedule",
+          "primary_cta_label": "See PALS provider page"
+        },
+        {
+          "id": "pals-renewal",
+          "label": "PALS Renewal",
+          "tab_badge": "Renewal",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "AHA PALS Renewal",
+          "description": "Focused recertification for providers who already hold PALS and need their next card without the full initial course.",
+          "course_codes": [
+            "AHA_PALS_RENEWAL"
+          ],
+          "name_contains": [
+            "PALS Provider - In-Person - Renewal",
+            "PALS Renewal"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251496",
+          "full_schedule_label": "See full PALS renewal schedule",
+          "primary_cta_label": "See PALS renewal page"
+        },
+        {
+          "id": "pals-heartcode",
+          "label": "PALS HeartCode",
+          "tab_badge": "Online + Skills",
+          "tab_icon": "/images/tab_blended.png",
+          "program": "HeartCode PALS Skills",
+          "description": "Self-paced online HeartCode plus an in-person skills session for providers who prefer a blended-learning path.",
+          "course_codes": [
+            "AHA_PALS_HEARTCODE"
+          ],
+          "name_contains": [
+            "PALS Provider - HeartCode",
+            "PALS HeartCode"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209812",
+          "full_schedule_label": "See full PALS HeartCode schedule",
+          "primary_cta_label": "See PALS HeartCode page"
+        }
+      ],
+      "guidance_banner_ids": []
+    },
+    {
+      "slug": "heartsaver",
+      "title": "Heartsaver CPR Classes | 910CPR",
+      "description": "AHA Heartsaver CPR, AED, first aid, and pediatric options for workplace, school, childcare, and professional requirements.",
+      "eyebrow": "Workplace And Public CPR",
+      "hero_title": "CPR And First Aid For Workplaces And Schools",
+      "hero_copy": "AHA Heartsaver CPR, AED, first aid, and pediatric options for workplace, school, childcare, and professional requirements.",
+      "hero_image": "/images/heartsaver_general.png",
+      "hero_image_alt": "AHA Heartsaver CPR and first aid course",
+      "full_schedule_banner": "Want more Heartsaver dates? Open the full schedule page for the tab you selected.",
+      "flexible_location_id": "101560",
+      "flexible_cache_seconds": 180,
+      "other_training_options": [
+        {
+          "label": "AHA Courses",
+          "description": "Browse the main American Heart Association paths including BLS, ACLS, PALS, and Heartsaver.",
+          "href": "/index.html",
+          "cta": "Browse AHA training"
+        },
+        {
+          "label": "American Red Cross Courses",
+          "description": "Compare Red Cross options if your employer, school, or program prefers ARC certification.",
+          "href": "/arc",
+          "cta": "Compare ARC options"
+        },
+        {
+          "label": "HSI Courses",
+          "description": "Explore HSI workplace-focused options when you need a non-AHA certification path.",
+          "href": "/hsi",
+          "cta": "Compare HSI options"
+        },
+        {
+          "label": "Group / Workplace Training",
+          "description": "Plan a private class for a team, office, school, or jobsite instead of booking individual seats.",
+          "href": "/group-training.html",
+          "cta": "Request group training"
+        },
+        {
+          "label": "USCG / Maritime First Aid",
+          "description": "Find the maritime-first option for crews and mariners who need USCG-aligned first aid and CPR.",
+          "href": "/uscg-elementary-first-aid-cpr.html",
+          "cta": "See maritime options"
+        }
+      ],
+      "approved_public_locations": [
+        "Wilmington; Shipyard Blvd",
+        "Holly Ridge; Sound Rd",
+        "Burgaw; 111 S Wright St"
+      ],
+      "tabs": [
+        {
+          "id": "hs-fa-cpr-aed-ip",
+          "label": "First Aid + CPR + AED",
+          "tab_badge": "In-Person",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "First Aid / CPR / AED",
+          "description": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
+          "description_short": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
+          "description_more": "Choose this classroom path when you want the full Heartsaver First Aid CPR AED course taught in person from start to finish.",
+          "course_codes": [
+            "AHA_HS_FA_CPR_IP"
+          ],
+          "name_contains": [
+            "Heartsaver\u00ae First Aid CPR AED"
+          ],
+          "exclude_name_contains": [
+            "Pediatric"
+          ],
+          "full_schedule_url": "/heartsaver.html",
+          "full_schedule_label": "See full Heartsaver First Aid CPR AED schedule",
+          "primary_cta_label": "See in-person class page"
+        },
+        {
+          "id": "hs-fa-cpr-aed-bl",
+          "label": "First Aid + CPR + AED",
+          "tab_badge": "Online + Skills",
+          "tab_icon": "/images/tab_blended.png",
+          "program": "First Aid / CPR / AED",
+          "description": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
+          "description_short": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
+          "description_more": "Choose this blended path when you want to complete the coursework online first and then finish with an in-person skills session.",
+          "course_codes": [
+            "AHA_HS_FA_CPR_BL"
+          ],
+          "name_contains": [
+            "Heartsaver\u00ae First Aid CPR AED"
+          ],
+          "exclude_name_contains": [
+            "Pediatric"
+          ],
+          "full_schedule_url": "/heartsaver.html",
+          "full_schedule_label": "See full Heartsaver First Aid CPR AED schedule",
+          "primary_cta_label": "See blended class page"
+        },
+        {
+          "id": "hs-cpr-aed-ip",
+          "label": "CPR + AED Only",
+          "tab_badge": "In-Person",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "Heartsaver CPR AED",
+          "description": "Best when you need CPR and AED training without the added first aid component.",
+          "description_short": "Best when you need CPR and AED training without the added first aid component.",
+          "description_more": "This is the leaner classroom option for teams and individuals who do not need the first aid module.",
+          "name_contains": [
+            "Heartsaver\u00ae CPR AED"
+          ],
+          "exclude_name_contains": [
+            "Pediatric",
+            "First Aid"
+          ],
+          "full_schedule_url": "/heartsaver.html",
+          "full_schedule_label": "See full Heartsaver CPR AED schedule",
+          "primary_cta_label": "See CPR AED page"
+        },
+        {
+          "id": "hs-cpr-aed-bl",
+          "label": "CPR + AED Only",
+          "tab_badge": "Online + Skills",
+          "tab_icon": "/images/tab_blended.png",
+          "program": "Heartsaver CPR AED",
+          "description": "Best when you need CPR and AED training without the added first aid component.",
+          "description_short": "Best when you need CPR and AED training without the added first aid component.",
+          "description_more": "This blended path is for learners who want to complete the knowledge portion online and come in only for the skills check.",
+          "name_contains": [
+            "Heartsaver\u00ae CPR AED"
+          ],
+          "exclude_name_contains": [
+            "Pediatric",
+            "First Aid"
+          ],
+          "full_schedule_url": "/heartsaver.html",
+          "full_schedule_label": "See full Heartsaver CPR AED schedule",
+          "primary_cta_label": "See blended CPR AED page"
+        },
+        {
+          "id": "hs-pediatric-ip",
+          "label": "Pediatric First Aid",
+          "tab_badge": "In-Person",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "Pediatric First Aid CPR AED In-Person",
+          "description": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
+          "description_short": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
+          "description_more": "Use this classroom path when your school, camp, childcare, or caregiver requirement specifically calls for a traditional in-person Pediatric Heartsaver class.",
+          "course_codes": [
+            "AHA_HS_PED_FA_CPR_IP"
+          ],
+          "name_contains": [
+            "Heartsaver\u00ae Pediatric First Aid CPR AED"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
+          "full_schedule_label": "See full pediatric Heartsaver schedule",
+          "primary_cta_label": "See pediatric page"
+        },
+        {
+          "id": "hs-pediatric-bl",
+          "label": "Pediatric First Aid",
+          "tab_badge": "Online + Skills",
+          "tab_icon": "/images/tab_blended.png",
+          "program": "Pediatric First Aid CPR AED Blended",
+          "description": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
+          "description_short": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
+          "description_more": "Use this blended path when you want the pediatric coursework online first and a shorter in-person skills session to finish the class.",
+          "course_codes": [
+            "AHA_HS_PED_FA_CPR_BL"
+          ],
+          "name_contains": [
+            "Heartsaver\u00ae Pediatric First Aid CPR AED"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
+          "full_schedule_label": "See full pediatric Heartsaver schedule",
+          "primary_cta_label": "See pediatric page"
+        }
+      ]
+    },
+    {
+      "slug": "arc",
+      "title": "American Red Cross CPR Classes | 910CPR",
+      "description": "American Red Cross BLS, CPR/AED, and First Aid/CPR/AED options from 910CPR for students whose employer, school, or program requires ARC certification.",
+      "eyebrow": "American Red Cross Training",
+      "hero_title": "Red Cross CPR And BLS Options",
+      "hero_copy": "Use this hub when your employer, school, or program specifically asks for American Red Cross certification instead of AHA or HSI.",
+      "hero_image": "/images/0arc.png",
+      "hero_image_alt": "American Red Cross training logo",
+      "full_schedule_banner": "Need more Red Cross options or upcoming dates? Open the full schedule for the selected ARC path.",
+      "ecosystem_hub": true,
+      "keep_empty_tabs": true,
+      "primary_cta_label": "Compare Red Cross options",
+      "secondary_cta_label": "Request ARC group training",
+      "trust_title": "Red Cross training, routed clearly",
+      "trust_copy": "Use this permanent hub for renewal emails, QR codes, scheduling help, and future Red Cross class inventory.",
+      "category_eyebrow": "Red Cross Course Categories",
+      "category_title": "Choose the ARC path your requirement names",
+      "category_copy": "ARC categories remain available here even while new public dates are being added.",
+      "empty_copy": "Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance.",
+      "future_categories_title": "Future Red Cross paths can be coordinated",
+      "future_categories": [
+        {
+          "label": "ARC ALS",
+          "description": "Advanced Life Support may be coordinated when a clinical team or employer specifically needs Red Cross ALS.",
+          "href": "/request_group_session.html?program=ARC%20ALS",
+          "cta": "Ask about ARC ALS"
+        },
+        {
+          "label": "ARC Instructor Courses",
+          "description": "Instructor-level Red Cross requests should be routed through scheduling support so prerequisites and availability can be confirmed.",
+          "href": "/request_group_session.html?program=ARC%20Instructor%20Course",
+          "cta": "Ask about instructor training"
+        },
+        {
+          "label": "ARC Babysitting / Layperson",
+          "description": "Layperson and babysitting-focused Red Cross tracks may be coordinated for groups, schools, and community programs.",
+          "href": "/request_group_session.html?program=ARC%20Babysitting%20Layperson",
+          "cta": "Ask about layperson tracks"
+        }
+      ],
+      "tabs": [
+        {
+          "id": "arc-bls",
+          "label": "ARC BLS",
+          "tab_badge": "Healthcare",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "ARC BLS",
+          "description": "American Red Cross BLS options for healthcare providers and students who need ARC specifically.",
+          "card_image": "/images/0arc.png",
+          "category_chips": [
+            "Healthcare",
+            "Red Cross"
+          ],
+          "ecosystem_points": [
+            "For healthcare-provider level BLS requirements that name American Red Cross.",
+            "Useful for students, clinical staff, responders, and employer-specific renewal routing.",
+            "Public dates appear here automatically when matching sessions are available."
+          ],
+          "certifying_bodies": [
+            "ARC",
+            "Red Cross",
+            "American Red Cross"
+          ],
+          "name_contains": [
+            "ARC BLS",
+            "American Red Cross BLS",
+            "Red Cross BLS",
+            "red cross basic life support",
+            "american red cross basic life support"
+          ],
+          "exclude_name_contains": [
+            "PALS",
+            "ALS",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/arc-bls-provider.html",
+          "full_schedule_label": "See ARC BLS course details",
+          "primary_cta_label": "See ARC BLS details",
+          "secondary_cta_label": "Ask about ARC BLS dates"
+        },
+        {
+          "id": "arc-cpr-aed",
+          "label": "ARC CPR/AED",
+          "tab_badge": "CPR + AED",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "ARC CPR/AED",
+          "description": "Red Cross CPR/AED training for workplace and general certification needs when first aid is not required.",
+          "card_image": "/images/0arc.png",
+          "category_chips": [
+            "CPR/AED",
+            "Lay responder"
+          ],
+          "ecosystem_points": [
+            "For requirements that name Red Cross Adult CPR/AED or ARC CPR/AED.",
+            "Best when first aid is not part of the requested credential.",
+            "Public dates and appointment routing can be added without changing this stable URL."
+          ],
+          "certifying_bodies": [
+            "ARC",
+            "Red Cross",
+            "American Red Cross"
+          ],
+          "name_contains": [
+            "ARC CPR/AED",
+            "ARC CPR AED",
+            "American Red Cross CPR/AED",
+            "Red Cross CPR/AED",
+            "Red Cross CPR AED",
+            "Red Cross Adult CPR/AED",
+            "Red Cross Adult CPR AED"
+          ],
+          "exclude_name_contains": [
+            "First Aid",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/arc-cpr-aed.html",
+          "full_schedule_label": "See ARC CPR/AED course details",
+          "primary_cta_label": "See ARC CPR/AED details",
+          "secondary_cta_label": "Ask about ARC CPR/AED dates"
+        },
+        {
+          "id": "arc-first-aid-cpr-aed",
+          "label": "ARC First Aid/CPR/AED",
+          "tab_badge": "First Aid",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "ARC First Aid/CPR/AED",
+          "description": "Red Cross First Aid/CPR/AED for workplaces, schools, and programs that require ARC certification.",
+          "card_image": "/images/0arc.png",
+          "category_chips": [
+            "First Aid",
+            "CPR/AED"
+          ],
+          "ecosystem_points": [
+            "For workplace, school, and program requirements that need Red Cross first aid with CPR/AED.",
+            "Useful when a non-AHA certifying body is required.",
+            "If no public date is listed, scheduling support can route the request."
+          ],
+          "certifying_bodies": [
+            "ARC",
+            "Red Cross",
+            "American Red Cross"
+          ],
+          "name_contains": [
+            "ARC First Aid CPR AED",
+            "ARC First Aid/CPR/AED",
+            "American Red Cross First Aid CPR AED",
+            "American Red Cross First Aid/CPR/AED",
+            "Red Cross First Aid CPR AED",
+            "Red Cross First Aid/CPR/AED",
+            "Red Cross Adult First Aid CPR/AED",
+            "Red Cross Adult First Aid CPR AED"
+          ],
+          "exclude_name_contains": [
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/arc-first-aid-cpr-aed.html",
+          "full_schedule_label": "See ARC First Aid/CPR/AED course details",
+          "primary_cta_label": "See ARC First Aid/CPR/AED details",
+          "secondary_cta_label": "Ask about ARC First Aid dates"
+        }
+      ]
+    },
+    {
+      "slug": "hsi",
+      "title": "HSI CPR And First Aid Classes | 910CPR",
+      "description": "HSI BLS, First Aid/CPR/AED, and CPR/AED options from 910CPR for workplace, school, and professional certification requirements.",
+      "eyebrow": "HSI Training",
+      "hero_title": "HSI CPR, BLS, And First Aid Options",
+      "hero_copy": "Use this hub when your employer, school, or program accepts or requests HSI certification.",
+      "hero_image": "/images/0hsi.png",
+      "hero_image_alt": "HSI training logo",
+      "full_schedule_banner": "Need more HSI options or upcoming dates? Open the full schedule for the selected HSI path.",
+      "ecosystem_hub": true,
+      "keep_empty_tabs": true,
+      "primary_cta_label": "Compare HSI options",
+      "secondary_cta_label": "Request HSI workplace training",
+      "trust_title": "Built for workplace routing",
+      "trust_copy": "This permanent HSI hub supports renewal emails, appointment routing, QR codes, group training, and future public sessions.",
+      "category_eyebrow": "HSI Course Categories",
+      "category_title": "Choose the HSI path that fits the job requirement",
+      "category_copy": "HSI categories stay visible for workplace and group scheduling even when public inventory is temporarily sparse.",
+      "empty_copy": "Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance.",
+      "tabs": [
+        {
+          "id": "hsi-bls",
+          "label": "HSI BLS",
+          "tab_badge": "Healthcare",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "HSI BLS",
+          "description": "HSI Basic Life Support for healthcare providers and students whose requirement accepts HSI.",
+          "card_image": "/images/0hsi.png",
+          "category_chips": [
+            "BLS",
+            "Healthcare"
+          ],
+          "ecosystem_points": [
+            "For healthcare-provider level BLS requirements that accept HSI.",
+            "Useful for employers, students, and teams that do not need AHA specifically.",
+            "Public dates appear automatically when matching HSI BLS sessions are available."
+          ],
+          "certifying_bodies": [
+            "HSI",
+            "ASHI"
+          ],
+          "name_contains": [
+            "HSI BLS",
+            "HSI Basic Life Support",
+            "Basic Life Support"
+          ],
+          "exclude_name_contains": [
+            "First Aid",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/hsi-bls-blended-learning-skills-session.html",
+          "full_schedule_label": "See HSI BLS course details",
+          "primary_cta_label": "See HSI BLS details",
+          "secondary_cta_label": "Ask about HSI BLS dates"
+        },
+        {
+          "id": "hsi-bls-fa",
+          "label": "HSI BLS With First Aid",
+          "tab_badge": "BLS + First Aid",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "HSI BLS With First Aid",
+          "description": "A combined HSI path for students who need BLS plus first aid in the same certification cycle.",
+          "card_image": "/images/0hsi.png",
+          "category_chips": [
+            "BLS",
+            "First Aid"
+          ],
+          "ecosystem_points": [
+            "For workers who need BLS and first aid aligned in the same renewal cycle.",
+            "Good fit for industrial, safety, and workplace teams with mixed requirements.",
+            "Call/text support can coordinate dates when public inventory is not listed."
+          ],
+          "certifying_bodies": [
+            "HSI",
+            "ASHI"
+          ],
+          "name_contains": [
+            "HSI BLS with First Aid",
+            "Basic Life Support (BLS) with Adult First Aid",
+            "BLS with Adult First Aid",
+            "BLS With First Aid",
+            "HSI BLS First Aid"
+          ],
+          "exclude_name_contains": [
+            "Instructor"
+          ],
+          "full_schedule_url": "/hsi",
+          "full_schedule_label": "Call/text 910-395-5193 for HSI BLS with First Aid dates",
+          "primary_cta_label": "Review HSI BLS + First Aid",
+          "secondary_cta_label": "Ask about combo dates"
+        },
+        {
+          "id": "hsi-first-aid-cpr-aed",
+          "label": "HSI First Aid/CPR/AED",
+          "tab_badge": "First Aid",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "HSI First Aid/CPR/AED",
+          "description": "HSI First Aid/CPR/AED for workplace, school, and professional requirements.",
+          "card_image": "/images/0hsi.png",
+          "category_chips": [
+            "First Aid",
+            "CPR/AED"
+          ],
+          "ecosystem_points": [
+            "For OSHA-style workplace first aid, CPR, and AED requirements.",
+            "Strong fit for business, industrial, school, and staff training needs.",
+            "Public and group training requests can route from this stable category."
+          ],
+          "certifying_bodies": [
+            "HSI",
+            "ASHI"
+          ],
+          "name_contains": [
+            "HSI First Aid CPR AED",
+            "HSI First Aid/CPR/AED",
+            "HSI - First Aid CPR AED",
+            "HSI Adult First Aid CPR AED",
+            "HSI Adult First Aid/CPR/AED",
+            "First Aid CPR AED"
+          ],
+          "exclude_name_contains": [
+            "AHA",
+            "ARC",
+            "Red Cross",
+            "Heartsaver",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/hsi-first-aid-cpr-aed.html",
+          "full_schedule_label": "See HSI First Aid/CPR/AED course details",
+          "primary_cta_label": "See HSI First Aid details",
+          "secondary_cta_label": "Ask about HSI First Aid dates"
+        },
+        {
+          "id": "hsi-cpr-aed",
+          "label": "HSI CPR/AED",
+          "tab_badge": "CPR + AED",
+          "tab_icon": "/images/tab_classroom.png",
+          "program": "HSI CPR/AED",
+          "description": "HSI CPR/AED for students who need CPR and AED coverage without a first aid component.",
+          "card_image": "/images/0hsi.png",
+          "category_chips": [
+            "CPR/AED",
+            "Workplace"
+          ],
+          "ecosystem_points": [
+            "For CPR/AED-only requirements where first aid is not needed.",
+            "Useful for teams that need a shorter workplace safety credential.",
+            "Scheduling support can coordinate public or group options."
+          ],
+          "certifying_bodies": [
+            "HSI",
+            "ASHI"
+          ],
+          "name_contains": [
+            "HSI CPR AED",
+            "HSI CPR/AED",
+            "HSI Adult CPR AED",
+            "HSI Adult CPR/AED"
+          ],
+          "exclude_name_contains": [
+            "First Aid",
+            "Instructor"
+          ],
+          "full_schedule_url": "/courses/hsi-cpr-aed.html",
+          "full_schedule_label": "See HSI CPR/AED course details",
+          "primary_cta_label": "See HSI CPR/AED details",
+          "secondary_cta_label": "Ask about HSI CPR/AED dates"
+        }
+      ]
+    },
+    {
+      "slug": "uscg-elementary-first-aid-cpr",
+      "title": "USCG Elementary First Aid CPR Classes | 910CPR",
+      "description": "USCG Elementary First Aid and CPR class dates from 910CPR for mariners and crews who need accepted maritime training.",
+      "eyebrow": "Maritime CPR Training",
+      "hero_title": "USCG Elementary First Aid | CPR",
+      "hero_copy": "Accepted first aid and CPR training for mariners and crews who need the USCG Elementary First Aid CPR requirement.",
+      "hero_note": "Choose a scheduled class time and reserve your seat without back-and-forth coordination.",
+      "full_schedule_banner": "Need the full USCG page with more context and schedule detail? Open it here.",
+      "tabs": [
+        {
+          "id": "uscg-efa",
+          "label": "USCG Elementary First Aid | CPR",
+          "program": "USCG Elementary First Aid | CPR",
+          "description": "Meets U.S. Coast Guard maritime requirements using the Heartsaver-based format aligned to AMERHA-216.",
+          "course_codes": [
+            "USCG_EFA_AHA"
+          ],
+          "name_contains": [
+            "USCG Elementary First Aid | CPR"
+          ],
+          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct253768",
+          "full_schedule_label": "See full USCG Elementary First Aid CPR schedule",
+          "primary_cta_label": "See full USCG page"
+        }
+      ]
+    },
+    {
+      "slug": "group-training",
+      "title": "Group CPR Training | 910CPR",
+      "description": "Request CPR, BLS, ACLS, PALS, first aid, and AED group training for healthcare, dental, school, workplace, and professional teams.",
+      "eyebrow": "On-Site Team Training",
+      "hero_title": "Group CPR Training For Real Requirements",
+      "hero_copy": "CPR, BLS, ACLS, PALS, first aid, and AED training for healthcare, dental, school, workplace, and professional teams.",
+      "hero_note": "Tell us what your group needs and preferred timing so we can coordinate the right training path.",
+      "full_schedule_banner": "If private scheduling is not the best fit, jump to the full public schedule page for the selected program.",
+      "group_mode": true,
+      "tabs": [
+        {
+          "id": "group-bls",
+          "label": "BLS On-Site",
+          "program": "BLS On-Site",
+          "description": "Private BLS training delivered at your office for healthcare and clinical teams that want everyone certified together.",
+          "course_codes": [
+            "AHA_BLS_IP_INITIAL",
+            "AHA_BLS_IP_RENEWAL",
+            "AHA_BLS_BL_SKILLS"
+          ],
+          "name_contains": [
+            "AHA BLS Provider",
+            "BLS Provider HeartCode Skills"
+          ],
+          "full_schedule_url": "/bls.html",
+          "full_schedule_label": "See public BLS options",
+          "primary_cta_label": "Request on-site BLS"
+        },
+        {
+          "id": "group-heartsaver",
+          "label": "First Aid / CPR / AED",
+          "program": "First Aid / CPR / AED",
+          "description": "A workplace-friendly private class for teams that need first aid, CPR, and AED coverage in one visit.",
+          "course_codes": [
+            "AHA_HS_FA_CPR_IP",
+            "AHA_HS_FA_CPR_BL"
+          ],
+          "name_contains": [
+            "Heartsaver\u00ae First Aid CPR AED"
+          ],
+          "exclude_name_contains": [
+            "Pediatric"
+          ],
+          "full_schedule_url": "/heartsaver.html",
+          "full_schedule_label": "See public Heartsaver options",
+          "primary_cta_label": "Request group training"
+        },
+        {
+          "id": "group-acls",
+          "label": "ACLS",
+          "program": "ACLS",
+          "description": "Custom ACLS scheduling for clinical teams that need a private format, coordinated timing, or on-site delivery.",
+          "course_codes": [
+            "AHA_ACLS_PROVIDER_INITIAL",
+            "AHA_ACLS_PROVIDER_RENEWAL",
+            "AHA_ACLS_HEARTCODE"
+          ],
+          "name_contains": [
+            "ACLS"
+          ],
+          "exclude_name_contains": [
+            "Instructor"
+          ],
+          "full_schedule_url": "/acls.html",
+          "full_schedule_label": "See public ACLS options",
+          "primary_cta_label": "Request group ACLS"
+        },
+        {
+          "id": "group-pals",
+          "label": "PALS",
+          "program": "PALS",
+          "description": "Private PALS scheduling for pediatric care teams that want a coordinated group class instead of separate registrations.",
+          "course_codes": [
+            "AHA_PALS_INITIAL",
+            "AHA_PALS_RENEWAL",
+            "AHA_PALS_HEARTCODE"
+          ],
+          "name_contains": [
+            "PALS"
+          ],
+          "exclude_name_contains": [
+            "Instructor"
+          ],
+          "full_schedule_url": "/pals.html",
+          "full_schedule_label": "See public PALS options",
+          "primary_cta_label": "Request group PALS"
+        },
+        {
+          "id": "group-uscg",
+          "label": "USCG",
+          "program": "USCG Elementary First Aid | CPR",
+          "description": "Maritime-focused private training for crews and marine employers that need USCG-aligned first aid and CPR certification.",
+          "course_codes": [
+            "USCG_EFA_AHA"
+          ],
+          "name_contains": [
+            "USCG Elementary First Aid | CPR"
+          ],
+          "full_schedule_url": "/uscg-elementary-first-aid-cpr.html",
+          "full_schedule_label": "See public USCG options",
+          "primary_cta_label": "Request group USCG training"
+        }
+      ]
+    }
+  ]
+}

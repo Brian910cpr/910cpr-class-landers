@@ -1,0 +1,357 @@
+{
+  "generated_at": "2026-05-12T23:06:00-04:00",
+  "scope": "local source/config audit before guideline content patch",
+  "issue_count": 50,
+  "issues": [
+    {
+      "file": "scripts/build_inventory_status.py",
+      "issue": "first aid topic scope incomplete",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Add practical first aid recognition topics including ticks, stings, burns, eye injuries, poison ivy/oak, and pulse oximetry limitations.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_landers.py",
+      "issue": "choking guidance generic",
+      "outdated_phrase": "choking wording lacks current back blow/chest thrust detail",
+      "recommended_replacement": "Use 5 back blows plus 5 abdominal thrusts for adults and children, and 5 back blows plus 5 chest thrusts for infants.",
+      "confidence": "high"
+    },
+    {
+      "file": "scripts/build_slug_hubs.py",
+      "issue": "choking guidance generic",
+      "outdated_phrase": "choking wording lacks current back blow/chest thrust detail",
+      "recommended_replacement": "Use 5 back blows plus 5 abdominal thrusts for adults and children, and 5 back blows plus 5 chest thrusts for infants.",
+      "confidence": "high"
+    },
+    {
+      "file": "scripts/fb_relevance_scout.py",
+      "issue": "choking guidance generic",
+      "outdated_phrase": "choking wording lacks current back blow/chest thrust detail",
+      "recommended_replacement": "Use 5 back blows plus 5 abdominal thrusts for adults and children, and 5 back blows plus 5 chest thrusts for infants.",
+      "confidence": "high"
+    },
+    {
+      "file": "scripts/title_cleaner.py",
+      "issue": "choking guidance generic",
+      "outdated_phrase": "choking wording lacks current back blow/chest thrust detail",
+      "recommended_replacement": "Use 5 back blows plus 5 abdominal thrusts for adults and children, and 5 back blows plus 5 chest thrusts for infants.",
+      "confidence": "high"
+    },
+    {
+      "file": "raw/course_archive_v1.json",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "opioid/Narcan wording lacks naloxone accessibility and ventilation emphasis",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "high"
+    },
+    {
+      "file": "raw/course_archive_v1.json",
+      "issue": "stroke recognition incomplete",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Use FAST recognition, activate EMS, and avoid implying stroke only affects older adults. Mention pediatric stroke where appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v1.json",
+      "issue": "choking guidance generic",
+      "outdated_phrase": "choking wording lacks current back blow/chest thrust detail",
+      "recommended_replacement": "Use 5 back blows plus 5 abdominal thrusts for adults and children, and 5 back blows plus 5 chest thrusts for infants.",
+      "confidence": "high"
+    },
+    {
+      "file": "raw/course_archive_v2.json",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "opioid/Narcan wording lacks naloxone accessibility and ventilation emphasis",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "high"
+    },
+    {
+      "file": "raw/course_archive_v2.json",
+      "issue": "stroke recognition incomplete",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Use FAST recognition, activate EMS, and avoid implying stroke only affects older adults. Mention pediatric stroke where appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v2.json",
+      "issue": "choking guidance generic",
+      "outdated_phrase": "choking wording lacks current back blow/chest thrust detail",
+      "recommended_replacement": "Use 5 back blows plus 5 abdominal thrusts for adults and children, and 5 back blows plus 5 chest thrusts for infants.",
+      "confidence": "high"
+    },
+    {
+      "file": "raw/course_archive_v2.json",
+      "issue": "asthma spacer guidance missing",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Mention helping with a prescribed bronchodilator and spacer preference, including improvised spacer when appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v2.json",
+      "issue": "first aid topic scope incomplete",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Add practical first aid recognition topics including ticks, stings, burns, eye injuries, poison ivy/oak, and pulse oximetry limitations.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v3.json",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "opioid/Narcan wording lacks naloxone accessibility and ventilation emphasis",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "high"
+    },
+    {
+      "file": "raw/course_archive_v3.json",
+      "issue": "stroke recognition incomplete",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Use FAST recognition, activate EMS, and avoid implying stroke only affects older adults. Mention pediatric stroke where appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v3.json",
+      "issue": "choking guidance generic",
+      "outdated_phrase": "choking wording lacks current back blow/chest thrust detail",
+      "recommended_replacement": "Use 5 back blows plus 5 abdominal thrusts for adults and children, and 5 back blows plus 5 chest thrusts for infants.",
+      "confidence": "high"
+    },
+    {
+      "file": "raw/course_archive_v3.json",
+      "issue": "asthma spacer guidance missing",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Mention helping with a prescribed bronchodilator and spacer preference, including improvised spacer when appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v3.json",
+      "issue": "first aid topic scope incomplete",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Add practical first aid recognition topics including ticks, stings, burns, eye injuries, poison ivy/oak, and pulse oximetry limitations.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v4.json",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "opioid/Narcan wording lacks naloxone accessibility and ventilation emphasis",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "high"
+    },
+    {
+      "file": "raw/course_archive_v4.json",
+      "issue": "stroke recognition incomplete",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Use FAST recognition, activate EMS, and avoid implying stroke only affects older adults. Mention pediatric stroke where appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v4.json",
+      "issue": "choking guidance generic",
+      "outdated_phrase": "choking wording lacks current back blow/chest thrust detail",
+      "recommended_replacement": "Use 5 back blows plus 5 abdominal thrusts for adults and children, and 5 back blows plus 5 chest thrusts for infants.",
+      "confidence": "high"
+    },
+    {
+      "file": "raw/course_archive_v4.json",
+      "issue": "asthma spacer guidance missing",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Mention helping with a prescribed bronchodilator and spacer preference, including improvised spacer when appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v4.json",
+      "issue": "first aid topic scope incomplete",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Add practical first aid recognition topics including ticks, stings, burns, eye injuries, poison ivy/oak, and pulse oximetry limitations.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/thread_course_image_map.json",
+      "issue": "stroke recognition incomplete",
+      "outdated_phrase": "topic mention without full 2024/2025 guideline-supporting context",
+      "recommended_replacement": "Use FAST recognition, activate EMS, and avoid implying stroke only affects older adults. Mention pediatric stroke where appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_landers.py",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_landers.py",
+      "issue": "seizure guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add protect from injury, do not restrain, nothing in mouth, and expanded EMS activation conditions.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_landers.py",
+      "issue": "asthma spacer guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Mention helping with a prescribed bronchodilator and spacer preference, including improvised spacer when appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_landers.py",
+      "issue": "heat/cold illness guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add severe heat illness cooling priority including ice water immersion when available, safe rewarming, and avoiding harmful warming methods.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_slug_hubs.py",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_slug_hubs.py",
+      "issue": "seizure guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add protect from injury, do not restrain, nothing in mouth, and expanded EMS activation conditions.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_slug_hubs.py",
+      "issue": "asthma spacer guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Mention helping with a prescribed bronchodilator and spacer preference, including improvised spacer when appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_slug_hubs.py",
+      "issue": "heat/cold illness guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add severe heat illness cooling priority including ice water immersion when available, safe rewarming, and avoiding harmful warming methods.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_index_and_sitemap.py",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_index_and_sitemap.py",
+      "issue": "seizure guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add protect from injury, do not restrain, nothing in mouth, and expanded EMS activation conditions.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_index_and_sitemap.py",
+      "issue": "asthma spacer guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Mention helping with a prescribed bronchodilator and spacer preference, including improvised spacer when appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/build_index_and_sitemap.py",
+      "issue": "heat/cold illness guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add severe heat illness cooling priority including ice water immersion when available, safe rewarming, and avoiding harmful warming methods.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/hub_utils.py",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/hub_utils.py",
+      "issue": "seizure guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add protect from injury, do not restrain, nothing in mouth, and expanded EMS activation conditions.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/hub_utils.py",
+      "issue": "asthma spacer guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Mention helping with a prescribed bronchodilator and spacer preference, including improvised spacer when appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "scripts/hub_utils.py",
+      "issue": "heat/cold illness guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add severe heat illness cooling priority including ice water immersion when available, safe rewarming, and avoiding harmful warming methods.",
+      "confidence": "medium"
+    },
+    {
+      "file": "data/config/slug_hubs.json",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "medium"
+    },
+    {
+      "file": "data/config/slug_hubs.json",
+      "issue": "seizure guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add protect from injury, do not restrain, nothing in mouth, and expanded EMS activation conditions.",
+      "confidence": "medium"
+    },
+    {
+      "file": "data/config/slug_hubs.json",
+      "issue": "asthma spacer guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Mention helping with a prescribed bronchodilator and spacer preference, including improvised spacer when appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "data/config/slug_hubs.json",
+      "issue": "heat/cold illness guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add severe heat illness cooling priority including ice water immersion when available, safe rewarming, and avoiding harmful warming methods.",
+      "confidence": "medium"
+    },
+    {
+      "file": "data/config/course_map.json",
+      "issue": "opioid/naloxone missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add opioid emergency recognition, EMS activation, naloxone accessibility, CPR with breaths for respiratory arrest, and warning that hands-only CPR is not always enough in opioid emergencies.",
+      "confidence": "medium"
+    },
+    {
+      "file": "data/config/course_map.json",
+      "issue": "seizure guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add protect from injury, do not restrain, nothing in mouth, and expanded EMS activation conditions.",
+      "confidence": "medium"
+    },
+    {
+      "file": "data/config/course_map.json",
+      "issue": "asthma spacer guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Mention helping with a prescribed bronchodilator and spacer preference, including improvised spacer when appropriate.",
+      "confidence": "medium"
+    },
+    {
+      "file": "data/config/course_map.json",
+      "issue": "heat/cold illness guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add severe heat illness cooling priority including ice water immersion when available, safe rewarming, and avoiding harmful warming methods.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v4.json",
+      "issue": "seizure guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add protect from injury, do not restrain, nothing in mouth, and expanded EMS activation conditions.",
+      "confidence": "medium"
+    },
+    {
+      "file": "raw/course_archive_v4.json",
+      "issue": "heat/cold illness guidance missing",
+      "outdated_phrase": "topic absent from reusable public course content",
+      "recommended_replacement": "Add severe heat illness cooling priority including ice water immersion when available, safe rewarming, and avoiding harmful warming methods.",
+      "confidence": "medium"
+    }
+  ]
+}

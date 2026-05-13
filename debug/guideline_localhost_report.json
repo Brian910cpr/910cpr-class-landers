@@ -1,0 +1,108 @@
+{
+  "status": "PASS",
+  "pages_checked": 8,
+  "urls_checked": 63,
+  "failures": [],
+  "sample_urls": [
+    {
+      "url": "http://127.0.0.1:8000/docs/bls.html",
+      "status": 200,
+      "bytes": 37187
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/request_group_session.html?program=AHA%20BLS%20Provider",
+      "status": 200,
+      "bytes": 9017
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/assets/hub-ui.js",
+      "status": 200,
+      "bytes": 35897
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/assets/hybrid-inventory.js",
+      "status": 200,
+      "bytes": 7196
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/assets/live-sessions.js",
+      "status": 200,
+      "bytes": 4129
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/assets/session-expiry.js",
+      "status": 200,
+      "bytes": 5511
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/css/lander.css",
+      "status": 200,
+      "bytes": 59586
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/images/910CPR_wave.jpg",
+      "status": 200,
+      "bytes": 86561
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/images/bls_general.png",
+      "status": 200,
+      "bytes": 207811
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/images/logo.png",
+      "status": 200,
+      "bytes": 20028
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/images/tab_blended.png",
+      "status": 200,
+      "bytes": 2759
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/images/tab_classroom.png",
+      "status": 200,
+      "bytes": 2584
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/index.html",
+      "status": 200,
+      "bytes": 8686
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/acls.html",
+      "status": 200,
+      "bytes": 28688
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/request_group_session.html?program=AHA%20ACLS%20Provider",
+      "status": 200,
+      "bytes": 9017
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/images/acls_general.png",
+      "status": 200,
+      "bytes": 175986
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/pals.html",
+      "status": 200,
+      "bytes": 18964
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/request_group_session.html?program=AHA%20PALS%20Provider",
+      "status": 200,
+      "bytes": 9017
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/images/pals_general.png",
+      "status": 200,
+      "bytes": 176493
+    },
+    {
+      "url": "http://127.0.0.1:8000/docs/heartsaver.html",
+      "status": 200,
+      "bytes": 75618
+    }
+  ]
+}

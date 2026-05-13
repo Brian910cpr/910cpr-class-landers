@@ -281,13 +281,13 @@
     {
       "slug": "heartsaver",
       "title": "Heartsaver CPR Classes | 910CPR",
-      "description": "AHA Heartsaver CPR, AED, first aid, and pediatric options for workplace, school, childcare, and professional requirements.",
+      "description": "AHA Heartsaver CPR, AED, first aid, and pediatric options with practical emergency recognition for workplace, school, childcare, and professional requirements.",
       "eyebrow": "Workplace And Public CPR",
       "hero_title": "CPR And First Aid For Workplaces And Schools",
-      "hero_copy": "AHA Heartsaver CPR, AED, first aid, and pediatric options for workplace, school, childcare, and professional requirements.",
+      "hero_copy": "AHA Heartsaver CPR, AED, first aid, and pediatric options that teach practical recognition and response for choking, opioid emergencies, stroke warning signs, seizures, asthma, heat illness, burns, and everyday injuries.",
       "hero_image": "/images/heartsaver_general.png",
       "hero_image_alt": "AHA Heartsaver CPR and first aid course",
-      "full_schedule_banner": "Want more Heartsaver dates? Open the full schedule page for the tab you selected.",
+      "full_schedule_banner": "Want more Heartsaver dates? Pick the class format first, then book a real seat from the live schedule.",
       "flexible_location_id": "101560",
       "flexible_cache_seconds": 180,
       "other_training_options": [
@@ -300,13 +300,13 @@
         {
           "label": "American Red Cross Courses",
           "description": "Compare Red Cross options if your employer, school, or program prefers ARC certification.",
-          "href": "/arc",
+          "href": "/arc.html",
           "cta": "Compare ARC options"
         },
         {
           "label": "HSI Courses",
           "description": "Explore HSI workplace-focused options when you need a non-AHA certification path.",
-          "href": "/hsi",
+          "href": "/hsi.html",
           "cta": "Compare HSI options"
         },
         {
@@ -334,14 +334,14 @@
           "tab_badge": "In-Person",
           "tab_icon": "/images/tab_classroom.png",
           "program": "First Aid / CPR / AED",
-          "description": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
-          "description_short": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
-          "description_more": "Choose this classroom path when you want the full Heartsaver First Aid CPR AED course taught in person from start to finish.",
+          "description": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, AED, choking, naloxone awareness, stroke recognition, seizures, asthma, heat illness, burns, and common injury response.",
+          "description_short": "First aid, CPR, and AED training for practical workplace and community response.",
+          "description_more": "Choose this path when you want hands-on practice plus current first aid topics such as opioid emergencies, FAST stroke recognition, seizure safety, asthma inhaler assistance, heat illness cooling, burns, eye injuries, ticks, stings, poison ivy/oak, and pulse oximetry limitations.",
           "course_codes": [
             "AHA_HS_FA_CPR_IP"
           ],
           "name_contains": [
-            "Heartsaver\u00ae First Aid CPR AED"
+            "Heartsaver® First Aid CPR AED"
           ],
           "exclude_name_contains": [
             "Pediatric"
@@ -356,14 +356,14 @@
           "tab_badge": "Online + Skills",
           "tab_icon": "/images/tab_blended.png",
           "program": "First Aid / CPR / AED",
-          "description": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
-          "description_short": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, and AED skills together.",
-          "description_more": "Choose this blended path when you want to complete the coursework online first and then finish with an in-person skills session.",
+          "description": "The broadest Heartsaver option for workplaces and general certification needs, covering first aid, CPR, AED, choking, naloxone awareness, stroke recognition, seizures, asthma, heat illness, burns, and common injury response.",
+          "description_short": "First aid, CPR, and AED training for practical workplace and community response.",
+          "description_more": "Choose this path when you want hands-on practice plus current first aid topics such as opioid emergencies, FAST stroke recognition, seizure safety, asthma inhaler assistance, heat illness cooling, burns, eye injuries, ticks, stings, poison ivy/oak, and pulse oximetry limitations.",
           "course_codes": [
             "AHA_HS_FA_CPR_BL"
           ],
           "name_contains": [
-            "Heartsaver\u00ae First Aid CPR AED"
+            "Heartsaver® First Aid CPR AED"
           ],
           "exclude_name_contains": [
             "Pediatric"
@@ -378,11 +378,11 @@
           "tab_badge": "In-Person",
           "tab_icon": "/images/tab_classroom.png",
           "program": "Heartsaver CPR AED",
-          "description": "Best when you need CPR and AED training without the added first aid component.",
-          "description_short": "Best when you need CPR and AED training without the added first aid component.",
-          "description_more": "This is the leaner classroom option for teams and individuals who do not need the first aid module.",
+          "description": "Best when you need CPR and AED training without the first aid module, including adult and child choking response and when breaths matter.",
+          "description_short": "CPR and AED training without the added first aid component.",
+          "description_more": "This option keeps the focus on CPR, AED use, and choking response. It also reinforces that hands-only CPR is not always enough in opioid-related respiratory arrest, where CPR with breaths and naloxone access may matter.",
           "name_contains": [
-            "Heartsaver\u00ae CPR AED"
+            "Heartsaver® CPR AED"
           ],
           "exclude_name_contains": [
             "Pediatric",
@@ -398,11 +398,11 @@
           "tab_badge": "Online + Skills",
           "tab_icon": "/images/tab_blended.png",
           "program": "Heartsaver CPR AED",
-          "description": "Best when you need CPR and AED training without the added first aid component.",
-          "description_short": "Best when you need CPR and AED training without the added first aid component.",
-          "description_more": "This blended path is for learners who want to complete the knowledge portion online and come in only for the skills check.",
+          "description": "Best when you need CPR and AED training without the first aid module, including adult and child choking response and when breaths matter.",
+          "description_short": "CPR and AED training without the added first aid component.",
+          "description_more": "This option keeps the focus on CPR, AED use, and choking response. It also reinforces that hands-only CPR is not always enough in opioid-related respiratory arrest, where CPR with breaths and naloxone access may matter.",
           "name_contains": [
-            "Heartsaver\u00ae CPR AED"
+            "Heartsaver® CPR AED"
           ],
           "exclude_name_contains": [
             "Pediatric",
@@ -418,14 +418,14 @@
           "tab_badge": "In-Person",
           "tab_icon": "/images/tab_classroom.png",
           "program": "Pediatric First Aid CPR AED In-Person",
-          "description": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
-          "description_short": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
-          "description_more": "Use this classroom path when your school, camp, childcare, or caregiver requirement specifically calls for a traditional in-person Pediatric Heartsaver class.",
+          "description": "A childcare-focused option covering pediatric first aid, CPR, AED, choking, asthma, seizures, allergic reactions, heat illness, burns, and injury response for schools, camps, and caregiver teams.",
+          "description_short": "Pediatric first aid, CPR, AED, and emergency recognition for childcare and youth settings.",
+          "description_more": "Use this path when your school, camp, childcare, or caregiver requirement calls for pediatric training that includes infant/child CPR, choking response, seizure safety, asthma support, severe allergic reaction response, heat illness, burns, and injury care.",
           "course_codes": [
             "AHA_HS_PED_FA_CPR_IP"
           ],
           "name_contains": [
-            "Heartsaver\u00ae Pediatric First Aid CPR AED"
+            "Heartsaver® Pediatric First Aid CPR AED"
           ],
           "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
           "full_schedule_label": "See full pediatric Heartsaver schedule",
@@ -437,14 +437,14 @@
           "tab_badge": "Online + Skills",
           "tab_icon": "/images/tab_blended.png",
           "program": "Pediatric First Aid CPR AED Blended",
-          "description": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
-          "description_short": "A childcare-focused option covering pediatric first aid, CPR, and AED content for schools, camps, and caregiver teams.",
-          "description_more": "Use this blended path when you want the pediatric coursework online first and a shorter in-person skills session to finish the class.",
+          "description": "A childcare-focused option covering pediatric first aid, CPR, AED, choking, asthma, seizures, allergic reactions, heat illness, burns, and injury response for schools, camps, and caregiver teams.",
+          "description_short": "Pediatric first aid, CPR, AED, and emergency recognition for childcare and youth settings.",
+          "description_more": "Use this path when your school, camp, childcare, or caregiver requirement calls for pediatric training that includes infant/child CPR, choking response, seizure safety, asthma support, severe allergic reaction response, heat illness, burns, and injury care.",
           "course_codes": [
             "AHA_HS_PED_FA_CPR_BL"
           ],
           "name_contains": [
-            "Heartsaver\u00ae Pediatric First Aid CPR AED"
+            "Heartsaver® Pediatric First Aid CPR AED"
           ],
           "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
           "full_schedule_label": "See full pediatric Heartsaver schedule",
@@ -458,7 +458,7 @@
       "description": "American Red Cross BLS, CPR/AED, and First Aid/CPR/AED options from 910CPR for students whose employer, school, or program requires ARC certification.",
       "eyebrow": "American Red Cross Training",
       "hero_title": "Red Cross CPR And BLS Options",
-      "hero_copy": "Use this hub when your employer, school, or program specifically asks for American Red Cross certification instead of AHA or HSI.",
+      "hero_copy": "Use this hub when your employer, school, or program specifically asks for American Red Cross certification, including practical CPR/AED and first aid recognition topics aligned to current first aid guidance.",
       "hero_image": "/images/0arc.png",
       "hero_image_alt": "American Red Cross training logo",
       "full_schedule_banner": "Need more Red Cross options or upcoming dates? Open the full schedule for the selected ARC path.",
@@ -470,7 +470,7 @@
       "trust_copy": "Use this permanent hub for renewal emails, QR codes, scheduling help, and future Red Cross class inventory.",
       "category_eyebrow": "Red Cross Course Categories",
       "category_title": "Choose the ARC path your requirement names",
-      "category_copy": "ARC categories remain available here even while new public dates are being added.",
+      "category_copy": "ARC categories remain available here even while new public dates are being added, with routing for CPR/AED, first aid, BLS, and workplace emergency recognition needs.",
       "empty_copy": "Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance.",
       "future_categories_title": "Future Red Cross paths can be coordinated",
       "future_categories": [
@@ -539,7 +539,7 @@
           "tab_badge": "CPR + AED",
           "tab_icon": "/images/tab_classroom.png",
           "program": "ARC CPR/AED",
-          "description": "Red Cross CPR/AED training for workplace and general certification needs when first aid is not required.",
+          "description": "Red Cross CPR/AED training for workplace and general certification needs when first aid is not required, including CPR, AED use, and choking response.",
           "card_image": "/images/0arc.png",
           "category_chips": [
             "CPR/AED",
@@ -547,7 +547,7 @@
           ],
           "ecosystem_points": [
             "For requirements that name Red Cross Adult CPR/AED or ARC CPR/AED.",
-            "Best when first aid is not part of the requested credential.",
+            "Best when first aid is not part of the requested credential but CPR, AED, and choking response are still needed.",
             "Public dates and appointment routing can be added without changing this stable URL."
           ],
           "certifying_bodies": [
@@ -579,7 +579,7 @@
           "tab_badge": "First Aid",
           "tab_icon": "/images/tab_classroom.png",
           "program": "ARC First Aid/CPR/AED",
-          "description": "Red Cross First Aid/CPR/AED for workplaces, schools, and programs that require ARC certification.",
+          "description": "Red Cross First Aid/CPR/AED for workplaces, schools, and programs that require ARC certification and practical first aid recognition.",
           "card_image": "/images/0arc.png",
           "category_chips": [
             "First Aid",
@@ -587,7 +587,7 @@
           ],
           "ecosystem_points": [
             "For workplace, school, and program requirements that need Red Cross first aid with CPR/AED.",
-            "Useful when a non-AHA certifying body is required.",
+            "Useful when a non-AHA certifying body is required and students need practical topics such as naloxone awareness, FAST stroke recognition, seizures, asthma, burns, heat illness, stings, ticks, and poison plant exposure.",
             "If no public date is listed, scheduling support can route the request."
           ],
           "certifying_bodies": [
@@ -621,7 +621,7 @@
       "description": "HSI BLS, First Aid/CPR/AED, and CPR/AED options from 910CPR for workplace, school, and professional certification requirements.",
       "eyebrow": "HSI Training",
       "hero_title": "HSI CPR, BLS, And First Aid Options",
-      "hero_copy": "Use this hub when your employer, school, or program accepts or requests HSI certification.",
+      "hero_copy": "Use this hub when your employer, school, or program accepts or requests HSI certification for practical workplace CPR, AED, BLS, and first aid response.",
       "hero_image": "/images/0hsi.png",
       "hero_image_alt": "HSI training logo",
       "full_schedule_banner": "Need more HSI options or upcoming dates? Open the full schedule for the selected HSI path.",
@@ -633,7 +633,7 @@
       "trust_copy": "This permanent HSI hub supports renewal emails, appointment routing, QR codes, group training, and future public sessions.",
       "category_eyebrow": "HSI Course Categories",
       "category_title": "Choose the HSI path that fits the job requirement",
-      "category_copy": "HSI categories stay visible for workplace and group scheduling even when public inventory is temporarily sparse.",
+      "category_copy": "HSI categories stay visible for workplace and group scheduling even when public inventory is temporarily sparse, including CPR/AED, BLS, and first aid response topics.",
       "empty_copy": "Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance.",
       "tabs": [
         {
@@ -702,7 +702,7 @@
           "exclude_name_contains": [
             "Instructor"
           ],
-          "full_schedule_url": "/hsi",
+          "full_schedule_url": "/hsi.html",
           "full_schedule_label": "Call/text 910-395-5193 for HSI BLS with First Aid dates",
           "primary_cta_label": "Review HSI BLS + First Aid",
           "secondary_cta_label": "Ask about combo dates"
@@ -713,7 +713,7 @@
           "tab_badge": "First Aid",
           "tab_icon": "/images/tab_classroom.png",
           "program": "HSI First Aid/CPR/AED",
-          "description": "HSI First Aid/CPR/AED for workplace, school, and professional requirements.",
+          "description": "HSI First Aid/CPR/AED for workplace, school, and professional requirements, including practical recognition of choking, opioid emergencies, stroke, seizures, asthma, heat illness, burns, and common injuries.",
           "card_image": "/images/0hsi.png",
           "category_chips": [
             "First Aid",
@@ -721,8 +721,8 @@
           ],
           "ecosystem_points": [
             "For OSHA-style workplace first aid, CPR, and AED requirements.",
-            "Strong fit for business, industrial, school, and staff training needs.",
-            "Public and group training requests can route from this stable category."
+            "Strong fit for business, industrial, school, and staff training needs that benefit from scenario-based response practice.",
+            "Topics can include naloxone access, CPR with breaths for respiratory arrest, FAST stroke recognition, seizure safety, asthma inhaler assistance with spacer preference, heat illness cooling, burns, eye injuries, ticks, stings, poison ivy/oak, and pulse oximetry limitations."
           ],
           "certifying_bodies": [
             "HSI",
@@ -754,7 +754,7 @@
           "tab_badge": "CPR + AED",
           "tab_icon": "/images/tab_classroom.png",
           "program": "HSI CPR/AED",
-          "description": "HSI CPR/AED for students who need CPR and AED coverage without a first aid component.",
+          "description": "HSI CPR/AED for students who need CPR, AED, and choking response coverage without a first aid component.",
           "card_image": "/images/0hsi.png",
           "category_chips": [
             "CPR/AED",
@@ -792,7 +792,7 @@
       "description": "USCG Elementary First Aid and CPR class dates from 910CPR for mariners and crews who need accepted maritime training.",
       "eyebrow": "Maritime CPR Training",
       "hero_title": "USCG Elementary First Aid | CPR",
-      "hero_copy": "Accepted first aid and CPR training for mariners and crews who need the USCG Elementary First Aid CPR requirement.",
+      "hero_copy": "Accepted first aid and CPR training for mariners and crews who need the USCG Elementary First Aid CPR requirement, with practical emergency recognition for maritime and outdoor settings.",
       "hero_note": "Choose a scheduled class time and reserve your seat without back-and-forth coordination.",
       "full_schedule_banner": "Need the full USCG page with more context and schedule detail? Open it here.",
       "tabs": [
@@ -800,7 +800,7 @@
           "id": "uscg-efa",
           "label": "USCG Elementary First Aid | CPR",
           "program": "USCG Elementary First Aid | CPR",
-          "description": "Meets U.S. Coast Guard maritime requirements using the Heartsaver-based format aligned to AMERHA-216.",
+          "description": "Meets U.S. Coast Guard maritime requirements using the Heartsaver-based format aligned to AMERHA-216, with practical first aid, CPR, choking, heat/cold exposure, and emergency recognition topics.",
           "course_codes": [
             "USCG_EFA_AHA"
           ],
@@ -819,7 +819,7 @@
       "description": "Request CPR, BLS, ACLS, PALS, first aid, and AED group training for healthcare, dental, school, workplace, and professional teams.",
       "eyebrow": "On-Site Team Training",
       "hero_title": "Group CPR Training For Real Requirements",
-      "hero_copy": "CPR, BLS, ACLS, PALS, first aid, and AED training for healthcare, dental, school, workplace, and professional teams.",
+      "hero_copy": "CPR, BLS, ACLS, PALS, first aid, and AED training for healthcare, dental, school, workplace, and professional teams, built around hands-on practice, scenario refreshers, and clear team communication.",
       "hero_note": "Tell us what your group needs and preferred timing so we can coordinate the right training path.",
       "full_schedule_banner": "If private scheduling is not the best fit, jump to the full public schedule page for the selected program.",
       "group_mode": true,
@@ -852,7 +852,7 @@
             "AHA_HS_FA_CPR_BL"
           ],
           "name_contains": [
-            "Heartsaver\u00ae First Aid CPR AED"
+            "Heartsaver® First Aid CPR AED"
           ],
           "exclude_name_contains": [
             "Pediatric"

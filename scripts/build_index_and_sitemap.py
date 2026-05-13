@@ -297,6 +297,14 @@ def infer_parent_hub(course_name: str) -> str:
 def course_description(course_name: str) -> str:
     title = strip_html(course_name)
     upper = title.upper()
+    if "HEARTSAVER" in upper or "FIRST AID" in upper or "CPR AED" in upper or "CPR/AED" in upper:
+        return f"See current upcoming dates for {title}, with direct registration links plus practical CPR, AED, choking, naloxone, stroke, seizure, asthma, heat illness, burn, and first aid response topics."
+    if "BLS" in upper:
+        return f"See current upcoming dates for {title}, with direct registration links and healthcare-provider CPR, AED, ventilation, choking response, and team communication practice."
+    if "ACLS" in upper:
+        return f"See upcoming {title} options with direct registration, scenario-based team response, cardiac arrest, stroke recognition, airway, rhythm, and postarrest care topics."
+    if "PALS" in upper:
+        return f"See upcoming {title} options with direct registration, pediatric assessment, respiratory support, shock, cardiac arrest, and team communication topics."
     if "HEARTCODE" in upper or "SKILLS" in upper:
         return f"Browse upcoming hands-on skills sessions for {title}. Choose a future date, register directly, or use the full course calendar for additional openings."
     if "RENEW" in upper or "UPDATE" in upper:

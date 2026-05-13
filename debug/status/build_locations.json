@@ -3,13 +3,13 @@
   "worker": "build_locations",
   "script": "scripts/build_locations.py",
   "status": "done",
-  "last_run": "2026-05-11T17:08:07.448025-04:00",
+  "last_run": "2026-05-12T23:17:37.089304-04:00",
   "current_count": 1,
   "total_count": 1,
   "percent_complete": 100.0,
   "last_output_file": "docs\\locations\\wilmington.html",
-  "timestamp": "2026-05-11T17:08:07.448025-04:00",
-  "last_successful_run": "2026-05-11T17:08:07.448025-04:00",
+  "timestamp": "2026-05-12T23:17:37.089304-04:00",
+  "last_successful_run": "2026-05-12T23:17:37.089304-04:00",
   "inputs": [
     "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json"
   ],
@@ -18,7 +18,7 @@
   ],
   "counts": {
     "sessions_loaded": 26039,
-    "future_public_sessions": 1346,
+    "future_public_sessions": 1340,
     "location_pages": 1
   },
   "pages_generated": 1,

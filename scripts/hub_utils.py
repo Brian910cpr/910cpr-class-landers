@@ -226,3 +226,27 @@ def session_rows(rows: list[SessionRecord], limit=20):
             f"<td>{fmt_dt(s.start_at)}</td><td>{s.city}</td><td>{s.cert_body or ''} {s.course_family}</td><td><a class='button secondary' href='{s.registration_link}'>Register</a></td></tr>"
         )
     return "<table class='table-lite'><thead><tr><th>Date / Time</th><th>City</th><th>Program</th><th></th></tr></thead><tbody data-session-container>" + "".join(tr) + "</tbody></table>"
+
+
+def guideline_topic_block(family: str) -> str:
+    text = strip_html(family).lower()
+    if not any(term in text for term in ["heartsaver", "first aid", "cpr", "aed", "bls", "pals", "acls", "uscg"]):
+        return ""
+    if "acls" in text or "pals" in text:
+        points = [
+            "Scenario-based practice keeps recognition, assessment, ventilation, CPR quality, defibrillation, and team communication connected to real clinical response.",
+            "Stroke content should be framed as a time-sensitive emergency, with FAST recognition and EMS activation included where layperson wording appears.",
+        ]
+    elif "bls" in text:
+        points = [
+            "BLS pages should preserve high-quality CPR, AED use, ventilations, choking response, and team-based response language.",
+            "Opioid-related respiratory arrest needs CPR with breaths when breathing is absent or abnormal. Hands-only CPR is not always enough, and naloxone should be used when available.",
+        ]
+    else:
+        points = [
+            "First aid topics now emphasize practical recognition and early EMS activation, not just certification wording.",
+            "Choking response should say adults and children receive 5 back blows and 5 abdominal thrusts, while infants receive 5 back blows and 5 chest thrusts.",
+            "Updated first aid language includes naloxone access, seizures, asthma spacer support, stroke FAST recognition, severe heat illness cooling, safe rewarming, burns, eye injuries, ticks, stings, poison ivy/oak, and pulse oximetry limitations.",
+        ]
+    items = "".join(f"<li>{p}</li>" for p in points)
+    return f"<section class='section-box'><h2>Current CPR and First Aid Focus</h2><ul>{items}</ul></section>"

@@ -1,6 +1,6 @@
 # Missing Descriptions Report
 
-- Generated at: `2026-05-12T21:43:44.915550-04:00`
+- Generated at: `2026-05-12T23:10:47.282815-04:00`
 - Total mapped courses: `25`
 - Courses with complete descriptions: `0`
 - Courses needing review: `25`

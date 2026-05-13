@@ -1393,12 +1393,12 @@ def course_description_paragraphs(session: dict) -> list[str]:
         if "heartcode" in subtype or delivery in {"BL", "SS"}:
             return [
                 "This is the American Heart Association BLS Provider HeartCode skills session. Students complete the AHA online HeartCode BLS coursework first, then use this appointment for hands-on skills practice and testing.",
-                "It is built for healthcare and clinical roles that need AHA BLS Provider certification while using the blended-learning pathway.",
+                "It is built for healthcare and clinical roles that need AHA BLS Provider certification while using the blended-learning pathway, including high-quality CPR, AED use, ventilation practice, choking response, and team communication.",
             ]
         if "renewal" in subtype:
             return [
                 "This is the American Heart Association BLS Provider renewal class for students who already work at the healthcare-provider level and need to keep their BLS current.",
-                "The class focuses on high-quality CPR, AED use, ventilations, and team response for adult, child, and infant emergencies.",
+                "The class focuses on high-quality CPR, AED use, ventilations, choking response, and team response for adult, child, and infant emergencies.",
             ]
         return [
             "This is the American Heart Association BLS Provider course for healthcare providers and students entering clinical programs.",
@@ -1409,33 +1409,33 @@ def course_description_paragraphs(session: dict) -> list[str]:
         if "heartcode" in subtype or delivery in {"BL", "SS"}:
             return [
                 "This is the American Heart Association ACLS HeartCode skills session. Students complete the online ACLS portion first, then attend this session for hands-on skills testing.",
-                "It is intended for clinicians who manage or participate in adult cardiovascular emergency response and need the AHA ACLS Provider pathway.",
+                "It is intended for clinicians who manage or participate in adult cardiovascular emergency response and need the AHA ACLS Provider pathway, including stroke recognition, postarrest care, and coordinated team response.",
             ]
         return [
             "This is the American Heart Association ACLS Provider course for clinicians involved in adult cardiovascular emergency care.",
-            "The class reinforces systematic assessment, effective team dynamics, rhythm recognition, pharmacology concepts, and management of cardiac arrest and peri-arrest situations.",
+            "The class reinforces systematic assessment, effective team dynamics, rhythm recognition, pharmacology concepts, stroke recognition, and management of cardiac arrest and peri-arrest situations.",
         ]
 
     if body == "AHA" and family == "PALS":
         return [
             "This is the American Heart Association PALS Provider course for clinicians who respond to pediatric respiratory, shock, and cardiac emergencies.",
-            "The class emphasizes pediatric assessment, high-performance team response, and treatment priorities for infants and children in urgent care settings.",
+            "The class emphasizes pediatric assessment, respiratory support, high-performance team response, and treatment priorities for infants and children in urgent care settings.",
         ]
 
     if body == "AHA" and family == "Heartsaver":
         if "pediatric" in subtype:
             return [
                 "This AHA Heartsaver Pediatric First Aid CPR AED session is designed for childcare providers, caregivers, teachers, and others responsible for children.",
-                "It combines practical first aid, CPR, and AED training in the format listed for this session.",
+                "It combines practical first aid, CPR, AED, choking, asthma, seizure, allergic reaction, heat illness, and injury response training in the format listed for this session.",
             ]
         if "cpr" in subtype and "first aid" not in subtype:
             return [
                 "This AHA Heartsaver CPR AED class is for workplace and community responders who need CPR and AED training without the first aid module.",
-                "It is a practical non-healthcare-provider course for adults who need a recognized CPR AED credential for work, school, or volunteering.",
+                "It is a practical non-healthcare-provider course for adults who need a recognized CPR AED credential for work, school, or volunteering, with adult and child choking response reinforced during skills practice.",
             ]
         return [
             "This AHA Heartsaver First Aid CPR AED class is for workplace, school, childcare, fitness, church, and community responders.",
-            "It combines first aid, CPR, and AED training in a practical format for people who need a recognized non-healthcare-provider certification.",
+            "It combines first aid, CPR, AED, choking, opioid emergency awareness, stroke recognition, seizure response, asthma assistance, burns, environmental emergencies, and other practical response skills for people who need a recognized non-healthcare-provider certification.",
         ]
 
     if family == "USCG":
@@ -1513,6 +1513,55 @@ def render_course_description_section(session: dict, fallback_html: str) -> str:
   <div class="description-html">
 {paragraphs}
   </div>
+</section>
+"""
+
+
+def guideline_update_points(session: dict) -> list[str]:
+    if not is_mapped(session):
+        return []
+
+    body = structured_certifying_body(session).upper()
+    family = structured_family(session)
+    subtype = structured_subtype(session).lower()
+    points: list[str] = []
+
+    if family in {"BLS", "ACLS", "PALS"}:
+        points.append("Current CPR and ECC training emphasizes high-quality compressions, AED use, ventilation when indicated, and clear team communication.")
+        if family == "BLS":
+            points.append("For opioid-related respiratory arrest, hands-only CPR is not always enough. Training reinforces EMS activation, naloxone access when available, and CPR with breaths when breathing is absent or abnormal.")
+        if family in {"ACLS", "PALS"}:
+            points.append("Advanced courses keep recognition, assessment, and coordinated response at the center of the scenario, including respiratory emergencies and time-sensitive cardiovascular care.")
+
+    if family == "Heartsaver" or body in {"ARC", "HSI"} or "first aid" in subtype:
+        points.extend(
+            [
+                "First aid content is framed around fast recognition, EMS activation, and practical action while help is on the way.",
+                "Choking response follows the current pattern: adults and children receive 5 back blows and 5 abdominal thrusts; infants receive 5 back blows and 5 chest thrusts.",
+                "Opioid emergency content highlights recognition, naloxone availability, CPR with breaths for respiratory arrest, and why hands-only CPR may not be enough.",
+                "Stroke content uses FAST recognition, urgent EMS activation, and avoids treating stroke as an older-adult-only problem.",
+                "Seizure response focuses on protecting from injury, not restraining the person, placing nothing in the mouth, and calling EMS for prolonged, repeated, first-time, injured, breathing-compromised, water-related, pregnant, diabetic, or pediatric febrile seizure concerns.",
+                "Asthma support includes helping with the person's prescribed bronchodilator, using a spacer when available, and understanding that an improvised spacer may help when a standard spacer is not available.",
+                "Environmental first aid includes rapid cooling for severe heat illness, ice water immersion when available, safe rewarming for cold exposure, and avoiding harmful warming methods.",
+                "Additional first aid topics include ticks, stings, burns, eye injuries, poison ivy/oak exposure, and pulse oximetry limitations.",
+            ]
+        )
+
+    return points
+
+
+def render_guideline_update_section(session: dict) -> str:
+    points = guideline_update_points(session)
+    if not points:
+        return ""
+    items = "\n".join(f"    <li>{escape(point)}</li>" for point in points)
+    return f"""
+<section class="section-box guideline-update-section">
+  <h2>Current Guideline Focus</h2>
+  <p>910CPR keeps public course pages practical and class-first while aligning response language with current AHA, Red Cross, and certifying-agency first aid and CPR guidance.</p>
+  <ul>
+{items}
+  </ul>
 </section>
 """
 
@@ -1639,6 +1688,8 @@ TEMPLATE = """<!DOCTYPE html>
     {review_snippet_html}
 
     {course_description_section}
+
+    {guideline_update_section}
 
     {upcoming_sessions_html}
 
@@ -1867,9 +1918,10 @@ def main() -> None:
 
         description_html = load_course_description_html(course_id or course_number, course_display)
         course_description_section = render_course_description_section(session, description_html)
+        guideline_update_section = render_guideline_update_section(session)
         schema_description = strip_html(description_html)
         if not schema_description:
-            schema_description = " ".join(course_description_paragraphs(session))
+            schema_description = " ".join(course_description_paragraphs(session) + guideline_update_points(session))
         if not schema_description:
             schema_description = meta_description
         schema_valid_from_dt = (
@@ -1951,6 +2003,7 @@ def main() -> None:
             brand_strip_html=brand_strip_html,
             reviews_html=reviews_html,
             course_description_section=course_description_section,
+            guideline_update_section=guideline_update_section,
             who_for_section=who_for_section,
             build_stamp=escape(build_stamp),
             session_id=escape(session_id),

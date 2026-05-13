@@ -1263,7 +1263,7 @@ def render_group_training_push(page: dict[str, Any], first_tab: dict[str, Any], 
     if group_mode:
         return ""
     onsite_href = group_request_href(first_tab.get("program") or page.get("hero_title"))
-    classes_href = f"#slug-tabs-{escape(page['slug'], quote=True)}"
+    classes_href = "#ecosystem-categories" if page.get("ecosystem_hub") else f"#slug-tabs-{escape(page['slug'], quote=True)}"
     return f"""
   <section class="group-training-push" aria-label="On-site group training">
     <div class="group-training-copy">
@@ -1388,25 +1388,25 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
             "href": "#hs-fa-cpr-aed-ip",
             "image": "images/HS-FA-CPR-AED.jpeg",
             "title": "Heartsaver First Aid CPR AED",
-            "copy": "The AHA Heartsaver First Aid CPR AED course is designed for anyone who needs a course completion card for their job, regulatory requirements, OSHA, or other requirements. This course teaches first aid, CPR, and AED use for emergencies in any setting.",
+            "copy": "For workplace and community responders who need practical first aid, CPR, and AED training. Topics include choking, naloxone awareness, FAST stroke recognition, seizures, asthma, burns, heat illness, and common injury response.",
         },
         {
             "href": "/courses/aha-heartsaver-cpr-aed.html",
             "image": "images/HS-CPR-AED.jpeg",
             "title": "Heartsaver CPR AED",
-            "copy": "This course teaches adult CPR and AED use, choking relief, and response skills for people who need CPR/AED training without first aid. It is a focused option for job, regulatory, or personal preparedness needs.",
+            "copy": "A focused CPR/AED path for people who do not need the first aid module. It reinforces adult and child choking response and why breaths may matter in opioid-related respiratory arrest.",
         },
         {
             "href": "/courses/heartsaver-first-aid.html",
             "image": "images/HS-FA.jpeg",
             "title": "Heartsaver First Aid",
-            "copy": "The AHA Heartsaver First Aid course is designed for anyone with limited or no medical training who needs a course completion card in first aid to meet job, regulatory, or other requirements.",
+            "copy": "Practical first aid recognition for people with limited or no medical training, including EMS activation, seizures, asthma support, stings, ticks, burns, eye injuries, heat/cold exposure, and poison plant exposure.",
         },
         {
             "href": "#hs-pediatric-ip",
             "image": "images/HS-PEDI-FA-CPR-AED.jpeg",
             "title": "Pediatric First Aid CPR AED",
-            "copy": "The AHA Heartsaver Pediatric First Aid CPR AED course is designed for anyone involved in childcare who has a duty to respond to illnesses and injuries in a child or infant in the first few minutes until professional help arrives. Including: childcare workers, teachers, camp counselors, etc.",
+            "copy": "For childcare, school, camp, and caregiver teams that need infant and child CPR, AED, choking, seizure, asthma, allergic reaction, heat illness, burn, and injury response practice.",
         },
         {
             "href": "/request_group_session.html?program=Bloodborne%20Pathogens",

@@ -2,7 +2,7 @@
 from pathlib import Path
 from collections import defaultdict
 from scripts.build_status import BuildStatusReporter
-from scripts.hub_utils import load_sessions, upcoming_public_sessions, render_page, session_rows, slugify
+from scripts.hub_utils import guideline_topic_block, load_sessions, upcoming_public_sessions, render_page, session_rows, slugify
 try:
     from tqdm import tqdm
 except ModuleNotFoundError:
@@ -37,7 +37,12 @@ def build():
         print(f"Building {len(families)} course hub pages")
         for index, family in enumerate(tqdm(families, desc="Building course hubs", unit="page", miniters=1), start=1):
             rows = upcoming_public_sessions(sessions, family=family)
-            blocks = [f"<h1>{family}</h1>", "<p class='muted'>Live course hub built from Class Report.xlsx. Use this page to jump into actual upcoming sessions instead of a generic article.</p>", session_rows(rows, limit=20)]
+            blocks = [
+                f"<h1>{family}</h1>",
+                "<p class='muted'>Live course hub built from Class Report.xlsx. Use this page to jump into actual upcoming sessions instead of a generic article.</p>",
+                session_rows(rows, limit=20),
+                guideline_topic_block(family),
+            ]
             html = render_page(f"{family} Classes | 910CPR", "".join(blocks), f"Upcoming {family} classes and registration options from 910CPR.")
             last_output = OUTPUT / f"{slugify(family)}.html"
             last_output.write_text(html, encoding='utf-8')
