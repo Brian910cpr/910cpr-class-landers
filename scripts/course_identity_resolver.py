@@ -158,16 +158,21 @@ def alias_result(alias: dict[str, Any], method: str, confidence: str, matched_al
 def reference_result(entry: dict[str, Any], method: str) -> dict[str, Any]:
     official = normalize_whitespace(entry.get("official_title") or entry.get("clean_title"))
     return {
+        "course_id": normalize_whitespace(entry.get("course_id") or entry.get("course_number")),
         "course_key": normalize_whitespace(entry.get("course_key")) or stable_course_key(official or entry.get("course_id")),
         "official_course_name": official,
         "match_method": method,
         "match_confidence": "high",
         "matched_alias": "",
+        "course_code": normalize_whitespace(entry.get("course_code")),
         "certifying_body": normalize_whitespace(entry.get("certifying_body")),
         "family": normalize_whitespace(entry.get("family")),
         "subtype": normalize_whitespace(entry.get("subtype")),
         "delivery_mode": normalize_whitespace(entry.get("delivery_mode")),
+        "logo_key": normalize_whitespace(entry.get("logo_key")),
+        "clean_title": normalize_whitespace(entry.get("clean_title") or official),
         "needs_review": False,
+        "mapping_status": "mapped",
     }
 
 
@@ -229,10 +234,16 @@ def resolve_course_identity(
 
     alias = indexes["exact"].get(raw_course)
     if alias:
+        referenced = course_reference_by_title(course_reference, alias.get("official_course_name"))
+        if referenced:
+            return reference_result(referenced, "legacy_alias")
         return alias_result(alias, "legacy_alias", "high", raw_course)
 
     alias = indexes["normalized"].get(normalized)
     if alias:
+        referenced = course_reference_by_title(course_reference, alias.get("official_course_name"))
+        if referenced:
+            return reference_result(referenced, "normalized_title")
         return alias_result(alias, "normalized_title", "medium", normalize_whitespace(alias.get("legacy_name")))
 
     referenced = course_reference_by_title(course_reference, raw_course)

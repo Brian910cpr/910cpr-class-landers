@@ -1,0 +1,1067 @@
+{
+  "generated_at": "2026-05-12T22:25:51.886436",
+  "status": "PASS",
+  "failures": [],
+  "scope": {
+    "checked_hubs": [
+      "bls",
+      "acls",
+      "pals",
+      "heartsaver",
+      "arc",
+      "hsi"
+    ],
+    "auxiliary_checked_hubs": [
+      "uscg-elementary-first-aid-cpr"
+    ],
+    "local_only": true,
+    "base_url": "http://127.0.0.1:8000/docs/"
+  },
+  "summary": {
+    "active_course_identities": 30,
+    "future_sessions_total": 1351,
+    "matrix_rows": 30,
+    "matrix_rows_with_future_sessions": 14,
+    "rendered_session_cards_by_hub": {
+      "bls": 24,
+      "acls": 16,
+      "pals": 8,
+      "heartsaver": 47,
+      "arc": 0,
+      "hsi": 0,
+      "uscg-elementary-first-aid-cpr": 6
+    },
+    "missing_categories": 0,
+    "policy_excluded_categories": 1,
+    "orphaned_sessions": 0,
+    "policy_excluded_sessions": 1,
+    "empty_tabs_info": 10,
+    "empty_tabs_failures": 0,
+    "missing_assets": 0,
+    "http_urls_checked": 76,
+    "http_failures": 0,
+    "broken_enroll_links": 0,
+    "unmapped_review_warnings": 7,
+    "target_relevant_unmapped": 0,
+    "duplicate_canonical_name_warnings": 1
+  },
+  "verification_matrix": [
+    {
+      "course_id": "209811",
+      "canonical_course_name": "AHA ACLS HeartCode",
+      "course_key": "aha_acls_heartcode",
+      "family": "ACLS",
+      "subtype": "HeartCode",
+      "certifying_body": "AHA",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "acls",
+      "tab_assignment_counts": {
+        "acls-heartcode": 96
+      },
+      "future_session_count": 96,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774042",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/acls.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "241108",
+      "canonical_course_name": "AHA ACLS Provider (Initial)",
+      "course_key": "aha_acls_provider_initial",
+      "family": "ACLS",
+      "subtype": "Provider Initial",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "acls",
+      "tab_assignment_counts": {
+        "acls-provider": 3
+      },
+      "future_session_count": 3,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=13295707",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/acls.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "209818",
+      "canonical_course_name": "AHA ACLS Provider (Renewal)",
+      "course_key": "aha_acls_provider_renewal",
+      "family": "ACLS",
+      "subtype": "Renewal",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "acls",
+      "tab_assignment_counts": {
+        "acls-renewal": 5
+      },
+      "future_session_count": 5,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=13295727",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/acls.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "369209",
+      "canonical_course_name": "American Red Cross Adult and Pediatric First Aid/CPR/AED",
+      "course_key": "arc_adult_pediatric_first_aid_cpr_aed",
+      "family": "ARC",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "ARC",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "arc",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/arc.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "410694",
+      "canonical_course_name": "American Red Cross Adult and Pediatric First Aid/CPR/AED Blended Learning",
+      "course_key": "arc_adult_pediatric_first_aid_cpr_aed_blended",
+      "family": "ARC",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "ARC",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "arc",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/arc.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "444919",
+      "canonical_course_name": "American Red Cross BLS Challenge",
+      "course_key": "arc_bls_challenge",
+      "family": "ARC",
+      "subtype": "BLS Challenge",
+      "certifying_body": "ARC",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "arc",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/arc.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "248288",
+      "canonical_course_name": "American Red Cross Basic Life Support",
+      "course_key": "arc_bls",
+      "family": "ARC",
+      "subtype": "BLS",
+      "certifying_body": "ARC",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "arc",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/arc.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "248287",
+      "canonical_course_name": "American Red Cross Basic Life Support - Blended Learning",
+      "course_key": "arc_bls_blended",
+      "family": "ARC",
+      "subtype": "BLS",
+      "certifying_body": "ARC",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "arc",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/arc.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "209806",
+      "canonical_course_name": "AHA BLS Provider",
+      "course_key": "aha_bls_provider",
+      "family": "BLS",
+      "subtype": "Provider",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "bls",
+      "tab_assignment_counts": {
+        "bls-provider": 259
+      },
+      "future_session_count": 259,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774314",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/bls.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "359474",
+      "canonical_course_name": "AHA BLS Provider Renewal",
+      "course_key": "aha_bls_provider_renewal",
+      "family": "BLS",
+      "subtype": "Renewal",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "bls",
+      "tab_assignment_counts": {
+        "bls-renewal": 260
+      },
+      "future_session_count": 260,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775511",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/bls.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "210549",
+      "canonical_course_name": "AHA HeartCode BLS",
+      "course_key": "aha_heartcode_bls",
+      "family": "BLS",
+      "subtype": "HeartCode",
+      "certifying_body": "AHA",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "bls",
+      "tab_assignment_counts": {
+        "bls-heartcode": 225
+      },
+      "future_session_count": 225,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776551",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/bls.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "440431",
+      "canonical_course_name": "BLS Provider Blended Learning (Online Course; Group; In-person Skills Testing)",
+      "course_key": "aha_bls_provider_blended_group_skills",
+      "family": "BLS",
+      "subtype": "HeartCode",
+      "certifying_body": "AHA",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "bls",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/bls.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "344085",
+      "canonical_course_name": "AHA Heartsaver CPR AED",
+      "course_key": "aha_heartsaver_cpr_aed",
+      "family": "Heartsaver",
+      "subtype": "CPR + AED",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "heartsaver",
+      "tab_assignment_counts": {},
+      "future_session_count": 1,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=13271027",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/heartsaver.html",
+      "policy_excluded_counts": {
+        "excluded:unapproved_location": 1
+      }
+    },
+    {
+      "course_id": "209808",
+      "canonical_course_name": "AHA Heartsaver CPR AED Online",
+      "course_key": "aha_heartsaver_cpr_aed_online",
+      "family": "Heartsaver",
+      "subtype": "CPR + AED",
+      "certifying_body": "AHA",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "heartsaver",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/heartsaver.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "209809",
+      "canonical_course_name": "AHA Heartsaver First Aid CPR AED",
+      "course_key": "aha_heartsaver_first_aid_cpr_aed",
+      "family": "Heartsaver",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "heartsaver",
+      "tab_assignment_counts": {
+        "hs-fa-cpr-aed-ip": 131
+      },
+      "future_session_count": 131,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776768",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/heartsaver.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "329495",
+      "canonical_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+      "family": "Heartsaver",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "AHA",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "heartsaver",
+      "tab_assignment_counts": {
+        "hs-fa-cpr-aed-bl": 259
+      },
+      "future_session_count": 259,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776131",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/heartsaver.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "351632",
+      "canonical_course_name": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_in_person",
+      "family": "Heartsaver",
+      "subtype": "Pediatric First Aid",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "heartsaver",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/heartsaver.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "251545",
+      "canonical_course_name": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
+      "family": "Heartsaver",
+      "subtype": "Pediatric First Aid",
+      "certifying_body": "AHA",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "heartsaver",
+      "tab_assignment_counts": {
+        "hs-pediatric-bl": 33
+      },
+      "future_session_count": 33,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783392",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/heartsaver.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "374378",
+      "canonical_course_name": "HSI Adult First Aid | CPR AED",
+      "course_key": "hsi_adult_first_aid_cpr_aed",
+      "family": "HSI",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "HSI",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "hsi",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/hsi.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "422270",
+      "canonical_course_name": "HSI Adult First Aid | CPR AED",
+      "course_key": "hsi_adult_first_aid_cpr_aed_alt",
+      "family": "HSI",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "HSI",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "hsi",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/hsi.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "371954",
+      "canonical_course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "course_key": "hsi_adult_first_aid_cpr_aed_blended",
+      "family": "HSI",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "HSI",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "hsi",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/hsi.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "463743",
+      "canonical_course_name": "HSI BLS Challenge",
+      "course_key": "hsi_bls_challenge",
+      "family": "HSI",
+      "subtype": "BLS Challenge",
+      "certifying_body": "HSI",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "hsi",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/hsi.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "445670",
+      "canonical_course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "course_key": "hsi_bls_adult_first_aid_blended",
+      "family": "HSI",
+      "subtype": "BLS + First Aid",
+      "certifying_body": "HSI",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "hsi",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/hsi.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "448630",
+      "canonical_course_name": "HSI Basic Life Support",
+      "course_key": "hsi_basic_life_support",
+      "family": "HSI",
+      "subtype": "BLS",
+      "certifying_body": "HSI",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "hsi",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/hsi.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "449422",
+      "canonical_course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "course_key": "hsi_pediatric_first_aid_cpr_aed_blended",
+      "family": "HSI",
+      "subtype": "Pediatric First Aid",
+      "certifying_body": "HSI",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "hsi",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/hsi.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "209812",
+      "canonical_course_name": "AHA PALS HeartCode",
+      "course_key": "aha_pals_heartcode",
+      "family": "PALS",
+      "subtype": "HeartCode",
+      "certifying_body": "AHA",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "pals",
+      "tab_assignment_counts": {
+        "pals-heartcode": 1
+      },
+      "future_session_count": 1,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=13430683",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/pals.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "209805",
+      "canonical_course_name": "AHA PALS Provider",
+      "course_key": "aha_pals_provider",
+      "family": "PALS",
+      "subtype": "Provider Initial",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "pals",
+      "tab_assignment_counts": {
+        "pals-provider": 3
+      },
+      "future_session_count": 3,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=13295748",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/pals.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "251496",
+      "canonical_course_name": "AHA PALS Renewal",
+      "course_key": "aha_pals_renewal",
+      "family": "PALS",
+      "subtype": "Renewal",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "pals",
+      "tab_assignment_counts": {
+        "pals-renewal": 4
+      },
+      "future_session_count": 4,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=13295771",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/pals.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "253768",
+      "canonical_course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver)",
+      "course_key": null,
+      "family": "USCG",
+      "subtype": "Elementary First Aid | CPR",
+      "certifying_body": "AHA",
+      "delivery_mode": "ILT",
+      "hub_category_assignment": "uscg-elementary-first-aid-cpr",
+      "tab_assignment_counts": {
+        "uscg-efa": 64
+      },
+      "future_session_count": 64,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776857",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/uscg-elementary-first-aid-cpr.html",
+      "policy_excluded_counts": {}
+    },
+    {
+      "course_id": "359827",
+      "canonical_course_name": "USCG Elementary First Aid | CPR - Blended",
+      "course_key": null,
+      "family": "USCG",
+      "subtype": "Elementary First Aid | CPR",
+      "certifying_body": "AHA",
+      "delivery_mode": "BL",
+      "hub_category_assignment": "uscg-elementary-first-aid-cpr",
+      "tab_assignment_counts": {},
+      "future_session_count": 0,
+      "sample_enroll_url": null,
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/uscg-elementary-first-aid-cpr.html",
+      "policy_excluded_counts": {}
+    }
+  ],
+  "page_checks": [
+    {
+      "hub": "bls",
+      "url": "http://127.0.0.1:8000/docs/bls.html",
+      "html_path": "E:\\GitHub\\910cpr-class-landers\\docs\\bls.html",
+      "tabs": [
+        {
+          "tab_id": "bls-provider",
+          "label": "BLS Provider",
+          "future_session_count": 259,
+          "expected_static_card_count": 7,
+          "rendered_card_count": 7,
+          "sample_session_ids": [
+            "12774314",
+            "12774560",
+            "12776629"
+          ]
+        },
+        {
+          "tab_id": "bls-renewal",
+          "label": "BLS Renewal",
+          "future_session_count": 260,
+          "expected_static_card_count": 8,
+          "rendered_card_count": 8,
+          "sample_session_ids": [
+            "12775278",
+            "12775519",
+            "12775511"
+          ]
+        },
+        {
+          "tab_id": "bls-heartcode",
+          "label": "BLS HeartCode",
+          "future_session_count": 322,
+          "expected_static_card_count": 9,
+          "rendered_card_count": 9,
+          "sample_session_ids": [
+            "12774042",
+            "13430683",
+            "12774033"
+          ]
+        }
+      ],
+      "local_missing_assets": []
+    },
+    {
+      "hub": "acls",
+      "url": "http://127.0.0.1:8000/docs/acls.html",
+      "html_path": "E:\\GitHub\\910cpr-class-landers\\docs\\acls.html",
+      "tabs": [
+        {
+          "tab_id": "acls-provider",
+          "label": "ACLS Provider",
+          "future_session_count": 3,
+          "expected_static_card_count": 3,
+          "rendered_card_count": 3,
+          "sample_session_ids": [
+            "13295707",
+            "13295710",
+            "13295711"
+          ]
+        },
+        {
+          "tab_id": "acls-renewal",
+          "label": "ACLS Renewal",
+          "future_session_count": 5,
+          "expected_static_card_count": 5,
+          "rendered_card_count": 5,
+          "sample_session_ids": [
+            "13295727",
+            "13295728",
+            "13295730"
+          ]
+        },
+        {
+          "tab_id": "acls-heartcode",
+          "label": "ACLS HeartCode",
+          "future_session_count": 96,
+          "expected_static_card_count": 8,
+          "rendered_card_count": 8,
+          "sample_session_ids": [
+            "12774042",
+            "12774033",
+            "12774013"
+          ]
+        }
+      ],
+      "local_missing_assets": []
+    },
+    {
+      "hub": "pals",
+      "url": "http://127.0.0.1:8000/docs/pals.html",
+      "html_path": "E:\\GitHub\\910cpr-class-landers\\docs\\pals.html",
+      "tabs": [
+        {
+          "tab_id": "pals-provider",
+          "label": "PALS Provider",
+          "future_session_count": 3,
+          "expected_static_card_count": 3,
+          "rendered_card_count": 3,
+          "sample_session_ids": [
+            "13295748",
+            "13295751",
+            "13295752"
+          ]
+        },
+        {
+          "tab_id": "pals-renewal",
+          "label": "PALS Renewal",
+          "future_session_count": 4,
+          "expected_static_card_count": 4,
+          "rendered_card_count": 4,
+          "sample_session_ids": [
+            "13295771",
+            "13295774",
+            "13295775"
+          ]
+        },
+        {
+          "tab_id": "pals-heartcode",
+          "label": "PALS HeartCode",
+          "future_session_count": 1,
+          "expected_static_card_count": 1,
+          "rendered_card_count": 1,
+          "sample_session_ids": [
+            "13430683"
+          ]
+        }
+      ],
+      "local_missing_assets": []
+    },
+    {
+      "hub": "heartsaver",
+      "url": "http://127.0.0.1:8000/docs/heartsaver.html",
+      "html_path": "E:\\GitHub\\910cpr-class-landers\\docs\\heartsaver.html",
+      "tabs": [
+        {
+          "tab_id": "hs-fa-cpr-aed-ip",
+          "label": "First Aid + CPR + AED",
+          "future_session_count": 131,
+          "expected_static_card_count": 8,
+          "rendered_card_count": 8,
+          "sample_session_ids": [
+            "12776768",
+            "12776003",
+            "12776011"
+          ]
+        },
+        {
+          "tab_id": "hs-fa-cpr-aed-bl",
+          "label": "First Aid + CPR + AED",
+          "future_session_count": 259,
+          "expected_static_card_count": 6,
+          "rendered_card_count": 6,
+          "sample_session_ids": [
+            "12776131",
+            "12775756",
+            "12776693"
+          ]
+        },
+        {
+          "tab_id": "hs-cpr-aed-ip",
+          "label": "CPR + AED Only",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        },
+        {
+          "tab_id": "hs-cpr-aed-bl",
+          "label": "CPR + AED Only",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        },
+        {
+          "tab_id": "hs-pediatric-ip",
+          "label": "Pediatric First Aid",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        },
+        {
+          "tab_id": "hs-pediatric-bl",
+          "label": "Pediatric First Aid",
+          "future_session_count": 33,
+          "expected_static_card_count": 33,
+          "rendered_card_count": 33,
+          "sample_session_ids": [
+            "12783392",
+            "12783393",
+            "12783387"
+          ]
+        }
+      ],
+      "local_missing_assets": []
+    },
+    {
+      "hub": "arc",
+      "url": "http://127.0.0.1:8000/docs/arc.html",
+      "html_path": "E:\\GitHub\\910cpr-class-landers\\docs\\arc.html",
+      "tabs": [
+        {
+          "tab_id": "arc-bls",
+          "label": "ARC BLS",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        },
+        {
+          "tab_id": "arc-cpr-aed",
+          "label": "ARC CPR/AED",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        },
+        {
+          "tab_id": "arc-first-aid-cpr-aed",
+          "label": "ARC First Aid/CPR/AED",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        }
+      ],
+      "local_missing_assets": []
+    },
+    {
+      "hub": "hsi",
+      "url": "http://127.0.0.1:8000/docs/hsi.html",
+      "html_path": "E:\\GitHub\\910cpr-class-landers\\docs\\hsi.html",
+      "tabs": [
+        {
+          "tab_id": "hsi-bls",
+          "label": "HSI BLS",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        },
+        {
+          "tab_id": "hsi-bls-fa",
+          "label": "HSI BLS With First Aid",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        },
+        {
+          "tab_id": "hsi-first-aid-cpr-aed",
+          "label": "HSI First Aid/CPR/AED",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        },
+        {
+          "tab_id": "hsi-cpr-aed",
+          "label": "HSI CPR/AED",
+          "future_session_count": 0,
+          "expected_static_card_count": 0,
+          "rendered_card_count": 0,
+          "sample_session_ids": []
+        }
+      ],
+      "local_missing_assets": []
+    },
+    {
+      "hub": "uscg-elementary-first-aid-cpr",
+      "url": "http://127.0.0.1:8000/docs/uscg-elementary-first-aid-cpr.html",
+      "html_path": "E:\\GitHub\\910cpr-class-landers\\docs\\uscg-elementary-first-aid-cpr.html",
+      "tabs": [
+        {
+          "tab_id": "uscg-efa",
+          "label": "USCG Elementary First Aid | CPR",
+          "future_session_count": 64,
+          "expected_static_card_count": 6,
+          "rendered_card_count": 6,
+          "sample_session_ids": [
+            "12776857",
+            "12776862",
+            "12776863"
+          ]
+        }
+      ],
+      "local_missing_assets": []
+    }
+  ],
+  "missing_categories": [],
+  "policy_excluded_categories": [
+    {
+      "course_id": "344085",
+      "canonical_course_name": "AHA Heartsaver CPR AED",
+      "course_key": "aha_heartsaver_cpr_aed",
+      "family": "Heartsaver",
+      "subtype": "CPR + AED",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "hub_category_assignment": "heartsaver",
+      "tab_assignment_counts": {},
+      "future_session_count": 1,
+      "sample_enroll_url": "https://coastalcprtraining.enrollware.com/enroll?id=13271027",
+      "rendered_hub_url": "http://127.0.0.1:8000/docs/heartsaver.html",
+      "policy_excluded_counts": {
+        "excluded:unapproved_location": 1
+      }
+    }
+  ],
+  "orphaned_sessions": [],
+  "policy_excluded_sessions_sample": [
+    {
+      "session_id": "13271027",
+      "course_id": "344085",
+      "official_course_name": "AHA Heartsaver CPR AED",
+      "hub": "heartsaver",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13271027",
+      "reason": "excluded:unapproved_location"
+    }
+  ],
+  "empty_tabs": [
+    {
+      "hub": "heartsaver",
+      "tab_id": "hs-cpr-aed-ip",
+      "label": "CPR + AED Only",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    },
+    {
+      "hub": "heartsaver",
+      "tab_id": "hs-cpr-aed-bl",
+      "label": "CPR + AED Only",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    },
+    {
+      "hub": "heartsaver",
+      "tab_id": "hs-pediatric-ip",
+      "label": "Pediatric First Aid",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    },
+    {
+      "hub": "arc",
+      "tab_id": "arc-bls",
+      "label": "ARC BLS",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    },
+    {
+      "hub": "arc",
+      "tab_id": "arc-cpr-aed",
+      "label": "ARC CPR/AED",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    },
+    {
+      "hub": "arc",
+      "tab_id": "arc-first-aid-cpr-aed",
+      "label": "ARC First Aid/CPR/AED",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    },
+    {
+      "hub": "hsi",
+      "tab_id": "hsi-bls",
+      "label": "HSI BLS",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    },
+    {
+      "hub": "hsi",
+      "tab_id": "hsi-bls-fa",
+      "label": "HSI BLS With First Aid",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    },
+    {
+      "hub": "hsi",
+      "tab_id": "hsi-first-aid-cpr-aed",
+      "label": "HSI First Aid/CPR/AED",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    },
+    {
+      "hub": "hsi",
+      "tab_id": "hsi-cpr-aed",
+      "label": "HSI CPR/AED",
+      "future_session_count": 0,
+      "expected_static_card_count": 0,
+      "severity": "info_no_future_sessions"
+    }
+  ],
+  "static_card_mismatches": [],
+  "missing_assets": [],
+  "http_failures": [],
+  "unmapped_canonical_names": [
+    {
+      "session_id": "12775764",
+      "course_key": "aha_family_friends_cpr",
+      "official_course_name": "AHA Family & Friends CPR",
+      "reason": "non-core/instructor/specialty review"
+    },
+    {
+      "session_id": "10009265",
+      "course_key": "aha_pals_instructor_renewal",
+      "official_course_name": "AHA PALS Instructor Renewal",
+      "reason": "non-core/instructor/specialty review"
+    },
+    {
+      "session_id": "10009276",
+      "course_key": "aha_pals_instructor_renewal",
+      "official_course_name": "AHA PALS Instructor Renewal",
+      "reason": "non-core/instructor/specialty review"
+    },
+    {
+      "session_id": "11341054",
+      "course_key": "aha_bls_instructor_renewal",
+      "official_course_name": "AHA BLS Instructor Renewal",
+      "reason": "non-core/instructor/specialty review"
+    },
+    {
+      "session_id": "10009277",
+      "course_key": "aha_pals_instructor_renewal",
+      "official_course_name": "AHA PALS Instructor Renewal",
+      "reason": "non-core/instructor/specialty review"
+    },
+    {
+      "session_id": "11341058",
+      "course_key": "aha_bls_instructor_renewal",
+      "official_course_name": "AHA BLS Instructor Renewal",
+      "reason": "non-core/instructor/specialty review"
+    },
+    {
+      "session_id": "13384273",
+      "course_key": "aha_2025_instructor_update",
+      "official_course_name": "AHA 2025 Instructor Update",
+      "reason": "non-core/instructor/specialty review"
+    }
+  ],
+  "duplicate_canonical_names": [
+    {
+      "canonical_name": "hsi adult first aid cpr aed",
+      "course_ids": [
+        "374378",
+        "422270"
+      ]
+    }
+  ],
+  "urls_checked": [
+    "http://127.0.0.1:8000/docs/bls.html",
+    "http://127.0.0.1:8000/docs/assets/hub-ui.js",
+    "http://127.0.0.1:8000/docs/assets/hybrid-inventory.js",
+    "http://127.0.0.1:8000/docs/assets/live-sessions.js",
+    "http://127.0.0.1:8000/docs/assets/session-expiry.js",
+    "http://127.0.0.1:8000/docs/css/lander.css",
+    "http://127.0.0.1:8000/docs/images/910CPR_wave.jpg",
+    "http://127.0.0.1:8000/docs/images/bls_general.png",
+    "http://127.0.0.1:8000/docs/images/logo.png",
+    "http://127.0.0.1:8000/docs/images/tab_blended.png",
+    "http://127.0.0.1:8000/docs/images/tab_classroom.png",
+    "http://127.0.0.1:8000/docs/acls.html",
+    "http://127.0.0.1:8000/docs/assets/hub-ui.js",
+    "http://127.0.0.1:8000/docs/assets/hybrid-inventory.js",
+    "http://127.0.0.1:8000/docs/assets/live-sessions.js",
+    "http://127.0.0.1:8000/docs/assets/session-expiry.js",
+    "http://127.0.0.1:8000/docs/css/lander.css",
+    "http://127.0.0.1:8000/docs/images/910CPR_wave.jpg",
+    "http://127.0.0.1:8000/docs/images/acls_general.png",
+    "http://127.0.0.1:8000/docs/images/logo.png",
+    "http://127.0.0.1:8000/docs/images/tab_blended.png",
+    "http://127.0.0.1:8000/docs/images/tab_classroom.png",
+    "http://127.0.0.1:8000/docs/pals.html",
+    "http://127.0.0.1:8000/docs/assets/hub-ui.js",
+    "http://127.0.0.1:8000/docs/assets/hybrid-inventory.js",
+    "http://127.0.0.1:8000/docs/assets/live-sessions.js",
+    "http://127.0.0.1:8000/docs/assets/session-expiry.js",
+    "http://127.0.0.1:8000/docs/css/lander.css",
+    "http://127.0.0.1:8000/docs/images/910CPR_wave.jpg",
+    "http://127.0.0.1:8000/docs/images/logo.png",
+    "http://127.0.0.1:8000/docs/images/pals_general.png",
+    "http://127.0.0.1:8000/docs/images/tab_blended.png",
+    "http://127.0.0.1:8000/docs/images/tab_classroom.png",
+    "http://127.0.0.1:8000/docs/heartsaver.html",
+    "http://127.0.0.1:8000/docs/assets/hub-ui.js",
+    "http://127.0.0.1:8000/docs/assets/hybrid-inventory.js",
+    "http://127.0.0.1:8000/docs/assets/live-sessions.js",
+    "http://127.0.0.1:8000/docs/assets/session-expiry.js",
+    "http://127.0.0.1:8000/docs/css/lander.css",
+    "http://127.0.0.1:8000/docs/images/910CPR_wave.jpg",
+    "http://127.0.0.1:8000/docs/images/HS-BBP.jpeg",
+    "http://127.0.0.1:8000/docs/images/HS-CPR-AED.jpeg",
+    "http://127.0.0.1:8000/docs/images/HS-FA-CPR-AED.jpeg",
+    "http://127.0.0.1:8000/docs/images/HS-FA.jpeg",
+    "http://127.0.0.1:8000/docs/images/HS-PEDI-FA-CPR-AED.jpeg",
+    "http://127.0.0.1:8000/docs/images/heartsaver_general.png",
+    "http://127.0.0.1:8000/docs/images/logo.png",
+    "http://127.0.0.1:8000/docs/images/tab_blended.png",
+    "http://127.0.0.1:8000/docs/images/tab_classroom.png",
+    "http://127.0.0.1:8000/docs/arc.html",
+    "http://127.0.0.1:8000/docs/assets/hub-ui.js",
+    "http://127.0.0.1:8000/docs/assets/hybrid-inventory.js",
+    "http://127.0.0.1:8000/docs/assets/live-sessions.js",
+    "http://127.0.0.1:8000/docs/assets/session-expiry.js",
+    "http://127.0.0.1:8000/docs/css/lander.css",
+    "http://127.0.0.1:8000/docs/images/0arc.png",
+    "http://127.0.0.1:8000/docs/images/910CPR_wave.jpg",
+    "http://127.0.0.1:8000/docs/images/logo.png",
+    "http://127.0.0.1:8000/docs/hsi.html",
+    "http://127.0.0.1:8000/docs/assets/hub-ui.js",
+    "http://127.0.0.1:8000/docs/assets/hybrid-inventory.js",
+    "http://127.0.0.1:8000/docs/assets/live-sessions.js",
+    "http://127.0.0.1:8000/docs/assets/session-expiry.js",
+    "http://127.0.0.1:8000/docs/css/lander.css",
+    "http://127.0.0.1:8000/docs/images/0hsi.png",
+    "http://127.0.0.1:8000/docs/images/910CPR_wave.jpg",
+    "http://127.0.0.1:8000/docs/images/logo.png",
+    "http://127.0.0.1:8000/docs/uscg-elementary-first-aid-cpr.html",
+    "http://127.0.0.1:8000/docs/assets/hub-ui.js",
+    "http://127.0.0.1:8000/docs/assets/hybrid-inventory.js",
+    "http://127.0.0.1:8000/docs/assets/live-sessions.js",
+    "http://127.0.0.1:8000/docs/assets/session-expiry.js",
+    "http://127.0.0.1:8000/docs/css/lander.css",
+    "http://127.0.0.1:8000/docs/images/910CPR_wave.jpg",
+    "http://127.0.0.1:8000/docs/images/logo.png",
+    "http://127.0.0.1:8000/docs/images/tab_classroom.png"
+  ]
+}

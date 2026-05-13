@@ -198,9 +198,10 @@ def build_public_future_session(session: dict[str, Any], course_identity: dict[s
     end_raw = session_end_candidate(session)
     raw_course_name = course.get("course_name_raw") or course.get("course_name_primary_raw") or course.get("course_name_primary_clean")
     identity = course_identity or {}
+    identity_is_mapped = identity.get("mapping_status") == "mapped" or bool(identity.get("family"))
     return {
         "session_id": session.get("session_id"),
-        "course_id": course.get("course_id"),
+        "course_id": identity.get("course_id") or course.get("course_id"),
         "course_key": identity.get("course_key") or session.get("course_key"),
         "official_course_name": identity.get("official_course_name") or session.get("official_course_name"),
         "raw_course_name": raw_course_name,
@@ -211,9 +212,9 @@ def build_public_future_session(session: dict[str, Any], course_identity: dict[s
         "course_name": course.get("course_name_primary_clean"),
         "course_subtitle": course.get("course_subtitle_text"),
         "course_number": course.get("course_number"),
-        "course_code": course.get("course_code_hint"),
-        "certifying_body": course.get("certifying_body_hint"),
-        "delivery_mode": course.get("delivery_mode_hint"),
+        "course_code": identity.get("course_code") or course.get("course_code_hint"),
+        "certifying_body": identity.get("certifying_body") or course.get("certifying_body_hint"),
+        "delivery_mode": identity.get("delivery_mode") or course.get("delivery_mode_hint"),
         "start_at": start_raw,
         "end_at": end_raw,
         "timezone": timing.get("timezone"),
@@ -229,13 +230,15 @@ def build_public_future_session(session: dict[str, Any], course_identity: dict[s
         "is_full": capacity.get("is_full"),
         "registration_url": commerce.get("registration_url"),
         "session_status": status.get("session_status"),
-        "mapped_family": session.get("mapped_family") or course.get("mapped_family"),
-        "mapped_subtype": session.get("mapped_subtype") or course.get("mapped_subtype"),
-        "mapped_certifying_body": session.get("mapped_certifying_body") or course.get("mapped_certifying_body"),
-        "mapped_delivery_mode": session.get("mapped_delivery_mode") or course.get("mapped_delivery_mode"),
-        "mapped_logo_key": session.get("mapped_logo_key") or course.get("mapped_logo_key"),
+        "mapped_family": session.get("mapped_family") or identity.get("family") or course.get("mapped_family"),
+        "mapped_subtype": session.get("mapped_subtype") or identity.get("subtype") or course.get("mapped_subtype"),
+        "mapped_certifying_body": session.get("mapped_certifying_body") or identity.get("certifying_body") or course.get("mapped_certifying_body"),
+        "mapped_delivery_mode": session.get("mapped_delivery_mode") or identity.get("delivery_mode") or course.get("mapped_delivery_mode"),
+        "mapped_logo_key": session.get("mapped_logo_key") or identity.get("logo_key") or course.get("mapped_logo_key"),
         "mapped_price": session.get("mapped_price") if session.get("mapped_price") is not None else course.get("mapped_price"),
-        "mapped_clean_title": session.get("mapped_clean_title") or course.get("mapped_clean_title"),
+        "mapped_clean_title": session.get("mapped_clean_title")
+        or (identity.get("clean_title") or identity.get("official_course_name") if identity_is_mapped else None)
+        or course.get("mapped_clean_title"),
         "mapped_short_description": session.get("mapped_short_description") or course.get("mapped_short_description"),
         "mapped_long_description": session.get("mapped_long_description") or course.get("mapped_long_description"),
         "mapped_who_class_for": session.get("mapped_who_class_for") or course.get("mapped_who_class_for"),
@@ -245,7 +248,7 @@ def build_public_future_session(session: dict[str, Any], course_identity: dict[s
         "mapped_renewal_info": session.get("mapped_renewal_info") or course.get("mapped_renewal_info"),
         "mapped_official_description_source": session.get("mapped_official_description_source") or course.get("mapped_official_description_source"),
         "mapped_description_status": session.get("mapped_description_status") or course.get("mapped_description_status"),
-        "mapping_status": session.get("mapping_status") or course.get("mapping_status") or "unmapped",
+        "mapping_status": "mapped" if identity_is_mapped else session.get("mapping_status") or course.get("mapping_status") or "unmapped",
         "mapping_notes": session.get("mapping_notes") or course.get("mapping_notes") or [],
     }
 

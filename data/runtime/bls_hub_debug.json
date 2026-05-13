@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T22:01:51.035813-04:00",
+  "generated_at": "2026-05-12T22:24:22.994732-04:00",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "page_slug": "bls",
   "records": [
@@ -5697,11 +5697,11 @@
     {
       "page_slug": "bls",
       "session_id": "12946259",
-      "course_id": null,
+      "course_id": "359474",
       "course_name": "AHA - BLS Provider - Renewal Instructor-led Classroom program for BLS Renewal",
       "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal_inperson",
-      "course_code": null,
+      "course_key": "aha_bls_provider_renewal",
+      "course_code": "AHA_BLS_IP_RENEWAL",
       "start_at": "2026-08-10T09:00:00-04:00",
       "included": true,
       "matched_tabs": [
@@ -5711,7 +5711,7 @@
         "family": "BLS",
         "subtype": "Renewal",
         "certifying_body": "aha",
-        "delivery_mode": ""
+        "delivery_mode": "IP"
       },
       "reason_excluded": null
     },
