@@ -1,0 +1,85 @@
+<!-- BUILD_CODE: 2026-05-08 00:52 | scripts/stamp_generated_html.py | full class lander rebuild -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="build-date" content="2026-05-08T00:52:58-04:00">
+<meta charset="UTF-8">
+<title>Schedule Page Error | 910CPR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #eef4f8;
+  padding: 40px 16px;
+  color: #1f2937;
+  margin: 0;
+}
+.card {
+  max-width: 820px;
+  margin: 40px auto;
+  background: white;
+  border: 1px solid #dbe4ee;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+h1 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 40px;
+  line-height: 1.1;
+}
+p {
+  font-size: 20px;
+  line-height: 1.6;
+  margin: 0 0 18px 0;
+}
+.actions {
+  margin-top: 26px;
+}
+a.button {
+  display: inline-block;
+  padding: 14px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  background: #ea580c;
+  color: white;
+}
+a.button:hover {
+  background: #c2410c;
+}
+.small-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 18px;
+}
+.small-link:hover {
+  text-decoration: underline;
+}
+</style>
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({
+  event: "page_404",
+  page_type: "404",
+  path: location.pathname
+});
+</script>
+</head>
+<body>
+<div class="card">
+  <h1>Sorry about that.</h1>
+  <p>There appears to have been an error loading this class page.</p>
+  <p>Please don’t worry, we can still get you to the full live schedule so you can choose the class you need.</p>
+  <p>We apologize for the inconvenience.</p>
+
+  <div class="actions">
+    <a class="button" href="https://coastalcprtraining.enrollware.com/">Go to Full Schedule</a>
+  </div>
+</div>
+<div class="build-stamp">Build: 2026-05-08 00:52</div>
+</body>
+</html>
