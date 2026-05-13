@@ -3,13 +3,13 @@
   "worker": "build_sessions_current",
   "script": "scripts/build_sessions_current.py",
   "status": "done",
-  "last_run": "2026-05-11T17:02:43.927995-04:00",
+  "last_run": "2026-05-12T21:43:58.886558-04:00",
   "current_count": 26039,
   "total_count": 26039,
   "percent_complete": 100.0,
   "last_output_file": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
-  "timestamp": "2026-05-11T17:02:43.927995-04:00",
-  "last_successful_run": "2026-05-11T17:02:43.927995-04:00",
+  "timestamp": "2026-05-12T21:43:58.886558-04:00",
+  "last_successful_run": "2026-05-12T21:43:58.886558-04:00",
   "inputs": [
     "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx",
     "E:\\GitHub\\910cpr-class-landers\\data\\raw\\classes_raw_live.csv",
@@ -27,14 +27,14 @@
   "counts": {
     "sessions_written": 26039,
     "class_report_rows": 26039,
-    "unmapped_sessions": 13550,
+    "unmapped_sessions": 2686,
     "mapping_conflicts": 0,
-    "courses_needing_description_review": 14
+    "courses_needing_description_review": 25
   },
   "pages_generated": null,
   "warnings": [
-    "13550 unmapped sessions need course mapping.",
-    "14 mapped courses need description review."
+    "2686 unmapped sessions need course mapping.",
+    "25 mapped courses need description review."
   ],
   "errors": [],
   "files_needing_review": [

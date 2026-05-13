@@ -81,6 +81,43 @@ def course_reference_by_id(course_reference: dict[str, Any] | None, course_id: s
     return None
 
 
+def course_reference_title_aliases(entry: dict[str, Any]) -> list[str]:
+    aliases: list[str] = []
+    for key in ("official_title", "clean_title", "course_key"):
+        value = normalize_whitespace(entry.get(key))
+        if value:
+            aliases.append(value)
+    for value in entry.get("title_aliases", []) or []:
+        value = normalize_whitespace(value)
+        if value:
+            aliases.append(value)
+    return aliases
+
+
+def build_course_reference_title_index(course_reference: dict[str, Any] | None) -> dict[str, dict[str, Any]]:
+    if not course_reference:
+        return {}
+    by_id = course_reference.get("courses_by_id", {}) if isinstance(course_reference, dict) else {}
+    index: dict[str, dict[str, Any]] = {}
+    for entry in by_id.values():
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("active") is False:
+            continue
+        for alias in course_reference_title_aliases(entry):
+            normalized = normalize_title(alias)
+            if normalized:
+                index.setdefault(normalized, entry)
+    return index
+
+
+def course_reference_by_title(course_reference: dict[str, Any] | None, raw_course: str) -> dict[str, Any] | None:
+    normalized = normalize_title(raw_course)
+    if not normalized:
+        return None
+    return build_course_reference_title_index(course_reference).get(normalized)
+
+
 def hidden_metadata(raw_course: str) -> dict[str, str]:
     raw = str(raw_course or "")
     found: dict[str, str] = {}
@@ -126,6 +163,10 @@ def reference_result(entry: dict[str, Any], method: str) -> dict[str, Any]:
         "match_method": method,
         "match_confidence": "high",
         "matched_alias": "",
+        "certifying_body": normalize_whitespace(entry.get("certifying_body")),
+        "family": normalize_whitespace(entry.get("family")),
+        "subtype": normalize_whitespace(entry.get("subtype")),
+        "delivery_mode": normalize_whitespace(entry.get("delivery_mode")),
         "needs_review": False,
     }
 
@@ -193,6 +234,10 @@ def resolve_course_identity(
     alias = indexes["normalized"].get(normalized)
     if alias:
         return alias_result(alias, "normalized_title", "medium", normalize_whitespace(alias.get("legacy_name")))
+
+    referenced = course_reference_by_title(course_reference, raw_course)
+    if referenced:
+        return reference_result(referenced, "course_title")
 
     return {
         "course_key": "",

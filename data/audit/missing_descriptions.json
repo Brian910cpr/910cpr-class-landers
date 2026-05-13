@@ -1,20 +1,21 @@
 {
-  "generated_at": "2026-05-11T17:02:38.833162-04:00",
+  "generated_at": "2026-05-12T21:43:44.915550-04:00",
   "counts": {
-    "mapped_courses": 14,
+    "mapped_courses": 25,
     "courses_with_complete_descriptions": 0,
-    "courses_needing_review_or_missing": 14,
-    "sessions_affected": 12489
+    "courses_needing_review_or_missing": 25,
+    "sessions_affected": 23353
   },
   "missing_field_counts": {
-    "description_status": 14,
-    "long_description": 14
+    "description_status": 25,
+    "long_description": 25,
+    "who_class_for": 10
   },
   "items": [
     {
       "course_id": "209805",
       "course_number": "209805",
-      "clean_title": "AHA PALS Provider Initial",
+      "clean_title": "AHA PALS Provider",
       "official_title": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial",
       "family": "PALS",
       "subtype": "Provider Initial",
@@ -62,7 +63,7 @@
     {
       "course_id": "209809",
       "course_number": "209809",
-      "clean_title": "AHA Heartsaver First Aid CPR AED (In-Person)",
+      "clean_title": "AHA Heartsaver First Aid CPR AED",
       "official_title": "AHA Heartsaver® First Aid CPR AED - In-Person",
       "family": "Heartsaver",
       "subtype": "First Aid + CPR + AED",
@@ -86,10 +87,10 @@
     {
       "course_id": "209811",
       "course_number": "209811",
-      "clean_title": "AHA ACLS HeartCode Skills",
-      "official_title": "AHA - ACLS Provider - Online or Skills Session Perfect for both an Initial Students/first-time or a Renewal for experienced ACLS healthcare providers, including doctors, nurses, paramedics, and critical care staff.",
+      "clean_title": "AHA ACLS HeartCode",
+      "official_title": "AHA HeartCode ACLS",
       "family": "ACLS",
-      "subtype": "HeartCode Skills",
+      "subtype": "HeartCode",
       "certifying_body": "AHA",
       "delivery_mode": "BL",
       "description_status": "needs_review",
@@ -99,18 +100,43 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "10667009",
-        "9948320",
-        "9948233",
-        "10833639",
-        "10833640"
+        "3614340",
+        "3647618",
+        "3647622",
+        "3988051",
+        "3953077"
       ],
-      "count_of_affected_sessions": 6
+      "count_of_affected_sessions": 3182
+    },
+    {
+      "course_id": "209812",
+      "course_number": "209812",
+      "clean_title": "AHA PALS HeartCode",
+      "official_title": "AHA HeartCode PALS",
+      "family": "PALS",
+      "subtype": "HeartCode",
+      "certifying_body": "AHA",
+      "delivery_mode": "BL",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "3953080",
+        "3953029",
+        "3953099",
+        "3953113",
+        "3953125"
+      ],
+      "count_of_affected_sessions": 414
     },
     {
       "course_id": "209818",
       "course_number": "209818",
-      "clean_title": "AHA ACLS Provider Renewal",
+      "clean_title": "AHA ACLS Provider (Renewal)",
       "official_title": "AHA ACLS Provider - In-person (Renewal)",
       "family": "ACLS",
       "subtype": "Renewal",
@@ -134,10 +160,10 @@
     {
       "course_id": "210549",
       "course_number": "210549",
-      "clean_title": "AHA BLS HeartCode Skills",
-      "official_title": "AHA - BLS Provider - Online Class with in-Person Skill Session - Initial or Renewal Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...",
+      "clean_title": "AHA HeartCode BLS",
+      "official_title": "AHA HeartCode BLS",
       "family": "BLS",
-      "subtype": "HeartCode Skills",
+      "subtype": "HeartCode",
       "certifying_body": "AHA",
       "delivery_mode": "BL",
       "description_status": "needs_review",
@@ -147,18 +173,18 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "9948604",
-        "9653647",
-        "10666970",
-        "9948391",
-        "9948529"
+        "3504915",
+        "3504914",
+        "3504851",
+        "3504869",
+        "3504919"
       ],
-      "count_of_affected_sessions": 12
+      "count_of_affected_sessions": 4047
     },
     {
       "course_id": "241108",
       "course_number": "241108",
-      "clean_title": "AHA ACLS Provider Initial",
+      "clean_title": "AHA ACLS Provider (Initial)",
       "official_title": "AHA ACLS Provider - In-person (Initial)",
       "family": "ACLS",
       "subtype": "Provider Initial",
@@ -180,9 +206,34 @@
       "count_of_affected_sessions": 105
     },
     {
+      "course_id": "248288",
+      "course_number": "248288",
+      "clean_title": "American Red Cross Basic Life Support",
+      "official_title": "American Red Cross Basic Life Support",
+      "family": "ARC",
+      "subtype": "BLS",
+      "certifying_body": "ARC",
+      "delivery_mode": "IP",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "4133502",
+        "4138200",
+        "4138201",
+        "4133505",
+        "4138202"
+      ],
+      "count_of_affected_sessions": 1745
+    },
+    {
       "course_id": "251496",
       "course_number": "251496",
-      "clean_title": "AHA PALS Provider Renewal",
+      "clean_title": "AHA PALS Renewal",
       "official_title": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
       "family": "PALS",
       "subtype": "Renewal",
@@ -206,7 +257,7 @@
     {
       "course_id": "251545",
       "course_number": "251545",
-      "clean_title": "AHA Heartsaver Pediatric First Aid CPR AED (Blended)",
+      "clean_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "official_title": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
       "family": "Heartsaver",
       "subtype": "Pediatric First Aid",
@@ -254,7 +305,7 @@
     {
       "course_id": "329495",
       "course_number": "329495",
-      "clean_title": "AHA Heartsaver First Aid CPR AED (Blended)",
+      "clean_title": "AHA Heartsaver First Aid CPR AED - Blended",
       "official_title": "AHA Heartsaver® First Aid CPR AED - Blended",
       "family": "Heartsaver",
       "subtype": "First Aid + CPR + AED",
@@ -278,8 +329,8 @@
     {
       "course_id": "344085",
       "course_number": "344085",
-      "clean_title": "AHA Heartsaver CPR AED (No First Aid)",
-      "official_title": "AHA - Heartsaver® CPR AED (No First Aid)- In-person",
+      "clean_title": "AHA Heartsaver CPR AED",
+      "official_title": "AHA Heartsaver CPR AED",
       "family": "Heartsaver",
       "subtype": "CPR + AED",
       "certifying_body": "AHA",
@@ -291,9 +342,62 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "9947974"
+        "4028031",
+        "4028032",
+        "4028033",
+        "4028034",
+        "4028035"
       ],
-      "count_of_affected_sessions": 1
+      "count_of_affected_sessions": 633
+    },
+    {
+      "course_id": "351632",
+      "course_number": "351632",
+      "clean_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "official_title": "AHA - Heartsaver® Pediatric First Aid / CPR / AED In-person",
+      "family": "Heartsaver",
+      "subtype": "Pediatric First Aid",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "7657438",
+        "7694353",
+        "7825663",
+        "7832897",
+        "7694411"
+      ],
+      "count_of_affected_sessions": 21
+    },
+    {
+      "course_id": "355327",
+      "course_number": "355327",
+      "clean_title": "AHA Heartsaver First Aid CPR AED",
+      "official_title": "AHA Heartsaver First Aid CPR AED",
+      "family": "Heartsaver",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "AHA",
+      "delivery_mode": "IP",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "7853817",
+        "7763887",
+        "8006147",
+        "8006149",
+        "7881541"
+      ],
+      "count_of_affected_sessions": 32
     },
     {
       "course_id": "359474",
@@ -342,6 +446,181 @@
         "7907460"
       ],
       "count_of_affected_sessions": 645
+    },
+    {
+      "course_id": "369209",
+      "course_number": "369209",
+      "clean_title": "American Red Cross Adult and Pediatric First Aid/CPR/AED",
+      "official_title": "American Red Cross Adult and Pediatric First Aid/CPR/AED",
+      "family": "ARC",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "ARC",
+      "delivery_mode": "IP",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "9948658",
+        "9948649",
+        "9948622",
+        "9948726",
+        "9948654"
+      ],
+      "count_of_affected_sessions": 230
+    },
+    {
+      "course_id": "371954",
+      "course_number": "371954",
+      "clean_title": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "official_title": "HSI Adult First Aid CPR AED - Blended",
+      "family": "HSI",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "HSI",
+      "delivery_mode": "BL",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "8253674",
+        "8256125",
+        "8256140",
+        "8256133",
+        "8256142"
+      ],
+      "count_of_affected_sessions": 72
+    },
+    {
+      "course_id": "374378",
+      "course_number": "374378",
+      "clean_title": "HSI Adult First Aid | CPR AED",
+      "official_title": "HSI Adult First Aid CPR AED - In-Person",
+      "family": "HSI",
+      "subtype": "First Aid + CPR + AED",
+      "certifying_body": "HSI",
+      "delivery_mode": "IP",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "8381082",
+        "10005545",
+        "10012311",
+        "10005558",
+        "10012312"
+      ],
+      "count_of_affected_sessions": 129
+    },
+    {
+      "course_id": "444919",
+      "course_number": "444919",
+      "clean_title": "American Red Cross BLS Challenge",
+      "official_title": "ARC BLS Challenge - Renewal for Experienced Providers",
+      "family": "ARC",
+      "subtype": "BLS Challenge",
+      "certifying_body": "ARC",
+      "delivery_mode": "IP",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "11772905",
+        "11772992",
+        "11773041",
+        "11773086",
+        "11772996"
+      ],
+      "count_of_affected_sessions": 177
+    },
+    {
+      "course_id": "445670",
+      "course_number": "445670",
+      "clean_title": "HSI BLS and Adult First Aid | Blended Learning",
+      "official_title": "HSI BLS and Adult First Aid | Blended Learning",
+      "family": "HSI",
+      "subtype": "BLS + First Aid",
+      "certifying_body": "HSI",
+      "delivery_mode": "BL",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "11799544",
+        "11799556",
+        "11799575",
+        "11799340",
+        "11799604"
+      ],
+      "count_of_affected_sessions": 129
+    },
+    {
+      "course_id": "449422",
+      "course_number": "449422",
+      "clean_title": "HSI Pediatric First Aid | CPR AED - Blended",
+      "official_title": "HSI Pediatric First Aid CPR AED - Blended",
+      "family": "HSI",
+      "subtype": "Pediatric First Aid",
+      "certifying_body": "HSI",
+      "delivery_mode": "BL",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "11930598",
+        "11930596",
+        "11930599",
+        "11930597",
+        "11930604"
+      ],
+      "count_of_affected_sessions": 34
+    },
+    {
+      "course_id": "463743",
+      "course_number": "463743",
+      "clean_title": "HSI BLS Challenge",
+      "official_title": "HSI BLS Challenge - Renewal for Experienced Providers",
+      "family": "HSI",
+      "subtype": "BLS Challenge",
+      "certifying_body": "HSI",
+      "delivery_mode": "IP",
+      "description_status": "needs_review",
+      "missing_fields": [
+        "description_status",
+        "long_description",
+        "who_class_for"
+      ],
+      "placeholder_fields": [],
+      "example_session_ids": [
+        "12474141",
+        "12474108",
+        "12474075",
+        "12474135",
+        "12474168"
+      ],
+      "count_of_affected_sessions": 38
     }
   ]
 }

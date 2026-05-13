@@ -325,9 +325,158 @@ def matches_tab(session: dict[str, Any], tab: dict[str, Any], *, page_slug: str 
 
     excludes = [str(item).lower() for item in tab.get("exclude_name_contains", []) if str(item).strip()]
     normalized_excludes = [normalize_match_text(item) for item in tab.get("exclude_name_contains", []) if str(item).strip()]
-    return not any(needle in haystack for needle in excludes) and not any(
-        needle and needle in normalized_haystack for needle in normalized_excludes
+    def has_exclusion(needle: str, normalized_needle: str) -> bool:
+        if normalized_needle == "instructor":
+            return bool(
+                re.search(
+                    r"\binstructor\s+(course|renewal|update|candidate|training)\b|\bbecome an? .*?\binstructor\b",
+                    normalized_haystack,
+                )
+            )
+        return (needle and needle in haystack) or (normalized_needle and normalized_needle in normalized_haystack)
+
+    return not any(has_exclusion(raw, normalized) for raw, normalized in zip(excludes, normalized_excludes))
+
+
+def canonical_session_category(session: dict[str, Any]) -> dict[str, str]:
+    metadata_parts = [
+        normalize_space(session.get("course_name")),
+        normalize_space(session.get("official_course_name")),
+        normalize_space(session.get("raw_course_name")),
+        normalize_space(session.get("course_key")),
+        normalize_space(session.get("course_code")),
+        normalize_space(session.get("mapped_clean_title")),
+        normalize_space(session.get("mapped_family")),
+        normalize_space(session.get("mapped_subtype")),
+        normalize_space(session.get("mapped_certifying_body")),
+    ]
+    haystack = normalize_match_text(" ".join(part for part in metadata_parts if part))
+    body = certifying_body_key(session)
+    family = normalize_space(session.get("mapped_family"))
+    subtype = normalize_space(session.get("mapped_subtype"))
+    delivery = normalize_space(session.get("mapped_delivery_mode") or session.get("delivery_mode"))
+
+    if not family:
+        if "acls" in haystack:
+            family = "ACLS"
+        elif "pals" in haystack:
+            family = "PALS"
+        elif "heartsaver" in haystack:
+            family = "Heartsaver"
+        elif "bls" in haystack or "basic life support" in haystack:
+            family = "BLS"
+        elif body == "hsi":
+            family = "HSI"
+        elif body == "arc":
+            family = "ARC"
+
+    if not subtype:
+        if "heartcode" in haystack or "online skills" in haystack or "blended" in haystack:
+            subtype = "HeartCode" if family in {"BLS", "ACLS", "PALS"} else "Blended"
+        elif "renewal" in haystack or "update" in haystack:
+            subtype = "Renewal"
+        elif "provider" in haystack:
+            subtype = "Provider"
+
+    return {
+        "family": family,
+        "subtype": subtype,
+        "certifying_body": body,
+        "delivery_mode": delivery,
+        "haystack": haystack,
+    }
+
+
+def session_is_page_candidate(session: dict[str, Any], page_slug: str) -> bool:
+    category = canonical_session_category(session)
+    family = category["family"].lower()
+    body = category["certifying_body"]
+    haystack = category["haystack"]
+    if page_slug == "bls":
+        return family == "bls" or ("bls" in haystack and "instructor" not in haystack)
+    if page_slug == "acls":
+        return family == "acls" or "acls" in haystack
+    if page_slug == "pals":
+        return family == "pals" or "pals" in haystack
+    if page_slug == "heartsaver":
+        return family == "heartsaver" or "heartsaver" in haystack
+    if page_slug == "hsi":
+        return family == "hsi" or body == "hsi" or "hsi" in haystack
+    if page_slug == "arc":
+        return family == "arc" or body == "arc" or "red cross" in haystack or "arc" in haystack
+    return False
+
+
+def build_hub_debug_records(page: dict[str, Any], sessions: list[dict[str, Any]], *, now: datetime) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    page_slug = str(page.get("slug") or "")
+    for session in sort_sessions(sessions):
+        if not is_future_session(session, now=now):
+            continue
+        if not session_is_page_candidate(session, page_slug):
+            continue
+
+        matched_tabs: list[str] = []
+        exclusion_reasons: list[str] = []
+        for tab in page.get("tabs", []):
+            enriched = enrich_session_for_page(session, page, tab, now=now)
+            if enriched:
+                matched_tabs.append(str(tab.get("id") or ""))
+            elif page_slug == "heartsaver":
+                is_public, public_reason = public_inventory_decision(session, page)
+                classification, class_reason = classify_heartsaver_session(session)
+                exclusion_reasons.append(public_reason if not is_public else class_reason)
+            elif page_slug == "acls":
+                _, reason = classify_acls_tab(session)
+                exclusion_reasons.append(reason)
+            else:
+                exclusion_reasons.append("excluded:no_tab_match")
+
+        category = canonical_session_category(session)
+        included = bool(matched_tabs)
+        records.append(
+            {
+                "page_slug": page_slug,
+                "session_id": session.get("session_id"),
+                "course_id": session.get("course_id") or session.get("course_number"),
+                "course_name": session.get("course_name"),
+                "official_course_name": session.get("official_course_name"),
+                "course_key": session.get("course_key"),
+                "course_code": session.get("course_code"),
+                "start_at": session.get("start_at"),
+                "included": included,
+                "matched_tabs": matched_tabs,
+                "matched_classification": {
+                    "family": category["family"],
+                    "subtype": category["subtype"],
+                    "certifying_body": category["certifying_body"],
+                    "delivery_mode": category["delivery_mode"],
+                },
+                "reason_excluded": None if included else sorted(set(exclusion_reasons)),
+            }
+        )
+    return records
+
+
+def write_hub_runtime_debug(page: dict[str, Any], sessions: list[dict[str, Any]], *, now: datetime) -> list[dict[str, Any]]:
+    records = build_hub_debug_records(page, sessions, now=now)
+    output_path = RUNTIME_DIR / f"{page.get('slug')}_hub_debug.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(
+            {
+                "generated_at": now.isoformat(),
+                "source_schedule_future_path": str(SCHEDULE_PATH),
+                "page_slug": page.get("slug"),
+                "records": records,
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
     )
+    return records
 
 
 def build_acls_debug_records(page: dict[str, Any], sessions: list[dict[str, Any]], *, now: datetime) -> list[dict[str, Any]]:
@@ -1585,18 +1734,35 @@ def build() -> None:
 
     reporter.start(total=len(manifest))
     last_output: Path | None = None
+    all_hub_debug_records: list[dict[str, Any]] = []
     try:
         for index, page in enumerate(manifest, start=1):
             html = render_page(page, sessions, banner_library)
             html = apply_build_metadata(html, build_meta)
             last_output = OUTPUT_DIR / f"{page['slug']}.html"
             last_output.write_text(html, encoding="utf-8")
+            all_hub_debug_records.extend(write_hub_runtime_debug(page, sessions, now=now))
             if page.get("slug") == "acls":
                 write_acls_runtime_debug(page, sessions, now=now)
             if page.get("slug") == "heartsaver":
                 write_heartsaver_runtime_debug(page, sessions, now=now)
             reporter.update(current=index, total=len(manifest), last_output_file=last_output)
             print(f"Wrote {last_output}")
+        consolidated_debug_path = ROOT / "debug" / "hub_session_classification.json"
+        consolidated_debug_path.parent.mkdir(parents=True, exist_ok=True)
+        consolidated_debug_path.write_text(
+            json.dumps(
+                {
+                    "generated_at": now.isoformat(),
+                    "source_schedule_future_path": str(SCHEDULE_PATH),
+                    "records": all_hub_debug_records,
+                },
+                indent=2,
+                ensure_ascii=False,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
         reporter.done(
             current=len(manifest),
             total=len(manifest),

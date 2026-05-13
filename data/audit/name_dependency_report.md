@@ -4,7 +4,7 @@ This build keeps legacy Course HTML parsing for backward compatibility, but mapp
 
 - Course map: `E:\GitHub\910cpr-class-landers\data\config\course_map.json`
 - Sessions written: `26039`
-- Unmapped sessions: `13550`
+- Unmapped sessions: `2686`
 - Mapping conflicts: `0`
 
 ## Phase 1 Rules

@@ -13,6 +13,7 @@ from typing import Any, Optional
 from zoneinfo import ZoneInfo
 
 from openpyxl import load_workbook
+from scripts.course_identity_resolver import normalize_title
 from scripts.build_status import BuildStatusReporter
 
 
@@ -362,6 +363,7 @@ def resolve_course_mapping(
     *,
     course_id: Optional[str],
     course_number: Optional[str],
+    raw_course_title: Optional[str] = None,
 ) -> tuple[Optional[dict[str, Any]], str, list[str]]:
     by_id = course_map.get("courses_by_id", {})
     by_number = course_map.get("courses_by_number", {})
@@ -381,6 +383,20 @@ def resolve_course_mapping(
         return map_by_id, "mapped", notes
     if map_by_number:
         return map_by_number, "mapped", notes
+    title_key = normalize_title(raw_course_title)
+    if title_key:
+        for entry in by_id.values():
+            if not isinstance(entry, dict) or entry.get("active") is False:
+                continue
+            title_values = [
+                entry.get("official_title"),
+                entry.get("clean_title"),
+                entry.get("course_key"),
+                *(entry.get("title_aliases", []) or []),
+            ]
+            if any(normalize_title(value) == title_key for value in title_values if value):
+                notes.append("course_map_title_alias")
+                return entry, "mapped", notes
     return None, "unmapped", notes
 
 
@@ -417,12 +433,18 @@ def build_session_from_class_report(
         course_map,
         course_id=course_id,
         course_number=course_number,
+        raw_course_title=parsed.course_name_primary_clean or parsed.course_name_raw,
     )
+    if mapped and not course_id:
+        course_id = clean_string(mapped.get("course_id"))
+    if mapped and not course_number:
+        course_number = clean_string(mapped.get("course_number") or mapped.get("course_id"))
 
     mapped_family = clean_string(mapped.get("family")) if mapped else None
     mapped_subtype = clean_string(mapped.get("subtype")) if mapped else None
     mapped_certifying_body = clean_string(mapped.get("certifying_body")) if mapped else None
     mapped_delivery_mode = clean_string(mapped.get("delivery_mode")) if mapped else None
+    mapped_course_code = clean_string(mapped.get("course_code")) if mapped else None
     mapped_logo_key = clean_string(mapped.get("logo_key")) if mapped else None
     mapped_price = parse_float(mapped.get("price")) if mapped else None
     mapped_clean_title = clean_string(mapped.get("clean_title")) if mapped else None
@@ -523,11 +545,11 @@ def build_session_from_class_report(
             "course_tail_raw": parsed.course_tail_raw,
             "course_subtitle_text": parsed.course_subtitle_text,
             "course_number": course_number,
-            "course_code_hint": parsed.course_code_hint,
-            "certifying_body_hint": parsed.certifying_body_hint,
+            "course_code_hint": parsed.course_code_hint or mapped_course_code,
+            "certifying_body_hint": parsed.certifying_body_hint or mapped_certifying_body,
             "source_hint": parsed.source_hint,
             "price_hint": parsed.price_hint,
-            "delivery_mode_hint": parsed.delivery_mode_hint,
+            "delivery_mode_hint": parsed.delivery_mode_hint or mapped_delivery_mode,
             "image_src": parsed.image_src,
             "parse_confidence": parsed.parse_confidence,
             "parse_notes": parsed.parse_notes,

@@ -1,24 +1,388 @@
 {
-  "generated_at": "2026-05-05T23:45:51.134722-04:00",
+  "generated_at": "2026-05-12T21:48:28.134953-04:00",
   "counts": {
-    "html_files": 26587,
-    "future_sessions_runtime_valid": 1380,
-    "past_sessions_in_full_dataset": 18328,
-    "missing_build_code": 0,
-    "missing_meta_build_date": 0,
-    "missing_visible_build": 0,
-    "past_pages_missing_banner": 0,
+    "html_files": 26542,
+    "future_sessions_runtime_valid": 1351,
+    "past_sessions_in_full_dataset": 18358,
+    "missing_build_code": 371,
+    "missing_meta_build_date": 371,
+    "missing_visible_build": 371,
+    "past_pages_missing_banner": 9,
     "future_pages_missing_enroll": 0,
     "empty_schedule_sections": 0,
-    "expired_rendered_items": 0
+    "expired_rendered_items": 701
   },
   "failures": {
-    "missing_build_code": [],
-    "missing_meta_build_date": [],
-    "missing_visible_build": [],
-    "past_pages_missing_banner": [],
+    "missing_build_code": [
+      "docs\\classes\\index.html",
+      "docs\\control-center\\index.html",
+      "docs\\control-center\\modules\\audit-center.html",
+      "docs\\control-center\\modules\\diagnostics.html",
+      "docs\\control-center\\modules\\facebook-post-machine.html",
+      "docs\\control-center\\modules\\feature-registry.html",
+      "docs\\control-center\\modules\\lander-builder.html",
+      "docs\\control-center\\modules\\task-prompter.html",
+      "docs\\control-center\\modules\\theme-builder.html",
+      "docs\\course-at-city\\acls-wilmington.html",
+      "docs\\course-at-city\\bls-wilmington.html",
+      "docs\\course-at-city\\pals-wilmington.html",
+      "docs\\course-at-city\\uscg-elementary-first-aid-cpr-wilmington.html",
+      "docs\\courses\\2025-aha-instructor-update.html",
+      "docs\\courses\\acls.html",
+      "docs\\courses\\aed-maintenance-program-an-easy-to-understand-and-even-simpler-to-implement-plan-to-get-an-aed-in-your-facility.html",
+      "docs\\courses\\aed-maintenance-program-training-training.html",
+      "docs\\courses\\aed-maintenance-program.html",
+      "docs\\courses\\aha-acls-heartcode-skills-session-training.html",
+      "docs\\courses\\aha-acls-instructor-course.html",
+      "docs\\courses\\aha-acls-instructor-renewal.html",
+      "docs\\courses\\aha-acls-provider-heartcode-skills-session.html",
+      "docs\\courses\\aha-acls-provider-in-person-initial.html",
+      "docs\\courses\\aha-acls-provider-in-person-renewal.html",
+      "docs\\courses\\aha-acls-provider-training.html",
+      "docs\\courses\\aha-bls-acls-and-pals-instructor-course.html",
+      "docs\\courses\\aha-bls-heartcode-skills-session-cpr-certification.html",
+      "docs\\courses\\aha-bls-heartcode-skills-session.html",
+      "docs\\courses\\aha-bls-instructor-course.html",
+      "docs\\courses\\aha-bls-instructor-renewal.html",
+      "docs\\courses\\aha-bls-provider-cpr-certification.html",
+      "docs\\courses\\aha-bls-provider-heartcode-skills.html",
+      "docs\\courses\\aha-bls-provider-renewal.html",
+      "docs\\courses\\aha-bls-provider.html",
+      "docs\\courses\\aha-family-friends-cpr.html",
+      "docs\\courses\\aha-heartsaver-cpr-aed-skills-session.html",
+      "docs\\courses\\aha-heartsaver-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-blended.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-in-person.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-skills-session.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-training.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-instructor-course-training.html",
+      "docs\\courses\\aha-heartsaver-instructor-course.html",
+      "docs\\courses\\aha-heartsaver-k-12-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-pediatric-first-aid-cpr-aed-blended.html",
+      "docs\\courses\\aha-heartsaver-pediatric-first-aid-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-primeros-auxilios-con-rcp-y-dea-blended.html",
+      "docs\\courses\\aha-instructor-courses-a-la-carte-instructor-program-choose-your-desired-aha-ins.html",
+      "docs\\courses\\aha-instructor-courses-a-la-carte-instructor-program-choose-your-desired-aha-instructor-certification-and-receive-all-required-materials-to-start-teaching.html"
+    ],
+    "missing_meta_build_date": [
+      "docs\\classes\\index.html",
+      "docs\\control-center\\index.html",
+      "docs\\control-center\\modules\\audit-center.html",
+      "docs\\control-center\\modules\\diagnostics.html",
+      "docs\\control-center\\modules\\facebook-post-machine.html",
+      "docs\\control-center\\modules\\feature-registry.html",
+      "docs\\control-center\\modules\\lander-builder.html",
+      "docs\\control-center\\modules\\task-prompter.html",
+      "docs\\control-center\\modules\\theme-builder.html",
+      "docs\\course-at-city\\acls-wilmington.html",
+      "docs\\course-at-city\\bls-wilmington.html",
+      "docs\\course-at-city\\pals-wilmington.html",
+      "docs\\course-at-city\\uscg-elementary-first-aid-cpr-wilmington.html",
+      "docs\\courses\\2025-aha-instructor-update.html",
+      "docs\\courses\\acls.html",
+      "docs\\courses\\aed-maintenance-program-an-easy-to-understand-and-even-simpler-to-implement-plan-to-get-an-aed-in-your-facility.html",
+      "docs\\courses\\aed-maintenance-program-training-training.html",
+      "docs\\courses\\aed-maintenance-program.html",
+      "docs\\courses\\aha-acls-heartcode-skills-session-training.html",
+      "docs\\courses\\aha-acls-instructor-course.html",
+      "docs\\courses\\aha-acls-instructor-renewal.html",
+      "docs\\courses\\aha-acls-provider-heartcode-skills-session.html",
+      "docs\\courses\\aha-acls-provider-in-person-initial.html",
+      "docs\\courses\\aha-acls-provider-in-person-renewal.html",
+      "docs\\courses\\aha-acls-provider-training.html",
+      "docs\\courses\\aha-bls-acls-and-pals-instructor-course.html",
+      "docs\\courses\\aha-bls-heartcode-skills-session-cpr-certification.html",
+      "docs\\courses\\aha-bls-heartcode-skills-session.html",
+      "docs\\courses\\aha-bls-instructor-course.html",
+      "docs\\courses\\aha-bls-instructor-renewal.html",
+      "docs\\courses\\aha-bls-provider-cpr-certification.html",
+      "docs\\courses\\aha-bls-provider-heartcode-skills.html",
+      "docs\\courses\\aha-bls-provider-renewal.html",
+      "docs\\courses\\aha-bls-provider.html",
+      "docs\\courses\\aha-family-friends-cpr.html",
+      "docs\\courses\\aha-heartsaver-cpr-aed-skills-session.html",
+      "docs\\courses\\aha-heartsaver-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-blended.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-in-person.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-skills-session.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-training.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-instructor-course-training.html",
+      "docs\\courses\\aha-heartsaver-instructor-course.html",
+      "docs\\courses\\aha-heartsaver-k-12-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-pediatric-first-aid-cpr-aed-blended.html",
+      "docs\\courses\\aha-heartsaver-pediatric-first-aid-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-primeros-auxilios-con-rcp-y-dea-blended.html",
+      "docs\\courses\\aha-instructor-courses-a-la-carte-instructor-program-choose-your-desired-aha-ins.html",
+      "docs\\courses\\aha-instructor-courses-a-la-carte-instructor-program-choose-your-desired-aha-instructor-certification-and-receive-all-required-materials-to-start-teaching.html"
+    ],
+    "missing_visible_build": [
+      "docs\\classes\\index.html",
+      "docs\\control-center\\index.html",
+      "docs\\control-center\\modules\\audit-center.html",
+      "docs\\control-center\\modules\\diagnostics.html",
+      "docs\\control-center\\modules\\facebook-post-machine.html",
+      "docs\\control-center\\modules\\feature-registry.html",
+      "docs\\control-center\\modules\\lander-builder.html",
+      "docs\\control-center\\modules\\task-prompter.html",
+      "docs\\control-center\\modules\\theme-builder.html",
+      "docs\\course-at-city\\acls-wilmington.html",
+      "docs\\course-at-city\\bls-wilmington.html",
+      "docs\\course-at-city\\pals-wilmington.html",
+      "docs\\course-at-city\\uscg-elementary-first-aid-cpr-wilmington.html",
+      "docs\\courses\\2025-aha-instructor-update.html",
+      "docs\\courses\\acls.html",
+      "docs\\courses\\aed-maintenance-program-an-easy-to-understand-and-even-simpler-to-implement-plan-to-get-an-aed-in-your-facility.html",
+      "docs\\courses\\aed-maintenance-program-training-training.html",
+      "docs\\courses\\aed-maintenance-program.html",
+      "docs\\courses\\aha-acls-heartcode-skills-session-training.html",
+      "docs\\courses\\aha-acls-instructor-course.html",
+      "docs\\courses\\aha-acls-instructor-renewal.html",
+      "docs\\courses\\aha-acls-provider-heartcode-skills-session.html",
+      "docs\\courses\\aha-acls-provider-in-person-initial.html",
+      "docs\\courses\\aha-acls-provider-in-person-renewal.html",
+      "docs\\courses\\aha-acls-provider-training.html",
+      "docs\\courses\\aha-bls-acls-and-pals-instructor-course.html",
+      "docs\\courses\\aha-bls-heartcode-skills-session-cpr-certification.html",
+      "docs\\courses\\aha-bls-heartcode-skills-session.html",
+      "docs\\courses\\aha-bls-instructor-course.html",
+      "docs\\courses\\aha-bls-instructor-renewal.html",
+      "docs\\courses\\aha-bls-provider-cpr-certification.html",
+      "docs\\courses\\aha-bls-provider-heartcode-skills.html",
+      "docs\\courses\\aha-bls-provider-renewal.html",
+      "docs\\courses\\aha-bls-provider.html",
+      "docs\\courses\\aha-family-friends-cpr.html",
+      "docs\\courses\\aha-heartsaver-cpr-aed-skills-session.html",
+      "docs\\courses\\aha-heartsaver-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-blended.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-in-person.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-skills-session.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed-training.html",
+      "docs\\courses\\aha-heartsaver-first-aid-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-instructor-course-training.html",
+      "docs\\courses\\aha-heartsaver-instructor-course.html",
+      "docs\\courses\\aha-heartsaver-k-12-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-pediatric-first-aid-cpr-aed-blended.html",
+      "docs\\courses\\aha-heartsaver-pediatric-first-aid-cpr-aed.html",
+      "docs\\courses\\aha-heartsaver-primeros-auxilios-con-rcp-y-dea-blended.html",
+      "docs\\courses\\aha-instructor-courses-a-la-carte-instructor-program-choose-your-desired-aha-ins.html",
+      "docs\\courses\\aha-instructor-courses-a-la-carte-instructor-program-choose-your-desired-aha-instructor-certification-and-receive-all-required-materials-to-start-teaching.html"
+    ],
+    "past_pages_missing_banner": [
+      "docs\\classes\\12773995.html",
+      "docs\\classes\\12774311.html",
+      "docs\\classes\\12774562.html",
+      "docs\\classes\\12775274.html",
+      "docs\\classes\\12775507.html",
+      "docs\\classes\\12775752.html",
+      "docs\\classes\\12776127.html",
+      "docs\\classes\\12776763.html",
+      "docs\\classes\\13295747.html"
+    ],
     "future_pages_missing_enroll": [],
     "empty_schedule_sections": [],
-    "expired_rendered_items": []
+    "expired_rendered_items": [
+      {
+        "file": "docs\\classes\\12774310.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774311.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774312.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774322.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774323.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774324.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774325.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774326.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774335.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774336.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774337.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774338.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774349.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774350.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774351.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774352.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774353.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774371.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774372.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774373.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774374.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774383.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774384.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774385.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774386.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774387.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774397.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774398.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774399.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774400.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774410.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774411.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774412.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774413.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774530.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774531.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774532.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774533.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774534.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774535.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774536.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774537.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774538.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774539.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774540.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774541.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774542.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774543.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774544.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      },
+      {
+        "file": "docs\\classes\\12774545.html",
+        "start": "2026-05-11T18:15:00-04:00"
+      }
+    ]
   }
 }
