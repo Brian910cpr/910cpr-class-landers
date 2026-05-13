@@ -162,6 +162,18 @@ def normalize_match_text(value: str | None) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def hub_asset_url(value: str | None, fallback: str = "") -> str:
+    """Return a URL that works for generated hub pages served from docs/."""
+    text = normalize_space(value) or fallback
+    if text.startswith(("/images/", "/assets/", "/css/")):
+        return text.lstrip("/")
+    return text
+
+
+def hub_script_url(path: str) -> str:
+    return hub_asset_url(path)
+
+
 def approved_locations_for_page(page: dict[str, Any]) -> set[str]:
     return {
         clean_location(location)
@@ -673,7 +685,7 @@ def enrich_session_for_page(session: dict[str, Any], page: dict[str, Any], tab: 
 
 def heartsaver_tab_display(tab: dict[str, Any], sessions: list[dict[str, Any]]) -> dict[str, str]:
     return {
-        "tab_icon": tab.get("tab_icon") or "/images/tab_classroom.png",
+        "tab_icon": tab.get("tab_icon") or "images/tab_classroom.png",
         "tab_badge": tab.get("tab_badge") or "",
     }
 
@@ -717,11 +729,11 @@ def certifying_body_key(session: dict[str, Any]) -> str:
 
 
 def certifying_logo_src(session: dict[str, Any]) -> str:
-    return {
+    return hub_asset_url({
         "aha": "/images/0aha.png",
         "arc": "/images/0arc.png",
         "hsi": "/images/0hsi.png",
-    }.get(certifying_body_key(session), "")
+    }.get(certifying_body_key(session), ""))
 
 
 def render_emergency_mailto(session: dict[str, Any], *, page_slug: str) -> str:
@@ -880,7 +892,7 @@ def render_curated_offer_item(
     end_dt = parse_dt(session.get("end_at"))
     title = normalize_space(session.get("course_name")) or normalize_space(tab.get("label")) or "910CPR Class"
     location = clean_location(session.get("location_display") or session.get("location_name"))
-    image_src = escape(tab.get("tab_icon") or page.get("hero_image") or "/images/logo.png", quote=True)
+    image_src = escape(hub_asset_url(tab.get("tab_icon") or page.get("hero_image"), "images/logo.png"), quote=True)
     image_alt = escape(tab.get("label") or page.get("hero_title") or "910CPR class")
     session_id = escape(str(session.get("session_id") or ""), quote=True)
     session_start = escape(start_dt.isoformat() if start_dt else "", quote=True)
@@ -1050,7 +1062,7 @@ def render_flexible_section(page: dict[str, Any], tab: dict[str, Any], sessions:
 
 def render_tab_button(tab: dict[str, Any], *, active: bool) -> str:
     active_class = " active" if active else ""
-    icon = escape(tab.get("tab_icon") or "/images/tab_classroom.png", quote=True)
+    icon = escape(hub_asset_url(tab.get("tab_icon"), "images/tab_classroom.png"), quote=True)
     badge = escape(tab.get("tab_badge") or "", quote=False)
     label = escape(tab["label"])
     program = escape(tab["program"], quote=True)
@@ -1223,7 +1235,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
 
 
 def render_hero_image(page: dict[str, Any]) -> str:
-    hero_image = str(page.get("hero_image") or "").strip()
+    hero_image = hub_asset_url(page.get("hero_image"))
     if not hero_image:
         return ""
     hero_alt = escape(page.get("hero_image_alt") or page["hero_title"])
@@ -1374,31 +1386,31 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
     cards = [
         {
             "href": "#hs-fa-cpr-aed-ip",
-            "image": "/images/HS-FA-CPR-AED.jpeg",
+            "image": "images/HS-FA-CPR-AED.jpeg",
             "title": "Heartsaver First Aid CPR AED",
             "copy": "The AHA Heartsaver First Aid CPR AED course is designed for anyone who needs a course completion card for their job, regulatory requirements, OSHA, or other requirements. This course teaches first aid, CPR, and AED use for emergencies in any setting.",
         },
         {
             "href": "/courses/aha-heartsaver-cpr-aed.html",
-            "image": "/images/HS-CPR-AED.jpeg",
+            "image": "images/HS-CPR-AED.jpeg",
             "title": "Heartsaver CPR AED",
             "copy": "This course teaches adult CPR and AED use, choking relief, and response skills for people who need CPR/AED training without first aid. It is a focused option for job, regulatory, or personal preparedness needs.",
         },
         {
             "href": "/courses/heartsaver-first-aid.html",
-            "image": "/images/HS-FA.jpeg",
+            "image": "images/HS-FA.jpeg",
             "title": "Heartsaver First Aid",
             "copy": "The AHA Heartsaver First Aid course is designed for anyone with limited or no medical training who needs a course completion card in first aid to meet job, regulatory, or other requirements.",
         },
         {
             "href": "#hs-pediatric-ip",
-            "image": "/images/HS-PEDI-FA-CPR-AED.jpeg",
+            "image": "images/HS-PEDI-FA-CPR-AED.jpeg",
             "title": "Pediatric First Aid CPR AED",
             "copy": "The AHA Heartsaver Pediatric First Aid CPR AED course is designed for anyone involved in childcare who has a duty to respond to illnesses and injuries in a child or infant in the first few minutes until professional help arrives. Including: childcare workers, teachers, camp counselors, etc.",
         },
         {
             "href": "/request_group_session.html?program=Bloodborne%20Pathogens",
-            "image": "/images/HS-BBP.jpeg",
+            "image": "images/HS-BBP.jpeg",
             "title": "Bloodborne Pathogens",
             "copy": "Heartsaver Bloodborne Pathogens online course teaches employees how to protect themselves and others from being exposed to blood or blood-containing materials. This course is designed to meet OSHA requirements for bloodborne pathogens training when paired with site-specific instruction.",
         },
@@ -1434,8 +1446,8 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
 def render_brand_bar() -> str:
     return """
 <header class="site-brand-bar">
-  <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
-    <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+  <a class="site-brand-link" href="index.html" aria-label="910CPR home">
+    <img class="site-brand-logo" src="images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='images/910CPR_wave.jpg';this.onerror=null;">
     <span class="site-brand-wordmark">910CPR</span>
   </a>
 </header>
@@ -1455,7 +1467,7 @@ def render_ecosystem_session_preview(sessions: list[dict[str, Any]], *, page_slu
 
 
 def render_ecosystem_category_card(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
-    card_image = escape(tab.get("card_image") or page.get("hero_image") or "/images/logo.png", quote=True)
+    card_image = escape(hub_asset_url(tab.get("card_image") or page.get("hero_image"), "images/logo.png"), quote=True)
     card_alt = escape(tab.get("card_image_alt") or tab.get("label") or page.get("hero_title") or "", quote=True)
     href = escape(tab.get("full_schedule_url") or f"#{tab.get('id')}", quote=True)
     request_href = escape(group_request_href(tab.get("program") or tab.get("label")), quote=True)
@@ -1589,10 +1601,10 @@ def render_ecosystem_page(page: dict[str, Any], sessions: list[dict[str, Any]], 
 <title>{escape(page['title'])}</title>
 <meta name="description" content="{escape(page['description'])}">
 <link rel="canonical" href="https://www.910cpr.com/{escape(page['slug'])}">
-<link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="shortcut icon" href="/images/logo.png">
-<link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="stylesheet" href="/css/lander.css">
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="shortcut icon" href="images/logo.png">
+<link rel="apple-touch-icon" href="images/logo.png">
+<link rel="stylesheet" href="css/lander.css">
 </head>
 <body>
 <div class="wrap">
@@ -1600,10 +1612,10 @@ def render_ecosystem_page(page: dict[str, Any], sessions: list[dict[str, Any]], 
     {body}
   </div>
 </div>
-<script src="/assets/hub-ui.js?v=20260511-hash-tabs"></script>
-<script src="/assets/live-sessions.js"></script>
-<script src="/assets/session-expiry.js"></script>
-<script src="/assets/hybrid-inventory.js"></script>
+<script src="assets/hub-ui.js?v=20260511-hash-tabs"></script>
+<script src="assets/live-sessions.js"></script>
+<script src="assets/session-expiry.js"></script>
+<script src="assets/hybrid-inventory.js"></script>
 </body>
 </html>"""
 
@@ -1696,10 +1708,10 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 <title>{escape(page['title'])}</title>
 <meta name="description" content="{escape(page['description'])}">
 <link rel="canonical" href="https://www.910cpr.com/{escape(page['slug'])}">
-<link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="shortcut icon" href="/images/logo.png">
-<link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="stylesheet" href="/css/lander.css">
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="shortcut icon" href="images/logo.png">
+<link rel="apple-touch-icon" href="images/logo.png">
+<link rel="stylesheet" href="css/lander.css">
 </head>
 <body>
 <div class="wrap">
@@ -1707,10 +1719,10 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
     {body}
   </div>
 </div>
-<script src="/assets/hub-ui.js?v=20260511-hash-tabs"></script>
-<script src="/assets/live-sessions.js"></script>
-<script src="/assets/session-expiry.js"></script>
-<script src="/assets/hybrid-inventory.js"></script>
+<script src="assets/hub-ui.js?v=20260511-hash-tabs"></script>
+<script src="assets/live-sessions.js"></script>
+<script src="assets/session-expiry.js"></script>
+<script src="assets/hybrid-inventory.js"></script>
 </body>
 </html>"""
 
