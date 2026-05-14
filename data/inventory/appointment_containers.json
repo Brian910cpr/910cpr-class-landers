@@ -4,10 +4,13 @@
   "containers": [
     {
       "container_id": "shipyard_brian_continuous_20260621_20270430",
+      "container_group": "shipyard",
       "container_name": "Shipyard continuous appointment range",
       "instructor_name": "Brian",
+      "instructor_id_optional": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "location_id": "101560",
+      "room_or_resource_name": "Shipyard Office",
       "base_date": "2026-06-21",
       "base_appointmentDayId": 260670,
       "first_valid_date": "2026-06-21",
@@ -17,6 +20,8 @@
       "first_invalid_appointmentDayId": 260984,
       "default_slot_minutes": 60,
       "status": "active",
+      "priority": 100,
+      "tags": ["shipyard", "brian", "bls_public", "advanced_provider", "skills_testing"],
       "notes": "Validated first-party owned range. appointmentDayId 260984 crossed outside the owned block and must be treated as unsafe."
     }
   ]

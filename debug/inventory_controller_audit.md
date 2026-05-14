@@ -6,7 +6,7 @@ Scenario: `no_anchor_case`
 - Total candidates: 1292
 - Public offerings: 94
 - Suppressed offerings: 1198
-- Invalid out-of-range offerings: 68
+- Invalid out-of-range offerings: 0
 - Anchor-required blocks: 1
 
 ## Suppression Examples

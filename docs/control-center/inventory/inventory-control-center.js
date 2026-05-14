@@ -208,28 +208,47 @@ function renderPools(data) {
 }
 
 function renderAppointments(data) {
+  const groups = data.appointment_container_groups || [];
   const blocks = data.appointment_blocks || [];
-  setHtml("appointment-list", blocks.map(block => `
+  const groupRows = groups.length ? groups.map(group => `
+    <article class="block-row">
+      <div class="panel-header">
+        <div>
+          <strong>${escapeHtml(group.container_group)}</strong>
+          <div class="muted">${number(group.container_count)} containers / ${number(group.public_offering_dependency_count)} public offerings depend on this group</div>
+        </div>
+        <div>
+          ${group.missing_or_unsafe_count ? pill(`${number(group.missing_or_unsafe_count)} missing/unsafe`, "action") : pill("verified fields", "good")}
+          ${group.unused_container_count ? pill(`${number(group.unused_container_count)} unused`, "due") : ""}
+        </div>
+      </div>
+    </article>
+  `).join("") : "";
+  const blockRows = blocks.map(block => `
     <article class="block-row">
       <div class="panel-header">
         <div>
           <strong>${escapeHtml(block.container_name || block.container_id)}</strong>
-          <div class="muted">${escapeHtml(block.location_name)}</div>
+          <div class="muted">${escapeHtml(block.container_group || "ungrouped")} / ${escapeHtml(block.location_name)}</div>
         </div>
         <div>${(block.flags || []).length ? (block.flags || []).map(flag => pill(flag, flag === "expired" || flag === "unsafe_range" ? "action" : "due")).join(" ") : pill("range verified", "good")}</div>
       </div>
       <div class="facts">
         <div class="fact"><span>Instructor</span><span>${escapeHtml(block.instructor_name)}</span></div>
+        <div class="fact"><span>Room / resource</span><span>${escapeHtml(block.room_or_resource_name)}</span></div>
         <div class="fact"><span>Base date / id</span><span>${escapeHtml(block.base_date)} / ${escapeHtml(block.base_appointmentDayId)}</span></div>
         <div class="fact"><span>First valid</span><span>${escapeHtml(block.first_valid_date)} / ${escapeHtml(block.first_valid_appointmentDayId)}</span></div>
         <div class="fact"><span>Last valid</span><span>${escapeHtml(block.last_valid_date)} / ${escapeHtml(block.last_valid_appointmentDayId)}</span></div>
         <div class="fact"><span>First invalid id</span><span>${escapeHtml(block.first_invalid_appointmentDayId)}</span></div>
         <div class="fact"><span>Days remaining</span><span>${escapeHtml(text(block.days_remaining_until_expiration))}</span></div>
+        <div class="fact"><span>Public dependencies</span><span>${number(block.public_offering_dependency_count)}</span></div>
+        <div class="fact"><span>Tags</span><span>${escapeHtml((block.tags || []).join(", "))}</span></div>
         <div class="fact"><span>Status</span><span>${escapeHtml(block.status)}</span></div>
         <div class="fact"><span>Notes</span><span>${escapeHtml(block.notes)}</span></div>
       </div>
     </article>
-  `).join(""));
+  `).join("");
+  setHtml("appointment-list", groupRows + blockRows);
 }
 
 function renderInstructors(data) {
@@ -290,7 +309,7 @@ function renderDebug(data) {
   const visible = filtered.slice(0, 250);
   setHtml("debug-table", `
     <table>
-      <thead><tr><th>Date</th><th>Time</th><th>Instructor</th><th>Location</th><th>Course</th><th>Family</th><th>Pool</th><th>Tier</th><th>Score</th><th>Status</th><th>Reasons</th><th>Registration URL</th></tr></thead>
+      <thead><tr><th>Date</th><th>Time</th><th>Instructor</th><th>Location</th><th>Course</th><th>Family</th><th>Pool</th><th>Tier</th><th>Container</th><th>Score</th><th>Status</th><th>Reasons</th><th>Registration URL</th></tr></thead>
       <tbody>${visible.map(row => `
         <tr>
           <td>${escapeHtml(row.date)}</td>
@@ -301,6 +320,7 @@ function renderDebug(data) {
           <td>${escapeHtml(row.course_family)}</td>
           <td>${escapeHtml(row.occupancy_pool)}</td>
           <td>${escapeHtml(row.escalation_tier)}</td>
+          <td>${escapeHtml(row.appointment_container_group || "")}<br>${escapeHtml(row.appointment_container_id || "")}</td>
           <td>${escapeHtml(row.score)}</td>
           <td>${escapeHtml(row.status)}</td>
           <td class="reason-cell">${escapeHtml((row.reasons || []).join(", "))}</td>

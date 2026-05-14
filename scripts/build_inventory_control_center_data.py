@@ -142,7 +142,15 @@ def build() -> dict[str, Any]:
     today = date.today()
     warnings: list[dict[str, Any]] = []
 
-    invalid = [item for item in candidates if item.get("status") == "invalid"]
+    invalid = [
+        item for item in candidates
+        if item.get("status") == "invalid"
+        or "appointment_container_out_of_range" in item.get("reasons", [])
+    ]
+    no_matching_container_candidates = [
+        item for item in candidates
+        if "no_matching_appointment_container" in item.get("reasons", [])
+    ]
     anchor_blocks = [block for block in availability if block.get("anchor_required")]
     high_value_fragmented = [
         item for item in public
@@ -172,6 +180,8 @@ def build() -> dict[str, Any]:
 
     if invalid:
         add_warning(warnings, "action", "Generated candidates outside owned range", f"{len(invalid)} candidates are invalid or out of range.", "Keep invalid rows hidden and extend appointment containers before using those dates.", "Inventory")
+    if no_matching_container_candidates:
+        add_warning(warnings, "action", "Availability blocks without matching containers", f"{len(no_matching_container_candidates)} candidates have no matching appointment container.", "Add or tag an active appointment container for the instructor/location/date range.", "Appointment Blocks")
     if public and not containers:
         add_warning(warnings, "action", "Public offerings without verified appointment range", "Public offerings exist but no appointment container registry loaded.", "Load appointment_containers.json before publishing any links.", "Inventory")
     if len(suppressed) > max(1, len(public) * 8):
@@ -186,7 +196,7 @@ def build() -> dict[str, Any]:
         public_by_block[block_key_from_candidate(item)].append(item)
     for item in suppressed:
         key = block_key_from_candidate(item)
-        if item.get("status") == "invalid":
+        if item.get("status") == "invalid" or "appointment_container_out_of_range" in item.get("reasons", []):
             invalid_by_block[key].append(item)
         else:
             suppressed_by_block[key].append(item)
@@ -287,6 +297,8 @@ def build() -> dict[str, Any]:
             "notes": " ".join(block.get("notes", "") for block in instructor_blocks if block.get("notes")),
         })
 
+    public_by_container = Counter(str(item.get("appointment_container_id") or "") for item in public if item.get("appointment_container_id"))
+    container_groups: dict[str, dict[str, Any]] = {}
     appointment_blocks = []
     for container in containers:
         last_valid = parse_date(container.get("last_valid_date"))
@@ -305,11 +317,39 @@ def build() -> dict[str, Any]:
                 flags.append(flag)
         if int(container.get("first_invalid_appointmentDayId", 0) or 0) <= int(container.get("last_valid_appointmentDayId", 0) or 0):
             flags.append("unsafe_range")
-        appointment_blocks.append({
+        container_id = str(container.get("container_id", ""))
+        container_group = str(container.get("container_group") or "ungrouped")
+        public_dependency_count = public_by_container.get(container_id, 0)
+        if public_dependency_count == 0 and container.get("status") == "active":
+            flags.append("unused_container")
+        container_row = {
             **container,
             "days_remaining_until_expiration": days_remaining,
+            "public_offering_dependency_count": public_dependency_count,
             "flags": flags,
+        }
+        appointment_blocks.append(container_row)
+        group = container_groups.setdefault(container_group, {
+            "container_group": container_group,
+            "container_count": 0,
+            "active_count": 0,
+            "expired_count": 0,
+            "missing_or_unsafe_count": 0,
+            "public_offering_dependency_count": 0,
+            "unused_container_count": 0,
+            "containers": [],
         })
+        group["container_count"] += 1
+        if container.get("status") == "active":
+            group["active_count"] += 1
+        if "expired" in flags:
+            group["expired_count"] += 1
+        if any(flag.startswith("missing_") or flag == "unsafe_range" for flag in flags):
+            group["missing_or_unsafe_count"] += 1
+        if "unused_container" in flags:
+            group["unused_container_count"] += 1
+        group["public_offering_dependency_count"] += public_dependency_count
+        group["containers"].append(container_row)
 
     rule_rows = []
     required_rule_fields = ["course_id", "clean_course_name", "course_family", "duration_minutes", "occupancy_pool", "escalation_tier", "default_capacity"]
@@ -357,6 +397,7 @@ def build() -> dict[str, Any]:
         "escalation_rings": tier_stats,
         "occupancy_pools": pool_stats,
         "appointment_blocks": appointment_blocks,
+        "appointment_container_groups": sorted(container_groups.values(), key=lambda row: row["container_group"]),
         "instructors": instructor_stats,
         "course_rules": rule_rows,
         "debug": {

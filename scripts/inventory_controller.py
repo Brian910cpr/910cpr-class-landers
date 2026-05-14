@@ -56,15 +56,6 @@ def intervals_overlap(start_a: time, end_a: time, start_b: time, end_b: time) ->
     return time_to_minutes(start_a) < time_to_minutes(end_b) and time_to_minutes(start_b) < time_to_minutes(end_a)
 
 
-def find_container(containers: list[dict[str, Any]], location_name: str) -> dict[str, Any] | None:
-    for container in containers:
-        if container.get("status") != "active":
-            continue
-        if container.get("location_name") == location_name:
-            return container
-    return None
-
-
 def compute_appointment_day_id(container: dict[str, Any], target_date: date) -> int:
     base = parse_date(container["base_date"])
     return int(container["base_appointmentDayId"]) + (target_date - base).days
@@ -83,6 +74,79 @@ def validate_appointment_day_id(container: dict[str, Any], target_date: date) ->
     if appointment_day_id >= int(container["first_invalid_appointmentDayId"]):
         return False, appointment_day_id, "appointmentDayId_reaches_first_invalid_boundary"
     return True, appointment_day_id, "owned_appointment_container"
+
+
+def item_tags(item: dict[str, Any]) -> set[str]:
+    tags = item.get("tags") or []
+    if isinstance(tags, str):
+        tags = [tags]
+    return {str(tag).lower() for tag in tags}
+
+
+def container_location_matches(container: dict[str, Any], block: dict[str, Any]) -> bool:
+    location_name = container.get("location_name")
+    if location_name and location_name != block.get("location_name"):
+        return False
+    room_name = container.get("room_or_resource_name")
+    block_room = block.get("room_or_resource_name")
+    if room_name and block_room and room_name != block_room:
+        return False
+    return True
+
+
+def container_metadata_matches(container: dict[str, Any], block: dict[str, Any]) -> bool:
+    container_tags = item_tags(container)
+    block_tags = item_tags(block)
+    if block_tags and container_tags and block_tags.isdisjoint(container_tags):
+        return False
+    return container_location_matches(container, block)
+
+
+def container_specificity_score(container: dict[str, Any], block: dict[str, Any]) -> int:
+    score = 0
+    if container.get("instructor_name") and container.get("instructor_name") == block.get("instructor_name"):
+        score += 20
+    if item_tags(container) & item_tags(block):
+        score += 5
+    if container.get("room_or_resource_name") and container.get("room_or_resource_name") == block.get("room_or_resource_name"):
+        score += 5
+    return score
+
+
+def select_appointment_container(
+    containers: list[dict[str, Any]],
+    block: dict[str, Any],
+    target_date: date,
+) -> tuple[dict[str, Any] | None, int | None, str]:
+    metadata_matches = [
+        container for container in containers
+        if container.get("status") == "active"
+        and container_metadata_matches(container, block)
+    ]
+    if not metadata_matches:
+        return None, None, "no_matching_appointment_container"
+
+    valid_matches: list[tuple[int, int, dict[str, Any], int]] = []
+    out_of_range_ids: list[int] = []
+    for container in metadata_matches:
+        valid, appointment_day_id, _ = validate_appointment_day_id(container, target_date)
+        if valid:
+            valid_matches.append((
+                int(container.get("priority", 0)),
+                container_specificity_score(container, block),
+                container,
+                appointment_day_id,
+            ))
+        else:
+            out_of_range_ids.append(appointment_day_id)
+
+    if not valid_matches:
+        computed_id = out_of_range_ids[0] if out_of_range_ids else None
+        return None, computed_id, "appointment_container_out_of_range"
+
+    valid_matches.sort(key=lambda item: (item[0], item[1], str(item[2].get("container_id", ""))), reverse=True)
+    _, _, selected, appointment_day_id = valid_matches[0]
+    return selected, appointment_day_id, "owned_appointment_container"
 
 
 def build_registration_url(appointment_day_id: int, start_time: time, course_id: str) -> str:
@@ -296,6 +360,8 @@ class Candidate:
     escalation_tier: int
     momentum_triggered: bool
     duration_minutes: int
+    appointment_container_id: str
+    appointment_container_group: str
     appointmentDayId: int | None
     registration_url: str
     score: int
@@ -322,39 +388,10 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
         target_date = parse_date(block["date"])
         block_start = parse_time(block["start_time"])
         block_end = parse_time(block["end_time"])
-        container = find_container(containers, block["location_name"])
+        container, appointment_day_id, container_reason = select_appointment_container(containers, block, target_date)
         anchor_bookings = anchor_bookings_for_block(block, bookings)
         anchor_exists = any(booking.get("anchor") for booking in anchor_bookings)
         anchor_strength = anchor_strength_for_bookings(anchor_bookings)
-
-        if not container:
-            for rule in course_rules:
-                pool = occupancy_pool(rule)
-                tier = escalation_tier(rule)
-                candidates.append(Candidate(
-                    scenario=scenario_name,
-                    block_id=block_id,
-                    instructor=block["instructor_name"],
-                    location=block["location_name"],
-                    date=block["date"],
-                    start_time=block["start_time"],
-                    end_time=block["end_time"],
-                    course_id=str(rule["course_id"]),
-                    course_name=str(rule["clean_course_name"]),
-                    course_family=str(rule["course_family"]),
-                    occupancy_pool=pool,
-                    escalation_tier=tier,
-                    momentum_triggered=False,
-                    duration_minutes=int(rule["duration_minutes"]),
-                    appointmentDayId=None,
-                    registration_url="",
-                    score=0,
-                    status="invalid",
-                    reasons=["no_owned_appointment_container_for_location"],
-                ))
-            continue
-
-        owned, appointment_day_id, range_reason = validate_appointment_day_id(container, target_date)
 
         for rule in course_rules:
             allowed, allow_reason = block_allows_course(block, rule, anchor_exists=anchor_exists)
@@ -365,15 +402,17 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
 
             for start in starts:
                 end = add_minutes(start, duration)
-                reasons = [range_reason, allow_reason]
+                reasons = [container_reason, allow_reason]
                 score = 0
                 status = "suppressed"
                 registration_url = ""
                 momentum_triggered = False
 
-                if not owned:
-                    status = "invalid"
-                    reasons.append("registration_url_not_generated_outside_owned_range")
+                if not container:
+                    if container_reason == "appointment_container_out_of_range":
+                        reasons.append("registration_url_not_generated_outside_owned_range")
+                    else:
+                        reasons.append("registration_url_not_generated_without_matching_container")
                 elif block.get("availability_status") not in {"available", "diagnostic_out_of_range"}:
                     reasons.append("availability_status_not_public")
                 elif not allowed:
@@ -410,6 +449,8 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
                             escalation_tier=tier,
                             momentum_triggered=momentum_triggered,
                             duration_minutes=duration,
+                            appointment_container_id=str(container.get("container_id", "")) if container else "",
+                            appointment_container_group=str(container.get("container_group", "")) if container else "",
                             appointmentDayId=appointment_day_id,
                             registration_url="",
                             score=0,
@@ -431,6 +472,7 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
                         public_counts.get(key, 0) < max_public
                         and pool_public_counts.get(pool_key, 0) < max_pool_public
                         and score >= 50
+                        and appointment_day_id is not None
                     ):
                         status = "public"
                         public_counts[key] = public_counts.get(key, 0) + 1
@@ -456,7 +498,9 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
                     escalation_tier=tier,
                     momentum_triggered=momentum_triggered,
                     duration_minutes=duration,
-                    appointmentDayId=appointment_day_id if owned else appointment_day_id,
+                    appointment_container_id=str(container.get("container_id", "")) if container else "",
+                    appointment_container_group=str(container.get("container_group", "")) if container else "",
+                    appointmentDayId=appointment_day_id,
                     registration_url=registration_url,
                     score=score,
                     status=status,

@@ -10,6 +10,7 @@ from scripts.inventory_controller import (
     generate_inventory,
     load_json,
     parse_time,
+    select_appointment_container,
     validate_appointment_day_id,
 )
 
@@ -163,6 +164,76 @@ class InventoryControllerTest(unittest.TestCase):
             if "duplicate_same_course_suppressed_for_consolidation" in candidate["reasons"]
         ]
         self.assertTrue(suppressed_duplicates)
+
+    def test_multiple_appointment_containers_can_exist(self) -> None:
+        containers = load_json(APPOINTMENT_CONTAINERS_PATH)["containers"]
+        extra = dict(containers[0], container_id="shipyard_future_extension", priority=10)
+        self.assertEqual(2, len(containers + [extra]))
+
+    def test_resolver_selects_container_by_instructor_location_and_date(self) -> None:
+        containers = [
+            dict(self.container, container_id="brian_shipyard", instructor_name="Brian", priority=50),
+            dict(self.container, container_id="amy_shipyard", instructor_name="Amy", priority=50),
+        ]
+        block = {
+            "instructor_name": "Amy",
+            "location_name": self.container["location_name"],
+            "date": "2026-06-22",
+        }
+        selected, appointment_day_id, reason = select_appointment_container(containers, block, date(2026, 6, 22))
+        self.assertEqual("owned_appointment_container", reason)
+        self.assertEqual("amy_shipyard", selected["container_id"])
+        self.assertEqual(260671, appointment_day_id)
+
+    def test_higher_priority_container_wins_when_valid_ranges_overlap(self) -> None:
+        containers = [
+            dict(self.container, container_id="lower_priority", priority=10),
+            dict(self.container, container_id="higher_priority", priority=90),
+        ]
+        block = {
+            "instructor_name": "Brian",
+            "location_name": self.container["location_name"],
+            "date": "2026-06-22",
+        }
+        selected, _, reason = select_appointment_container(containers, block, date(2026, 6, 22))
+        self.assertEqual("owned_appointment_container", reason)
+        self.assertEqual("higher_priority", selected["container_id"])
+
+    def test_no_matching_container_suppresses_candidate(self) -> None:
+        block = {
+            "instructor_name": "Brian",
+            "location_name": "NC - Wilmington: Missing Location",
+            "date": "2026-06-22",
+        }
+        selected, appointment_day_id, reason = select_appointment_container([self.container], block, date(2026, 6, 22))
+        self.assertIsNone(selected)
+        self.assertIsNone(appointment_day_id)
+        self.assertEqual("no_matching_appointment_container", reason)
+
+    def test_out_of_range_container_suppresses_candidate(self) -> None:
+        block = {
+            "instructor_name": "Brian",
+            "location_name": self.container["location_name"],
+            "date": "2027-05-01",
+        }
+        selected, appointment_day_id, reason = select_appointment_container([self.container], block, date(2027, 5, 1))
+        self.assertIsNone(selected)
+        self.assertEqual(260984, appointment_day_id)
+        self.assertEqual("appointment_container_out_of_range", reason)
+
+    def test_generated_urls_never_cross_first_invalid_boundary(self) -> None:
+        result = generate_inventory("no_anchor_case")
+        first_invalid = int(self.container["first_invalid_appointmentDayId"])
+        public_with_urls = [candidate for candidate in result["public_offerings"] if candidate["registration_url"]]
+        self.assertTrue(public_with_urls)
+        self.assertTrue(all(int(candidate["appointmentDayId"]) < first_invalid for candidate in public_with_urls))
+
+        out_of_range = [
+            candidate for candidate in result["suppressed"]
+            if "appointment_container_out_of_range" in candidate["reasons"]
+        ]
+        self.assertTrue(out_of_range)
+        self.assertTrue(all(not candidate["registration_url"] for candidate in out_of_range))
 
 
 def parse_time_12h(value: str):
