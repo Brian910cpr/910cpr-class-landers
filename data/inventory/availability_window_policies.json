@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "description": "Availability window policies define what a specific instructor/location/resource window permits. They do not define course duration; course_consumption_rules.json owns course consumption requirements.",
+  "invariants": [
+    "A 4-hour availability window must not automatically become two 2-hour slots or multiple shorter appointments.",
+    "The inventory resolver may subdivide a window only when both the course consumption rule and the window policy allow it.",
+    "Fallback course families require manual approval when fallback_requires_manual_approval is true.",
+    "capacity_mode is a policy shortcut; explicit window fields may override mode defaults."
+  ],
+  "defaults": {
+    "split_allowed": false,
+    "preferred_duration_minutes": 240,
+    "minimum_duration_minutes": 240,
+    "maximum_appointments_per_window": 1,
+    "preferred_course_families": [],
+    "allowed_course_families": [],
+    "fallback_course_families": [],
+    "fallback_requires_manual_approval": true,
+    "capacity_mode": "admin_hold"
+  },
+  "capacity_modes": {
+    "single_advanced_provider_block": {
+      "split_allowed": false,
+      "preferred_duration_minutes": 240,
+      "minimum_duration_minutes": 240,
+      "maximum_appointments_per_window": 1,
+      "preferred_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "allowed_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "fallback_course_families": [
+        "BLS",
+        "Heartsaver"
+      ],
+      "fallback_requires_manual_approval": true
+    },
+    "divisible_skills_block": {
+      "split_allowed": true,
+      "preferred_duration_minutes": 60,
+      "minimum_duration_minutes": 60,
+      "maximum_appointments_per_window": 4,
+      "preferred_course_families": [
+        "BLS"
+      ],
+      "allowed_course_families": [
+        "BLS"
+      ],
+      "fallback_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "fallback_requires_manual_approval": true
+    },
+    "open_bls_block": {
+      "split_allowed": true,
+      "preferred_duration_minutes": 120,
+      "minimum_duration_minutes": 120,
+      "maximum_appointments_per_window": 2,
+      "preferred_course_families": [
+        "BLS"
+      ],
+      "allowed_course_families": [
+        "BLS"
+      ],
+      "fallback_course_families": [
+        "Heartsaver"
+      ],
+      "fallback_requires_manual_approval": true
+    },
+    "mixed_public_block": {
+      "split_allowed": true,
+      "preferred_duration_minutes": 120,
+      "minimum_duration_minutes": 60,
+      "maximum_appointments_per_window": 4,
+      "preferred_course_families": [
+        "BLS",
+        "Heartsaver"
+      ],
+      "allowed_course_families": [
+        "BLS",
+        "Heartsaver"
+      ],
+      "fallback_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "fallback_requires_manual_approval": true
+    },
+    "private_group_block": {
+      "split_allowed": false,
+      "preferred_duration_minutes": 240,
+      "minimum_duration_minutes": 120,
+      "maximum_appointments_per_window": 1,
+      "preferred_course_families": [
+        "BLS",
+        "ACLS",
+        "PALS",
+        "Heartsaver",
+        "USCG"
+      ],
+      "allowed_course_families": [
+        "BLS",
+        "ACLS",
+        "PALS",
+        "Heartsaver",
+        "USCG"
+      ],
+      "fallback_course_families": [],
+      "fallback_requires_manual_approval": true
+    },
+    "admin_hold": {
+      "split_allowed": false,
+      "preferred_duration_minutes": 0,
+      "minimum_duration_minutes": 0,
+      "maximum_appointments_per_window": 0,
+      "preferred_course_families": [],
+      "allowed_course_families": [],
+      "fallback_course_families": [],
+      "fallback_requires_manual_approval": true
+    }
+  },
+  "policies": [
+    {
+      "policy_id": "amy_shipyard_advanced_0800_1200_example",
+      "description": "Example: Amy available 08:00-12:00 at Shipyard as one advanced-provider block. This permits one ACLS/PALS-compatible reservation consuming the full block, not automatic BLS subdivision.",
+      "capacity_mode": "single_advanced_provider_block",
+      "split_allowed": false,
+      "preferred_duration_minutes": 240,
+      "minimum_duration_minutes": 240,
+      "maximum_appointments_per_window": 1,
+      "preferred_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "allowed_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "fallback_course_families": [
+        "BLS",
+        "Heartsaver"
+      ],
+      "fallback_requires_manual_approval": true
+    }
+  ]
+}
