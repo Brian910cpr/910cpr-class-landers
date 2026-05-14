@@ -25,7 +25,7 @@ flowchart TD
   F --> O["scripts/build_course_at_city.py"]
   I --> P["docs/classes/*.html"]
   J --> Q["docs/courses/*.html"]
-  K --> R["docs/bls.html, acls.html, pals.html, heartsaver.html, uscg..., group-training.html"]
+  K --> R["docs/bls.html, acls.html, pals.html, heartsaver.html, uscg..., group.html"]
   L --> S["docs/index.html and docs/sitemap.xml"]
   M --> Q
   N --> T["docs/locations/*.html"]
@@ -108,7 +108,7 @@ Outputs:
 - `docs/pals.html`
 - `docs/heartsaver.html`
 - `docs/uscg-elementary-first-aid-cpr.html`
-- `docs/group-training.html`
+- `docs/group.html`
 - `data/runtime/acls_hub_debug.json`
 - `data/runtime/heartsaver_hub_debug.json`
 - `data/runtime/build_slug_hubs.json`

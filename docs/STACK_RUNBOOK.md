@@ -278,7 +278,7 @@ python -m scripts.build_course_at_city
   - `docs/pals.html`
   - `docs/heartsaver.html`
   - `docs/uscg-elementary-first-aid-cpr.html`
-  - `docs/group-training.html`
+  - `docs/group.html`
 - Writes ACLS and Heartsaver debug files under `data/runtime/`.
 
 Command:
@@ -289,7 +289,7 @@ python -m scripts.build_slug_hubs
 
 `scripts/build_request_group_session.py`
 
-- Builds `docs/request_group_session.html`.
+- Builds `docs/group.html`.
 
 Command:
 
@@ -418,13 +418,13 @@ Public outputs:
 - `docs/index.html`
 - `docs/sitemap.xml`
 - `docs/schedule.html`
-- `docs/request_group_session.html`
+- `docs/group.html`
 - `docs/bls.html`
 - `docs/acls.html`
 - `docs/pals.html`
 - `docs/heartsaver.html`
 - `docs/uscg-elementary-first-aid-cpr.html`
-- `docs/group-training.html`
+- `docs/group.html`
 - `docs/classes/*.html`
 - `docs/courses/*.html`
 - `docs/locations/*.html`
@@ -569,7 +569,7 @@ Get-Content docs\data\site-emergency-settings.json
 2. Search generated hub HTML:
 
 ```powershell
-rg -n "Email Us To Register|Our Schedule Platform Vendor|slug-emergency-alert|mailto:info@910cpr.com" docs\bls.html docs\acls.html docs\pals.html docs\heartsaver.html docs\uscg-elementary-first-aid-cpr.html docs\group-training.html
+rg -n "Email Us To Register|Our Schedule Platform Vendor|slug-emergency-alert|mailto:info@910cpr.com" docs\bls.html docs\acls.html docs\pals.html docs\heartsaver.html docs\uscg-elementary-first-aid-cpr.html docs\group.html
 ```
 
 3. If generated HTML contains emergency markup, rebuild hubs:
@@ -643,7 +643,7 @@ python -m scripts.build_control_booth
 Hub emergency checks:
 
 ```powershell
-rg -n "Email Us To Register|Our Schedule Platform Vendor|slug-emergency-alert|mailto:info@910cpr.com" docs\bls.html docs\acls.html docs\pals.html docs\heartsaver.html docs\uscg-elementary-first-aid-cpr.html docs\group-training.html
+rg -n "Email Us To Register|Our Schedule Platform Vendor|slug-emergency-alert|mailto:info@910cpr.com" docs\bls.html docs\acls.html docs\pals.html docs\heartsaver.html docs\uscg-elementary-first-aid-cpr.html docs\group.html
 ```
 
 Expected when emergency settings are OFF:
@@ -683,7 +683,7 @@ Do not manually edit generated outputs unless the explicit goal is a temporary e
 - `docs/courses/*.html`
 - `docs/locations/*.html`
 - `docs/course-at-city/*.html`
-- generated hub pages under `docs/*.html` such as `bls.html`, `acls.html`, `pals.html`, `heartsaver.html`, `uscg-elementary-first-aid-cpr.html`, `group-training.html`
+- generated hub pages under `docs/*.html` such as `bls.html`, `acls.html`, `pals.html`, `heartsaver.html`, `uscg-elementary-first-aid-cpr.html`, `group.html`
 - `docs/index.html`
 - `docs/sitemap.xml`
 - `docs/data/schedule_future.json`

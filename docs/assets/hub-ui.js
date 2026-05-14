@@ -551,7 +551,7 @@
     if (!fallback) {
       fallback = document.createElement("div");
       fallback.className = "slug-empty hub-empty-state";
-      fallback.innerHTML = `<strong>${EMPTY_FALLBACK_TITLE}</strong><p>${EMPTY_FALLBACK_BODY}</p><div class="slug-empty-actions"><a class="button primary" href="/index.html">View Full Schedule</a><a class="button secondary" href="/request_group_session.html">Request On-Site Training</a></div>`;
+      fallback.innerHTML = `<strong>${EMPTY_FALLBACK_TITLE}</strong><p>${EMPTY_FALLBACK_BODY}</p><div class="slug-empty-actions"><a class="button primary" href="/index.html">View Full Schedule</a><a class="button secondary" href="/group.html#request-form">Request On-Site Training</a></div>`;
       scope.appendChild(fallback);
     }
     return fallback;
@@ -582,7 +582,7 @@
         + `<p>${EMPTY_FALLBACK_BODY}</p>`
         + "<div class='slug-empty-actions'>"
         + `<a class='button primary' href='${escapeHtml(fullScheduleUrl)}'>View Full Schedule</a>`
-        + "<a class='button secondary' href='/request_group_session.html'>Request On-Site Training</a>"
+        + "<a class='button secondary' href='/group.html#request-form'>Request On-Site Training</a>"
         + "</div>"
         + "</div>"
       );

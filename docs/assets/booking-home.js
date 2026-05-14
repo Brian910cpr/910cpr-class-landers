@@ -551,7 +551,7 @@
             <a class="home-stat" href="/arc">American Red Cross</a>
             <a class="home-stat" href="/hsi">HSI</a>
             <a class="home-stat" href="/uscg-elementary-first-aid-cpr.html">USCG First Aid/CPR</a>
-            <a class="home-stat" href="/request_group_session.html">Request Group Training</a>
+            <a class="home-stat" href="/group.html#request-form">Request Group Training</a>
           </p>
         </div>
       </article>
