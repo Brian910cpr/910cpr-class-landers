@@ -87,6 +87,83 @@ class InventoryControllerTest(unittest.TestCase):
         self.assertTrue(result["suppressed"])
         self.assertTrue(all(candidate["reasons"] for candidate in result["suppressed"]))
 
+    def test_advanced_blocks_explain_certification_and_profitability_boosts(self) -> None:
+        result = generate_inventory("no_anchor_case")
+        advanced_anchor = next(
+            candidate for candidate in result["public_offerings"]
+            if candidate["instructor"] == "Amy"
+            and candidate["course_family"] in {"ACLS", "PALS"}
+        )
+        self.assertIn("certification_ceiling_boost_advanced_provider_anchor", advanced_anchor["reasons"])
+        self.assertIn("profitability_boost_high_value_course", advanced_anchor["reasons"])
+
+    def test_bls_only_blocks_use_fair_rotation_and_brand_mix(self) -> None:
+        result = generate_inventory("no_anchor_case")
+        bls_public = [
+            candidate for candidate in result["public_offerings"]
+            if candidate["instructor"] == "BLS Sample Instructor"
+        ]
+        self.assertTrue(bls_public)
+        self.assertFalse(any(candidate["course_family"] in {"ACLS", "PALS"} for candidate in bls_public))
+        self.assertTrue(any("fair_rotation_boost_bls_level_block" in candidate["reasons"] for candidate in bls_public))
+        self.assertTrue(any("brand_mix_boost_primary_aha_inventory" in candidate["reasons"] for candidate in bls_public))
+
+        waiting_for_momentum = [
+            candidate for candidate in result["suppressed"]
+            if candidate["instructor"] == "BLS Sample Instructor"
+            and candidate["occupancy_pool"] == "BLS_SKILLS_POOL"
+            and "escalation_tier_2_suppressed_until_momentum" in candidate["reasons"]
+        ]
+        self.assertTrue(waiting_for_momentum)
+
+    def test_compatible_occupancy_pool_can_ride_existing_momentum(self) -> None:
+        result = generate_inventory("bls_skills_momentum_case")
+        bls_public = [
+            candidate for candidate in result["public_offerings"]
+            if candidate["instructor"] == "BLS Sample Instructor"
+            and candidate["occupancy_pool"] == "BLS_SKILLS_POOL"
+        ]
+        self.assertTrue(bls_public)
+        self.assertTrue(all(candidate["escalation_tier"] == 2 for candidate in bls_public))
+        self.assertTrue(any(candidate["momentum_triggered"] for candidate in bls_public))
+        self.assertGreaterEqual(len({candidate["course_id"] for candidate in bls_public}), 2)
+
+        secondary_brand = [
+            candidate for candidate in result["candidates"]
+            if candidate["instructor"] == "BLS Sample Instructor"
+            and candidate["course_name"].startswith(("ARC", "HSI"))
+            and "brand_mix_penalty_hsi_arc_secondary_inventory" in candidate["reasons"]
+        ]
+        self.assertTrue(secondary_brand)
+
+    def test_anchor_momentum_enables_secondary_escalation(self) -> None:
+        result = generate_inventory("acls_booked_case")
+        secondary_public = [
+            candidate for candidate in result["public_offerings"]
+            if candidate["instructor"] == "Amy"
+            and candidate["escalation_tier"] == 2
+        ]
+        self.assertTrue(secondary_public)
+        self.assertTrue(any(candidate["momentum_triggered"] for candidate in secondary_public))
+        self.assertTrue(any("momentum_triggered_by_anchor_strength_3" in candidate["reasons"] for candidate in secondary_public))
+
+    def test_candidates_include_occupancy_and_escalation_debug_fields(self) -> None:
+        result = generate_inventory("no_anchor_case")
+        candidate = result["candidates"][0]
+        self.assertIn("occupancy_pool", candidate)
+        self.assertIn("escalation_tier", candidate)
+        self.assertIn("momentum_triggered", candidate)
+        self.assertTrue(any("occupancy_pool_" in reason for reason in candidate["reasons"]))
+        self.assertTrue(any("escalation_tier_" in reason for reason in candidate["reasons"]))
+
+    def test_duplicate_courses_are_suppressed_for_consolidation(self) -> None:
+        result = generate_inventory("no_anchor_case")
+        suppressed_duplicates = [
+            candidate for candidate in result["suppressed"]
+            if "duplicate_same_course_suppressed_for_consolidation" in candidate["reasons"]
+        ]
+        self.assertTrue(suppressed_duplicates)
+
 
 def parse_time_12h(value: str):
     from datetime import datetime

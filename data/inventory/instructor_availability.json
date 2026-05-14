@@ -4,6 +4,7 @@
   "availability_blocks": [
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-22",
       "weekday": "Monday",
       "start_time": "08:30",
@@ -19,6 +20,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-22",
       "weekday": "Monday",
       "start_time": "17:30",
@@ -34,6 +36,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-23",
       "weekday": "Tuesday",
       "start_time": "08:30",
@@ -49,6 +52,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-23",
       "weekday": "Tuesday",
       "start_time": "17:30",
@@ -64,6 +68,7 @@
     },
     {
       "instructor_name": "Amy",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-23",
       "weekday": "Tuesday",
       "start_time": "08:30",
@@ -78,7 +83,24 @@
       "notes": "Do not ask instructors to drive in for scraps. Small courses appear only after anchor value exists."
     },
     {
+      "instructor_name": "BLS Sample Instructor",
+      "instructor_certification_ceiling": "BLS",
+      "date": "2026-06-24",
+      "weekday": "Wednesday",
+      "start_time": "08:30",
+      "end_time": "14:30",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "availability_status": "available",
+      "minimum_trip_value": 0,
+      "anchor_required": false,
+      "anchor_course_families": [],
+      "allowed_course_families": ["BLS", "HeartCode", "Heartsaver"],
+      "fallback_course_families": ["ARC", "HSI"],
+      "notes": "Prototype BLS-only block for fair rotation and brand mix scoring."
+    },
+    {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-24",
       "weekday": "Wednesday",
       "start_time": "08:30",
@@ -94,6 +116,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-24",
       "weekday": "Wednesday",
       "start_time": "17:30",
@@ -109,6 +132,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-25",
       "weekday": "Thursday",
       "start_time": "08:30",
@@ -124,6 +148,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-25",
       "weekday": "Thursday",
       "start_time": "17:30",
@@ -139,6 +164,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-26",
       "weekday": "Friday",
       "start_time": "08:30",
@@ -154,6 +180,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-26",
       "weekday": "Friday",
       "start_time": "17:30",
@@ -169,6 +196,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-27",
       "weekday": "Saturday",
       "start_time": "08:30",
@@ -184,6 +212,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2026-06-27",
       "weekday": "Saturday",
       "start_time": "17:30",
@@ -199,6 +228,7 @@
     },
     {
       "instructor_name": "Brian",
+      "instructor_certification_ceiling": "ACLS_PALS",
       "date": "2027-05-01",
       "weekday": "Saturday",
       "start_time": "08:30",

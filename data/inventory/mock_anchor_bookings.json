@@ -36,6 +36,21 @@
           "anchor": true
         }
       ]
+    },
+    "bls_skills_momentum_case": {
+      "description": "A BLS-only block has an existing BLS renewal booking; compatible skills and alternate certifying-body offerings may ride the same instructional momentum.",
+      "bookings": [
+        {
+          "instructor_name": "BLS Sample Instructor",
+          "date": "2026-06-24",
+          "start_time": "08:30",
+          "end_time": "10:30",
+          "course_id": "359474",
+          "course_family": "BLS",
+          "course_name": "AHA BLS Provider Renewal",
+          "anchor": false
+        }
+      ]
     }
   }
 }

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>910CPR Inventory Control Center</title>
+  <link rel="stylesheet" href="inventory-control-center.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">910CPR Inventory Controller</p>
+        <h1>Inventory Control Center</h1>
+        <p class="subhead">One place to see whether inventory is healthy, profitable, overextended, fragmented, or about to run out of verified appointment capacity.</p>
+      </div>
+      <div class="top-actions">
+        <a href="../index.html">Main Control Center</a>
+        <button type="button" id="refresh-button">Refresh Data</button>
+      </div>
+    </header>
+
+    <section id="load-warning" class="load-warning hidden"></section>
+
+    <nav class="tabs" aria-label="Inventory control center tabs">
+      <button class="active" data-tab="system">System Status</button>
+      <button data-tab="revenue">Revenue / Work Potential</button>
+      <button data-tab="geometry">Inventory Geometry</button>
+      <button data-tab="rings">Escalation Rings</button>
+      <button data-tab="pools">Occupancy Pools / Grouping</button>
+      <button data-tab="appointments">Appointment Blocks</button>
+      <button data-tab="instructors">Instructor Board</button>
+      <button data-tab="rules">Course Rules</button>
+      <button data-tab="debug">Debug Explorer</button>
+    </nav>
+
+    <section id="system" class="tab-panel active">
+      <div class="section-title">
+        <h2>System Status</h2>
+        <p>Fast answer: what exists, what is exposed, what is suppressed, and what needs attention.</p>
+      </div>
+      <div id="system-kpis" class="metric-grid"></div>
+      <div class="grid two">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Things That Need Attention</h3>
+            <span id="warning-count" class="pill">Loading</span>
+          </div>
+          <div id="attention-list" class="stack"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Data Sources</h3>
+            <span id="data-source-status" class="pill">Checking</span>
+          </div>
+          <div id="source-list" class="stack compact"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="revenue" class="tab-panel">
+      <div class="section-title">
+        <h2>Revenue / Work Potential</h2>
+        <p>Revenue is intentionally conservative. Missing course prices are called out instead of guessed.</p>
+      </div>
+      <div id="revenue-kpis" class="metric-grid"></div>
+      <div id="revenue-placeholders" class="grid five"></div>
+    </section>
+
+    <section id="geometry" class="tab-panel">
+      <div class="section-title">
+        <h2>Inventory Geometry</h2>
+        <p>How instructor/location availability blocks are being turned into public, suppressed, and invalid offerings.</p>
+      </div>
+      <div id="geometry-list" class="stack"></div>
+    </section>
+
+    <section id="rings" class="tab-panel">
+      <div class="section-title">
+        <h2>Escalation Rings</h2>
+        <p>Primary anchors first, secondary inventory after momentum, tertiary inventory only when it cannot damage stronger blocks.</p>
+      </div>
+      <div id="ring-grid" class="grid three"></div>
+    </section>
+
+    <section id="pools" class="tab-panel">
+      <div class="section-title">
+        <h2>Occupancy Pools / Grouping</h2>
+        <p>Instructional occupancy is tracked separately from certifying-body flavor so compatible students can be grouped cleanly.</p>
+      </div>
+      <div id="pool-grid" class="grid three"></div>
+    </section>
+
+    <section id="appointments" class="tab-panel">
+      <div class="section-title">
+        <h2>Appointment Blocks</h2>
+        <p>Read-only view of verified owned Enrollware appointmentDayId containers and unsafe boundaries.</p>
+      </div>
+      <div id="appointment-list" class="stack"></div>
+    </section>
+
+    <section id="instructors" class="tab-panel">
+      <div class="section-title">
+        <h2>Instructor Board</h2>
+        <p>Instructor load, exposure, trip risk, payment placeholders, and future preference fields.</p>
+      </div>
+      <div id="instructor-grid" class="grid three"></div>
+    </section>
+
+    <section id="rules" class="tab-panel">
+      <div class="section-title">
+        <h2>Course Rules</h2>
+        <p>Course duration, occupancy pools, escalation tiers, anchor behavior, capacity, prices, and missing-field warnings.</p>
+      </div>
+      <div id="rules-table" class="table-wrap"></div>
+    </section>
+
+    <section id="debug" class="tab-panel">
+      <div class="section-title">
+        <h2>Debug Explorer</h2>
+        <p>Search public offerings, suppressed candidates, and invalid candidates without opening raw JSON.</p>
+      </div>
+      <div class="debug-controls">
+        <label>
+          Search
+          <input id="debug-search" type="search" placeholder="Course, instructor, pool, reason, URL">
+        </label>
+        <label>
+          Dataset
+          <select id="debug-dataset">
+            <option value="public_offerings">Public offerings</option>
+            <option value="suppressed_candidates">Suppressed candidates</option>
+            <option value="invalid_candidates">Invalid candidates</option>
+          </select>
+        </label>
+      </div>
+      <div id="debug-table" class="table-wrap"></div>
+    </section>
+  </main>
+
+  <script src="inventory-control-center.js"></script>
+</body>
+</html>

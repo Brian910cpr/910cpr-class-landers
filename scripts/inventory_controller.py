@@ -100,12 +100,52 @@ def course_bucket(rule: dict[str, Any]) -> str:
     return str(rule.get("course_family") or "")
 
 
+def course_brand(rule: dict[str, Any]) -> str:
+    if rule.get("brand"):
+        return str(rule["brand"])
+    name = str(rule.get("clean_course_name") or "")
+    for brand in ("AHA", "ARC", "HSI", "USCG"):
+        if name.startswith(brand):
+            return brand
+    return "Other"
+
+
+def occupancy_pool(rule: dict[str, Any]) -> str:
+    if rule.get("occupancy_pool"):
+        return str(rule["occupancy_pool"])
+    return f"{course_brand(rule)}_{rule.get('course_family', 'UNKNOWN')}"
+
+
+def escalation_tier(rule: dict[str, Any]) -> int:
+    return int(rule.get("escalation_tier", 1))
+
+
+def instructor_certification_ceiling(block: dict[str, Any]) -> str:
+    if block.get("instructor_certification_ceiling"):
+        return str(block["instructor_certification_ceiling"])
+    families = set(block.get("allowed_course_families", [])) | set(block.get("anchor_course_families", []))
+    if "ACLS" in families or "PALS" in families:
+        return "ACLS_PALS"
+    return "BLS"
+
+
+def is_bls_only_block(block: dict[str, Any]) -> bool:
+    ceiling = instructor_certification_ceiling(block)
+    if ceiling == "BLS":
+        return True
+    families = set(block.get("allowed_course_families", [])) | set(block.get("anchor_course_families", []))
+    return not bool(families & {"ACLS", "PALS"})
+
+
 def block_allows_course(block: dict[str, Any], rule: dict[str, Any], *, anchor_exists: bool) -> tuple[bool, str]:
     family = str(rule.get("course_family") or "")
     bucket = course_bucket(rule)
     allowed = set(block.get("allowed_course_families", []))
     fallback = set(block.get("fallback_course_families", []))
     anchor_families = set(block.get("anchor_course_families", []))
+
+    if is_bls_only_block(block) and family in {"ACLS", "PALS"}:
+        return False, "instructor_certification_ceiling_blocks_advanced_course"
 
     if block.get("anchor_required") and not anchor_exists:
         if rule.get("anchor_eligible") and family in anchor_families:
@@ -123,6 +163,53 @@ def anchor_bookings_for_block(block: dict[str, Any], bookings: list[dict[str, An
         if booking.get("instructor_name") == block.get("instructor_name")
         and booking.get("date") == block.get("date")
     ]
+
+
+def anchor_strength_for_bookings(bookings: list[dict[str, Any]]) -> int:
+    strength = 0
+    for booking in bookings:
+        strength += 3 if booking.get("anchor") else 1
+    return strength
+
+
+def tier_visibility(
+    rule: dict[str, Any],
+    anchor_strength: int,
+    pool_public_count: int,
+    reasons: list[str],
+) -> tuple[bool, bool]:
+    tier = escalation_tier(rule)
+    pool = occupancy_pool(rule)
+    reasons.append(f"occupancy_pool_{pool}")
+    reasons.append(f"escalation_tier_{tier}")
+
+    if tier == 1:
+        reasons.append("escalation_tier_1_primary_anchor_exposure")
+        return True, False
+
+    minimum_strength = int(rule.get("minimum_anchor_strength", 0))
+    anchor_momentum = anchor_strength >= minimum_strength > 0
+    pool_momentum = pool_public_count > 0
+    momentum_triggered = anchor_momentum or pool_momentum
+
+    if momentum_triggered:
+        if anchor_momentum:
+            reasons.append(f"momentum_triggered_by_anchor_strength_{anchor_strength}")
+        if pool_momentum:
+            reasons.append(f"momentum_triggered_by_compatible_pool_count_{pool_public_count}")
+            reasons.append("compatible_occupancy_pool_already_public")
+        if tier == 2:
+            reasons.append("escalation_tier_2_secondary_inventory_enabled")
+        else:
+            reasons.append("escalation_tier_3_tertiary_inventory_enabled")
+        return True, True
+
+    if rule.get("suppresses_when_empty"):
+        reasons.append(f"escalation_tier_{tier}_suppressed_until_momentum")
+        return False, False
+
+    reasons.append(f"escalation_tier_{tier}_allowed_without_momentum_by_policy")
+    return True, False
 
 
 def candidate_start_times(start: time, end: time) -> list[time]:
@@ -144,20 +231,51 @@ def score_candidate(
     score = int(rule.get("public_priority", 50))
     leftover = minutes_between(candidate_end, block_end)
     min_useful = 60
+    family = str(rule.get("course_family") or "")
+    brand = course_brand(rule)
+    economic_priority = int(rule.get("economic_priority", 50))
+    brand_mix_weight = float(rule.get("brand_mix_weight", 1.0))
+    bls_only = is_bls_only_block(block)
 
     if leftover == 0:
-        score += 10
-        reasons.append("no_unusable_tail_fragment")
+        score += 14
+        reasons.append("consolidation_boost_no_unusable_tail_fragment")
     elif leftover >= min_useful:
         score += 6
         reasons.append("remaining_fragment_can_support_small_course")
     else:
         score -= 20
         reasons.append("remaining_fragment_too_small")
+        reasons.append("fragmentation_risk_penalty_remaining_fragment_too_small")
 
-    if block.get("anchor_required") and rule.get("anchor_eligible"):
-        score += 15
-        reasons.append("anchor_candidate_protects_trip_value")
+    if bls_only:
+        if family in {"BLS", "Heartsaver"}:
+            score += 10
+            reasons.append("fair_rotation_boost_bls_level_block")
+        if brand == "AHA":
+            score += 8
+            reasons.append("brand_mix_boost_primary_aha_inventory")
+        elif brand in {"HSI", "ARC"}:
+            score -= 12
+            reasons.append("brand_mix_penalty_hsi_arc_secondary_inventory")
+    else:
+        if rule.get("anchor_eligible") and family in {"ACLS", "PALS"}:
+            score += 18
+            reasons.append("certification_ceiling_boost_advanced_provider_anchor")
+        if block.get("anchor_required") and rule.get("anchor_eligible"):
+            score += 15
+            reasons.append("anchor_candidate_protects_trip_value")
+        if economic_priority >= 85:
+            score += 12
+            reasons.append("profitability_boost_high_value_course")
+        elif economic_priority >= 70:
+            score += 6
+            reasons.append("profitability_boost_moderate_value_course")
+
+    if brand_mix_weight < 1:
+        brand_penalty = round((1 - brand_mix_weight) * 20)
+        score -= brand_penalty
+        reasons.append(f"brand_mix_weight_applied_{brand}_{brand_mix_weight:g}")
 
     return score
 
@@ -174,6 +292,9 @@ class Candidate:
     course_id: str
     course_name: str
     course_family: str
+    occupancy_pool: str
+    escalation_tier: int
+    momentum_triggered: bool
     duration_minutes: int
     appointmentDayId: int | None
     registration_url: str
@@ -194,6 +315,7 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
 
     candidates: list[Candidate] = []
     public_counts: dict[tuple[str, str, str], int] = {}
+    pool_public_counts: dict[tuple[str, str, str], int] = {}
 
     for block_index, block in enumerate(availability_blocks, start=1):
         block_id = f"{block['instructor_name']}|{block['date']}|{block['start_time']}|{block['end_time']}|{block_index}"
@@ -203,9 +325,12 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
         container = find_container(containers, block["location_name"])
         anchor_bookings = anchor_bookings_for_block(block, bookings)
         anchor_exists = any(booking.get("anchor") for booking in anchor_bookings)
+        anchor_strength = anchor_strength_for_bookings(anchor_bookings)
 
         if not container:
             for rule in course_rules:
+                pool = occupancy_pool(rule)
+                tier = escalation_tier(rule)
                 candidates.append(Candidate(
                     scenario=scenario_name,
                     block_id=block_id,
@@ -217,6 +342,9 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
                     course_id=str(rule["course_id"]),
                     course_name=str(rule["clean_course_name"]),
                     course_family=str(rule["course_family"]),
+                    occupancy_pool=pool,
+                    escalation_tier=tier,
+                    momentum_triggered=False,
                     duration_minutes=int(rule["duration_minutes"]),
                     appointmentDayId=None,
                     registration_url="",
@@ -232,6 +360,8 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
             allowed, allow_reason = block_allows_course(block, rule, anchor_exists=anchor_exists)
             duration = int(rule.get("minimum_reservation_block_minutes") or rule["duration_minutes"])
             starts = candidate_start_times(block_start, block_end)
+            pool = occupancy_pool(rule)
+            tier = escalation_tier(rule)
 
             for start in starts:
                 end = add_minutes(start, duration)
@@ -239,6 +369,7 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
                 score = 0
                 status = "suppressed"
                 registration_url = ""
+                momentum_triggered = False
 
                 if not owned:
                     status = "invalid"
@@ -255,17 +386,59 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
                     reasons.append("anchor_already_exists_anchor_course_not_icing")
                 else:
                     reasons.append("course_fits_contiguous_block")
+                    pool_key = (block_id, pool, scenario_name)
+                    visible_by_tier, momentum_triggered = tier_visibility(
+                        rule,
+                        anchor_strength,
+                        pool_public_counts.get(pool_key, 0),
+                        reasons,
+                    )
+                    if not visible_by_tier:
+                        reasons.append("course_hidden_by_escalation_tier_policy")
+                        candidates.append(Candidate(
+                            scenario=scenario_name,
+                            block_id=block_id,
+                            instructor=block["instructor_name"],
+                            location=block["location_name"],
+                            date=block["date"],
+                            start_time=display_time(start),
+                            end_time=display_time(end),
+                            course_id=str(rule["course_id"]),
+                            course_name=str(rule["clean_course_name"]),
+                            course_family=str(rule["course_family"]),
+                            occupancy_pool=pool,
+                            escalation_tier=tier,
+                            momentum_triggered=momentum_triggered,
+                            duration_minutes=duration,
+                            appointmentDayId=appointment_day_id,
+                            registration_url="",
+                            score=0,
+                            status="suppressed",
+                            reasons=reasons,
+                        ))
+                        continue
                     score = score_candidate(rule, block, end, block_end, reasons)
                     key = (block_id, str(rule["course_id"]), scenario_name)
                     max_public = int(rule.get("max_public_candidates_per_block", 1))
+                    max_pool_public = max(2, int(rule.get("maximum_parallel_sessions", 1)) + 2)
+                    if pool_public_counts.get(pool_key, 0) >= max_pool_public:
+                        score -= 40
+                        reasons.append("compatible_occupancy_pool_public_limit_reached")
                     if public_counts.get(key, 0) >= max_public:
-                        score -= 30
-                        reasons.append("duplicate_same_course_too_close_in_block")
-                    if score >= 50:
+                        score -= 60
+                        reasons.append("duplicate_same_course_suppressed_for_consolidation")
+                    if (
+                        public_counts.get(key, 0) < max_public
+                        and pool_public_counts.get(pool_key, 0) < max_pool_public
+                        and score >= 50
+                    ):
                         status = "public"
                         public_counts[key] = public_counts.get(key, 0) + 1
+                        pool_public_counts[pool_key] = pool_public_counts.get(pool_key, 0) + 1
                         registration_url = build_registration_url(appointment_day_id, start, str(rule["course_id"]))
                     else:
+                        if "fragmentation_risk_penalty_remaining_fragment_too_small" in reasons:
+                            reasons.append("suppressed_due_to_fragmentation_risk")
                         reasons.append("score_below_public_threshold")
 
                 candidates.append(Candidate(
@@ -279,6 +452,9 @@ def generate_inventory(anchor_scenario: str | None = None) -> dict[str, Any]:
                     course_id=str(rule["course_id"]),
                     course_name=str(rule["clean_course_name"]),
                     course_family=str(rule["course_family"]),
+                    occupancy_pool=pool,
+                    escalation_tier=tier,
+                    momentum_triggered=momentum_triggered,
                     duration_minutes=duration,
                     appointmentDayId=appointment_day_id if owned else appointment_day_id,
                     registration_url=registration_url,
