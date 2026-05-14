@@ -3,7 +3,17 @@ const DATA_URL = "../../../debug/inventory_control_center_data.json";
 const state = {
   data: null,
   debugDataset: "public_offerings",
-  debugSearch: ""
+  debugSearch: "",
+  debugFilters: {
+    status: "",
+    instructor: "",
+    date: "",
+    course_family: "",
+    occupancy_pool: "",
+    escalation_tier: "",
+    reason: "",
+    appointment_container_group: ""
+  }
 };
 
 function byId(id) {
@@ -128,6 +138,139 @@ function renderRevenue(data) {
       <span class="hint">Future finance field</span>
     </article>
   `).join(""));
+}
+
+function countCards(rows, label) {
+  return (rows || []).slice(0, 8).map(row => `
+    <article class="metric">
+      <span class="label">${escapeHtml(label)}</span>
+      <span class="value">${escapeHtml(row.count)}</span>
+      <span class="hint">${escapeHtml(row.value)}</span>
+    </article>
+  `).join("");
+}
+
+function exampleLine(row) {
+  return `
+    <div class="reason-example">
+      <strong>${escapeHtml(row.date)} ${escapeHtml(row.start_time)}-${escapeHtml(row.end_time)} / ${escapeHtml(row.instructor)}</strong>
+      <div>${escapeHtml(row.course_name)} / ${escapeHtml(row.course_family)} / ${escapeHtml(row.occupancy_pool)}</div>
+      <div class="muted">${escapeHtml((row.reasons || []).join(", "))}</div>
+    </div>
+  `;
+}
+
+function reasonCard(row, kind) {
+  const examples = (row.examples || []).slice(0, 3).map(exampleLine).join("");
+  const percent = row.percent === undefined ? "" : ` / ${row.percent}%`;
+  const healthClass = row.health === "alarming" ? "action" : row.health === "healthy" ? "good" : "due";
+  return `
+    <article class="warning-card ${kind === "public" ? "info" : row.health === "alarming" ? "action" : "due"} reason-row">
+      <div class="panel-header">
+        <div>
+          <strong>${escapeHtml(row.label)}</strong>
+          <div class="muted">${escapeHtml(row.reason)}</div>
+        </div>
+        ${pill(`${number(row.count)}${percent}`, healthClass)}
+      </div>
+      ${row.top_instructors ? `<div class="muted">Top instructors: ${escapeHtml(row.top_instructors.map(item => `${item.value} (${item.count})`).join(", "))}</div>` : ""}
+      ${row.top_course_families ? `<div class="muted">Top families: ${escapeHtml(row.top_course_families.map(item => `${item.value} (${item.count})`).join(", "))}</div>` : ""}
+      ${row.top_dates ? `<div class="muted">Top dates: ${escapeHtml(row.top_dates.map(item => `${item.value} (${item.count})`).join(", "))}</div>` : ""}
+      <div class="reason-examples">${examples}</div>
+    </article>
+  `;
+}
+
+function renderReasonCloud(id, rows) {
+  setHtml(id, (rows || []).slice(0, 30).map(row => pill(`${row.label}: ${number(row.count)}`)).join(""));
+}
+
+function publicSurvivorGroups(publicRows) {
+  const groups = new Map();
+  (publicRows || []).forEach(row => {
+    const key = [
+      row.instructor,
+      row.date,
+      row.block_id,
+      row.appointment_container_id,
+      row.course_family,
+      row.occupancy_pool,
+      row.escalation_tier
+    ].join("|");
+    if (!groups.has(key)) {
+      groups.set(key, {
+        instructor: row.instructor,
+        date: row.date,
+        block_id: row.block_id,
+        appointment_container_id: row.appointment_container_id,
+        appointment_container_group: row.appointment_container_group,
+        course_family: row.course_family,
+        occupancy_pool: row.occupancy_pool,
+        escalation_tier: row.escalation_tier,
+        rows: []
+      });
+    }
+    groups.get(key).rows.push(row);
+  });
+  return Array.from(groups.values()).sort((a, b) => b.rows.length - a.rows.length);
+}
+
+function renderPublicSurvivorGroups(data) {
+  const groups = publicSurvivorGroups(data.debug?.public_offerings || []);
+  setHtml("public-survivor-groups", groups.slice(0, 40).map(group => `
+    <article class="list-row">
+      <div class="panel-header">
+        <div>
+          <strong>${escapeHtml(group.instructor)} / ${escapeHtml(group.date)} / ${escapeHtml(group.course_family)} / Tier ${escapeHtml(group.escalation_tier)}</strong>
+          <div class="muted">${escapeHtml(group.occupancy_pool)} / ${escapeHtml(group.appointment_container_group)} / ${escapeHtml(group.appointment_container_id)}</div>
+          <div class="muted">${escapeHtml(group.block_id)}</div>
+        </div>
+        ${pill(`${number(group.rows.length)} survived`, "good")}
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Course</th><th>Start / End</th><th>Score</th><th>appointmentDayId</th><th>Role</th><th>Momentum</th><th>Shared Pool</th><th>Reasons</th><th>URL</th></tr></thead>
+          <tbody>${group.rows.map(row => `
+            <tr>
+              <td>${escapeHtml(row.course_name)}</td>
+              <td>${escapeHtml(row.start_time)}-${escapeHtml(row.end_time)}</td>
+              <td>${escapeHtml(row.score)}</td>
+              <td>${escapeHtml(row.appointmentDayId)}</td>
+              <td>${row.escalation_tier === 1 ? "anchor / primary" : row.escalation_tier === 2 ? "secondary" : "tertiary"}</td>
+              <td>${row.momentum_triggered ? "yes" : "no"}</td>
+              <td>${row.occupancy_pool ? "yes" : "no"}</td>
+              <td class="reason-cell">${escapeHtml((row.reasons || []).join(", "))}</td>
+              <td class="url-cell">${row.registration_url ? `<a href="${escapeHtml(row.registration_url)}">${escapeHtml(row.registration_url)}</a>` : ""}</td>
+            </tr>
+          `).join("")}</tbody>
+        </table>
+      </div>
+    </article>
+  `).join(""));
+}
+
+function renderDecisions(data) {
+  const decisions = data.decision_explanations || {};
+  setHtml("decision-kpis", [
+    metric("Total Candidates", number(decisions.total_candidates), "All generated candidates"),
+    metric("Public Offerings", number(decisions.public_total), `${text(decisions.public_percent)}% survived`),
+    metric("Suppressed", number(decisions.suppressed_total), `${text(decisions.suppression_percent)}% hidden`),
+    metric("Invalid / Out of Range", number(decisions.invalid_total), "Unsafe or unlinked"),
+    metric("Suppression Health", text(decisions.suppression_health), text(decisions.suppression_health_detail)),
+    metric("Missing URLs", number((decisions.offerings_without_urls || []).length), "Public rows without links")
+  ].join(""));
+  setHtml("public-reason-count", `${number(decisions.public_total)} public`);
+  setHtml("suppressed-reason-count", `${number(decisions.suppressed_total)} suppressed`);
+  setHtml("public-reason-list", [
+    `<div class="grid two">${countCards(decisions.public_by_instructor, "By Instructor")}${countCards(decisions.public_by_family, "By Family")}</div>`,
+    `<div class="grid two">${countCards(decisions.public_by_pool, "By Pool")}${countCards(decisions.public_by_tier, "By Tier")}</div>`,
+    `<div class="grid two">${countCards(decisions.public_by_container, "By Container")}</div>`,
+    ...(decisions.public_primary_reasons || []).map(row => reasonCard(row, "public"))
+  ].join(""));
+  setHtml("suppressed-reason-list", (decisions.suppressed_by_reason || []).map(row => reasonCard(row, "suppressed")).join(""));
+  renderPublicSurvivorGroups(data);
+  renderReasonCloud("public-all-reasons", decisions.public_all_reasons);
+  renderReasonCloud("suppressed-all-reasons", decisions.suppressed_all_reasons);
 }
 
 function timelineSlot(item) {
@@ -301,11 +444,52 @@ function renderRules(data) {
   `);
 }
 
+function uniqueValues(rows, getter) {
+  return Array.from(new Set(rows.map(getter).filter(value => value !== null && value !== undefined && value !== "")))
+    .map(String)
+    .sort();
+}
+
+function fillFilter(id, values, label) {
+  const node = byId(id);
+  if (!node) return;
+  const current = node.value;
+  node.innerHTML = `<option value="">All ${escapeHtml(label)}</option>` + values.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("");
+  if (values.includes(current)) node.value = current;
+}
+
+function populateDebugFilters(data) {
+  const rows = [
+    ...(data.debug?.public_offerings || []),
+    ...(data.debug?.suppressed_candidates || []),
+    ...(data.debug?.invalid_candidates || [])
+  ];
+  fillFilter("debug-status-filter", uniqueValues(rows, row => row.status), "status");
+  fillFilter("debug-instructor-filter", uniqueValues(rows, row => row.instructor), "instructors");
+  fillFilter("debug-date-filter", uniqueValues(rows, row => row.date), "dates");
+  fillFilter("debug-family-filter", uniqueValues(rows, row => row.course_family), "families");
+  fillFilter("debug-pool-filter", uniqueValues(rows, row => row.occupancy_pool), "pools");
+  fillFilter("debug-tier-filter", uniqueValues(rows, row => row.escalation_tier), "tiers");
+  fillFilter("debug-reason-filter", Array.from(new Set(rows.flatMap(row => row.reasons || []))).sort(), "reasons");
+  fillFilter("debug-container-filter", uniqueValues(rows, row => row.appointment_container_group), "container groups");
+}
+
 function renderDebug(data) {
   const debug = data.debug || {};
   const rows = debug[state.debugDataset] || [];
   const needle = state.debugSearch.trim().toLowerCase();
-  const filtered = needle ? rows.filter(row => JSON.stringify(row).toLowerCase().includes(needle)) : rows;
+  const filtered = rows.filter(row => {
+    if (needle && !JSON.stringify(row).toLowerCase().includes(needle)) return false;
+    for (const [field, value] of Object.entries(state.debugFilters)) {
+      if (!value) continue;
+      if (field === "reason") {
+        if (!(row.reasons || []).includes(value)) return false;
+      } else if (String(row[field] ?? "") !== value) {
+        return false;
+      }
+    }
+    return true;
+  });
   const visible = filtered.slice(0, 250);
   setHtml("debug-table", `
     <table>
@@ -336,6 +520,7 @@ function renderAll() {
   const data = state.data;
   if (!data) return;
   renderSystem(data);
+  renderDecisions(data);
   renderRevenue(data);
   renderGeometry(data);
   renderRings(data);
@@ -343,6 +528,7 @@ function renderAll() {
   renderAppointments(data);
   renderInstructors(data);
   renderRules(data);
+  populateDebugFilters(data);
   renderDebug(data);
 }
 
@@ -384,6 +570,23 @@ function setupDebugControls() {
       renderDebug(state.data || {});
     });
   }
+  [
+    ["debug-status-filter", "status"],
+    ["debug-instructor-filter", "instructor"],
+    ["debug-date-filter", "date"],
+    ["debug-family-filter", "course_family"],
+    ["debug-pool-filter", "occupancy_pool"],
+    ["debug-tier-filter", "escalation_tier"],
+    ["debug-reason-filter", "reason"],
+    ["debug-container-filter", "appointment_container_group"]
+  ].forEach(([id, field]) => {
+    const node = byId(id);
+    if (!node) return;
+    node.addEventListener("change", event => {
+      state.debugFilters[field] = event.target.value;
+      renderDebug(state.data || {});
+    });
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

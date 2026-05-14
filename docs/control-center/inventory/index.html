@@ -24,6 +24,7 @@
 
     <nav class="tabs" aria-label="Inventory control center tabs">
       <button class="active" data-tab="system">System Status</button>
+      <button data-tab="decisions">Why Decisions</button>
       <button data-tab="revenue">Revenue / Work Potential</button>
       <button data-tab="geometry">Inventory Geometry</button>
       <button data-tab="rings">Escalation Rings</button>
@@ -54,6 +55,53 @@
             <span id="data-source-status" class="pill">Checking</span>
           </div>
           <div id="source-list" class="stack compact"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="decisions" class="tab-panel">
+      <div class="section-title">
+        <h2>Why Decisions</h2>
+        <p>Plain-English explanation of why public offerings survived and why suppressed candidates stayed hidden.</p>
+      </div>
+      <div id="decision-kpis" class="metric-grid"></div>
+      <div class="grid two">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Why Public Offerings Survived</h3>
+            <span id="public-reason-count" class="pill">Loading</span>
+          </div>
+          <div id="public-reason-list" class="stack"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Why Candidates Were Suppressed</h3>
+            <span id="suppressed-reason-count" class="pill">Loading</span>
+          </div>
+          <div id="suppressed-reason-list" class="stack"></div>
+        </article>
+      </div>
+      <article class="panel reason-grid">
+        <div class="panel-header">
+          <h3>Public Offering Survivors</h3>
+          <span class="pill">Grouped by instructor, date, block, container, family, pool, and tier</span>
+        </div>
+        <div id="public-survivor-groups" class="stack"></div>
+      </article>
+      <div class="grid two reason-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>All Survival Signals</h3>
+            <span class="pill">Every reason tag</span>
+          </div>
+          <div id="public-all-reasons" class="reason-cloud"></div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>All Suppression Signals</h3>
+            <span class="pill">Every reason tag</span>
+          </div>
+          <div id="suppressed-all-reasons" class="reason-cloud"></div>
         </article>
       </div>
     </section>
@@ -132,6 +180,38 @@
             <option value="suppressed_candidates">Suppressed candidates</option>
             <option value="invalid_candidates">Invalid candidates</option>
           </select>
+        </label>
+        <label>
+          Status
+          <select id="debug-status-filter"></select>
+        </label>
+        <label>
+          Instructor
+          <select id="debug-instructor-filter"></select>
+        </label>
+        <label>
+          Date
+          <select id="debug-date-filter"></select>
+        </label>
+        <label>
+          Course Family
+          <select id="debug-family-filter"></select>
+        </label>
+        <label>
+          Occupancy Pool
+          <select id="debug-pool-filter"></select>
+        </label>
+        <label>
+          Escalation Tier
+          <select id="debug-tier-filter"></select>
+        </label>
+        <label>
+          Suppression Reason
+          <select id="debug-reason-filter"></select>
+        </label>
+        <label>
+          Container Group
+          <select id="debug-container-filter"></select>
         </label>
       </div>
       <div id="debug-table" class="table-wrap"></div>

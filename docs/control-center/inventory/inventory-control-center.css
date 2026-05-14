@@ -371,6 +371,33 @@ h3 {
   margin-bottom: 12px;
 }
 
+.reason-grid {
+  margin-top: 14px;
+}
+
+.reason-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reason-row {
+  display: grid;
+  gap: 8px;
+}
+
+.reason-examples {
+  display: grid;
+  gap: 6px;
+}
+
+.reason-example {
+  padding: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  background: #fff;
+}
+
 .debug-controls label {
   display: grid;
   gap: 5px;

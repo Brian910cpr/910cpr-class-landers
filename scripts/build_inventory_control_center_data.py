@@ -125,6 +125,190 @@ def add_warning(warnings: list[dict[str, Any]], severity: str, title: str, detai
     })
 
 
+def decision_label(reason: str) -> str:
+    labels = {
+        "owned_appointment_container": "Verified appointment range",
+        "course_family_allowed_by_block": "Allowed by availability policy",
+        "course_fits_contiguous_block": "Fits inside the time block",
+        "escalation_tier_1_primary_anchor_exposure": "Primary inventory exposure",
+        "escalation_tier_2_secondary_inventory_enabled": "Secondary inventory unlocked by momentum",
+        "remaining_fragment_can_support_small_course": "Leaves usable time",
+        "consolidation_boost_no_unusable_tail_fragment": "Uses the block cleanly",
+        "profitability_boost_high_value_course": "High-value course",
+        "profitability_boost_moderate_value_course": "Moderate-value course",
+        "certification_ceiling_boost_advanced_provider_anchor": "Uses advanced instructor capability",
+        "fair_rotation_boost_bls_level_block": "BLS fair rotation",
+        "brand_mix_boost_primary_aha_inventory": "Primary AHA brand mix",
+        "momentum_triggered_by_anchor_strength_3": "Anchor booking created momentum",
+        "momentum_triggered_by_compatible_pool_count_1": "Compatible pool already has momentum",
+        "appointment_container_out_of_range": "Outside verified appointment range",
+        "no_matching_appointment_container": "No matching appointment container",
+        "registration_url_not_generated_outside_owned_range": "Unsafe appointment link suppressed",
+        "registration_url_not_generated_without_matching_container": "No appointment link available",
+        "anchor_required_unmet_non_anchor_suppressed": "Anchor required before smaller offerings",
+        "course_hidden_by_anchor_or_family_policy": "Hidden by course family policy",
+        "course_hidden_by_escalation_tier_policy": "Hidden until escalation momentum exists",
+        "escalation_tier_2_suppressed_until_momentum": "Tier 2 waiting for momentum",
+        "course_does_not_fit_contiguous_block": "Does not fit in the block",
+        "overlaps_existing_anchor_booking": "Overlaps existing anchor booking",
+        "anchor_already_exists_anchor_course_not_icing": "Anchor already exists",
+        "duplicate_same_course_suppressed_for_consolidation": "Duplicate suppressed for consolidation",
+        "compatible_occupancy_pool_public_limit_reached": "Shared pool exposure limit reached",
+        "fragmentation_risk_penalty_remaining_fragment_too_small": "Fragmentation risk penalty",
+        "suppressed_due_to_fragmentation_risk": "Suppressed due to fragmentation risk",
+        "score_below_public_threshold": "Score below public threshold",
+        "instructor_certification_ceiling_blocks_advanced_course": "Instructor certification ceiling blocks course",
+    }
+    if reason.startswith("occupancy_pool_"):
+        return f"Occupancy pool: {reason.removeprefix('occupancy_pool_')}"
+    if reason.startswith("escalation_tier_"):
+        return reason.replace("_", " ").title()
+    return labels.get(reason, reason.replace("_", " ").title())
+
+
+def primary_public_reason(candidate: dict[str, Any]) -> str:
+    reasons = candidate.get("reasons", [])
+    for reason in (
+        "certification_ceiling_boost_advanced_provider_anchor",
+        "profitability_boost_high_value_course",
+        "escalation_tier_2_secondary_inventory_enabled",
+        "fair_rotation_boost_bls_level_block",
+        "brand_mix_boost_primary_aha_inventory",
+        "consolidation_boost_no_unusable_tail_fragment",
+        "remaining_fragment_can_support_small_course",
+        "escalation_tier_1_primary_anchor_exposure",
+    ):
+        if reason in reasons:
+            return reason
+    return reasons[-1] if reasons else "public_without_reason"
+
+
+def primary_suppression_reason(candidate: dict[str, Any]) -> str:
+    reasons = candidate.get("reasons", [])
+    for reason in (
+        "appointment_container_out_of_range",
+        "no_matching_appointment_container",
+        "course_does_not_fit_contiguous_block",
+        "anchor_required_unmet_non_anchor_suppressed",
+        "course_hidden_by_escalation_tier_policy",
+        "escalation_tier_2_suppressed_until_momentum",
+        "overlaps_existing_anchor_booking",
+        "duplicate_same_course_suppressed_for_consolidation",
+        "compatible_occupancy_pool_public_limit_reached",
+        "suppressed_due_to_fragmentation_risk",
+        "score_below_public_threshold",
+        "instructor_certification_ceiling_blocks_advanced_course",
+        "course_hidden_by_anchor_or_family_policy",
+    ):
+        if reason in reasons:
+            return reason
+    return reasons[-1] if reasons else "suppressed_without_reason"
+
+
+SUPPRESSION_REASON_CATEGORIES = {
+    "no_matching_appointment_container": ("no_matching_appointment_container", "No matching appointment container"),
+    "appointment_container_out_of_range": ("appointment_container_out_of_range", "Appointment container out of range"),
+    "anchor_required_unmet_non_anchor_suppressed": ("anchor_required_unmet", "Anchor required before smaller offerings"),
+    "escalation_tier_2_suppressed_until_momentum": ("tier_suppressed_until_momentum", "Tier suppressed until momentum"),
+    "course_hidden_by_escalation_tier_policy": ("tier_suppressed_until_momentum", "Tier suppressed until momentum"),
+    "duplicate_same_course_suppressed_for_consolidation": ("duplicate_same_course_too_close", "Duplicate suppressed for consolidation"),
+    "suppressed_due_to_fragmentation_risk": ("fragmentation_risk", "Fragmentation risk"),
+    "fragmentation_risk_penalty_remaining_fragment_too_small": ("fragmentation_risk", "Fragmentation risk"),
+    "course_does_not_fit_contiguous_block": ("course_does_not_fit_block", "Course does not fit block"),
+    "score_below_public_threshold": ("below_public_threshold", "Score below public threshold"),
+    "overlaps_existing_anchor_booking": ("no_remaining_geometry", "No remaining geometry"),
+    "compatible_occupancy_pool_public_limit_reached": ("pool_limit_reached", "Shared pool exposure limit reached"),
+    "instructor_certification_ceiling_blocks_advanced_course": ("instructor_not_eligible", "Instructor not eligible"),
+    "course_hidden_by_anchor_or_family_policy": ("course_policy_hidden", "Hidden by course policy"),
+}
+
+HEALTHY_SUPPRESSION_REASONS = {
+    "anchor_required_unmet",
+    "tier_suppressed_until_momentum",
+    "duplicate_same_course_too_close",
+    "pool_limit_reached",
+}
+
+ALARMING_SUPPRESSION_REASONS = {
+    "no_matching_appointment_container",
+    "appointment_container_out_of_range",
+    "unknown_or_other",
+}
+
+
+def suppression_category(candidate: dict[str, Any]) -> tuple[str, str]:
+    for reason in candidate.get("reasons", []):
+        if reason in SUPPRESSION_REASON_CATEGORIES:
+            return SUPPRESSION_REASON_CATEGORIES[reason]
+    return "unknown_or_other", "Other / unknown"
+
+
+def top_counts(items: list[dict[str, Any]], field: str, limit: int = 5) -> list[dict[str, Any]]:
+    counter = Counter(str(item.get(field) or "Unknown") for item in items)
+    return [{"value": value, "count": count} for value, count in counter.most_common(limit)]
+
+
+def count_rows(items: list[dict[str, Any]], field: str) -> list[dict[str, Any]]:
+    return [
+        {"value": value, "count": count}
+        for value, count in Counter(str(item.get(field) or "Unknown") for item in items).most_common()
+    ]
+
+
+def reason_rows(items: list[dict[str, Any]], primary_reason_fn, *, include_percent: bool = False) -> list[dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in items:
+        grouped[primary_reason_fn(item)].append(item)
+    rows = []
+    for reason, reason_items in grouped.items():
+        row = {
+            "reason": reason,
+            "label": decision_label(reason),
+            "count": len(reason_items),
+            "examples": reason_items[:5],
+        }
+        if include_percent:
+            row["percent"] = round((len(reason_items) / max(1, len(items))) * 100, 1)
+            row["top_instructors"] = top_counts(reason_items, "instructor")
+            row["top_course_families"] = top_counts(reason_items, "course_family")
+            row["top_dates"] = top_counts(reason_items, "date")
+        rows.append(row)
+    return sorted(rows, key=lambda row: row["count"], reverse=True)
+
+
+def suppression_breakdown(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    labels: dict[str, str] = {}
+    for item in items:
+        key, label = suppression_category(item)
+        grouped[key].append(item)
+        labels[key] = label
+    return [
+        {
+            "reason": key,
+            "label": labels[key],
+            "count": len(reason_items),
+            "percent": round((len(reason_items) / max(1, len(items))) * 100, 1),
+            "health": "alarming" if key in ALARMING_SUPPRESSION_REASONS else "healthy" if key in HEALTHY_SUPPRESSION_REASONS else "watch",
+            "top_instructors": top_counts(reason_items, "instructor"),
+            "top_course_families": top_counts(reason_items, "course_family"),
+            "top_dates": top_counts(reason_items, "date"),
+            "examples": reason_items[:8],
+        }
+        for key, reason_items in sorted(grouped.items(), key=lambda item: len(item[1]), reverse=True)
+    ]
+
+
+def all_reason_rows(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    counter: Counter[str] = Counter()
+    for item in items:
+        counter.update(item.get("reasons", []))
+    return [
+        {"reason": reason, "label": decision_label(reason), "count": count}
+        for reason, count in counter.most_common()
+    ]
+
+
 def build() -> dict[str, Any]:
     candidates = read_json(SOURCE_PATHS["candidates"], [])
     public = read_json(SOURCE_PATHS["public_offerings"], [])
@@ -189,6 +373,10 @@ def build() -> dict[str, Any]:
     if high_value_fragmented:
         add_warning(warnings, "due", "High-value block fragmented early", f"{len(high_value_fragmented)} public high-value candidates carry a fragmentation penalty.", "Prefer stronger anchor starts or fewer public alternatives.", "Inventory")
 
+    offerings_without_urls = [item for item in public if not item.get("registration_url")]
+    if offerings_without_urls:
+        add_warning(warnings, "action", "Public offering missing registration URL", f"{len(offerings_without_urls)} public offerings have no registration URL.", "Do not publish these rows until URL generation is fixed.", "Inventory")
+
     public_by_block = defaultdict(list)
     suppressed_by_block = defaultdict(list)
     invalid_by_block = defaultdict(list)
@@ -234,6 +422,16 @@ def build() -> dict[str, Any]:
             "timeline": block_public[:18] + block_suppressed[:8] + block_invalid[:6],
             "notes": block.get("notes", ""),
         })
+
+    zero_public_blocks = [block for block in block_summaries if block["public_count"] == 0]
+    for block in zero_public_blocks:
+        add_warning(warnings, "due", "Availability block has zero public offerings", f"{block['instructor']} {block['date']} {block['start_time']}-{block['end_time']}", "Open Inventory Geometry and review suppression reasons for this block.", "Inventory")
+
+    public_dates = {item.get("date") for item in public}
+    suppressed_dates = {item.get("date") for item in suppressed}
+    all_suppressed_dates = sorted(date_value for date_value in suppressed_dates if date_value and date_value not in public_dates)
+    for date_value in all_suppressed_dates[:5]:
+        add_warning(warnings, "due", "All offerings for a day are suppressed", str(date_value), "Review appointment container range, availability policy, and course fit for that date.", "Inventory")
 
     tier_stats = []
     for tier in sorted(set([int(item.get("escalation_tier", 0)) for item in candidates if item.get("escalation_tier")])):
@@ -362,10 +560,22 @@ def build() -> dict[str, Any]:
             "price": rule.get("price", "unknown"),
             "warnings": missing,
         })
+        if "occupancy_pool" in missing or "escalation_tier" in missing:
+            add_warning(warnings, "action", "Course missing grouping fields", str(rule.get("clean_course_name")), "Add occupancy_pool and escalation_tier to the course rule.", "Course Rules")
 
     revenue = summarize_price(public)
     working_hours = round(sum(int(item.get("duration_minutes", 0)) for item in public) / 60, 1)
     revenue_per_hour = "unknown" if revenue["unknown_price_count"] else round(revenue["known_revenue"] / working_hours, 2) if working_hours else "unknown"
+    suppression_breakdown_rows = suppression_breakdown(suppressed)
+    alarming_reasons = [row for row in suppression_breakdown_rows if row["health"] == "alarming"]
+    healthy_reasons = [row for row in suppression_breakdown_rows if row["health"] == "healthy"]
+    unknown_suppression = next((row for row in suppression_breakdown_rows if row["reason"] == "unknown_or_other"), None)
+    if unknown_suppression:
+        add_warning(warnings, "due", "Unknown suppression reason exists", f"{unknown_suppression['count']} suppressed candidates fell into other/unknown.", "Add explicit reason mapping so operators can interpret the outcome.", "Inventory")
+    public_percent = round((len(public) / max(1, len(candidates))) * 100, 1)
+    suppression_percent = round((len(suppressed) / max(1, len(candidates))) * 100, 1)
+    alarming_count = sum(row["count"] for row in alarming_reasons)
+    suppression_health = "alarming" if alarming_count else "healthy" if healthy_reasons else "watch"
 
     data = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
@@ -393,6 +603,31 @@ def build() -> dict[str, Any]:
             "net_per_working_hour": "placeholder",
         },
         "warnings": sorted(warnings, key=lambda row: {"action": 0, "due": 1, "info": 2}.get(row["severity"], 3)),
+        "decision_explanations": {
+            "public_total": len(public),
+            "suppressed_total": len(suppressed),
+            "invalid_total": len(invalid),
+            "total_candidates": len(candidates),
+            "public_percent": public_percent,
+            "suppression_percent": suppression_percent,
+            "suppression_health": suppression_health,
+            "suppression_health_detail": f"{alarming_count} suppressed candidates are in alarming categories." if alarming_count else "Suppression is mostly protecting inventory pacing, anchors, and grouping.",
+            "public_by_instructor": count_rows(public, "instructor"),
+            "public_by_family": count_rows(public, "course_family"),
+            "public_by_pool": count_rows(public, "occupancy_pool"),
+            "public_by_tier": count_rows(public, "escalation_tier"),
+            "public_by_container": count_rows(public, "appointment_container_id"),
+            "public_primary_reasons": reason_rows(public, primary_public_reason),
+            "suppressed_primary_reasons": reason_rows(suppressed, primary_suppression_reason, include_percent=True),
+            "suppressed_by_reason": suppression_breakdown_rows,
+            "suppressed_reason_examples": {row["reason"]: row["examples"] for row in suppression_breakdown_rows},
+            "alarming_suppression_reasons": alarming_reasons,
+            "healthy_suppression_reasons": healthy_reasons,
+            "offerings_without_urls": offerings_without_urls,
+            "availability_blocks_with_zero_public_offerings": zero_public_blocks,
+            "public_all_reasons": all_reason_rows(public),
+            "suppressed_all_reasons": all_reason_rows(suppressed),
+        },
         "inventory_geometry": block_summaries,
         "escalation_rings": tier_stats,
         "occupancy_pools": pool_stats,
