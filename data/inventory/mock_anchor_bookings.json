@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "description": "Prototype anchor booking states used by scripts/inventory_controller.py. These records are not Enrollware registrations.",
+  "active_scenario": "no_anchor_case",
+  "scenarios": {
+    "no_anchor_case": {
+      "description": "Amy has no anchor booking; only ACLS/PALS anchor candidates should be public.",
+      "bookings": []
+    },
+    "acls_booked_case": {
+      "description": "Amy has an ACLS anchor from 08:30 to 12:30; smaller post-anchor offerings may appear in remaining time.",
+      "bookings": [
+        {
+          "instructor_name": "Amy",
+          "date": "2026-06-23",
+          "start_time": "08:30",
+          "end_time": "12:30",
+          "course_id": "241108",
+          "course_family": "ACLS",
+          "course_name": "AHA ACLS Provider (Initial)",
+          "anchor": true
+        }
+      ]
+    },
+    "pals_booked_case": {
+      "description": "Amy has a PALS anchor from 08:30 to 12:30; smaller post-anchor offerings may appear in remaining time.",
+      "bookings": [
+        {
+          "instructor_name": "Amy",
+          "date": "2026-06-23",
+          "start_time": "08:30",
+          "end_time": "12:30",
+          "course_id": "209805",
+          "course_family": "PALS",
+          "course_name": "AHA PALS Provider",
+          "anchor": true
+        }
+      ]
+    }
+  }
+}

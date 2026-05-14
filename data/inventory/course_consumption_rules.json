@@ -17,9 +17,13 @@
     "fragmentation_tolerant": false,
     "overlapping_allowed": false,
     "appointment_eligible": false,
+    "anchor_eligible": false,
+    "post_anchor_eligible": false,
     "public_priority": 50,
     "minimum_reservation_block_minutes": 120,
-    "maximum_parallel_sessions": 1
+    "maximum_parallel_sessions": 1,
+    "max_public_candidates_per_block": 2,
+    "default_capacity": 1
   },
   "rules": [
     {
@@ -32,9 +36,13 @@
       "fragmentation_tolerant": true,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
       "public_priority": 80,
       "minimum_reservation_block_minutes": 120,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 2,
+      "default_capacity": 6
     },
     {
       "course_id": "359474",
@@ -46,9 +54,13 @@
       "fragmentation_tolerant": true,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
       "public_priority": 80,
       "minimum_reservation_block_minutes": 120,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 2,
+      "default_capacity": 6
     },
     {
       "course_id": "210549",
@@ -60,9 +72,13 @@
       "fragmentation_tolerant": true,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
       "public_priority": 70,
       "minimum_reservation_block_minutes": 60,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 2,
+      "default_capacity": 1
     },
     {
       "course_id": "241108",
@@ -74,9 +90,13 @@
       "fragmentation_tolerant": false,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": true,
+      "post_anchor_eligible": false,
       "public_priority": 60,
       "minimum_reservation_block_minutes": 240,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 6
     },
     {
       "course_id": "209818",
@@ -88,9 +108,13 @@
       "fragmentation_tolerant": false,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": true,
+      "post_anchor_eligible": false,
       "public_priority": 60,
       "minimum_reservation_block_minutes": 240,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 6
     },
     {
       "course_id": "209811",
@@ -102,9 +126,13 @@
       "fragmentation_tolerant": false,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": true,
+      "post_anchor_eligible": false,
       "public_priority": 55,
       "minimum_reservation_block_minutes": 240,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 1
     },
     {
       "course_id": "209805",
@@ -116,9 +144,13 @@
       "fragmentation_tolerant": false,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": true,
+      "post_anchor_eligible": false,
       "public_priority": 60,
       "minimum_reservation_block_minutes": 240,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 6
     },
     {
       "course_id": "251496",
@@ -130,9 +162,13 @@
       "fragmentation_tolerant": false,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": true,
+      "post_anchor_eligible": false,
       "public_priority": 60,
       "minimum_reservation_block_minutes": 240,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 6
     },
     {
       "course_id": "209812",
@@ -144,9 +180,13 @@
       "fragmentation_tolerant": false,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": true,
+      "post_anchor_eligible": false,
       "public_priority": 55,
       "minimum_reservation_block_minutes": 240,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 1
     },
     {
       "course_id": "209809",
@@ -158,9 +198,13 @@
       "fragmentation_tolerant": true,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
       "public_priority": 65,
       "minimum_reservation_block_minutes": 150,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 10
     },
     {
       "course_id": "251545",
@@ -172,9 +216,13 @@
       "fragmentation_tolerant": true,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
       "public_priority": 65,
       "minimum_reservation_block_minutes": 120,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 10
     },
     {
       "course_id": "253768",
@@ -186,9 +234,13 @@
       "fragmentation_tolerant": false,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
       "public_priority": 50,
       "minimum_reservation_block_minutes": 240,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 10
     },
     {
       "course_id": "359827",
@@ -200,9 +252,13 @@
       "fragmentation_tolerant": true,
       "overlapping_allowed": false,
       "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
       "public_priority": 50,
       "minimum_reservation_block_minutes": 120,
-      "maximum_parallel_sessions": 1
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 10
     }
   ]
 }
