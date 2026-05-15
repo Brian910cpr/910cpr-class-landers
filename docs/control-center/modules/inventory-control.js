@@ -2,8 +2,10 @@ const PROFILE_URL = "../../data/instructor_profiles.json";
 const AVAILABILITY_URL = "../../data/instructor_availability.json";
 const RANGE_URL = "../../data/appointment_range_registry.json";
 const RECOMMENDATION_URL = "../../data/inventory_recommendations.json";
+const ACTION_QUEUE_URL = "../../data/inventory_action_queue.json";
 const AVAILABILITY_PATH = "docs/data/instructor_availability.json";
 const RECOMMENDATION_PATH = "docs/data/inventory_recommendations.json";
+const ACTION_QUEUE_PATH = "docs/data/inventory_action_queue.json";
 const FLEXIBILITY_MODES = [
   "strict_preferred_only",
   "use_unused_time_if_useful",
@@ -25,6 +27,8 @@ const state = {
   availability: { schema_version: "0.1", updated_at: "", availability_blocks: [], source_notes: [] },
   ranges: { ranges: [] },
   recommendations: { recommendations: [] },
+  actionQueue: { schema_version: "0.1", updated_at: "", duplicate_prevented_count: 0, actions: [] },
+  queueFilter: "draft",
   oneOffRows: [],
   generatedBlocks: [],
   exclusions: [],
@@ -397,6 +401,11 @@ function renderRecommendations() {
       updateRecommendationStatus(button.dataset.recId, button.dataset.recStatus);
     });
   });
+  $("recommendation-table").querySelectorAll("[data-create-action]").forEach(button => {
+    button.addEventListener("click", () => {
+      createDraftAction(button.dataset.createAction);
+    });
+  });
 }
 
 function groupedRecommendationsHtml(recommendations) {
@@ -439,10 +448,13 @@ function renderRecommendationCard(item) {
   const fits = item.suggested_fits || [];
   const topFit = fits[0] || {};
   const topReason = item.explanation || topFit.rank_reason || topFit.reason || "No reason recorded.";
+  const draftExists = actionForRecommendation(item.recommendation_id);
   const badges = [];
   if (fits.some(fit => fit.preferred_match)) badges.push("Preferred");
   if (fits.some(fit => Number(fit.business_priority_boost || 0) > 0)) badges.push("Business Priority");
   if (item.location_conflict_possible) badges.push("Possible Conflict");
+  if (draftExists) badges.push("Draft Action Exists");
+  const canCreateDraft = item.status === "accepted" && !draftExists;
   return `
     <article class="rec-card" data-rec-id="${escapeHtml(item.recommendation_id)}">
       <div class="card-header">
@@ -462,6 +474,7 @@ function renderRecommendationCard(item) {
         <button type="button" data-rec-id="${escapeHtml(item.recommendation_id)}" data-rec-status="accepted">Accept</button>
         <button class="secondary" type="button" data-rec-id="${escapeHtml(item.recommendation_id)}" data-rec-status="ignored">Ignore</button>
         <button class="secondary" type="button" data-rec-id="${escapeHtml(item.recommendation_id)}" data-rec-status="blocked">Block</button>
+        ${canCreateDraft ? `<button type="button" data-create-action="${escapeHtml(item.recommendation_id)}">Create Draft Inventory Action</button>` : ""}
       </div>
     </article>
   `;
@@ -488,6 +501,150 @@ function updateRecommendationStatus(recommendationId, status) {
   const item = (state.recommendations.recommendations || []).find(recommendation => recommendation.recommendation_id === recommendationId);
   if (!item) return;
   item.status = status;
+  renderRecommendations();
+  renderActionQueue();
+}
+
+function actionForRecommendation(recommendationId) {
+  return (state.actionQueue.actions || []).find(action =>
+    action.source_recommendation_id === recommendationId && action.status !== "archived"
+  );
+}
+
+function draftDuplicate(recommendation, fit) {
+  return (state.actionQueue.actions || []).some(action =>
+    action.source_recommendation_id === recommendation.recommendation_id &&
+    action.course_family === fit.course_family &&
+    action.proposed_start === recommendation.gap_start &&
+    action.proposed_end === recommendation.gap_end &&
+    action.status !== "archived"
+  );
+}
+
+function actionIdFor(recommendation) {
+  const instructor = slug(String(recommendation.instructor || "").split(" ")[0] || "draft");
+  return `draft_${instructor}_${recommendation.date}_${String(recommendation.gap_start || "").replace(":", "")}`;
+}
+
+function createDraftAction(recommendationId) {
+  const recommendation = (state.recommendations.recommendations || []).find(item => item.recommendation_id === recommendationId);
+  const fit = (recommendation?.suggested_fits || [])[0];
+  if (!recommendation || recommendation.status !== "accepted" || !fit) return;
+  if (draftDuplicate(recommendation, fit)) {
+    state.actionQueue.duplicate_prevented_count = Number(state.actionQueue.duplicate_prevented_count || 0) + 1;
+    renderActionQueue();
+    renderRecommendations();
+    return;
+  }
+  state.actionQueue.actions = state.actionQueue.actions || [];
+  state.actionQueue.actions.push({
+    action_id: actionIdFor(recommendation),
+    source_recommendation_id: recommendation.recommendation_id,
+    status: "draft",
+    instructor: recommendation.instructor,
+    date: recommendation.date,
+    location: recommendation.location,
+    proposed_start: recommendation.gap_start,
+    proposed_end: addMinutes(recommendation.gap_start, fit.estimated_minutes) || recommendation.gap_end,
+    course_family: fit.course_family,
+    estimated_minutes: fit.estimated_minutes,
+    reason: fit.reason || recommendation.explanation || "",
+    created_at: new Date().toISOString(),
+    operator_notes: "",
+    warning_flags: actionWarningFlags(recommendation, fit)
+  });
+  renderRecommendations();
+  renderActionQueue();
+}
+
+function addMinutes(time, minutes) {
+  const start = timeMinutes(time);
+  if (start === null) return "";
+  return `${String(Math.floor((start + Number(minutes || 0)) / 60)).padStart(2, "0")}:${String((start + Number(minutes || 0)) % 60).padStart(2, "0")}`;
+}
+
+function actionWarningFlags(recommendation, fit) {
+  const flags = [];
+  if (recommendation.location_conflict_possible) flags.push("Possible Conflict");
+  if (fit?.inefficient_fit) flags.push("Inefficient Fit");
+  if (!fit?.business_priority_boost && !fit?.preferred_match) flags.push("Low Business Priority");
+  return flags;
+}
+
+function renderActionQueue() {
+  const actions = state.actionQueue.actions || [];
+  const filtered = state.queueFilter === "all" ? actions : actions.filter(action => action.status === state.queueFilter);
+  const draftCount = actions.filter(action => action.status === "draft").length;
+  const readyCount = actions.filter(action => action.status === "ready").length;
+  const archivedCount = actions.filter(action => action.status === "archived").length;
+  $("action-queue-summary").innerHTML = `
+    <div class="summary-card"><strong>${draftCount}</strong><span>Draft</span></div>
+    <div class="summary-card"><strong>${readyCount}</strong><span>Ready</span></div>
+    <div class="summary-card"><strong>${archivedCount}</strong><span>Archived</span></div>
+    <div class="summary-card"><strong>${escapeHtml(state.actionQueue.duplicate_prevented_count || 0)}</strong><span>Duplicates prevented</span></div>
+  `;
+  if (!filtered.length) {
+    $("action-queue-table").innerHTML = `<div class="empty-state">No ${escapeHtml(state.queueFilter)} draft actions in the local queue.</div>`;
+    return;
+  }
+  $("action-queue-table").innerHTML = `
+    <table>
+      <thead><tr><th>Instructor</th><th>Date</th><th>Course</th><th>Proposed Time</th><th>Source</th><th>Status</th><th>Warnings</th><th>Notes</th><th>Actions</th></tr></thead>
+      <tbody>${filtered.map(action => `
+        <tr>
+          <td>${escapeHtml(action.instructor)}</td>
+          <td>${escapeHtml(action.date)}</td>
+          <td>${escapeHtml(action.course_family)}</td>
+          <td>${escapeHtml(action.proposed_start)}-${escapeHtml(action.proposed_end)}</td>
+          <td>${escapeHtml(action.source_recommendation_id)}</td>
+          <td><span class="status ${statusClassForAction(action.status)}">${escapeHtml(action.status)}</span></td>
+          <td>${renderBadges(action.warning_flags || [])}</td>
+          <td><textarea data-action-note="${escapeHtml(action.action_id)}" rows="2">${escapeHtml(action.operator_notes || "")}</textarea></td>
+          <td class="actions">
+            <button type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="ready">Mark Ready</button>
+            <button class="secondary" type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="draft">Revert to Draft</button>
+            <button class="secondary" type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="archived">Archive</button>
+            <button class="secondary" type="button" data-delete-action="${escapeHtml(action.action_id)}">Delete</button>
+          </td>
+        </tr>
+      `).join("")}</tbody>
+    </table>
+  `;
+  $("action-queue-table").querySelectorAll("[data-action-status]").forEach(button => {
+    button.addEventListener("click", () => updateActionStatus(button.dataset.actionStatus, button.dataset.status));
+  });
+  $("action-queue-table").querySelectorAll("[data-delete-action]").forEach(button => {
+    button.addEventListener("click", () => deleteAction(button.dataset.deleteAction));
+  });
+  $("action-queue-table").querySelectorAll("[data-action-note]").forEach(input => {
+    input.addEventListener("input", () => {
+      const action = findAction(input.dataset.actionNote);
+      if (action) action.operator_notes = input.value;
+    });
+  });
+}
+
+function statusClassForAction(status) {
+  if (status === "ready") return "normal";
+  if (status === "archived") return "none";
+  return "opportunity";
+}
+
+function findAction(actionId) {
+  return (state.actionQueue.actions || []).find(action => action.action_id === actionId);
+}
+
+function updateActionStatus(actionId, status) {
+  const action = findAction(actionId);
+  if (!action) return;
+  action.status = status;
+  renderActionQueue();
+  renderRecommendations();
+}
+
+function deleteAction(actionId) {
+  state.actionQueue.actions = (state.actionQueue.actions || []).filter(action => action.action_id !== actionId);
+  renderActionQueue();
   renderRecommendations();
 }
 
@@ -588,6 +745,7 @@ function render() {
   renderExclusions();
   renderAppointmentRanges();
   renderRecommendations();
+  renderActionQueue();
   renderPreview();
 }
 
@@ -633,6 +791,12 @@ async function saveRecommendationsFile() {
   state.recommendations.generated_at = new Date().toISOString();
   const content = JSON.stringify(state.recommendations, null, 2) + "\n";
   await writeRepoJson(RECOMMENDATION_PATH, "inventory_recommendations.json", content);
+}
+
+async function saveActionQueueFile() {
+  state.actionQueue.updated_at = new Date().toISOString();
+  const content = JSON.stringify(state.actionQueue, null, 2) + "\n";
+  await writeRepoJson(ACTION_QUEUE_PATH, "inventory_action_queue.json", content);
 }
 
 async function writeRepoJson(relativePath, fallbackFilename, content) {
@@ -683,6 +847,13 @@ function wireEvents() {
   $("download-json-button").addEventListener("click", () => downloadText("instructor_availability.json", JSON.stringify(buildAvailabilityModel(), null, 2) + "\n", "application/json"));
   $("save-recommendations-button").addEventListener("click", saveRecommendationsFile);
   $("download-recommendations-button").addEventListener("click", () => downloadText("inventory_recommendations.json", JSON.stringify(state.recommendations, null, 2) + "\n", "application/json"));
+  $("save-queue-button").addEventListener("click", saveActionQueueFile);
+  $("download-queue-button").addEventListener("click", () => downloadText("inventory_action_queue.json", JSON.stringify(state.actionQueue, null, 2) + "\n", "application/json"));
+  $("copy-queue-button").addEventListener("click", () => navigator.clipboard?.writeText(JSON.stringify(state.actionQueue, null, 2)));
+  $("queue-filter").addEventListener("change", event => {
+    state.queueFilter = event.target.value;
+    renderActionQueue();
+  });
   $("add-source-note-button").addEventListener("click", addSourceNote);
   $("clear-generated-button").addEventListener("click", () => {
     state.generatedBlocks = [];
@@ -716,6 +887,7 @@ async function init() {
   state.availability = await readJson(AVAILABILITY_URL, state.availability);
   state.ranges = await readJson(RANGE_URL, state.ranges);
   state.recommendations = await readJson(RECOMMENDATION_URL, state.recommendations);
+  state.actionQueue = await readJson(ACTION_QUEUE_URL, state.actionQueue);
   if (!state.profiles.instructors?.length) {
     $("load-warning").classList.remove("hidden");
     $("load-warning").textContent = "Instructor profiles could not be loaded. Availability entry is running with fallback data.";

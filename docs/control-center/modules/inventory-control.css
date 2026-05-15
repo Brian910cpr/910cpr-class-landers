@@ -30,7 +30,9 @@
 .field textarea,
 .form-grid input,
 .form-grid select,
-.form-grid textarea {
+.form-grid textarea,
+#queue-filter,
+td textarea {
   min-height: 38px;
   width: 100%;
   border: 1px solid var(--line);

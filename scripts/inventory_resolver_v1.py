@@ -15,6 +15,8 @@ RANGES_PATH = ROOT / "docs" / "data" / "appointment_range_registry.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 RECOMMENDATIONS_PATH = ROOT / "docs" / "data" / "inventory_recommendations.json"
 AUDIT_PATH = ROOT / "debug" / "inventory_resolver_v1_audit.json"
+ACTION_QUEUE_PATH = ROOT / "docs" / "data" / "inventory_action_queue.json"
+ACTION_QUEUE_AUDIT_PATH = ROOT / "debug" / "inventory_action_queue_audit.json"
 MINIMUM_GAP_MINUTES = 30
 RECOMMENDATION_STATUSES = {"suggested", "ignored", "accepted", "blocked"}
 
@@ -73,6 +75,30 @@ def load_json(path: Path, default: Any) -> Any:
 def write_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+
+
+def audit_action_queue(recommendations: list[dict[str, Any]]) -> dict[str, Any]:
+    queue = load_json(ACTION_QUEUE_PATH, {"actions": [], "duplicate_prevented_count": 0})
+    actions = queue.get("actions") or []
+    recommendation_ids = {item.get("recommendation_id") for item in recommendations}
+    warnings: list[str] = []
+    seen_action_ids: set[str] = set()
+    for action in actions:
+        action_id = str(action.get("action_id") or "")
+        if action_id in seen_action_ids:
+            warnings.append(f"Duplicate action_id found: {action_id}")
+        seen_action_ids.add(action_id)
+        if action.get("source_recommendation_id") not in recommendation_ids:
+            warnings.append(f"Action {action_id} references a recommendation not present in the current output.")
+    return {
+        "schema_version": "0.1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "draft_count": sum(1 for action in actions if action.get("status") == "draft"),
+        "ready_count": sum(1 for action in actions if action.get("status") == "ready"),
+        "archived_count": sum(1 for action in actions if action.get("status") == "archived"),
+        "duplicate_prevented_count": int(queue.get("duplicate_prevented_count") or 0),
+        "warnings": warnings,
+    }
 
 
 def parse_iso_datetime(value: str | None) -> datetime | None:
@@ -553,6 +579,7 @@ def main() -> int:
     output, audit = resolve()
     write_json(RECOMMENDATIONS_PATH, output)
     write_json(AUDIT_PATH, audit)
+    write_json(ACTION_QUEUE_AUDIT_PATH, audit_action_queue(output["recommendations"]))
     print(json.dumps({"recommendations": len(output["recommendations"]), "warnings": len(audit["warnings"]), "skipped": len(audit["skipped_blocks"])}, indent=2))
     return 0
 

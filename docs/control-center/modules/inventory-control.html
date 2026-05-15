@@ -145,6 +145,31 @@
       <article class="card span-12">
         <div class="card-header">
           <div>
+            <h2>Inventory Draft Action Queue</h2>
+            <p class="muted">Local operational drafts created from accepted recommendations. These are not Enrollware sessions.</p>
+          </div>
+          <div class="actions">
+            <select id="queue-filter">
+              <option value="draft">Draft</option>
+              <option value="ready">Ready</option>
+              <option value="archived">Archived</option>
+              <option value="all">All</option>
+            </select>
+            <button id="copy-queue-button" type="button">Copy Draft Queue JSON</button>
+            <button id="save-queue-button" type="button">Save Queue</button>
+            <button id="download-queue-button" class="secondary" type="button">Download Queue</button>
+          </div>
+        </div>
+        <div class="warn">Draft Inventory Actions do NOT create Enrollware sessions. These are operational planning suggestions only.</div>
+        <div id="action-queue-summary" class="summary-grid"></div>
+        <div id="action-queue-table" class="table-wrap"></div>
+      </article>
+    </section>
+
+    <section class="section">
+      <article class="card span-12">
+        <div class="card-header">
+          <div>
             <h2>Enrollware AppointmentDayID Ranges</h2>
             <p class="muted">Read-only Enrollware appointment backbone windows. These are not instructor availability blocks.</p>
           </div>
