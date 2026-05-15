@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "default_theme": "TH000",
+  "rules": [
+    {
+      "id": "theme-rule-001",
+      "theme": "TH005",
+      "label": "Halloween",
+      "start": "2026-10-01",
+      "end": "2026-11-01",
+      "scope": {
+        "type": "global"
+      },
+      "enabled": false
+    }
+  ]
+}

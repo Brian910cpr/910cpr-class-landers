@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Theme Builder - 910CPR Control Center</title>
   <link rel="stylesheet" href="../control-center.css">
+  <link rel="stylesheet" href="theme-builder.css">
 </head>
-<body>
+<body data-page="theme-builder">
   <main class="shell">
     <header class="topbar">
       <div class="brand">
         <div class="eyebrow">Control Center Module</div>
         <h1>Theme Builder</h1>
-        <p class="subhead">Operational UI for theme IDs, role IDs, default inheritance, asset checks, previews, and color tokens.</p>
+        <p class="subhead">Create, edit, schedule, validate, preview, and publish visual themes. Themes change visuals only and never alter booking, schedule, pricing, registration, or inventory behavior.</p>
       </div>
       <nav class="nav">
         <a class="secondary" href="../index.html">Dashboard</a>
@@ -20,92 +21,122 @@
       </nav>
     </header>
 
+    <section class="warn theme-guardrail">
+      Visual-only guardrail: do not change Enrollware URLs, register buttons, inventory rules, schedule filtering, pricing logic, sitemap logic, or booking behavior from this tool.
+    </section>
+
+    <section id="load-warning" class="warn hidden"></section>
+
     <section class="section grid">
       <article class="card span-4">
-        <h2>Theme IDs</h2>
-        <div class="list">
-          <div class="list-item"><strong>TH000</strong><span>default</span></div>
-          <div class="list-item"><strong>TH001</strong><span>christmas</span></div>
-          <div class="list-item"><strong>TH002</strong><span>ems-week</span></div>
-          <div class="list-item"><strong>TH003</strong><span>nurses-week</span></div>
-          <div class="list-item"><strong>TH004</strong><span>patriotic</span></div>
-          <div class="list-item"><strong>TH005</strong><span>halloween</span></div>
+        <div class="card-header">
+          <div>
+            <h2>Theme IDs</h2>
+            <p class="muted">Repo-backed registry: <code>docs/data/theme_registry.json</code></p>
+          </div>
+          <button id="add-theme-button" type="button">Add Theme</button>
+        </div>
+        <div id="theme-list" class="list"></div>
+      </article>
+
+      <article class="card span-4">
+        <div class="card-header">
+          <h2>Selected Theme</h2>
+          <span id="selected-theme-status" class="status none">Loading</span>
+        </div>
+        <div id="selected-theme-details" class="facts"></div>
+        <div class="actions">
+          <button id="save-registry-button" type="button">Save Registry</button>
+          <button id="download-registry-button" class="secondary" type="button">Download Registry</button>
         </div>
       </article>
 
       <article class="card span-4">
-        <h2>Default Inheritance</h2>
-        <div class="facts">
-          <div class="fact"><span class="label">Fallback</span><span class="value">TH000 is the fallback/default theme.</span></div>
-          <div class="fact"><span class="label">New themes</span><span class="value">Prefill from TH000 and override only selected roles.</span></div>
-          <div class="fact"><span class="label">Missing assets</span><span class="value">Inherit automatically, never render broken blanks.</span></div>
-          <div class="fact"><span class="label">Guardrail</span><span class="value">Themes change visuals only, not business logic or booking behavior.</span></div>
+        <div class="card-header">
+          <h2>Active Schedule</h2>
+          <button id="add-rule-button" type="button">Schedule Theme</button>
+        </div>
+        <div id="active-schedule-summary" class="facts"></div>
+        <div class="actions">
+          <button id="save-schedule-button" type="button">Save Schedule</button>
+          <button id="download-schedule-button" class="secondary" type="button">Download Schedule</button>
         </div>
       </article>
+    </section>
 
-      <article class="card span-4" id="upcoming">
-        <h2>Color System</h2>
-        <div class="list">
-          <div class="list-item"><span>Surface Background</span><span>Primary Text</span></div>
-          <div class="list-item"><span>Muted Text</span><span>Accent Color</span></div>
-          <div class="list-item"><span>Primary Pill</span><span>Secondary Pill</span></div>
-          <div class="list-item"><span>Tertiary Pill</span><span>Pill Outline</span></div>
-          <div class="list-item"><span>Button Background</span><span>Button Text</span></div>
-          <div class="list-item"><span>Warning Background</span><span>Warning Text</span></div>
-        </div>
+    <section class="section grid">
+      <article class="card span-4">
+        <h2>Add Theme</h2>
+        <form id="theme-form" class="form-grid">
+          <label>Theme label<input name="label" required placeholder="summer"></label>
+          <label>Optional notes<textarea name="notes" rows="3"></textarea></label>
+          <label>Parent/fallback theme<select name="inherits" id="theme-parent-select"></select></label>
+          <label>Initial active status<select name="active"><option value="false">Inactive</option><option value="true">Active</option></select></label>
+          <label>Schedule start date<input name="start" type="date"></label>
+          <label>Schedule end date<input name="end" type="date"></label>
+          <label>Scope type<select name="scope_type" data-scope-type></select></label>
+          <label>Scope value<input name="scope_value" placeholder="Only needed for non-global scope"></label>
+          <button type="submit">Save Theme</button>
+        </form>
+      </article>
+
+      <article class="card span-4">
+        <h2>Upload Asset</h2>
+        <form id="asset-form" class="form-grid">
+          <label>Theme<select name="theme" id="asset-theme-select"></select></label>
+          <label>Role<select name="role" id="asset-role-select"></select></label>
+          <label>Human-readable name<input name="name" placeholder="summer hero background"></label>
+          <label>Asset file<input name="file" type="file" accept=".svg,.webp,.png,.jpg,.jpeg"></label>
+          <button type="submit">Register Asset</button>
+        </form>
+        <p class="muted">Browser save writes to <code>docs/assets/themes/</code> when directory access is granted. Otherwise the file and updated registry are downloaded.</p>
+      </article>
+
+      <article class="card span-4">
+        <h2>Preview</h2>
+        <form id="preview-form" class="form-grid">
+          <label>Selected theme<select id="preview-theme-select"></select></label>
+          <label>Sample context<select id="preview-context-select"></select></label>
+          <label>Preview date<input id="preview-date-input" type="date"></label>
+          <button type="submit">Preview</button>
+        </form>
+        <div id="preview-result" class="facts"></div>
       </article>
     </section>
 
     <section class="section">
-      <h2>Theme Asset Roles</h2>
-      <div class="grid">
-        <article class="card span-6">
-          <div class="card-header"><h3>Hero Background</h3><span class="status opportunity">🔵 RL100</span></div>
-          <p class="muted">Primary visual field used by top hero areas.</p>
-          <div class="facts">
-            <div class="fact"><span class="label">Recommended</span><span class="value">WebP preferred, wide composition, optimized for desktop and mobile crops.</span></div>
-            <div class="fact"><span class="label">Current asset</span><span class="value">TH000-RL100-V01__default-hero-background.webp</span></div>
-            <div class="fact"><span class="label">Fallback asset</span><span class="value">TH000 RL100</span></div>
-          </div>
-          <div class="preview">Hero background preview</div>
-          <div class="actions"><button>Upload Replacement</button></div>
-        </article>
+      <article class="card span-12">
+        <div class="card-header">
+          <h2>Selected Theme Role Matrix</h2>
+          <button id="run-audit-button" type="button">Run Audit</button>
+        </div>
+        <div id="role-matrix" class="table-wrap"></div>
+      </article>
+    </section>
 
-        <article class="card span-6">
-          <div class="card-header"><h3>Section Divider</h3><span class="status opportunity">🔵 RL200</span></div>
-          <p class="muted">Horizontal divider used sparingly between major sections.</p>
-          <div class="facts">
-            <div class="fact"><span class="label">Recommended</span><span class="value">SVG preferred, 1600x80, low-detail repeating motif, complements palette, no text.</span></div>
-            <div class="fact"><span class="label">Current asset</span><span class="value">TH000-RL200-V01__default-section-divider.svg</span></div>
-            <div class="fact"><span class="label">Fallback asset</span><span class="value">TH000 RL200</span></div>
-          </div>
-          <div class="preview">Section divider preview</div>
-          <div class="actions"><button>Upload Replacement</button></div>
-        </article>
+    <section class="section grid">
+      <article class="card span-8">
+        <h2>Schedule Rules</h2>
+        <div id="schedule-table" class="table-wrap"></div>
+      </article>
+      <article class="card span-4">
+        <h2>Audit Results</h2>
+        <div id="audit-summary" class="facts"></div>
+        <div id="audit-issues" class="list"></div>
+      </article>
+    </section>
 
-        <article class="card span-12">
-          <h2>Role ID Matrix</h2>
-          <div class="grid">
-            <div class="card compact span-4"><strong>RL110</strong><span class="muted">Hero Corner Badge</span></div>
-            <div class="card compact span-4"><strong>RL210</strong><span class="muted">Archive Divider</span></div>
-            <div class="card compact span-4"><strong>RL300</strong><span class="muted">Card Edge Frame</span></div>
-            <div class="card compact span-4"><strong>RL310</strong><span class="muted">Card Corner Accent</span></div>
-            <div class="card compact span-4"><strong>RL400</strong><span class="muted">Trust Strip Accent</span></div>
-            <div class="card compact span-4"><strong>RL500</strong><span class="muted">Footer Divider</span></div>
-            <div class="card compact span-4"><strong>RL600</strong><span class="muted">Texture Overlay</span></div>
-            <div class="card compact span-4"><strong>RL700</strong><span class="muted">Badge Ribbon</span></div>
-          </div>
-        </article>
-
-        <article class="card span-12">
-          <h2>Asset Naming Format</h2>
-          <pre class="code">[THEMEID]-[ROLEID]-[VARIANTID]__[human-readable-name].[ext]
-TH001-RL200-V01__holly-vine-divider.svg
-TH002-RL100-V01__ems-week-hero-background.webp</pre>
-          <p class="warn">Operational rule: systems rely on IDs, not human-readable text.</p>
-        </article>
-      </div>
+    <section class="section">
+      <article class="card span-12">
+        <h2>Asset Naming Format</h2>
+        <pre class="code">[THEMEID]-[ROLEID]-[VARIANTID]_[human-readable-name].[ext]
+TH006-RL100-V01_summer-hero-background.webp
+TH006-RL200-V01_summer-section-divider.svg</pre>
+        <p class="muted">Missing role assets inherit from the selected parent, then TH000. If TH000 is missing a critical fallback role, the audit will warn the operator.</p>
+      </article>
     </section>
   </main>
+  <script src="../../assets/theme-resolver.js"></script>
+  <script src="theme-builder.js"></script>
 </body>
 </html>

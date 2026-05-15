@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-05-14",
+  "registry": "docs/data/theme_registry.json",
+  "schedule": "docs/data/theme_schedule.json",
+  "asset_directory": "docs/assets/themes",
+  "theme_count": 6,
+  "role_count": 10,
+  "asset_count": 2,
+  "error_count": 0,
+  "warning_count": 0,
+  "status": "pass",
+  "issues": []
+}

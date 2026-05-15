@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="90" viewBox="0 0 1600 90" role="img" aria-label="Default 910CPR section divider">
+  <rect width="1600" height="90" fill="none"/>
+  <path d="M0 48 C180 20 300 70 480 42 C680 10 820 74 1020 45 C1240 14 1390 66 1600 36" fill="none" stroke="#66c7cb" stroke-width="10" stroke-linecap="round" opacity=".85"/>
+  <path d="M0 62 C200 38 360 82 560 56 C740 33 900 80 1100 58 C1300 35 1430 70 1600 52" fill="none" stroke="#ef8a5b" stroke-width="6" stroke-linecap="round" opacity=".75"/>
+</svg>

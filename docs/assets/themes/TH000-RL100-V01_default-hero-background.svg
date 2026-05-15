@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="Default 910CPR hero background">
+  <rect width="1600" height="900" fill="#123a57"/>
+  <path d="M0 650 C260 570 430 740 690 660 C950 580 1110 700 1600 590 L1600 900 L0 900 Z" fill="#66c7cb" opacity=".45"/>
+  <path d="M0 710 C270 640 470 780 760 700 C1020 630 1230 760 1600 690 L1600 900 L0 900 Z" fill="#ef8a5b" opacity=".32"/>
+  <circle cx="1250" cy="190" r="150" fill="#f1ab3d" opacity=".18"/>
+</svg>
