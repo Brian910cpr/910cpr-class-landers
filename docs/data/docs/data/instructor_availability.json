@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1",
+  "updated_at": "2026-05-15",
+  "availability_blocks": [
+    {
+      "block_id": "amy_arnold_2026-06-03_1300_1800",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "date": "2026-06-03",
+      "available_start": "13:00",
+      "available_end": "18:00",
+      "preferred_anchor_start": "14:00",
+      "preferred_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "allowed_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "flexibility": "use_unused_time_if_useful",
+      "source": "manual_ui",
+      "notes": ""
+    },
+    {
+      "block_id": "amy_arnold__1300_1800",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "date": "",
+      "available_start": "13:00",
+      "available_end": "18:00",
+      "preferred_anchor_start": "14:00",
+      "preferred_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "allowed_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "flexibility": "use_unused_time_if_useful",
+      "source": "manual_ui",
+      "notes": ""
+    }
+  ],
+  "source_notes": []
+}
