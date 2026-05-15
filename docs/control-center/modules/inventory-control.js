@@ -1,6 +1,7 @@
 const PROFILE_URL = "../../data/instructor_profiles.json";
 const AVAILABILITY_URL = "../../data/instructor_availability.json";
 const RANGE_URL = "../../data/appointment_range_registry.json";
+const RECOMMENDATION_URL = "../../data/inventory_recommendations.json";
 const AVAILABILITY_PATH = "docs/data/instructor_availability.json";
 const FLEXIBILITY_MODES = [
   "strict_preferred_only",
@@ -22,6 +23,7 @@ const state = {
   profiles: { instructors: [] },
   availability: { schema_version: "0.1", updated_at: "", availability_blocks: [], source_notes: [] },
   ranges: { ranges: [] },
+  recommendations: { recommendations: [] },
   oneOffRows: [],
   generatedBlocks: [],
   exclusions: [],
@@ -349,6 +351,36 @@ function renderAppointmentRanges() {
   `;
 }
 
+function renderRecommendations() {
+  const recommendations = state.recommendations.recommendations || [];
+  $("recommendation-count").textContent = `${recommendations.length} recommendations`;
+  if (!recommendations.length) {
+    $("recommendation-table").innerHTML = `
+      <div class="empty-state">
+        No resolver recommendations have been generated yet. Run <code>python scripts/inventory_resolver_v1.py</code>.
+      </div>
+    `;
+    return;
+  }
+  $("recommendation-table").innerHTML = `
+    <table>
+      <thead><tr><th>Instructor</th><th>Date</th><th>Gap</th><th>Minutes</th><th>Suggested Fits</th><th>Reason</th></tr></thead>
+      <tbody>${recommendations.map(item => {
+        const fits = item.suggested_fits || [];
+        const topReason = fits[0]?.reason || "No reason recorded.";
+        return `<tr>
+          <td>${escapeHtml(item.instructor)}</td>
+          <td>${escapeHtml(item.date)}</td>
+          <td>${escapeHtml(item.gap_start)} - ${escapeHtml(item.gap_end)}</td>
+          <td>${escapeHtml(item.gap_minutes)}</td>
+          <td>${renderPills(fits.map(fit => `${fit.rank}. ${fit.course_family} (${fit.estimated_minutes}m)`))}</td>
+          <td>${escapeHtml(topReason)}</td>
+        </tr>`;
+      }).join("")}</tbody>
+    </table>
+  `;
+}
+
 function renderExclusions() {
   $("exclusion-list").innerHTML = state.exclusions.map((exclusion, index) => `
     <div class="list-item">
@@ -438,6 +470,7 @@ function render() {
   renderOneOffRows();
   renderExclusions();
   renderAppointmentRanges();
+  renderRecommendations();
   renderPreview();
 }
 
@@ -553,6 +586,7 @@ async function init() {
   state.profiles = await readJson(PROFILE_URL, state.profiles);
   state.availability = await readJson(AVAILABILITY_URL, state.availability);
   state.ranges = await readJson(RANGE_URL, state.ranges);
+  state.recommendations = await readJson(RECOMMENDATION_URL, state.recommendations);
   if (!state.profiles.instructors?.length) {
     $("load-warning").classList.remove("hidden");
     $("load-warning").textContent = "Instructor profiles could not be loaded. Availability entry is running with fallback data.";

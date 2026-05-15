@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1",
+  "generated_at": "2026-05-15T15:33:03.347305+00:00",
+  "availability_blocks_read": 0,
+  "existing_sessions_read": 1281,
+  "gaps_found": 0,
+  "recommendations_created": 0,
+  "warnings": [],
+  "skipped_blocks": [],
+  "hard_stop": "V1 only: availability - existing sessions = usable gaps + simple fit recommendations. No public booking links generated."
+}
