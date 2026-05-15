@@ -3,6 +3,7 @@ const AVAILABILITY_URL = "../../data/instructor_availability.json";
 const RANGE_URL = "../../data/appointment_range_registry.json";
 const RECOMMENDATION_URL = "../../data/inventory_recommendations.json";
 const AVAILABILITY_PATH = "docs/data/instructor_availability.json";
+const RECOMMENDATION_PATH = "docs/data/inventory_recommendations.json";
 const FLEXIBILITY_MODES = [
   "strict_preferred_only",
   "use_unused_time_if_useful",
@@ -372,7 +373,16 @@ function renderAppointmentRanges() {
 
 function renderRecommendations() {
   const recommendations = state.recommendations.recommendations || [];
+  const instructors = new Set(recommendations.map(item => item.instructor).filter(Boolean));
+  const businessPriority = recommendations.filter(item => (item.suggested_fits || []).some(fit => Number(fit.business_priority_boost || 0) > 0)).length;
+  const conflicts = recommendations.filter(item => item.location_conflict_possible).length;
   $("recommendation-count").textContent = `${recommendations.length} recommendations`;
+  $("recommendation-summary").innerHTML = `
+    <div class="summary-card"><strong>${recommendations.length}</strong><span>Total recommendations</span></div>
+    <div class="summary-card"><strong>${instructors.size}</strong><span>Instructors with recommendations</span></div>
+    <div class="summary-card"><strong>${businessPriority}</strong><span>Business-priority recommendations</span></div>
+    <div class="summary-card"><strong>${conflicts}</strong><span>Possible conflicts</span></div>
+  `;
   if (!recommendations.length) {
     $("recommendation-table").innerHTML = `
       <div class="empty-state">
@@ -381,29 +391,104 @@ function renderRecommendations() {
     `;
     return;
   }
-  $("recommendation-table").innerHTML = `
-    <table>
-      <thead><tr><th>Instructor</th><th>Date</th><th>Gap</th><th>Minutes</th><th>Suggested Fits</th><th>Badges</th><th>Reason</th></tr></thead>
-      <tbody>${recommendations.map(item => {
-        const fits = item.suggested_fits || [];
-        const topFit = fits[0] || {};
-        const topReason = topFit.rank_reason || topFit.reason || "No reason recorded.";
-        const badges = [];
-        if (fits.some(fit => fit.preferred_match)) badges.push("Preferred");
-        if (fits.some(fit => Number(fit.business_priority_boost || 0) > 0)) badges.push("Business Priority");
-        if (item.location_conflict_possible) badges.push("Possible Conflict");
-        return `<tr>
-          <td>${escapeHtml(item.instructor)}</td>
-          <td>${escapeHtml(item.date)}</td>
-          <td>${escapeHtml(item.gap_start)} - ${escapeHtml(item.gap_end)}</td>
-          <td>${escapeHtml(item.gap_minutes)}</td>
-          <td>${renderPills(fits.map(fit => `${fit.rank}. ${fit.course_family} (${fit.estimated_minutes}m, score ${fit.rank_score ?? "n/a"})`))}</td>
-          <td>${renderBadges(badges)}</td>
-          <td>${escapeHtml(topReason)}</td>
-        </tr>`;
-      }).join("")}</tbody>
-    </table>
+  $("recommendation-table").innerHTML = groupedRecommendationsHtml(recommendations);
+  $("recommendation-table").querySelectorAll("[data-rec-status]").forEach(button => {
+    button.addEventListener("click", () => {
+      updateRecommendationStatus(button.dataset.recId, button.dataset.recStatus);
+    });
+  });
+}
+
+function groupedRecommendationsHtml(recommendations) {
+  const sorted = [...recommendations].sort((left, right) =>
+    String(left.date || "").localeCompare(String(right.date || "")) ||
+    String(left.instructor || "").localeCompare(String(right.instructor || "")) ||
+    String(left.gap_start || "").localeCompare(String(right.gap_start || "")) ||
+    topRankScore(right) - topRankScore(left)
+  );
+  const instructorGroups = new Map();
+  for (const item of sorted) {
+    if (!instructorGroups.has(item.instructor)) instructorGroups.set(item.instructor, new Map());
+    const dateGroups = instructorGroups.get(item.instructor);
+    if (!dateGroups.has(item.date)) dateGroups.set(item.date, []);
+    dateGroups.get(item.date).push(item);
+  }
+  return Array.from(instructorGroups.entries()).map(([instructor, dateGroups]) => `
+    <details class="rec-group" open>
+      <summary>${escapeHtml(instructor)} <span class="muted">${countGroup(dateGroups)} recommendations</span></summary>
+      ${Array.from(dateGroups.entries()).map(([date, items]) => `
+        <details class="rec-date-group" open>
+          <summary>${escapeHtml(date)} <span class="muted">${items.length} gaps</span></summary>
+          <div class="rec-card-list">${items.map(renderRecommendationCard).join("")}</div>
+        </details>
+      `).join("")}
+    </details>
+  `).join("");
+}
+
+function countGroup(dateGroups) {
+  return Array.from(dateGroups.values()).reduce((total, items) => total + items.length, 0);
+}
+
+function topRankScore(item) {
+  const topFit = (item.suggested_fits || [])[0] || {};
+  return Number(topFit.rank_score || 0);
+}
+
+function renderRecommendationCard(item) {
+  const fits = item.suggested_fits || [];
+  const topFit = fits[0] || {};
+  const topReason = item.explanation || topFit.rank_reason || topFit.reason || "No reason recorded.";
+  const badges = [];
+  if (fits.some(fit => fit.preferred_match)) badges.push("Preferred");
+  if (fits.some(fit => Number(fit.business_priority_boost || 0) > 0)) badges.push("Business Priority");
+  if (item.location_conflict_possible) badges.push("Possible Conflict");
+  return `
+    <article class="rec-card" data-rec-id="${escapeHtml(item.recommendation_id)}">
+      <div class="card-header">
+        <div>
+          <h3>${escapeHtml(item.gap_start)}-${escapeHtml(item.gap_end)} open</h3>
+          <p class="muted">${escapeHtml(item.gap_minutes)} minutes at ${escapeHtml(item.location)}</p>
+        </div>
+        <span class="status ${statusClassForRecommendation(item.status)}">${escapeHtml(item.status || "suggested")}</span>
+      </div>
+      ${renderTimeline(item)}
+      <div class="facts">
+        <div class="fact"><span class="label">Suggested fits</span><span class="value">${renderPills(fits.map(fit => `${fit.rank}. ${fit.course_family} (${fit.estimated_minutes}m, score ${fit.rank_score ?? "n/a"}, ${fit.duration_fit_quality || "fit"})`))}</span></div>
+        <div class="fact"><span class="label">Badges</span><span class="value">${renderBadges(badges)}</span></div>
+        <div class="fact"><span class="label">Explanation</span><span class="value">${escapeHtml(topReason)}</span></div>
+      </div>
+      <div class="actions">
+        <button type="button" data-rec-id="${escapeHtml(item.recommendation_id)}" data-rec-status="accepted">Accept</button>
+        <button class="secondary" type="button" data-rec-id="${escapeHtml(item.recommendation_id)}" data-rec-status="ignored">Ignore</button>
+        <button class="secondary" type="button" data-rec-id="${escapeHtml(item.recommendation_id)}" data-rec-status="blocked">Block</button>
+      </div>
+    </article>
   `;
+}
+
+function renderTimeline(item) {
+  const segments = [
+    ...(item.merged_occupied_windows || []).map(window => ({ type: "occupied", start: window.start, end: window.end, label: "OCCUPIED" })),
+    { type: "open", start: item.gap_start, end: item.gap_end, label: "OPEN" }
+  ].sort((left, right) => String(left.start).localeCompare(String(right.start)));
+  return `<div class="op-timeline">${segments.map(segment => `
+    <div class="op-segment ${segment.type}"><strong>${escapeHtml(segment.start)}-${escapeHtml(segment.end)}</strong><span>${segment.label}</span></div>
+  `).join("")}</div>`;
+}
+
+function statusClassForRecommendation(status) {
+  if (status === "accepted") return "normal";
+  if (status === "blocked") return "action";
+  if (status === "ignored") return "none";
+  return "opportunity";
+}
+
+function updateRecommendationStatus(recommendationId, status) {
+  const item = (state.recommendations.recommendations || []).find(recommendation => recommendation.recommendation_id === recommendationId);
+  if (!item) return;
+  item.status = status;
+  renderRecommendations();
 }
 
 function renderExclusions() {
@@ -541,10 +626,20 @@ function addSourceNote() {
 
 async function saveJsonFile() {
   const content = JSON.stringify(buildAvailabilityModel(), null, 2) + "\n";
+  await writeRepoJson(AVAILABILITY_PATH, "instructor_availability.json", content);
+}
+
+async function saveRecommendationsFile() {
+  state.recommendations.generated_at = new Date().toISOString();
+  const content = JSON.stringify(state.recommendations, null, 2) + "\n";
+  await writeRepoJson(RECOMMENDATION_PATH, "inventory_recommendations.json", content);
+}
+
+async function writeRepoJson(relativePath, fallbackFilename, content) {
   if (window.showDirectoryPicker) {
     try {
       if (!state.directoryHandle) state.directoryHandle = await window.showDirectoryPicker({ mode: "readwrite" });
-      const parts = AVAILABILITY_PATH.split("/");
+      const parts = relativePath.split("/");
       let dir = state.directoryHandle;
       for (const part of parts.slice(0, -1)) dir = await dir.getDirectoryHandle(part, { create: true });
       const file = await dir.getFileHandle(parts.at(-1), { create: true });
@@ -553,11 +648,11 @@ async function saveJsonFile() {
       await writable.close();
       return;
     } catch {
-      downloadText("instructor_availability.json", content, "application/json");
+      downloadText(fallbackFilename, content, "application/json");
       return;
     }
   }
-  downloadText("instructor_availability.json", content, "application/json");
+  downloadText(fallbackFilename, content, "application/json");
 }
 
 function downloadText(filename, content, type) {
@@ -586,6 +681,8 @@ function wireEvents() {
   $("preview-range-button").addEventListener("click", renderPreview);
   $("save-json-button").addEventListener("click", saveJsonFile);
   $("download-json-button").addEventListener("click", () => downloadText("instructor_availability.json", JSON.stringify(buildAvailabilityModel(), null, 2) + "\n", "application/json"));
+  $("save-recommendations-button").addEventListener("click", saveRecommendationsFile);
+  $("download-recommendations-button").addEventListener("click", () => downloadText("inventory_recommendations.json", JSON.stringify(state.recommendations, null, 2) + "\n", "application/json"));
   $("add-source-note-button").addEventListener("click", addSourceNote);
   $("clear-generated-button").addEventListener("click", () => {
     state.generatedBlocks = [];

@@ -129,9 +129,14 @@
             <h2>Resolver V1 Recommendations</h2>
             <p class="muted">Simple gap-fit recommendations only. No public booking links are generated.</p>
           </div>
-          <span id="recommendation-count" class="status none">0 recommendations</span>
+          <div class="actions">
+            <span id="recommendation-count" class="status none">0 recommendations</span>
+            <button id="save-recommendations-button" type="button">Save Statuses</button>
+            <button id="download-recommendations-button" class="secondary" type="button">Download Recommendations</button>
+          </div>
         </div>
         <div class="warn">Run resolver: <code>python scripts/inventory_resolver_v1.py</code></div>
+        <div id="recommendation-summary" class="summary-grid"></div>
         <div id="recommendation-table" class="table-wrap"></div>
       </article>
     </section>

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-05-15T15:57:19.677911+00:00",
+  "generated_at": "2026-05-15T16:01:05.518435+00:00",
   "availability_blocks_read": 2,
   "existing_sessions_read": 1281,
   "gaps_found": 1,
@@ -15,6 +15,10 @@
     "BLS": 25,
     "Unknown": 1
   },
+  "blocked_recommendations_skipped": 0,
+  "accepted_recommendations_preserved": 0,
+  "ignored_recommendations_count": 0,
+  "minimum_gap_minutes": 30,
   "warnings": [],
   "skipped_blocks": [
     {
@@ -22,5 +26,5 @@
       "reason": "missing_required_block_fields"
     }
   ],
-  "hard_stop": "V2 operational ranking only: availability - occupied time = usable gaps + smarter recommendations. No public booking links generated."
+  "hard_stop": "V3 operational controls only: availability - occupied time = operational suggestions. No public booking links generated."
 }

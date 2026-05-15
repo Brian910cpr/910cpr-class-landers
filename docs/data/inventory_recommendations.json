@@ -1,6 +1,12 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-05-15T15:57:19.677911+00:00",
+  "generated_at": "2026-05-15T16:01:05.518435+00:00",
+  "status_values": [
+    "accepted",
+    "blocked",
+    "ignored",
+    "suggested"
+  ],
   "recommendations": [
     {
       "recommendation_id": "amy_arnold_2026-06-03_1300_1800",
@@ -20,8 +26,12 @@
           "estimated_minutes": 300,
           "preferred_match": true,
           "business_priority_boost": 0,
-          "rank_score": 140,
-          "rank_reason": "Matches instructor preferred course family. Duration fit score 40.",
+          "rank_score": 150,
+          "rank_reason": "Matches instructor preferred course family. Duration fit score 50.",
+          "duration_fit_quality": "exact_fit",
+          "exact_fit": true,
+          "partial_fit": false,
+          "inefficient_fit": false,
           "reason": "Matches instructor preferred course family.",
           "rank": 1
         },
@@ -30,8 +40,12 @@
           "estimated_minutes": 300,
           "preferred_match": true,
           "business_priority_boost": 0,
-          "rank_score": 140,
-          "rank_reason": "Matches instructor preferred course family. Duration fit score 40.",
+          "rank_score": 150,
+          "rank_reason": "Matches instructor preferred course family. Duration fit score 50.",
+          "duration_fit_quality": "exact_fit",
+          "exact_fit": true,
+          "partial_fit": false,
+          "inefficient_fit": false,
           "reason": "Matches instructor preferred course family.",
           "rank": 2
         },
@@ -42,6 +56,10 @@
           "business_priority_boost": 0,
           "rank_score": 128,
           "rank_reason": "Matches instructor preferred course family. Duration fit score 28.",
+          "duration_fit_quality": "partial_fit",
+          "exact_fit": false,
+          "partial_fit": true,
+          "inefficient_fit": false,
           "reason": "Matches instructor preferred course family.",
           "rank": 3
         },
@@ -52,6 +70,10 @@
           "business_priority_boost": 0,
           "rank_score": 128,
           "rank_reason": "Matches instructor preferred course family. Duration fit score 28.",
+          "duration_fit_quality": "partial_fit",
+          "exact_fit": false,
+          "partial_fit": true,
+          "inefficient_fit": false,
           "reason": "Matches instructor preferred course family.",
           "rank": 4
         },
@@ -62,6 +84,10 @@
           "business_priority_boost": 0,
           "rank_score": 10,
           "rank_reason": "Duration fit score 10.",
+          "duration_fit_quality": "inefficient_fit",
+          "exact_fit": false,
+          "partial_fit": false,
+          "inefficient_fit": true,
           "reason": "Fits available 300-minute gap before preferred anchor.",
           "rank": 5
         },
@@ -72,6 +98,10 @@
           "business_priority_boost": 0,
           "rank_score": 10,
           "rank_reason": "Duration fit score 10.",
+          "duration_fit_quality": "inefficient_fit",
+          "exact_fit": false,
+          "partial_fit": false,
+          "inefficient_fit": true,
           "reason": "Fits available 300-minute gap before preferred anchor.",
           "rank": 6
         },
@@ -82,6 +112,10 @@
           "business_priority_boost": 0,
           "rank_score": 0,
           "rank_reason": "Duration fit score 0.",
+          "duration_fit_quality": "inefficient_fit",
+          "exact_fit": false,
+          "partial_fit": false,
+          "inefficient_fit": true,
           "reason": "Fits available 300-minute gap before preferred anchor.",
           "rank": 7
         },
@@ -92,11 +126,16 @@
           "business_priority_boost": 0,
           "rank_score": 0,
           "rank_reason": "Duration fit score 0.",
+          "duration_fit_quality": "inefficient_fit",
+          "exact_fit": false,
+          "partial_fit": false,
+          "inefficient_fit": true,
           "reason": "Fits available 300-minute gap before preferred anchor.",
           "rank": 8
         }
       ],
-      "status": "recommendation_only"
+      "explanation": "Amy Arnold has a 300-minute opening. ACLS Initial fits exactly.",
+      "status": "suggested"
     }
   ]
 }

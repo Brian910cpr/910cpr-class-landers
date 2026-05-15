@@ -15,6 +15,8 @@ RANGES_PATH = ROOT / "docs" / "data" / "appointment_range_registry.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 RECOMMENDATIONS_PATH = ROOT / "docs" / "data" / "inventory_recommendations.json"
 AUDIT_PATH = ROOT / "debug" / "inventory_resolver_v1_audit.json"
+MINIMUM_GAP_MINUTES = 30
+RECOMMENDATION_STATUSES = {"suggested", "ignored", "accepted", "blocked"}
 
 # Resolver V2 still uses simple estimates only. Keep these obvious and editable.
 COURSE_DURATION_MINUTES = {
@@ -259,7 +261,17 @@ def preferred_match(course_family: str, preferred_families: list[str]) -> bool:
 
 def duration_fit_score(duration: int, gap_minutes: int) -> int:
     leftover = gap_minutes - duration
-    return max(0, 40 - min(40, leftover // 5))
+    exact_bonus = 10 if leftover == 0 else 0
+    return exact_bonus + max(0, 40 - min(40, leftover // 5))
+
+
+def duration_fit_quality(duration: int, gap_minutes: int) -> str:
+    leftover = gap_minutes - duration
+    if leftover == 0:
+        return "exact_fit"
+    if leftover <= 60:
+        return "partial_fit"
+    return "inefficient_fit"
 
 
 def fit_reason(course_family: str, duration: int, gap_minutes: int, block: dict[str, Any], gap_start: int, is_preferred: bool) -> str:
@@ -316,6 +328,7 @@ def suggested_fits(
             preferred_bonus = 100 if is_preferred else 0
             business_boost = 50 if pressure_counts.get(family, 0) < 3 else 0
             fit_score = duration_fit_score(duration, gap_minutes)
+            fit_quality = duration_fit_quality(duration, gap_minutes)
             rank_score = preferred_bonus + business_boost + fit_score
             rank_reasons = []
             if is_preferred:
@@ -331,6 +344,10 @@ def suggested_fits(
                     "business_priority_boost": business_boost,
                     "rank_score": rank_score,
                     "rank_reason": " ".join(rank_reasons),
+                    "duration_fit_quality": fit_quality,
+                    "exact_fit": fit_quality == "exact_fit",
+                    "partial_fit": fit_quality == "partial_fit",
+                    "inefficient_fit": fit_quality == "inefficient_fit",
                     "_score": rank_score + BUSINESS_USEFULNESS.get(course_family, 0),
                     "reason": fit_reason(course_family, duration, gap_minutes, block, gap_start, is_preferred),
                 }
@@ -352,6 +369,75 @@ def location_conflict_possible(block: dict[str, Any], gap_start: int, gap_end: i
     )
 
 
+def previous_recommendation_state() -> dict[str, dict[str, Any]]:
+    current = load_json(RECOMMENDATIONS_PATH, {"recommendations": []})
+    return {
+        str(item.get("recommendation_id")): item
+        for item in current.get("recommendations", [])
+        if item.get("recommendation_id")
+    }
+
+
+def preserved_status(previous: dict[str, Any] | None) -> str:
+    status = str((previous or {}).get("status") or "suggested")
+    return status if status in RECOMMENDATION_STATUSES else "suggested"
+
+
+def block_signature(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "instructor": item.get("instructor"),
+        "gap_start": item.get("gap_start"),
+        "gap_end": item.get("gap_end"),
+        "gap_minutes": item.get("gap_minutes"),
+    }
+
+
+def is_same_blocked_gap(previous: dict[str, Any], current: dict[str, Any]) -> bool:
+    return preserved_status(previous) == "blocked" and block_signature(previous) == block_signature(current)
+
+
+def recommendation_explanation(block: dict[str, Any], gap_start: int, gap_end: int, fits: list[dict[str, Any]]) -> str:
+    gap_minutes = gap_end - gap_start
+    top_fit = fits[0] if fits else {}
+    preferred = "/".join(block.get("preferred_course_families") or [])
+    before_anchor = ""
+    anchor = parse_time(block.get("preferred_anchor_start"))
+    if anchor is not None and gap_end <= anchor:
+        before_anchor = f" before preferred {preferred or 'anchor'} anchor"
+    if top_fit:
+        exact = " exactly" if top_fit.get("exact_fit") else ""
+        does_not_fit = [
+            course
+            for course, duration in COURSE_DURATION_MINUTES.items()
+            if duration > gap_minutes and base_family(course) in set(block.get("allowed_course_families") or [])
+        ]
+        miss = f" {does_not_fit[0]} does not fit." if does_not_fit else ""
+        return (
+            f"{block.get('instructor')} has a {gap_minutes}-minute opening{before_anchor}. "
+            f"{top_fit.get('course_family')} fits{exact}.{miss}"
+        )
+    return f"{block.get('instructor')} has a {gap_minutes}-minute opening, but no configured course estimate fits."
+
+
+def top_rank_score(item: dict[str, Any]) -> int:
+    fits = item.get("suggested_fits") or []
+    if not fits:
+        return 0
+    return int(fits[0].get("rank_score") or 0)
+
+
+def sort_recommendations(recommendations: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(
+        recommendations,
+        key=lambda item: (
+            str(item.get("date") or ""),
+            str(item.get("instructor") or ""),
+            str(item.get("gap_start") or ""),
+            -top_rank_score(item),
+        ),
+    )
+
+
 def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
     warnings: list[str] = []
     skipped: list[dict[str, str]] = []
@@ -360,10 +446,14 @@ def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
     load_json(RANGES_PATH, {"ranges": []})  # Loaded to keep V1 aware of the registry file; not used for link generation.
     sessions = load_sessions(warnings)
     pressure_counts = business_pressure_counts(sessions)
+    previous_by_id = previous_recommendation_state()
     recommendations: list[dict[str, Any]] = []
     gaps_found = 0
     merged_overlap_count = 0
     conflict_warnings_count = 0
+    blocked_skipped = 0
+    accepted_preserved = 0
+    ignored_preserved = 0
 
     blocks = availability.get("availability_blocks") or []
     for block in blocks:
@@ -380,6 +470,7 @@ def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
         merged_occupied, block_overlap_count = merge_occupied_windows(start, end, occupied)
         merged_overlap_count += block_overlap_count
         gaps = subtract_occupied(start, end, merged_occupied)
+        gaps = [(gap_start, gap_end) for gap_start, gap_end in gaps if gap_end - gap_start >= MINIMUM_GAP_MINUTES]
         gaps_found += len(gaps)
         for gap_start, gap_end in gaps:
             fits = suggested_fits(block, gap_start, gap_end, profile, pressure_counts)
@@ -389,41 +480,52 @@ def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
             if possible_conflict:
                 conflict_warnings_count += 1
             recommendation_id = f"{slug(str(block.get('instructor')))}_{block.get('date')}_{format_time(gap_start).replace(':', '')}_{format_time(gap_end).replace(':', '')}"
-            recommendations.append(
-                {
-                    "recommendation_id": recommendation_id,
-                    "instructor": block.get("instructor"),
-                    "date": block.get("date"),
-                    "location": block.get("location"),
-                    "availability_block_id": block.get("block_id", ""),
-                    "gap_start": format_time(gap_start),
-                    "gap_end": format_time(gap_end),
-                    "gap_minutes": gap_end - gap_start,
-                    "existing_sessions_considered": [
-                        {
-                            "session_id": session.session_id,
-                            "course_name": session.course_name,
-                            "start": format_time(session.start_minutes),
-                            "end": format_time(session.end_minutes),
-                            "instructor": session.instructor,
-                            "location": session.location,
-                        }
-                        for session in occupied
-                    ],
-                    "merged_occupied_windows": [
-                        {"start": format_time(window_start), "end": format_time(window_end)}
-                        for window_start, window_end in merged_occupied
-                    ],
-                    "location_conflict_possible": possible_conflict,
-                    "suggested_fits": fits,
-                    "status": "recommendation_only",
-                }
-            )
+            recommendation = {
+                "recommendation_id": recommendation_id,
+                "instructor": block.get("instructor"),
+                "date": block.get("date"),
+                "location": block.get("location"),
+                "availability_block_id": block.get("block_id", ""),
+                "gap_start": format_time(gap_start),
+                "gap_end": format_time(gap_end),
+                "gap_minutes": gap_end - gap_start,
+                "existing_sessions_considered": [
+                    {
+                        "session_id": session.session_id,
+                        "course_name": session.course_name,
+                        "start": format_time(session.start_minutes),
+                        "end": format_time(session.end_minutes),
+                        "instructor": session.instructor,
+                        "location": session.location,
+                    }
+                    for session in occupied
+                ],
+                "merged_occupied_windows": [
+                    {"start": format_time(window_start), "end": format_time(window_end)}
+                    for window_start, window_end in merged_occupied
+                ],
+                "location_conflict_possible": possible_conflict,
+                "suggested_fits": fits,
+                "explanation": recommendation_explanation(block, gap_start, gap_end, fits),
+                "status": "suggested",
+            }
+            previous = previous_by_id.get(recommendation_id)
+            if previous and is_same_blocked_gap(previous, recommendation):
+                blocked_skipped += 1
+                continue
+            recommendation["status"] = preserved_status(previous)
+            if recommendation["status"] == "accepted":
+                accepted_preserved += 1
+            if recommendation["status"] == "ignored":
+                ignored_preserved += 1
+            recommendations.append(recommendation)
 
     generated_at = datetime.now(timezone.utc).isoformat()
+    recommendations = sort_recommendations(recommendations)
     output = {
         "schema_version": "0.1",
         "generated_at": generated_at,
+        "status_values": sorted(RECOMMENDATION_STATUSES),
         "recommendations": recommendations,
     }
     audit = {
@@ -436,9 +538,13 @@ def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
         "merged_overlap_count": merged_overlap_count,
         "conflict_warnings_count": conflict_warnings_count,
         "business_pressure_counts_by_family": pressure_counts,
+        "blocked_recommendations_skipped": blocked_skipped,
+        "accepted_recommendations_preserved": accepted_preserved,
+        "ignored_recommendations_count": ignored_preserved,
+        "minimum_gap_minutes": MINIMUM_GAP_MINUTES,
         "warnings": warnings,
         "skipped_blocks": skipped,
-        "hard_stop": "V2 operational ranking only: availability - occupied time = usable gaps + smarter recommendations. No public booking links generated.",
+        "hard_stop": "V3 operational controls only: availability - occupied time = operational suggestions. No public booking links generated.",
     }
     return output, audit
 
