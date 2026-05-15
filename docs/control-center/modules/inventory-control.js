@@ -3,6 +3,7 @@ const AVAILABILITY_URL = "../../data/instructor_availability.json";
 const RANGE_URL = "../../data/appointment_range_registry.json";
 const RECOMMENDATION_URL = "../../data/inventory_recommendations.json";
 const ACTION_QUEUE_URL = "../../data/inventory_action_queue.json";
+const ADMIN_API_BASE = "http://127.0.0.1:5057/api/inventory-control";
 const AVAILABILITY_PATH = "docs/data/instructor_availability.json";
 const RECOMMENDATION_PATH = "docs/data/inventory_recommendations.json";
 const ACTION_QUEUE_PATH = "docs/data/inventory_action_queue.json";
@@ -28,6 +29,8 @@ const state = {
   ranges: { ranges: [] },
   recommendations: { recommendations: [] },
   actionQueue: { schema_version: "0.1", updated_at: "", duplicate_prevented_count: 0, actions: [] },
+  adminConnected: false,
+  staticMode: true,
   queueFilter: "draft",
   oneOffRows: [],
   generatedBlocks: [],
@@ -56,6 +59,31 @@ async function readJson(url, fallback) {
   } catch {
     return fallback;
   }
+}
+
+async function apiGet(path) {
+  const response = await fetch(`${ADMIN_API_BASE}${path}`, { cache: "no-store" });
+  const data = await response.json();
+  if (!response.ok || data.ok === false) throw new Error(data.error || `API ${path} failed`);
+  return data;
+}
+
+async function apiPost(path, payload = {}) {
+  const response = await fetch(`${ADMIN_API_BASE}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  const data = await response.json();
+  if (!response.ok || data.ok === false) throw new Error(data.error || `API ${path} failed`);
+  return data;
+}
+
+function setAdminStatus(message, connected) {
+  const banner = $("admin-server-status");
+  if (!banner) return;
+  banner.textContent = message;
+  banner.classList.toggle("admin-connected", Boolean(connected));
 }
 
 function todayIso() {
@@ -503,6 +531,7 @@ function updateRecommendationStatus(recommendationId, status) {
   item.status = status;
   renderRecommendations();
   renderActionQueue();
+  saveRecommendationsFile();
 }
 
 function actionForRecommendation(recommendationId) {
@@ -555,6 +584,7 @@ function createDraftAction(recommendationId) {
   });
   renderRecommendations();
   renderActionQueue();
+  saveActionQueueFile();
 }
 
 function addMinutes(time, minutes) {
@@ -624,6 +654,7 @@ function renderActionQueue() {
       const action = findAction(input.dataset.actionNote);
       if (action) action.operator_notes = input.value;
     });
+    input.addEventListener("change", () => saveActionQueueFile());
   });
 }
 
@@ -644,6 +675,7 @@ function updateActionStatus(actionId, status) {
   renderActionQueue();
   renderRecommendations();
   renderManualChecklist();
+  saveActionQueueFile();
 }
 
 function deleteAction(actionId) {
@@ -651,6 +683,7 @@ function deleteAction(actionId) {
   renderActionQueue();
   renderRecommendations();
   renderManualChecklist();
+  saveActionQueueFile();
 }
 
 function renderManualChecklist() {
@@ -710,6 +743,18 @@ function editActionNotes(actionId) {
   action.operator_notes = updated;
   renderActionQueue();
   renderManualChecklist();
+  saveActionQueueFile();
+}
+
+async function safeCopy(text) {
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const fallback = $("load-warning");
+    fallback.classList.remove("hidden");
+    fallback.innerHTML = `Clipboard unavailable. Select and copy this text:<br><textarea rows="8">${escapeHtml(text)}</textarea>`;
+  }
 }
 
 function copyTaskSummary(actionId) {
@@ -730,7 +775,7 @@ Manual Steps:
 3. Create/adjust session manually.
 4. Verify public/admin display.
 5. Return here and mark completed.`;
-  navigator.clipboard?.writeText(text);
+  safeCopy(text);
 }
 
 function renderExclusions() {
@@ -869,7 +914,21 @@ function addSourceNote() {
 }
 
 async function saveJsonFile() {
-  const content = JSON.stringify(buildAvailabilityModel(), null, 2) + "\n";
+  const model = buildAvailabilityModel();
+  if (state.adminConnected) {
+    try {
+      const result = await apiPost("/availability", model);
+      state.availability = result.availability || model;
+      state.oneOffRows = [];
+      state.generatedBlocks = [];
+      populateForms();
+      render();
+      return;
+    } catch (error) {
+      setAdminStatus(`Local admin save failed: ${error.message}`, false);
+    }
+  }
+  const content = JSON.stringify(model, null, 2) + "\n";
   await writeRepoJson(AVAILABILITY_PATH, "instructor_availability.json", content);
 }
 
@@ -881,8 +940,37 @@ async function saveRecommendationsFile() {
 
 async function saveActionQueueFile() {
   state.actionQueue.updated_at = new Date().toISOString();
+  if (state.adminConnected) {
+    try {
+      const result = await apiPost("/action-queue", state.actionQueue);
+      state.actionQueue = result.action_queue || state.actionQueue;
+      renderActionQueue();
+      renderManualChecklist();
+      renderRecommendations();
+      return;
+    } catch (error) {
+      setAdminStatus(`Local admin queue save failed: ${error.message}`, false);
+    }
+  }
   const content = JSON.stringify(state.actionQueue, null, 2) + "\n";
   await writeRepoJson(ACTION_QUEUE_PATH, "inventory_action_queue.json", content);
+}
+
+async function runResolverFromUi() {
+  if (!state.adminConnected) {
+    setAdminStatus("Static mode: preview only. Start local admin server to run resolver.", false);
+    return;
+  }
+  try {
+    const result = await apiPost("/run-resolver", {});
+    state.recommendations = result.recommendations || state.recommendations;
+    renderRecommendations();
+    renderActionQueue();
+    renderManualChecklist();
+    setAdminStatus("Resolver completed through local admin server. Recommendations refreshed.", true);
+  } catch (error) {
+    setAdminStatus(`Resolver failed: ${error.message}`, false);
+  }
 }
 
 async function writeRepoJson(relativePath, fallbackFilename, content) {
@@ -935,7 +1023,8 @@ function wireEvents() {
   $("download-recommendations-button").addEventListener("click", () => downloadText("inventory_recommendations.json", JSON.stringify(state.recommendations, null, 2) + "\n", "application/json"));
   $("save-queue-button").addEventListener("click", saveActionQueueFile);
   $("download-queue-button").addEventListener("click", () => downloadText("inventory_action_queue.json", JSON.stringify(state.actionQueue, null, 2) + "\n", "application/json"));
-  $("copy-queue-button").addEventListener("click", () => navigator.clipboard?.writeText(JSON.stringify(state.actionQueue, null, 2)));
+  $("copy-queue-button").addEventListener("click", () => safeCopy(JSON.stringify(state.actionQueue, null, 2)));
+  $("run-resolver-button").addEventListener("click", runResolverFromUi);
   $("queue-filter").addEventListener("change", event => {
     state.queueFilter = event.target.value;
     renderActionQueue();
@@ -969,11 +1058,26 @@ function wireEvents() {
 }
 
 async function init() {
-  state.profiles = await readJson(PROFILE_URL, state.profiles);
-  state.availability = await readJson(AVAILABILITY_URL, state.availability);
-  state.ranges = await readJson(RANGE_URL, state.ranges);
-  state.recommendations = await readJson(RECOMMENDATION_URL, state.recommendations);
-  state.actionQueue = await readJson(ACTION_QUEUE_URL, state.actionQueue);
+  try {
+    const apiState = await apiGet("/state");
+    state.adminConnected = true;
+    state.staticMode = false;
+    state.profiles = apiState.profiles || state.profiles;
+    state.availability = apiState.availability || state.availability;
+    state.ranges = apiState.ranges || state.ranges;
+    state.recommendations = apiState.recommendations || state.recommendations;
+    state.actionQueue = apiState.action_queue || state.actionQueue;
+    setAdminStatus("Local admin server connected. Changes save to repo JSON files.", true);
+  } catch {
+    state.adminConnected = false;
+    state.staticMode = true;
+    setAdminStatus("Static mode: preview only. Start local admin server to save changes.", false);
+    state.profiles = await readJson(PROFILE_URL, state.profiles);
+    state.availability = await readJson(AVAILABILITY_URL, state.availability);
+    state.ranges = await readJson(RANGE_URL, state.ranges);
+    state.recommendations = await readJson(RECOMMENDATION_URL, state.recommendations);
+    state.actionQueue = await readJson(ACTION_QUEUE_URL, state.actionQueue);
+  }
   if (!state.profiles.instructors?.length) {
     $("load-warning").classList.remove("hidden");
     $("load-warning").textContent = "Instructor profiles could not be loaded. Availability entry is running with fallback data.";

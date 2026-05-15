@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-05-15T20:21:54.864487+00:00",
-  "availability_blocks_read": 2,
+  "generated_at": "2026-05-15T20:37:49.484406+00:00",
+  "availability_blocks_read": 1,
   "existing_sessions_read": 1281,
   "gaps_found": 1,
   "recommendations_created": 1,
@@ -20,11 +20,6 @@
   "ignored_recommendations_count": 0,
   "minimum_gap_minutes": 30,
   "warnings": [],
-  "skipped_blocks": [
-    {
-      "block_id": "amy_arnold__1300_1800",
-      "reason": "missing_required_block_fields"
-    }
-  ],
+  "skipped_blocks": [],
   "hard_stop": "V3 operational controls only: availability - occupied time = operational suggestions. No public booking links generated."
 }

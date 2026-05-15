@@ -2,6 +2,12 @@
   margin-top: 16px;
 }
 
+.admin-connected {
+  color: var(--green);
+  background: rgba(66, 211, 146, .12);
+  border-color: rgba(66, 211, 146, .45);
+}
+
 .hidden {
   display: none;
 }

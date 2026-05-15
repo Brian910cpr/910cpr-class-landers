@@ -25,6 +25,7 @@
       Operational guardrail: this page only edits availability data. It does not modify Enrollware, booking links, schedule filtering, pricing, sitemap logic, generated public landers, or public class availability.
     </section>
 
+    <section id="admin-server-status" class="warn">Checking local admin server...</section>
     <section id="load-warning" class="warn hidden"></section>
 
     <section class="section grid">
@@ -133,6 +134,7 @@
             <span id="recommendation-count" class="status none">0 recommendations</span>
             <button id="save-recommendations-button" type="button">Save Statuses</button>
             <button id="download-recommendations-button" class="secondary" type="button">Download Recommendations</button>
+            <button id="run-resolver-button" type="button">Run Resolver</button>
           </div>
         </div>
         <div class="warn">Run resolver: <code>python scripts/inventory_resolver_v1.py</code></div>
