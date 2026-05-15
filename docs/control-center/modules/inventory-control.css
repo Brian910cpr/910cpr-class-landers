@@ -140,6 +140,19 @@ th {
   font-weight: 700;
 }
 
+.badge {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  border: 1px solid rgba(85, 167, 255, .55);
+  border-radius: 6px;
+  background: rgba(85, 167, 255, .12);
+  color: var(--soft);
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .empty-state {
   min-height: 88px;
   display: grid;

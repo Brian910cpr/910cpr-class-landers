@@ -383,16 +383,22 @@ function renderRecommendations() {
   }
   $("recommendation-table").innerHTML = `
     <table>
-      <thead><tr><th>Instructor</th><th>Date</th><th>Gap</th><th>Minutes</th><th>Suggested Fits</th><th>Reason</th></tr></thead>
+      <thead><tr><th>Instructor</th><th>Date</th><th>Gap</th><th>Minutes</th><th>Suggested Fits</th><th>Badges</th><th>Reason</th></tr></thead>
       <tbody>${recommendations.map(item => {
         const fits = item.suggested_fits || [];
-        const topReason = fits[0]?.reason || "No reason recorded.";
+        const topFit = fits[0] || {};
+        const topReason = topFit.rank_reason || topFit.reason || "No reason recorded.";
+        const badges = [];
+        if (fits.some(fit => fit.preferred_match)) badges.push("Preferred");
+        if (fits.some(fit => Number(fit.business_priority_boost || 0) > 0)) badges.push("Business Priority");
+        if (item.location_conflict_possible) badges.push("Possible Conflict");
         return `<tr>
           <td>${escapeHtml(item.instructor)}</td>
           <td>${escapeHtml(item.date)}</td>
           <td>${escapeHtml(item.gap_start)} - ${escapeHtml(item.gap_end)}</td>
           <td>${escapeHtml(item.gap_minutes)}</td>
-          <td>${renderPills(fits.map(fit => `${fit.rank}. ${fit.course_family} (${fit.estimated_minutes}m)`))}</td>
+          <td>${renderPills(fits.map(fit => `${fit.rank}. ${fit.course_family} (${fit.estimated_minutes}m, score ${fit.rank_score ?? "n/a"})`))}</td>
+          <td>${renderBadges(badges)}</td>
           <td>${escapeHtml(topReason)}</td>
         </tr>`;
       }).join("")}</tbody>
@@ -441,6 +447,12 @@ function renderGeneratedTable() {
 
 function renderPills(items = []) {
   return `<div class="pill-list">${items.map(item => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>`;
+}
+
+function renderBadges(items = []) {
+  return items.length
+    ? `<div class="pill-list">${items.map(item => `<span class="badge">${escapeHtml(item)}</span>`).join("")}</div>`
+    : `<span class="muted">None</span>`;
 }
 
 function currentBlocks() {

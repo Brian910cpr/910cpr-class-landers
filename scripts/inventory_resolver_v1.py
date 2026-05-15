@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -16,17 +16,19 @@ SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 RECOMMENDATIONS_PATH = ROOT / "docs" / "data" / "inventory_recommendations.json"
 AUDIT_PATH = ROOT / "debug" / "inventory_resolver_v1_audit.json"
 
-# Resolver V1 estimates only. Keep these obvious and editable.
-COURSE_DURATION_ESTIMATES = {
+# Resolver V2 still uses simple estimates only. Keep these obvious and editable.
+COURSE_DURATION_MINUTES = {
     "HeartCode": 60,
     "BLS": 150,
     "Heartsaver CPR/AED": 90,
     "Heartsaver First Aid CPR/AED": 150,
     "ACLS Renewal": 240,
-    "PALS Renewal": 240,
     "ACLS Initial": 300,
+    "PALS Renewal": 240,
     "PALS Initial": 300,
 }
+
+COURSE_DURATION_ESTIMATES = COURSE_DURATION_MINUTES
 
 BUSINESS_USEFULNESS = {
     "ACLS Initial": 90,
@@ -57,6 +59,7 @@ class Session:
     start_minutes: int
     end_minutes: int
     course_name: str
+    family: str
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -136,6 +139,24 @@ def profile_for(instructor: str, profiles: dict[str, Any]) -> dict[str, Any]:
     return {}
 
 
+def course_family_from_session(raw: dict[str, Any]) -> str:
+    mapped_family = str(raw.get("mapped_family") or "")
+    mapped_subtype = str(raw.get("mapped_subtype") or "")
+    course_name = str(raw.get("course_name") or raw.get("official_course_name") or raw.get("raw_course_name") or "")
+    haystack = f"{mapped_family} {mapped_subtype} {course_name}".lower()
+    if "heartcode" in haystack or "skills" in haystack:
+        return "HeartCode"
+    if "bls" in haystack:
+        return "BLS"
+    if "acls" in haystack:
+        return "ACLS"
+    if "pals" in haystack:
+        return "PALS"
+    if "heartsaver" in haystack or "first aid" in haystack or "cpr/aed" in haystack or "cpr aed" in haystack:
+        return "Heartsaver"
+    return mapped_family or "Unknown"
+
+
 def load_sessions(warnings: list[str]) -> list[Session]:
     schedule = load_json(SCHEDULE_PATH, {"sessions": []})
     sessions: list[Session] = []
@@ -156,6 +177,7 @@ def load_sessions(warnings: list[str]) -> list[Session]:
                 start_minutes=start.hour * 60 + start.minute,
                 end_minutes=end.hour * 60 + end.minute,
                 course_name=raw.get("course_name") or raw.get("official_course_name") or "",
+                family=course_family_from_session(raw),
             )
         )
     if not sessions:
@@ -173,15 +195,28 @@ def occupied_segments(block: dict[str, Any], sessions: list[Session], profiles: 
     ]
 
 
-def subtract_occupied(start: int, end: int, occupied: list[Session]) -> list[tuple[int, int]]:
+def merge_occupied_windows(start: int, end: int, occupied: list[Session]) -> tuple[list[tuple[int, int]], int]:
     clipped = sorted(
         (max(start, session.start_minutes), min(end, session.end_minutes))
         for session in occupied
         if session.end_minutes > start and session.start_minutes < end
     )
+    merged: list[tuple[int, int]] = []
+    overlap_count = 0
+    for segment_start, segment_end in clipped:
+        if not merged or segment_start > merged[-1][1]:
+            merged.append((segment_start, segment_end))
+            continue
+        if segment_start < merged[-1][1]:
+            overlap_count += 1
+        merged[-1] = (merged[-1][0], max(merged[-1][1], segment_end))
+    return merged, overlap_count
+
+
+def subtract_occupied(start: int, end: int, merged_occupied: list[tuple[int, int]]) -> list[tuple[int, int]]:
     gaps: list[tuple[int, int]] = []
     cursor = start
-    for segment_start, segment_end in clipped:
+    for segment_start, segment_end in merged_occupied:
         if segment_start > cursor:
             gaps.append((cursor, segment_start))
         cursor = max(cursor, segment_end)
@@ -207,8 +242,30 @@ def candidate_courses(allowed_families: list[str], preferred_families: list[str]
     return sorted(set(candidates), key=lambda item: item[0])
 
 
-def fit_reason(course_family: str, duration: int, gap_minutes: int, block: dict[str, Any], gap_start: int) -> str:
+def base_family(course_family: str) -> str:
+    if course_family.startswith("ACLS"):
+        return "ACLS"
+    if course_family.startswith("PALS"):
+        return "PALS"
+    if course_family.startswith("Heartsaver"):
+        return "Heartsaver"
+    return course_family
+
+
+def preferred_match(course_family: str, preferred_families: list[str]) -> bool:
+    preferred = {family for family in preferred_families if family != "flexible"}
+    return base_family(course_family) in preferred or course_family in preferred
+
+
+def duration_fit_score(duration: int, gap_minutes: int) -> int:
+    leftover = gap_minutes - duration
+    return max(0, 40 - min(40, leftover // 5))
+
+
+def fit_reason(course_family: str, duration: int, gap_minutes: int, block: dict[str, Any], gap_start: int, is_preferred: bool) -> str:
     preferred = set(block.get("preferred_course_families") or [])
+    if is_preferred:
+        return "Matches instructor preferred course family."
     if course_family.startswith(("ACLS", "PALS")) and any(family in preferred for family in ("ACLS", "PALS")):
         return f"Preferred advanced family fits available {gap_minutes}-minute gap."
     anchor = parse_time(block.get("preferred_anchor_start"))
@@ -217,21 +274,65 @@ def fit_reason(course_family: str, duration: int, gap_minutes: int, block: dict[
     return f"Fits available {gap_minutes}-minute gap using V1 {duration}-minute estimate."
 
 
-def suggested_fits(block: dict[str, Any], gap_start: int, gap_end: int, profile: dict[str, Any]) -> list[dict[str, Any]]:
+def business_pressure_counts(sessions: list[Session], today: date | None = None) -> dict[str, int]:
+    anchor = today or date.today()
+    window_end = anchor + timedelta(days=14)
+    counts: dict[str, int] = {}
+    for session in sessions:
+        try:
+            session_date = date.fromisoformat(session.date)
+        except ValueError:
+            continue
+        if anchor <= session_date <= window_end:
+            counts[session.family] = counts.get(session.family, 0) + 1
+    return counts
+
+
+def suggested_fits(
+    block: dict[str, Any],
+    gap_start: int,
+    gap_end: int,
+    profile: dict[str, Any],
+    pressure_counts: dict[str, int],
+) -> list[dict[str, Any]]:
     gap_minutes = gap_end - gap_start
-    allowed = block.get("allowed_course_families") or profile.get("allowed_families") or []
+    block_allowed = set(block.get("allowed_course_families") or [])
+    profile_allowed = set(profile.get("allowed_families") or [])
+    if not block_allowed:
+        allowed = list(profile_allowed)
+    elif not profile_allowed or "flexible" in profile_allowed:
+        allowed = list(block_allowed)
+    elif "flexible" in block_allowed:
+        allowed = list(profile_allowed)
+    else:
+        allowed = list(block_allowed & profile_allowed)
     preferred = block.get("preferred_course_families") or profile.get("preferred_families") or []
     flexibility = block.get("flexibility") or profile.get("default_flexibility") or "use_unused_time_if_useful"
     fits = []
     for course_family, duration in candidate_courses(allowed, preferred, flexibility):
         if duration <= gap_minutes:
-            preferred_bonus = 100 if any(course_family.startswith(family) for family in preferred if family != "flexible") else 0
+            family = base_family(course_family)
+            is_preferred = preferred_match(course_family, preferred)
+            preferred_bonus = 100 if is_preferred else 0
+            business_boost = 50 if pressure_counts.get(family, 0) < 3 else 0
+            fit_score = duration_fit_score(duration, gap_minutes)
+            rank_score = preferred_bonus + business_boost + fit_score
+            rank_reasons = []
+            if is_preferred:
+                rank_reasons.append("Matches instructor preferred course family.")
+            if business_boost:
+                rank_reasons.append(f"{family} low upcoming inventory detected.")
+            rank_reasons.append(f"Duration fit score {fit_score}.")
             fits.append(
                 {
                     "course_family": course_family,
                     "estimated_minutes": duration,
-                    "_score": preferred_bonus + BUSINESS_USEFULNESS.get(course_family, 0),
-                    "reason": fit_reason(course_family, duration, gap_minutes, block, gap_start),
+                    "preferred_match": is_preferred,
+                    "business_priority_boost": business_boost,
+                    "rank_score": rank_score,
+                    "rank_reason": " ".join(rank_reasons),
+                    "_score": rank_score + BUSINESS_USEFULNESS.get(course_family, 0),
+                    "reason": fit_reason(course_family, duration, gap_minutes, block, gap_start, is_preferred),
                 }
             )
     fits.sort(key=lambda item: (-item["_score"], item["estimated_minutes"], item["course_family"]))
@@ -241,6 +342,16 @@ def suggested_fits(block: dict[str, Any], gap_start: int, gap_end: int, profile:
     return fits
 
 
+def location_conflict_possible(block: dict[str, Any], gap_start: int, gap_end: int, sessions: list[Session]) -> bool:
+    return any(
+        session.date == block.get("date")
+        and locations_match(str(block.get("location", "")), session.location)
+        and session.end_minutes > gap_start
+        and session.start_minutes < gap_end
+        for session in sessions
+    )
+
+
 def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
     warnings: list[str] = []
     skipped: list[dict[str, str]] = []
@@ -248,8 +359,11 @@ def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
     profiles = load_json(PROFILES_PATH, {"instructors": []})
     load_json(RANGES_PATH, {"ranges": []})  # Loaded to keep V1 aware of the registry file; not used for link generation.
     sessions = load_sessions(warnings)
+    pressure_counts = business_pressure_counts(sessions)
     recommendations: list[dict[str, Any]] = []
     gaps_found = 0
+    merged_overlap_count = 0
+    conflict_warnings_count = 0
 
     blocks = availability.get("availability_blocks") or []
     for block in blocks:
@@ -263,12 +377,17 @@ def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
             continue
         profile = profile_for(str(block.get("instructor", "")), profiles)
         occupied = occupied_segments(block, sessions, profiles)
-        gaps = subtract_occupied(start, end, occupied)
+        merged_occupied, block_overlap_count = merge_occupied_windows(start, end, occupied)
+        merged_overlap_count += block_overlap_count
+        gaps = subtract_occupied(start, end, merged_occupied)
         gaps_found += len(gaps)
         for gap_start, gap_end in gaps:
-            fits = suggested_fits(block, gap_start, gap_end, profile)
+            fits = suggested_fits(block, gap_start, gap_end, profile, pressure_counts)
             if not fits:
                 continue
+            possible_conflict = location_conflict_possible(block, gap_start, gap_end, sessions)
+            if possible_conflict:
+                conflict_warnings_count += 1
             recommendation_id = f"{slug(str(block.get('instructor')))}_{block.get('date')}_{format_time(gap_start).replace(':', '')}_{format_time(gap_end).replace(':', '')}"
             recommendations.append(
                 {
@@ -291,6 +410,11 @@ def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
                         }
                         for session in occupied
                     ],
+                    "merged_occupied_windows": [
+                        {"start": format_time(window_start), "end": format_time(window_end)}
+                        for window_start, window_end in merged_occupied
+                    ],
+                    "location_conflict_possible": possible_conflict,
                     "suggested_fits": fits,
                     "status": "recommendation_only",
                 }
@@ -309,9 +433,12 @@ def resolve() -> tuple[dict[str, Any], dict[str, Any]]:
         "existing_sessions_read": len(sessions),
         "gaps_found": gaps_found,
         "recommendations_created": len(recommendations),
+        "merged_overlap_count": merged_overlap_count,
+        "conflict_warnings_count": conflict_warnings_count,
+        "business_pressure_counts_by_family": pressure_counts,
         "warnings": warnings,
         "skipped_blocks": skipped,
-        "hard_stop": "V1 only: availability - existing sessions = usable gaps + simple fit recommendations. No public booking links generated.",
+        "hard_stop": "V2 operational ranking only: availability - occupied time = usable gaps + smarter recommendations. No public booking links generated.",
     }
     return output, audit
 

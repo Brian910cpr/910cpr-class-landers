@@ -1,10 +1,20 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-05-15T15:50:23.179589+00:00",
+  "generated_at": "2026-05-15T15:57:19.677911+00:00",
   "availability_blocks_read": 2,
   "existing_sessions_read": 1281,
   "gaps_found": 1,
   "recommendations_created": 1,
+  "merged_overlap_count": 0,
+  "conflict_warnings_count": 1,
+  "business_pressure_counts_by_family": {
+    "HeartCode": 14,
+    "ACLS": 7,
+    "PALS": 6,
+    "Heartsaver": 20,
+    "BLS": 25,
+    "Unknown": 1
+  },
   "warnings": [],
   "skipped_blocks": [
     {
@@ -12,5 +22,5 @@
       "reason": "missing_required_block_fields"
     }
   ],
-  "hard_stop": "V1 only: availability - existing sessions = usable gaps + simple fit recommendations. No public booking links generated."
+  "hard_stop": "V2 operational ranking only: availability - occupied time = usable gaps + smarter recommendations. No public booking links generated."
 }
