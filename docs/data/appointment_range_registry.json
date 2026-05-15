@@ -47,20 +47,6 @@
           "notes": "Historical/test data only. Earlier June 13-19 courseId 486041 test range; not the active normalized Brian appointment backbone."
         }
       ]
-    },
-    {
-      "range_id": "amy_wilmington_daily_2026",
-      "owner": "Amy Arnold",
-      "courseId": 486043,
-      "location": "NC - Wilmington: 4018 Shipyard Blvd",
-      "start_date": "2026-05-18",
-      "start_appointmentDayId": 261374,
-      "last_valid_date": "2027-04-30",
-      "last_valid_appointmentDayId": 261721,
-      "broken_after_appointmentDayId": 261722,
-      "generation_mode": "daily_contiguous",
-      "minimum_notice_days": 2,
-      "notes": "Amy range hard-stops at 261721 as tested. Saving 24-hour availability did not extend the generated range."
     }
   ]
 }

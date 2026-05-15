@@ -1,12 +1,12 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-05-15T20:37:49.484406+00:00",
-  "availability_blocks_read": 1,
+  "generated_at": "2026-05-15T21:24:27.203312+00:00",
+  "availability_blocks_read": 2,
   "existing_sessions_read": 1281,
-  "gaps_found": 1,
-  "recommendations_created": 1,
+  "gaps_found": 2,
+  "recommendations_created": 2,
   "merged_overlap_count": 0,
-  "conflict_warnings_count": 1,
+  "conflict_warnings_count": 2,
   "business_pressure_counts_by_family": {
     "HeartCode": 14,
     "ACLS": 7,

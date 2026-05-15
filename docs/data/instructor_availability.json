@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-05-15T20:36:39.734845+00:00",
+  "updated_at": "2026-05-15T20:45:42.948935+00:00",
   "availability_blocks": [
     {
       "allowed_course_families": [
@@ -24,6 +24,28 @@
         "PALS"
       ],
       "source": "manual_ui"
+    },
+    {
+      "block_id": "amy_2026-06-26_1300_1800",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "date": "2026-06-26",
+      "available_start": "13:00",
+      "available_end": "18:00",
+      "preferred_anchor_start": "14:00",
+      "preferred_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "allowed_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "flexibility": "use_unused_time_if_useful",
+      "source": "manual_ui",
+      "notes": "Erratic one-off blocks, often 1p-6p with 2p ACLS/PALS target."
     }
   ],
   "source_notes": []
