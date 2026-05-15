@@ -9,13 +9,162 @@
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
-.form-grid,
-.row-list {
+.error-panel ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.inventory-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 16px 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(17, 22, 27, .94);
+  backdrop-filter: blur(10px);
+}
+
+.inventory-nav a,
+.inventory-nav button {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.inventory-nav .status {
+  margin-left: auto;
+}
+
+.wizard-card {
   display: grid;
-  gap: 10px;
+  gap: 16px;
+}
+
+.step-indicator {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step-indicator li {
+  display: grid;
+  gap: 5px;
+  min-height: 64px;
+  align-content: center;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: var(--panel-2);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.step-indicator span {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #0f1317;
+  color: var(--soft);
+}
+
+.step-indicator li.active {
+  border-color: rgba(85, 167, 255, .65);
+  color: var(--text);
+}
+
+.step-indicator li.active span {
+  background: rgba(85, 167, 255, .22);
+  color: var(--text);
+}
+
+.step-indicator li.done {
+  border-color: rgba(66, 211, 146, .45);
+}
+
+.step-indicator li.done span {
+  background: rgba(66, 211, 146, .18);
+}
+
+.wizard-content {
+  min-height: 300px;
+  display: grid;
+  gap: 14px;
+}
+
+.wizard-step-heading h2 {
+  margin-bottom: 4px;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.instructor-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.choice-card {
+  min-height: 122px;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 14px;
+  text-align: left;
+}
+
+.choice-card strong {
+  font-size: 17px;
+}
+
+.choice-card span,
+.choice-card small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.choice-card.selected {
+  border-color: rgba(66, 211, 146, .62);
+  background: rgba(66, 211, 146, .1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.single-column {
+  grid-template-columns: 1fr;
 }
 
 .field,
@@ -50,8 +199,12 @@ td textarea {
 
 .checkbox-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
+}
+
+.weekday-grid {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
 .checkbox-grid label {
@@ -67,19 +220,72 @@ td textarea {
   font-size: 13px;
 }
 
-.entry-card {
-  display: grid;
+.wizard-actions {
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  padding: 12px;
+  justify-content: flex-end;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, .75fr) minmax(320px, 1.25fr);
+  gap: 14px;
+}
+
+.summary-list {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.summary-list div {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px;
+}
+
+.summary-list dt {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.summary-list dd {
+  margin: 0;
+}
+
+.hint-card {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--panel-2);
 }
 
-.entry-grid {
+.exclusion-tools {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 180px 1fr auto;
   gap: 10px;
+  align-items: end;
+}
+
+.list {
+  display: grid;
+  gap: 8px;
+}
+
+.list-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-2);
 }
 
 .table-wrap {
@@ -110,16 +316,34 @@ th {
   text-transform: uppercase;
 }
 
+.mini-table {
+  min-width: 680px;
+}
+
 .json-preview {
-  min-height: 420px;
+  max-height: 520px;
+  min-height: 280px;
+  overflow: auto;
   white-space: pre-wrap;
 }
 
-.exclusion-tools {
-  display: grid;
-  grid-template-columns: 180px 1fr auto;
-  gap: 10px;
-  align-items: end;
+.module-details {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.module-details > summary {
+  cursor: pointer;
+  padding: 14px 16px;
+  color: var(--text);
+  font-weight: 900;
+}
+
+.module-details > .card {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 8px 8px;
 }
 
 .small-note {
@@ -275,27 +499,39 @@ th {
   background: var(--panel-2);
 }
 
-@media (max-width: 980px) {
-  .entry-grid,
+@media (max-width: 1100px) {
+  .step-indicator,
+  .choice-grid,
+  .instructor-grid,
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .checkbox-grid,
+  .weekday-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .inventory-nav .status {
+    margin-left: 0;
+  }
+
+  .step-indicator,
+  .choice-grid,
+  .instructor-grid,
+  .form-grid,
+  .summary-grid,
   .exclusion-tools {
     grid-template-columns: 1fr;
   }
 
-  .checkbox-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .summary-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .checkbox-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .summary-grid {
+  .summary-list div {
     grid-template-columns: 1fr;
   }
 }

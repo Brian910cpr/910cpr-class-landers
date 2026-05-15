@@ -4,14 +4,23 @@ const RANGE_URL = "../../data/appointment_range_registry.json";
 const RECOMMENDATION_URL = "../../data/inventory_recommendations.json";
 const ACTION_QUEUE_URL = "../../data/inventory_action_queue.json";
 const ADMIN_API_BASE = "http://127.0.0.1:5057/api/inventory-control";
-const AVAILABILITY_PATH = "docs/data/instructor_availability.json";
-const RECOMMENDATION_PATH = "docs/data/inventory_recommendations.json";
-const ACTION_QUEUE_PATH = "docs/data/inventory_action_queue.json";
+
+const STEPS = [
+  ["Instructor", "Choose Instructor"],
+  ["Location", "Choose Location"],
+  ["Entry Type", "Choose Availability Entry Type"],
+  ["Time", "Choose Date/Time Blocks"],
+  ["Behavior", "Choose Behavior"],
+  ["Review", "Review & Add to Staging"],
+  ["Save", "Staging Queue"]
+];
+
 const FLEXIBILITY_MODES = [
   "strict_preferred_only",
   "use_unused_time_if_useful",
   "fully_flexible_within_qualifications"
 ];
+
 const COURSE_FAMILIES = ["ACLS", "PALS", "BLS", "Heartsaver", "HeartCode", "HSI", "ARC"];
 const WEEKDAYS = [
   ["0", "Sun"],
@@ -24,22 +33,38 @@ const WEEKDAYS = [
 ];
 
 const state = {
-  profiles: { instructors: [] },
+  profiles: { schema_version: "0.1", instructors: [] },
   availability: { schema_version: "0.1", updated_at: "", availability_blocks: [], source_notes: [] },
-  ranges: { ranges: [] },
-  recommendations: { recommendations: [] },
+  ranges: { schema_version: "0.1", ranges: [] },
+  recommendations: { schema_version: "0.1", recommendations: [] },
   actionQueue: { schema_version: "0.1", updated_at: "", duplicate_prevented_count: 0, actions: [] },
   adminConnected: false,
   staticMode: true,
+  currentStep: 1,
+  stagedBlocks: [],
+  editingStagedIndex: null,
   queueFilter: "draft",
-  oneOffRows: [],
-  generatedBlocks: [],
-  exclusions: [],
-  directoryHandle: null
+  lastErrors: [],
+  wizard: freshWizard()
 };
 
 function $(id) {
   return document.getElementById(id);
+}
+
+function freshWizard() {
+  return {
+    instructor: "",
+    location: "",
+    entryType: "",
+    oneOff: { date: "", start: "", end: "", anchor: "" },
+    block: { startDate: "", endDate: "", weekdays: ["1", "2", "3", "4", "5"], start: "", end: "", anchor: "" },
+    range: { startDate: "", endDate: "", weekdays: ["1", "2", "3", "4", "5"], start: "", end: "", anchor: "", exclusions: [] },
+    preferredFamilies: [],
+    allowedFamilies: [],
+    flexibility: "use_unused_time_if_useful",
+    notes: ""
+  };
 }
 
 function escapeHtml(value) {
@@ -86,12 +111,52 @@ function setAdminStatus(message, connected) {
   banner.classList.toggle("admin-connected", Boolean(connected));
 }
 
+function setLoadWarning(message) {
+  const banner = $("load-warning");
+  if (!banner) return;
+  banner.classList.toggle("hidden", !message);
+  banner.innerHTML = message ? escapeHtml(message) : "";
+}
+
+function showErrors(errors, focusSelector = "") {
+  state.lastErrors = errors;
+  const panel = $("error-panel");
+  const count = $("top-error-count");
+  if (count) {
+    count.textContent = `${errors.length} error${errors.length === 1 ? "" : "s"}`;
+    count.className = errors.length ? "status action" : "status none";
+  }
+  if (!panel) return;
+  if (!errors.length) {
+    panel.classList.add("hidden");
+    panel.innerHTML = "";
+    return;
+  }
+  panel.classList.remove("hidden");
+  panel.innerHTML = `
+    <strong>Fix this before continuing:</strong>
+    <ul>${errors.map(error => `<li>${escapeHtml(error.message || error)}</li>`).join("")}</ul>
+  `;
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  const target = focusSelector || errors.find(error => error.selector)?.selector;
+  if (target) {
+    const element = document.querySelector(target);
+    if (element && typeof element.focus === "function") {
+      setTimeout(() => element.focus(), 80);
+    }
+  }
+}
+
+function clearErrors() {
+  showErrors([]);
+}
+
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
 
 function dateFromIso(value) {
-  const [year, month, day] = String(value).split("-").map(Number);
+  const [year, month, day] = String(value || "").split("-").map(Number);
   if (!year || !month || !day) return null;
   return new Date(year, month - 1, day);
 }
@@ -128,7 +193,7 @@ function displayTime(value) {
   let hour = Number(hourText);
   const suffix = hour >= 12 ? "PM" : "AM";
   hour = hour % 12 || 12;
-  return `${hour}:${minuteText} ${suffix}`;
+  return `${hour}:${minuteText || "00"} ${suffix}`;
 }
 
 function slug(value) {
@@ -140,242 +205,686 @@ function slug(value) {
 }
 
 function instructorByName(name) {
-  return (state.profiles.instructors || []).find(instructor => instructor.display_name === name || instructor.short_name === name);
+  return (state.profiles.instructors || []).find(instructor =>
+    instructor.display_name === name || instructor.short_name === name || instructor.id === name
+  );
 }
 
-function instructorOptions(selected = "") {
-  return (state.profiles.instructors || [])
-    .map(instructor => `<option value="${escapeHtml(instructor.display_name)}" ${instructor.display_name === selected ? "selected" : ""}>${escapeHtml(instructor.display_name)}</option>`)
-    .join("");
+function selectedProfile() {
+  return instructorByName(state.wizard.instructor);
 }
 
-function flexibilityOptions(selected = "use_unused_time_if_useful") {
-  return FLEXIBILITY_MODES
-    .map(mode => `<option value="${mode}" ${mode === selected ? "selected" : ""}>${mode}</option>`)
-    .join("");
-}
-
-function familyCheckboxes(name, selected = []) {
+function familySetHtml(name, selected = []) {
   const selectedSet = new Set(selected);
   return `<div class="checkbox-grid">${COURSE_FAMILIES.map(family => `
-    <label><input type="checkbox" name="${name}" value="${family}" ${selectedSet.has(family) ? "checked" : ""}> ${family}</label>
+    <label>
+      <input type="checkbox" name="${name}" value="${family}" ${selectedSet.has(family) ? "checked" : ""}>
+      ${escapeHtml(family)}
+    </label>
   `).join("")}</div>`;
 }
 
-function weekdayCheckboxes(name, selected = ["1", "2", "3", "4", "5"]) {
+function weekdaySetHtml(name, selected = []) {
   const selectedSet = new Set(selected.map(String));
-  return `<div class="checkbox-grid">${WEEKDAYS.map(([value, label]) => `
-    <label><input type="checkbox" name="${name}" value="${value}" ${selectedSet.has(value) ? "checked" : ""}> ${label}</label>
+  return `<div class="checkbox-grid weekday-grid">${WEEKDAYS.map(([value, label]) => `
+    <label>
+      <input type="checkbox" name="${name}" value="${value}" ${selectedSet.has(value) ? "checked" : ""}>
+      ${label}
+    </label>
   `).join("")}</div>`;
 }
 
-function getChecked(form, name) {
-  return Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map(input => input.value);
+function getChecked(name) {
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(input => input.value);
 }
 
-function baseFields(prefix, profile) {
+function renderStepIndicator() {
+  const indicator = $("step-indicator");
+  indicator.innerHTML = STEPS.map(([label], index) => {
+    const step = index + 1;
+    const className = step === state.currentStep ? "active" : step < state.currentStep ? "done" : "";
+    return `<li class="${className}"><span>${step}</span>${escapeHtml(label)}</li>`;
+  }).join("");
+  $("wizard-mode").textContent = `Step ${state.currentStep}`;
+}
+
+function renderWizard() {
+  renderStepIndicator();
+  const [, title] = STEPS[state.currentStep - 1];
+  $("wizard-content").innerHTML = `
+    <div class="wizard-step-heading">
+      <h2>${escapeHtml(title)}</h2>
+      <p class="muted">${escapeHtml(stepHelpText(state.currentStep))}</p>
+    </div>
+    ${renderStepBody(state.currentStep)}
+  `;
+  wireWizardStep();
+  renderWizardActions();
+  validateCurrentStep(false);
+}
+
+function stepHelpText(step) {
+  const help = {
+    1: "Start by choosing who owns this availability. Defaults load from the instructor profile.",
+    2: "Confirm where the instructor can be used. The default location is loaded first.",
+    3: "Choose one entry style. Only the selected path is shown after this point.",
+    4: "Enter the actual availability window. Times are availability, not public class promises.",
+    5: "Set course-family permissions and flexibility. Resolver logic decides what fits later.",
+    6: "Review the generated blocks. Add to staging only after the summary looks right.",
+    7: "Save only staged, validated blocks. The active form is ignored by the save operation."
+  };
+  return help[step] || "";
+}
+
+function renderStepBody(step) {
+  if (step === 1) return renderInstructorStep();
+  if (step === 2) return renderLocationStep();
+  if (step === 3) return renderEntryTypeStep();
+  if (step === 4) return renderTimeStep();
+  if (step === 5) return renderBehaviorStep();
+  if (step === 6) return renderReviewStep();
+  return renderSaveStep();
+}
+
+function renderInstructorStep() {
+  const profiles = state.profiles.instructors || [];
+  if (!profiles.length) {
+    return `<div class="empty-state">No instructor profiles were loaded. Check docs/data/instructor_profiles.json.</div>`;
+  }
+  return `<div class="choice-grid instructor-grid">${profiles.map(profile => `
+    <button type="button" class="choice-card ${state.wizard.instructor === profile.display_name ? "selected" : ""}" data-select-instructor="${escapeHtml(profile.display_name)}">
+      <strong>${escapeHtml(profile.display_name)}</strong>
+      <span>${escapeHtml(profile.default_location || "No default location")}</span>
+      <small>Preferred: ${escapeHtml((profile.preferred_families || []).join(", ") || "Not set")}</small>
+    </button>
+  `).join("")}</div>`;
+}
+
+function renderLocationStep() {
+  const profile = selectedProfile();
   return `
-    <label>Instructor<select name="instructor" data-instructor-select data-prefix="${prefix}">${instructorOptions(profile?.display_name || "")}</select></label>
-    <label>Location<input name="location" value="${escapeHtml(profile?.default_location || "Wilmington Shipyard")}" required></label>
-    <label>Available start time<input name="available_start" type="time" value="${prefix === "range" ? "08:30" : "13:00"}" required></label>
-    <label>Available end time<input name="available_end" type="time" value="${prefix === "range" ? "20:00" : "18:00"}" required></label>
-    <label>Preferred anchor/start time<input name="preferred_anchor_start" type="time" value="${profile?.short_name === "Amy" ? "14:00" : ""}"></label>
-    <label>Flexibility mode<select name="flexibility">${flexibilityOptions(profile?.default_flexibility)}</select></label>
-    <div class="field span-field">Preferred course families${familyCheckboxes("preferred_course_families", profile?.preferred_families || [])}</div>
-    <div class="field span-field">Allowed course families${familyCheckboxes("allowed_course_families", profile?.allowed_families || [])}</div>
-    <label class="span-field">Notes<textarea name="notes" rows="3">${escapeHtml(profile?.default_availability_pattern_note || "")}</textarea></label>
+    <div class="form-grid single-column">
+      <label class="field">Location
+        <input id="wizard-location" type="text" value="${escapeHtml(state.wizard.location)}" placeholder="${escapeHtml(profile?.default_location || "Wilmington Shipyard")}">
+      </label>
+      <div class="hint-card">
+        Default location: <strong>${escapeHtml(profile?.default_location || "Not set")}</strong>
+      </div>
+    </div>
   `;
 }
 
-function populateForms() {
-  const amy = instructorByName("Amy Arnold") || state.profiles.instructors?.[0] || {};
-  const nick = instructorByName("Nick") || state.profiles.instructors?.[0] || {};
-  const brian = instructorByName("Brian") || state.profiles.instructors?.[0] || {};
-  $("block-form").innerHTML = `
-    <label>Start date<input name="start_date" type="date" required></label>
-    <label>End date<input name="end_date" type="date" required></label>
-    ${baseFields("block", nick)}
-    <div class="field span-field">Days of week included${weekdayCheckboxes("days_of_week", ["1", "2", "3", "4", "5"])}</div>
+function renderEntryTypeStep() {
+  const options = [
+    ["one_off", "One-off day", "Best for erratic single-day availability."],
+    ["block", "Block of days", "Best for several similar days in a row."],
+    ["large_range", "Large range with exclusions", "Best for broad recurring availability with blackout dates."]
+  ];
+  return `<div class="choice-grid">${options.map(([value, label, note]) => `
+    <button type="button" class="choice-card ${state.wizard.entryType === value ? "selected" : ""}" data-select-entry-type="${value}">
+      <strong>${label}</strong>
+      <span>${note}</span>
+    </button>
+  `).join("")}</div>`;
+}
+
+function renderTimeStep() {
+  if (state.wizard.entryType === "one_off") {
+    const model = state.wizard.oneOff;
+    return `
+      <div class="form-grid">
+        <label class="field">Date<input id="oneoff-date" type="date" value="${escapeHtml(model.date)}"></label>
+        <label class="field">Available start time<input id="oneoff-start" type="time" value="${escapeHtml(model.start)}"></label>
+        <label class="field">Available end time<input id="oneoff-end" type="time" value="${escapeHtml(model.end)}"></label>
+        <label class="field">Preferred anchor/start time<input id="oneoff-anchor" type="time" value="${escapeHtml(model.anchor)}"></label>
+      </div>
+    `;
+  }
+  if (state.wizard.entryType === "block") {
+    const model = state.wizard.block;
+    return `
+      <div class="form-grid">
+        <label class="field">Start date<input id="block-start-date" type="date" value="${escapeHtml(model.startDate)}"></label>
+        <label class="field">End date<input id="block-end-date" type="date" value="${escapeHtml(model.endDate)}"></label>
+        <label class="field">Available start time<input id="block-start" type="time" value="${escapeHtml(model.start)}"></label>
+        <label class="field">Available end time<input id="block-end" type="time" value="${escapeHtml(model.end)}"></label>
+        <label class="field">Preferred anchor/start time<input id="block-anchor" type="time" value="${escapeHtml(model.anchor)}"></label>
+        <div class="field span-field">Days of week included${weekdaySetHtml("block-weekdays", model.weekdays)}</div>
+      </div>
+    `;
+  }
+  const model = state.wizard.range;
+  return `
+    <div class="form-grid">
+      <label class="field">Start date<input id="range-start-date" type="date" value="${escapeHtml(model.startDate)}"></label>
+      <label class="field">End date<input id="range-end-date" type="date" value="${escapeHtml(model.endDate)}"></label>
+      <label class="field">Default start time<input id="range-start" type="time" value="${escapeHtml(model.start)}"></label>
+      <label class="field">Default end time<input id="range-end" type="time" value="${escapeHtml(model.end)}"></label>
+      <label class="field">Preferred anchor/start time<input id="range-anchor" type="time" value="${escapeHtml(model.anchor)}"></label>
+      <div class="field span-field">Days of week included${weekdaySetHtml("range-weekdays", model.weekdays)}</div>
+    </div>
+    <div class="exclusion-tools">
+      <label class="field">Excluded date<input id="excluded-date-input" type="date"></label>
+      <label class="field">Exclusion reason<input id="exclusion-reason-input" placeholder="travel, unavailable, admin hold"></label>
+      <button id="add-exclusion-button" type="button">Add Exclusion</button>
+    </div>
+    <div id="exclusion-list" class="list">${renderExclusionsHtml()}</div>
   `;
-  $("range-form").innerHTML = `
-    <label>Start date<input name="start_date" type="date" required></label>
-    <label>End date<input name="end_date" type="date" required></label>
-    ${baseFields("range", brian)}
-    <div class="field span-field">Days of week included${weekdayCheckboxes("days_of_week", ["1", "2", "3", "4", "5", "6"])}</div>
+}
+
+function renderBehaviorStep() {
+  return `
+    <div class="form-grid">
+      <div class="field span-field">Preferred course families${familySetHtml("preferred-families", state.wizard.preferredFamilies)}</div>
+      <div class="field span-field">Allowed course families${familySetHtml("allowed-families", state.wizard.allowedFamilies)}</div>
+      <label class="field span-field">Flexibility mode
+        <select id="wizard-flexibility">
+          ${FLEXIBILITY_MODES.map(mode => `<option value="${mode}" ${mode === state.wizard.flexibility ? "selected" : ""}>${mode}</option>`).join("")}
+        </select>
+      </label>
+      <label class="field span-field">Notes
+        <textarea id="wizard-notes" rows="4" placeholder="Operator context for this availability block.">${escapeHtml(state.wizard.notes)}</textarea>
+      </label>
+    </div>
   `;
-  if (!state.oneOffRows.length) {
-    state.oneOffRows.push(defaultOneOffRow(amy));
+}
+
+function renderReviewStep() {
+  const blocks = generateWizardBlocks();
+  const summary = humanSummary(blocks);
+  return `
+    <div class="review-grid">
+      <article class="hint-card">
+        <h3>Summary</h3>
+        <p>${escapeHtml(summary)}</p>
+        <dl class="summary-list">
+          <div><dt>Instructor</dt><dd>${escapeHtml(state.wizard.instructor)}</dd></div>
+          <div><dt>Location</dt><dd>${escapeHtml(state.wizard.location)}</dd></div>
+          <div><dt>Entry type</dt><dd>${escapeHtml(entryTypeLabel(state.wizard.entryType))}</dd></div>
+          <div><dt>Generated blocks</dt><dd>${blocks.length}</dd></div>
+        </dl>
+      </article>
+      <article>
+        <h3>Generated JSON Preview</h3>
+        <pre class="code json-preview">${escapeHtml(JSON.stringify(blocks, null, 2))}</pre>
+      </article>
+    </div>
+  `;
+}
+
+function renderSaveStep() {
+  return `
+    <div class="hint-card">
+      <h3>Ready to Save</h3>
+      <p>Use the Staging Queue below to save staged blocks. The active wizard form is never posted to JSON.</p>
+      <p><strong>${state.stagedBlocks.length}</strong> staged block${state.stagedBlocks.length === 1 ? "" : "s"} ready.</p>
+    </div>
+  `;
+}
+
+function renderExclusionsHtml() {
+  const exclusions = state.wizard.range.exclusions || [];
+  if (!exclusions.length) return `<div class="list-item"><span>No exclusions yet.</span><span class="status none">Optional</span></div>`;
+  return exclusions.map((exclusion, index) => `
+    <div class="list-item">
+      <div><strong>${escapeHtml(exclusion.date)}</strong><div class="muted">${escapeHtml(exclusion.reason || "No reason recorded")}</div></div>
+      <button class="secondary" type="button" data-remove-exclusion="${index}">Remove Exclusion</button>
+    </div>
+  `).join("");
+}
+
+function wireWizardStep() {
+  document.querySelectorAll("[data-select-instructor]").forEach(button => {
+    button.addEventListener("click", () => selectInstructor(button.dataset.selectInstructor));
+  });
+  document.querySelectorAll("[data-select-entry-type]").forEach(button => {
+    button.addEventListener("click", () => {
+      state.wizard.entryType = button.dataset.selectEntryType;
+      clearErrors();
+      renderWizard();
+    });
+  });
+  const location = $("wizard-location");
+  if (location) {
+    location.addEventListener("input", () => {
+      state.wizard.location = location.value.trim();
+      validateCurrentStep(false);
+    });
+  }
+  bindTimeInputs();
+  bindBehaviorInputs();
+  const addExclusion = $("add-exclusion-button");
+  if (addExclusion) addExclusion.addEventListener("click", addExclusionFromInputs);
+  document.querySelectorAll("[data-remove-exclusion]").forEach(button => {
+    button.addEventListener("click", () => {
+      state.wizard.range.exclusions.splice(Number(button.dataset.removeExclusion), 1);
+      renderWizard();
+    });
+  });
+}
+
+function selectInstructor(displayName) {
+  const profile = instructorByName(displayName);
+  state.wizard.instructor = displayName;
+  state.wizard.location = profile?.default_location || "";
+  state.wizard.preferredFamilies = [...(profile?.preferred_families || [])].filter(family => family !== "flexible");
+  state.wizard.allowedFamilies = [...(profile?.allowed_families || [])];
+  state.wizard.flexibility = profile?.default_flexibility || "use_unused_time_if_useful";
+  state.wizard.notes = profile?.default_availability_pattern_note || "";
+  const defaultStart = profile?.short_name === "Amy" ? "13:00" : "08:30";
+  const defaultEnd = profile?.short_name === "Amy" ? "18:00" : "17:00";
+  const defaultAnchor = profile?.short_name === "Amy" ? "14:00" : "";
+  state.wizard.oneOff.start = state.wizard.oneOff.start || defaultStart;
+  state.wizard.oneOff.end = state.wizard.oneOff.end || defaultEnd;
+  state.wizard.oneOff.anchor = state.wizard.oneOff.anchor || defaultAnchor;
+  state.wizard.block.start = state.wizard.block.start || defaultStart;
+  state.wizard.block.end = state.wizard.block.end || defaultEnd;
+  state.wizard.block.anchor = state.wizard.block.anchor || defaultAnchor;
+  state.wizard.range.start = state.wizard.range.start || defaultStart;
+  state.wizard.range.end = state.wizard.range.end || defaultEnd;
+  state.wizard.range.anchor = state.wizard.range.anchor || defaultAnchor;
+  clearErrors();
+  renderWizard();
+}
+
+function bindTimeInputs() {
+  const pairs = [
+    ["oneOff", "date", "oneoff-date"],
+    ["oneOff", "start", "oneoff-start"],
+    ["oneOff", "end", "oneoff-end"],
+    ["oneOff", "anchor", "oneoff-anchor"],
+    ["block", "startDate", "block-start-date"],
+    ["block", "endDate", "block-end-date"],
+    ["block", "start", "block-start"],
+    ["block", "end", "block-end"],
+    ["block", "anchor", "block-anchor"],
+    ["range", "startDate", "range-start-date"],
+    ["range", "endDate", "range-end-date"],
+    ["range", "start", "range-start"],
+    ["range", "end", "range-end"],
+    ["range", "anchor", "range-anchor"]
+  ];
+  for (const [group, key, id] of pairs) {
+    const input = $(id);
+    if (!input) continue;
+    input.addEventListener("input", () => {
+      state.wizard[group][key] = input.value;
+      validateCurrentStep(false);
+    });
+  }
+  document.querySelectorAll("input[name='block-weekdays']").forEach(input => {
+    input.addEventListener("change", () => {
+      state.wizard.block.weekdays = getChecked("block-weekdays");
+      validateCurrentStep(false);
+    });
+  });
+  document.querySelectorAll("input[name='range-weekdays']").forEach(input => {
+    input.addEventListener("change", () => {
+      state.wizard.range.weekdays = getChecked("range-weekdays");
+      validateCurrentStep(false);
+    });
+  });
+}
+
+function bindBehaviorInputs() {
+  document.querySelectorAll("input[name='preferred-families']").forEach(input => {
+    input.addEventListener("change", () => {
+      state.wizard.preferredFamilies = getChecked("preferred-families");
+      validateCurrentStep(false);
+    });
+  });
+  document.querySelectorAll("input[name='allowed-families']").forEach(input => {
+    input.addEventListener("change", () => {
+      state.wizard.allowedFamilies = getChecked("allowed-families");
+      validateCurrentStep(false);
+    });
+  });
+  const flexibility = $("wizard-flexibility");
+  if (flexibility) {
+    flexibility.addEventListener("change", () => {
+      state.wizard.flexibility = flexibility.value;
+      validateCurrentStep(false);
+    });
+  }
+  const notes = $("wizard-notes");
+  if (notes) {
+    notes.addEventListener("input", () => {
+      state.wizard.notes = notes.value;
+    });
   }
 }
 
-function defaultOneOffRow(profile = {}) {
-  return {
-    instructor: profile.display_name || "Amy Arnold",
-    location: profile.default_location || "Wilmington Shipyard",
-    date: "",
-    available_start: "13:00",
-    available_end: "18:00",
-    preferred_anchor_start: profile.short_name === "Amy" ? "14:00" : "",
-    preferred_course_families: profile.preferred_families || ["ACLS", "PALS"],
-    allowed_course_families: profile.allowed_families || ["ACLS", "PALS", "BLS", "Heartsaver", "HeartCode"],
-    flexibility: profile.default_flexibility || "use_unused_time_if_useful",
-    notes: profile.default_availability_pattern_note || ""
-  };
+function addExclusionFromInputs() {
+  const dateInput = $("excluded-date-input");
+  const reasonInput = $("exclusion-reason-input");
+  if (!dateInput?.value) {
+    showErrors([{ message: "Excluded date required.", selector: "#excluded-date-input" }]);
+    return;
+  }
+  state.wizard.range.exclusions.push({ date: dateInput.value, reason: reasonInput?.value.trim() || "" });
+  renderWizard();
 }
 
-function buildBlockId(row) {
-  const profile = instructorByName(row.instructor);
-  const instructorSlug = slug(profile?.short_name || row.instructor);
-  return `${instructorSlug}_${row.date}_${String(row.available_start).replace(":", "")}_${String(row.available_end).replace(":", "")}`;
+function renderWizardActions() {
+  const back = $("wizard-back-button");
+  const next = $("wizard-next-button");
+  const add = $("wizard-add-staging-button");
+  const reset = $("wizard-reset-button");
+  const valid = validateCurrentStep(false);
+  back.disabled = state.currentStep === 1;
+  next.classList.toggle("hidden", state.currentStep >= 6);
+  add.classList.toggle("hidden", state.currentStep !== 6);
+  reset.disabled = false;
+  syncWizardButtonState(valid);
 }
 
-function normalizeBlock(row, source = "manual_ui") {
-  return {
-    block_id: buildBlockId(row),
-    instructor: row.instructor,
-    location: row.location,
-    date: row.date,
-    available_start: row.available_start,
-    available_end: row.available_end,
-    preferred_anchor_start: row.preferred_anchor_start || "",
-    preferred_course_families: row.preferred_course_families || [],
-    allowed_course_families: row.allowed_course_families || [],
-    flexibility: row.flexibility,
-    source,
-    notes: row.notes || ""
-  };
+function validateCurrentStep(showPanel) {
+  const result = validateStep(state.currentStep);
+  if (showPanel || result.errors.length) {
+    if (result.errors.length) showErrors(result.errors);
+    else clearErrors();
+  } else {
+    clearErrors();
+  }
+  syncWizardButtonState(result.errors.length === 0);
+  return result.errors.length === 0;
 }
 
-function validateBlock(row) {
+function syncWizardButtonState(valid) {
+  const next = $("wizard-next-button");
+  const add = $("wizard-add-staging-button");
+  if (next) next.disabled = !valid;
+  if (add) add.disabled = state.currentStep !== 6 || !valid;
+}
+
+function validateStep(step) {
+  const errors = [];
+  if (step >= 1 && !state.wizard.instructor) errors.push({ message: "Instructor required before Step 2.", selector: "[data-select-instructor]" });
+  if (step >= 2 && !state.wizard.location) errors.push({ message: "Location required before Step 3.", selector: "#wizard-location" });
+  if (step >= 3 && !state.wizard.entryType) errors.push({ message: "Entry type required before Step 4.", selector: "[data-select-entry-type]" });
+  if (step >= 4 && state.wizard.entryType) errors.push(...validateTimeStep());
+  if (step >= 5 && !state.wizard.allowedFamilies.length) errors.push({ message: "At least one allowed course family required before Review.", selector: "input[name='allowed-families']" });
+  if (step >= 6) {
+    const blocks = generateWizardBlocks();
+    if (!blocks.length) errors.push({ message: "No valid date-level blocks were generated.", selector: "#wizard-content" });
+    for (const block of blocks) {
+      for (const issue of validateBlock(block)) errors.push({ message: `${block.block_id}: ${issue}`, selector: "#wizard-content" });
+    }
+  }
+  return { errors };
+}
+
+function validateTimeStep() {
+  const errors = [];
+  const type = state.wizard.entryType;
+  const model = type === "one_off" ? state.wizard.oneOff : type === "block" ? state.wizard.block : state.wizard.range;
+  const start = timeMinutes(model.start);
+  const end = timeMinutes(model.end);
+  const anchor = timeMinutes(model.anchor);
+  const startSelector = type === "one_off" ? "#oneoff-start" : type === "block" ? "#block-start" : "#range-start";
+  const endSelector = type === "one_off" ? "#oneoff-end" : type === "block" ? "#block-end" : "#range-end";
+  if (type === "one_off") {
+    if (!model.date) errors.push({ message: "Date required.", selector: "#oneoff-date" });
+  } else {
+    const startDate = dateFromIso(model.startDate);
+    const endDate = dateFromIso(model.endDate);
+    const startDateSelector = type === "block" ? "#block-start-date" : "#range-start-date";
+    const endDateSelector = type === "block" ? "#block-end-date" : "#range-end-date";
+    if (!startDate) errors.push({ message: "Start date required.", selector: startDateSelector });
+    if (!endDate) errors.push({ message: "End date required.", selector: endDateSelector });
+    if (startDate && endDate && endDate < startDate) errors.push({ message: "End date must be after start date.", selector: endDateSelector });
+    if (!model.weekdays.length) errors.push({ message: "At least one day of week must be selected.", selector: type === "block" ? "input[name='block-weekdays']" : "input[name='range-weekdays']" });
+    if (type === "large_range") {
+      for (const exclusion of model.exclusions) {
+        const exclusionDate = dateFromIso(exclusion.date);
+        if (!exclusionDate || !startDate || !endDate || exclusionDate < startDate || exclusionDate > endDate) {
+          errors.push({ message: `Excluded date ${exclusion.date} must fall inside the large range.`, selector: "#excluded-date-input" });
+        }
+      }
+    }
+  }
+  if (start === null) errors.push({ message: "Available start time required.", selector: startSelector });
+  if (end === null) errors.push({ message: "Available end time required.", selector: endSelector });
+  if (start !== null && end !== null && start >= end) errors.push({ message: "End time must be after start time.", selector: endSelector });
+  if (model.anchor && (anchor === null || anchor < start || anchor >= end)) {
+    errors.push({ message: "Preferred anchor must be inside the availability window.", selector: type === "one_off" ? "#oneoff-anchor" : type === "block" ? "#block-anchor" : "#range-anchor" });
+  }
+  return errors;
+}
+
+function validateBlock(block) {
   const issues = [];
-  const start = timeMinutes(row.available_start);
-  const end = timeMinutes(row.available_end);
-  const anchor = timeMinutes(row.preferred_anchor_start);
-  if (!row.instructor) issues.push("Instructor required");
-  if (!row.location) issues.push("Location required");
-  if (!row.date) issues.push("Date required");
+  const start = timeMinutes(block.available_start);
+  const end = timeMinutes(block.available_end);
+  const anchor = timeMinutes(block.preferred_anchor_start);
+  if (!block.instructor) issues.push("Instructor required");
+  if (!block.location) issues.push("Location required");
+  if (!block.date) issues.push("Date required");
   if (start === null || end === null || start >= end) issues.push("Start time must be before end time");
-  if (!row.allowed_course_families?.length) issues.push("At least one allowed course family required");
-  if (row.preferred_anchor_start && (anchor === null || anchor < start || anchor >= end)) {
+  if (!block.allowed_course_families?.length) issues.push("At least one allowed course family required");
+  if (block.preferred_anchor_start && (anchor === null || anchor < start || anchor >= end)) {
     issues.push("Preferred anchor must fall inside the availability window");
   }
   return issues;
 }
 
-function formToRows(form, mode) {
-  const data = new FormData(form);
-  const startDate = String(data.get("start_date") || "");
-  const endDate = String(data.get("end_date") || "");
-  const selectedDays = new Set(getChecked(form, "days_of_week"));
-  const rowBase = {
-    instructor: String(data.get("instructor") || ""),
-    location: String(data.get("location") || ""),
-    available_start: String(data.get("available_start") || ""),
-    available_end: String(data.get("available_end") || ""),
-    preferred_anchor_start: String(data.get("preferred_anchor_start") || ""),
-    preferred_course_families: getChecked(form, "preferred_course_families"),
-    allowed_course_families: getChecked(form, "allowed_course_families"),
-    flexibility: String(data.get("flexibility") || "use_unused_time_if_useful"),
-    notes: String(data.get("notes") || "")
-  };
-  const exclusionDates = new Set(state.exclusions.map(item => item.date));
-  return dateRange(startDate, endDate)
-    .filter(date => selectedDays.has(String(date.getDay())))
-    .filter(date => mode !== "range" || !exclusionDates.has(toIsoDate(date)))
-    .map(date => normalizeBlock({ ...rowBase, date: toIsoDate(date) }, mode === "range" ? "large_range_ui" : "block_builder_ui"));
-}
-
-function validateRangeForm(form) {
-  const data = new FormData(form);
-  const start = dateFromIso(data.get("start_date"));
-  const end = dateFromIso(data.get("end_date"));
-  const issues = [];
-  if (!start || !end || end < start) issues.push("Range start and end dates are required, and end must be after start");
-  for (const exclusion of state.exclusions) {
-    const exclusionDate = dateFromIso(exclusion.date);
-    if (!exclusionDate || exclusionDate < start || exclusionDate > end) {
-      issues.push(`Excluded date ${exclusion.date} must fall inside the large range`);
-    }
+function generateWizardBlocks() {
+  if (!state.wizard.instructor || !state.wizard.location || !state.wizard.entryType) return [];
+  if (validateTimeStep().length) return [];
+  const type = state.wizard.entryType;
+  if (type === "one_off") {
+    return [normalizeBlock({
+      date: state.wizard.oneOff.date,
+      start: state.wizard.oneOff.start,
+      end: state.wizard.oneOff.end,
+      anchor: state.wizard.oneOff.anchor,
+      source: "manual_ui"
+    })];
   }
-  return issues;
+  const model = type === "block" ? state.wizard.block : state.wizard.range;
+  const selectedDays = new Set(model.weekdays.map(String));
+  const exclusions = new Set((model.exclusions || []).map(item => item.date));
+  return dateRange(model.startDate, model.endDate)
+    .filter(date => selectedDays.has(String(date.getDay())))
+    .filter(date => type !== "large_range" || !exclusions.has(toIsoDate(date)))
+    .map(date => normalizeBlock({
+      date: toIsoDate(date),
+      start: model.start,
+      end: model.end,
+      anchor: model.anchor,
+      source: type === "block" ? "block_builder_ui" : "large_range_ui"
+    }));
 }
 
-function renderOneOffRows() {
-  $("one-off-list").innerHTML = state.oneOffRows.map((row, index) => `
-    <div class="entry-card" data-row="${index}">
-      <div class="card-header">
-        <strong>One-off ${index + 1}</strong>
-        <div class="actions">
-          <button class="secondary" type="button" data-copy-row="${index}">Copy Previous Row</button>
-          <button class="secondary" type="button" data-delete-row="${index}">Delete Row</button>
-        </div>
-      </div>
-      <div class="entry-grid">
-        <label class="field">Instructor<select data-field="instructor">${instructorOptions(row.instructor)}</select></label>
-        <label class="field">Location<input data-field="location" value="${escapeHtml(row.location)}"></label>
-        <label class="field">Date<input data-field="date" type="date" value="${escapeHtml(row.date)}"></label>
-        <label class="field">Preferred anchor/start time<input data-field="preferred_anchor_start" type="time" value="${escapeHtml(row.preferred_anchor_start)}"></label>
-        <label class="field">Available start time<input data-field="available_start" type="time" value="${escapeHtml(row.available_start)}"></label>
-        <label class="field">Available end time<input data-field="available_end" type="time" value="${escapeHtml(row.available_end)}"></label>
-        <label class="field">Flexibility mode<select data-field="flexibility">${flexibilityOptions(row.flexibility)}</select></label>
-      </div>
-      <div class="field">Preferred course families${familyCheckboxes(`preferred_${index}`, row.preferred_course_families)}</div>
-      <div class="field">Allowed course families${familyCheckboxes(`allowed_${index}`, row.allowed_course_families)}</div>
-      <label class="field">Notes<textarea data-field="notes" rows="2">${escapeHtml(row.notes)}</textarea></label>
-    </div>
-  `).join("");
+function normalizeBlock(raw) {
+  const block = {
+    block_id: buildBlockId(raw.date, raw.start, raw.end),
+    instructor: state.wizard.instructor,
+    location: state.wizard.location,
+    date: raw.date,
+    available_start: raw.start,
+    available_end: raw.end,
+    preferred_anchor_start: raw.anchor || "",
+    preferred_course_families: [...state.wizard.preferredFamilies],
+    allowed_course_families: [...state.wizard.allowedFamilies],
+    flexibility: state.wizard.flexibility,
+    source: raw.source,
+    notes: state.wizard.notes || ""
+  };
+  return block;
+}
 
-  $("one-off-list").querySelectorAll("[data-field]").forEach(input => {
-    const updateRow = event => {
-      const card = event.target.closest("[data-row]");
-      state.oneOffRows[Number(card.dataset.row)][event.target.dataset.field] = event.target.value;
-      renderPreview();
-    };
-    input.addEventListener("input", updateRow);
-    input.addEventListener("change", updateRow);
+function buildBlockId(date, start, end) {
+  const profile = selectedProfile();
+  const instructorSlug = slug(profile?.short_name || state.wizard.instructor);
+  return `${instructorSlug}_${date}_${String(start).replace(":", "")}_${String(end).replace(":", "")}`;
+}
+
+function entryTypeLabel(value) {
+  return {
+    one_off: "One-off day",
+    block: "Block of days",
+    large_range: "Large range with exclusions"
+  }[value] || "Not selected";
+}
+
+function humanSummary(blocks) {
+  if (!blocks.length) return "No valid blocks generated yet.";
+  const dates = blocks.map(block => block.date).sort();
+  const first = dates[0];
+  const last = dates[dates.length - 1];
+  const window = `${displayTime(blocks[0].available_start)}-${displayTime(blocks[0].available_end)}`;
+  return `${blocks.length} block${blocks.length === 1 ? "" : "s"} for ${state.wizard.instructor} at ${state.wizard.location}, ${first}${first === last ? "" : ` through ${last}`}, ${window}.`;
+}
+
+function addCurrentWizardToStaging() {
+  if (!validateCurrentStep(true)) return;
+  const blocks = generateWizardBlocks();
+  const invalid = blocks.flatMap(block => validateBlock(block).map(issue => ({ message: `${block.block_id}: ${issue}` })));
+  if (invalid.length) {
+    showErrors(invalid);
+    return;
+  }
+  if (state.editingStagedIndex !== null) {
+    state.stagedBlocks.splice(state.editingStagedIndex, 1, ...blocks);
+    state.editingStagedIndex = null;
+  } else {
+    state.stagedBlocks.push(...blocks);
+  }
+  state.currentStep = 7;
+  clearErrors();
+  renderAll();
+  document.querySelector("#staging")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function resetWizard() {
+  state.wizard = freshWizard();
+  state.currentStep = 1;
+  state.editingStagedIndex = null;
+  clearErrors();
+  renderWizard();
+}
+
+function editStagedBlock(index) {
+  const block = state.stagedBlocks[index];
+  if (!block) return;
+  state.editingStagedIndex = index;
+  state.wizard = freshWizard();
+  state.wizard.instructor = block.instructor;
+  state.wizard.location = block.location;
+  state.wizard.entryType = "one_off";
+  state.wizard.oneOff = {
+    date: block.date,
+    start: block.available_start,
+    end: block.available_end,
+    anchor: block.preferred_anchor_start || ""
+  };
+  state.wizard.preferredFamilies = [...(block.preferred_course_families || [])];
+  state.wizard.allowedFamilies = [...(block.allowed_course_families || [])];
+  state.wizard.flexibility = block.flexibility || "use_unused_time_if_useful";
+  state.wizard.notes = block.notes || "";
+  state.currentStep = 4;
+  renderAll();
+  document.querySelector("#add-availability")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderStagingQueue() {
+  $("staging-count").textContent = `${state.stagedBlocks.length} staged`;
+  const save = $("save-staged-button");
+  const valid = state.stagedBlocks.length > 0 && state.stagedBlocks.every(block => validateBlock(block).length === 0);
+  save.disabled = !valid || !state.adminConnected;
+  if (!state.stagedBlocks.length) {
+    $("staging-table").innerHTML = `<div class="empty-state">No staged blocks yet. Complete the wizard and use Add to Staging.</div>`;
+    return;
+  }
+  $("staging-table").innerHTML = blockTable(state.stagedBlocks, true);
+  document.querySelectorAll("[data-edit-staged]").forEach(button => {
+    button.addEventListener("click", () => editStagedBlock(Number(button.dataset.editStaged)));
   });
-  $("one-off-list").querySelectorAll("input[type='checkbox']").forEach(input => {
-    input.addEventListener("change", () => {
-      state.oneOffRows.forEach((row, index) => {
-        row.preferred_course_families = Array.from(document.querySelectorAll(`input[name="preferred_${index}"]:checked`)).map(item => item.value);
-        row.allowed_course_families = Array.from(document.querySelectorAll(`input[name="allowed_${index}"]:checked`)).map(item => item.value);
-      });
-      renderPreview();
-    });
-  });
-  $("one-off-list").querySelectorAll("[data-copy-row]").forEach(button => {
+  document.querySelectorAll("[data-remove-staged]").forEach(button => {
     button.addEventListener("click", () => {
-      const source = state.oneOffRows[Math.max(0, Number(button.dataset.copyRow) - 1)] || state.oneOffRows[Number(button.dataset.copyRow)];
-      state.oneOffRows.splice(Number(button.dataset.copyRow) + 1, 0, { ...source });
-      render();
-    });
-  });
-  $("one-off-list").querySelectorAll("[data-delete-row]").forEach(button => {
-    button.addEventListener("click", () => {
-      state.oneOffRows.splice(Number(button.dataset.deleteRow), 1);
-      render();
+      state.stagedBlocks.splice(Number(button.dataset.removeStaged), 1);
+      renderAll();
     });
   });
 }
 
-function syncOneOffRowsFromDom() {
-  const list = $("one-off-list");
-  if (!list) return;
-  list.querySelectorAll("[data-row]").forEach(card => {
-    const index = Number(card.dataset.row);
-    const row = state.oneOffRows[index];
-    if (!row) return;
-    card.querySelectorAll("[data-field]").forEach(input => {
-      row[input.dataset.field] = input.value;
-    });
-    row.preferred_course_families = Array.from(card.querySelectorAll(`input[name="preferred_${index}"]:checked`)).map(input => input.value);
-    row.allowed_course_families = Array.from(card.querySelectorAll(`input[name="allowed_${index}"]:checked`)).map(input => input.value);
-  });
+function renderSavedBlocks() {
+  const blocks = state.availability.availability_blocks || [];
+  $("saved-block-count").textContent = `${blocks.length} saved`;
+  $("saved-block-table").innerHTML = blocks.length
+    ? blockTable(blocks, false)
+    : `<div class="empty-state">No saved availability blocks.</div>`;
+}
+
+function blockTable(blocks, staged) {
+  return `
+    <table>
+      <thead><tr><th>Date</th><th>Instructor</th><th>Location</th><th>Window</th><th>Anchor</th><th>Preferred</th><th>Allowed</th><th>Flexibility</th><th>Source</th><th>Notes</th>${staged ? "<th>Actions</th>" : ""}</tr></thead>
+      <tbody>${blocks.map((block, index) => `
+        <tr>
+          <td>${escapeHtml(block.date)}</td>
+          <td>${escapeHtml(block.instructor)}</td>
+          <td>${escapeHtml(block.location)}</td>
+          <td>${displayTime(block.available_start)} - ${displayTime(block.available_end)}</td>
+          <td>${block.preferred_anchor_start ? displayTime(block.preferred_anchor_start) : "None"}</td>
+          <td>${renderPills(block.preferred_course_families)}</td>
+          <td>${renderPills(block.allowed_course_families)}</td>
+          <td>${escapeHtml(block.flexibility)}</td>
+          <td>${escapeHtml(block.source)}</td>
+          <td>${escapeHtml(block.notes || "")}</td>
+          ${staged ? `<td class="actions"><button type="button" data-edit-staged="${index}">Edit staged block</button><button class="secondary" type="button" data-remove-staged="${index}">Remove staged block</button></td>` : ""}
+        </tr>
+      `).join("")}</tbody>
+    </table>
+  `;
+}
+
+async function saveStagedBlocks() {
+  if (!state.adminConnected) {
+    showErrors([{ message: "Static mode: preview only. Start local admin server to save changes." }]);
+    return;
+  }
+  const stagedIssues = state.stagedBlocks.flatMap(block => validateBlock(block).map(issue => ({ message: `${block.block_id}: ${issue}` })));
+  if (!state.stagedBlocks.length || stagedIssues.length) {
+    showErrors(stagedIssues.length ? stagedIssues : [{ message: "No staged valid blocks exist. Save is disabled until blocks are staged." }]);
+    return;
+  }
+  const model = {
+    schema_version: state.availability.schema_version || "0.1",
+    updated_at: new Date().toISOString(),
+    availability_blocks: [...(state.availability.availability_blocks || []), ...state.stagedBlocks],
+    source_notes: [...(state.availability.source_notes || [])]
+  };
+  try {
+    const result = await apiPost("/availability", model);
+    state.availability = result.availability || model;
+    state.stagedBlocks = [];
+    setAdminStatus("Availability saved through local admin server.", true);
+    clearErrors();
+    renderAll();
+  } catch (error) {
+    showErrors([{ message: `Save failed: ${error.message}` }]);
+  }
+}
+
+function renderPills(items = []) {
+  return `<div class="pill-list">${items.map(item => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>`;
+}
+
+function renderBadges(items = []) {
+  return items.length
+    ? `<div class="pill-list">${items.map(item => `<span class="badge">${escapeHtml(item)}</span>`).join("")}</div>`
+    : `<span class="muted">None</span>`;
 }
 
 function renderAppointmentRanges() {
   const ranges = state.ranges.ranges || [];
   $("range-count").textContent = `${ranges.length} ranges`;
+  if (!ranges.length) {
+    $("appointment-range-table").innerHTML = `<div class="empty-state">No appointment range registry loaded.</div>`;
+    return;
+  }
   $("appointment-range-table").innerHTML = `
     <table>
       <thead><tr><th>Owner</th><th>Range ID</th><th>Course ID</th><th>Location</th><th>Start</th><th>Last Verified</th><th>Last Valid</th><th>Broken After</th><th>Mode</th><th>Notice</th><th>Notes</th></tr></thead>
@@ -390,12 +899,12 @@ function renderAppointmentRanges() {
           <td>${escapeHtml(range.range_id)}</td>
           <td>${escapeHtml(range.courseId)}</td>
           <td>${escapeHtml(range.location || "Not recorded")}</td>
-          <td>${escapeHtml(range.start_date)}<br><span class="small-note">${escapeHtml(range.start_appointmentDayId)}</span></td>
+          <td>${escapeHtml(range.start_date || "Not recorded")}<br><span class="small-note">${escapeHtml(range.start_appointmentDayId || "")}</span></td>
           <td>${escapeHtml(range.verified_date || "Not recorded")}<br><span class="small-note">${escapeHtml(range.verified_appointmentDayId || "")}</span></td>
-          <td>${escapeHtml(range.last_valid_date)}<br><span class="small-note">${escapeHtml(range.last_valid_appointmentDayId)}</span></td>
+          <td>${escapeHtml(range.last_valid_date || "Not recorded")}<br><span class="small-note">${escapeHtml(range.last_valid_appointmentDayId || "")}</span></td>
           <td>${escapeHtml(range.broken_after_appointmentDayId || "None recorded")}</td>
-          <td>${escapeHtml(range.generation_mode)}<span class="small-note">${escapeHtml(helper)}</span></td>
-          <td>${escapeHtml(range.minimum_notice_days)} days</td>
+          <td>${escapeHtml(range.generation_mode || "Not recorded")}<span class="small-note">${escapeHtml(helper)}</span></td>
+          <td>${escapeHtml(range.minimum_notice_days ?? "Not set")} days</td>
           <td>${escapeHtml(range.notes || "")}${range.diagnostic_url ? `<span class="small-note">Diagnostic URL: ${escapeHtml(range.diagnostic_url)}</span>` : ""}</td>
         </tr>`;
       }).join("")}</tbody>
@@ -425,203 +934,164 @@ function renderRecommendations() {
   }
   $("recommendation-table").innerHTML = groupedRecommendationsHtml(recommendations);
   $("recommendation-table").querySelectorAll("[data-rec-status]").forEach(button => {
-    button.addEventListener("click", () => {
-      updateRecommendationStatus(button.dataset.recId, button.dataset.recStatus);
-    });
+    button.addEventListener("click", () => updateRecommendationStatus(button.dataset.recId, button.dataset.recStatus));
   });
   $("recommendation-table").querySelectorAll("[data-create-action]").forEach(button => {
-    button.addEventListener("click", () => {
-      createDraftAction(button.dataset.createAction);
-    });
+    button.addEventListener("click", () => createDraftAction(button.dataset.createAction));
   });
 }
 
 function groupedRecommendationsHtml(recommendations) {
-  const sorted = [...recommendations].sort((left, right) =>
-    String(left.date || "").localeCompare(String(right.date || "")) ||
-    String(left.instructor || "").localeCompare(String(right.instructor || "")) ||
-    String(left.gap_start || "").localeCompare(String(right.gap_start || "")) ||
-    topRankScore(right) - topRankScore(left)
+  const sorted = [...recommendations].sort((a, b) =>
+    String(a.date).localeCompare(String(b.date)) ||
+    String(a.gap_start).localeCompare(String(b.gap_start)) ||
+    Number(b.rank_score || bestFitScore(b)) - Number(a.rank_score || bestFitScore(a))
   );
-  const instructorGroups = new Map();
-  for (const item of sorted) {
-    if (!instructorGroups.has(item.instructor)) instructorGroups.set(item.instructor, new Map());
-    const dateGroups = instructorGroups.get(item.instructor);
-    if (!dateGroups.has(item.date)) dateGroups.set(item.date, []);
-    dateGroups.get(item.date).push(item);
-  }
-  return Array.from(instructorGroups.entries()).map(([instructor, dateGroups]) => `
-    <details class="rec-group" open>
-      <summary>${escapeHtml(instructor)} <span class="muted">${countGroup(dateGroups)} recommendations</span></summary>
-      ${Array.from(dateGroups.entries()).map(([date, items]) => `
+  const byInstructor = groupBy(sorted, item => item.instructor || "Unknown instructor");
+  return Object.entries(byInstructor).map(([instructor, items]) => `
+    <details class="rec-group">
+      <summary>${escapeHtml(instructor)} (${items.length})</summary>
+      ${Object.entries(groupBy(items, item => item.date || "Unknown date")).map(([date, dateItems]) => `
         <details class="rec-date-group" open>
-          <summary>${escapeHtml(date)} <span class="muted">${items.length} gaps</span></summary>
-          <div class="rec-card-list">${items.map(renderRecommendationCard).join("")}</div>
+          <summary>${escapeHtml(date)} (${dateItems.length})</summary>
+          <div class="rec-card-list">${dateItems.map(recommendationCard).join("")}</div>
         </details>
       `).join("")}
     </details>
   `).join("");
 }
 
-function countGroup(dateGroups) {
-  return Array.from(dateGroups.values()).reduce((total, items) => total + items.length, 0);
-}
-
-function topRankScore(item) {
-  const topFit = (item.suggested_fits || [])[0] || {};
-  return Number(topFit.rank_score || 0);
-}
-
-function renderRecommendationCard(item) {
-  const fits = item.suggested_fits || [];
-  const topFit = fits[0] || {};
-  const topReason = item.explanation || topFit.rank_reason || topFit.reason || "No reason recorded.";
-  const draftExists = actionForRecommendation(item.recommendation_id);
-  const badges = [];
-  if (fits.some(fit => fit.preferred_match)) badges.push("Preferred");
-  if (fits.some(fit => Number(fit.business_priority_boost || 0) > 0)) badges.push("Business Priority");
-  if (item.location_conflict_possible) badges.push("Possible Conflict");
-  if (draftExists) badges.push("Draft Action Exists");
-  const canCreateDraft = item.status === "accepted" && !draftExists;
+function recommendationCard(recommendation) {
+  const actionExists = (state.actionQueue.actions || []).some(action => action.source_recommendation_id === recommendation.recommendation_id);
+  const fits = recommendation.suggested_fits || [];
   return `
-    <article class="rec-card" data-rec-id="${escapeHtml(item.recommendation_id)}">
+    <article class="rec-card">
       <div class="card-header">
         <div>
-          <h3>${escapeHtml(item.gap_start)}-${escapeHtml(item.gap_end)} open</h3>
-          <p class="muted">${escapeHtml(item.gap_minutes)} minutes at ${escapeHtml(item.location)}</p>
+          <h3>${escapeHtml(recommendation.gap_start)}-${escapeHtml(recommendation.gap_end)} ${escapeHtml(recommendation.location || "")}</h3>
+          <p class="muted">${escapeHtml(recommendation.explanation || recommendation.reason || "Gap-fit recommendation.")}</p>
         </div>
-        <span class="status ${statusClassForRecommendation(item.status)}">${escapeHtml(item.status || "suggested")}</span>
+        <span class="status ${recommendation.status === "accepted" ? "normal" : recommendation.status === "blocked" ? "action" : "opportunity"}">${escapeHtml(recommendation.status || "suggested")}</span>
       </div>
-      ${renderTimeline(item)}
-      <div class="facts">
-        <div class="fact"><span class="label">Suggested fits</span><span class="value">${renderPills(fits.map(fit => `${fit.rank}. ${fit.course_family} (${fit.estimated_minutes}m, score ${fit.rank_score ?? "n/a"}, ${fit.duration_fit_quality || "fit"})`))}</span></div>
-        <div class="fact"><span class="label">Badges</span><span class="value">${renderBadges(badges)}</span></div>
-        <div class="fact"><span class="label">Explanation</span><span class="value">${escapeHtml(topReason)}</span></div>
+      <div class="op-timeline">${renderTimeline(recommendation)}</div>
+      <div class="pill-list">
+        ${(fits.some(fit => fit.preferred_family_match) ? "<span class=\"badge\">Preferred</span>" : "")}
+        ${(fits.some(fit => Number(fit.business_priority_boost || 0) > 0) ? "<span class=\"badge\">Business Priority</span>" : "")}
+        ${recommendation.location_conflict_possible ? "<span class=\"badge\">Possible Conflict</span>" : ""}
+        ${actionExists ? "<span class=\"badge\">Draft Action Exists</span>" : ""}
       </div>
+      <table class="mini-table">
+        <thead><tr><th>Fit</th><th>Minutes</th><th>Score</th><th>Reason</th><th>Action</th></tr></thead>
+        <tbody>${fits.map(fit => `
+          <tr>
+            <td>${escapeHtml(fit.course_family)}</td>
+            <td>${escapeHtml(fit.estimated_minutes)}</td>
+            <td>${escapeHtml(fit.rank_score ?? fit.rank ?? "")}</td>
+            <td>${escapeHtml(fit.rank_reason || fit.reason || "")}</td>
+            <td>${recommendation.status === "accepted" ? `<button type="button" data-create-action="${escapeHtml(recommendation.recommendation_id)}|${escapeHtml(fit.course_family)}">Create Draft Inventory Action</button>` : "<span class=\"muted\">Accept first</span>"}</td>
+          </tr>
+        `).join("")}</tbody>
+      </table>
       <div class="actions">
-        <button type="button" data-rec-id="${escapeHtml(item.recommendation_id)}" data-rec-status="accepted">Accept</button>
-        <button class="secondary" type="button" data-rec-id="${escapeHtml(item.recommendation_id)}" data-rec-status="ignored">Ignore</button>
-        <button class="secondary" type="button" data-rec-id="${escapeHtml(item.recommendation_id)}" data-rec-status="blocked">Block</button>
-        ${canCreateDraft ? `<button type="button" data-create-action="${escapeHtml(item.recommendation_id)}">Create Draft Inventory Action</button>` : ""}
+        <button type="button" data-rec-status="accepted" data-rec-id="${escapeHtml(recommendation.recommendation_id)}">Accept</button>
+        <button class="secondary" type="button" data-rec-status="ignored" data-rec-id="${escapeHtml(recommendation.recommendation_id)}">Ignore</button>
+        <button class="secondary" type="button" data-rec-status="blocked" data-rec-id="${escapeHtml(recommendation.recommendation_id)}">Block</button>
       </div>
     </article>
   `;
 }
 
-function renderTimeline(item) {
-  const segments = [
-    ...(item.merged_occupied_windows || []).map(window => ({ type: "occupied", start: window.start, end: window.end, label: "OCCUPIED" })),
-    { type: "open", start: item.gap_start, end: item.gap_end, label: "OPEN" }
-  ].sort((left, right) => String(left.start).localeCompare(String(right.start)));
-  return `<div class="op-timeline">${segments.map(segment => `
-    <div class="op-segment ${segment.type}"><strong>${escapeHtml(segment.start)}-${escapeHtml(segment.end)}</strong><span>${segment.label}</span></div>
-  `).join("")}</div>`;
+function bestFitScore(recommendation) {
+  return Math.max(0, ...(recommendation.suggested_fits || []).map(fit => Number(fit.rank_score || fit.rank || 0)));
 }
 
-function statusClassForRecommendation(status) {
-  if (status === "accepted") return "normal";
-  if (status === "blocked") return "action";
-  if (status === "ignored") return "none";
-  return "opportunity";
+function renderTimeline(recommendation) {
+  const occupied = recommendation.existing_sessions_considered || [];
+  const open = `<div class="op-segment open"><strong>${escapeHtml(recommendation.gap_start)}-${escapeHtml(recommendation.gap_end)}</strong><span>OPEN ${escapeHtml(recommendation.gap_minutes)} min</span></div>`;
+  const occupiedHtml = occupied.map(session => `
+    <div class="op-segment occupied"><strong>${escapeHtml(session.start_time || session.start || "")}-${escapeHtml(session.end_time || session.end || "")}</strong><span>OCCUPIED</span></div>
+  `).join("");
+  return open + occupiedHtml;
+}
+
+function groupBy(items, keyFn) {
+  return items.reduce((groups, item) => {
+    const key = keyFn(item);
+    groups[key] = groups[key] || [];
+    groups[key].push(item);
+    return groups;
+  }, {});
 }
 
 function updateRecommendationStatus(recommendationId, status) {
-  const item = (state.recommendations.recommendations || []).find(recommendation => recommendation.recommendation_id === recommendationId);
-  if (!item) return;
-  item.status = status;
-  renderRecommendations();
-  renderActionQueue();
-  saveRecommendationsFile();
-}
-
-function actionForRecommendation(recommendationId) {
-  return (state.actionQueue.actions || []).find(action =>
-    action.source_recommendation_id === recommendationId && action.status !== "archived"
-  );
-}
-
-function draftDuplicate(recommendation, fit) {
-  return (state.actionQueue.actions || []).some(action =>
-    action.source_recommendation_id === recommendation.recommendation_id &&
-    action.course_family === fit.course_family &&
-    action.proposed_start === recommendation.gap_start &&
-    action.proposed_end === recommendation.gap_end &&
-    action.status !== "archived"
-  );
-}
-
-function actionIdFor(recommendation) {
-  const instructor = slug(String(recommendation.instructor || "").split(" ")[0] || "draft");
-  return `draft_${instructor}_${recommendation.date}_${String(recommendation.gap_start || "").replace(":", "")}`;
-}
-
-function createDraftAction(recommendationId) {
   const recommendation = (state.recommendations.recommendations || []).find(item => item.recommendation_id === recommendationId);
-  const fit = (recommendation?.suggested_fits || [])[0];
-  if (!recommendation || recommendation.status !== "accepted" || !fit) return;
-  if (draftDuplicate(recommendation, fit)) {
+  if (!recommendation) return;
+  recommendation.status = status;
+  renderRecommendations();
+}
+
+function createDraftAction(encoded) {
+  const [recommendationId, courseFamily] = encoded.split("|");
+  const recommendation = (state.recommendations.recommendations || []).find(item => item.recommendation_id === recommendationId);
+  const fit = (recommendation?.suggested_fits || []).find(item => item.course_family === courseFamily);
+  if (!recommendation || !fit) return;
+  const duplicate = (state.actionQueue.actions || []).some(action =>
+    action.source_recommendation_id === recommendationId &&
+    action.course_family === courseFamily &&
+    action.proposed_start === recommendation.gap_start &&
+    action.proposed_end === recommendation.gap_end
+  );
+  if (duplicate) {
     state.actionQueue.duplicate_prevented_count = Number(state.actionQueue.duplicate_prevented_count || 0) + 1;
     renderActionQueue();
-    renderRecommendations();
     return;
   }
+  const warnings = [];
+  if (recommendation.location_conflict_possible) warnings.push("Possible Conflict");
+  if (fit.fit_quality === "inefficient_fit") warnings.push("Inefficient Fit");
+  if (!fit.business_priority_boost) warnings.push("Low Business Priority");
   state.actionQueue.actions = state.actionQueue.actions || [];
   state.actionQueue.actions.push({
-    action_id: actionIdFor(recommendation),
-    source_recommendation_id: recommendation.recommendation_id,
+    action_id: `draft_${slug(recommendation.instructor)}_${recommendation.date}_${String(recommendation.gap_start).replace(":", "")}_${slug(courseFamily)}`,
+    source_recommendation_id: recommendationId,
     status: "draft",
     instructor: recommendation.instructor,
     date: recommendation.date,
     location: recommendation.location,
     proposed_start: recommendation.gap_start,
-    proposed_end: addMinutes(recommendation.gap_start, fit.estimated_minutes) || recommendation.gap_end,
-    course_family: fit.course_family,
+    proposed_end: recommendation.gap_end,
+    course_family: courseFamily,
     estimated_minutes: fit.estimated_minutes,
-    reason: fit.reason || recommendation.explanation || "",
+    reason: fit.reason || fit.rank_reason || recommendation.explanation || "",
     created_at: new Date().toISOString(),
     operator_notes: "",
-    warning_flags: actionWarningFlags(recommendation, fit)
+    warning_flags: warnings
   });
-  renderRecommendations();
-  renderActionQueue();
   saveActionQueueFile();
-}
-
-function addMinutes(time, minutes) {
-  const start = timeMinutes(time);
-  if (start === null) return "";
-  return `${String(Math.floor((start + Number(minutes || 0)) / 60)).padStart(2, "0")}:${String((start + Number(minutes || 0)) % 60).padStart(2, "0")}`;
-}
-
-function actionWarningFlags(recommendation, fit) {
-  const flags = [];
-  if (recommendation.location_conflict_possible) flags.push("Possible Conflict");
-  if (fit?.inefficient_fit) flags.push("Inefficient Fit");
-  if (!fit?.business_priority_boost && !fit?.preferred_match) flags.push("Low Business Priority");
-  return flags;
 }
 
 function renderActionQueue() {
   const actions = state.actionQueue.actions || [];
-  const filtered = state.queueFilter === "all" ? actions : actions.filter(action => action.status === state.queueFilter);
-  const draftCount = actions.filter(action => action.status === "draft").length;
-  const readyCount = actions.filter(action => action.status === "ready").length;
-  const archivedCount = actions.filter(action => action.status === "archived").length;
-  const completedCount = actions.filter(action => action.status === "completed").length;
+  const counts = {
+    draft: actions.filter(action => action.status === "draft").length,
+    ready: actions.filter(action => action.status === "ready").length,
+    archived: actions.filter(action => action.status === "archived").length,
+    completed: actions.filter(action => action.status === "completed").length
+  };
   $("action-queue-summary").innerHTML = `
-    <div class="summary-card"><strong>${draftCount}</strong><span>Draft</span></div>
-    <div class="summary-card"><strong>${readyCount}</strong><span>Ready</span></div>
-    <div class="summary-card"><strong>${archivedCount}</strong><span>Archived</span></div>
-    <div class="summary-card"><strong>${completedCount}</strong><span>Completed</span></div>
-    <div class="summary-card"><strong>${escapeHtml(state.actionQueue.duplicate_prevented_count || 0)}</strong><span>Duplicates prevented</span></div>
+    <div class="summary-card"><strong>${counts.draft}</strong><span>Draft</span></div>
+    <div class="summary-card"><strong>${counts.ready}</strong><span>Ready</span></div>
+    <div class="summary-card"><strong>${counts.completed}</strong><span>Completed</span></div>
+    <div class="summary-card"><strong>${counts.archived}</strong><span>Archived</span></div>
   `;
+  const filtered = state.queueFilter === "all" ? actions : actions.filter(action => action.status === state.queueFilter);
   if (!filtered.length) {
-    $("action-queue-table").innerHTML = `<div class="empty-state">No ${escapeHtml(state.queueFilter)} draft actions in the local queue.</div>`;
+    $("action-queue-table").innerHTML = `<div class="empty-state">No ${escapeHtml(state.queueFilter)} draft actions.</div>`;
     return;
   }
   $("action-queue-table").innerHTML = `
     <table>
-      <thead><tr><th>Instructor</th><th>Date</th><th>Course</th><th>Proposed Time</th><th>Source</th><th>Status</th><th>Warnings</th><th>Notes</th><th>Actions</th></tr></thead>
+      <thead><tr><th>Instructor</th><th>Date</th><th>Course</th><th>Time</th><th>Source</th><th>Status</th><th>Warnings</th><th>Notes</th><th>Actions</th></tr></thead>
       <tbody>${filtered.map(action => `
         <tr>
           <td>${escapeHtml(action.instructor)}</td>
@@ -654,7 +1124,7 @@ function renderActionQueue() {
       const action = findAction(input.dataset.actionNote);
       if (action) action.operator_notes = input.value;
     });
-    input.addEventListener("change", () => saveActionQueueFile());
+    input.addEventListener("change", saveActionQueueFile);
   });
 }
 
@@ -672,18 +1142,29 @@ function updateActionStatus(actionId, status) {
   const action = findAction(actionId);
   if (!action) return;
   action.status = status;
-  renderActionQueue();
-  renderRecommendations();
-  renderManualChecklist();
   saveActionQueueFile();
 }
 
 function deleteAction(actionId) {
   state.actionQueue.actions = (state.actionQueue.actions || []).filter(action => action.action_id !== actionId);
-  renderActionQueue();
-  renderRecommendations();
-  renderManualChecklist();
   saveActionQueueFile();
+}
+
+async function saveActionQueueFile() {
+  state.actionQueue.updated_at = new Date().toISOString();
+  if (!state.adminConnected) {
+    showErrors([{ message: "Static mode: preview only. Start local admin server to save queue changes." }]);
+    return;
+  }
+  try {
+    const result = await apiPost("/action-queue", state.actionQueue);
+    state.actionQueue = result.action_queue || state.actionQueue;
+    renderActionQueue();
+    renderRecommendations();
+    renderManualChecklist();
+  } catch (error) {
+    showErrors([{ message: `Queue save failed: ${error.message}` }]);
+  }
 }
 
 function renderManualChecklist() {
@@ -718,7 +1199,6 @@ function renderManualChecklist() {
       </ol>
       <div class="actions">
         <button type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="completed">Mark Completed</button>
-        <button class="secondary" type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="ready">Return to Ready</button>
         <button class="secondary" type="button" data-edit-action-note="${escapeHtml(action.action_id)}">Add/Edit Notes</button>
         <button class="secondary" type="button" data-copy-task="${escapeHtml(action.action_id)}">Copy Enrollware Task Summary</button>
       </div>
@@ -741,8 +1221,6 @@ function editActionNotes(actionId) {
   const updated = prompt("Operator notes", action.operator_notes || "");
   if (updated === null) return;
   action.operator_notes = updated;
-  renderActionQueue();
-  renderManualChecklist();
   saveActionQueueFile();
 }
 
@@ -778,187 +1256,9 @@ Manual Steps:
   safeCopy(text);
 }
 
-function renderExclusions() {
-  $("exclusion-list").innerHTML = state.exclusions.map((exclusion, index) => `
-    <div class="list-item">
-      <div><strong>${escapeHtml(exclusion.date)}</strong><div class="muted">${escapeHtml(exclusion.reason || "No reason recorded")}</div></div>
-      <button class="secondary" type="button" data-remove-exclusion="${index}">Remove Exclusion</button>
-    </div>
-  `).join("") || `<div class="list-item"><span>No exclusions yet.</span><span class="status none">Optional</span></div>`;
-  $("exclusion-list").querySelectorAll("[data-remove-exclusion]").forEach(button => {
-    button.addEventListener("click", () => {
-      state.exclusions.splice(Number(button.dataset.removeExclusion), 1);
-      renderExclusions();
-      renderPreview();
-    });
-  });
-}
-
-function renderGeneratedTable() {
-  $("block-count").textContent = `${currentBlocks().length} blocks`;
-  $("generated-table").innerHTML = `
-    <table>
-      <thead><tr><th>Date</th><th>Instructor</th><th>Location</th><th>Window</th><th>Anchor</th><th>Preferred</th><th>Allowed</th><th>Flexibility</th><th>Source</th><th>Notes</th></tr></thead>
-      <tbody>${currentBlocks().map(block => `
-        <tr>
-          <td>${escapeHtml(block.date)}</td>
-          <td>${escapeHtml(block.instructor)}</td>
-          <td>${escapeHtml(block.location)}</td>
-          <td>${displayTime(block.available_start)} - ${displayTime(block.available_end)}</td>
-          <td>${escapeHtml(block.preferred_anchor_start ? displayTime(block.preferred_anchor_start) : "None")}</td>
-          <td>${renderPills(block.preferred_course_families)}</td>
-          <td>${renderPills(block.allowed_course_families)}</td>
-          <td>${escapeHtml(block.flexibility)}</td>
-          <td>${escapeHtml(block.source)}</td>
-          <td>${escapeHtml(block.notes)}</td>
-        </tr>
-      `).join("")}</tbody>
-    </table>
-  `;
-}
-
-function renderPills(items = []) {
-  return `<div class="pill-list">${items.map(item => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>`;
-}
-
-function renderBadges(items = []) {
-  return items.length
-    ? `<div class="pill-list">${items.map(item => `<span class="badge">${escapeHtml(item)}</span>`).join("")}</div>`
-    : `<span class="muted">None</span>`;
-}
-
-function currentBlocks() {
-  syncOneOffRowsFromDom();
-  const oneOffBlocks = state.oneOffRows.map(row => normalizeBlock(row));
-  return [...(state.availability.availability_blocks || []), ...oneOffBlocks, ...state.generatedBlocks];
-}
-
-function currentSourceNotes() {
-  return [...(state.availability.source_notes || [])];
-}
-
-function buildAvailabilityModel() {
-  return {
-    schema_version: state.availability.schema_version || "0.1",
-    updated_at: todayIso(),
-    availability_blocks: currentBlocks(),
-    source_notes: currentSourceNotes()
-  };
-}
-
-function validateAll() {
-  const issues = [];
-  for (const block of currentBlocks()) {
-    for (const issue of validateBlock(block)) {
-      issues.push(`${block.block_id || "new block"}: ${issue}`);
-    }
-  }
-  return issues;
-}
-
-function renderValidation() {
-  const issues = validateAll();
-  $("validation-list").innerHTML = issues.length
-    ? issues.slice(0, 12).map(issue => `<div class="list-item"><span>${escapeHtml(issue)}</span><span class="status action">Fix</span></div>`).join("")
-    : `<div class="list-item"><span>Generated availability data passes local validation.</span><span class="status normal">Ready</span></div>`;
-}
-
-function renderPreview() {
-  const model = buildAvailabilityModel();
-  $("json-preview").textContent = JSON.stringify(model, null, 2);
-  renderGeneratedTable();
-  renderValidation();
-}
-
-function render() {
-  renderOneOffRows();
-  renderExclusions();
-  renderAppointmentRanges();
-  renderRecommendations();
-  renderActionQueue();
-  renderManualChecklist();
-  renderPreview();
-}
-
-function generateBlockRows() {
-  const form = $("block-form");
-  const rows = formToRows(form, "block");
-  state.generatedBlocks.push(...rows);
-  renderPreview();
-}
-
-function generateRangeRows() {
-  const form = $("range-form");
-  const formIssues = validateRangeForm(form);
-  if (formIssues.length) {
-    $("validation-list").innerHTML = formIssues.map(issue => `<div class="list-item"><span>${escapeHtml(issue)}</span><span class="status action">Fix</span></div>`).join("");
-    return;
-  }
-  const rows = formToRows(form, "range");
-  state.generatedBlocks.push(...rows);
-  renderPreview();
-}
-
-function addSourceNote() {
-  const text = $("source-note-input").value.trim();
-  if (!text) return;
-  state.availability.source_notes = state.availability.source_notes || [];
-  state.availability.source_notes.push({
-    id: `source_note_${Date.now()}`,
-    captured_at: new Date().toISOString(),
-    source: "manual_paste",
-    text
-  });
-  $("source-note-input").value = "";
-  renderPreview();
-}
-
-async function saveJsonFile() {
-  const model = buildAvailabilityModel();
-  if (state.adminConnected) {
-    try {
-      const result = await apiPost("/availability", model);
-      state.availability = result.availability || model;
-      state.oneOffRows = [];
-      state.generatedBlocks = [];
-      populateForms();
-      render();
-      return;
-    } catch (error) {
-      setAdminStatus(`Local admin save failed: ${error.message}`, false);
-    }
-  }
-  const content = JSON.stringify(model, null, 2) + "\n";
-  await writeRepoJson(AVAILABILITY_PATH, "instructor_availability.json", content);
-}
-
-async function saveRecommendationsFile() {
-  state.recommendations.generated_at = new Date().toISOString();
-  const content = JSON.stringify(state.recommendations, null, 2) + "\n";
-  await writeRepoJson(RECOMMENDATION_PATH, "inventory_recommendations.json", content);
-}
-
-async function saveActionQueueFile() {
-  state.actionQueue.updated_at = new Date().toISOString();
-  if (state.adminConnected) {
-    try {
-      const result = await apiPost("/action-queue", state.actionQueue);
-      state.actionQueue = result.action_queue || state.actionQueue;
-      renderActionQueue();
-      renderManualChecklist();
-      renderRecommendations();
-      return;
-    } catch (error) {
-      setAdminStatus(`Local admin queue save failed: ${error.message}`, false);
-    }
-  }
-  const content = JSON.stringify(state.actionQueue, null, 2) + "\n";
-  await writeRepoJson(ACTION_QUEUE_PATH, "inventory_action_queue.json", content);
-}
-
 async function runResolverFromUi() {
   if (!state.adminConnected) {
-    setAdminStatus("Static mode: preview only. Start local admin server to run resolver.", false);
+    showErrors([{ message: "Static mode: preview only. Start local admin server to run resolver." }]);
     return;
   }
   try {
@@ -969,92 +1269,50 @@ async function runResolverFromUi() {
     renderManualChecklist();
     setAdminStatus("Resolver completed through local admin server. Recommendations refreshed.", true);
   } catch (error) {
-    setAdminStatus(`Resolver failed: ${error.message}`, false);
+    showErrors([{ message: `Resolver failed: ${error.message}` }]);
   }
 }
 
-async function writeRepoJson(relativePath, fallbackFilename, content) {
-  if (window.showDirectoryPicker) {
-    try {
-      if (!state.directoryHandle) state.directoryHandle = await window.showDirectoryPicker({ mode: "readwrite" });
-      const parts = relativePath.split("/");
-      let dir = state.directoryHandle;
-      for (const part of parts.slice(0, -1)) dir = await dir.getDirectoryHandle(part, { create: true });
-      const file = await dir.getFileHandle(parts.at(-1), { create: true });
-      const writable = await file.createWritable();
-      await writable.write(content);
-      await writable.close();
-      return;
-    } catch {
-      downloadText(fallbackFilename, content, "application/json");
-      return;
-    }
-  }
-  downloadText(fallbackFilename, content, "application/json");
-}
-
-function downloadText(filename, content, type) {
-  const blob = new Blob([content], { type });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(url);
-}
-
-function addOneOffRow() {
-  const profile = instructorByName("Amy Arnold") || state.profiles.instructors?.[0] || {};
-  const source = state.oneOffRows.at(-1) || defaultOneOffRow(profile);
-  state.oneOffRows.push({ ...source, date: "" });
-  render();
+function renderAll() {
+  renderWizard();
+  renderStagingQueue();
+  renderSavedBlocks();
+  renderAppointmentRanges();
+  renderRecommendations();
+  renderActionQueue();
+  renderManualChecklist();
 }
 
 function wireEvents() {
-  $("add-one-off-button").addEventListener("click", addOneOffRow);
-  $("generate-block-button").addEventListener("click", generateBlockRows);
-  $("generate-range-button").addEventListener("click", generateRangeRows);
-  $("preview-all-button").addEventListener("click", renderPreview);
-  $("preview-block-button").addEventListener("click", renderPreview);
-  $("preview-range-button").addEventListener("click", renderPreview);
-  $("save-json-button").addEventListener("click", saveJsonFile);
-  $("download-json-button").addEventListener("click", () => downloadText("instructor_availability.json", JSON.stringify(buildAvailabilityModel(), null, 2) + "\n", "application/json"));
-  $("save-recommendations-button").addEventListener("click", saveRecommendationsFile);
-  $("download-recommendations-button").addEventListener("click", () => downloadText("inventory_recommendations.json", JSON.stringify(state.recommendations, null, 2) + "\n", "application/json"));
-  $("save-queue-button").addEventListener("click", saveActionQueueFile);
-  $("download-queue-button").addEventListener("click", () => downloadText("inventory_action_queue.json", JSON.stringify(state.actionQueue, null, 2) + "\n", "application/json"));
-  $("copy-queue-button").addEventListener("click", () => safeCopy(JSON.stringify(state.actionQueue, null, 2)));
+  $("wizard-back-button").addEventListener("click", () => {
+    if (state.currentStep > 1) {
+      state.currentStep -= 1;
+      clearErrors();
+      renderWizard();
+    }
+  });
+  $("wizard-next-button").addEventListener("click", () => {
+    if (!validateCurrentStep(true)) return;
+    if (state.currentStep < 6) {
+      state.currentStep += 1;
+      clearErrors();
+      renderWizard();
+    }
+  });
+  $("wizard-add-staging-button").addEventListener("click", addCurrentWizardToStaging);
+  $("wizard-reset-button").addEventListener("click", resetWizard);
+  $("save-staged-button").addEventListener("click", saveStagedBlocks);
+  $("clear-staging-button").addEventListener("click", () => {
+    state.stagedBlocks = [];
+    renderAll();
+  });
   $("run-resolver-button").addEventListener("click", runResolverFromUi);
+  $("top-run-resolver-button").addEventListener("click", runResolverFromUi);
   $("queue-filter").addEventListener("change", event => {
     state.queueFilter = event.target.value;
     renderActionQueue();
   });
-  $("add-source-note-button").addEventListener("click", addSourceNote);
-  $("clear-generated-button").addEventListener("click", () => {
-    state.generatedBlocks = [];
-    renderPreview();
-  });
-  $("add-exclusion-button").addEventListener("click", () => {
-    const date = $("excluded-date-input").value;
-    if (!date) return;
-    state.exclusions.push({ date, reason: $("exclusion-reason-input").value.trim() });
-    $("excluded-date-input").value = "";
-    $("exclusion-reason-input").value = "";
-    renderExclusions();
-    renderPreview();
-  });
-  document.addEventListener("change", event => {
-    if (!event.target.matches("[data-instructor-select]")) return;
-    const form = event.target.closest("form");
-    const profile = instructorByName(event.target.value);
-    if (!form || !profile) return;
-    const location = form.querySelector('input[name="location"]');
-    const flexibility = form.querySelector('select[name="flexibility"]');
-    const notes = form.querySelector('textarea[name="notes"]');
-    if (location) location.value = profile.default_location || location.value;
-    if (flexibility) flexibility.value = profile.default_flexibility || flexibility.value;
-    if (notes && !notes.value) notes.value = profile.default_availability_pattern_note || "";
-  });
+  $("copy-queue-button").addEventListener("click", () => safeCopy(JSON.stringify(state.actionQueue, null, 2)));
 }
 
 async function init() {
@@ -1079,12 +1337,10 @@ async function init() {
     state.actionQueue = await readJson(ACTION_QUEUE_URL, state.actionQueue);
   }
   if (!state.profiles.instructors?.length) {
-    $("load-warning").classList.remove("hidden");
-    $("load-warning").textContent = "Instructor profiles could not be loaded. Availability entry is running with fallback data.";
+    setLoadWarning("Instructor profiles could not be loaded. Availability entry is running without profile defaults.");
   }
-  populateForms();
   wireEvents();
-  render();
+  renderAll();
 }
 
 document.addEventListener("DOMContentLoaded", init);

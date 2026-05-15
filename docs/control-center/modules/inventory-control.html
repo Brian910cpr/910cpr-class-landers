@@ -13,7 +13,7 @@
       <div class="brand">
         <div class="eyebrow">Control Center Module</div>
         <h1>Inventory Control</h1>
-        <p class="subhead">Enter structured instructor availability for future inventory resolvers. This does not create public classes, change Enrollware, or generate live booking links.</p>
+        <p class="subhead">Guided instructor availability entry for future inventory resolvers. This does not create public classes, change Enrollware, or generate live booking links.</p>
       </div>
       <nav class="nav">
         <a class="secondary" href="../index.html">Dashboard</a>
@@ -27,171 +27,148 @@
 
     <section id="admin-server-status" class="warn">Checking local admin server...</section>
     <section id="load-warning" class="warn hidden"></section>
+    <section id="error-panel" class="warn error-panel hidden" aria-live="polite"></section>
 
-    <section class="section grid">
-      <article class="card span-4">
+    <nav class="inventory-nav" aria-label="Inventory Control sections">
+      <a href="#add-availability">Add Availability</a>
+      <a href="#saved-blocks">Saved Blocks</a>
+      <button id="top-run-resolver-button" type="button">Run Resolver</button>
+      <a href="#recommendations-section">Recommendations</a>
+      <a href="#draft-queue-section">Draft Queue</a>
+      <a href="#manual-checklist-section">Manual Checklist</a>
+      <span id="top-error-count" class="status none">0 errors</span>
+    </nav>
+
+    <section id="add-availability" class="section">
+      <article class="card span-12 wizard-card">
         <div class="card-header">
-          <h2>Availability Data</h2>
-          <span id="block-count" class="status none">0 blocks</span>
+          <div>
+            <h2>Add Availability</h2>
+            <p class="muted">Complete each step, review the generated blocks, then add only validated blocks to staging.</p>
+          </div>
+          <span id="wizard-mode" class="status opportunity">Step 1</span>
         </div>
-        <div class="facts">
-          <div class="fact"><span class="label">Data file</span><span class="value">docs/data/instructor_availability.json</span></div>
-          <div class="fact"><span class="label">Profiles</span><span class="value">docs/data/instructor_profiles.json</span></div>
-          <div class="fact"><span class="label">Appointment ranges</span><span class="value">docs/data/appointment_range_registry.json</span></div>
+
+        <ol id="step-indicator" class="step-indicator" aria-label="Availability entry steps"></ol>
+        <div id="wizard-content" class="wizard-content"></div>
+
+        <div class="wizard-actions">
+          <button id="wizard-back-button" class="secondary" type="button">Back</button>
+          <button id="wizard-next-button" type="button">Next</button>
+          <button id="wizard-add-staging-button" type="button">Add to Staging</button>
+          <button id="wizard-reset-button" class="secondary" type="button">Reset Wizard</button>
         </div>
+      </article>
+    </section>
+
+    <section id="staging" class="section">
+      <article class="card span-12">
+        <div class="card-header">
+          <div>
+            <h2>Staging Queue</h2>
+            <p class="muted">Staged blocks are not saved yet. Saving writes only these valid staged blocks into the availability JSON.</p>
+          </div>
+          <span id="staging-count" class="status none">0 staged</span>
+        </div>
+        <div id="staging-table" class="table-wrap"></div>
         <div class="actions">
-          <button id="preview-all-button" type="button">Preview JSON</button>
-          <button id="save-json-button" type="button">Save JSON</button>
-          <button id="download-json-button" class="secondary" type="button">Download JSON</button>
-        </div>
-      </article>
-
-      <article class="card span-4">
-        <h2>Paste Enrollware Class List or Notes</h2>
-        <label class="field">Source note
-          <textarea id="source-note-input" rows="8" placeholder="Paste Enrollware class list, appointment notes, or operator context here."></textarea>
-        </label>
-        <div class="actions">
-          <button id="add-source-note-button" type="button">Store Source Note</button>
-        </div>
-      </article>
-
-      <article class="card span-4">
-        <h2>Validation</h2>
-        <div id="validation-list" class="list">
-          <div class="list-item"><span>No generated data yet.</span><span class="status none">Idle</span></div>
+          <button id="save-staged-button" type="button" disabled>Save Staged Blocks to JSON</button>
+          <button id="clear-staging-button" class="secondary" type="button">Clear Staging</button>
         </div>
       </article>
     </section>
 
-    <section class="section grid">
-      <article class="card span-6">
+    <section id="saved-blocks" class="section">
+      <article class="card span-12">
         <div class="card-header">
           <div>
-            <h2>One-Off Rows</h2>
-            <p class="muted">Best for erratic availability like Amy.</p>
+            <h2>Saved Availability Blocks</h2>
+            <p class="muted">Existing saved availability is shown separately from the active form. Typing in the wizard never edits these blocks.</p>
           </div>
-          <button id="add-one-off-button" type="button">Add One Day</button>
+          <span id="saved-block-count" class="status none">0 saved</span>
         </div>
-        <div id="one-off-list" class="row-list"></div>
-      </article>
-
-      <article class="card span-6">
-        <h2>Block Builder</h2>
-        <p class="muted">Best for instructors who provide blocks of days.</p>
-        <form id="block-form" class="form-grid"></form>
-        <div class="actions">
-          <button id="generate-block-button" type="button">Generate Block Rows</button>
-          <button id="preview-block-button" class="secondary" type="button">Preview JSON</button>
-        </div>
-      </article>
-    </section>
-
-    <section class="section grid">
-      <article class="card span-6">
-        <h2>Large Range With Exclusions</h2>
-        <p class="muted">Best for broad Brian-style availability where individual dates are excluded.</p>
-        <form id="range-form" class="form-grid"></form>
-        <div class="exclusion-tools">
-          <label class="field">Excluded date<input id="excluded-date-input" type="date"></label>
-          <label class="field">Exclusion reason<input id="exclusion-reason-input" placeholder="travel, unavailable, admin hold"></label>
-          <button id="add-exclusion-button" type="button">Add Exclusion</button>
-        </div>
-        <div id="exclusion-list" class="list"></div>
-        <div class="actions">
-          <button id="generate-range-button" type="button">Generate Range</button>
-          <button id="preview-range-button" class="secondary" type="button">Preview JSON</button>
-        </div>
-      </article>
-
-      <article class="card span-6">
-        <h2>Preview JSON</h2>
-        <pre id="json-preview" class="code json-preview">No generated blocks yet.</pre>
+        <div id="saved-block-table" class="table-wrap"></div>
       </article>
     </section>
 
     <section class="section">
-      <article class="card span-12">
-        <div class="card-header">
-          <div>
-            <h2>Generated Availability Blocks</h2>
-            <p class="muted">These are date-level availability blocks for future resolvers. They are not public classes.</p>
+      <details id="recommendations-section" class="module-details">
+        <summary>Resolver V1 Recommendations</summary>
+        <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <h2>Resolver V1 Recommendations</h2>
+              <p class="muted">Simple gap-fit recommendations only. No public booking links are generated.</p>
+            </div>
+            <div class="actions">
+              <span id="recommendation-count" class="status none">0 recommendations</span>
+              <button id="run-resolver-button" type="button">Run Resolver</button>
+            </div>
           </div>
-          <button id="clear-generated-button" class="secondary" type="button">Clear Generated Blocks</button>
-        </div>
-        <div id="generated-table" class="table-wrap"></div>
-      </article>
+          <div class="warn">Run resolver: <code>python scripts/inventory_resolver_v1.py</code></div>
+          <div id="recommendation-summary" class="summary-grid"></div>
+          <div id="recommendation-table" class="table-wrap"></div>
+        </article>
+      </details>
     </section>
 
     <section class="section">
-      <article class="card span-12">
-        <div class="card-header">
-          <div>
-            <h2>Resolver V1 Recommendations</h2>
-            <p class="muted">Simple gap-fit recommendations only. No public booking links are generated.</p>
+      <details id="draft-queue-section" class="module-details">
+        <summary>Inventory Draft Action Queue</summary>
+        <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <h2>Inventory Draft Action Queue</h2>
+              <p class="muted">Local operational drafts created from accepted recommendations. These are not Enrollware sessions.</p>
+            </div>
+            <div class="actions">
+              <select id="queue-filter">
+                <option value="draft">Draft</option>
+                <option value="ready">Ready</option>
+                <option value="archived">Archived</option>
+                <option value="completed">Completed</option>
+                <option value="all">All</option>
+              </select>
+              <button id="copy-queue-button" type="button">Copy Draft Queue JSON</button>
+            </div>
           </div>
-          <div class="actions">
-            <span id="recommendation-count" class="status none">0 recommendations</span>
-            <button id="save-recommendations-button" type="button">Save Statuses</button>
-            <button id="download-recommendations-button" class="secondary" type="button">Download Recommendations</button>
-            <button id="run-resolver-button" type="button">Run Resolver</button>
-          </div>
-        </div>
-        <div class="warn">Run resolver: <code>python scripts/inventory_resolver_v1.py</code></div>
-        <div id="recommendation-summary" class="summary-grid"></div>
-        <div id="recommendation-table" class="table-wrap"></div>
-      </article>
+          <div class="warn">Inventory Control does not modify Enrollware. Ready actions are manual checklists only.</div>
+          <div id="action-queue-summary" class="summary-grid"></div>
+          <div id="action-queue-table" class="table-wrap"></div>
+        </article>
+      </details>
     </section>
 
     <section class="section">
-      <article class="card span-12">
-        <div class="card-header">
-          <div>
-            <h2>Inventory Draft Action Queue</h2>
-            <p class="muted">Local operational drafts created from accepted recommendations. These are not Enrollware sessions.</p>
+      <details id="manual-checklist-section" class="module-details">
+        <summary>Manual Enrollware Execution Checklist</summary>
+        <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <h2>Manual Enrollware Execution Checklist</h2>
+              <p class="muted">Ready actions only. Use this context while manually working in Enrollware admin.</p>
+            </div>
+            <span id="manual-checklist-count" class="status none">0 ready</span>
           </div>
-          <div class="actions">
-            <select id="queue-filter">
-              <option value="draft">Draft</option>
-              <option value="ready">Ready</option>
-              <option value="archived">Archived</option>
-              <option value="all">All</option>
-            </select>
-            <button id="copy-queue-button" type="button">Copy Draft Queue JSON</button>
-            <button id="save-queue-button" type="button">Save Queue</button>
-            <button id="download-queue-button" class="secondary" type="button">Download Queue</button>
-          </div>
-        </div>
-        <div class="warn">Inventory Control does not modify Enrollware. Ready actions are manual checklists only.</div>
-        <div id="action-queue-summary" class="summary-grid"></div>
-        <div id="action-queue-table" class="table-wrap"></div>
-      </article>
+          <div id="manual-checklist" class="manual-checklist"></div>
+        </article>
+      </details>
     </section>
 
     <section class="section">
-      <article class="card span-12">
-        <div class="card-header">
-          <div>
-            <h2>Manual Enrollware Execution Checklist</h2>
-            <p class="muted">Ready actions only. Use this context while manually working in Enrollware admin.</p>
+      <details id="appointment-ranges-section" class="module-details">
+        <summary>Enrollware AppointmentDayID Ranges</summary>
+        <article class="card span-12">
+          <div class="card-header">
+            <div>
+              <h2>Enrollware AppointmentDayID Ranges</h2>
+              <p class="muted">Read-only Enrollware appointment backbone windows. These are not instructor availability blocks.</p>
+            </div>
+            <span id="range-count" class="status none">0 ranges</span>
           </div>
-          <span id="manual-checklist-count" class="status none">0 ready</span>
-        </div>
-        <div id="manual-checklist" class="manual-checklist"></div>
-      </article>
-    </section>
-
-    <section class="section">
-      <article class="card span-12">
-        <div class="card-header">
-          <div>
-            <h2>Enrollware AppointmentDayID Ranges</h2>
-            <p class="muted">Read-only Enrollware appointment backbone windows. These are not instructor availability blocks.</p>
-          </div>
-          <span id="range-count" class="status none">0 ranges</span>
-        </div>
-        <div id="appointment-range-table" class="table-wrap"></div>
-      </article>
+          <div id="appointment-range-table" class="table-wrap"></div>
+        </article>
+      </details>
     </section>
   </main>
   <script src="inventory-control.js"></script>
