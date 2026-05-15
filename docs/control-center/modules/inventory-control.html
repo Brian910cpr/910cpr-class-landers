@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventory Control - 910CPR Control Center</title>
+  <link rel="stylesheet" href="../control-center.css">
+  <link rel="stylesheet" href="inventory-control.css">
+</head>
+<body data-page="inventory-control">
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="eyebrow">Control Center Module</div>
+        <h1>Inventory Control</h1>
+        <p class="subhead">Enter structured instructor availability for future inventory resolvers. This does not create public classes, change Enrollware, or generate live booking links.</p>
+      </div>
+      <nav class="nav">
+        <a class="secondary" href="../index.html">Dashboard</a>
+        <a class="secondary" href="audit-center.html">Audit Center</a>
+      </nav>
+    </header>
+
+    <section class="warn inventory-guardrail">
+      Operational guardrail: this page only edits availability data. It does not modify Enrollware, booking links, schedule filtering, pricing, sitemap logic, generated public landers, or public class availability.
+    </section>
+
+    <section id="load-warning" class="warn hidden"></section>
+
+    <section class="section grid">
+      <article class="card span-4">
+        <div class="card-header">
+          <h2>Availability Data</h2>
+          <span id="block-count" class="status none">0 blocks</span>
+        </div>
+        <div class="facts">
+          <div class="fact"><span class="label">Data file</span><span class="value">docs/data/instructor_availability.json</span></div>
+          <div class="fact"><span class="label">Profiles</span><span class="value">docs/data/instructor_profiles.json</span></div>
+          <div class="fact"><span class="label">Appointment ranges</span><span class="value">docs/data/appointment_range_registry.json</span></div>
+        </div>
+        <div class="actions">
+          <button id="preview-all-button" type="button">Preview JSON</button>
+          <button id="save-json-button" type="button">Save JSON</button>
+          <button id="download-json-button" class="secondary" type="button">Download JSON</button>
+        </div>
+      </article>
+
+      <article class="card span-4">
+        <h2>Paste Enrollware Class List or Notes</h2>
+        <label class="field">Source note
+          <textarea id="source-note-input" rows="8" placeholder="Paste Enrollware class list, appointment notes, or operator context here."></textarea>
+        </label>
+        <div class="actions">
+          <button id="add-source-note-button" type="button">Store Source Note</button>
+        </div>
+      </article>
+
+      <article class="card span-4">
+        <h2>Validation</h2>
+        <div id="validation-list" class="list">
+          <div class="list-item"><span>No generated data yet.</span><span class="status none">Idle</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section grid">
+      <article class="card span-6">
+        <div class="card-header">
+          <div>
+            <h2>One-Off Rows</h2>
+            <p class="muted">Best for erratic availability like Amy.</p>
+          </div>
+          <button id="add-one-off-button" type="button">Add One Day</button>
+        </div>
+        <div id="one-off-list" class="row-list"></div>
+      </article>
+
+      <article class="card span-6">
+        <h2>Block Builder</h2>
+        <p class="muted">Best for instructors who provide blocks of days.</p>
+        <form id="block-form" class="form-grid"></form>
+        <div class="actions">
+          <button id="generate-block-button" type="button">Generate Block Rows</button>
+          <button id="preview-block-button" class="secondary" type="button">Preview JSON</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="section grid">
+      <article class="card span-6">
+        <h2>Large Range With Exclusions</h2>
+        <p class="muted">Best for broad Brian-style availability where individual dates are excluded.</p>
+        <form id="range-form" class="form-grid"></form>
+        <div class="exclusion-tools">
+          <label class="field">Excluded date<input id="excluded-date-input" type="date"></label>
+          <label class="field">Exclusion reason<input id="exclusion-reason-input" placeholder="travel, unavailable, admin hold"></label>
+          <button id="add-exclusion-button" type="button">Add Exclusion</button>
+        </div>
+        <div id="exclusion-list" class="list"></div>
+        <div class="actions">
+          <button id="generate-range-button" type="button">Generate Range</button>
+          <button id="preview-range-button" class="secondary" type="button">Preview JSON</button>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <h2>Preview JSON</h2>
+        <pre id="json-preview" class="code json-preview">No generated blocks yet.</pre>
+      </article>
+    </section>
+
+    <section class="section">
+      <article class="card span-12">
+        <div class="card-header">
+          <div>
+            <h2>Generated Availability Blocks</h2>
+            <p class="muted">These are date-level availability blocks for future resolvers. They are not public classes.</p>
+          </div>
+          <button id="clear-generated-button" class="secondary" type="button">Clear Generated Blocks</button>
+        </div>
+        <div id="generated-table" class="table-wrap"></div>
+      </article>
+    </section>
+
+    <section class="section">
+      <article class="card span-12">
+        <div class="card-header">
+          <div>
+            <h2>Enrollware AppointmentDayID Ranges</h2>
+            <p class="muted">Read-only Enrollware appointment backbone windows. These are not instructor availability blocks.</p>
+          </div>
+          <span id="range-count" class="status none">0 ranges</span>
+        </div>
+        <div id="appointment-range-table" class="table-wrap"></div>
+      </article>
+    </section>
+  </main>
+  <script src="inventory-control.js"></script>
+</body>
+</html>

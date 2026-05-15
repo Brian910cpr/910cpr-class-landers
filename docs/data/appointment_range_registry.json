@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.1",
+  "ranges": [
+    {
+      "range_id": "nick_wilmington_daily_2026",
+      "owner": "Nick",
+      "courseId": 486041,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd",
+      "start_date": "2026-05-18",
+      "start_appointmentDayId": 260994,
+      "verified_date": "2026-07-31",
+      "verified_appointmentDayId": 261068,
+      "last_valid_date": "2027-05-15",
+      "last_valid_appointmentDayId": 261356,
+      "generation_mode": "daily_contiguous",
+      "minimum_notice_days": 2,
+      "notes": "Nick appointment backbone. IDs appear +1 per calendar day inside this generated range."
+    },
+    {
+      "range_id": "brian_june_2026_selected_days",
+      "owner": "Brian",
+      "courseId": 486041,
+      "location": "",
+      "start_date": "2026-06-13",
+      "start_appointmentDayId": 260986,
+      "last_valid_date": "2026-06-19",
+      "last_valid_appointmentDayId": 260991,
+      "generation_mode": "selected_days_only",
+      "minimum_notice_days": 2,
+      "notes": "Sunday was skipped, so IDs incremented by enabled appointment days, not raw calendar days."
+    },
+    {
+      "range_id": "amy_wilmington_daily_2026",
+      "owner": "Amy Arnold",
+      "courseId": 486043,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd",
+      "start_date": "2026-05-18",
+      "start_appointmentDayId": 261374,
+      "last_valid_date": "2027-04-30",
+      "last_valid_appointmentDayId": 261721,
+      "broken_after_appointmentDayId": 261722,
+      "generation_mode": "daily_contiguous",
+      "minimum_notice_days": 2,
+      "notes": "Amy range hard-stops at 261721 as tested. Saving 24-hour availability did not extend the generated range."
+    }
+  ]
+}
