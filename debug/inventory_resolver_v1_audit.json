@@ -1,11 +1,16 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-05-15T15:33:03.347305+00:00",
-  "availability_blocks_read": 0,
+  "generated_at": "2026-05-15T15:50:23.179589+00:00",
+  "availability_blocks_read": 2,
   "existing_sessions_read": 1281,
-  "gaps_found": 0,
-  "recommendations_created": 0,
+  "gaps_found": 1,
+  "recommendations_created": 1,
   "warnings": [],
-  "skipped_blocks": [],
+  "skipped_blocks": [
+    {
+      "block_id": "amy_arnold__1300_1800",
+      "reason": "missing_required_block_fields"
+    }
+  ],
   "hard_stop": "V1 only: availability - existing sessions = usable gaps + simple fit recommendations. No public booking links generated."
 }
