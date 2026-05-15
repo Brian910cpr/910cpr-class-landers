@@ -191,7 +191,9 @@ function defaultOneOffRow(profile = {}) {
 }
 
 function buildBlockId(row) {
-  return `${slug(row.instructor)}_${row.date}_${String(row.available_start).replace(":", "")}_${String(row.available_end).replace(":", "")}`;
+  const profile = instructorByName(row.instructor);
+  const instructorSlug = slug(profile?.short_name || row.instructor);
+  return `${instructorSlug}_${row.date}_${String(row.available_start).replace(":", "")}_${String(row.available_end).replace(":", "")}`;
 }
 
 function normalizeBlock(row, source = "manual_ui") {
@@ -291,11 +293,13 @@ function renderOneOffRows() {
   `).join("");
 
   $("one-off-list").querySelectorAll("[data-field]").forEach(input => {
-    input.addEventListener("input", event => {
+    const updateRow = event => {
       const card = event.target.closest("[data-row]");
       state.oneOffRows[Number(card.dataset.row)][event.target.dataset.field] = event.target.value;
       renderPreview();
-    });
+    };
+    input.addEventListener("input", updateRow);
+    input.addEventListener("change", updateRow);
   });
   $("one-off-list").querySelectorAll("input[type='checkbox']").forEach(input => {
     input.addEventListener("change", () => {
@@ -318,6 +322,21 @@ function renderOneOffRows() {
       state.oneOffRows.splice(Number(button.dataset.deleteRow), 1);
       render();
     });
+  });
+}
+
+function syncOneOffRowsFromDom() {
+  const list = $("one-off-list");
+  if (!list) return;
+  list.querySelectorAll("[data-row]").forEach(card => {
+    const index = Number(card.dataset.row);
+    const row = state.oneOffRows[index];
+    if (!row) return;
+    card.querySelectorAll("[data-field]").forEach(input => {
+      row[input.dataset.field] = input.value;
+    });
+    row.preferred_course_families = Array.from(card.querySelectorAll(`input[name="preferred_${index}"]:checked`)).map(input => input.value);
+    row.allowed_course_families = Array.from(card.querySelectorAll(`input[name="allowed_${index}"]:checked`)).map(input => input.value);
   });
 }
 
@@ -425,6 +444,7 @@ function renderPills(items = []) {
 }
 
 function currentBlocks() {
+  syncOneOffRowsFromDom();
   const oneOffBlocks = state.oneOffRows.map(row => normalizeBlock(row));
   return [...(state.availability.availability_blocks || []), ...oneOffBlocks, ...state.generatedBlocks];
 }
