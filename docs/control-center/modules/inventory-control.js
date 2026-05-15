@@ -577,10 +577,12 @@ function renderActionQueue() {
   const draftCount = actions.filter(action => action.status === "draft").length;
   const readyCount = actions.filter(action => action.status === "ready").length;
   const archivedCount = actions.filter(action => action.status === "archived").length;
+  const completedCount = actions.filter(action => action.status === "completed").length;
   $("action-queue-summary").innerHTML = `
     <div class="summary-card"><strong>${draftCount}</strong><span>Draft</span></div>
     <div class="summary-card"><strong>${readyCount}</strong><span>Ready</span></div>
     <div class="summary-card"><strong>${archivedCount}</strong><span>Archived</span></div>
+    <div class="summary-card"><strong>${completedCount}</strong><span>Completed</span></div>
     <div class="summary-card"><strong>${escapeHtml(state.actionQueue.duplicate_prevented_count || 0)}</strong><span>Duplicates prevented</span></div>
   `;
   if (!filtered.length) {
@@ -604,6 +606,7 @@ function renderActionQueue() {
             <button type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="ready">Mark Ready</button>
             <button class="secondary" type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="draft">Revert to Draft</button>
             <button class="secondary" type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="archived">Archive</button>
+            <button class="secondary" type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="completed">Mark Completed</button>
             <button class="secondary" type="button" data-delete-action="${escapeHtml(action.action_id)}">Delete</button>
           </td>
         </tr>
@@ -625,7 +628,7 @@ function renderActionQueue() {
 }
 
 function statusClassForAction(status) {
-  if (status === "ready") return "normal";
+  if (status === "ready" || status === "completed") return "normal";
   if (status === "archived") return "none";
   return "opportunity";
 }
@@ -640,12 +643,94 @@ function updateActionStatus(actionId, status) {
   action.status = status;
   renderActionQueue();
   renderRecommendations();
+  renderManualChecklist();
 }
 
 function deleteAction(actionId) {
   state.actionQueue.actions = (state.actionQueue.actions || []).filter(action => action.action_id !== actionId);
   renderActionQueue();
   renderRecommendations();
+  renderManualChecklist();
+}
+
+function renderManualChecklist() {
+  const readyActions = (state.actionQueue.actions || []).filter(action => action.status === "ready");
+  $("manual-checklist-count").textContent = `${readyActions.length} ready`;
+  if (!readyActions.length) {
+    $("manual-checklist").innerHTML = `<div class="empty-state">No ready actions. Mark a draft action Ready to create a manual Enrollware checklist.</div>`;
+    return;
+  }
+  $("manual-checklist").innerHTML = readyActions.map(action => `
+    <article class="manual-card">
+      <div class="card-header">
+        <div>
+          <h3>${escapeHtml(action.course_family)} with ${escapeHtml(action.instructor)}</h3>
+          <p class="muted">${escapeHtml(action.date)} ${displayTime(action.proposed_start)}-${displayTime(action.proposed_end)} at ${escapeHtml(action.location)}</p>
+        </div>
+        <span class="status normal">ready</span>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="label">Estimated minutes</span><span class="value">${escapeHtml(action.estimated_minutes)}</span></div>
+        <div class="fact"><span class="label">Reason</span><span class="value">${escapeHtml(action.reason || "")}</span></div>
+        <div class="fact"><span class="label">Warnings</span><span class="value">${renderBadges(action.warning_flags || [])}</span></div>
+        <div class="fact"><span class="label">Operator notes</span><span class="value">${escapeHtml(action.operator_notes || "No notes yet.")}</span></div>
+      </div>
+      <ol class="manual-steps">
+        <li>Open Enrollware admin.</li>
+        <li>Confirm instructor availability.</li>
+        <li>Confirm room/location availability.</li>
+        <li>Create or adjust session manually.</li>
+        <li>Verify class appears correctly.</li>
+        <li>Mark action completed.</li>
+      </ol>
+      <div class="actions">
+        <button type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="completed">Mark Completed</button>
+        <button class="secondary" type="button" data-action-status="${escapeHtml(action.action_id)}" data-status="ready">Return to Ready</button>
+        <button class="secondary" type="button" data-edit-action-note="${escapeHtml(action.action_id)}">Add/Edit Notes</button>
+        <button class="secondary" type="button" data-copy-task="${escapeHtml(action.action_id)}">Copy Enrollware Task Summary</button>
+      </div>
+    </article>
+  `).join("");
+  $("manual-checklist").querySelectorAll("[data-action-status]").forEach(button => {
+    button.addEventListener("click", () => updateActionStatus(button.dataset.actionStatus, button.dataset.status));
+  });
+  $("manual-checklist").querySelectorAll("[data-edit-action-note]").forEach(button => {
+    button.addEventListener("click", () => editActionNotes(button.dataset.editActionNote));
+  });
+  $("manual-checklist").querySelectorAll("[data-copy-task]").forEach(button => {
+    button.addEventListener("click", () => copyTaskSummary(button.dataset.copyTask));
+  });
+}
+
+function editActionNotes(actionId) {
+  const action = findAction(actionId);
+  if (!action) return;
+  const updated = prompt("Operator notes", action.operator_notes || "");
+  if (updated === null) return;
+  action.operator_notes = updated;
+  renderActionQueue();
+  renderManualChecklist();
+}
+
+function copyTaskSummary(actionId) {
+  const action = findAction(actionId);
+  if (!action) return;
+  const text = `Inventory Action:
+Instructor: ${action.instructor || ""}
+Date: ${action.date || ""}
+Time: ${displayTime(action.proposed_start)}-${displayTime(action.proposed_end)}
+Course Family: ${action.course_family || ""}
+Location: ${action.location || ""}
+Reason: ${action.reason || ""}
+Warnings: ${(action.warning_flags || []).join(", ") || "None"}
+
+Manual Steps:
+1. Open Enrollware admin.
+2. Confirm instructor and room availability.
+3. Create/adjust session manually.
+4. Verify public/admin display.
+5. Return here and mark completed.`;
+  navigator.clipboard?.writeText(text);
 }
 
 function renderExclusions() {
@@ -746,6 +831,7 @@ function render() {
   renderAppointmentRanges();
   renderRecommendations();
   renderActionQueue();
+  renderManualChecklist();
   renderPreview();
 }
 

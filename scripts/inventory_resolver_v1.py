@@ -96,6 +96,8 @@ def audit_action_queue(recommendations: list[dict[str, Any]]) -> dict[str, Any]:
         "draft_count": sum(1 for action in actions if action.get("status") == "draft"),
         "ready_count": sum(1 for action in actions if action.get("status") == "ready"),
         "archived_count": sum(1 for action in actions if action.get("status") == "archived"),
+        "completed_count": sum(1 for action in actions if action.get("status") == "completed"),
+        "ready_for_manual_execution_count": sum(1 for action in actions if action.get("status") == "ready"),
         "duplicate_prevented_count": int(queue.get("duplicate_prevented_count") or 0),
         "warnings": warnings,
     }

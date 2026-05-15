@@ -160,9 +160,22 @@
             <button id="download-queue-button" class="secondary" type="button">Download Queue</button>
           </div>
         </div>
-        <div class="warn">Draft Inventory Actions do NOT create Enrollware sessions. These are operational planning suggestions only.</div>
+        <div class="warn">Inventory Control does not modify Enrollware. Ready actions are manual checklists only.</div>
         <div id="action-queue-summary" class="summary-grid"></div>
         <div id="action-queue-table" class="table-wrap"></div>
+      </article>
+    </section>
+
+    <section class="section">
+      <article class="card span-12">
+        <div class="card-header">
+          <div>
+            <h2>Manual Enrollware Execution Checklist</h2>
+            <p class="muted">Ready actions only. Use this context while manually working in Enrollware admin.</p>
+          </div>
+          <span id="manual-checklist-count" class="status none">0 ready</span>
+        </div>
+        <div id="manual-checklist" class="manual-checklist"></div>
       </article>
     </section>
 
