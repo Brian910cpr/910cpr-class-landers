@@ -17,17 +17,36 @@
       "notes": "Nick appointment backbone. IDs appear +1 per calendar day inside this generated range."
     },
     {
-      "range_id": "brian_june_2026_selected_days",
-      "owner": "Brian",
-      "courseId": 486041,
-      "location": "",
-      "start_date": "2026-06-13",
-      "start_appointmentDayId": 260986,
-      "last_valid_date": "2026-06-19",
-      "last_valid_appointmentDayId": 260991,
-      "generation_mode": "selected_days_only",
+      "range_id": "brian_wilmington_daily_2026",
+      "owner": "Brian Ennis",
+      "appointment_id": "763",
+      "courseId": "486042",
+      "course_label": "~B -- No Sessions",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd",
+      "start_date": null,
+      "start_appointmentDayId": null,
+      "verified_date": "2026-06-21",
+      "verified_appointmentDayId": 260670,
+      "last_valid_date": "2027-04-30",
+      "last_valid_appointmentDayId": 260983,
+      "generation_mode": "daily_contiguous",
+      "availability_mode": "24_hour_backbone",
       "minimum_notice_days": 2,
-      "notes": "Sunday was skipped, so IDs incremented by enabled appointment days, not raw calendar days."
+      "slot_length_minutes": 60,
+      "notes": "Brian normalized 24-hour backbone. IDs confirmed +1 per calendar day from 2026-06-21 through 2027-04-30. Inventory Control handles actual staffing, exclusions, and public exposure separately.",
+      "historical_notes": [
+        {
+          "range_id": "brian_june_2026_selected_days",
+          "owner": "Brian",
+          "courseId": 486041,
+          "start_date": "2026-06-13",
+          "start_appointmentDayId": 260986,
+          "last_valid_date": "2026-06-19",
+          "last_valid_appointmentDayId": 260991,
+          "generation_mode": "selected_days_only",
+          "notes": "Historical/test data only. Earlier June 13-19 courseId 486041 test range; not the active normalized Brian appointment backbone."
+        }
+      ]
     },
     {
       "range_id": "amy_wilmington_daily_2026",
