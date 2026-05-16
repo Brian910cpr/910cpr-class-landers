@@ -1,0 +1,368 @@
+{
+  "target_class_report_id": "50864",
+  "target_session_ids": [
+    "12946259",
+    "12946261",
+    "12946272"
+  ],
+  "target_location_text": "90 Medical Cntr SW #100",
+  "authoritative_public_rule": "Only sessions whose raw source location begins with :: may be public.",
+  "generated_at": "2026-05-16T11:08:17.215606+00:00",
+  "leakage_path": [
+    "data/sessions_current.json contains the source sessions with raw location text that does not begin with ::.",
+    "Before this repair, scripts/build_schedule_future.py only suppressed TBD locations, so future non-public rows could enter docs/data/schedule_future.json.",
+    "Public schedule feeds, slug hubs, course pages, class detail pages, location pages, file lists, and sitemap output consumed or retained those stale rows until regenerated or surgically purged."
+  ],
+  "source_filter_verification": {
+    "scripts/build_sessions_current.py": "Preserves source location text from the report/class patch. It does not decide public visibility and does not strip the :: marker.",
+    "scripts/build_schedule_future.py": "Now enforces raw location startswith :: before public schedule row creation and deletes stale direct class pages for suppressed future non-public sessions.",
+    "scripts/build_slug_hubs.py": "Now includes a defensive raw-location guard in public_inventory_decision before rendering hub inventory.",
+    "docs/assets/hub-ui.js": "Display-only browser behavior over baked DOM rows; it does not fetch schedule_future/public_schedule or bypass build-time filtering."
+  },
+  "repair_actions": [
+    "Added raw-location public gate to scripts/build_schedule_future.py.",
+    "Added stale direct class page deletion for future non-public suppressed sessions.",
+    "Added defense-in-depth raw-location gate to scripts/build_slug_hubs.py.",
+    "Regenerated docs/data/schedule_future.json, docs/public_schedule.json, docs/data/public_schedule.json, slug hubs, and course landers as targeted public consumers.",
+    "Deleted stale public class/location/archive artifacts containing target IDs or target location text.",
+    "Surgically scrubbed stale related-session references from affected class, location, archive, filelist, and sitemap artifacts."
+  ],
+  "suppressed_future_non_public_session_ids": [
+    "12775764",
+    "13271027",
+    "13041903",
+    "12946259",
+    "12946261",
+    "12946272"
+  ],
+  "deleted_public_artifacts": [
+    "docs/classes/10724528.html",
+    "docs/classes/12775764.html",
+    "docs/classes/12946259.html",
+    "docs/classes/12946261.html",
+    "docs/classes/12946272.html",
+    "docs/classes/13041903.html",
+    "docs/classes/13271027.html",
+    "docs/locations/90-medical-cntr-sw-100-supply.html",
+    "docs/classes/cities/img-src-https-www-enrollware-com-sitefiles-coastalcprtraining-logo-bom-png-style-width-200px.html",
+    "docs/classes/cities/img-src-style-width-200px.html",
+    "docs/classes/course-at-city/aha-bls-provider-renewal-instructor-led-classroom-program-fo--img-src-style-width-200px.html",
+    "docs/classes/course-at-city/aha-bls-provider-renewal-instructor-led-classroom-program-for-bls-renewal-bls--img-src-https-www-enrollware-com-sitefiles-coastalcprtraining-logo-bom-png-style-width-200px.html",
+    "docs/classes/courses/aha-bls-provider-renewal-instructor-led-classroom-program-for-bls-renewal-bls.html"
+  ],
+  "post_repair_verification": {
+    "public_docs_target_matches": 0,
+    "public_docs_clean": true,
+    "remaining_repo_matches_note": "Remaining matches are source, runtime, debug, audit, or quarantine records and are not public schedule/page outputs."
+  },
+  "files_with_matches_after_repair": 26,
+  "matches_after_repair": [
+    {
+      "file_path": "data/audit/unmapped_courses.json",
+      "matches": [
+        "12946259"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "source",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/runtime/acls_hub_debug.json",
+      "matches": [
+        "12946261",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/runtime/bls_hub_debug.json",
+      "matches": [
+        "12946259"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/runtime/enrollware_sync/20260427-074805/desired_sessions.json",
+      "matches": [
+        "12946259",
+        "12946261",
+        "12946272",
+        "50864",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/runtime/enrollware_sync/20260427-074805/sync_report.json",
+      "matches": [
+        "12946261",
+        "12946272",
+        "50864",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/runtime/enrollware_sync/reconciliation_20260427-074902.json",
+      "matches": [
+        "12946259",
+        "12946261",
+        "12946272",
+        "50864",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/runtime/enrollware_sync/reconciliation_20260427-074950.json",
+      "matches": [
+        "12946259",
+        "12946261",
+        "12946272",
+        "50864",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/runtime/pals_hub_debug.json",
+      "matches": [
+        "12946272"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/schedule.json",
+      "matches": [
+        "12946259",
+        "12946261",
+        "12946272",
+        "50864",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "source",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/schedule_all.json",
+      "matches": [
+        "12946261",
+        "12946272",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "source",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/sessions_current.json",
+      "matches": [
+        "12946259",
+        "12946261",
+        "12946272",
+        "50864",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "source",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/state/acls_hub_debug.json",
+      "matches": [
+        "12946261"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "source",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "data/state/session_manifest.json",
+      "matches": [
+        "12946259",
+        "12946261",
+        "12946272",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "source_or_runtime_data",
+      "generated_or_source": "source",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/hub_session_classification.json",
+      "matches": [
+        "12946259",
+        "12946261",
+        "12946272"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/quarantine/stale_classes/20260430-144339/10724528.html",
+      "matches": [
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/quarantine/stale_classes/20260430-144339/13295722.html",
+      "matches": [
+        "12946261",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/quarantine/stale_classes/20260430-144339/13295723.html",
+      "matches": [
+        "12946261",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/quarantine/stale_classes/20260430-144339/13295724.html",
+      "matches": [
+        "12946261",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/quarantine/stale_classes/20260430-144339/13295766.html",
+      "matches": [
+        "12946272",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/quarantine/stale_classes/20260430-144339/13295767.html",
+      "matches": [
+        "12946272",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/quarantine/stale_classes/20260430-144339/13295768.html",
+      "matches": [
+        "12946272",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/quarantine/stale_classes/20260430-144339/50864.html",
+      "matches": [
+        "50864"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/raw_sessions_current.json",
+      "matches": [
+        "12946259",
+        "12946261",
+        "12946272",
+        "50864",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/schema_missing_price_course_review.csv",
+      "matches": [
+        "12946259",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/schema_missing_price_sessions.json",
+      "matches": [
+        "12946259",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "debug_or_quarantine_data",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    },
+    {
+      "file_path": "debug/session_visibility_audit_50864.json",
+      "matches": [
+        "12946259",
+        "12946261",
+        "12946272",
+        "50864",
+        "90 Medical Cntr SW #100"
+      ],
+      "render_source": "audit_output",
+      "generated_or_source": "generated",
+      "stale": false,
+      "publicly_reachable": false
+    }
+  ]
+}

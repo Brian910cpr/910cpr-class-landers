@@ -139,6 +139,14 @@ def has_tbd_location(session: dict[str, Any]) -> bool:
     return any("TBD" in value.upper() for value in raw_location_values(session))
 
 
+def has_public_raw_location(session: dict[str, Any]) -> bool:
+    return any(value.strip().startswith("::") for value in raw_location_values(session))
+
+
+def safe_console_text(value: str) -> str:
+    return value.encode("ascii", errors="backslashreplace").decode("ascii")
+
+
 def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
     requested_path = (repo_root / requested).resolve()
     if requested_path.exists():
@@ -352,7 +360,9 @@ def main() -> int:
         skipped_missing_start = 0
         skipped_past = 0
         skipped_orphan = 0
+        skipped_non_public_location = 0
         skipped_tbd_location = 0
+        skipped_non_public_session_ids: list[str] = []
         skipped_tbd_session_ids: list[str] = []
         included_by_legacy_mapping = 0
         included_by_course_identity_resolver = 0
@@ -395,12 +405,6 @@ def main() -> int:
                 skipped_orphan += 1
                 reporter.update(current=index, total=len(sessions))
                 continue
-            if has_tbd_location(session):
-                print(f"TBD LOCATION SUPPRESSED: session_id={session_id} location={debug_location_value(session)}")
-                skipped_tbd_location += 1
-                skipped_tbd_session_ids.append(session_id)
-                reporter.update(current=index, total=len(sessions))
-                continue
             start_dt = parse_iso_dt(session_start_candidate(session))
             if start_dt is None:
                 skipped_missing_start += 1
@@ -409,6 +413,18 @@ def main() -> int:
             is_past = start_dt < now_dt
             if is_past and not args.include_past:
                 skipped_past += 1
+                reporter.update(current=index, total=len(sessions))
+                continue
+            if not has_public_raw_location(session):
+                print(f"NON-PUBLIC LOCATION SUPPRESSED: session_id={session_id} location={safe_console_text(debug_location_value(session))}")
+                skipped_non_public_location += 1
+                skipped_non_public_session_ids.append(session_id)
+                reporter.update(current=index, total=len(sessions))
+                continue
+            if has_tbd_location(session):
+                print(f"TBD LOCATION SUPPRESSED: session_id={session_id} location={safe_console_text(debug_location_value(session))}")
+                skipped_tbd_location += 1
+                skipped_tbd_session_ids.append(session_id)
                 reporter.update(current=index, total=len(sessions))
                 continue
             mapping_status = str(session.get("mapping_status") or "").strip().lower()
@@ -450,6 +466,7 @@ def main() -> int:
                     "skipped_missing_start": skipped_missing_start,
                     "skipped_past": skipped_past,
                     "skipped_orphan": skipped_orphan,
+                    "skipped_non_public_location": skipped_non_public_location,
                     "skipped_tbd_location": skipped_tbd_location,
                     "included_by_legacy_mapping": included_by_legacy_mapping,
                     "included_by_course_identity_resolver": included_by_course_identity_resolver,
@@ -467,7 +484,14 @@ def main() -> int:
             encoding="utf-8",
         )
         stale_tbd_class_pages_deleted = 0
+        stale_non_public_class_pages_deleted = 0
         classes_dir = repo_root / "docs" / "classes"
+        for session_id in skipped_non_public_session_ids:
+            stale_page = classes_dir / f"{session_id}.html"
+            if stale_page.exists():
+                stale_page.unlink()
+                stale_non_public_class_pages_deleted += 1
+                print(f"Deleted stale non-public class page: {stale_page}")
         for session_id in skipped_tbd_session_ids:
             stale_page = classes_dir / f"{session_id}.html"
             if stale_page.exists():
@@ -498,6 +522,8 @@ def main() -> int:
         files_needing_review = []
         if skipped_orphan:
             warnings.append(f"{skipped_orphan} sessions were skipped because they were not present in the current Class Report.")
+        if skipped_non_public_location:
+            warnings.append(f"{skipped_non_public_location} sessions were skipped because raw location does not begin with '::'.")
         if skipped_tbd_location:
             warnings.append(f"{skipped_tbd_location} sessions were skipped by the emergency TBD location suppression rule.")
         if skipped_unmapped_after_resolver:
@@ -513,7 +539,9 @@ def main() -> int:
                 "skipped_missing_start": skipped_missing_start,
                 "skipped_past": skipped_past,
                 "skipped_orphan": skipped_orphan,
+                "skipped_non_public_location": skipped_non_public_location,
                 "skipped_tbd_location": skipped_tbd_location,
+                "stale_non_public_class_pages_deleted": stale_non_public_class_pages_deleted,
                 "stale_tbd_class_pages_deleted": stale_tbd_class_pages_deleted,
                 "included_by_legacy_mapping": included_by_legacy_mapping,
                 "included_by_course_identity_resolver": included_by_course_identity_resolver,

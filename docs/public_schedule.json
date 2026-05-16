@@ -1,211 +1,7 @@
 {
-  "generated_at": "2026-05-12T23:11:06.906438-04:00",
-  "count": 1351,
+  "generated_at": "2026-05-16T06:51:40.402038-04:00",
+  "count": 1328,
   "sessions": [
-    {
-      "session_id": "209811",
-      "class_id": "12774042",
-      "course_id": "209811",
-      "course": "AHA HeartCode ACLS",
-      "title": "AHA HeartCode ACLS",
-      "start": "2026-05-13T08:30:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 0,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774042",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209811"
-    },
-    {
-      "session_id": "253768",
-      "class_id": "12776857",
-      "course_id": "253768",
-      "course": "USCG Elementary First Aid | CPR (AHA Heartsaver®)",
-      "title": "USCG Elementary First Aid | CPR (AHA Heartsaver®)",
-      "start": "2026-05-13T09:15:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 3,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776857",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct253768"
-    },
-    {
-      "session_id": "329495",
-      "class_id": "12776131",
-      "course_id": "329495",
-      "course": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "title": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start": "2026-05-13T11:45:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 2,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776131",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct329495"
-    },
-    {
-      "session_id": "209806",
-      "class_id": "12774314",
-      "course_id": "209806",
-      "course": "AHA BLS Provider",
-      "title": "AHA BLS Provider",
-      "start": "2026-05-13T12:30:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 6,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774314",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
-    },
-    {
-      "session_id": "359474",
-      "class_id": "12775511",
-      "course_id": "359474",
-      "course": "AHA BLS Provider Renewal",
-      "title": "AHA BLS Provider Renewal",
-      "start": "2026-05-13T12:30:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 5,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775511",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
-    },
-    {
-      "session_id": "329495",
-      "class_id": "12775756",
-      "course_id": "329495",
-      "course": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "title": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start": "2026-05-13T17:30:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 2,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775756",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct329495"
-    },
-    {
-      "session_id": "209806",
-      "class_id": "12774560",
-      "course_id": "209806",
-      "course": "AHA BLS Provider",
-      "title": "AHA BLS Provider",
-      "start": "2026-05-13T18:15:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 6,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774560",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
-    },
-    {
-      "session_id": "359474",
-      "class_id": "12775278",
-      "course_id": "359474",
-      "course": "AHA BLS Provider Renewal",
-      "title": "AHA BLS Provider Renewal",
-      "start": "2026-05-13T18:15:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 3,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775278",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
-    },
-    {
-      "session_id": "329495",
-      "class_id": "12776693",
-      "course_id": "329495",
-      "course": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "title": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start": "2026-05-14T08:30:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 2,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776693",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct329495"
-    },
-    {
-      "session_id": "251545",
-      "class_id": "12783392",
-      "course_id": "251545",
-      "course": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
-      "title": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
-      "start": "2026-05-14T08:30:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 2,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783392",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545"
-    },
-    {
-      "session_id": "210549",
-      "class_id": "12776551",
-      "course_id": "210549",
-      "course": "AHA HeartCode BLS",
-      "title": "AHA HeartCode BLS",
-      "start": "2026-05-14T17:30:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 4,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776551",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
-    },
-    {
-      "session_id": "209809",
-      "class_id": "12776768",
-      "course_id": "209809",
-      "course": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "title": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "start": "2026-05-14T18:15:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 7,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776768",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209809"
-    },
-    {
-      "session_id": "209812",
-      "class_id": "13430683",
-      "course_id": "209812",
-      "course": "AHA HeartCode PALS",
-      "title": "AHA HeartCode PALS",
-      "start": "2026-05-15T13:00:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 2,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=13430683",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209812"
-    },
-    {
-      "session_id": "241108",
-      "class_id": "13295707",
-      "course_id": "241108",
-      "course": "AHA ACLS Provider - In-person (Initial)",
-      "title": "AHA ACLS Provider - In-person (Initial)",
-      "start": "2026-05-15T14:00:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 3,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=13295707",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct241108"
-    },
-    {
-      "session_id": "209818",
-      "class_id": "13295727",
-      "course_id": "209818",
-      "course": "AHA ACLS Provider - In-person (Renewal)",
-      "title": "AHA ACLS Provider - In-person (Renewal)",
-      "start": "2026-05-15T14:00:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 3,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=13295727",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209818"
-    },
-    {
-      "session_id": "209805",
-      "class_id": "13295748",
-      "course_id": "209805",
-      "course": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial",
-      "title": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial",
-      "start": "2026-05-15T14:00:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 4,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=13295748",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209805"
-    },
-    {
-      "session_id": "251496",
-      "class_id": "13295771",
-      "course_id": "251496",
-      "course": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
-      "title": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
-      "start": "2026-05-15T14:00:00-04:00",
-      "location": ":: Wilmington; Shipyard Blvd",
-      "seats_available": 4,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=13295771",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251496"
-    },
     {
       "session_id": "209811",
       "class_id": "12774013",
@@ -277,18 +73,6 @@
       "seats_available": 8,
       "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776629",
       "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
-    },
-    {
-      "session_id": "12775764",
-      "class_id": "12775764",
-      "course_id": null,
-      "course": "AHA - Family & Friends® CPR",
-      "title": "AHA - Family & Friends® CPR",
-      "start": "2026-05-16T16:30:00-04:00",
-      "location": "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/EFCC.png\" style=\"width: 75px;\"></img><br>4114 Echo Farms Road, Wilm",
-      "seats_available": 15,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775764",
-      "schedule_url": ""
     },
     {
       "session_id": "209811",
@@ -373,18 +157,6 @@
       "seats_available": 8,
       "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776764",
       "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209809"
-    },
-    {
-      "session_id": "344085",
-      "class_id": "13271027",
-      "course_id": "344085",
-      "course": "AHA - Heartsaver® CPR AED - In-person",
-      "title": "AHA - Heartsaver® CPR AED - In-person",
-      "start": "2026-05-20T08:30:00-04:00",
-      "location": "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HUMC.png\" width=\"100\">HUMC Preschool <br>15395 US Hwy 17;Hampstead",
-      "seats_available": 992,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=13271027",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct344085"
     },
     {
       "session_id": "209806",
@@ -1045,18 +817,6 @@
       "seats_available": 5,
       "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775289",
       "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
-    },
-    {
-      "session_id": "209806",
-      "class_id": "13041903",
-      "course_id": "209806",
-      "course": "AHA BLS Provider",
-      "title": "AHA BLS Provider",
-      "start": "2026-05-30T09:00:00-04:00",
-      "location": "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HFD.png\" style=\"width: 150px;\"></img><br>1139 Greenville Hwy, Hendersonville",
-      "seats_available": 999,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=13041903",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
     },
     {
       "session_id": "10009265",
@@ -6027,30 +5787,6 @@
       "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
     },
     {
-      "session_id": "359474",
-      "class_id": "12946259",
-      "course_id": "359474",
-      "course": "AHA - BLS Provider - Renewal Instructor-led Classroom program for BLS Renewal",
-      "title": "AHA - BLS Provider - Renewal Instructor-led Classroom program for BLS Renewal",
-      "start": "2026-08-10T09:00:00-04:00",
-      "location": "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BOM.png\" style=\"width: 200px;\"></img><br>90 Medical Cntr SW #100, Supply",
-      "seats_available": 999,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12946259",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
-    },
-    {
-      "session_id": "209818",
-      "class_id": "12946261",
-      "course_id": "209818",
-      "course": "AHA ACLS Provider - In-person (Renewal)",
-      "title": "AHA ACLS Provider - In-person (Renewal)",
-      "start": "2026-08-10T11:30:00-04:00",
-      "location": "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BOM.png\" style=\"width: 200px;\"></img><br>90 Medical Cntr SW #100, Supply",
-      "seats_available": 999,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12946261",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209818"
-    },
-    {
       "session_id": "329495",
       "class_id": "12776167",
       "course_id": "329495",
@@ -6085,18 +5821,6 @@
       "seats_available": 5,
       "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775560",
       "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
-    },
-    {
-      "session_id": "251496",
-      "class_id": "12946272",
-      "course_id": "251496",
-      "course": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
-      "title": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
-      "start": "2026-08-10T14:00:00-04:00",
-      "location": "<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BOM.png\" style=\"width: 200px;\"></img><br>90 Medical Cntr SW #100, Supply",
-      "seats_available": 999,
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12946272",
-      "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251496"
     },
     {
       "session_id": "329495",

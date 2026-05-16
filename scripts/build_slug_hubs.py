@@ -90,6 +90,11 @@ def normalize_space(value: str | None) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
+def has_public_raw_location(session: dict[str, Any]) -> bool:
+    location_raw = normalize_space(session.get("location_display") or session.get("location_name"))
+    return location_raw.startswith("::")
+
+
 def strip_review_text(value: str | None) -> str:
     text = unescape(str(value or ""))
     text = re.sub(r"<[^>]+>", " ", text)
@@ -188,6 +193,9 @@ def public_inventory_decision(session: dict[str, Any], page: dict[str, Any]) -> 
     course_subtitle = normalize_space(session.get("course_subtitle"))
     haystack = normalize_match_text(f"{course_name} {course_subtitle} {location_raw}")
     location_clean = clean_location(location_raw)
+
+    if not has_public_raw_location(session):
+        return False, "excluded:raw_location_not_public"
 
     approved_locations = approved_locations_for_page(page)
     if approved_locations and location_clean not in approved_locations:
