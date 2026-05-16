@@ -2848,17 +2848,29 @@ textarea {
   color: var(--muted);
 }
 
+.slug-tabs-block .slug-pill-list {
+  grid-template-columns: 1fr;
+}
+
 .slug-day-card {
   position: relative;
   display: grid;
-  grid-template-columns: 78px minmax(0, 1fr);
-  gap: 16px;
-  padding: 16px;
-  padding-right: 52px;
-  border-radius: 22px;
+  grid-template-columns: 70px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  padding-right: 46px;
+  border-radius: 14px;
   background: #ffffff;
-  border: 1px solid #dbe7f0;
-  box-shadow: 0 10px 22px rgba(22, 42, 66, 0.04);
+  border: 1px solid #d6e5f2;
+  box-shadow: 0 8px 18px rgba(22, 42, 66, 0.035);
+}
+
+.slug-day-card-base {
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+}
+
+.slug-day-card-alt {
+  background: linear-gradient(180deg, #f3f8ff 0%, #fbfdff 100%);
 }
 
 .slug-day-cert-logos {
@@ -2884,28 +2896,36 @@ textarea {
 }
 
 .slug-day-title {
-  margin: 2px 0 14px;
-  font-size: 18px;
+  margin: 0 0 8px;
+  font-size: 16px;
   font-weight: 800;
   color: var(--heading);
 }
 
 .slug-time-list {
   display: grid;
-  gap: 12px;
+  gap: 6px;
 }
 
 .slug-time-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 16px;
-  padding-top: 12px;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 10px;
   border-top: 1px solid rgba(219, 231, 240, 0.9);
+  border-radius: 10px;
+  transition: background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
 .slug-time-row:first-child {
-  padding-top: 0;
   border-top: 0;
+}
+
+.slug-time-row:hover,
+.slug-time-row:focus-within {
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: inset 0 0 0 1px rgba(53, 95, 218, 0.18), 0 8px 18px rgba(22, 42, 66, 0.045);
 }
 
 .slug-time-copy {
@@ -2913,18 +2933,39 @@ textarea {
 }
 
 .slug-time-meta {
-  margin-bottom: 6px;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.slug-time-value {
+  display: inline-flex;
+  align-items: center;
+  color: #162f55;
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 900;
 }
 
 .slug-time-subtitle {
   color: var(--muted);
-  line-height: 1.55;
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .slug-time-actions {
   display: grid;
   justify-items: end;
-  gap: 8px;
+  gap: 4px;
+}
+
+.slug-reveal-control {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+}
+
+.slug-reveal-button {
+  min-width: min(100%, 300px);
 }
 
 .slug-banner {

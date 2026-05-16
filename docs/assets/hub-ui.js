@@ -663,13 +663,14 @@
       href: buttonNode ? buttonNode.getAttribute("href") : "",
       originalHref: buttonNode ? (buttonNode.getAttribute("data-original-href") || buttonNode.getAttribute("href") || "") : "",
       buttonText: buttonNode ? buttonNode.textContent.trim() : "Register",
-      hint: hintNode ? hintNode.textContent.trim() : "Reserve this class time",
+      hint: hintNode ? hintNode.textContent.trim() : "",
       sessionId: pill.getAttribute("data-session-id") || "",
       sessionStart: start ? start.toISOString() : "",
       sessionEnd: pill.getAttribute("data-end") || pill.getAttribute("data-session-end") || "",
       sessionDate: start ? formatSessionDateKey(start) : "",
       certifyingBody: pill.getAttribute("data-certifying-body") || "",
       certifyingLogo: pill.getAttribute("data-certifying-logo") || "",
+      rowHref: pill.getAttribute("data-row-href") || (buttonNode ? (buttonNode.getAttribute("href") || "") : ""),
     };
   }
 
@@ -724,18 +725,18 @@
         byKey.get(key).rows.push(row);
       });
 
-      list.innerHTML = groups.map((group) => {
+      list.innerHTML = groups.map((group, groupIndex) => {
         const rowsMarkup = group.rows.map((row) => `
-          <div class="slug-time-row" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}">
+          <div class="slug-time-row" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}"${row.rowHref ? ` data-row-href="${escapeHtml(row.rowHref)}"` : ""}>
             <div class="slug-time-copy">
               <div class="slug-pill-meta-row slug-time-meta">
-                ${row.time ? `<span class="slug-pill-chip">${escapeHtml(row.time)}</span>` : ""}
+                ${row.time ? `<span class="slug-time-value">${escapeHtml(row.time)}</span>` : ""}
                 ${row.location ? `<span class="slug-pill-chip slug-pill-chip-location">${escapeHtml(row.location)}</span>` : ""}
               </div>
               ${row.subtitle ? `<div class="slug-time-subtitle">${escapeHtml(row.subtitle)}</div>` : ""}
             </div>
             <div class="slug-time-actions">
-              <div class="slug-pill-hint">${escapeHtml(row.hint)}</div>
+              ${row.hint ? `<div class="slug-pill-hint">${escapeHtml(row.hint)}</div>` : ""}
               ${row.href ? `<a class="button small primary" href="${escapeHtml(row.href)}" data-original-href="${escapeHtml(row.originalHref || row.href)}" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}">${escapeHtml(row.buttonText)}</a>` : ""}
             </div>
           </div>
@@ -749,7 +750,7 @@
         const certAttr = certLogos.length === 1 ? ` data-certifying-body="${escapeHtml(certLogos[0].body)}"` : "";
 
         return `
-          <article class="slug-day-card"${group.sessionDate ? ` data-session-date="${group.sessionDate}"` : ""}${certAttr}>
+          <article class="slug-day-card ${groupIndex % 2 ? "slug-day-card-alt" : "slug-day-card-base"}"${group.sessionDate ? ` data-session-date="${group.sessionDate}"` : ""}${certAttr}>
             ${certMarkup}
             ${group.dateHtml}
             <div class="slug-day-main">
@@ -761,6 +762,67 @@
       }).join("");
 
       list.dataset.groupedByDay = "true";
+    });
+  }
+
+  function updateDayVisibility(list) {
+    list.querySelectorAll(".slug-day-card").forEach((card) => {
+      const rows = Array.from(card.querySelectorAll(".slug-time-row"));
+      card.hidden = rows.length > 0 && rows.every((row) => row.hidden);
+    });
+  }
+
+  function revealButtonText(increment, label, remaining) {
+    const count = Math.min(increment, remaining);
+    return `Show ${count} more upcoming ${label} dates`;
+  }
+
+  function applyProgressiveReveal(scope) {
+    if (!scope) return;
+
+    scope.querySelectorAll(".tab-panel .slug-pill-list[data-initial-visible]").forEach((list) => {
+      const rows = Array.from(list.querySelectorAll(".slug-time-row"));
+      const initialVisible = Number.parseInt(list.getAttribute("data-initial-visible") || "30", 10);
+      const increment = Number.parseInt(list.getAttribute("data-reveal-increment") || "15", 10);
+      const label = list.getAttribute("data-reveal-label") || "class";
+      const limit = Number.isFinite(initialVisible) && initialVisible > 0 ? initialVisible : 30;
+      const step = Number.isFinite(increment) && increment > 0 ? increment : 15;
+
+      if (!rows.length) return;
+      if (!list.dataset.visibleCount) {
+        list.dataset.visibleCount = String(Math.min(limit, rows.length));
+      }
+
+      let visibleCount = Number.parseInt(list.dataset.visibleCount, 10);
+      if (!Number.isFinite(visibleCount) || visibleCount < 1) visibleCount = Math.min(limit, rows.length);
+      visibleCount = Math.min(visibleCount, rows.length);
+      list.dataset.visibleCount = String(visibleCount);
+
+      rows.forEach((row, index) => {
+        row.hidden = index >= visibleCount;
+      });
+      updateDayVisibility(list);
+
+      const existing = list.nextElementSibling && list.nextElementSibling.classList.contains("slug-reveal-control")
+        ? list.nextElementSibling
+        : null;
+      if (existing) existing.remove();
+
+      const remaining = rows.length - visibleCount;
+      if (remaining <= 0) return;
+
+      const control = document.createElement("div");
+      control.className = "slug-reveal-control";
+      const button = document.createElement("button");
+      button.className = "button secondary slug-reveal-button";
+      button.type = "button";
+      button.textContent = revealButtonText(step, label, remaining);
+      button.addEventListener("click", () => {
+        list.dataset.visibleCount = String(Math.min(rows.length, visibleCount + step));
+        applyProgressiveReveal(scope);
+      });
+      control.appendChild(button);
+      list.insertAdjacentElement("afterend", control);
     });
   }
 
@@ -786,6 +848,7 @@
       pruneDirectPills(scope);
       groupSessionsByDay(scope);
       pruneGroupedRows(scope);
+      applyProgressiveReveal(scope);
       syncScopeVisibility(scope);
     });
   }

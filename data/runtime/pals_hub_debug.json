@@ -1,71 +1,8 @@
 {
-  "generated_at": "2026-05-12T23:20:41.705282-04:00",
+  "generated_at": "2026-05-16T14:05:20.169660-04:00",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "page_slug": "pals",
   "records": [
-    {
-      "page_slug": "pals",
-      "session_id": "13430683",
-      "course_id": "209812",
-      "course_name": "AHA HeartCode PALS",
-      "official_course_name": "AHA PALS HeartCode",
-      "course_key": "aha_pals_heartcode",
-      "course_code": "AHA_PALS_HEARTCODE",
-      "start_at": "2026-05-15T13:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "pals-heartcode"
-      ],
-      "matched_classification": {
-        "family": "PALS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "pals",
-      "session_id": "13295748",
-      "course_id": "209805",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial",
-      "official_course_name": "AHA PALS Provider",
-      "course_key": "aha_pals_provider",
-      "course_code": "AHA_PALS_INITIAL",
-      "start_at": "2026-05-15T14:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "pals-provider"
-      ],
-      "matched_classification": {
-        "family": "PALS",
-        "subtype": "Provider Initial",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "pals",
-      "session_id": "13295771",
-      "course_id": "251496",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
-      "official_course_name": "AHA PALS Renewal",
-      "course_key": "aha_pals_renewal",
-      "course_code": "AHA_PALS_RENEWAL",
-      "start_at": "2026-05-15T14:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "pals-renewal"
-      ],
-      "matched_classification": {
-        "family": "PALS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
     {
       "page_slug": "pals",
       "session_id": "13295751",
@@ -159,17 +96,17 @@
       "course_key": "aha_pals_instructor_renewal",
       "course_code": null,
       "start_at": "2026-06-01T00:00:00-04:00",
-      "included": false,
-      "matched_tabs": [],
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
       "matched_classification": {
         "family": "PALS",
         "subtype": "Renewal",
         "certifying_body": "aha",
         "delivery_mode": ""
       },
-      "reason_excluded": [
-        "excluded:no_tab_match"
-      ]
+      "reason_excluded": null
     },
     {
       "page_slug": "pals",
@@ -180,17 +117,17 @@
       "course_key": "aha_pals_instructor_renewal",
       "course_code": null,
       "start_at": "2026-06-01T00:00:00-04:00",
-      "included": false,
-      "matched_tabs": [],
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
       "matched_classification": {
         "family": "PALS",
         "subtype": "Renewal",
         "certifying_body": "aha",
         "delivery_mode": ""
       },
-      "reason_excluded": [
-        "excluded:no_tab_match"
-      ]
+      "reason_excluded": null
     },
     {
       "page_slug": "pals",
@@ -201,27 +138,6 @@
       "course_key": "aha_pals_instructor_renewal",
       "course_code": null,
       "start_at": "2026-07-01T00:00:00-04:00",
-      "included": false,
-      "matched_tabs": [],
-      "matched_classification": {
-        "family": "PALS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": ""
-      },
-      "reason_excluded": [
-        "excluded:no_tab_match"
-      ]
-    },
-    {
-      "page_slug": "pals",
-      "session_id": "12946272",
-      "course_id": "251496",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
-      "official_course_name": "AHA PALS Renewal",
-      "course_key": "aha_pals_renewal",
-      "course_code": "AHA_PALS_RENEWAL",
-      "start_at": "2026-08-10T14:00:00-04:00",
       "included": true,
       "matched_tabs": [
         "pals-renewal"
@@ -230,7 +146,7 @@
         "family": "PALS",
         "subtype": "Renewal",
         "certifying_body": "aha",
-        "delivery_mode": "IP"
+        "delivery_mode": ""
       },
       "reason_excluded": null
     }

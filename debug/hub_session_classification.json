@@ -1,175 +1,7 @@
 {
-  "generated_at": "2026-05-12T23:20:41.705282-04:00",
+  "generated_at": "2026-05-16T14:05:20.169660-04:00",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "records": [
-    {
-      "page_slug": "bls",
-      "session_id": "12774314",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-05-13T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775511",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider Renewal",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-05-13T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12774560",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-05-13T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775278",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider Renewal",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-05-13T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12776551",
-      "course_id": "210549",
-      "course_name": "AHA HeartCode BLS",
-      "official_course_name": "AHA HeartCode BLS",
-      "course_key": "aha_heartcode_bls",
-      "course_code": "AHA_BLS_BL_SKILLS",
-      "start_at": "2026-05-14T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12776389",
-      "course_id": "210549",
-      "course_name": "AHA HeartCode BLS",
-      "official_course_name": "AHA HeartCode BLS",
-      "course_key": "aha_heartcode_bls",
-      "course_code": "AHA_BLS_BL_SKILLS",
-      "start_at": "2026-05-16T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775519",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider Renewal",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-05-16T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12776629",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-05-16T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
     {
       "page_slug": "bls",
       "session_id": "12774310",
@@ -816,27 +648,6 @@
       "matched_classification": {
         "family": "BLS",
         "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "13041903",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-05-30T09:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
@@ -5681,27 +5492,6 @@
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
       "start_at": "2026-08-08T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12946259",
-      "course_id": "359474",
-      "course_name": "AHA - BLS Provider - Renewal Instructor-led Classroom program for BLS Renewal",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-08-10T09:00:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -15670,90 +15460,6 @@
     },
     {
       "page_slug": "acls",
-      "session_id": "12774042",
-      "course_id": "209811",
-      "course_name": "AHA HeartCode ACLS",
-      "official_course_name": "AHA ACLS HeartCode",
-      "course_key": "aha_acls_heartcode",
-      "course_code": "AHA_ACLS_HEARTCODE",
-      "start_at": "2026-05-13T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
-      "session_id": "13295707",
-      "course_id": "241108",
-      "course_name": "AHA ACLS Provider - In-person (Initial)",
-      "official_course_name": "AHA ACLS Provider (Initial)",
-      "course_key": "aha_acls_provider_initial",
-      "course_code": "AHA_ACLS_PROVIDER_INITIAL",
-      "start_at": "2026-05-15T14:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-provider"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "Provider Initial",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
-      "session_id": "13295727",
-      "course_id": "209818",
-      "course_name": "AHA ACLS Provider - In-person (Renewal)",
-      "official_course_name": "AHA ACLS Provider (Renewal)",
-      "course_key": "aha_acls_provider_renewal",
-      "course_code": "AHA_ACLS_PROVIDER_RENEWAL",
-      "start_at": "2026-05-15T14:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-renewal"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
-      "session_id": "12774013",
-      "course_id": "209811",
-      "course_name": "AHA HeartCode ACLS",
-      "official_course_name": "AHA ACLS HeartCode",
-      "course_key": "aha_acls_heartcode",
-      "course_code": "AHA_ACLS_HEARTCODE",
-      "start_at": "2026-05-16T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
       "session_id": "12773996",
       "course_id": "209811",
       "course_name": "AHA HeartCode ACLS",
@@ -16547,27 +16253,6 @@
         "subtype": "HeartCode",
         "certifying_body": "aha",
         "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
-      "session_id": "12946261",
-      "course_id": "209818",
-      "course_name": "AHA ACLS Provider - In-person (Renewal)",
-      "official_course_name": "AHA ACLS Provider (Renewal)",
-      "course_key": "aha_acls_provider_renewal",
-      "course_code": "AHA_ACLS_PROVIDER_RENEWAL",
-      "start_at": "2026-08-10T11:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-renewal"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
       },
       "reason_excluded": null
     },
@@ -17854,69 +17539,6 @@
     },
     {
       "page_slug": "pals",
-      "session_id": "13430683",
-      "course_id": "209812",
-      "course_name": "AHA HeartCode PALS",
-      "official_course_name": "AHA PALS HeartCode",
-      "course_key": "aha_pals_heartcode",
-      "course_code": "AHA_PALS_HEARTCODE",
-      "start_at": "2026-05-15T13:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "pals-heartcode"
-      ],
-      "matched_classification": {
-        "family": "PALS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "pals",
-      "session_id": "13295748",
-      "course_id": "209805",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial",
-      "official_course_name": "AHA PALS Provider",
-      "course_key": "aha_pals_provider",
-      "course_code": "AHA_PALS_INITIAL",
-      "start_at": "2026-05-15T14:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "pals-provider"
-      ],
-      "matched_classification": {
-        "family": "PALS",
-        "subtype": "Provider Initial",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "pals",
-      "session_id": "13295771",
-      "course_id": "251496",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
-      "official_course_name": "AHA PALS Renewal",
-      "course_key": "aha_pals_renewal",
-      "course_code": "AHA_PALS_RENEWAL",
-      "start_at": "2026-05-15T14:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "pals-renewal"
-      ],
-      "matched_classification": {
-        "family": "PALS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "pals",
       "session_id": "13295751",
       "course_id": "209805",
       "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial",
@@ -18008,17 +17630,17 @@
       "course_key": "aha_pals_instructor_renewal",
       "course_code": null,
       "start_at": "2026-06-01T00:00:00-04:00",
-      "included": false,
-      "matched_tabs": [],
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
       "matched_classification": {
         "family": "PALS",
         "subtype": "Renewal",
         "certifying_body": "aha",
         "delivery_mode": ""
       },
-      "reason_excluded": [
-        "excluded:no_tab_match"
-      ]
+      "reason_excluded": null
     },
     {
       "page_slug": "pals",
@@ -18029,17 +17651,17 @@
       "course_key": "aha_pals_instructor_renewal",
       "course_code": null,
       "start_at": "2026-06-01T00:00:00-04:00",
-      "included": false,
-      "matched_tabs": [],
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
       "matched_classification": {
         "family": "PALS",
         "subtype": "Renewal",
         "certifying_body": "aha",
         "delivery_mode": ""
       },
-      "reason_excluded": [
-        "excluded:no_tab_match"
-      ]
+      "reason_excluded": null
     },
     {
       "page_slug": "pals",
@@ -18050,27 +17672,6 @@
       "course_key": "aha_pals_instructor_renewal",
       "course_code": null,
       "start_at": "2026-07-01T00:00:00-04:00",
-      "included": false,
-      "matched_tabs": [],
-      "matched_classification": {
-        "family": "PALS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": ""
-      },
-      "reason_excluded": [
-        "excluded:no_tab_match"
-      ]
-    },
-    {
-      "page_slug": "pals",
-      "session_id": "12946272",
-      "course_id": "251496",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
-      "official_course_name": "AHA PALS Renewal",
-      "course_key": "aha_pals_renewal",
-      "course_code": "AHA_PALS_RENEWAL",
-      "start_at": "2026-08-10T14:00:00-04:00",
       "included": true,
       "matched_tabs": [
         "pals-renewal"
@@ -18079,177 +17680,9 @@
         "family": "PALS",
         "subtype": "Renewal",
         "certifying_body": "aha",
-        "delivery_mode": "IP"
+        "delivery_mode": ""
       },
       "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776857",
-      "course_id": "253768",
-      "course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver®)",
-      "official_course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver)",
-      "course_key": "uscg_elementary_first_aid_cpr_aha_heartsaver",
-      "course_code": "USCG_EFA_AHA",
-      "start_at": "2026-05-13T09:15:00-04:00",
-      "included": false,
-      "matched_tabs": [],
-      "matched_classification": {
-        "family": "USCG",
-        "subtype": "Elementary First Aid | CPR",
-        "certifying_body": "aha",
-        "delivery_mode": "ILT"
-      },
-      "reason_excluded": [
-        "excluded:uscg_routed_elsewhere"
-      ]
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776131",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-05-13T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12775756",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-05-13T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776693",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-05-14T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12783392",
-      "course_id": "251545",
-      "course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
-      "official_course_name": "AHA Heartsaver Pediatric First Aid CPR AED Online",
-      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
-      "course_code": "AHA_HS_PED_FA_CPR_BL",
-      "start_at": "2026-05-14T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-pediatric-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "Pediatric First Aid",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776768",
-      "course_id": "209809",
-      "course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed",
-      "course_code": "AHA_HS_FA_CPR_IP",
-      "start_at": "2026-05-14T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776011",
-      "course_id": "209809",
-      "course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed",
-      "course_code": "AHA_HS_FA_CPR_IP",
-      "start_at": "2026-05-16T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776862",
-      "course_id": "253768",
-      "course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver®)",
-      "official_course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver)",
-      "course_key": "uscg_elementary_first_aid_cpr_aha_heartsaver",
-      "course_code": "USCG_EFA_AHA",
-      "start_at": "2026-05-16T09:15:00-04:00",
-      "included": false,
-      "matched_tabs": [],
-      "matched_classification": {
-        "family": "USCG",
-        "subtype": "Elementary First Aid | CPR",
-        "certifying_body": "aha",
-        "delivery_mode": "ILT"
-      },
-      "reason_excluded": [
-        "excluded:uscg_routed_elsewhere"
-      ]
     },
     {
       "page_slug": "heartsaver",
@@ -18313,27 +17746,6 @@
         "delivery_mode": "IP"
       },
       "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "13271027",
-      "course_id": "344085",
-      "course_name": "AHA - Heartsaver® CPR AED - In-person",
-      "official_course_name": "AHA Heartsaver CPR AED",
-      "course_key": "aha_heartsaver_cpr_aed",
-      "course_code": "AHA_HS_CPR_AED_IP",
-      "start_at": "2026-05-20T08:30:00-04:00",
-      "included": false,
-      "matched_tabs": [],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": [
-        "excluded:unapproved_location"
-      ]
     },
     {
       "page_slug": "heartsaver",

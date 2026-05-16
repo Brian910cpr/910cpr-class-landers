@@ -251,7 +251,8 @@
           ],
           "name_contains": [
             "PALS Provider - In-Person - Renewal",
-            "PALS Renewal"
+            "PALS Renewal",
+            "PALS Instructor Renewal"
           ],
           "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251496",
           "full_schedule_label": "See full PALS renewal schedule",

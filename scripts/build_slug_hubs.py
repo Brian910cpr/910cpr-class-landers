@@ -34,6 +34,8 @@ SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
 TZ = ZoneInfo("America/New_York")
 DATE_LIMIT = 6
 POPULAR_LIMIT = 4
+HUB_INITIAL_VISIBLE_LIMIT = 30
+HUB_REVEAL_INCREMENT = 15
 CURATED_OFFER_LIMIT = 8
 CURATED_OFFER_MIN = 5
 EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options."
@@ -816,7 +818,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
     action_hint_html = f'    <div class="slug-pill-hint">{escape(action_hint)}</div>' if action_hint else ""
 
     return f"""
-<article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}"{cert_attrs}>
+<article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}" data-row-href="{register_url}"{cert_attrs}>
   <div class="slug-pill-date">
     <div class="slug-pill-month">{format_month(start_dt)}</div>
     <div class="slug-pill-day">{format_day(start_dt)}</div>
@@ -962,15 +964,14 @@ def group_request_href(program: str | None = None) -> str:
 
 
 def render_empty_state(page: dict[str, Any], tab: dict[str, Any], *, group_mode: bool) -> str:
-    full_schedule_url = str(tab.get("full_schedule_url") or page.get("full_schedule_url") or "#")
     onsite_href = group_request_href(tab.get("program") or page.get("hero_title"))
     return (
         "<div class='slug-empty'>"
         f"<strong>{EMPTY_FALLBACK_TITLE}</strong>"
         f"<p>{EMPTY_FALLBACK_BODY}</p>"
         "<div class='slug-empty-actions'>"
-        f"<a class='button primary' href='{escape(full_schedule_url, quote=True)}'>View Full Schedule</a>"
-        f"<a class='button secondary' href='{escape(onsite_href, quote=True)}'>Request On-Site Training</a>"
+        f"<a class='button primary' href='{escape(onsite_href, quote=True)}'>Ask About Dates</a>"
+        f"<a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a>"
         "</div>"
         "</div>"
     )
@@ -994,18 +995,27 @@ def render_inventory_section(
     empty_copy: str | None = None,
     section_class: str = "",
     page_slug: str = "",
+    tab_label: str = "",
 ) -> str:
     selected = sessions[:limit] if limit is not None else sessions
     cards = "\n".join(render_session_card(session, group_mode=group_mode, page_slug=page_slug) for session in selected)
     if not cards and empty_copy:
         cards = f"<div class=\"slug-section-empty\"><p>{escape(empty_copy)}</p></div>"
+    reveal_attrs = ""
+    if not group_mode and sessions:
+        reveal_label = tab_label or title
+        reveal_attrs = (
+            f' data-initial-visible="{HUB_INITIAL_VISIBLE_LIMIT}"'
+            f' data-reveal-increment="{HUB_REVEAL_INCREMENT}"'
+            f' data-reveal-label="{escape(reveal_label, quote=True)}"'
+        )
     return f"""
 <section class="slug-inventory-section {escape(section_class, quote=True)}">
   <div class="slug-inventory-head">
     <h3>{escape(title)}</h3>
     <p>{escape(body)}</p>
   </div>
-  <div class="slug-pill-list">
+  <div class="slug-pill-list"{reveal_attrs}>
     {cards}
   </div>
 </section>
@@ -1157,46 +1167,27 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
 </section>
 """.strip()
 
-    popular_sessions = sort_by_momentum([session for session in sessions if session_enrolled_count(session) >= 1])[:POPULAR_LIMIT]
-    highlighted_keys = {session_key(session) for session in popular_sessions}
-    remaining_sessions = [
-        session
-        for session in sort_by_start(sessions)
-        if str(session.get("session_id") or session.get("registration_url") or "") not in highlighted_keys
-    ]
+    upcoming_sessions = sort_by_start(sessions)
 
     section_html: list[str] = []
     curated_html = render_curated_offers_section(page, tab, sessions)
     if curated_html:
         section_html.append(curated_html)
 
-    if popular_sessions:
+    if upcoming_sessions:
         section_html.append(
             render_inventory_section(
-                "Popular upcoming classes",
-                "Selected upcoming class times with active registrations.",
-                popular_sessions,
+                "Upcoming dates",
+                "Browse upcoming class times here, then use Book Seat for the exact session you want.",
+                upcoming_sessions,
                 group_mode=group_mode,
-                limit=POPULAR_LIMIT,
-                section_class="slug-popular-section",
-                page_slug=str(page.get("slug") or ""),
-            )
-        )
-
-    remaining_limit = None if tab.get("id") == "hs-pediatric-bl" else DATE_LIMIT
-    if remaining_sessions:
-        section_html.append(
-            render_inventory_section(
-                "Next available classes",
-                "More selected class times to help you compare dates.",
-                remaining_sessions,
-                group_mode=group_mode,
-                limit=remaining_limit,
+                limit=None,
                 section_class="slug-scheduled-section",
                 page_slug=str(page.get("slug") or ""),
+                tab_label=str(tab.get("label") or page.get("hero_title") or "class"),
             )
         )
-    elif not popular_sessions:
+    else:
         section_html.append(render_empty_state(page, tab, group_mode=group_mode))
 
     flexible_html = ""
@@ -1211,19 +1202,7 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
     )
     inventory_label = "Start here, more dates available"
     schedule_short_label = full_schedule_short_label(page)
-    escape_hatch_html = (
-        f"""
-<section class="slug-escape-hatch">
-  <div class="slug-escape-copy">
-    <strong>Need a different date or time?</strong>
-    <span>These are selected upcoming classes. We have more dates, times, and locations available on the full schedule.</span>
-  </div>
-  <a class="button primary slug-full-schedule-button" href="{escape(tab['full_schedule_url'], quote=True)}">See all {escape(tab['label'])} dates</a>
-</section>
-""".strip()
-        if not group_mode
-        else ""
-    )
+    escape_hatch_html = ""
     panel_sections = "\n    ".join(part for part in [" ".join(section_html), flexible_html, escape_hatch_html] if part)
 
     return f"""
@@ -1735,6 +1714,10 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 </html>"""
 
 
+def clean_generated_html(html: str) -> str:
+    return "\n".join(line.rstrip() for line in html.splitlines()).rstrip() + "\n"
+
+
 def build() -> None:
     reporter = BuildStatusReporter("build_slug_hubs")
     reporter.set_context(inputs=[MANIFEST_PATH, SCHEDULE_PATH], outputs=[OUTPUT_DIR])
@@ -1759,6 +1742,7 @@ def build() -> None:
         for index, page in enumerate(manifest, start=1):
             html = render_page(page, sessions, banner_library)
             html = apply_build_metadata(html, build_meta)
+            html = clean_generated_html(html)
             last_output = OUTPUT_DIR / f"{page['slug']}.html"
             last_output.write_text(html, encoding="utf-8")
             all_hub_debug_records.extend(write_hub_runtime_debug(page, sessions, now=now))
