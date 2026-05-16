@@ -12,6 +12,59 @@
 <link rel="shortcut icon" href="images/logo.png">
 <link rel="apple-touch-icon" href="images/logo.png">
 <link rel="stylesheet" href="css/lander.css">
+<style>
+  .slug-tabs-block .slug-scheduled-section .slug-pill-list {
+    grid-template-columns: 1fr;
+  }
+
+  .slug-tabs-block .slug-group-request-pill {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .slug-tabs-block .slug-group-request-pill .slug-pill-main {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .slug-tabs-block .slug-group-request-pill .slug-pill-subtitle {
+    max-width: 72ch;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .slug-tabs-block .slug-group-request-pill .slug-pill-actions {
+    justify-content: flex-end;
+    min-width: max-content;
+  }
+
+  .slug-tabs-block .slug-group-request-pill .button {
+    width: auto;
+    max-width: none;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 720px) {
+    .slug-tabs-block .slug-group-request-pill {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    .slug-tabs-block .slug-group-request-pill .slug-pill-actions {
+      justify-content: flex-start;
+      min-width: 0;
+    }
+
+    .slug-tabs-block .slug-group-request-pill .button {
+      width: 100%;
+      white-space: normal;
+    }
+  }
+</style>
 </head>
 <body>
 <div class="wrap">
