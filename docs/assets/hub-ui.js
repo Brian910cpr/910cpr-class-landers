@@ -683,6 +683,14 @@
     return Array.from(byBody, ([body, logo]) => ({ body, logo }));
   }
 
+  function rowBookingLabel(row, dayTitle) {
+    const parts = ["Book"];
+    if (row.subtitle) parts.push(row.subtitle);
+    if (dayTitle) parts.push(`on ${dayTitle}`);
+    if (row.time) parts.push(`at ${row.time}`);
+    return parts.join(" ");
+  }
+
   function pruneDirectPills(scope) {
     const now = new Date();
     scope.querySelectorAll(".tab-panel .slug-pill-list > .slug-pill").forEach((pill) => {
@@ -727,7 +735,7 @@
 
       list.innerHTML = groups.map((group, groupIndex) => {
         const rowsMarkup = group.rows.map((row) => `
-          <div class="slug-time-row" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}"${row.rowHref ? ` data-row-href="${escapeHtml(row.rowHref)}"` : ""}>
+          <div class="slug-time-row" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}"${row.rowHref ? ` data-row-href="${escapeHtml(row.rowHref)}" role="link" tabindex="0" aria-label="${escapeHtml(rowBookingLabel(row, group.title))}"` : ""}>
             <div class="slug-time-copy">
               <div class="slug-pill-meta-row slug-time-meta">
                 ${row.time ? `<span class="slug-time-value">${escapeHtml(row.time)}</span>` : ""}
@@ -799,7 +807,9 @@
       list.dataset.visibleCount = String(visibleCount);
 
       rows.forEach((row, index) => {
-        row.hidden = index >= visibleCount;
+        const revealHidden = index >= visibleCount;
+        row.hidden = revealHidden;
+        row.dataset.revealHidden = revealHidden ? "true" : "false";
       });
       updateDayVisibility(list);
 
@@ -971,6 +981,32 @@
     activateTab(scopeForTrigger(target), target);
   }
 
+  function isNestedInteractiveTarget(target) {
+    return Boolean(target && target.closest("a, button, input, select, textarea, summary, [role='button']"));
+  }
+
+  function activateSessionRow(row) {
+    const href = row && row.getAttribute("data-row-href");
+    if (!href) return;
+    window.location.href = href;
+  }
+
+  function bindClickableRows() {
+    document.addEventListener("click", (event) => {
+      const row = event.target && event.target.closest ? event.target.closest(".slug-time-row[data-row-href]") : null;
+      if (!row || isNestedInteractiveTarget(event.target)) return;
+      activateSessionRow(row);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      const row = event.target && event.target.closest ? event.target.closest(".slug-time-row[data-row-href]") : null;
+      if (!row || event.target !== row) return;
+      event.preventDefault();
+      activateSessionRow(row);
+    });
+  }
+
   function initializeScopes() {
     document.querySelectorAll("[data-tabs]").forEach((scope) => {
       const active = scope.querySelector(".tab-btn.active:not([hidden]), .slug-quick-pick.active:not([hidden]), .tab-panel.active:not([hidden])");
@@ -1015,6 +1051,7 @@
   };
 
   bindTriggers();
+  bindClickableRows();
   window.addEventListener("hashchange", () => activateTabFromHash({ scroll: true }));
   window.addEventListener("resize", () => refreshCuratedOfferHeights(document));
   if (document.readyState === "loading") {

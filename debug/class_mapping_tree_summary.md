@@ -1,6 +1,6 @@
 # Class Mapping Tree Audit
 
-- Generated: 2026-05-16T18:05:34.162652+00:00
+- Generated: 2026-05-16T19:11:33.594311+00:00
 - Overall status: warning
 - Future sessions: 1328
 - Hub-visible unique sessions: 1257

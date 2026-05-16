@@ -141,6 +141,9 @@
         node.hidden = true;
         node.style.display = "none";
         hiddenCount += 1;
+      } else if (node.getAttribute("data-reveal-hidden") === "true") {
+        node.hidden = true;
+        node.style.display = "none";
       } else {
         node.hidden = false;
         node.style.display = "";
