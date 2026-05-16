@@ -3,16 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Request Group Training | 910CPR</title>
+<title>Group Training Request Moved | 910CPR</title>
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://www.910cpr.com/group.html">
-<meta http-equiv="refresh" content="0; url=/group.html#request-form">
+<meta http-equiv="refresh" content="0; url=group.html#request-form">
 <script>
-  const targetHash = window.location.hash || "#request-form";
-  window.location.replace("/group.html" + window.location.search + targetHash);
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const source = [
+      window.location.hash.replace(/^#/, ""),
+      params.get("program"),
+      params.get("course"),
+      params.get("type"),
+      params.get("training")
+    ].filter(Boolean).join(" ").toLowerCase();
+
+    function targetHash(value) {
+      if (value.includes("uscg")) return "#uscg";
+      if (value.includes("pals")) return "#pals";
+      if (value.includes("acls")) return "#acls";
+      if (value.includes("heartcode") || value.includes("skill")) return "#skills";
+      if (value.includes("first aid") || value.includes("cpr") || value.includes("aed") || value.includes("heartsaver")) return "#fa";
+      if (value.includes("bls")) return "#bls";
+      return window.location.hash || "#request-form";
+    }
+
+    const targetPath = new URL("group.html", window.location.href).pathname;
+    window.location.replace(targetPath + targetHash(source));
+  }());
 </script>
 </head>
 <body>
-<p>Group training requests have moved to <a href="/group.html#request-form">910CPR group training</a>.</p>
+<p>Group training requests have moved to <a href="/group.html#request-form">the current 910CPR group training page</a>.</p>
 </body>
 </html>
