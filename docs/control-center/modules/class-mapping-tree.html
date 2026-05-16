@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Class Mapping Tree - 910CPR Control Center</title>
+  <link rel="stylesheet" href="../control-center.css">
+  <link rel="stylesheet" href="class-mapping-tree.css">
+</head>
+<body data-page="class-mapping-tree">
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="eyebrow">Control Center Diagnostic</div>
+        <h1>Class Mapping Tree</h1>
+        <p class="subhead">Stored audit view for future inventory flow from schedule data into homepage previews and public hub pages.</p>
+      </div>
+      <nav class="nav">
+        <a class="secondary" href="../index.html">Dashboard</a>
+        <a class="secondary" href="audit-center.html">Audit Center</a>
+      </nav>
+    </header>
+
+    <section id="load-state" class="warn">Loading debug/class_mapping_tree_audit.json...</section>
+
+    <section class="section grid">
+      <article class="card span-12">
+        <div class="card-header">
+          <div>
+            <h2>Audit Health</h2>
+            <p class="muted">This module never crawls live pages. Run <code>python scripts/audit_class_mapping_tree.py</code> to refresh the stored artifact.</p>
+          </div>
+          <span id="overall-status" class="status none">Waiting</span>
+        </div>
+        <div id="summary-cards" class="mapping-summary"></div>
+      </article>
+
+      <article class="card span-12">
+        <div class="card-header"><h2>Warnings</h2><span id="warning-count" class="status none">0</span></div>
+        <div id="warnings-list" class="warning-list"></div>
+      </article>
+
+      <article class="card span-12">
+        <div class="card-header"><h2>Inventory Tree</h2><span class="status opportunity">Expandable</span></div>
+        <div id="tree-root" class="tree-root"></div>
+      </article>
+
+      <article class="card span-12">
+        <div class="card-header"><h2>Homepage vs Hub Comparison</h2><span class="status normal">Stored Counts</span></div>
+        <div id="comparison-table" class="table-wrap"></div>
+      </article>
+
+      <article class="card span-12">
+        <div class="card-header"><h2>Sample Missing Sessions</h2><span class="status attention">Diagnostics</span></div>
+        <div id="missing-sessions" class="table-wrap"></div>
+      </article>
+    </section>
+  </main>
+  <script src="class-mapping-tree.js" defer></script>
+</body>
+</html>

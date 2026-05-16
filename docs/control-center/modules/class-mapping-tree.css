@@ -1,0 +1,133 @@
+.mapping-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.metric-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--panel-2);
+}
+
+.metric-card .label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.metric-card .value {
+  display: block;
+  margin-top: 4px;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.warning-list {
+  display: grid;
+  gap: 8px;
+}
+
+.warning-item {
+  border: 1px solid rgba(255, 201, 92, .45);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(255, 201, 92, .10);
+}
+
+.tree-root {
+  display: grid;
+  gap: 10px;
+}
+
+.tree-node {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--panel-2);
+}
+
+.tree-toggle {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 0;
+  color: var(--text);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tree-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-weight: 900;
+}
+
+.tree-children {
+  display: grid;
+  gap: 6px;
+  padding: 0 12px 12px;
+}
+
+.tree-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .035);
+  color: var(--muted);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.pill.healthy { color: #93f4c2; background: rgba(66, 211, 146, .16); }
+.pill.warning { color: #ffd36f; background: rgba(255, 201, 92, .16); }
+.pill.broken { color: #ff9b9b; background: rgba(255, 95, 95, .16); }
+.pill.opportunity,
+.pill.inactive { color: #9ed2ff; background: rgba(77, 163, 255, .16); }
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.mapping-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mapping-table th,
+.mapping-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.mapping-table th {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.muted-small {
+  color: var(--muted);
+  font-size: 12px;
+}

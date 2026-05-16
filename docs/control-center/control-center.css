@@ -169,10 +169,14 @@ h3 {
 }
 
 .status.normal { color: var(--green); }
+.status.healthy { color: var(--green); }
+.status.warning { color: var(--yellow); }
+.status.broken { color: var(--red); }
 .status.due { color: var(--yellow); }
 .status.action { color: var(--red); }
 .status.none { color: var(--black); }
-.status.opportunity { color: var(--blue); }
+.status.opportunity,
+.status.inactive { color: var(--blue); }
 
 .facts {
   display: grid;

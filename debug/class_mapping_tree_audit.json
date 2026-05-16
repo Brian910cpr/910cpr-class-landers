@@ -1,0 +1,1027 @@
+{
+  "schema_version": "0.2",
+  "generated_at": "2026-05-16T16:31:12.470361+00:00",
+  "source_files": {
+    "schedule_future": "docs/data/schedule_future.json",
+    "hubs": {
+      "BLS": "docs/bls.html",
+      "ACLS": "docs/acls.html",
+      "PALS": "docs/pals.html",
+      "Heartsaver": "docs/heartsaver.html",
+      "ARC": "docs/arc.html",
+      "HSI": "docs/hsi.html"
+    },
+    "homepage": "docs/index.html",
+    "homepage_runtime_feed_note": "Homepage previews are client-rendered from stored public schedule feeds; this audit computes the same capped preview counts from schedule_future.json without live crawling."
+  },
+  "config": {
+    "expected_minimums": {
+      "BLS": 20,
+      "ACLS": 10,
+      "PALS": 10,
+      "Heartsaver": 25,
+      "ARC": 5,
+      "HSI": 5
+    },
+    "homepage_preview_limit": 6,
+    "dedicated_hub_expected_visible_limit": 30,
+    "valid_statuses": [
+      "broken",
+      "healthy",
+      "inactive",
+      "opportunity",
+      "warning"
+    ]
+  },
+  "overall_status": "warning",
+  "warnings": [
+    "BLS hub exposes 16, below expected minimum 20.",
+    "PALS homepage preview count exceeds hub visible count.",
+    "PALS hub exposes 4, below expected minimum 10."
+  ],
+  "totals": {
+    "future_sessions_total": 1328,
+    "hub_visible_unique_sessions": 77,
+    "hidden_or_not_surfaced_sessions": 1250,
+    "duplicate_session_ids": 0,
+    "orphan_hub_session_ids": 0
+  },
+  "categories": [
+    {
+      "category": "BLS",
+      "future_sessions_total": 739,
+      "homepage_preview_count": 6,
+      "hub_visible_count": 16,
+      "hub_path": "docs/bls.html",
+      "expected_minimum": 20,
+      "status": "warning",
+      "warnings": [
+        "BLS hub exposes 16, below expected minimum 20."
+      ],
+      "opportunities": [],
+      "broken_links": [],
+      "subtypes": [
+        {
+          "name": "HeartCode",
+          "available": 224,
+          "visible_on_hub": 3
+        },
+        {
+          "name": "Provider",
+          "available": 256,
+          "visible_on_hub": 6
+        },
+        {
+          "name": "Renewal",
+          "available": 259,
+          "visible_on_hub": 7
+        }
+      ],
+      "missing_count": 723,
+      "sample_missing_sessions": [
+        {
+          "session_id": "11341054",
+          "course_name": "AHA - BLS Instructor Renewal",
+          "start_at": "2026-06-01T00:00:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Renewal",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "11341058",
+          "course_name": "AHA - BLS Instructor Renewal",
+          "start_at": "2026-12-01T00:00:00-05:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Renewal",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774312",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-05-25T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774321",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-05-29T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774322",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-06-01T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774323",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-06-08T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774324",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-06-15T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774325",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-06-22T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774326",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-06-29T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-06-03T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774328",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-06-10T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774329",
+          "course_name": "AHA BLS Provider",
+          "start_at": "2026-06-17T12:30:00-04:00",
+          "expected_hub": "bls.html",
+          "category": "BLS",
+          "subtype": "Provider",
+          "reason": "excluded_by_mapping"
+        }
+      ]
+    },
+    {
+      "category": "ACLS",
+      "future_sessions_total": 100,
+      "homepage_preview_count": 6,
+      "hub_visible_count": 12,
+      "hub_path": "docs/acls.html",
+      "expected_minimum": 10,
+      "status": "healthy",
+      "warnings": [],
+      "opportunities": [],
+      "broken_links": [],
+      "subtypes": [
+        {
+          "name": "HeartCode",
+          "available": 95,
+          "visible_on_hub": 7
+        },
+        {
+          "name": "Provider Initial",
+          "available": 2,
+          "visible_on_hub": 2
+        },
+        {
+          "name": "Renewal",
+          "available": 3,
+          "visible_on_hub": 3
+        }
+      ],
+      "missing_count": 88,
+      "sample_missing_sessions": [
+        {
+          "session_id": "12773998",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-07T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12773999",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-21T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774000",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-14T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774001",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-28T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774002",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-02T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774003",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-09T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774004",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-16T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774005",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-23T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774006",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-30T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774007",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-05T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774008",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-12T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "12774009",
+          "course_name": "AHA HeartCode ACLS",
+          "start_at": "2026-09-19T08:30:00-04:00",
+          "expected_hub": "acls.html",
+          "category": "ACLS",
+          "subtype": "HeartCode",
+          "reason": "excluded_by_mapping"
+        }
+      ]
+    },
+    {
+      "category": "PALS",
+      "future_sessions_total": 7,
+      "homepage_preview_count": 6,
+      "hub_visible_count": 4,
+      "hub_path": "docs/pals.html",
+      "expected_minimum": 10,
+      "status": "warning",
+      "warnings": [
+        "PALS homepage preview count exceeds hub visible count.",
+        "PALS hub exposes 4, below expected minimum 10."
+      ],
+      "opportunities": [],
+      "broken_links": [],
+      "subtypes": [
+        {
+          "name": "Provider Initial",
+          "available": 2,
+          "visible_on_hub": 2
+        },
+        {
+          "name": "Renewal",
+          "available": 5,
+          "visible_on_hub": 2
+        }
+      ],
+      "missing_count": 3,
+      "sample_missing_sessions": [
+        {
+          "session_id": "10009265",
+          "course_name": "AHA - PALS Instructor Renewal",
+          "start_at": "2026-06-01T00:00:00-04:00",
+          "expected_hub": "pals.html",
+          "category": "PALS",
+          "subtype": "Renewal",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "10009276",
+          "course_name": "AHA - PALS Instructor Renewal",
+          "start_at": "2026-06-01T00:00:00-04:00",
+          "expected_hub": "pals.html",
+          "category": "PALS",
+          "subtype": "Renewal",
+          "reason": "excluded_by_mapping"
+        },
+        {
+          "session_id": "10009277",
+          "course_name": "AHA - PALS Instructor Renewal",
+          "start_at": "2026-07-01T00:00:00-04:00",
+          "expected_hub": "pals.html",
+          "category": "PALS",
+          "subtype": "Renewal",
+          "reason": "excluded_by_mapping"
+        }
+      ]
+    },
+    {
+      "category": "Heartsaver",
+      "future_sessions_total": 481,
+      "homepage_preview_count": 6,
+      "hub_visible_count": 45,
+      "hub_path": "docs/heartsaver.html",
+      "expected_minimum": 25,
+      "status": "healthy",
+      "warnings": [],
+      "opportunities": [],
+      "broken_links": [],
+      "subtypes": [
+        {
+          "name": "First Aid/CPR/AED",
+          "available": 193,
+          "visible_on_hub": 7
+        },
+        {
+          "name": "Online/Blended",
+          "available": 256,
+          "visible_on_hub": 6
+        },
+        {
+          "name": "Pediatric",
+          "available": 32,
+          "visible_on_hub": 32
+        }
+      ],
+      "missing_count": 436,
+      "sample_missing_sessions": [
+        {
+          "session_id": "12775754",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-05-25T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775767",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-05-29T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775769",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-01T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775770",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-08T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775771",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-15T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775772",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-29T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775773",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-22T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775774",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-03T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775775",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-10T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775776",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-17T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775777",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-24T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        },
+        {
+          "session_id": "12775778",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_at": "2026-06-05T17:30:00-04:00",
+          "expected_hub": "heartsaver.html",
+          "category": "Heartsaver",
+          "subtype": "Online/Blended",
+          "reason": "rendering_limit"
+        }
+      ]
+    },
+    {
+      "category": "ARC",
+      "future_sessions_total": 0,
+      "homepage_preview_count": 0,
+      "hub_visible_count": 0,
+      "hub_path": "docs/arc.html",
+      "expected_minimum": 5,
+      "status": "inactive",
+      "warnings": [],
+      "opportunities": [
+        "ARC has no future sessions; treat as inactive inventory, not broken."
+      ],
+      "broken_links": [],
+      "subtypes": [],
+      "missing_count": 0,
+      "sample_missing_sessions": []
+    },
+    {
+      "category": "HSI",
+      "future_sessions_total": 0,
+      "homepage_preview_count": 0,
+      "hub_visible_count": 0,
+      "hub_path": "docs/hsi.html",
+      "expected_minimum": 5,
+      "status": "inactive",
+      "warnings": [],
+      "opportunities": [
+        "HSI has no future sessions; treat as inactive inventory, not broken."
+      ],
+      "broken_links": [],
+      "subtypes": [],
+      "missing_count": 0,
+      "sample_missing_sessions": []
+    },
+    {
+      "category": "Group/Other",
+      "future_sessions_total": 1,
+      "homepage_preview_count": 0,
+      "hub_visible_count": 0,
+      "hub_path": null,
+      "expected_minimum": 0,
+      "status": "healthy",
+      "warnings": [],
+      "opportunities": [],
+      "broken_links": [],
+      "subtypes": [
+        {
+          "name": "Other",
+          "available": 1,
+          "visible_on_hub": 0
+        }
+      ],
+      "missing_count": 1,
+      "sample_missing_sessions": [
+        {
+          "session_id": "13384273",
+          "course_name": "2025 AHA Instructor Update",
+          "start_at": "2027-01-01T12:30:00-05:00",
+          "expected_hub": null,
+          "category": "Group/Other",
+          "subtype": "Other",
+          "reason": "missing_slug"
+        }
+      ]
+    }
+  ],
+  "tree": {
+    "BLS": {
+      "count": 739,
+      "homepage_preview_count": 6,
+      "hub_visible_count": 16,
+      "status": "warning",
+      "children": {
+        "HeartCode": 224,
+        "Provider": 256,
+        "Renewal": 259
+      }
+    },
+    "ACLS": {
+      "count": 100,
+      "homepage_preview_count": 6,
+      "hub_visible_count": 12,
+      "status": "healthy",
+      "children": {
+        "HeartCode": 95,
+        "Provider Initial": 2,
+        "Renewal": 3
+      }
+    },
+    "PALS": {
+      "count": 7,
+      "homepage_preview_count": 6,
+      "hub_visible_count": 4,
+      "status": "warning",
+      "children": {
+        "Provider Initial": 2,
+        "Renewal": 5
+      }
+    },
+    "Heartsaver": {
+      "count": 481,
+      "homepage_preview_count": 6,
+      "hub_visible_count": 45,
+      "status": "healthy",
+      "children": {
+        "First Aid/CPR/AED": 193,
+        "Online/Blended": 256,
+        "Pediatric": 32
+      }
+    },
+    "ARC": {
+      "count": 0,
+      "homepage_preview_count": 0,
+      "hub_visible_count": 0,
+      "status": "inactive",
+      "children": {}
+    },
+    "HSI": {
+      "count": 0,
+      "homepage_preview_count": 0,
+      "hub_visible_count": 0,
+      "status": "inactive",
+      "children": {}
+    },
+    "Group/Other": {
+      "count": 1,
+      "homepage_preview_count": 0,
+      "hub_visible_count": 0,
+      "status": "healthy",
+      "children": {
+        "Other": 1
+      }
+    }
+  },
+  "missing_inventory_analysis": [
+    {
+      "session_id": "11341054",
+      "course_name": "AHA - BLS Instructor Renewal",
+      "start_at": "2026-06-01T00:00:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Renewal",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "11341058",
+      "course_name": "AHA - BLS Instructor Renewal",
+      "start_at": "2026-12-01T00:00:00-05:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Renewal",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774312",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-05-25T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774321",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-05-29T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774322",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-06-01T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774323",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-06-08T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774324",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-06-15T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774325",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-06-22T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774326",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-06-29T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774327",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-06-03T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774328",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-06-10T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774329",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-06-17T12:30:00-04:00",
+      "expected_hub": "bls.html",
+      "category": "BLS",
+      "subtype": "Provider",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12773998",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-07T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12773999",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-21T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774000",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-14T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774001",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-28T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774002",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-02T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774003",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-09T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774004",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-16T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774005",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-23T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774006",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-30T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774007",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-05T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774008",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-12T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12774009",
+      "course_name": "AHA HeartCode ACLS",
+      "start_at": "2026-09-19T08:30:00-04:00",
+      "expected_hub": "acls.html",
+      "category": "ACLS",
+      "subtype": "HeartCode",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "10009265",
+      "course_name": "AHA - PALS Instructor Renewal",
+      "start_at": "2026-06-01T00:00:00-04:00",
+      "expected_hub": "pals.html",
+      "category": "PALS",
+      "subtype": "Renewal",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "10009276",
+      "course_name": "AHA - PALS Instructor Renewal",
+      "start_at": "2026-06-01T00:00:00-04:00",
+      "expected_hub": "pals.html",
+      "category": "PALS",
+      "subtype": "Renewal",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "10009277",
+      "course_name": "AHA - PALS Instructor Renewal",
+      "start_at": "2026-07-01T00:00:00-04:00",
+      "expected_hub": "pals.html",
+      "category": "PALS",
+      "subtype": "Renewal",
+      "reason": "excluded_by_mapping"
+    },
+    {
+      "session_id": "12775754",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-05-25T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775767",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-05-29T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775769",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-01T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775770",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-08T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775771",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-15T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775772",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-29T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775773",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-22T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775774",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-03T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775775",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-10T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775776",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-17T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775777",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-24T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "12775778",
+      "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+      "start_at": "2026-06-05T17:30:00-04:00",
+      "expected_hub": "heartsaver.html",
+      "category": "Heartsaver",
+      "subtype": "Online/Blended",
+      "reason": "rendering_limit"
+    },
+    {
+      "session_id": "13384273",
+      "course_name": "2025 AHA Instructor Update",
+      "start_at": "2027-01-01T12:30:00-05:00",
+      "expected_hub": null,
+      "category": "Group/Other",
+      "subtype": "Other",
+      "reason": "missing_slug"
+    }
+  ],
+  "orphan_hub_session_ids": [],
+  "duplicate_session_ids": []
+}
