@@ -1,0 +1,2082 @@
+{
+  "generated_at": "2026-05-16T20:01:21.020499-04:00",
+  "schema_version": "0.1",
+  "source_files": {
+    "schedule_future": {
+      "path": "docs/data/schedule_future.json",
+      "found": true
+    },
+    "instructor_availability": {
+      "path": "docs/data/instructor_availability.json",
+      "found": true
+    },
+    "instructor_profiles": {
+      "path": "docs/data/instructor_profiles.json",
+      "found": true
+    },
+    "appointment_range_registry": {
+      "path": "docs/data/appointment_range_registry.json",
+      "found": true
+    },
+    "appointment_containers": {
+      "path": "data/inventory/appointment_containers.json",
+      "found": true
+    },
+    "course_consumption_rules": {
+      "path": "data/inventory/course_consumption_rules.json",
+      "found": true
+    },
+    "slug_hubs": {
+      "path": "data/config/slug_hubs.json",
+      "found": true
+    }
+  },
+  "overall_status": "preview",
+  "summary": {
+    "candidate_slots_total": 53,
+    "public_ready_candidates": 0,
+    "blocked_conflicts": 36,
+    "low_confidence": 0,
+    "status_counts": {
+      "blocked_conflict": 36,
+      "blocked_no_appointment_mapping": 17
+    }
+  },
+  "warnings": [],
+  "candidates": [
+    {
+      "date": "2026-06-03",
+      "start_time": "14:30",
+      "end_time": "17:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "14:30",
+      "end_time": "16:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "14:30",
+      "end_time": "17:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "14:30",
+      "end_time": "16:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "Heartsaver",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "14:30",
+      "end_time": "17:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "15:00",
+      "end_time": "17:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "15:00",
+      "end_time": "17:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "Heartsaver",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "15:30",
+      "end_time": "17:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "15:30",
+      "end_time": "17:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "Heartsaver",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "14:30",
+      "end_time": "17:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "14:30",
+      "end_time": "16:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "14:30",
+      "end_time": "17:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "14:30",
+      "end_time": "17:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "15:00",
+      "end_time": "17:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "15:30",
+      "end_time": "17:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_no_appointment_mapping",
+      "confidence_score": 45,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Instructor available and no scheduled conflict found. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:00",
+      "end_time": "16:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:00",
+      "end_time": "15:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:00",
+      "end_time": "15:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:00",
+      "end_time": "15:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "Heartsaver",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:00",
+      "end_time": "16:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:30",
+      "end_time": "16:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:30",
+      "end_time": "15:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:30",
+      "end_time": "16:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:30",
+      "end_time": "15:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "Heartsaver",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "13:30",
+      "end_time": "16:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775529",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "14:00",
+      "end_time": "17:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "14:00",
+      "end_time": "16:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "14:00",
+      "end_time": "16:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "14:00",
+      "end_time": "16:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "Heartsaver",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "14:00",
+      "end_time": "17:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774327",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "15:00",
+      "end_time": "18:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12775774",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_time": "17:30",
+          "end_time": "18:15",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "15:00",
+      "end_time": "18:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12775774",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_time": "17:30",
+          "end_time": "18:15",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "15:30",
+      "end_time": "18:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12775774",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_time": "17:30",
+          "end_time": "18:15",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "16:00",
+      "end_time": "18:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12775774",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_time": "17:30",
+          "end_time": "18:15",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-03",
+      "start_time": "16:00",
+      "end_time": "18:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "Heartsaver",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "Heartsaver",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12775774",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_time": "17:30",
+          "end_time": "18:15",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_arnold_2026-06-03_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "13:00",
+      "end_time": "16:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775540",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "13:00",
+      "end_time": "15:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775540",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "13:00",
+      "end_time": "15:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775540",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "13:00",
+      "end_time": "16:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775540",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "13:30",
+      "end_time": "16:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775540",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "13:30",
+      "end_time": "15:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775540",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "13:30",
+      "end_time": "16:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775540",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "13:30",
+      "end_time": "16:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        },
+        {
+          "session_id": "12775540",
+          "course_name": "AHA BLS Provider Renewal",
+          "start_time": "12:30",
+          "end_time": "14:00",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "14:00",
+      "end_time": "17:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "14:00",
+      "end_time": "16:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "14:00",
+      "end_time": "16:30",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "14:00",
+      "end_time": "17:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12774334",
+          "course_name": "AHA BLS Provider",
+          "start_time": "12:30",
+          "end_time": "14:30",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "15:00",
+      "end_time": "18:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "ACLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12775785",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_time": "17:30",
+          "end_time": "18:15",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "15:00",
+      "end_time": "18:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "PALS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12775785",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_time": "17:30",
+          "end_time": "18:15",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "15:30",
+      "end_time": "18:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "HeartCode",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12775785",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_time": "17:30",
+          "end_time": "18:15",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    },
+    {
+      "date": "2026-06-26",
+      "start_time": "16:00",
+      "end_time": "18:00",
+      "instructor": "Amy Arnold",
+      "location": "Wilmington Shipyard",
+      "room": null,
+      "course_family": "BLS",
+      "eligible_course_families": [
+        "ACLS",
+        "PALS",
+        "BLS",
+        "HeartCode"
+      ],
+      "unknown_eligibility_warnings": [],
+      "status": "blocked_conflict",
+      "confidence_score": 0,
+      "appointment_url_status": "blocked_no_appointment_mapping",
+      "appointment_url": null,
+      "appointment_range_id": null,
+      "public_bookable": false,
+      "conflicts": [
+        {
+          "session_id": "12775785",
+          "course_name": "AHA Heartsaver\u00ae First Aid CPR AED - Blended",
+          "start_time": "17:30",
+          "end_time": "18:15",
+          "reason": "same_time_location"
+        }
+      ],
+      "warnings": [
+        "Room/resource availability is unknown; location is known but no room/resource was recorded.",
+        "No verified or predictable appointmentDayId mapping found for this instructor/date/location."
+      ],
+      "reason": "Blocked by scheduled-session conflict. Appointment URL not verified or mapped. Room/resource unknown.",
+      "source_availability_block_id": "amy_2026-06-26_1300_1800",
+      "source": "manual_ui"
+    }
+  ]
+}
