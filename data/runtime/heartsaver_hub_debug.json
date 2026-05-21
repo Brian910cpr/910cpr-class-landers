@@ -1,59 +1,11 @@
 {
-  "generated_at": "2026-05-16T15:11:33.199787-04:00",
+  "generated_at": "2026-05-21T10:40:01.789512-04:00",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "page_slug": "heartsaver",
   "records": [
     {
-      "session_id": "12776128",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-05-18T11:45:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12775753",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-05-18T17:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776764",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "start_datetime": "2026-05-19T18:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-ip",
-      "normalized_format": "In-Person",
-      "icon_selected": "/images/tab_classroom.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12775757",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-05-20T17:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
       "session_id": "12776767",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-05-21T18:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -65,7 +17,7 @@
     },
     {
       "session_id": "12776137",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-05-22T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -77,7 +29,7 @@
     },
     {
       "session_id": "12775766",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-05-22T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -89,7 +41,7 @@
     },
     {
       "session_id": "12776012",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-05-23T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -113,7 +65,7 @@
     },
     {
       "session_id": "12775765",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-05-23T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -125,7 +77,7 @@
     },
     {
       "session_id": "12776129",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-05-25T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -137,7 +89,7 @@
     },
     {
       "session_id": "12775754",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-05-25T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -149,7 +101,7 @@
     },
     {
       "session_id": "12776003",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-05-26T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -161,7 +113,7 @@
     },
     {
       "session_id": "12776765",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-05-26T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -173,7 +125,7 @@
     },
     {
       "session_id": "12776695",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-05-28T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -185,7 +137,7 @@
     },
     {
       "session_id": "12783393",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-05-28T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -197,7 +149,7 @@
     },
     {
       "session_id": "12776769",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-05-28T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -209,7 +161,7 @@
     },
     {
       "session_id": "12776138",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-05-29T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -221,7 +173,7 @@
     },
     {
       "session_id": "12775767",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-05-29T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -232,20 +184,8 @@
       "exclusion_reason": null
     },
     {
-      "session_id": "12776139",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-01T11:45:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
       "session_id": "12775769",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-01T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -256,20 +196,8 @@
       "exclusion_reason": null
     },
     {
-      "session_id": "12775988",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "start_datetime": "2026-06-02T09:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-ip",
-      "normalized_format": "In-Person",
-      "icon_selected": "/images/tab_classroom.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
       "session_id": "12776770",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-02T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -293,7 +221,7 @@
     },
     {
       "session_id": "12776144",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-03T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -305,7 +233,7 @@
     },
     {
       "session_id": "12775774",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-03T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -317,7 +245,7 @@
     },
     {
       "session_id": "12776696",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-04T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -329,7 +257,7 @@
     },
     {
       "session_id": "12783387",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-06-04T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -341,7 +269,7 @@
     },
     {
       "session_id": "12776775",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-04T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -353,7 +281,7 @@
     },
     {
       "session_id": "12776148",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-05T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -365,7 +293,7 @@
     },
     {
       "session_id": "12775778",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-05T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -377,7 +305,7 @@
     },
     {
       "session_id": "12775997",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-06T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -401,7 +329,7 @@
     },
     {
       "session_id": "12775779",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-06T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -413,7 +341,7 @@
     },
     {
       "session_id": "12776140",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-08T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -425,7 +353,7 @@
     },
     {
       "session_id": "12775770",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-08T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -437,7 +365,7 @@
     },
     {
       "session_id": "12775989",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-09T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -449,7 +377,7 @@
     },
     {
       "session_id": "12776771",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-09T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -473,7 +401,7 @@
     },
     {
       "session_id": "12776145",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-10T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -485,7 +413,7 @@
     },
     {
       "session_id": "12775775",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-10T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -497,7 +425,7 @@
     },
     {
       "session_id": "12776697",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-11T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -509,7 +437,7 @@
     },
     {
       "session_id": "12783389",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-06-11T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -521,7 +449,7 @@
     },
     {
       "session_id": "12776776",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-11T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -533,7 +461,7 @@
     },
     {
       "session_id": "12776149",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-12T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -545,7 +473,7 @@
     },
     {
       "session_id": "12775781",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-12T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -556,224 +484,8 @@
       "exclusion_reason": null
     },
     {
-      "session_id": "12775998",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "start_datetime": "2026-06-13T09:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-ip",
-      "normalized_format": "In-Person",
-      "icon_selected": "/images/tab_classroom.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776870",
-      "raw_course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver®)",
-      "start_datetime": "2026-06-13T09:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": null,
-      "normalized_format": null,
-      "icon_selected": null,
-      "included": false,
-      "exclusion_reason": "excluded:uscg_routed_elsewhere"
-    },
-    {
-      "session_id": "12775780",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-13T17:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776141",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-15T11:45:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12775771",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-15T17:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12775991",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "start_datetime": "2026-06-16T09:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-ip",
-      "normalized_format": "In-Person",
-      "icon_selected": "/images/tab_classroom.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776772",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "start_datetime": "2026-06-16T18:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-ip",
-      "normalized_format": "In-Person",
-      "icon_selected": "/images/tab_classroom.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776867",
-      "raw_course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver®)",
-      "start_datetime": "2026-06-17T09:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": null,
-      "normalized_format": null,
-      "icon_selected": null,
-      "included": false,
-      "exclusion_reason": "excluded:uscg_routed_elsewhere"
-    },
-    {
-      "session_id": "12776146",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-17T11:45:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12775776",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-17T17:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776698",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-18T08:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12783388",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-18T08:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-pediatric-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776777",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "start_datetime": "2026-06-18T18:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-ip",
-      "normalized_format": "In-Person",
-      "icon_selected": "/images/tab_classroom.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776150",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-19T11:45:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12775782",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-19T17:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12775999",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
-      "start_datetime": "2026-06-20T09:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-ip",
-      "normalized_format": "In-Person",
-      "icon_selected": "/images/tab_classroom.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
-      "session_id": "12776871",
-      "raw_course_name": "USCG Elementary First Aid | CPR (AHA Heartsaver®)",
-      "start_datetime": "2026-06-20T09:15:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": null,
-      "normalized_format": null,
-      "icon_selected": null,
-      "included": false,
-      "exclusion_reason": "excluded:uscg_routed_elsewhere"
-    },
-    {
-      "session_id": "12775783",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
-      "start_datetime": "2026-06-20T17:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "public_private_decision": "public",
-      "normalized_tab": "hs-fa-cpr-aed-bl",
-      "normalized_format": "Online + Skills",
-      "icon_selected": "/images/tab_blended.png",
-      "included": true,
-      "exclusion_reason": null
-    },
-    {
       "session_id": "12776142",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-22T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -785,7 +497,7 @@
     },
     {
       "session_id": "12775773",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-22T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -797,7 +509,7 @@
     },
     {
       "session_id": "12775990",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-23T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -809,7 +521,7 @@
     },
     {
       "session_id": "12776773",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-23T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -833,7 +545,7 @@
     },
     {
       "session_id": "12776147",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-24T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -845,7 +557,7 @@
     },
     {
       "session_id": "12775777",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-24T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -857,7 +569,7 @@
     },
     {
       "session_id": "12776699",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-25T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -869,7 +581,7 @@
     },
     {
       "session_id": "12783390",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-06-25T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -881,7 +593,7 @@
     },
     {
       "session_id": "12776778",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-25T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -893,7 +605,7 @@
     },
     {
       "session_id": "12776151",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-26T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -905,7 +617,7 @@
     },
     {
       "session_id": "12775785",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-26T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -917,7 +629,7 @@
     },
     {
       "session_id": "12776000",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-27T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -941,7 +653,7 @@
     },
     {
       "session_id": "12775784",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-27T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -953,7 +665,7 @@
     },
     {
       "session_id": "12776143",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-29T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -965,7 +677,7 @@
     },
     {
       "session_id": "12775772",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-06-29T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -977,7 +689,7 @@
     },
     {
       "session_id": "12775992",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-30T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -989,7 +701,7 @@
     },
     {
       "session_id": "12776774",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-06-30T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1013,7 +725,7 @@
     },
     {
       "session_id": "12776156",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-01T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1025,7 +737,7 @@
     },
     {
       "session_id": "12775790",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-01T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1037,7 +749,7 @@
     },
     {
       "session_id": "12776700",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-02T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1049,7 +761,7 @@
     },
     {
       "session_id": "12783382",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-07-02T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1061,7 +773,7 @@
     },
     {
       "session_id": "12776783",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-02T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1073,7 +785,7 @@
     },
     {
       "session_id": "12776161",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-03T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1085,7 +797,7 @@
     },
     {
       "session_id": "12775796",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-03T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1097,7 +809,7 @@
     },
     {
       "session_id": "12775975",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-04T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1121,7 +833,7 @@
     },
     {
       "session_id": "12775795",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-04T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1133,7 +845,7 @@
     },
     {
       "session_id": "12776152",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-06T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1145,7 +857,7 @@
     },
     {
       "session_id": "12775786",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-06T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1157,7 +869,7 @@
     },
     {
       "session_id": "12775984",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-07T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1169,7 +881,7 @@
     },
     {
       "session_id": "12776779",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-07T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1193,7 +905,7 @@
     },
     {
       "session_id": "12776157",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-08T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1205,7 +917,7 @@
     },
     {
       "session_id": "12775791",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-08T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1217,7 +929,7 @@
     },
     {
       "session_id": "12776701",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-09T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1229,7 +941,7 @@
     },
     {
       "session_id": "12783383",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-07-09T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1241,7 +953,7 @@
     },
     {
       "session_id": "12776785",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-09T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1253,7 +965,7 @@
     },
     {
       "session_id": "12776162",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-10T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1265,7 +977,7 @@
     },
     {
       "session_id": "12775797",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-10T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1277,7 +989,7 @@
     },
     {
       "session_id": "12775976",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-11T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1301,7 +1013,7 @@
     },
     {
       "session_id": "12775798",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-11T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1313,7 +1025,7 @@
     },
     {
       "session_id": "12776153",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-13T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1325,7 +1037,7 @@
     },
     {
       "session_id": "12775787",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-13T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1337,7 +1049,7 @@
     },
     {
       "session_id": "12775985",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-14T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1349,7 +1061,7 @@
     },
     {
       "session_id": "12776780",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-14T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1373,7 +1085,7 @@
     },
     {
       "session_id": "12776158",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-15T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1385,7 +1097,7 @@
     },
     {
       "session_id": "12775794",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-15T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1397,7 +1109,7 @@
     },
     {
       "session_id": "12776703",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-16T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1409,7 +1121,7 @@
     },
     {
       "session_id": "12783384",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-07-16T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1421,7 +1133,7 @@
     },
     {
       "session_id": "12776784",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-16T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1433,7 +1145,7 @@
     },
     {
       "session_id": "12776163",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-17T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1445,7 +1157,7 @@
     },
     {
       "session_id": "12775802",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-17T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1457,7 +1169,7 @@
     },
     {
       "session_id": "12775977",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-18T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1481,7 +1193,7 @@
     },
     {
       "session_id": "12775799",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-18T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1493,7 +1205,7 @@
     },
     {
       "session_id": "12776155",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-20T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1505,7 +1217,7 @@
     },
     {
       "session_id": "12775788",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-20T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1517,7 +1229,7 @@
     },
     {
       "session_id": "12775986",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-21T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1529,7 +1241,7 @@
     },
     {
       "session_id": "12776781",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-21T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1553,7 +1265,7 @@
     },
     {
       "session_id": "12776159",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-22T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1565,7 +1277,7 @@
     },
     {
       "session_id": "12775792",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-22T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1577,7 +1289,7 @@
     },
     {
       "session_id": "12776702",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-23T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1589,7 +1301,7 @@
     },
     {
       "session_id": "12783385",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-07-23T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1601,7 +1313,7 @@
     },
     {
       "session_id": "12776786",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-23T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1613,7 +1325,7 @@
     },
     {
       "session_id": "12776164",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-24T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1625,7 +1337,7 @@
     },
     {
       "session_id": "12775800",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-24T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1637,7 +1349,7 @@
     },
     {
       "session_id": "12775978",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-25T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1661,7 +1373,7 @@
     },
     {
       "session_id": "12775801",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-25T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1673,7 +1385,7 @@
     },
     {
       "session_id": "12776154",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-27T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1685,7 +1397,7 @@
     },
     {
       "session_id": "12775789",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-27T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1697,7 +1409,7 @@
     },
     {
       "session_id": "12775987",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-28T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1709,7 +1421,7 @@
     },
     {
       "session_id": "12776782",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-28T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1733,7 +1445,7 @@
     },
     {
       "session_id": "12776160",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-29T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1745,7 +1457,7 @@
     },
     {
       "session_id": "12775793",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-29T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1757,7 +1469,7 @@
     },
     {
       "session_id": "12776704",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-30T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1769,7 +1481,7 @@
     },
     {
       "session_id": "12783386",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-07-30T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1781,7 +1493,7 @@
     },
     {
       "session_id": "12776787",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-07-30T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1793,7 +1505,7 @@
     },
     {
       "session_id": "12776165",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-31T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1805,7 +1517,7 @@
     },
     {
       "session_id": "12775803",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-07-31T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1817,7 +1529,7 @@
     },
     {
       "session_id": "12775962",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-01T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1841,7 +1553,7 @@
     },
     {
       "session_id": "12775814",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-01T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1853,7 +1565,7 @@
     },
     {
       "session_id": "12776166",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-03T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1865,7 +1577,7 @@
     },
     {
       "session_id": "12775804",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-03T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1877,7 +1589,7 @@
     },
     {
       "session_id": "12775971",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-04T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1889,7 +1601,7 @@
     },
     {
       "session_id": "12776788",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-04T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1913,7 +1625,7 @@
     },
     {
       "session_id": "12776171",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-05T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1925,7 +1637,7 @@
     },
     {
       "session_id": "12775810",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-05T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1937,7 +1649,7 @@
     },
     {
       "session_id": "12776705",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-06T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1949,7 +1661,7 @@
     },
     {
       "session_id": "12783378",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-08-06T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1961,7 +1673,7 @@
     },
     {
       "session_id": "12776792",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-06T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1973,7 +1685,7 @@
     },
     {
       "session_id": "12776175",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-07T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1985,7 +1697,7 @@
     },
     {
       "session_id": "12775813",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-07T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -1997,7 +1709,7 @@
     },
     {
       "session_id": "12775963",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-08T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2021,7 +1733,7 @@
     },
     {
       "session_id": "12775815",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-08T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2033,7 +1745,7 @@
     },
     {
       "session_id": "12776167",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-10T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2045,7 +1757,7 @@
     },
     {
       "session_id": "12775805",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-10T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2057,7 +1769,7 @@
     },
     {
       "session_id": "12775972",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-11T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2069,7 +1781,7 @@
     },
     {
       "session_id": "12776789",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-11T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2093,7 +1805,7 @@
     },
     {
       "session_id": "12776172",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-12T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2105,7 +1817,7 @@
     },
     {
       "session_id": "12775809",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-12T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2117,7 +1829,7 @@
     },
     {
       "session_id": "12776706",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-13T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2129,7 +1841,7 @@
     },
     {
       "session_id": "12783379",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-08-13T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2141,7 +1853,7 @@
     },
     {
       "session_id": "12776793",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-13T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2153,7 +1865,7 @@
     },
     {
       "session_id": "12776176",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-14T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2165,7 +1877,7 @@
     },
     {
       "session_id": "12775817",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-14T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2177,7 +1889,7 @@
     },
     {
       "session_id": "12775964",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-15T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2201,7 +1913,7 @@
     },
     {
       "session_id": "12775816",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-15T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2213,7 +1925,7 @@
     },
     {
       "session_id": "12776168",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-17T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2225,7 +1937,7 @@
     },
     {
       "session_id": "12775806",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-17T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2237,7 +1949,7 @@
     },
     {
       "session_id": "12775973",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-18T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2249,7 +1961,7 @@
     },
     {
       "session_id": "12776790",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-18T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2273,7 +1985,7 @@
     },
     {
       "session_id": "12776173",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-19T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2285,7 +1997,7 @@
     },
     {
       "session_id": "12775811",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-19T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2297,7 +2009,7 @@
     },
     {
       "session_id": "12776707",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-20T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2309,7 +2021,7 @@
     },
     {
       "session_id": "12783380",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-08-20T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2321,7 +2033,7 @@
     },
     {
       "session_id": "12776794",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-20T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2333,7 +2045,7 @@
     },
     {
       "session_id": "12776177",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-21T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2345,7 +2057,7 @@
     },
     {
       "session_id": "12775818",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-21T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2357,7 +2069,7 @@
     },
     {
       "session_id": "12775965",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-22T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2381,7 +2093,7 @@
     },
     {
       "session_id": "12775819",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-22T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2393,7 +2105,7 @@
     },
     {
       "session_id": "12776169",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-24T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2405,7 +2117,7 @@
     },
     {
       "session_id": "12775807",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-24T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2417,7 +2129,7 @@
     },
     {
       "session_id": "12775974",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-25T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2429,7 +2141,7 @@
     },
     {
       "session_id": "12776791",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-25T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2453,7 +2165,7 @@
     },
     {
       "session_id": "12776174",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-26T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2465,7 +2177,7 @@
     },
     {
       "session_id": "12775812",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-26T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2477,7 +2189,7 @@
     },
     {
       "session_id": "12776708",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-27T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2489,7 +2201,7 @@
     },
     {
       "session_id": "12783381",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-08-27T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2501,7 +2213,7 @@
     },
     {
       "session_id": "12776795",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-27T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2513,7 +2225,7 @@
     },
     {
       "session_id": "12776178",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-28T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2525,7 +2237,7 @@
     },
     {
       "session_id": "12775820",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-28T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2537,7 +2249,7 @@
     },
     {
       "session_id": "12775966",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-08-29T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2561,7 +2273,7 @@
     },
     {
       "session_id": "12775821",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-29T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2573,7 +2285,7 @@
     },
     {
       "session_id": "12776170",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-31T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2585,7 +2297,7 @@
     },
     {
       "session_id": "12775808",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-08-31T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2597,7 +2309,7 @@
     },
     {
       "session_id": "12776014",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-01T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2609,7 +2321,7 @@
     },
     {
       "session_id": "12776827",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-01T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2633,7 +2345,7 @@
     },
     {
       "session_id": "12776183",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-02T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2645,7 +2357,7 @@
     },
     {
       "session_id": "12775826",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-02T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2657,7 +2369,7 @@
     },
     {
       "session_id": "12776709",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-03T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2669,7 +2381,7 @@
     },
     {
       "session_id": "12783409",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-09-03T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2681,7 +2393,7 @@
     },
     {
       "session_id": "12776823",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-03T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2693,7 +2405,7 @@
     },
     {
       "session_id": "12776188",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-04T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2705,7 +2417,7 @@
     },
     {
       "session_id": "12775831",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-04T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2717,7 +2429,7 @@
     },
     {
       "session_id": "12776023",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-05T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2741,7 +2453,7 @@
     },
     {
       "session_id": "12775834",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-05T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2753,7 +2465,7 @@
     },
     {
       "session_id": "12776179",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-07T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2765,7 +2477,7 @@
     },
     {
       "session_id": "12775822",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-07T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2777,7 +2489,7 @@
     },
     {
       "session_id": "12776015",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-08T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2789,7 +2501,7 @@
     },
     {
       "session_id": "12776828",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-08T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2813,7 +2525,7 @@
     },
     {
       "session_id": "12776184",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-09T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2825,7 +2537,7 @@
     },
     {
       "session_id": "12775827",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-09T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2837,7 +2549,7 @@
     },
     {
       "session_id": "12776710",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-10T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2849,7 +2561,7 @@
     },
     {
       "session_id": "12783410",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-09-10T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2861,7 +2573,7 @@
     },
     {
       "session_id": "12776824",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-10T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2873,7 +2585,7 @@
     },
     {
       "session_id": "12776189",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-11T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2885,7 +2597,7 @@
     },
     {
       "session_id": "12775833",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-11T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2897,7 +2609,7 @@
     },
     {
       "session_id": "12776026",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-12T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2921,7 +2633,7 @@
     },
     {
       "session_id": "12775832",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-12T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2933,7 +2645,7 @@
     },
     {
       "session_id": "12776181",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-14T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2945,7 +2657,7 @@
     },
     {
       "session_id": "12775824",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-14T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2957,7 +2669,7 @@
     },
     {
       "session_id": "12776016",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-15T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2969,7 +2681,7 @@
     },
     {
       "session_id": "12776829",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-15T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -2993,7 +2705,7 @@
     },
     {
       "session_id": "12776185",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-16T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3005,7 +2717,7 @@
     },
     {
       "session_id": "12775828",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-16T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3017,7 +2729,7 @@
     },
     {
       "session_id": "12776711",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-17T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3029,7 +2741,7 @@
     },
     {
       "session_id": "12783411",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-09-17T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3041,7 +2753,7 @@
     },
     {
       "session_id": "12776825",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-17T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3053,7 +2765,7 @@
     },
     {
       "session_id": "12776190",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-18T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3065,7 +2777,7 @@
     },
     {
       "session_id": "12775836",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-18T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3077,7 +2789,7 @@
     },
     {
       "session_id": "12776025",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-19T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3101,7 +2813,7 @@
     },
     {
       "session_id": "12775835",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-19T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3113,7 +2825,7 @@
     },
     {
       "session_id": "12776182",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-21T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3125,7 +2837,7 @@
     },
     {
       "session_id": "12775823",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-21T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3137,7 +2849,7 @@
     },
     {
       "session_id": "12776017",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-22T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3149,7 +2861,7 @@
     },
     {
       "session_id": "12776830",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-22T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3173,7 +2885,7 @@
     },
     {
       "session_id": "12776186",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-23T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3185,7 +2897,7 @@
     },
     {
       "session_id": "12775829",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-23T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3197,7 +2909,7 @@
     },
     {
       "session_id": "12776712",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-24T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3209,7 +2921,7 @@
     },
     {
       "session_id": "12783412",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-09-24T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3221,7 +2933,7 @@
     },
     {
       "session_id": "12776826",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-24T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3233,7 +2945,7 @@
     },
     {
       "session_id": "12776191",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-25T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3245,7 +2957,7 @@
     },
     {
       "session_id": "12775838",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-25T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3257,7 +2969,7 @@
     },
     {
       "session_id": "12776024",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-26T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3281,7 +2993,7 @@
     },
     {
       "session_id": "12775837",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-26T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3293,7 +3005,7 @@
     },
     {
       "session_id": "12776180",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-28T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3305,7 +3017,7 @@
     },
     {
       "session_id": "12775825",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-28T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3317,7 +3029,7 @@
     },
     {
       "session_id": "12776018",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-29T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3329,7 +3041,7 @@
     },
     {
       "session_id": "12776831",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-09-29T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3353,7 +3065,7 @@
     },
     {
       "session_id": "12776187",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-30T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3365,7 +3077,7 @@
     },
     {
       "session_id": "12775830",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-09-30T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3377,7 +3089,7 @@
     },
     {
       "session_id": "12776713",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-01T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3389,7 +3101,7 @@
     },
     {
       "session_id": "12783404",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-10-01T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3401,7 +3113,7 @@
     },
     {
       "session_id": "12776814",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-01T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3413,7 +3125,7 @@
     },
     {
       "session_id": "12776200",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-02T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3425,7 +3137,7 @@
     },
     {
       "session_id": "12775847",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-02T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3437,7 +3149,7 @@
     },
     {
       "session_id": "12776036",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-03T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3461,7 +3173,7 @@
     },
     {
       "session_id": "12775848",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-03T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3473,7 +3185,7 @@
     },
     {
       "session_id": "12776192",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-05T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3485,7 +3197,7 @@
     },
     {
       "session_id": "12775839",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-05T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3497,7 +3209,7 @@
     },
     {
       "session_id": "12776027",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-06T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3509,7 +3221,7 @@
     },
     {
       "session_id": "12776819",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-06T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3533,7 +3245,7 @@
     },
     {
       "session_id": "12776196",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-07T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3545,7 +3257,7 @@
     },
     {
       "session_id": "12775843",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-07T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3557,7 +3269,7 @@
     },
     {
       "session_id": "12776714",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-08T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3569,7 +3281,7 @@
     },
     {
       "session_id": "12783405",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-10-08T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3581,7 +3293,7 @@
     },
     {
       "session_id": "12776815",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-08T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3593,7 +3305,7 @@
     },
     {
       "session_id": "12776201",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-09T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3605,7 +3317,7 @@
     },
     {
       "session_id": "12775851",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-09T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3617,7 +3329,7 @@
     },
     {
       "session_id": "12776037",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-10T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3641,7 +3353,7 @@
     },
     {
       "session_id": "12775849",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-10T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3653,7 +3365,7 @@
     },
     {
       "session_id": "12776193",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-12T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3665,7 +3377,7 @@
     },
     {
       "session_id": "12775842",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-12T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3677,7 +3389,7 @@
     },
     {
       "session_id": "12776028",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-13T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3689,7 +3401,7 @@
     },
     {
       "session_id": "12776820",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-13T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3713,7 +3425,7 @@
     },
     {
       "session_id": "12776197",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-14T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3725,7 +3437,7 @@
     },
     {
       "session_id": "12775844",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-14T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3737,7 +3449,7 @@
     },
     {
       "session_id": "12776715",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-15T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3749,7 +3461,7 @@
     },
     {
       "session_id": "12783406",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-10-15T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3761,7 +3473,7 @@
     },
     {
       "session_id": "12776816",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-15T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3773,7 +3485,7 @@
     },
     {
       "session_id": "12776202",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-16T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3785,7 +3497,7 @@
     },
     {
       "session_id": "12775850",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-16T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3797,7 +3509,7 @@
     },
     {
       "session_id": "12776038",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-17T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3821,7 +3533,7 @@
     },
     {
       "session_id": "12775852",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-17T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3833,7 +3545,7 @@
     },
     {
       "session_id": "12776194",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-19T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3845,7 +3557,7 @@
     },
     {
       "session_id": "12775841",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-19T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3857,7 +3569,7 @@
     },
     {
       "session_id": "12776029",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-20T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3869,7 +3581,7 @@
     },
     {
       "session_id": "12776821",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-20T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3893,7 +3605,7 @@
     },
     {
       "session_id": "12776198",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-21T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3905,7 +3617,7 @@
     },
     {
       "session_id": "12775845",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-21T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3917,7 +3629,7 @@
     },
     {
       "session_id": "12776717",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-22T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3929,7 +3641,7 @@
     },
     {
       "session_id": "12783407",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-10-22T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3941,7 +3653,7 @@
     },
     {
       "session_id": "12776817",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-22T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3953,7 +3665,7 @@
     },
     {
       "session_id": "12776203",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-23T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3965,7 +3677,7 @@
     },
     {
       "session_id": "12775853",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-23T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -3977,7 +3689,7 @@
     },
     {
       "session_id": "12776039",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-24T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4001,7 +3713,7 @@
     },
     {
       "session_id": "12775854",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-24T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4013,7 +3725,7 @@
     },
     {
       "session_id": "12776195",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-26T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4025,7 +3737,7 @@
     },
     {
       "session_id": "12775840",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-26T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4037,7 +3749,7 @@
     },
     {
       "session_id": "12776030",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-27T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4049,7 +3761,7 @@
     },
     {
       "session_id": "12776822",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-27T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4073,7 +3785,7 @@
     },
     {
       "session_id": "12776199",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-28T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4085,7 +3797,7 @@
     },
     {
       "session_id": "12775846",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-28T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4097,7 +3809,7 @@
     },
     {
       "session_id": "12776716",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-29T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4109,7 +3821,7 @@
     },
     {
       "session_id": "12783408",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-10-29T08:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4121,7 +3833,7 @@
     },
     {
       "session_id": "12776818",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-29T18:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4133,7 +3845,7 @@
     },
     {
       "session_id": "12776204",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-30T11:45:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4145,7 +3857,7 @@
     },
     {
       "session_id": "12775856",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-30T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4157,7 +3869,7 @@
     },
     {
       "session_id": "12776040",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-10-31T09:15:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4181,7 +3893,7 @@
     },
     {
       "session_id": "12775855",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-10-31T17:30:00-04:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4193,7 +3905,7 @@
     },
     {
       "session_id": "12776205",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-02T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4205,7 +3917,7 @@
     },
     {
       "session_id": "12775857",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-02T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4217,7 +3929,7 @@
     },
     {
       "session_id": "12776041",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-03T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4229,7 +3941,7 @@
     },
     {
       "session_id": "12776810",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-03T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4253,7 +3965,7 @@
     },
     {
       "session_id": "12776210",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-04T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4265,7 +3977,7 @@
     },
     {
       "session_id": "12775862",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-04T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4277,7 +3989,7 @@
     },
     {
       "session_id": "12776718",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-05T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4289,7 +4001,7 @@
     },
     {
       "session_id": "12783400",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-11-05T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4301,7 +4013,7 @@
     },
     {
       "session_id": "12776807",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-05T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4313,7 +4025,7 @@
     },
     {
       "session_id": "12776214",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-06T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4325,7 +4037,7 @@
     },
     {
       "session_id": "12775867",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-06T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4337,7 +4049,7 @@
     },
     {
       "session_id": "12776049",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-07T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4361,7 +4073,7 @@
     },
     {
       "session_id": "12775866",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-07T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4373,7 +4085,7 @@
     },
     {
       "session_id": "12776206",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-09T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4385,7 +4097,7 @@
     },
     {
       "session_id": "12775858",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-09T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4397,7 +4109,7 @@
     },
     {
       "session_id": "12776042",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-10T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4409,7 +4121,7 @@
     },
     {
       "session_id": "12776811",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-10T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4433,7 +4145,7 @@
     },
     {
       "session_id": "12776211",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-11T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4445,7 +4157,7 @@
     },
     {
       "session_id": "12775863",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-11T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4457,7 +4169,7 @@
     },
     {
       "session_id": "12776719",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-12T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4469,7 +4181,7 @@
     },
     {
       "session_id": "12783401",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-11-12T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4481,7 +4193,7 @@
     },
     {
       "session_id": "12776806",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-12T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4493,7 +4205,7 @@
     },
     {
       "session_id": "12776215",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-13T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4505,7 +4217,7 @@
     },
     {
       "session_id": "12775868",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-13T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4517,7 +4229,7 @@
     },
     {
       "session_id": "12776050",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-14T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4541,7 +4253,7 @@
     },
     {
       "session_id": "12775869",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-14T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4553,7 +4265,7 @@
     },
     {
       "session_id": "12776207",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-16T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4565,7 +4277,7 @@
     },
     {
       "session_id": "12775859",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-16T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4577,7 +4289,7 @@
     },
     {
       "session_id": "12776043",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-17T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4589,7 +4301,7 @@
     },
     {
       "session_id": "12776812",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-17T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4613,7 +4325,7 @@
     },
     {
       "session_id": "12776212",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-18T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4625,7 +4337,7 @@
     },
     {
       "session_id": "12775864",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-18T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4637,7 +4349,7 @@
     },
     {
       "session_id": "12776720",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-19T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4649,7 +4361,7 @@
     },
     {
       "session_id": "12783402",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-11-19T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4661,7 +4373,7 @@
     },
     {
       "session_id": "12776809",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-19T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4673,7 +4385,7 @@
     },
     {
       "session_id": "12776216",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-20T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4685,7 +4397,7 @@
     },
     {
       "session_id": "12775871",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-20T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4697,7 +4409,7 @@
     },
     {
       "session_id": "12776051",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-21T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4721,7 +4433,7 @@
     },
     {
       "session_id": "12775870",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-21T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4733,7 +4445,7 @@
     },
     {
       "session_id": "12776208",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-23T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4745,7 +4457,7 @@
     },
     {
       "session_id": "12775860",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-23T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4757,7 +4469,7 @@
     },
     {
       "session_id": "12776044",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-24T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4769,7 +4481,7 @@
     },
     {
       "session_id": "12776813",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-24T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4793,7 +4505,7 @@
     },
     {
       "session_id": "12776213",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-25T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4805,7 +4517,7 @@
     },
     {
       "session_id": "12775865",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-25T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4817,7 +4529,7 @@
     },
     {
       "session_id": "12776721",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-26T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4829,7 +4541,7 @@
     },
     {
       "session_id": "12783403",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-11-26T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4841,7 +4553,7 @@
     },
     {
       "session_id": "12776808",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-26T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4853,7 +4565,7 @@
     },
     {
       "session_id": "12776217",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-27T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4865,7 +4577,7 @@
     },
     {
       "session_id": "12775872",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-27T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4877,7 +4589,7 @@
     },
     {
       "session_id": "12776052",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-11-28T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4901,7 +4613,7 @@
     },
     {
       "session_id": "12775873",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-28T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4913,7 +4625,7 @@
     },
     {
       "session_id": "12776209",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-30T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4925,7 +4637,7 @@
     },
     {
       "session_id": "12775861",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-11-30T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4937,7 +4649,7 @@
     },
     {
       "session_id": "12776053",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-01T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4949,7 +4661,7 @@
     },
     {
       "session_id": "12776801",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-01T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4973,7 +4685,7 @@
     },
     {
       "session_id": "12776222",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-02T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4985,7 +4697,7 @@
     },
     {
       "session_id": "12775878",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-02T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -4997,7 +4709,7 @@
     },
     {
       "session_id": "12776722",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-03T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5009,7 +4721,7 @@
     },
     {
       "session_id": "12783395",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-12-03T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5021,7 +4733,7 @@
     },
     {
       "session_id": "12776796",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-03T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5033,7 +4745,7 @@
     },
     {
       "session_id": "12776227",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-04T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5045,7 +4757,7 @@
     },
     {
       "session_id": "12775883",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-04T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5057,7 +4769,7 @@
     },
     {
       "session_id": "12776063",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-05T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5081,7 +4793,7 @@
     },
     {
       "session_id": "12775884",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-05T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5093,7 +4805,7 @@
     },
     {
       "session_id": "12776218",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-07T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5105,7 +4817,7 @@
     },
     {
       "session_id": "12775874",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-07T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5117,7 +4829,7 @@
     },
     {
       "session_id": "12776054",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-08T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5129,7 +4841,7 @@
     },
     {
       "session_id": "12776802",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-08T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5153,7 +4865,7 @@
     },
     {
       "session_id": "12776223",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-09T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5165,7 +4877,7 @@
     },
     {
       "session_id": "12775879",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-09T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5177,7 +4889,7 @@
     },
     {
       "session_id": "12776723",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-10T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5189,7 +4901,7 @@
     },
     {
       "session_id": "12783396",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-12-10T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5201,7 +4913,7 @@
     },
     {
       "session_id": "12776797",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-10T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5213,7 +4925,7 @@
     },
     {
       "session_id": "12776228",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-11T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5225,7 +4937,7 @@
     },
     {
       "session_id": "12775886",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-11T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5237,7 +4949,7 @@
     },
     {
       "session_id": "12776064",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-12T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5261,7 +4973,7 @@
     },
     {
       "session_id": "12775885",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-12T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5273,7 +4985,7 @@
     },
     {
       "session_id": "12776219",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-14T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5285,7 +4997,7 @@
     },
     {
       "session_id": "12775875",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-14T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5297,7 +5009,7 @@
     },
     {
       "session_id": "12776055",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-15T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5309,7 +5021,7 @@
     },
     {
       "session_id": "12776803",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-15T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5333,7 +5045,7 @@
     },
     {
       "session_id": "12776224",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-16T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5345,7 +5057,7 @@
     },
     {
       "session_id": "12775880",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-16T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5357,7 +5069,7 @@
     },
     {
       "session_id": "12776724",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-17T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5369,7 +5081,7 @@
     },
     {
       "session_id": "12783399",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-12-17T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5381,7 +5093,7 @@
     },
     {
       "session_id": "12776800",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-17T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5393,7 +5105,7 @@
     },
     {
       "session_id": "12776229",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-18T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5405,7 +5117,7 @@
     },
     {
       "session_id": "12775888",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-18T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5417,7 +5129,7 @@
     },
     {
       "session_id": "12776065",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-19T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5441,7 +5153,7 @@
     },
     {
       "session_id": "12775887",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-19T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5453,7 +5165,7 @@
     },
     {
       "session_id": "12776220",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-21T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5465,7 +5177,7 @@
     },
     {
       "session_id": "12775876",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-21T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5477,7 +5189,7 @@
     },
     {
       "session_id": "12776056",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-22T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5489,7 +5201,7 @@
     },
     {
       "session_id": "12776804",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-22T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5513,7 +5225,7 @@
     },
     {
       "session_id": "12776225",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-23T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5525,7 +5237,7 @@
     },
     {
       "session_id": "12775881",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-23T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5537,7 +5249,7 @@
     },
     {
       "session_id": "12776725",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-24T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5549,7 +5261,7 @@
     },
     {
       "session_id": "12783397",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-12-24T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5561,7 +5273,7 @@
     },
     {
       "session_id": "12776799",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-24T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5573,7 +5285,7 @@
     },
     {
       "session_id": "12776230",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-25T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5585,7 +5297,7 @@
     },
     {
       "session_id": "12775889",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-25T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5597,7 +5309,7 @@
     },
     {
       "session_id": "12776066",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-26T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5621,7 +5333,7 @@
     },
     {
       "session_id": "12775890",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-26T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5633,7 +5345,7 @@
     },
     {
       "session_id": "12776221",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-28T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5645,7 +5357,7 @@
     },
     {
       "session_id": "12775877",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-28T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5657,7 +5369,7 @@
     },
     {
       "session_id": "12776057",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-29T09:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5669,7 +5381,7 @@
     },
     {
       "session_id": "12776805",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-29T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5693,7 +5405,7 @@
     },
     {
       "session_id": "12776226",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-30T11:45:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5705,7 +5417,7 @@
     },
     {
       "session_id": "12775882",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-30T17:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5717,7 +5429,7 @@
     },
     {
       "session_id": "12776726",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
       "start_datetime": "2026-12-31T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5729,7 +5441,7 @@
     },
     {
       "session_id": "12783398",
-      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED - Blended",
+      "raw_course_name": "AHA Heartsaver® Pediatric First Aid CPR AED Online",
       "start_datetime": "2026-12-31T08:30:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",
@@ -5741,7 +5453,7 @@
     },
     {
       "session_id": "12776798",
-      "raw_course_name": "AHA Heartsaver® First Aid CPR AED - In-Person",
+      "raw_course_name": "AHA Heartsaver® First Aid CPR AED",
       "start_datetime": "2026-12-31T18:15:00-05:00",
       "location": "Wilmington; Shipyard Blvd",
       "public_private_decision": "public",

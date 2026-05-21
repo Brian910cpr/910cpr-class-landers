@@ -1,16 +1,16 @@
 # Missing Descriptions Report
 
-- Generated at: `2026-05-12T23:10:47.282815-04:00`
-- Total mapped courses: `25`
+- Generated at: `2026-05-21T10:06:26.312047-04:00`
+- Total mapped courses: `27`
 - Courses with complete descriptions: `0`
-- Courses needing review: `25`
-- Sessions affected: `23353`
+- Courses needing review: `27`
+- Sessions affected: `23251`
 
 ## Top Missing Fields
 
-- `description_status`: `25`
-- `long_description`: `25`
-- `who_class_for`: `10`
+- `description_status`: `27`
+- `long_description`: `27`
+- `who_class_for`: `12`
 
 ## Next Cleanup Recommendations
 

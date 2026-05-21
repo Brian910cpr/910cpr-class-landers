@@ -43,8 +43,13 @@ def build():
                 session_rows(rows, limit=20),
                 guideline_topic_block(family),
             ]
-            html = render_page(f"{family} Classes | 910CPR", "".join(blocks), f"Upcoming {family} classes and registration options from 910CPR.")
             last_output = OUTPUT / f"{slugify(family)}.html"
+            html = render_page(
+                f"{family} Classes | 910CPR",
+                "".join(blocks),
+                f"Upcoming {family} classes and registration options from 910CPR.",
+                canonical_path=f"/courses/{last_output.name}",
+            )
             last_output.write_text(html, encoding='utf-8')
             reporter.update(current=index, total=len(families), last_output_file=last_output)
         reporter.done(

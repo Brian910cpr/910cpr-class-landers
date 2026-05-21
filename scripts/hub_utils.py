@@ -13,6 +13,7 @@ RAW_REPORT = ROOT / "data" / "Class Report.xlsx"
 CSS_PATH = "/css/lander.css"
 GROUP_URL = "/request_group_session.html"
 NEARBY_MAP_PATH = ROOT / "data" / "config" / "nearby_cities.json"
+SITE_BASE = "https://www.910cpr.com"
 
 COURSE_FAMILY_RULES = [
     ("ACLS", ["ACLS"]),
@@ -187,7 +188,9 @@ def regional_private_sessions(sessions: list[SessionRecord], city: str, *, famil
         out.append(s)
     return sorted(out, key=session_sort_key)
 
-def render_page(title: str, body: str, description: str = "") -> str:
+def render_page(title: str, body: str, description: str = "", canonical_path: str = "") -> str:
+    canonical = f"{SITE_BASE}{canonical_path}" if canonical_path else ""
+    canonical_html = f'<link rel="canonical" href="{canonical}">' if canonical else ""
     return f"""<!DOCTYPE html>
 <html lang=\"en\">
 <head>
@@ -195,6 +198,8 @@ def render_page(title: str, body: str, description: str = "") -> str:
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 <title>{title}</title>
 <meta name=\"description\" content=\"{description or title}\">
+<meta name=\"robots\" content=\"index,follow\">
+{canonical_html}
 <link rel=\"stylesheet\" href=\"{CSS_PATH}\">
 </head>
 <body>
@@ -221,9 +226,10 @@ def session_rows(rows: list[SessionRecord], limit=20):
     for s in rows:
         start_iso = s.start_at.isoformat() if s.start_at else ""
         end_iso = s.end_at.isoformat() if s.end_at else ""
+        session_url = f"/classes/{s.session_id}.html#ForwardToEnrollware" if s.session_id else (s.registration_link or "#")
         tr.append(
             f"<tr class='js-session-item' data-session-id='{s.session_id}' data-start='{start_iso}' data-end='{end_iso}' data-session-start='{start_iso}'>"
-            f"<td>{fmt_dt(s.start_at)}</td><td>{s.city}</td><td>{s.cert_body or ''} {s.course_family}</td><td><a class='button secondary' href='{s.registration_link}'>Register</a></td></tr>"
+            f"<td>{fmt_dt(s.start_at)}</td><td>{s.city}</td><td>{s.cert_body or ''} {s.course_family}</td><td><a class='button secondary' href='{session_url}' data-original-href='{s.registration_link}'>Book Seat</a></td></tr>"
         )
     return "<table class='table-lite'><thead><tr><th>Date / Time</th><th>City</th><th>Program</th><th></th></tr></thead><tbody data-session-container>" + "".join(tr) + "</tbody></table>"
 

@@ -39,6 +39,14 @@ GTM_ID = "GTM-PQS8DCBH"
 UPCOMING_LIMIT = 10
 REVIEWS_PER_PAGE = 3
 MIN_REVIEW_LENGTH = 35
+ENTITY_IDENTITY = "Authorized American Heart Association Training Site providing CPR, BLS, ACLS, PALS & Heartsaver courses throughout Coastal North Carolina."
+ENTITY_VARIANTS = [
+    "910CPR is an Authorized American Heart Association Training Site serving Coastal North Carolina.",
+    "We provide AHA BLS, ACLS, PALS, Heartsaver CPR AED and First Aid courses for healthcare providers, workplaces and community responders.",
+    "910CPR offers American Heart Association certification courses in Wilmington, Holly Ridge, Jacksonville, Burgaw, Leland and surrounding communities.",
+    "For students and professionals who need AHA certification, 910CPR provides scheduled CPR, BLS and advanced cardiac life support training across Coastal NC.",
+]
+PROHIBITED_PUBLIC_NAMES = ("MedNorth", "Cardio Partners", "Breakthrough Autism")
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -320,7 +328,228 @@ def clean_location_display(location: str) -> str:
     value = str(location or "").strip()
     if value.startswith("::"):
         value = value[2:].strip()
+    for prohibited in PROHIBITED_PUBLIC_NAMES:
+        value = re.sub(re.escape(prohibited), "", value, flags=re.I).strip(" -–—,;")
     return value
+
+
+def session_lander_url(session_id: str, *, forward: bool = False) -> str:
+    sid = str(session_id or "").strip()
+    if not sid:
+        return "/schedule.html"
+    suffix = "#ForwardToEnrollware" if forward else ""
+    return f"/classes/{sid}.html{suffix}"
+
+
+def enrollware_url_for_session(session: dict) -> str:
+    register = str(session.get("registration_url") or "").strip()
+    if register:
+        return register
+    sid = str(session.get("session_id") or "").strip()
+    return f"https://coastalcprtraining.enrollware.com/enroll?id={sid}" if sid else ""
+
+
+def time_of_day_label(dt: datetime | None) -> str:
+    if not dt:
+        return "scheduled"
+    if dt.weekday() >= 5:
+        return "weekend"
+    if dt.hour < 12:
+        return "morning"
+    if dt.hour < 17:
+        return "afternoon"
+    return "evening"
+
+
+def session_daypart_phrase(dt: datetime | None) -> str:
+    if not dt:
+        return "scheduled session"
+    daypart = time_of_day_label(dt)
+    if daypart == "weekend":
+        return "weekend session"
+    return f"{daypart} session"
+
+
+def session_course_modifier(session: dict, course_display: str) -> str:
+    subtype = structured_subtype(session).lower()
+    delivery = structured_delivery(session).upper()
+    text = f"{subtype} {course_display}".lower()
+    if "heartcode" in text or "skills" in text or delivery in {"BL", "SS"}:
+        return "HeartCode Skills Session"
+    if "renewal" in text:
+        return "Renewal Course"
+    if "initial" in text or "provider" in text:
+        return "Provider Course"
+    return "Class"
+
+
+def dynamic_session_title(session: dict, course_display: str, dt: datetime | None, city: str, state: str) -> str:
+    family = course_family_label(course_display, session)
+    weekday = dt.strftime("%A") if dt else "Upcoming"
+    daypart = time_of_day_label(dt).title()
+    modifier = session_course_modifier(session, course_display)
+    cert = "AHA " if certifying_body_key(session) == "aha" else ""
+    patterns = [
+        f"{weekday} {daypart} {cert}{family} {modifier} in {city} {state} | 910CPR",
+        f"{cert}{family} {modifier} on {weekday} in {city} {state} | 910CPR",
+        f"{daypart} {cert}{family} {modifier} - {city} {state} | 910CPR",
+    ]
+    seed = int(hashlib.md5(str(session.get("session_id") or course_display).encode("utf-8")).hexdigest(), 16)
+    return normalize_whitespace(patterns[seed % len(patterns)])
+
+
+def dynamic_session_h1(session: dict, course_display: str, dt: datetime | None, city: str) -> str:
+    family = course_family_label(course_display, session)
+    weekday = dt.strftime("%A") if dt else "Upcoming"
+    daypart = time_of_day_label(dt).title()
+    modifier = session_course_modifier(session, course_display)
+    cert = "AHA " if certifying_body_key(session) == "aha" else ""
+    options = [
+        f"{weekday} {daypart} {cert}{family} {modifier} in {city}",
+        f"Upcoming {cert}{family} {modifier} in {city}",
+        f"{session_daypart_phrase(dt).title()} for {cert}{family} in {city}",
+    ]
+    seed = int(hashlib.md5(f"h1|{session.get('session_id') or course_display}".encode("utf-8")).hexdigest(), 16)
+    return normalize_whitespace(options[seed % len(options)])
+
+
+def session_identity_variant(session_id: str) -> str:
+    seed = int(hashlib.md5(f"identity|{session_id}".encode("utf-8")).hexdigest(), 16)
+    return ENTITY_VARIANTS[seed % len(ENTITY_VARIANTS)]
+
+
+def render_session_intro_block(session: dict, course_display: str, dt: datetime | None, city: str, location: str) -> str:
+    family = course_family_label(course_display, session)
+    date_label = dt.strftime("%A, %B ") + str(dt.day) if dt else "the scheduled date"
+    time_label = dt.strftime("%I:%M %p").lstrip("0") if dt else "the listed time"
+    daypart = session_daypart_phrase(dt)
+    audience = "healthcare students and professionals" if family in {"BLS", "ACLS", "PALS"} else "workplace and community responders"
+    seats = session.get("available_seats")
+    seats_sentence = ""
+    try:
+        if seats not in (None, "") and int(seats) > 0:
+            seats_sentence = f" {int(seats)} seats are currently shown as available in the registration feed."
+    except Exception:
+        seats_sentence = ""
+    body = structured_certifying_body(session).upper()
+    aha_phrase = " from an AHA Training Site" if body == "AHA" else ""
+    return f"""
+<section class="section-box session-intro-block">
+  <h2>This Session</h2>
+  <p>This {daypart} for {escape(course_display)} is scheduled in {escape(city)} on {escape(date_label)} at {escape(time_label)} for {audience} who need practical certification training{aha_phrase}.{escape(seats_sentence)}</p>
+  <p>{escape(session_identity_variant(str(session.get("session_id") or "")))}</p>
+</section>
+""".strip()
+
+
+def render_local_reference_block(city: str, state: str, location: str) -> str:
+    city_key = city.lower()
+    context = {
+        "wilmington": "This Wilmington session is convenient for students coming from Shipyard Boulevard, Midtown, Myrtle Grove, Leland, and nearby New Hanover County clinical programs.",
+        "holly ridge": "This Holly Ridge area class serves students near Surf City, Hampstead, Sneads Ferry, and the Onslow-Pender coastal corridor.",
+        "jacksonville": "This Jacksonville class supports Onslow County students, healthcare teams, military families, and workplaces near Western Boulevard and surrounding communities.",
+        "burgaw": "This Burgaw session gives Pender County students a local option without driving into Wilmington for every certification date.",
+        "leland": "This Leland area class is convenient for Brunswick County students and workplaces near Belville, Winnabow, and northern Brunswick County.",
+        "southport": "This Southport area class helps Brunswick County students find CPR and first aid training closer to the lower Cape Fear coast.",
+        "myrtle grove": "This Myrtle Grove area option is close to south Wilmington, Monkey Junction, and Carolina Beach Road corridors.",
+    }.get(city_key, f"This session is listed for {city}, {state}, with details preserved from the current 910CPR schedule.")
+    location_line = f"Listed location: {location}." if location and not any(re.search(re.escape(p), location, re.I) for p in PROHIBITED_PUBLIC_NAMES) else f"Listed city: {city}, {state}."
+    return f"""
+<section class="section-box local-reference-block">
+  <h2>Local Class Notes</h2>
+  <p>{escape(context)}</p>
+  <p>{escape(location_line)}</p>
+</section>
+""".strip()
+
+
+FAQ_BANK = {
+    "BLS": [
+        ("Who usually needs AHA BLS Provider?", "AHA BLS Provider is commonly required for nursing, dental, EMS, hospital, and allied health students and staff."),
+        ("Is this for renewal or initial certification?", "Use the course title and registration details to confirm whether the session is listed as renewal, initial, or HeartCode skills."),
+        ("When should I arrive?", "Plan to arrive a few minutes early so check-in and skills equipment setup do not shorten your class time."),
+        ("When are cards issued?", "AHA eCards are processed after successful completion when roster details and course requirements are complete."),
+        ("Do HeartCode students need online work first?", "Yes. HeartCode skills sessions require the online portion to be completed before the in-person skills appointment."),
+        ("What should I bring?", "Bring the name/email used for registration and any online completion certificate required for blended or HeartCode formats."),
+    ],
+    "ACLS": [
+        ("Who should take ACLS?", "ACLS is intended for clinicians involved in adult cardiovascular emergency response, including nurses, paramedics, respiratory therapists, and providers."),
+        ("Is online HeartCode required?", "HeartCode ACLS skills sessions require completion of the online ACLS course before attending the in-person skills check."),
+        ("What happens during skills testing?", "Expect practical review, megacode-style scenarios, rhythm and team response practice, and provider-level skills validation."),
+        ("When are ACLS cards issued?", "AHA provider eCards are processed after all course requirements are completed and roster details are verified."),
+        ("Can I use this for renewal?", "If the listing says renewal or provider renewal, it is intended for students keeping an existing ACLS credential current."),
+    ],
+    "PALS": [
+        ("Who should take PALS?", "PALS is for clinicians who may respond to pediatric respiratory, shock, or cardiac emergencies."),
+        ("What should I expect in class?", "The course focuses on pediatric assessment, respiratory support, team response, and treatment priorities for infants and children."),
+        ("Is this initial or renewal?", "Check the session title and registration page for the listed format before reserving your seat."),
+        ("When should I arrive?", "Arrive a few minutes before the listed start time to complete check-in and prepare for scenario work."),
+        ("When are PALS cards issued?", "AHA eCards are processed after successful completion and roster verification."),
+    ],
+    "Heartsaver": [
+        ("Who needs Heartsaver?", "Heartsaver is commonly used by workplace responders, childcare staff, teachers, fitness teams, and community responders."),
+        ("Is this a healthcare provider class?", "No. Healthcare provider programs usually require BLS Provider instead of Heartsaver."),
+        ("Does this include first aid?", "Some Heartsaver sessions include First Aid CPR AED, while others are CPR AED only. Confirm the exact title before registering."),
+        ("When should I arrive?", "Plan to arrive a few minutes early for check-in and skills setup."),
+        ("When are cards issued?", "Completion cards are processed after successful class completion and roster details are complete."),
+    ],
+    "First Aid": [
+        ("Who needs First Aid CPR AED?", "This format is common for workplaces, childcare, schools, fitness, construction, and community response roles."),
+        ("Does the class include hands-on CPR?", "Most First Aid CPR AED listings include hands-on CPR and AED skills practice."),
+        ("What should I bring?", "Bring your registration details and any employer paperwork that must be signed after completion."),
+        ("When are cards issued?", "Cards are processed after successful completion and verified roster information."),
+    ],
+    "HSI": [
+        ("Who uses HSI training?", "HSI courses are often used by workplaces and teams that need practical CPR, AED, and First Aid response training."),
+        ("Is this an AHA course?", "No. HSI is a separate certifying organization; choose AHA pages when your requirement specifically says American Heart Association."),
+        ("What should I bring?", "Bring registration details and any employer documentation needed for completion records."),
+    ],
+    "ARC": [
+        ("Who uses Red Cross training?", "American Red Cross courses are used by many workplaces, community responders, and organizations with ARC-specific requirements."),
+        ("Is this an AHA class?", "No. ARC is separate from AHA; choose an AHA class when your school or employer specifically requires American Heart Association."),
+        ("When should I arrive?", "Arrive a few minutes early so check-in and skills practice can start on time."),
+    ],
+}
+
+
+def faq_family_key(session: dict, course_display: str) -> str:
+    body = structured_certifying_body(session).upper()
+    family = course_family_label(course_display, session)
+    if body == "HSI":
+        return "HSI"
+    if body == "ARC":
+        return "ARC"
+    if family == "Heartsaver":
+        return "Heartsaver"
+    if "first aid" in course_display.lower():
+        return "First Aid"
+    return family if family in FAQ_BANK else "Heartsaver"
+
+
+def session_faqs(session: dict, course_display: str, count: int = 4) -> list[tuple[str, str]]:
+    bank = FAQ_BANK.get(faq_family_key(session, course_display), FAQ_BANK["Heartsaver"])
+    seed = int(hashlib.md5(f"faq|{session.get('session_id') or course_display}".encode("utf-8")).hexdigest(), 16)
+    ordered = bank[seed % len(bank):] + bank[: seed % len(bank)]
+    return ordered[: max(3, min(count, len(ordered)))]
+
+
+def render_faq_block(session: dict, course_display: str) -> str:
+    items = []
+    for question, answer in session_faqs(session, course_display):
+        items.append(
+            f"""
+  <details>
+    <summary>{escape(question)}</summary>
+    <p>{escape(answer)}</p>
+  </details>
+""".rstrip()
+        )
+    return f"""
+<section class="section-box session-faq-block">
+  <h2>Session FAQ</h2>
+{''.join(items)}
+</section>
+""".strip()
 
 
 def audience_blurb(course_name: str) -> str:
@@ -394,6 +623,7 @@ def make_schema(
     state: str,
     register_url: str,
     *,
+    self_url: str = "",
     end_dt=None,
     image_url: str = "",
     description: str = "",
@@ -424,7 +654,10 @@ def make_schema(
     schema = {
         "@context": "https://schema.org",
         "@type": "Event",
+        "@id": f"{self_url}#event" if self_url else "",
         "name": schema_name,
+        "url": self_url,
+        "sameAs": register_url,
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "eventStatus": "https://schema.org/EventScheduled",
         "startDate": start_iso,
@@ -445,6 +678,7 @@ def make_schema(
         "organizer": performer,
         "offers": offer,
     }
+    schema = {key: value for key, value in schema.items() if value not in ("", None)}
     return f"""
 <script type="application/ld+json">
 {json.dumps(schema, indent=2)}
@@ -803,7 +1037,8 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], course_url: str
         date_label = dt.strftime("%B %d, %Y")
         time_label = dt.strftime("%I:%M %p").lstrip("0")
         location_label = clean_location_display(session.get("location_display", "")) or "Location TBD"
-        register_url = session.get("registration_url", "#")
+        sid = str(session.get("session_id") or "").strip()
+        register_url = session_lander_url(sid)
         seats = session.get("available_seats")
         seats_label = ""
         if seats not in (None, ""):
@@ -823,12 +1058,12 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], course_url: str
 """
         )
 
-    heading = f"Other upcoming {course_label} class times" if course_label and course_label != "Course" else "Need a different time?"
+    heading = "More upcoming dates" if upcoming_sessions else "Need a different time?"
     return f"""
 <section id="upcoming-times" class="section-box js-live-session-group" data-empty-link="{escape(course_url)}" data-empty-link-label="{escape(primary_label)}" data-full-schedule-link="{escape(full_schedule_url)}">
   <div class="upcoming-head">
     <h2>{escape(heading)}</h2>
-    <p>These are nearby options from the same mapped course family and certifying body when that metadata is available.</p>
+    <p>These related future sessions link to their own class pages before registration.</p>
   </div>
   <div class="upcoming-grid">
     {''.join(cards)}
@@ -1641,7 +1876,7 @@ TEMPLATE = """<!DOCTYPE html>
 
       <div class="hero-main">
         <div class="eyebrow">{course}</div>
-        <h1>{course}</h1>
+        <h1>{session_h1}</h1>
         <p class="subhead">{hero_subhead}</p>
       </div>
 
@@ -1685,6 +1920,10 @@ TEMPLATE = """<!DOCTYPE html>
 
     {confidence_block_html}
 
+    {session_intro_html}
+
+    {local_reference_html}
+
     {review_snippet_html}
 
     {course_description_section}
@@ -1696,6 +1935,8 @@ TEMPLATE = """<!DOCTYPE html>
     {brand_strip_html}
 
     {who_for_section}
+
+    {faq_block_html}
 
     {reviews_html}
 
@@ -1725,6 +1966,19 @@ window.dataLayer.push({{
   event: "page_context",
   ...pageContext
 }});
+
+(function () {{
+  var shouldForward = window.location.hash === "#ForwardToEnrollware" || new URLSearchParams(window.location.search).get("go") === "enroll";
+  if (!shouldForward || !pageContext.register_url) return;
+  var notice = document.createElement("div");
+  notice.className = "notice enroll-forward-notice";
+  notice.textContent = "Opening secure registration...";
+  var shell = document.querySelector(".page-shell");
+  if (shell) shell.insertBefore(notice, shell.firstElementChild ? shell.firstElementChild.nextSibling : null);
+  window.setTimeout(function () {{
+    window.location.href = pageContext.register_url;
+  }}, 1700);
+}})();
 </script>
 <script src="/assets/live-sessions.js"></script>
 <script src="/assets/session-expiry.js"></script>
@@ -1823,7 +2077,7 @@ def main() -> None:
 
         raw_location = str(session.get("location_display", "")).strip()
         location = clean_location_display(raw_location) or "Wilmington; Shipyard Blvd"
-        register = session.get("registration_url", "#") or "#"
+        register = enrollware_url_for_session(session) or "#"
         dt = parse_dt(session.get("start_at"))
 
         if dt:
@@ -1840,13 +2094,14 @@ def main() -> None:
             weekday = ""
 
         city, state = location_to_city_state(location)
-        page_title = f"{seo_title_for_session(course_seo, city=city, state=state)} | 910CPR"
+        course_label = course_family_label(course_display, session)
+        page_title = dynamic_session_title(session, course_display, dt, city, state)
+        session_h1 = dynamic_session_h1(session, course_display, dt, city)
         meta_description = (
-            f"{course_seo} in {location}. View class details, current schedule options, "
-            f"and register online with 910CPR."
+            f"{course_label} session in {city}, {state} on {date} at {time}. "
+            f"View details and continue to secure registration with 910CPR."
         )
 
-        course_label = course_family_label(course_display, session)
         type_page_url = course_type_url_for_session(session, course_display)
         schedule_anchor = course_id if is_valid_schedule_anchor(course_id) else course_number
         if is_valid_schedule_anchor(schedule_anchor):
@@ -1869,9 +2124,9 @@ def main() -> None:
             hero_subhead = "This class is no longer bookable. Current options are shown above; this record remains for validation."
         else:
             state_notice = ""
-            button_html = f'<a class="button primary" href="{escape(register)}">Register Now</a>'
+            button_html = f'<a class="button primary" href="{escape(register, quote=True)}">Continue to Registration</a>'
             cta_panel_label = "Reserve your seat"
-            hero_subhead = "Use the register button for this session or the upcoming list below for other dates and times."
+            hero_subhead = f"{session_daypart_phrase(dt).capitalize()} in {city} with direct registration after the class details below."
 
         logo_key = str(session.get("mapped_logo_key") or mapped_entry.get("logo_key") or "").strip().lower()
         if logo_key == "aha":
@@ -1938,7 +2193,7 @@ def main() -> None:
             session,
             sessions,
             now_dt,
-            limit=UPCOMING_LIMIT,
+            limit=5,
             future_index=future_replacement_index,
         )
         if is_past:
@@ -1959,6 +2214,9 @@ def main() -> None:
         review_snippet_html = render_review_snippet_html(selected_reviews)
         confidence_block_html = render_confidence_block(session)
         who_for_section = render_who_for_section(session, course_display)
+        session_intro_html = render_session_intro_block(session, course_display, dt, city, location)
+        local_reference_html = render_local_reference_block(city, state, location)
+        faq_block_html = render_faq_block(session, course_display)
         trust_badge_title = "Mapped course details" if is_mapped(session) else "Mapping review needed"
         trust_badge_copy = same_day_note(session) or "Structured course metadata is shown before schedule alternatives."
 
@@ -1976,9 +2234,10 @@ def main() -> None:
                 city,
                 state,
                 register,
+                self_url=canonical_url,
                 end_dt=parse_dt(session.get("end_at")),
                 image_url=schema_image_url,
-                description=schema_description,
+                description=f"{course_label} in {city} on {date}. {ENTITY_IDENTITY} {schema_description}",
                 price=session.get("price"),
                 valid_from_dt=schema_valid_from_dt,
             ),
@@ -1988,6 +2247,7 @@ def main() -> None:
             day_num=escape(day_num),
             weekday=escape(weekday),
             course=escape(course_display),
+            session_h1=escape(session_h1),
             hero_subhead=escape(hero_subhead),
             cert_logo_html=cert_logo_html,
             trust_badge_title=escape(trust_badge_title),
@@ -1998,6 +2258,8 @@ def main() -> None:
             cta_panel_label=escape(cta_panel_label),
             button_html=button_html,
             confidence_block_html=confidence_block_html,
+            session_intro_html=session_intro_html,
+            local_reference_html=local_reference_html,
             review_snippet_html=review_snippet_html,
             upcoming_sessions_html=upcoming_sessions_html,
             brand_strip_html=brand_strip_html,
@@ -2005,6 +2267,7 @@ def main() -> None:
             course_description_section=course_description_section,
             guideline_update_section=guideline_update_section,
             who_for_section=who_for_section,
+            faq_block_html=faq_block_html,
             build_stamp=escape(build_stamp),
             session_id=escape(session_id),
             course_id=escape(course_id or course_number),

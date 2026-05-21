@@ -54,6 +54,12 @@ if errorlevel 1 goto :fail
 python -m scripts.suppress_tbd_public_inventory
 if errorlevel 1 goto :fail
 
+python -m scripts.retrofit_seo_entity
+if errorlevel 1 goto :fail
+
+python -m scripts.seo_entity_audits
+if errorlevel 1 goto :fail
+
 python -m scripts.audit_stale_sessions --warn-only
 if errorlevel 1 goto :fail
 

@@ -327,6 +327,7 @@
         start: row.start_at,
         locationRaw: row.location_display || row.location_name,
         registerUrl: row.registration_url,
+        sessionId: row.session_id,
         enrolledCount: Number(row.enrolled_count || row.registered_count || 0),
       });
     });
@@ -354,6 +355,7 @@
           locationRaw: enrichment.locationRaw,
           locationClean: enrichment.locationClean || session.locationClean,
           registerUrl: enrichment.registerUrl,
+          sessionId: enrichment.sessionId || session.sessionId,
           name: enrichment.name || session.name,
           formatLabel: enrichment.formatLabel || session.formatLabel,
           enrolledCount: Math.max(Number(session.enrolledCount || 0), Number(enrichment.enrolledCount || 0)),
@@ -416,7 +418,7 @@
   }
 
   function pillHref(section, session) {
-    return session.registerUrl || section.fullScheduleUrl;
+    return session.sessionId ? `/classes/${encodeURIComponent(session.sessionId)}.html#ForwardToEnrollware` : (session.registerUrl || section.fullScheduleUrl);
   }
 
   function pillCtaLabel(section) {

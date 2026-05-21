@@ -799,7 +799,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
         )
 
     action_label = "See Public Class" if group_mode else "Book Seat"
-    action_url = register_url
+    action_url = escape(f"/classes/{str(session.get('session_id') or '').strip()}.html#ForwardToEnrollware", quote=True) if str(session.get("session_id") or "").strip() else register_url
     action_hint = ""
     badge_html = ""
     if format_badge:
@@ -818,7 +818,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
     action_hint_html = f'    <div class="slug-pill-hint">{escape(action_hint)}</div>' if action_hint else ""
 
     return f"""
-<article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}" data-row-href="{register_url}"{cert_attrs}>
+<article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}" data-row-href="{action_url}"{cert_attrs}>
   <div class="slug-pill-date">
     <div class="slug-pill-month">{format_month(start_dt)}</div>
     <div class="slug-pill-day">{format_day(start_dt)}</div>
@@ -848,7 +848,8 @@ def session_key(session: dict[str, Any]) -> str:
 def session_action(session: dict[str, Any], *, page_slug: str) -> tuple[str, str, str]:
     register_url = escape(session.get("registration_url") or "#", quote=True)
     action_label = "Book Seat"
-    action_url = register_url
+    session_id = str(session.get("session_id") or "").strip()
+    action_url = escape(f"/classes/{session_id}.html#ForwardToEnrollware", quote=True) if session_id else register_url
     return action_label, action_url, register_url
 
 
@@ -1587,7 +1588,8 @@ def render_ecosystem_page(page: dict[str, Any], sessions: list[dict[str, Any]], 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escape(page['title'])}</title>
 <meta name="description" content="{escape(page['description'])}">
-<link rel="canonical" href="https://www.910cpr.com/{escape(page['slug'])}">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.910cpr.com/{escape(page['slug'])}.html">
 <link rel="icon" type="image/png" href="images/logo.png">
 <link rel="shortcut icon" href="images/logo.png">
 <link rel="apple-touch-icon" href="images/logo.png">
@@ -1694,7 +1696,8 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escape(page['title'])}</title>
 <meta name="description" content="{escape(page['description'])}">
-<link rel="canonical" href="https://www.910cpr.com/{escape(page['slug'])}">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.910cpr.com/{escape(page['slug'])}.html">
 <link rel="icon" type="image/png" href="images/logo.png">
 <link rel="shortcut icon" href="images/logo.png">
 <link rel="apple-touch-icon" href="images/logo.png">

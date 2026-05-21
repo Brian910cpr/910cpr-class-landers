@@ -3,37 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Group Training Request Moved | 910CPR</title>
-<meta name="robots" content="noindex">
-<link rel="canonical" href="https://www.910cpr.com/group.html">
-<meta http-equiv="refresh" content="0; url=group.html#request-form">
-<script>
-  (function () {
-    const params = new URLSearchParams(window.location.search);
-    const source = [
-      window.location.hash.replace(/^#/, ""),
-      params.get("program"),
-      params.get("course"),
-      params.get("type"),
-      params.get("training")
-    ].filter(Boolean).join(" ").toLowerCase();
-
-    function targetHash(value) {
-      if (value.includes("uscg")) return "#uscg";
-      if (value.includes("pals")) return "#pals";
-      if (value.includes("acls")) return "#acls";
-      if (value.includes("heartcode") || value.includes("skill")) return "#skills";
-      if (value.includes("first aid") || value.includes("cpr") || value.includes("aed") || value.includes("heartsaver")) return "#fa";
-      if (value.includes("bls")) return "#bls";
-      return window.location.hash || "#request-form";
-    }
-
-    const targetPath = new URL("group.html", window.location.href).pathname;
-    window.location.replace(targetPath + targetHash(source));
-  }());
-</script>
+<title>Request On-Site Group Training | 910CPR</title>
+<meta name="description" content="Request on-site BLS, HeartCode BLS, First Aid/CPR/AED, ACLS, PALS, or USCG group training.">
+<link rel="stylesheet" href="/css/lander.css">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.910cpr.com/request_group_session.html">
 </head>
 <body>
-<p>Group training requests have moved to <a href="/group.html#request-form">the current 910CPR group training page</a>.</p>
+<div class="wrap">
+  <div class="page-shell">
+
+<div class='card request-shell'>
+  <section class='hero request-hero'>
+    <div class='hero-main'>
+      <div class='eyebrow'>Private Team Training</div>
+      <h1>Request On-Site Group Training</h1>
+      <p class='subhead'>Tell us what your team needs, where you need it, and when you’d like it. We’ll help match the right training option and scheduling path for your group.</p>
+      <div class='request-hero-actions'>
+        <a class='button primary' href='#request-form'>Start your request</a>
+        <a class='button secondary' href='/index.html'>See individual seat schedule</a>
+      </div>
+    </div>
+    <div class='hero-side'>
+      <div class='trust-badge request-hero-note'>
+        <strong>Choose the training type below, then fill in the request form.</strong>
+        <span>The tabs help prefill the right program so you do not have to guess which group option to ask for.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class='section-box request-tabs-shell' id='request-programs' data-tabs data-sync-program='#program'>
+    <div class='section-head'>
+      <div class='section-title-wrap'>
+        <h2>Choose the closest training format</h2>
+        <p>Select the option that best matches your team so the form is prefilled with the right program name.</p>
+      </div>
+    </div>
+    <div class='tabs hub-tabs request-tabs'>
+      <button class='tab-btn request-tab-btn active' data-program='BLS On-Site' data-tab-target='#bls' type='button'><img class='request-tab-image' src='/images/25-bls-new.png' alt='BLS on-site training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>BLS On-Site</span></button><button class='tab-btn request-tab-btn' data-program='HeartCode BLS Group Skills' data-tab-target='#heartcode' type='button'><img class='request-tab-image' src='/images/hc_b.png' alt='HeartCode BLS skills testing' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>HeartCode BLS Group Skills</span></button><button class='tab-btn request-tab-btn' data-program='First Aid / CPR / AED' data-tab-target='#fa_cpr_aed' type='button'><img class='request-tab-image' src='/images/heartsaver_general.png' alt='Heartsaver on-site training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>First Aid / CPR / AED</span></button><button class='tab-btn request-tab-btn' data-program='ACLS' data-tab-target='#acls' type='button'><img class='request-tab-image' src='/images/25-acls-new.png' alt='ACLS on-site training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>ACLS</span></button><button class='tab-btn request-tab-btn' data-program='PALS' data-tab-target='#pals' type='button'><img class='request-tab-image' src='/images/25-pals-new.png' alt='PALS on-site training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>PALS</span></button><button class='tab-btn request-tab-btn' data-program='USCG Elementary First Aid | CPR' data-tab-target='#uscg' type='button'><img class='request-tab-image' src='/images/stripes.png' alt='USCG maritime training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>USCG Elementary First Aid | CPR</span></button>
+    </div>
+    <section class='tab-panel active' id='bls'><div class='request-program-card'><h2>BLS On-Site</h2><p>American Heart Association BLS Provider training delivered at your location. Ideal for healthcare offices, dental teams, clinics, and medical groups.</p><ul><li><strong>$700 for up to 12 participants</strong></li><li>We come to your location</li><li>Flexible scheduling</li><li>Approximately 2.5 hours</li></ul></div></section><section class='tab-panel' id='heartcode'><div class='request-program-card'><h2>HeartCode BLS Group Skills</h2><p>Blended package for offices that want online coursework plus a private on-site skills session.</p><ul><li><strong>$999 for up to 12 participants</strong></li><li>Includes HeartCode access and group skills testing</li><li>Completion certificates must be completed before the in-person session</li></ul></div></section><section class='tab-panel' id='fa_cpr_aed'><div class='request-program-card'><h2>First Aid / CPR / AED</h2><p>Workplace-friendly group training for offices, schools, churches, and general workplace responders.</p><ul><li><strong>$400 + $35 per participant</strong> (up to 20)</li><li>Delivered at your location</li><li>Approximately 2.25 hours depending on program body</li></ul></div></section><section class='tab-panel' id='acls'><div class='request-program-card'><h2>ACLS</h2><p>Advanced Cardiac Life Support group options for clinical teams. Best handled as a custom quote based on provider count, experience level, and desired format.</p></div></section><section class='tab-panel' id='pals'><div class='request-program-card'><h2>PALS</h2><p>Pediatric Advanced Life Support group options for teams caring for infants and children. Custom scheduling available for appropriate groups.</p></div></section><section class='tab-panel' id='uscg'><div class='request-program-card'><h2>USCG Elementary First Aid | CPR</h2><p>Maritime-focused training options for teams needing USCG-aligned certification. Request details and preferred scheduling window below.</p></div></section>
+  </section>
+
+  <section class='request-form-grid'>
+    <section class='section-box request-form-card' id='request-form'>
+      <div class='request-form-head'>
+        <div>
+          <div class='eyebrow'>Request Details</div>
+          <h2>Tell us about your group</h2>
+        </div>
+        <p class='muted'>Share the basics below and we’ll follow up with the best scheduling path for your team.</p>
+      </div>
+      <form method='post' action='#'>
+        <div class='grid-2'>
+          <label class='field'><span>Name</span><input type='text' name='name' autocomplete='name' required></label>
+          <label class='field'><span>Organization</span><input type='text' name='organization' autocomplete='organization'></label>
+          <label class='field'><span>Email</span><input type='email' name='email' autocomplete='email' required></label>
+          <label class='field'><span>Mobile</span><input type='tel' name='mobile' autocomplete='tel'></label>
+          <label class='field'><span>City</span><input type='text' name='city' autocomplete='address-level2'></label>
+          <label class='field'><span>On-site Address</span><input type='text' name='address' autocomplete='street-address'></label>
+          <label class='field'><span>Estimated Headcount</span><input type='number' min='1' name='headcount'></label>
+          <label class='field'><span>Desired Dates / Times</span><input type='text' name='preferred_times' placeholder='Any Thursday in May could work'></label>
+        </div>
+        <label class='field'><span>Program</span><input id='program' type='text' name='program' value='BLS On-Site'></label>
+        <label class='field'><span>Comments / Special Requests</span>
+          <textarea name='comments' placeholder='We have 12 for BLS, and 4 who need ACLS too.&#10;Any Thursday in May could work.&#10;Morning is better than afternoon.&#10;We may need training at our office in Morehead City.&#10;Some staff need Heartsaver, others need BLS.&#10;We already have AHA online completed, just need skills testing.'></textarea>
+        </label>
+        <div class='request-submit-row'>
+          <button class='button primary' type='submit'>Send Request</button>
+          <a class='button secondary' href='/index.html'>Compare individual seat options</a>
+        </div>
+      </form>
+    </section>
+
+    <aside class='section-box request-sidebar'>
+      <div class='callout request-seat-board'>
+        <strong>Need an individual seat schedule?</strong>
+        <p class='muted'>If private group scheduling is not the right fit, use the public booking pages below to find the next available class.</p>
+        <div class='request-link-list'>
+          <a href='/bls.html'>Public BLS options</a>
+          <a href='/heartsaver.html'>Public Heartsaver options</a>
+          <a href='/acls.html'>Public ACLS options</a>
+          <a href='/pals.html'>Public PALS options</a>
+          <a href='/uscg-elementary-first-aid-cpr.html'>Public USCG options</a>
+        </div>
+      </div>
+    </aside>
+  </section>
+</div>
+
+  </div>
+</div>
+<script src="/assets/hub-ui.js"></script>
+<script src="/assets/session-expiry.js"></script>
+
+<p class="entity-identity">910CPR is an Authorized American Heart Association Training Site serving Coastal North Carolina.</p>
 </body>
 </html>

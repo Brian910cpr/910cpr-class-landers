@@ -76,6 +76,7 @@ def build_locations():
         print(f"Building {len(cities)} location pages")
 
         for city, city_sessions in tqdm(cities, desc="Building location pages", unit="page", miniters=1):
+            filename = os.path.join(OUTPUT_DIR, f"{slugify(city)}.html")
             html = render_page(
                 title=f"CPR Classes in {city}",
                 body=f"""
@@ -83,9 +84,9 @@ def build_locations():
 {session_rows(city_sessions)}
 """,
                 description=f"Upcoming CPR classes in {city}.",
+                canonical_path="/" + filename.replace(os.sep, "/"),
             )
 
-            filename = os.path.join(OUTPUT_DIR, f"{slugify(city)}.html")
             last_output = filename
 
             with open(filename, "w", encoding="utf-8") as f:

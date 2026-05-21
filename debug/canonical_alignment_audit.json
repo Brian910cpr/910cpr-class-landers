@@ -1,0 +1,13 @@
+{
+  "canonical_mismatch": [],
+  "duplicate_canonical_targets": [],
+  "pages_lacking_self_canonical": [],
+  "sitemap_url_vs_canonical_url_mismatch": [],
+  "summary": {
+    "canonical_mismatches": 0,
+    "duplicate_canonical_targets": 0,
+    "pages_lacking_self_canonical": 0,
+    "pages_scanned": 26571,
+    "sitemap_url_vs_canonical_mismatches": 0
+  }
+}

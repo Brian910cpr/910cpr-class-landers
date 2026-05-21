@@ -378,12 +378,13 @@ def render_course_session_rows(sessions: list[dict]) -> str:
         time_label = start.strftime("%I:%M %p").lstrip("0")
         location = clean_location_name(session.get("location_display") or session.get("location_name") or "")
         register_url = str(session.get("registration_url", "")).strip()
+        session_id = str(session.get("session_id", "")).strip()
+        session_url = f"/classes/{session_id}.html#ForwardToEnrollware" if session_id else register_url
         register_html = (
-            f'<a class="course-session-register" href="{html_escape(register_url)}">Register</a>'
-            if register_url
+            f'<a class="course-session-register" href="{html_escape(session_url)}" data-original-href="{html_escape(register_url)}">Book Seat</a>'
+            if session_url
             else ""
         )
-        session_id = str(session.get("session_id", "")).strip()
         end_raw = str(session.get("end_at", "")).strip()
         rows.append(
             f"""
@@ -715,6 +716,17 @@ def render_homepage() -> str:
 <link rel="apple-touch-icon" href="/images/logo.png">
 <link rel="stylesheet" href="/css/lander.css">
 {render_gtm_head()}
+<script type="application/ld+json">
+{json.dumps({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": f"{SITE_BASE}/#organization",
+  "name": "910CPR",
+  "url": f"{SITE_BASE}/",
+  "description": "Authorized American Heart Association Training Site providing CPR, BLS, ACLS, PALS & Heartsaver courses throughout Coastal North Carolina.",
+  "areaServed": ["Wilmington NC", "Holly Ridge NC", "Jacksonville NC", "Burgaw NC", "Leland NC", "Coastal North Carolina"],
+}, indent=2)}
+</script>
 </head>
 <body>
 {render_gtm_body()}
@@ -731,7 +743,7 @@ def render_homepage() -> str:
         <div class="hero-main">
           <div class="eyebrow">CPR, BLS, ACLS, PALS, First Aid</div>
           <h1>Find the CPR Class You Need</h1>
-          <p class="subhead">Pick a date, register online, and get certified with AHA, Red Cross, or HSI training for work, school, licensing, or healthcare requirements.</p>
+          <p class="subhead">Pick a date with an Authorized American Heart Association Training Site serving Coastal North Carolina, plus Red Cross and HSI options for work, school, licensing, or healthcare requirements.</p>
           <div class="hero-actions">
             <a class="button primary" href="#class-finder">Find a class</a>
             <a class="button secondary" href="/group-training.html">Need training for a team?</a>
@@ -1020,7 +1032,8 @@ def build():
 
         line = " | ".join(html_escape(x) for x in left_parts if x)
         detail_link = f'<a href="{s["local_path"]}">Details</a>'
-        register_link = f' | <a href="{s["register_url"]}">Register</a>' if s["register_url"] else ""
+        session_forward = f'{s["local_path"]}#ForwardToEnrollware'
+        register_link = f' | <a href="{session_forward}" data-original-href="{s["register_url"]}">Book Seat</a>' if s["register_url"] else ""
 
         class_lines.append(
             f"<li class=\"js-session-item\" data-session-id=\"{html_escape(str(s.get('session_id', '')).strip())}\" data-start=\"{html_escape(str(s.get('display_date', '')).strip())}\">{line} | {detail_link}{register_link}</li>"
@@ -1131,7 +1144,8 @@ def build():
 
             line = " | ".join(html_escape(x) for x in bits if x)
             detail_link = f'<a href="{s["local_path"]}">Details</a>'
-            register_link = f' | <a href="{s["register_url"]}">Register</a>' if s["register_url"] else ""
+            session_forward = f'{s["local_path"]}#ForwardToEnrollware'
+            register_link = f' | <a href="{session_forward}" data-original-href="{s["register_url"]}">Book Seat</a>' if s["register_url"] else ""
 
             lines.append(
                 f"<li class=\"js-session-item\" data-session-id=\"{html_escape(str(s.get('session_id', '')).strip())}\" data-start=\"{html_escape(str(s.get('display_date', '')).strip())}\">{line} | {detail_link}{register_link}</li>"

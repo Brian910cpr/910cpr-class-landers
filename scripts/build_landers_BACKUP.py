@@ -1340,7 +1340,7 @@ if course_img_url and course_img_url != cert_logo:
   <img src="{escape(course_img_url)}" alt="{escape(course_display)} course image" loading="lazy">
 </div>
 '''
-    )        )
+    )
 
     if brand_parts:
         brand_strip_html = f'<section class="brand-strip">{"".join(brand_parts)}</section>'

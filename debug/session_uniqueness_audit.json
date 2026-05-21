@@ -1,0 +1,12 @@
+{
+  "duplicate_meta_descriptions": [],
+  "pages_with_identical_faq_sets": [],
+  "pages_with_identical_intro_copy": [],
+  "repeated_h1s": [],
+  "repeated_titles": [],
+  "session_to_session_similarity_warnings": [],
+  "summary": {
+    "session_pages_scanned": 26026,
+    "similarity_warnings": 0
+  }
+}

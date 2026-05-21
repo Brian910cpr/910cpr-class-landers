@@ -92,6 +92,10 @@ def build_course_at_city():
         print(f"Building {len(combos)} course-at-city pages")
 
         for (family, city), group_sessions in tqdm(combos, desc="Building course-at-city pages", unit="page", miniters=1):
+            filename = os.path.join(
+                OUTPUT_DIR,
+                f"{slugify(family)}-{slugify(city)}.html"
+            )
             html = render_page(
                 title=f"{family} Classes in {city}",
                 body=f"""
@@ -99,11 +103,7 @@ def build_course_at_city():
 {session_rows(group_sessions)}
 """,
                 description=f"Upcoming {family} classes in {city}.",
-            )
-
-            filename = os.path.join(
-                OUTPUT_DIR,
-                f"{slugify(family)}-{slugify(city)}.html"
+                canonical_path="/" + filename.replace(os.sep, "/"),
             )
             last_output = filename
 

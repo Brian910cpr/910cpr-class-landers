@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T15:11:33.199787-04:00",
+  "generated_at": "2026-05-21T10:40:01.789512-04:00",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "page_slug": "pals",
   "records": [
@@ -7,11 +7,11 @@
       "page_slug": "pals",
       "session_id": "13295751",
       "course_id": "209805",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial",
+      "course_name": "AHA PALS Provider",
       "official_course_name": "AHA PALS Provider",
       "course_key": "aha_pals_provider",
       "course_code": "AHA_PALS_INITIAL",
-      "start_at": "2026-05-26T13:00:00-04:00",
+      "start_at": "2026-05-26T14:00:00-04:00",
       "included": true,
       "matched_tabs": [
         "pals-provider"
@@ -26,34 +26,13 @@
     },
     {
       "page_slug": "pals",
-      "session_id": "13295774",
-      "course_id": "251496",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
-      "official_course_name": "AHA PALS Renewal",
-      "course_key": "aha_pals_renewal",
-      "course_code": "AHA_PALS_RENEWAL",
-      "start_at": "2026-05-26T13:00:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "pals-renewal"
-      ],
-      "matched_classification": {
-        "family": "PALS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "pals",
       "session_id": "13295752",
       "course_id": "209805",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Initial",
+      "course_name": "AHA PALS Provider",
       "official_course_name": "AHA PALS Provider",
       "course_key": "aha_pals_provider",
       "course_code": "AHA_PALS_INITIAL",
-      "start_at": "2026-05-29T13:00:00-04:00",
+      "start_at": "2026-05-29T14:00:00-04:00",
       "included": true,
       "matched_tabs": [
         "pals-provider"
@@ -70,11 +49,11 @@
       "page_slug": "pals",
       "session_id": "13295775",
       "course_id": "251496",
-      "course_name": "American Heart Association Pediatric Advanced Life Support (PALS) Provider - In-Person - Renewal",
+      "course_name": "AHA PALS Renewal",
       "official_course_name": "AHA PALS Renewal",
       "course_key": "aha_pals_renewal",
       "course_code": "AHA_PALS_RENEWAL",
-      "start_at": "2026-05-29T13:00:00-04:00",
+      "start_at": "2026-05-29T14:00:00-04:00",
       "included": true,
       "matched_tabs": [
         "pals-renewal"
@@ -126,6 +105,342 @@
         "subtype": "Renewal",
         "certifying_body": "aha",
         "delivery_mode": ""
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13460896",
+      "course_id": "209805",
+      "course_name": "AHA PALS Provider",
+      "official_course_name": "AHA PALS Provider",
+      "course_key": "aha_pals_provider",
+      "course_code": "AHA_PALS_INITIAL",
+      "start_at": "2026-06-03T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-provider"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Provider Initial",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13460904",
+      "course_id": "251496",
+      "course_name": "AHA PALS Renewal",
+      "official_course_name": "AHA PALS Renewal",
+      "course_key": "aha_pals_renewal",
+      "course_code": "AHA_PALS_RENEWAL",
+      "start_at": "2026-06-03T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Renewal",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472478",
+      "course_id": "209805",
+      "course_name": "AHA PALS Provider",
+      "official_course_name": "AHA PALS Provider",
+      "course_key": "aha_pals_provider",
+      "course_code": "AHA_PALS_INITIAL",
+      "start_at": "2026-06-04T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-provider"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Provider Initial",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472485",
+      "course_id": "251496",
+      "course_name": "AHA PALS Renewal",
+      "official_course_name": "AHA PALS Renewal",
+      "course_key": "aha_pals_renewal",
+      "course_code": "AHA_PALS_RENEWAL",
+      "start_at": "2026-06-04T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Renewal",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472479",
+      "course_id": "209805",
+      "course_name": "AHA PALS Provider",
+      "official_course_name": "AHA PALS Provider",
+      "course_key": "aha_pals_provider",
+      "course_code": "AHA_PALS_INITIAL",
+      "start_at": "2026-06-08T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-provider"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Provider Initial",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472486",
+      "course_id": "251496",
+      "course_name": "AHA PALS Renewal",
+      "official_course_name": "AHA PALS Renewal",
+      "course_key": "aha_pals_renewal",
+      "course_code": "AHA_PALS_RENEWAL",
+      "start_at": "2026-06-08T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Renewal",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472480",
+      "course_id": "209805",
+      "course_name": "AHA PALS Provider",
+      "official_course_name": "AHA PALS Provider",
+      "course_key": "aha_pals_provider",
+      "course_code": "AHA_PALS_INITIAL",
+      "start_at": "2026-06-12T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-provider"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Provider Initial",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472487",
+      "course_id": "251496",
+      "course_name": "AHA PALS Renewal",
+      "official_course_name": "AHA PALS Renewal",
+      "course_key": "aha_pals_renewal",
+      "course_code": "AHA_PALS_RENEWAL",
+      "start_at": "2026-06-12T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Renewal",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472481",
+      "course_id": "209805",
+      "course_name": "AHA PALS Provider",
+      "official_course_name": "AHA PALS Provider",
+      "course_key": "aha_pals_provider",
+      "course_code": "AHA_PALS_INITIAL",
+      "start_at": "2026-06-17T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-provider"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Provider Initial",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472488",
+      "course_id": "251496",
+      "course_name": "AHA PALS Renewal",
+      "official_course_name": "AHA PALS Renewal",
+      "course_key": "aha_pals_renewal",
+      "course_code": "AHA_PALS_RENEWAL",
+      "start_at": "2026-06-17T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Renewal",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472482",
+      "course_id": "209805",
+      "course_name": "AHA PALS Provider",
+      "official_course_name": "AHA PALS Provider",
+      "course_key": "aha_pals_provider",
+      "course_code": "AHA_PALS_INITIAL",
+      "start_at": "2026-06-22T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-provider"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Provider Initial",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472489",
+      "course_id": "251496",
+      "course_name": "AHA PALS Renewal",
+      "official_course_name": "AHA PALS Renewal",
+      "course_key": "aha_pals_renewal",
+      "course_code": "AHA_PALS_RENEWAL",
+      "start_at": "2026-06-22T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Renewal",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472483",
+      "course_id": "209805",
+      "course_name": "AHA PALS Provider",
+      "official_course_name": "AHA PALS Provider",
+      "course_key": "aha_pals_provider",
+      "course_code": "AHA_PALS_INITIAL",
+      "start_at": "2026-06-23T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-provider"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Provider Initial",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472490",
+      "course_id": "251496",
+      "course_name": "AHA PALS Renewal",
+      "official_course_name": "AHA PALS Renewal",
+      "course_key": "aha_pals_renewal",
+      "course_code": "AHA_PALS_RENEWAL",
+      "start_at": "2026-06-23T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Renewal",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472484",
+      "course_id": "209805",
+      "course_name": "AHA PALS Provider",
+      "official_course_name": "AHA PALS Provider",
+      "course_key": "aha_pals_provider",
+      "course_code": "AHA_PALS_INITIAL",
+      "start_at": "2026-06-26T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-provider"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Provider Initial",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    },
+    {
+      "page_slug": "pals",
+      "session_id": "13472491",
+      "course_id": "251496",
+      "course_name": "AHA PALS Renewal",
+      "official_course_name": "AHA PALS Renewal",
+      "course_key": "aha_pals_renewal",
+      "course_code": "AHA_PALS_RENEWAL",
+      "start_at": "2026-06-26T14:00:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "pals-renewal"
+      ],
+      "matched_classification": {
+        "family": "PALS",
+        "subtype": "Renewal",
+        "certifying_body": "aha",
+        "delivery_mode": "IP"
       },
       "reason_excluded": null
     },
