@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-21T10:06:26.312047-04:00",
+  "generated_at": "2026-05-25T16:39:14.682135-04:00",
   "counts": {
     "mapped_courses": 27,
     "courses_with_complete_descriptions": 0,
     "courses_needing_review_or_missing": 27,
-    "sessions_affected": 23251
+    "sessions_affected": 23242
   },
   "missing_field_counts": {
     "description_status": 27,
@@ -34,7 +34,7 @@
         "10293392",
         "10293393"
       ],
-      "count_of_affected_sessions": 104
+      "count_of_affected_sessions": 103
     },
     {
       "course_id": "209806",
@@ -58,7 +58,7 @@
         "3504852",
         "3504966"
       ],
-      "count_of_affected_sessions": 5356
+      "count_of_affected_sessions": 5355
     },
     {
       "course_id": "209808",
@@ -107,7 +107,7 @@
         "3884000",
         "3647597"
       ],
-      "count_of_affected_sessions": 1894
+      "count_of_affected_sessions": 1892
     },
     {
       "course_id": "209811",
@@ -131,7 +131,7 @@
         "3988051",
         "3953077"
       ],
-      "count_of_affected_sessions": 3178
+      "count_of_affected_sessions": 3177
     },
     {
       "course_id": "209812",
@@ -202,9 +202,9 @@
         "3504914",
         "3504851",
         "3504869",
-        "3504834"
+        "3504919"
       ],
-      "count_of_affected_sessions": 4039
+      "count_of_affected_sessions": 4037
     },
     {
       "course_id": "241108",
@@ -228,7 +228,7 @@
         "4644044",
         "4827461"
       ],
-      "count_of_affected_sessions": 112
+      "count_of_affected_sessions": 111
     },
     {
       "course_id": "248287",
@@ -302,7 +302,7 @@
         "5428554",
         "5428555"
       ],
-      "count_of_affected_sessions": 315
+      "count_of_affected_sessions": 314
     },
     {
       "course_id": "251545",
@@ -374,7 +374,7 @@
         "6893771",
         "6865379"
       ],
-      "count_of_affected_sessions": 1143
+      "count_of_affected_sessions": 1142
     },
     {
       "course_id": "344085",
@@ -398,7 +398,7 @@
         "7763942",
         "7708474"
       ],
-      "count_of_affected_sessions": 436
+      "count_of_affected_sessions": 437
     },
     {
       "course_id": "351632",

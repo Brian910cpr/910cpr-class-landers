@@ -2,10 +2,6 @@
   "cards_missing_session_urls": [],
   "cards_with_forward_to_enrollware_flag": [
     {
-      "href": "/classes/13295711.html#ForwardToEnrollware",
-      "page": "acls.html"
-    },
-    {
       "href": "/classes/13460876.html#ForwardToEnrollware",
       "page": "acls.html"
     },
@@ -71,18 +67,6 @@
     },
     {
       "href": "/classes/13472477.html#ForwardToEnrollware",
-      "page": "acls.html"
-    },
-    {
-      "href": "/classes/12774012.html#ForwardToEnrollware",
-      "page": "acls.html"
-    },
-    {
-      "href": "/classes/12773997.html#ForwardToEnrollware",
-      "page": "acls.html"
-    },
-    {
-      "href": "/classes/12774028.html#ForwardToEnrollware",
       "page": "acls.html"
     },
     {
@@ -430,26 +414,6 @@
       "page": "acls.html"
     },
     {
-      "href": "/classes/12774320.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774555.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12776631.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774556.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774312.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
       "href": "/classes/12774564.html#ForwardToEnrollware",
       "page": "bls.html"
     },
@@ -459,10 +423,6 @@
     },
     {
       "href": "/classes/12774558.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774567.html#ForwardToEnrollware",
       "page": "bls.html"
     },
     {
@@ -1391,26 +1351,6 @@
     },
     {
       "href": "/classes/12774613.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775521.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775288.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775520.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775287.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775509.html#ForwardToEnrollware",
       "page": "bls.html"
     },
     {
@@ -2354,31 +2294,7 @@
       "page": "bls.html"
     },
     {
-      "href": "/classes/12776334.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774012.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12776388.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12773997.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
       "href": "/classes/12776278.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12776380.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12776549.html#ForwardToEnrollware",
       "page": "bls.html"
     },
     {
@@ -2391,10 +2307,6 @@
     },
     {
       "href": "/classes/12776335.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774028.html#ForwardToEnrollware",
       "page": "bls.html"
     },
     {
@@ -3570,19 +3482,7 @@
       "page": "bls.html"
     },
     {
-      "href": "/classes/12776767.html#ForwardToEnrollware",
-      "page": "heartsaver.html"
-    },
-    {
-      "href": "/classes/12776012.html#ForwardToEnrollware",
-      "page": "heartsaver.html"
-    },
-    {
       "href": "/classes/12776003.html#ForwardToEnrollware",
-      "page": "heartsaver.html"
-    },
-    {
-      "href": "/classes/12776765.html#ForwardToEnrollware",
       "page": "heartsaver.html"
     },
     {
@@ -3999,16 +3899,112 @@
     },
     {
       "href": "/classes/12776054.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776802.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776797.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776064.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776055.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776803.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776800.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776065.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776056.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776804.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776799.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776066.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776057.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776805.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776798.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775754.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776695.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776138.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775767.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776144.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775774.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776696.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776148.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775778.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775779.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776140.html#ForwardToEnrollware",
       "page": "heartsaver.html"
     }
   ],
   "hub_cards_linking_directly_to_enrollware": [],
   "hub_cards_linking_to_session_pages": [
     {
-      "href": "/classes/13295711.html#ForwardToEnrollware",
-      "page": "acls.html"
-    },
-    {
       "href": "/classes/13460876.html#ForwardToEnrollware",
       "page": "acls.html"
     },
@@ -4074,18 +4070,6 @@
     },
     {
       "href": "/classes/13472477.html#ForwardToEnrollware",
-      "page": "acls.html"
-    },
-    {
-      "href": "/classes/12774012.html#ForwardToEnrollware",
-      "page": "acls.html"
-    },
-    {
-      "href": "/classes/12773997.html#ForwardToEnrollware",
-      "page": "acls.html"
-    },
-    {
-      "href": "/classes/12774028.html#ForwardToEnrollware",
       "page": "acls.html"
     },
     {
@@ -4433,26 +4417,6 @@
       "page": "acls.html"
     },
     {
-      "href": "/classes/12774320.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774555.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12776631.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774556.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774312.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
       "href": "/classes/12774564.html#ForwardToEnrollware",
       "page": "bls.html"
     },
@@ -4462,10 +4426,6 @@
     },
     {
       "href": "/classes/12774558.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774567.html#ForwardToEnrollware",
       "page": "bls.html"
     },
     {
@@ -5394,26 +5354,6 @@
     },
     {
       "href": "/classes/12774613.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775521.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775288.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775520.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775287.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12775509.html#ForwardToEnrollware",
       "page": "bls.html"
     },
     {
@@ -6357,31 +6297,7 @@
       "page": "bls.html"
     },
     {
-      "href": "/classes/12776334.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774012.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12776388.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12773997.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
       "href": "/classes/12776278.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12776380.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12776549.html#ForwardToEnrollware",
       "page": "bls.html"
     },
     {
@@ -6394,10 +6310,6 @@
     },
     {
       "href": "/classes/12776335.html#ForwardToEnrollware",
-      "page": "bls.html"
-    },
-    {
-      "href": "/classes/12774028.html#ForwardToEnrollware",
       "page": "bls.html"
     },
     {
@@ -7573,19 +7485,7 @@
       "page": "bls.html"
     },
     {
-      "href": "/classes/12776767.html#ForwardToEnrollware",
-      "page": "heartsaver.html"
-    },
-    {
-      "href": "/classes/12776012.html#ForwardToEnrollware",
-      "page": "heartsaver.html"
-    },
-    {
       "href": "/classes/12776003.html#ForwardToEnrollware",
-      "page": "heartsaver.html"
-    },
-    {
-      "href": "/classes/12776765.html#ForwardToEnrollware",
       "page": "heartsaver.html"
     },
     {
@@ -8003,13 +7903,113 @@
     {
       "href": "/classes/12776054.html#ForwardToEnrollware",
       "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776802.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776797.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776064.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776055.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776803.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776800.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776065.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776056.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776804.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776799.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776066.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776057.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776805.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776798.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775754.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776695.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776138.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775767.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776144.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775774.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776696.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776148.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775778.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12775779.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
+    },
+    {
+      "href": "/classes/12776140.html#ForwardToEnrollware",
+      "page": "heartsaver.html"
     }
   ],
   "summary": {
     "cards_missing_session_urls": 0,
-    "cards_with_forward_to_enrollware_flag": 29804,
+    "cards_with_forward_to_enrollware_flag": 4034,
     "hub_cards_linking_directly_to_enrollware": 0,
-    "hub_cards_linking_to_session_pages": 55827,
-    "hub_pages_scanned": 476
+    "hub_cards_linking_to_session_pages": 5286,
+    "hub_pages_scanned": 157
   }
 }

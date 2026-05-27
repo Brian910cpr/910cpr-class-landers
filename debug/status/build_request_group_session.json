@@ -3,13 +3,13 @@
   "worker": "build_request_group_session",
   "script": "scripts/build_request_group_session.py",
   "status": "done",
-  "last_run": "2026-05-21T10:13:02.123303-04:00",
+  "last_run": "2026-05-25T16:45:39.391778-04:00",
   "current_count": 1,
   "total_count": 1,
   "percent_complete": 100.0,
   "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\request_group_session.html",
-  "timestamp": "2026-05-21T10:13:02.123303-04:00",
-  "last_successful_run": "2026-05-21T10:13:02.123303-04:00",
+  "timestamp": "2026-05-25T16:45:39.391778-04:00",
+  "last_successful_run": "2026-05-25T16:45:39.391778-04:00",
   "inputs": [],
   "outputs": [
     "E:\\GitHub\\910cpr-class-landers\\docs\\request_group_session.html"

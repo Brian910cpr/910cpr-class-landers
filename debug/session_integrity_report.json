@@ -1,13 +1,14 @@
 {
-  "timestamp": "2026-05-21T10:07:11.737853",
+  "timestamp": "2026-05-25T16:39:58.646977",
   "class_report_path": "E:\\GitHub\\910cpr-class-landers\\data\\Class Report.xlsx",
-  "total_sessions_expected": 26010,
-  "total_sessions_built": 26010,
-  "total_future_sessions_built": 1282,
+  "total_sessions_expected": 26002,
+  "total_sessions_built": 26002,
+  "total_future_sessions_built": 1252,
   "missing_sessions": [],
   "extra_sessions": [],
   "future_orphan_sessions": [],
   "deleted_docs_data_json": [
+    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\public_schedule.json",
     "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json"
   ],
   "deleted_cached_schedule_files": [

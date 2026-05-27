@@ -1,51 +1,9 @@
 {
-  "generated_at": "2026-05-21T10:40:01.789512-04:00",
+  "generated_at": "2026-05-25T16:45:39.603907-04:00",
   "source_sessions_current_path": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
   "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
   "page_slug": "acls",
   "records": [
-    {
-      "session_id": "12774012",
-      "course_number": "209811",
-      "raw_course_name": "AHA ACLS HeartCode",
-      "start_datetime": "2026-05-23T08:45:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774012",
-      "included_in_schedule_future": true,
-      "normalized_hub": "acls",
-      "normalized_tab": "acls-heartcode",
-      "included_in_acls_hub": true,
-      "exclusion_reason": null,
-      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
-    },
-    {
-      "session_id": "12773997",
-      "course_number": "209811",
-      "raw_course_name": "AHA ACLS HeartCode",
-      "start_datetime": "2026-05-25T08:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12773997",
-      "included_in_schedule_future": true,
-      "normalized_hub": "acls",
-      "normalized_tab": "acls-heartcode",
-      "included_in_acls_hub": true,
-      "exclusion_reason": null,
-      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
-    },
-    {
-      "session_id": "13295711",
-      "course_number": "241108",
-      "raw_course_name": "AHA ACLS Provider (Initial)",
-      "start_datetime": "2026-05-29T14:00:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=13295711",
-      "included_in_schedule_future": true,
-      "normalized_hub": "acls",
-      "normalized_tab": "acls-provider",
-      "included_in_acls_hub": true,
-      "exclusion_reason": null,
-      "match_reason": "course_code:AHA_ACLS_PROVIDER_INITIAL"
-    },
     {
       "session_id": "13295731",
       "course_number": "209818",
@@ -59,20 +17,6 @@
       "included_in_acls_hub": true,
       "exclusion_reason": null,
       "match_reason": "course_code:AHA_ACLS_PROVIDER_RENEWAL"
-    },
-    {
-      "session_id": "12774028",
-      "course_number": "209811",
-      "raw_course_name": "AHA ACLS HeartCode",
-      "start_datetime": "2026-06-01T08:30:00-04:00",
-      "location": "Wilmington; Shipyard Blvd",
-      "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774028",
-      "included_in_schedule_future": true,
-      "normalized_hub": "acls",
-      "normalized_tab": "acls-heartcode",
-      "included_in_acls_hub": true,
-      "exclusion_reason": null,
-      "match_reason": "course_code:AHA_ACLS_HEARTCODE"
     },
     {
       "session_id": "12774034",

@@ -24,7 +24,7 @@ if errorlevel 1 goto :fail
 python -m scripts.build_schedule
 if errorlevel 1 goto :fail
 
-python -m scripts.audit_stale_sessions --warn-only
+python -m scripts.audit_stale_sessions --cleanup --warn-only
 if errorlevel 1 goto :fail
 
 python -m scripts.build_landers --workers 6
@@ -60,7 +60,7 @@ if errorlevel 1 goto :fail
 python -m scripts.seo_entity_audits
 if errorlevel 1 goto :fail
 
-python -m scripts.audit_stale_sessions --warn-only
+python -m scripts.audit_stale_sessions --cleanup --warn-only
 if errorlevel 1 goto :fail
 
 echo ========================================

@@ -328,6 +328,46 @@ def load_schedule_future_sessions() -> list[dict]:
     return out
 
 
+def schedule_future_to_public_session(session: dict) -> dict | None:
+    session_id = str(session.get("session_id") or session.get("id") or "").strip()
+    if not session_id:
+        return None
+
+    start = session.get("_parsed_start") or parse_local_datetime(session.get("start_at", ""))
+    if start:
+        display_date = start.strftime("%B %d, %Y")
+        display_time = start.strftime("%I:%M %p").lstrip("0")
+    else:
+        display_date = ""
+        display_time = ""
+
+    course_name = str(session.get("course_name") or session.get("course") or session.get("title") or "CPR Class").strip()
+    location_name = clean_location_name(
+        str(session.get("location_display") or session.get("location_name") or session.get("location") or "").strip()
+    )
+    register_url = str(session.get("registration_url") or session.get("register_url") or session.get("registration_link") or "").strip()
+    course_id = str(session.get("course_id") or "").strip()
+    course_number = str(session.get("course_number") or "").strip()
+
+    return {
+        "session_id": session_id,
+        "course_id": course_id if is_valid_course_token(course_id) else "",
+        "course_number": course_number if is_valid_course_token(course_number) else "",
+        "course_name": course_name,
+        "course_slug": short_slug(str(session.get("course_slug") or course_name)),
+        "location_name": location_name or "Unknown Location",
+        "title": course_name,
+        "meta_description": str(session.get("description") or "").strip(),
+        "display_date": display_date,
+        "display_time": display_time,
+        "canonical": f"{SITE_BASE}/classes/{session_id}.html",
+        "local_path": f"/classes/{session_id}.html",
+        "register_url": register_url,
+        "schedule_url": build_exact_schedule_url(course_id, course_number),
+        "source_file": str(SCHEDULE_FUTURE_FILE),
+    }
+
+
 def build_future_course_aliases(session: dict) -> set[str]:
     aliases: set[str] = set()
     course_name = str(session.get("course_name", "")).strip()
@@ -963,13 +1003,18 @@ def build():
     )
     reporter.start(total=len(class_files))
 
-    sessions = []
+    parsed_class_page_sessions = []
     for path in class_files:
         parsed = parse_class_page(path)
         if parsed and parsed.get("course_name", "").strip().lower() != "course":
-            sessions.append(parsed)
+            parsed_class_page_sessions.append(parsed)
 
     future_sessions = load_schedule_future_sessions()
+    sessions = [
+        public_session
+        for public_session in (schedule_future_to_public_session(session) for session in future_sessions)
+        if public_session is not None
+    ]
 
     # Sort by best available date text, then session id
     sessions.sort(key=lambda s: (s.get("display_date", ""), s.get("display_time", ""), s.get("session_id", "")))
@@ -1244,7 +1289,8 @@ def build():
         pages_generated=3 + len(course_groups) + len(location_groups),
         counts={
             "class_pages_scanned": len(class_files),
-            "valid_class_pages": len(sessions),
+            "valid_class_pages": len(parsed_class_page_sessions),
+            "public_sessions_from_schedule_future": len(sessions),
             "course_pages": len(course_groups),
             "location_pages": len(location_groups),
             "sitemap_urls": len(deduped_urls),
@@ -1253,7 +1299,8 @@ def build():
     write_status_snapshot()
 
     print(f"Scanned class pages: {len(class_files)}")
-    print(f"Parsed valid class pages: {len(sessions)}")
+    print(f"Parsed valid class pages: {len(parsed_class_page_sessions)}")
+    print(f"Public sessions from schedule_future.json: {len(sessions)}")
     print(f"Built root index: {INDEX_FILE}")
     print(f"Built classes index: {CLASSES_INDEX_FILE}")
     print(f"Built courses index: {COURSES_INDEX_FILE}")
