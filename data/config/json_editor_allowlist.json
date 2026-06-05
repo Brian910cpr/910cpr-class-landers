@@ -1,0 +1,61 @@
+{
+  "files": [
+    {
+      "id": "free_time_scheduler_config",
+      "label": "Free-Time Scheduler Config",
+      "path": "docs/data/free_time_scheduler_config.json",
+      "mode": "editable",
+      "description": "Primary local scheduler configuration and feature flags.",
+      "backup_required": true
+    },
+    {
+      "id": "customer_facing_offers",
+      "label": "Customer-Facing Offers",
+      "path": "docs/data/customer_facing_offers.json",
+      "mode": "read_only",
+      "description": "Generated requestable offer output. Regenerate from scheduler instead of editing directly.",
+      "backup_required": true
+    },
+    {
+      "id": "canonical_schedule_from_class_report",
+      "label": "Canonical Schedule From Class Report",
+      "path": "docs/data/canonical_schedule_from_class_report.json",
+      "mode": "read_only",
+      "description": "Generated canonical Class Report schedule source.",
+      "backup_required": true
+    },
+    {
+      "id": "extracted_course_ids_root",
+      "label": "Extracted Course IDs",
+      "path": "extracted_course_ids.json",
+      "mode": "read_only",
+      "description": "Raw extracted Enrollware course IDs, if present.",
+      "backup_required": false
+    },
+    {
+      "id": "extracted_course_ids_data",
+      "label": "Extracted Course IDs",
+      "path": "data/enrollware/extracted_course_ids.json",
+      "mode": "read_only",
+      "description": "Raw extracted Enrollware course IDs, if present.",
+      "backup_required": false
+    },
+    {
+      "id": "course_catalog_map",
+      "label": "Curated Course Catalog Map",
+      "path": "docs/data/course_catalog_map.json",
+      "mode": "editable",
+      "description": "Curated derivative map for public/course catalog metadata.",
+      "backup_required": true
+    },
+    {
+      "id": "hot_sync_active",
+      "label": "Free-Time Hot-Sync Active",
+      "path": "data/runtime/free_time_scheduler/hot_sync_active.json",
+      "mode": "editable",
+      "description": "Runtime hot-sync active records. Editable only when the file exists and explicit allowlist entry remains enabled.",
+      "backup_required": true,
+      "only_if_exists": true
+    }
+  ]
+}

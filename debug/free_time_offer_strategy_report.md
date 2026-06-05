@@ -1,0 +1,282 @@
+# Free-Time Offer Strategy Report
+
+- Generated at: 2026-06-05T09:25:49.412722-04:00
+- Courses: 4
+- Customer-facing offers: 30
+- Suppressed options: 4027
+- Normal hours only: False
+- Global minimum customer notice minutes: 120
+- Overnight anchors allowed: True
+- Private DoNotSchedule URL: [REDACTED]
+
+## Offer Frequency Assignments
+- bls: core_bls (explicit course_offer_overrides entry); gap=10; same-day reoffer=True; notice=120 (group); public=True; suppressed=False
+- bls-renewal: core_bls (explicit course_offer_overrides entry); gap=10; same-day reoffer=True; notice=120 (group); public=True; suppressed=False
+- heartcode-bls-skills: core_bls (explicit course_offer_overrides entry); gap=10; same-day reoffer=True; notice=120 (group); public=True; suppressed=False
+- heartsaver-fa-cpr-aed: standard_heartsaver (explicit course_offer_overrides entry); gap=24; same-day reoffer=False; notice=240 (group); public=True; suppressed=False
+
+## Offers By Course
+- bls (AHA BLS Provider): 8
+  - Max offers allowed: 8
+  - Horizon spread enabled: True
+  - Valid candidates by horizon bucket: {'next_7_days': 17, 'days_8_to_21': 68, 'days_22_to_45': 54, 'days_46_to_60': 53, 'days_61_to_90': 210}
+  - Selected offers by horizon bucket: {'next_7_days': 1, 'days_8_to_21': 1, 'days_22_to_45': 2, 'days_46_to_60': 2, 'days_61_to_90': 2}
+  - Unused bucket slots: {'next_7_days': 0, 'days_8_to_21': 0, 'days_22_to_45': 0, 'days_46_to_60': 0, 'days_61_to_90': 0}
+  - Fill-from-earliest count: 0
+  - Final selected offers by month: {'2026-06': 3, '2026-07': 3, '2026-08': 2}
+  - 2026-06-11T12:45:00-04:00 to 2026-06-11T15:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=next_7_days
+  - 2026-06-23T12:45:00-04:00 to 2026-06-23T15:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_8_to_21
+  - 2026-06-30T12:45:00-04:00 to 2026-06-30T15:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_22_to_45
+  - 2026-07-02T12:45:00-04:00 to 2026-07-02T15:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_22_to_45
+  - 2026-07-21T12:45:00-04:00 to 2026-07-21T15:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_46_to_60
+  - 2026-07-23T12:45:00-04:00 to 2026-07-23T15:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_46_to_60
+  - 2026-08-05T00:00:00-04:00 to 2026-08-05T03:00:00-04:00 | next_day_anchor | Request This Time | bucket=days_61_to_90
+  - 2026-08-05T12:00:00-04:00 to 2026-08-05T15:00:00-04:00 | next_day_anchor | Request This Time | bucket=days_61_to_90
+- bls-renewal (AHA BLS Renewal): 8
+  - Max offers allowed: 8
+  - Horizon spread enabled: True
+  - Valid candidates by horizon bucket: {'next_7_days': 18, 'days_8_to_21': 69, 'days_22_to_45': 54, 'days_46_to_60': 53, 'days_61_to_90': 210}
+  - Selected offers by horizon bucket: {'next_7_days': 1, 'days_8_to_21': 1, 'days_22_to_45': 2, 'days_46_to_60': 2, 'days_61_to_90': 2}
+  - Unused bucket slots: {'next_7_days': 0, 'days_8_to_21': 0, 'days_22_to_45': 0, 'days_46_to_60': 0, 'days_61_to_90': 0}
+  - Fill-from-earliest count: 0
+  - Final selected offers by month: {'2026-06': 3, '2026-07': 3, '2026-08': 2}
+  - 2026-06-11T12:45:00-04:00 to 2026-06-11T14:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=next_7_days
+  - 2026-06-23T12:45:00-04:00 to 2026-06-23T14:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_8_to_21
+  - 2026-06-30T12:45:00-04:00 to 2026-06-30T14:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_22_to_45
+  - 2026-07-02T12:45:00-04:00 to 2026-07-02T14:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_22_to_45
+  - 2026-07-21T12:45:00-04:00 to 2026-07-21T14:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_46_to_60
+  - 2026-07-23T12:45:00-04:00 to 2026-07-23T14:45:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_46_to_60
+  - 2026-08-05T00:00:00-04:00 to 2026-08-05T02:00:00-04:00 | next_day_anchor | Request This Time | bucket=days_61_to_90
+  - 2026-08-05T12:00:00-04:00 to 2026-08-05T14:00:00-04:00 | next_day_anchor | Request This Time | bucket=days_61_to_90
+- heartcode-bls-skills (HeartCode BLS Skills): 8
+  - Max offers allowed: 8
+  - Horizon spread enabled: True
+  - Valid candidates by horizon bucket: {'next_7_days': 24, 'days_8_to_21': 68, 'days_22_to_45': 84, 'days_46_to_60': 60, 'days_61_to_90': 210}
+  - Selected offers by horizon bucket: {'next_7_days': 1, 'days_8_to_21': 1, 'days_22_to_45': 2, 'days_46_to_60': 2, 'days_61_to_90': 2}
+  - Unused bucket slots: {'next_7_days': 0, 'days_8_to_21': 0, 'days_22_to_45': 0, 'days_46_to_60': 0, 'days_61_to_90': 0}
+  - Fill-from-earliest count: 0
+  - Final selected offers by month: {'2026-06': 3, '2026-07': 3, '2026-08': 2}
+  - 2026-06-05T14:15:00-04:00 to 2026-06-05T15:00:00-04:00 | stack_after_existing_session | Check This Time | bucket=next_7_days
+  - 2026-06-22T14:45:00-04:00 to 2026-06-22T15:30:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_8_to_21
+  - 2026-06-29T14:45:00-04:00 to 2026-06-29T15:30:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_22_to_45
+  - 2026-07-01T14:45:00-04:00 to 2026-07-01T15:30:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_22_to_45
+  - 2026-07-22T14:45:00-04:00 to 2026-07-22T15:30:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_46_to_60
+  - 2026-07-24T20:30:00-04:00 to 2026-07-24T21:15:00-04:00 | stack_after_existing_session | Check This Time | bucket=days_46_to_60
+  - 2026-08-05T00:00:00-04:00 to 2026-08-05T00:45:00-04:00 | next_day_anchor | Request This Time | bucket=days_61_to_90
+  - 2026-08-05T12:00:00-04:00 to 2026-08-05T12:45:00-04:00 | next_day_anchor | Request This Time | bucket=days_61_to_90
+- heartsaver-fa-cpr-aed (AHA Heartsaver First Aid CPR AED): 6
+  - Max offers allowed: 6
+  - Horizon spread enabled: True
+  - Valid candidates by horizon bucket: {'next_7_days': 8, 'days_8_to_21': 54, 'days_22_to_45': 0, 'days_46_to_90': 232}
+  - Selected offers by horizon bucket: {'next_7_days': 2, 'days_8_to_21': 2, 'days_46_to_90': 2}
+  - Unused bucket slots: {'next_7_days': 0, 'days_8_to_21': 0, 'days_22_to_45': 2, 'days_46_to_90': 0}
+  - Fill-from-earliest count: 0
+  - Final selected offers by month: {'2026-06': 4, '2026-08': 2}
+  - 2026-06-08T09:00:00-04:00 to 2026-06-08T11:30:00-04:00 | later_seed_anchor | Request This Time | bucket=next_7_days
+  - 2026-06-09T09:00:00-04:00 to 2026-06-09T11:30:00-04:00 | next_day_anchor | Request This Time | bucket=next_7_days
+  - 2026-06-21T01:00:00-04:00 to 2026-06-21T03:30:00-04:00 | later_seed_anchor | Request This Time | bucket=days_8_to_21
+  - 2026-06-13T20:00:00-04:00 to 2026-06-13T22:30:00-04:00 | next_day_anchor | Request This Time | bucket=days_8_to_21
+  - 2026-08-01T20:00:00-04:00 to 2026-08-01T22:30:00-04:00 | next_day_anchor | Request This Time | bucket=days_46_to_90
+  - 2026-08-02T20:00:00-04:00 to 2026-08-02T22:30:00-04:00 | next_day_anchor | Request This Time | bucket=days_46_to_90
+
+## Suppressed Options
+- bls 2026-06-05T01:00:00-04:00: suppressed because offer is inside group-specific minimum customer notice window
+- bls 2026-06-05T05:00:00-04:00: suppressed because offer is inside group-specific minimum customer notice window
+- bls 2026-06-05T08:30:00-04:00: suppressed because offer is inside group-specific minimum customer notice window
+- bls 2026-06-05T09:00:00-04:00: suppressed because offer is inside group-specific minimum customer notice window
+- bls 2026-06-05T09:15:00-04:00: suppressed because offer is inside group-specific minimum customer notice window
+- bls 2026-06-05T12:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-05T12:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-05T14:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-05T14:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-05T15:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-05T16:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-05T18:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-05T20:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-05T20:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T00:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T06:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-05T14:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T01:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T05:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T06:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T06:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T08:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T09:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T09:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T12:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T12:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T14:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T14:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T15:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T16:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T18:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T20:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-06T20:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-07T00:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-07T01:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-07T14:45:00-04:00: Rejected because only 0 minutes are available before next block 'Brian'; 150 minutes are required.
+- bls 2026-06-07T16:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-07T20:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-08T00:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-08T06:15:00-04:00: Rejected because only 15 minutes are available after previous block 'Brian'; 105 minutes are required.
+- bls 2026-06-07T14:45:00-04:00: Rejected because only 0 minutes are available before next block 'Brian'; 150 minutes are required.
+- bls 2026-06-08T01:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-08T05:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-08T06:15:00-04:00: Rejected because only 15 minutes are available after previous block 'Brian'; 105 minutes are required.
+- bls 2026-06-10T01:00:00-04:00: Rejected because only 105 minutes are available before next block 'Brian'; 150 minutes are required.
+- bls 2026-06-10T02:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T05:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T08:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T09:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T09:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T12:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T12:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T14:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T14:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T15:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T16:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T18:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T18:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T20:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-10T20:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-11T00:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-11T01:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-11T05:15:00-04:00: Rejected because only 0 minutes are available before next block 'AHA Heartsaver® First Aid CPR AED – Blended'; 15 minutes are required.
+- bls 2026-06-11T08:30:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-11 8:30 AM.
+- bls 2026-06-11T09:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-11 8:30 AM.
+- bls 2026-06-11T09:30:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 11:45 AM.
+- bls 2026-06-11T12:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 11:45 AM.
+- bls 2026-06-11T14:15:00-04:00: Rejected because only 0 minutes are available before next block 'AHA BLS HeartCode®'; 15 minutes are required.
+- bls 2026-06-11T14:45:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 5:30 PM.
+- bls 2026-06-11T15:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 5:30 PM.
+- bls 2026-06-11T16:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 5:30 PM.
+- bls 2026-06-11T18:30:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-11 6:15 PM.
+- bls 2026-06-11T20:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-11 6:15 PM.
+- bls 2026-06-11T20:30:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-12T00:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-12T06:15:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-12 8:30 AM.
+- bls 2026-06-11T14:45:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 5:30 PM.
+- bls 2026-06-12T01:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-12T02:45:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-12T05:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian, adr: Brian.
+- bls 2026-06-12T05:15:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian, adr: Brian.
+- bls 2026-06-12T06:15:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-12 8:30 AM.
+- bls 2026-06-12T08:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T09:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T09:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T09:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T12:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T12:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T14:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T15:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T16:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T18:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T18:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T20:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-12T20:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-13T00:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-13T01:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-21T14:45:00-04:00: Rejected because only 0 minutes are available before next block 'Brian'; 150 minutes are required.
+- bls 2026-06-21T16:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-21T20:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-22T00:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-22T06:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-21T14:45:00-04:00: Rejected because only 0 minutes are available before next block 'Brian'; 150 minutes are required.
+- bls 2026-06-22T01:00:00-04:00: Rejected because it overlaps blocking event(s): adr: Brian.
+- bls 2026-06-22T05:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T06:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T08:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T09:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T09:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T12:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T12:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T14:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T14:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T15:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T16:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T18:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T20:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-22T20:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-23T00:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-23T01:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-23T05:15:00-04:00: Rejected because only 0 minutes are available before next block 'AHA BLS HeartCode®'; 15 minutes are required.
+- bls 2026-06-23T06:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 8:30 AM.
+- bls 2026-06-23T08:30:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 8:30 AM.
+- bls 2026-06-23T09:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 8:30 AM.
+- bls 2026-06-23T09:30:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-23 9:15 AM.
+- bls 2026-06-23T12:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 11:45 AM.
+- bls 2026-06-23T14:15:00-04:00: Rejected because only 0 minutes are available before next block 'AHA BLS HeartCode®'; 15 minutes are required.
+- bls 2026-06-23T15:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 5:30 PM.
+- bls 2026-06-23T16:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 5:30 PM.
+- bls 2026-06-23T18:30:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-23 6:15 PM.
+- bls 2026-06-23T20:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-23 6:15 PM.
+- bls 2026-06-24T01:00:00-04:00: Rejected because only 105 minutes are available before next block 'Brian'; 150 minutes are required.
+- bls 2026-06-24T02:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T05:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T08:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T09:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T09:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T12:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T12:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T14:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T14:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T15:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T16:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T18:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T18:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T20:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-24T20:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-25T00:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-25T01:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-25T05:15:00-04:00: Rejected because only 0 minutes are available before next block 'AHA Heartsaver® First Aid CPR AED – Blended'; 15 minutes are required.
+- bls 2026-06-25T08:30:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-25 8:30 AM.
+- bls 2026-06-25T09:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-25 8:30 AM.
+- bls 2026-06-25T09:30:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-25 11:45 AM.
+- bls 2026-06-25T12:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-25 11:45 AM.
+- bls 2026-06-25T14:15:00-04:00: Rejected because only 0 minutes are available before next block 'AHA BLS HeartCode®'; 15 minutes are required.
+- bls 2026-06-25T15:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-25 5:30 PM.
+- bls 2026-06-25T16:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-25 5:30 PM.
+- bls 2026-06-25T18:30:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-25 6:15 PM.
+- bls 2026-06-25T20:00:00-04:00: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-25 6:15 PM.
+- bls 2026-06-26T05:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T05:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T08:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T09:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T09:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T09:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T12:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T12:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T14:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T14:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T15:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T16:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T18:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T20:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T20:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T00:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T06:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-26T14:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T01:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T05:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T06:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T06:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T08:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T09:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T09:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T12:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T12:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T14:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T14:45:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T15:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T16:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T18:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T20:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-27T20:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-28T00:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-28T01:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-29T05:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-29T08:30:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-29T09:00:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-29T09:15:00-04:00: suppressed because same-program gap against real canonical session
+- bls 2026-06-29T12:00:00-04:00: suppressed because same-program gap against real canonical session

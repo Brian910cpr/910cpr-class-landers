@@ -474,7 +474,11 @@
   function inferSessionStart(element) {
     if (!element) return null;
 
-    const existing = parseSessionStartValue(element.getAttribute("data-session-start"));
+    const existing = parseSessionStartValue(
+      element.getAttribute("data-session-start") ||
+      element.getAttribute("data-start") ||
+      element.getAttribute("data-requested-start")
+    );
     if (existing) return existing;
 
     const timeText =
@@ -653,8 +657,15 @@
     const timeNode = Array.from(pill.querySelectorAll(".slug-pill-chip")).find((chip) => !chip.classList.contains("slug-pill-chip-location"));
     const buttonNode = pill.querySelector(".slug-pill-actions .button");
     const hintNode = pill.querySelector(".slug-pill-hint");
+    const isRequestable = pill.classList.contains("slug-requestable-offer") || pill.getAttribute("data-offer-source") === "customer_facing_offers";
+    const offerSource = pill.getAttribute("data-offer-source") || (buttonNode ? buttonNode.getAttribute("data-offer-source") : "") || "";
+    const realEnrollwareSession = pill.getAttribute("data-real-enrollware-session") || (buttonNode ? buttonNode.getAttribute("data-real-enrollware-session") : "") || "";
+    const courseKey = pill.getAttribute("data-course-key") || (buttonNode ? buttonNode.getAttribute("data-course-key") : "") || "";
+    const requestedStart = pill.getAttribute("data-requested-start") || (buttonNode ? buttonNode.getAttribute("data-requested-start") : "") || "";
+    const locationName = pill.getAttribute("data-location-name") || (buttonNode ? buttonNode.getAttribute("data-location-name") : "") || "";
 
     return {
+      isRequestable,
       dateHtml: dateNode ? dateNode.outerHTML : "",
       title: titleNode ? titleNode.textContent.trim() : "",
       subtitle: subtitleNode ? subtitleNode.textContent.trim() : "",
@@ -668,9 +679,15 @@
       sessionStart: start ? start.toISOString() : "",
       sessionEnd: pill.getAttribute("data-end") || pill.getAttribute("data-session-end") || "",
       sessionDate: start ? formatSessionDateKey(start) : "",
+      sortTime: start ? start.getTime() : Number.MAX_SAFE_INTEGER,
       certifyingBody: pill.getAttribute("data-certifying-body") || "",
       certifyingLogo: pill.getAttribute("data-certifying-logo") || "",
-      rowHref: pill.getAttribute("data-row-href") || (buttonNode ? (buttonNode.getAttribute("href") || "") : ""),
+      rowHref: isRequestable ? "" : (pill.getAttribute("data-row-href") || (buttonNode ? (buttonNode.getAttribute("href") || "") : "")),
+      offerSource,
+      realEnrollwareSession,
+      courseKey,
+      requestedStart,
+      locationName,
     };
   }
 
@@ -716,8 +733,11 @@
       const groups = [];
       const byKey = new Map();
 
-      pills.forEach((pill) => {
-        const row = extractTimeRowData(pill);
+      const rows = pills
+        .map(extractTimeRowData)
+        .sort((a, b) => a.sortTime - b.sortTime);
+
+      rows.forEach((row) => {
         const key = row.sessionDate || row.title || row.dateHtml;
         if (!byKey.has(key)) {
           const group = {
@@ -730,12 +750,15 @@
           byKey.set(key, group);
           groups.push(group);
         }
-        byKey.get(key).rows.push(row);
+        const groupRows = byKey.get(key).rows;
+        groupRows.push(row);
+        groupRows.sort((a, b) => a.sortTime - b.sortTime);
       });
 
       list.innerHTML = groups.map((group, groupIndex) => {
+        group.rows.sort((a, b) => a.sortTime - b.sortTime);
         const rowsMarkup = group.rows.map((row) => `
-          <div class="slug-time-row" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}"${row.rowHref ? ` data-row-href="${escapeHtml(row.rowHref)}" role="link" tabindex="0" aria-label="${escapeHtml(rowBookingLabel(row, group.title))}"` : ""}>
+          <div class="slug-time-row${row.isRequestable ? " slug-requestable-offer" : ""}" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}"${row.isRequestable ? ` data-offer-source="${escapeHtml(row.offerSource)}" data-real-enrollware-session="${escapeHtml(row.realEnrollwareSession)}" data-course-key="${escapeHtml(row.courseKey)}" data-requested-start="${escapeHtml(row.requestedStart || row.sessionStart)}" data-location-name="${escapeHtml(row.locationName || row.location)}"` : ""}${row.rowHref ? ` data-row-href="${escapeHtml(row.rowHref)}" role="link" tabindex="0" aria-label="${escapeHtml(rowBookingLabel(row, group.title))}"` : ""}>
             <div class="slug-time-copy">
               <div class="slug-pill-meta-row slug-time-meta">
                 ${row.time ? `<span class="slug-time-value">${escapeHtml(row.time)}</span>` : ""}
@@ -745,7 +768,11 @@
             </div>
             <div class="slug-time-actions">
               ${row.hint ? `<div class="slug-pill-hint">${escapeHtml(row.hint)}</div>` : ""}
-              ${row.href ? `<a class="button small primary" href="${escapeHtml(row.href)}" data-original-href="${escapeHtml(row.originalHref || row.href)}" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}">${escapeHtml(row.buttonText)}</a>` : ""}
+              ${row.href ? (
+                row.isRequestable
+                  ? `<a class="button small secondary" href="${escapeHtml(row.href)}" data-offer-source="${escapeHtml(row.offerSource)}" data-real-enrollware-session="${escapeHtml(row.realEnrollwareSession)}" data-course-key="${escapeHtml(row.courseKey)}" data-requested-start="${escapeHtml(row.requestedStart || row.sessionStart)}" data-location-name="${escapeHtml(row.locationName || row.location)}">${escapeHtml(row.buttonText)}</a>`
+                  : `<a class="button small primary" href="${escapeHtml(row.href)}" data-original-href="${escapeHtml(row.originalHref || row.href)}" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}">${escapeHtml(row.buttonText)}</a>`
+              ) : ""}
             </div>
           </div>
         `).join("");
@@ -1007,6 +1034,76 @@
     });
   }
 
+  function requestableStatusElement(row) {
+    let status = row && row.querySelector(".slug-requestable-status");
+    if (!row || status) return status;
+    status = document.createElement("div");
+    status.className = "slug-pill-hint slug-requestable-status";
+    status.setAttribute("aria-live", "polite");
+    const actions = row.querySelector(".slug-pill-actions") || row;
+    actions.appendChild(status);
+    return status;
+  }
+
+  function setRequestableStatus(button, message, isError) {
+    const row = button.closest(".slug-requestable-offer") || button.closest(".slug-pill");
+    const status = requestableStatusElement(row);
+    if (!status) return;
+    status.textContent = message || "";
+    status.hidden = !message;
+    status.dataset.status = isError ? "error" : "info";
+  }
+
+  function requestablePayload(button) {
+    const row = button.closest(".slug-requestable-offer") || button.closest(".slug-pill");
+    return {
+      course_key: button.getAttribute("data-course-key") || (row && row.getAttribute("data-course-key")) || "",
+      requested_start: button.getAttribute("data-requested-start") || (row && row.getAttribute("data-requested-start")) || "",
+      location_name: button.getAttribute("data-location-name") || (row && row.getAttribute("data-location-name")) || "",
+      source_page: currentHubSlug(),
+      hub_slug: currentHubSlug(),
+      offer_source: button.getAttribute("data-offer-source") || (row && row.getAttribute("data-offer-source")) || "",
+    };
+  }
+
+  function handleRequestableResponse(button, payload) {
+    if (payload && payload.enrollware_enroll_url) {
+      button.textContent = "Book Seat";
+      button.href = payload.enrollware_enroll_url;
+      button.classList.remove("secondary");
+      button.classList.add("primary");
+      button.setAttribute("data-real-enrollware-session", "true");
+      setRequestableStatus(button, payload.message || "Booking link ready.", false);
+      return;
+    }
+
+    if (payload && payload.dry_run_available) {
+      setRequestableStatus(button, payload.message || "Preview only: this time passed recheck, but Enrollware creation is not wired yet.", false);
+      return;
+    }
+
+    if (payload && payload.available === false) {
+      setRequestableStatus(button, payload.message || "That time is no longer available. Please choose another option.", true);
+      return;
+    }
+
+    setRequestableStatus(button, "That time could not be verified. Please choose another option.", true);
+  }
+
+  function bindRequestableOfferChecks() {
+    document.addEventListener("click", (event) => {
+      const button = event.target && event.target.closest
+        ? event.target.closest('a[data-offer-source="customer_facing_offers"][data-real-enrollware-session="false"]')
+        : null;
+      if (!button) return;
+      if (button.getAttribute("data-offer-click-target") === "worker") {
+        return;
+      }
+      event.preventDefault();
+      setRequestableStatus(button, "This requestable time is a preview. Online registration opens after availability is checked.", false);
+    });
+  }
+
   function initializeScopes() {
     document.querySelectorAll("[data-tabs]").forEach((scope) => {
       const active = scope.querySelector(".tab-btn.active:not([hidden]), .slug-quick-pick.active:not([hidden]), .tab-panel.active:not([hidden])");
@@ -1052,6 +1149,7 @@
 
   bindTriggers();
   bindClickableRows();
+  bindRequestableOfferChecks();
   window.addEventListener("hashchange", () => activateTabFromHash({ scroll: true }));
   window.addEventListener("resize", () => refreshCuratedOfferHeights(document));
   if (document.readyState === "loading") {

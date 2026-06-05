@@ -1,10 +1,14 @@
 import json
 import re
+import sys
 from pathlib import Path
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from html import unescape
 from collections import defaultdict
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.build_status import BuildStatusReporter
 from scripts.build_course_landers import COURSE_SESSION_ALIASES, TITLE_OVERRIDES
@@ -22,6 +26,7 @@ CLASSES_INDEX_FILE = CLASSES_DIR / "index.html"
 COURSES_INDEX_FILE = COURSES_DIR / "index.html"
 SITEMAP_FILE = DOCS_DIR / "sitemap.xml"
 SCHEDULE_FUTURE_FILE = DOCS_DIR / "data" / "schedule_future.json"
+CANONICAL_CLASS_REPORT_FILE = DOCS_DIR / "data" / "canonical_schedule_from_class_report.json"
 REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
 
 SITE_BASE = "https://www.910cpr.com"
@@ -313,9 +318,17 @@ def course_description(course_name: str) -> str:
 
 
 def load_schedule_future_sessions() -> list[dict]:
-    if not SCHEDULE_FUTURE_FILE.exists():
+    source_file = SCHEDULE_FUTURE_FILE
+    if CANONICAL_CLASS_REPORT_FILE.exists():
+        try:
+            canonical = json.loads(CANONICAL_CLASS_REPORT_FILE.read_text(encoding="utf-8"))
+            if canonical.get("build", {}).get("source_mode") == "class_report_authoritative":
+                source_file = CANONICAL_CLASS_REPORT_FILE
+        except Exception:
+            source_file = SCHEDULE_FUTURE_FILE
+    if not source_file.exists():
         return []
-    payload = json.loads(SCHEDULE_FUTURE_FILE.read_text(encoding="utf-8"))
+    payload = json.loads(source_file.read_text(encoding="utf-8"))
     sessions = payload.get("sessions", []) if isinstance(payload, dict) else []
     out: list[dict] = []
     for session in sessions:
@@ -323,9 +336,20 @@ def load_schedule_future_sessions() -> list[dict]:
             continue
         enriched = dict(session)
         enriched["_parsed_start"] = parse_local_datetime(enriched.get("start_at", ""))
+        enriched["_source_file"] = str(source_file)
         out.append(enriched)
     out.sort(key=lambda item: ((item.get("_parsed_start") or datetime.max.replace(tzinfo=LOCAL_TZ)), str(item.get("session_id", ""))))
     return out
+
+
+def public_session_source_label(sessions: list[dict]) -> str:
+    if not sessions:
+        return str(SCHEDULE_FUTURE_FILE)
+    source = str(sessions[0].get("_source_file") or SCHEDULE_FUTURE_FILE)
+    try:
+        return str(Path(source).relative_to(ROOT))
+    except Exception:
+        return source
 
 
 def schedule_future_to_public_session(session: dict) -> dict | None:
@@ -346,6 +370,19 @@ def schedule_future_to_public_session(session: dict) -> dict | None:
         str(session.get("location_display") or session.get("location_name") or session.get("location") or "").strip()
     )
     register_url = str(session.get("registration_url") or session.get("register_url") or session.get("registration_link") or "").strip()
+    status = str(session.get("session_status") or "").strip().lower()
+    if status not in {"published", "active"}:
+        return None
+    if not re.match(r"^https://coastalcprtraining\.enrollware\.com/enroll\?(?:.*&)?id=\d+(?:&.*)?$", register_url):
+        return None
+    if session.get("is_full") is True:
+        return None
+    try:
+        seats = session.get("available_seats")
+        if seats not in (None, "") and int(seats) <= 0:
+            return None
+    except Exception:
+        pass
     course_id = str(session.get("course_id") or "").strip()
     course_number = str(session.get("course_number") or "").strip()
 
@@ -364,7 +401,7 @@ def schedule_future_to_public_session(session: dict) -> dict | None:
         "local_path": f"/classes/{session_id}.html",
         "register_url": register_url,
         "schedule_url": build_exact_schedule_url(course_id, course_number),
-        "source_file": str(SCHEDULE_FUTURE_FILE),
+        "source_file": str(session.get("_source_file") or SCHEDULE_FUTURE_FILE),
     }
 
 
@@ -1010,6 +1047,7 @@ def build():
             parsed_class_page_sessions.append(parsed)
 
     future_sessions = load_schedule_future_sessions()
+    future_session_source = public_session_source_label(future_sessions)
     sessions = [
         public_session
         for public_session in (schedule_future_to_public_session(session) for session in future_sessions)
@@ -1290,7 +1328,8 @@ def build():
         counts={
             "class_pages_scanned": len(class_files),
             "valid_class_pages": len(parsed_class_page_sessions),
-            "public_sessions_from_schedule_future": len(sessions),
+            "public_sessions_from_canonical_source": len(sessions),
+            "public_session_source": future_session_source,
             "course_pages": len(course_groups),
             "location_pages": len(location_groups),
             "sitemap_urls": len(deduped_urls),
@@ -1300,7 +1339,8 @@ def build():
 
     print(f"Scanned class pages: {len(class_files)}")
     print(f"Parsed valid class pages: {len(parsed_class_page_sessions)}")
-    print(f"Public sessions from schedule_future.json: {len(sessions)}")
+    print(f"Public sessions source: {future_session_source}")
+    print(f"Public sessions from canonical source: {len(sessions)}")
     print(f"Built root index: {INDEX_FILE}")
     print(f"Built classes index: {CLASSES_INDEX_FILE}")
     print(f"Built courses index: {COURSES_INDEX_FILE}")

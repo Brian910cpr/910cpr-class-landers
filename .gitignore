@@ -3,3 +3,13 @@ data/schedule.json
 # Public site builds should consume docs/data/schedule_future.json or smaller docs/data outputs.
 data/sessions_current.json
 docs/data/public_schedule.json
+# 910CPR Free-Time Scheduler local secrets
+docs/data/free_time_scheduler_secrets.local.json
+.env
+.env.local
+.dev.vars
+worker/.dev.vars
+data/private/
+docs/data/private/
+*.local.xlsx
+data/runtime/free_time_scheduler/

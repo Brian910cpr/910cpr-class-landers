@@ -1,0 +1,10 @@
+# Local-only example. Copy to worker/.dev.vars for local Wrangler testing.
+# Do not commit worker/.dev.vars or paste private calendar URLs here.
+
+CREATION_ENABLED=false
+DRY_RUN=true
+ALLOW_PUBLIC_CREATION=false
+
+# For local slug lookup testing only. Populate in your shell instead of committing
+# live JSON here:
+# OFFER_DATA_JSON=<contents of docs/data/customer_facing_offers.json>

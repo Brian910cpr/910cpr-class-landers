@@ -1,12 +1,20 @@
 from __future__ import annotations
 
 import json
+import base64
+import hashlib
+import hmac
+import os
 import re
+import sys
 from datetime import datetime
 from html import escape, unescape
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.build_metadata import apply_build_metadata, current_build_metadata
 from scripts.build_status import BuildStatusReporter
@@ -26,6 +34,9 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
+CANONICAL_CLASS_REPORT_PATH = ROOT / "docs" / "data" / "canonical_schedule_from_class_report.json"
+CUSTOMER_FACING_OFFERS_PATH = ROOT / "docs" / "data" / "customer_facing_offers.json"
+FREE_TIME_SCHEDULER_CONFIG_PATH = ROOT / "docs" / "data" / "free_time_scheduler_config.json"
 REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
 OUTPUT_DIR = ROOT / "docs"
 STATE_DIR = ROOT / "data" / "state"
@@ -62,6 +73,73 @@ PRIVATE_HINTS = (
     "custom session",
     "tbd",
 )
+BLS_REQUESTABLE_COURSE_KEYS = {"bls", "bls-renewal", "heartcode-bls-skills"}
+BLS_TAB_REQUESTABLE_COURSE_KEYS = {
+    "bls-provider": "bls",
+    "bls-renewal": "bls-renewal",
+    "bls-heartcode": "heartcode-bls-skills",
+}
+
+
+def authoritative_schedule_path() -> Path:
+    if CANONICAL_CLASS_REPORT_PATH.exists():
+        try:
+            payload = json.loads(CANONICAL_CLASS_REPORT_PATH.read_text(encoding="utf-8"))
+            if payload.get("build", {}).get("source_mode") == "class_report_authoritative":
+                return CANONICAL_CLASS_REPORT_PATH
+        except Exception:
+            pass
+    return SCHEDULE_PATH
+
+
+def schedule_source_label(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT)).replace("\\", "/")
+    except Exception:
+        return str(path)
+
+
+def load_authoritative_schedule() -> tuple[list[dict[str, Any]], Path]:
+    source_path = authoritative_schedule_path()
+    schedule = json.loads(source_path.read_text(encoding="utf-8"))
+    sessions = schedule.get("sessions", []) if isinstance(schedule, dict) else []
+    return [session for session in sessions if isinstance(session, dict)], source_path
+
+
+def load_customer_facing_offers() -> dict[str, list[dict[str, Any]]]:
+    if not CUSTOMER_FACING_OFFERS_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(CUSTOMER_FACING_OFFERS_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+
+    courses = payload.get("courses", []) if isinstance(payload, dict) else []
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for course in courses:
+        if not isinstance(course, dict):
+            continue
+        course_key = normalize_space(course.get("course_key"))
+        course_title = normalize_space(course.get("course_title"))
+        course_display_name = normalize_space(course.get("course_display_name"))
+        options = course.get("offered_options", [])
+        if not course_key or not isinstance(options, list):
+            continue
+        for option in options:
+            if not isinstance(option, dict):
+                continue
+            if normalize_space(option.get("session_status")) != "proposed":
+                continue
+            offer = dict(option)
+            offer["course_key"] = normalize_space(offer.get("course_key")) or course_key
+            offer["course_title"] = normalize_space(offer.get("course_title")) or course_title
+            offer["course_display_name"] = normalize_space(offer.get("course_display_name")) or course_display_name or offer["course_title"]
+            offer["enrollware_enroll_url"] = None
+            grouped.setdefault(offer["course_key"], []).append(offer)
+
+    for course_offers in grouped.values():
+        course_offers.sort(key=lambda offer: parse_dt(offer.get("start_time")) or datetime.max.replace(tzinfo=TZ))
+    return grouped
 
 
 def parse_dt(value: str | None) -> datetime | None:
@@ -90,6 +168,81 @@ def clean_location(value: str | None) -> str:
 
 def normalize_space(value: str | None) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def load_free_time_scheduler_config() -> dict[str, Any]:
+    if not FREE_TIME_SCHEDULER_CONFIG_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(FREE_TIME_SCHEDULER_CONFIG_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def b64url_json(payload: dict[str, Any]) -> str:
+    raw = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+
+def offer_link_signing_secret(config: dict[str, Any]) -> str:
+    target = config.get("offer_click_target", {}) if isinstance(config, dict) else {}
+    env_name = normalize_space(target.get("signing_secret_env")) or "OFFER_LINK_SIGNING_SECRET"
+    return os.environ.get(env_name, "")
+
+
+def build_offer_token(offer: dict[str, Any], *, hub_slug: str, config: dict[str, Any]) -> tuple[str, bool]:
+    payload = {
+        "v": 1,
+        "offer_id": normalize_space(offer.get("offer_id") or offer.get("page_slug")),
+        "course_key": normalize_space(offer.get("course_key")),
+        "course_display_name": normalize_space(offer.get("course_display_name") or offer.get("course_title")),
+        "requested_start": normalize_space(offer.get("start_time")),
+        "requested_end": normalize_space(offer.get("end_time")),
+        "location_name": normalize_space(offer.get("location_name") or offer.get("location_address")),
+        "hub_slug": hub_slug,
+        "source_page": hub_slug,
+        "offer_source": "customer_facing_offers",
+    }
+    body = b64url_json(payload)
+    target = config.get("offer_click_target", {}) if isinstance(config, dict) else {}
+    if not target.get("sign_links", True):
+        return body, False
+    secret = offer_link_signing_secret(config)
+    if not secret:
+        raise RuntimeError(
+            "offer_click_target.sign_links is true but the signing secret is missing. "
+            "Set the configured signing secret env var or disable Worker link generation."
+        )
+    signature = hmac.new(secret.encode("utf-8"), body.encode("ascii"), hashlib.sha256).digest()
+    return f"{body}.{base64.urlsafe_b64encode(signature).decode('ascii').rstrip('=')}", True
+
+
+def requestable_offer_click_target(offer: dict[str, Any], *, hub_slug: str) -> dict[str, Any]:
+    config = load_free_time_scheduler_config()
+    target = config.get("offer_click_target", {}) if isinstance(config, dict) else {}
+    enabled = bool(target.get("enabled")) and normalize_space(target.get("mode")) == "worker"
+    base_url = normalize_space(target.get("base_url"))
+    offer_slug = normalize_space(offer.get("offer_slug") or offer.get("page_slug"))
+    fallback = {
+        "href": "#request-this-time",
+        "mode": "local_static",
+        "token": "",
+        "signed": False,
+        "offer_slug": offer_slug,
+        "enabled": False,
+    }
+    if not enabled or not base_url or not offer_slug:
+        return fallback
+    base = base_url.split("/check-time", 1)[0].rstrip("/")
+    return {
+        "href": f"{base}/o/{quote(offer_slug)}",
+        "mode": "worker",
+        "token": "",
+        "signed": False,
+        "offer_slug": offer_slug,
+        "enabled": True,
+    }
 
 
 def has_public_raw_location(session: dict[str, Any]) -> bool:
@@ -321,6 +474,9 @@ def matches_tab(session: dict[str, Any], tab: dict[str, Any], *, page_slug: str 
     haystack = haystack_raw.lower()
     normalized_haystack = normalize_match_text(haystack_raw)
 
+    if page_slug == "bls" and tab.get("id") == "bls-heartcode" and "bls" not in normalized_haystack:
+        return False
+
     certifying_bodies = {normalize_space(body).upper() for body in tab.get("certifying_bodies", []) if normalize_space(body)}
     if certifying_bodies:
         session_bodies = {
@@ -480,16 +636,97 @@ def build_hub_debug_records(page: dict[str, Any], sessions: list[dict[str, Any]]
     return records
 
 
-def write_hub_runtime_debug(page: dict[str, Any], sessions: list[dict[str, Any]], *, now: datetime) -> list[dict[str, Any]]:
+def rendered_real_session_count(page: dict[str, Any], sessions: list[dict[str, Any]], *, now: datetime) -> int:
+    rendered_ids: set[str] = set()
+    rendered_without_id = 0
+    for tab in page.get("tabs", []):
+        for session in sessions:
+            enriched = enrich_session_for_page(session, page, tab, now=now)
+            if not enriched:
+                continue
+            session_id = normalize_space(enriched.get("session_id"))
+            if session_id:
+                rendered_ids.add(session_id)
+            else:
+                rendered_without_id += 1
+    return len(rendered_ids) + rendered_without_id
+
+
+def hub_group_schedule_summary(
+    page: dict[str, Any],
+    sessions: list[dict[str, Any]],
+    requestable_offers: list[dict[str, Any]],
+    *,
+    now: datetime,
+) -> dict[str, dict[str, Any]]:
+    if str(page.get("slug") or "") != "bls":
+        return {}
+
+    offers_by_course_key: dict[str, list[dict[str, Any]]] = {}
+    for offer in requestable_offers:
+        offers_by_course_key.setdefault(normalize_space(offer.get("course_key")), []).append(offer)
+
+    summary: dict[str, dict[str, Any]] = {}
+    for tab in page.get("tabs", []):
+        tab_id = str(tab.get("id") or "")
+        real_ids: set[str] = set()
+        real_without_id = 0
+        for session in sessions:
+            enriched = enrich_session_for_page(session, page, tab, now=now)
+            if not enriched:
+                continue
+            session_id = normalize_space(enriched.get("session_id"))
+            if session_id:
+                real_ids.add(session_id)
+            else:
+                real_without_id += 1
+
+        course_key = BLS_TAB_REQUESTABLE_COURSE_KEYS.get(tab_id, "")
+        requestable_count = len(offers_by_course_key.get(course_key, []))
+        real_count = len(real_ids) + real_without_id
+        combined_rows = sorted(
+            [
+                *[enrich_session_for_page(session, page, tab, now=now) for session in sessions],
+                *requestable_offers_for_tab(page, tab, requestable_offers),
+            ],
+            key=lambda row: schedule_row_start(row or {}),
+        )
+        combined_rows = [row for row in combined_rows if row]
+        _, default_strategy = prioritize_bls_default_rows(combined_rows, load_free_time_scheduler_config())
+        summary[tab_id] = {
+            "label": tab.get("label"),
+            "requestable_course_key": course_key,
+            "real_canonical_sessions_shown_count": real_count,
+            "requestable_offers_shown_count": requestable_count,
+            "combined_schedule_rows_count": real_count + requestable_count,
+            **default_strategy,
+        }
+    return summary
+
+
+def write_hub_runtime_debug(
+    page: dict[str, Any],
+    sessions: list[dict[str, Any]],
+    *,
+    now: datetime,
+    source_path: Path,
+    requestable_offers: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     records = build_hub_debug_records(page, sessions, now=now)
+    page_requestable_offers = requestable_offers or []
+    requestable_summary = summarize_requestable_offers(page_requestable_offers)
+    group_summary = hub_group_schedule_summary(page, sessions, page_requestable_offers, now=now)
     output_path = RUNTIME_DIR / f"{page.get('slug')}_hub_debug.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(
             {
                 "generated_at": now.isoformat(),
-                "source_schedule_future_path": str(SCHEDULE_PATH),
+                "source_schedule_path": schedule_source_label(source_path),
                 "page_slug": page.get("slug"),
+                "real_canonical_sessions_shown_count": rendered_real_session_count(page, sessions, now=now),
+                **requestable_summary,
+                "schedule_rows_by_course_group": group_summary,
                 "records": records,
             },
             indent=2,
@@ -544,7 +781,7 @@ def session_current_to_future_shape(session: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def write_acls_runtime_debug(page: dict[str, Any], future_sessions: list[dict[str, Any]], *, now: datetime) -> None:
+def write_acls_runtime_debug(page: dict[str, Any], future_sessions: list[dict[str, Any]], *, now: datetime, source_path: Path) -> None:
     current_payload = json.loads(SESSIONS_CURRENT_PATH.read_text(encoding="utf-8")) if SESSIONS_CURRENT_PATH.exists() else {}
     current_sessions = current_payload.get("sessions", []) if isinstance(current_payload.get("sessions"), list) else []
     future_by_id = {
@@ -601,7 +838,7 @@ def write_acls_runtime_debug(page: dict[str, Any], future_sessions: list[dict[st
     payload = {
         "generated_at": now.isoformat(),
         "source_sessions_current_path": str(SESSIONS_CURRENT_PATH),
-        "source_schedule_future_path": str(SCHEDULE_PATH),
+        "source_schedule_path": schedule_source_label(source_path),
         "page_slug": page.get("slug"),
         "records": records,
     }
@@ -610,7 +847,7 @@ def write_acls_runtime_debug(page: dict[str, Any], future_sessions: list[dict[st
     output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def write_heartsaver_runtime_debug(page: dict[str, Any], future_sessions: list[dict[str, Any]], *, now: datetime) -> None:
+def write_heartsaver_runtime_debug(page: dict[str, Any], future_sessions: list[dict[str, Any]], *, now: datetime, source_path: Path) -> None:
     records: list[dict[str, Any]] = []
     for session in sort_sessions(future_sessions):
         if not is_future_session(session, now=now):
@@ -639,7 +876,7 @@ def write_heartsaver_runtime_debug(page: dict[str, Any], future_sessions: list[d
 
     payload = {
         "generated_at": now.isoformat(),
-        "source_schedule_future_path": str(SCHEDULE_PATH),
+        "source_schedule_path": schedule_source_label(source_path),
         "page_slug": page.get("slug"),
         "records": records,
     }
@@ -913,8 +1150,6 @@ def render_curated_offer_item(
     enrolled_count = session_enrolled_count(session)
     benefit = offer_benefit_copy(tab, session)
     time_range = format_time_line(start_dt)
-    if end_dt:
-        time_range = f"{time_range} to {format_time_line(end_dt)}"
     detail_parts = [
         f"Class runs {time_range}.",
         f"Location: {location}.",
@@ -997,16 +1232,18 @@ def render_inventory_section(
     section_class: str = "",
     page_slug: str = "",
     tab_label: str = "",
+    initial_visible: int | None = None,
 ) -> str:
     selected = sessions[:limit] if limit is not None else sessions
-    cards = "\n".join(render_session_card(session, group_mode=group_mode, page_slug=page_slug) for session in selected)
+    cards = "\n".join(render_schedule_row_card(session, group_mode=group_mode, page_slug=page_slug) for session in selected)
     if not cards and empty_copy:
         cards = f"<div class=\"slug-section-empty\"><p>{escape(empty_copy)}</p></div>"
     reveal_attrs = ""
     if not group_mode and sessions:
         reveal_label = tab_label or title
+        visible_count = initial_visible if initial_visible is not None else HUB_INITIAL_VISIBLE_LIMIT
         reveal_attrs = (
-            f' data-initial-visible="{HUB_INITIAL_VISIBLE_LIMIT}"'
+            f' data-initial-visible="{visible_count}"'
             f' data-reveal-increment="{HUB_REVEAL_INCREMENT}"'
             f' data-reveal-label="{escape(reveal_label, quote=True)}"'
         )
@@ -1019,6 +1256,193 @@ def render_inventory_section(
   <div class="slug-pill-list"{reveal_attrs}>
     {cards}
   </div>
+</section>
+""".strip()
+
+
+def render_schedule_row_card(row: dict[str, Any], *, group_mode: bool, page_slug: str) -> str:
+    if row.get("_requestable_offer"):
+        return render_requestable_offer_card(row, hub_slug=page_slug)
+    return render_session_card(row, group_mode=group_mode, page_slug=page_slug)
+
+
+def requestable_offers_for_page(page: dict[str, Any], grouped_offers: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
+    if str(page.get("slug") or "") != "bls":
+        return []
+
+    offers: list[dict[str, Any]] = []
+    for course_key in sorted(BLS_REQUESTABLE_COURSE_KEYS):
+        offers.extend(grouped_offers.get(course_key, []))
+    return sorted(offers, key=lambda offer: parse_dt(offer.get("start_time")) or datetime.max.replace(tzinfo=TZ))
+
+
+def requestable_offers_for_tab(page: dict[str, Any], tab: dict[str, Any], requestable_offers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    if str(page.get("slug") or "") != "bls":
+        return []
+    course_key = BLS_TAB_REQUESTABLE_COURSE_KEYS.get(str(tab.get("id") or ""))
+    if not course_key:
+        return []
+    selected = []
+    for offer in requestable_offers:
+        if normalize_space(offer.get("course_key")) == course_key:
+            row = dict(offer)
+            row["_requestable_offer"] = True
+            selected.append(row)
+    return sorted(selected, key=lambda offer: parse_dt(offer.get("start_time")) or datetime.max.replace(tzinfo=TZ))
+
+
+def schedule_row_start(row: dict[str, Any]) -> datetime:
+    value = row.get("start_time") if row.get("_requestable_offer") else row.get("start_at")
+    return parse_dt(value) or datetime.max.replace(tzinfo=TZ)
+
+
+def schedule_row_kind(row: dict[str, Any]) -> str:
+    if row.get("_requestable_offer"):
+        return "requestable"
+    return "real_seated" if session_enrolled_count(row) >= 1 else "real_empty"
+
+
+def real_gap_days(rows: list[dict[str, Any]]) -> int:
+    real_starts = sorted(schedule_row_start(row) for row in rows if not row.get("_requestable_offer"))
+    if len(real_starts) < 2:
+        return 999
+    gaps = [(after.date() - before.date()).days for before, after in zip(real_starts, real_starts[1:])]
+    return max(gaps) if gaps else 0
+
+
+def prioritize_bls_default_rows(rows: list[dict[str, Any]], config: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    strategy = config.get("hub_display_strategy", {}) if isinstance(config, dict) else {}
+    if not strategy.get("prefer_seated_real_classes", True):
+        return rows, {"default_visible_count": min(len(rows), HUB_INITIAL_VISIBLE_LIMIT), "hidden_requestable_count": 0}
+
+    minimum_real = int(strategy.get("minimum_real_rows_before_requestable", 3) or 3)
+    requestable_cap = int(strategy.get("max_requestable_rows_in_default_view_per_course", 3) or 3)
+    gap_threshold = int(strategy.get("show_requestable_when_real_gap_days_exceeds", 10) or 10)
+
+    seated = [row for row in rows if schedule_row_kind(row) == "real_seated"]
+    empty = [row for row in rows if schedule_row_kind(row) == "real_empty"]
+    requestable = [row for row in rows if schedule_row_kind(row) == "requestable"]
+    real_rows = [*seated, *empty]
+    largest_gap = real_gap_days(rows)
+    allow_requestable_default = (
+        len(real_rows) < minimum_real
+        or largest_gap > gap_threshold
+        or not real_rows
+    )
+    default_rows = [*seated, *empty]
+    if allow_requestable_default:
+        default_rows.extend(requestable[:requestable_cap])
+
+    seen = {id(row) for row in default_rows}
+    remainder = [row for row in sorted(rows, key=schedule_row_start) if id(row) not in seen]
+    ordered = [*default_rows, *remainder] if strategy.get("keep_full_interwoven_view_behind_show_more", True) else sorted(default_rows, key=schedule_row_start)
+    default_visible_count = len(default_rows)
+    hidden_requestable_count = max(0, len(requestable) - sum(1 for row in default_rows if row.get("_requestable_offer")))
+    return ordered, {
+        "default_visible_count": default_visible_count,
+        "real_seated_default_visible": len(seated),
+        "real_empty_default_visible": len(empty),
+        "requestable_default_visible": sum(1 for row in default_rows if row.get("_requestable_offer")),
+        "requestable_hidden_from_default": hidden_requestable_count,
+        "largest_real_gap_days": largest_gap,
+        "requestable_allowed_in_default": allow_requestable_default,
+    }
+
+
+def requestable_offer_month(offer: dict[str, Any]) -> str:
+    start_dt = parse_dt(offer.get("start_time"))
+    return start_dt.strftime("%Y-%m") if start_dt else "unknown"
+
+
+def summarize_requestable_offers(offers: list[dict[str, Any]]) -> dict[str, Any]:
+    by_course_key: dict[str, int] = {}
+    by_month: dict[str, int] = {}
+    for offer in offers:
+        course_key = normalize_space(offer.get("course_key")) or "unknown"
+        by_course_key[course_key] = by_course_key.get(course_key, 0) + 1
+        month_key = requestable_offer_month(offer)
+        by_month[month_key] = by_month.get(month_key, 0) + 1
+    return {
+        "requestable_offers_shown_count": len(offers),
+        "requestable_offers_by_course_key": dict(sorted(by_course_key.items())),
+        "requestable_offers_by_month": dict(sorted(by_month.items())),
+        "requestable_offers_did_not_create_docs_classes_landers": True,
+    }
+
+
+def render_requestable_offer_card(offer: dict[str, Any], *, hub_slug: str = "bls") -> str:
+    start_dt = parse_dt(offer.get("start_time"))
+    end_dt = parse_dt(offer.get("end_time"))
+    course_key = normalize_space(offer.get("course_key"))
+    title = normalize_space(offer.get("course_display_name") or offer.get("course_title")) or "BLS requestable time"
+    location = clean_location(offer.get("location_name") or offer.get("location_address"))
+    label = normalize_space(offer.get("customer_label")) or "Request This Time"
+    requested_start = escape(start_dt.isoformat() if start_dt else normalize_space(offer.get("start_time")), quote=True)
+    requested_end = escape(end_dt.isoformat() if end_dt else normalize_space(offer.get("end_time")), quote=True)
+    course_key_attr = escape(course_key, quote=True)
+    click_target = requestable_offer_click_target(offer, hub_slug=hub_slug or "bls")
+    button_href = escape(click_target["href"], quote=True)
+    click_mode = escape(click_target["mode"], quote=True)
+    offer_token = escape(click_target["token"], quote=True)
+    offer_slug = escape(click_target.get("offer_slug") or normalize_space(offer.get("offer_slug") or offer.get("page_slug")), quote=True)
+    token_signed = "true" if click_target["signed"] else "false"
+    data_attrs = (
+        'data-offer-source="customer_facing_offers" '
+        'data-real-enrollware-session="false" '
+        f'data-course-key="{course_key_attr}" '
+        f'data-requested-start="{requested_start}" '
+        f'data-start="{requested_start}" '
+        f'data-session-start="{requested_start}" '
+        f'data-offer-click-target="{click_mode}" '
+        f'data-offer-slug="{offer_slug}" '
+        f'data-offer-token="{offer_token}" '
+        f'data-offer-token-signed="{token_signed}" '
+        f'data-location-name="{escape(location, quote=True)}"'
+    )
+    time_range = format_time_line(start_dt)
+    notice_minutes = offer.get("minimum_customer_notice_minutes_used")
+    notice_copy = ""
+    if notice_minutes not in (None, ""):
+        notice_copy = f'<span class="slug-pill-chip">Notice window: {escape(str(notice_minutes))} min</span>'
+
+    return f"""
+<article class="slug-pill slug-requestable-offer" {data_attrs} data-requested-end="{requested_end}">
+  <div class="slug-pill-date">
+    <div class="slug-pill-month">{format_month(start_dt)}</div>
+    <div class="slug-pill-day">{format_day(start_dt)}</div>
+    <div class="slug-pill-weekday">{format_weekday(start_dt)}</div>
+  </div>
+  <div class="slug-pill-main">
+    <div class="slug-pill-title">{escape(format_date_line(start_dt))}</div>
+    <div class="slug-pill-meta-row">
+      <span class="slug-pill-chip">{escape(time_range)}</span>
+      <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
+      {notice_copy}
+    </div>
+    <div class="slug-pill-subtitle">{escape(title)}</div>
+  </div>
+  <div class="slug-pill-actions">
+    <a class="button small secondary" href="{button_href}" {data_attrs}>{escape(label)}</a>
+  </div>
+</article>
+""".strip()
+
+
+def render_requestable_offers_section(page: dict[str, Any], offers: list[dict[str, Any]]) -> str:
+    if str(page.get("slug") or "") != "bls" or not offers:
+        return ""
+
+    cards = "\n".join(render_requestable_offer_card(offer, hub_slug=str(page.get("slug") or "bls")) for offer in offers)
+    return f"""
+<section class="slug-inventory-section slug-requestable-offers-section" id="request-this-time" aria-label="Requestable BLS times">
+  <div class="slug-inventory-head">
+    <h3>Need another BLS time?</h3>
+    <p>These times are based on current instructor availability and must be confirmed before booking.</p>
+  </div>
+  <div class="slug-pill-list slug-requestable-offer-list">
+    {cards}
+  </div>
+  <p class="slug-flexible-note">Requestable times are confirmed before a booking link is created.</p>
 </section>
 """.strip()
 
@@ -1120,7 +1544,15 @@ def full_schedule_short_label(page: dict[str, Any]) -> str:
     return labels.get(str(page.get("slug") or ""), "Class")
 
 
-def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]], *, active: bool, group_mode: bool) -> str:
+def render_tab_panel(
+    page: dict[str, Any],
+    tab: dict[str, Any],
+    sessions: list[dict[str, Any]],
+    *,
+    active: bool,
+    group_mode: bool,
+    requestable_offers: list[dict[str, Any]] | None = None,
+) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
     keep_empty_tab_ids = {
         "heartsaver": {"hs-pediatric-ip", "hs-pediatric-bl"},
@@ -1168,7 +1600,12 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
 </section>
 """.strip()
 
-    upcoming_sessions = sort_by_start(sessions)
+    tab_requestable_offers = requestable_offers_for_tab(page, tab, requestable_offers or [])
+    upcoming_sessions = sorted([*sort_by_start(sessions), *tab_requestable_offers], key=schedule_row_start)
+    default_visible_count: int | None = None
+    if str(page.get("slug") or "") == "bls":
+        upcoming_sessions, default_strategy = prioritize_bls_default_rows(upcoming_sessions, load_free_time_scheduler_config())
+        default_visible_count = int(default_strategy.get("default_visible_count") or len(upcoming_sessions))
 
     section_html: list[str] = []
     curated_html = render_curated_offers_section(page, tab, sessions)
@@ -1179,13 +1616,18 @@ def render_tab_panel(page: dict[str, Any], tab: dict[str, Any], sessions: list[d
         section_html.append(
             render_inventory_section(
                 "Upcoming dates",
-                "Browse upcoming class times here, then use Book Seat for the exact session you want.",
+                (
+                    "Browse upcoming class times here. Some times are requestable and confirmed before a booking link is created."
+                    if tab_requestable_offers
+                    else "Browse upcoming class times here, then use Book Seat for the exact session you want."
+                ),
                 upcoming_sessions,
                 group_mode=group_mode,
                 limit=None,
                 section_class="slug-scheduled-section",
                 page_slug=str(page.get("slug") or ""),
                 tab_label=str(tab.get("label") or page.get("hero_title") or "class"),
+                initial_visible=default_visible_count,
             )
         )
     else:
@@ -1609,7 +2051,13 @@ def render_ecosystem_page(page: dict[str, Any], sessions: list[dict[str, Any]], 
 </html>"""
 
 
-def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_library: dict[str, dict[str, Any]]) -> str:
+def render_page(
+    page: dict[str, Any],
+    sessions: list[dict[str, Any]],
+    banner_library: dict[str, dict[str, Any]],
+    *,
+    requestable_offers: list[dict[str, Any]] | None = None,
+) -> str:
     if page.get("ecosystem_hub"):
         return render_ecosystem_page(page, sessions, banner_library)
 
@@ -1643,7 +2091,16 @@ def render_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_lib
 
     for index, (tab, matched) in enumerate(visible_tabs):
         buttons.append(render_tab_button(tab, active=index == 0))
-        panels.append(render_tab_panel(page, tab, matched, active=index == 0, group_mode=group_mode))
+        panels.append(
+            render_tab_panel(
+                page,
+                tab,
+                matched,
+                active=index == 0,
+                group_mode=group_mode,
+                requestable_offers=requestable_offers or [],
+            )
+        )
 
     tabs_html = (
         f"""
@@ -1723,7 +2180,8 @@ def clean_generated_html(html: str) -> str:
 
 def build() -> None:
     reporter = BuildStatusReporter("build_slug_hubs")
-    reporter.set_context(inputs=[MANIFEST_PATH, SCHEDULE_PATH], outputs=[OUTPUT_DIR])
+    schedule_source_path = authoritative_schedule_path()
+    reporter.set_context(inputs=[MANIFEST_PATH, schedule_source_path], outputs=[OUTPUT_DIR])
     reporter.waiting(total=0)
     manifest_payload = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     if isinstance(manifest_payload, dict):
@@ -1733,26 +2191,40 @@ def build() -> None:
         manifest = manifest_payload
         banner_library = {}
 
-    schedule = json.loads(SCHEDULE_PATH.read_text(encoding="utf-8"))
-    sessions = schedule.get("sessions", [])
+    sessions, schedule_source_path = load_authoritative_schedule()
+    grouped_customer_offers = load_customer_facing_offers()
     now = datetime.now(TZ)
-    build_meta = current_build_metadata("scripts/build_slug_hubs.py", "slug hub rebuild")
+    build_meta = current_build_metadata("scripts/build_slug_hubs.py", f"slug hub rebuild from {schedule_source_label(schedule_source_path)}")
 
     reporter.start(total=len(manifest))
     last_output: Path | None = None
     all_hub_debug_records: list[dict[str, Any]] = []
+    requestable_offer_summary_by_page: dict[str, dict[str, Any]] = {}
+    schedule_rows_by_page: dict[str, dict[str, Any]] = {}
     try:
         for index, page in enumerate(manifest, start=1):
-            html = render_page(page, sessions, banner_library)
+            page_requestable_offers = requestable_offers_for_page(page, grouped_customer_offers)
+            page_slug = str(page.get("slug") or "")
+            requestable_offer_summary_by_page[page_slug] = summarize_requestable_offers(page_requestable_offers)
+            schedule_rows_by_page[page_slug] = hub_group_schedule_summary(page, sessions, page_requestable_offers, now=now)
+            html = render_page(page, sessions, banner_library, requestable_offers=page_requestable_offers)
             html = apply_build_metadata(html, build_meta)
             html = clean_generated_html(html)
             last_output = OUTPUT_DIR / f"{page['slug']}.html"
             last_output.write_text(html, encoding="utf-8")
-            all_hub_debug_records.extend(write_hub_runtime_debug(page, sessions, now=now))
+            all_hub_debug_records.extend(
+                write_hub_runtime_debug(
+                    page,
+                    sessions,
+                    now=now,
+                    source_path=schedule_source_path,
+                    requestable_offers=page_requestable_offers,
+                )
+            )
             if page.get("slug") == "acls":
-                write_acls_runtime_debug(page, sessions, now=now)
+                write_acls_runtime_debug(page, sessions, now=now, source_path=schedule_source_path)
             if page.get("slug") == "heartsaver":
-                write_heartsaver_runtime_debug(page, sessions, now=now)
+                write_heartsaver_runtime_debug(page, sessions, now=now, source_path=schedule_source_path)
             reporter.update(current=index, total=len(manifest), last_output_file=last_output)
             print(f"Wrote {last_output}")
         consolidated_debug_path = ROOT / "debug" / "hub_session_classification.json"
@@ -1761,7 +2233,10 @@ def build() -> None:
             json.dumps(
                 {
                     "generated_at": now.isoformat(),
-                    "source_schedule_future_path": str(SCHEDULE_PATH),
+                    "source_schedule_path": schedule_source_label(schedule_source_path),
+                    "customer_facing_offers_path": schedule_source_label(CUSTOMER_FACING_OFFERS_PATH),
+                    "requestable_offer_summary_by_page": requestable_offer_summary_by_page,
+                    "schedule_rows_by_page": schedule_rows_by_page,
                     "records": all_hub_debug_records,
                 },
                 indent=2,
@@ -1775,7 +2250,11 @@ def build() -> None:
             total=len(manifest),
             last_output_file=last_output,
             pages_generated=len(manifest),
-            counts={"sessions_loaded": len(sessions), "slug_hub_pages": len(manifest)},
+            counts={
+                "sessions_loaded": len(sessions),
+                "slug_hub_pages": len(manifest),
+                "schedule_source": schedule_source_label(schedule_source_path),
+            },
         )
         write_status_snapshot()
     except Exception:

@@ -1,0 +1,127 @@
+{
+  "generated_at": "2026-06-05T07:54:08.087847-04:00",
+  "appointment_links_enabled": false,
+  "fail_closed": true,
+  "day_id_formula": "appointmentDayId = appointment_start_day_id + real calendar day offset from appointment_start_date",
+  "no_sparse_availability_day_counting": true,
+  "no_guessed_ids_used": true,
+  "day_id_tests": [
+    {
+      "label": "Brian 2026-06-21",
+      "passed": true,
+      "value": 260670,
+      "error": null,
+      "expected": 260670
+    },
+    {
+      "label": "Brian 2026-08-04",
+      "passed": true,
+      "value": 260714,
+      "error": null,
+      "expected": 260714
+    },
+    {
+      "label": "Brian 2026-08-14",
+      "passed": true,
+      "value": 260724,
+      "error": null,
+      "expected": 260724
+    },
+    {
+      "label": "Amy 2026-06-06",
+      "passed": true,
+      "value": 261393,
+      "error": null,
+      "expected": 261393
+    },
+    {
+      "label": "Amy 2026-06-07",
+      "passed": true,
+      "value": 261394,
+      "error": null,
+      "expected": 261394
+    },
+    {
+      "label": "Amy 2026-08-14",
+      "passed": true,
+      "value": 261462,
+      "error": null,
+      "expected": 261462
+    },
+    {
+      "label": "Nick 2026-06-06",
+      "passed": true,
+      "value": 261013,
+      "error": null,
+      "expected": 261013
+    },
+    {
+      "label": "Nick 2026-06-07",
+      "passed": true,
+      "value": 261014,
+      "error": null,
+      "expected": 261014
+    },
+    {
+      "label": "Nick 2026-08-14",
+      "passed": true,
+      "value": 261082,
+      "error": null,
+      "expected": 261082
+    }
+  ],
+  "url_tests": [
+    {
+      "label": "Brian 2026-08-14 12:45 PM bls",
+      "passed": true,
+      "value": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260724&startTime=12:45%20PM&courseId=209806",
+      "error": null,
+      "expected": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260724&startTime=12:45%20PM&courseId=209806"
+    }
+  ],
+  "fail_closed_tests": [
+    {
+      "label": "date before configured start date",
+      "passed": true,
+      "value": null,
+      "error": "requested date is before instructor appointment start date"
+    },
+    {
+      "label": "date after valid_through_date",
+      "passed": true,
+      "value": null,
+      "error": "requested date is after instructor valid_through_date"
+    },
+    {
+      "label": "unknown instructor",
+      "passed": true,
+      "value": null,
+      "error": "instructor day base is missing for Unknown"
+    },
+    {
+      "label": "missing course ID",
+      "passed": true,
+      "value": null,
+      "error": "course ID is missing for bls-renewal"
+    },
+    {
+      "label": "invalid requested_start",
+      "passed": true,
+      "value": null,
+      "error": "requested_start is invalid"
+    },
+    {
+      "label": "disabled outside explicit test mode",
+      "passed": true,
+      "value": null,
+      "error": "enrollware appointment links are disabled"
+    }
+  ],
+  "missing_course_ids": [
+    "bls-renewal",
+    "heartcode-bls-skills"
+  ],
+  "configured_course_ids": {
+    "bls": 209806
+  }
+}

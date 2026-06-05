@@ -1,0 +1,721 @@
+{
+  "generated_at": "2026-06-05T07:30:14.997827-04:00",
+  "enabled_publicly": false,
+  "rendered_on_hubs": false,
+  "start_date": "2026-08-01",
+  "max_days_shown": 30,
+  "calendar_counts": {
+    "adr_events_found": 504,
+    "brian_adr_blocks_found": 51,
+    "do_not_schedule_blocks_found": 1,
+    "merged_existing_enrollware_sessions": 298,
+    "hot_sync_entries_merged": 0
+  },
+  "by_course_key": {
+    "bls": {
+      "truly_open_days_found_after_start_date": 30,
+      "days_rejected_as_not_truly_open": 0,
+      "rejection_reasons_by_day": [],
+      "top_rejection_reasons": {},
+      "expanded_anchor_offers_generated": 208,
+      "anchor_offers_rejected": 2,
+      "first_10_truly_open_days": [
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-08-04",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-09",
+        "2026-08-10"
+      ],
+      "first_20_expanded_offers": [
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-01T05:00:00-04:00",
+          "end_time": "2026-08-01T08:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260801-0500",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-01T09:00:00-04:00",
+          "end_time": "2026-08-01T12:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260801-0900",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-01T12:00:00-04:00",
+          "end_time": "2026-08-01T15:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260801-1200",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-01T16:00:00-04:00",
+          "end_time": "2026-08-01T19:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260801-1600",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-01T20:00:00-04:00",
+          "end_time": "2026-08-01T23:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260801-2000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-02T01:00:00-04:00",
+          "end_time": "2026-08-02T04:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260802-0100",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-02T05:00:00-04:00",
+          "end_time": "2026-08-02T08:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260802-0500",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-02T09:00:00-04:00",
+          "end_time": "2026-08-02T12:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260802-0900",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-02T12:00:00-04:00",
+          "end_time": "2026-08-02T15:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260802-1200",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-02T16:00:00-04:00",
+          "end_time": "2026-08-02T19:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260802-1600",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-02T20:00:00-04:00",
+          "end_time": "2026-08-02T23:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260802-2000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-02T00:00:00-04:00",
+          "end_time": "2026-08-02T03:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260802-0000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-03T01:00:00-04:00",
+          "end_time": "2026-08-03T04:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260803-0100",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-03T05:00:00-04:00",
+          "end_time": "2026-08-03T08:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260803-0500",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-03T09:00:00-04:00",
+          "end_time": "2026-08-03T12:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260803-0900",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-03T12:00:00-04:00",
+          "end_time": "2026-08-03T15:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260803-1200",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-03T16:00:00-04:00",
+          "end_time": "2026-08-03T19:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260803-1600",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-03T20:00:00-04:00",
+          "end_time": "2026-08-03T23:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260803-2000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-03T00:00:00-04:00",
+          "end_time": "2026-08-03T03:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260803-0000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls",
+          "course_display_name": "AHA BLS Provider (Initial)",
+          "start_time": "2026-08-04T01:00:00-04:00",
+          "end_time": "2026-08-04T04:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-wilmington-20260804-0100",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        }
+      ]
+    },
+    "bls-renewal": {
+      "truly_open_days_found_after_start_date": 30,
+      "days_rejected_as_not_truly_open": 0,
+      "rejection_reasons_by_day": [],
+      "top_rejection_reasons": {},
+      "expanded_anchor_offers_generated": 208,
+      "anchor_offers_rejected": 2,
+      "first_10_truly_open_days": [
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-08-04",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-09",
+        "2026-08-10"
+      ],
+      "first_20_expanded_offers": [
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-01T05:00:00-04:00",
+          "end_time": "2026-08-01T07:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260801-0500",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-01T09:00:00-04:00",
+          "end_time": "2026-08-01T11:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260801-0900",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-01T12:00:00-04:00",
+          "end_time": "2026-08-01T14:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260801-1200",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-01T16:00:00-04:00",
+          "end_time": "2026-08-01T18:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260801-1600",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-01T20:00:00-04:00",
+          "end_time": "2026-08-01T22:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260801-2000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-02T01:00:00-04:00",
+          "end_time": "2026-08-02T03:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260802-0100",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-02T05:00:00-04:00",
+          "end_time": "2026-08-02T07:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260802-0500",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-02T09:00:00-04:00",
+          "end_time": "2026-08-02T11:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260802-0900",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-02T12:00:00-04:00",
+          "end_time": "2026-08-02T14:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260802-1200",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-02T16:00:00-04:00",
+          "end_time": "2026-08-02T18:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260802-1600",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-02T20:00:00-04:00",
+          "end_time": "2026-08-02T22:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260802-2000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-02T00:00:00-04:00",
+          "end_time": "2026-08-02T02:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260802-0000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-03T01:00:00-04:00",
+          "end_time": "2026-08-03T03:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260803-0100",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-03T05:00:00-04:00",
+          "end_time": "2026-08-03T07:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260803-0500",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-03T09:00:00-04:00",
+          "end_time": "2026-08-03T11:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260803-0900",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-03T12:00:00-04:00",
+          "end_time": "2026-08-03T14:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260803-1200",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-03T16:00:00-04:00",
+          "end_time": "2026-08-03T18:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260803-1600",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-03T20:00:00-04:00",
+          "end_time": "2026-08-03T22:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260803-2000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-03T00:00:00-04:00",
+          "end_time": "2026-08-03T02:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260803-0000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "bls-renewal",
+          "course_display_name": "AHA BLS Provider (Renewal)",
+          "start_time": "2026-08-04T01:00:00-04:00",
+          "end_time": "2026-08-04T03:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "bls-renewal-wilmington-20260804-0100",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        }
+      ]
+    },
+    "heartcode-bls-skills": {
+      "truly_open_days_found_after_start_date": 30,
+      "days_rejected_as_not_truly_open": 0,
+      "rejection_reasons_by_day": [],
+      "top_rejection_reasons": {},
+      "expanded_anchor_offers_generated": 210,
+      "anchor_offers_rejected": 0,
+      "first_10_truly_open_days": [
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-08-04",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-09",
+        "2026-08-10"
+      ],
+      "first_20_expanded_offers": [
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-01T01:00:00-04:00",
+          "end_time": "2026-08-01T01:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260801-0100",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-01T05:00:00-04:00",
+          "end_time": "2026-08-01T05:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260801-0500",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-01T09:00:00-04:00",
+          "end_time": "2026-08-01T09:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260801-0900",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-01T12:00:00-04:00",
+          "end_time": "2026-08-01T12:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260801-1200",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-01T16:00:00-04:00",
+          "end_time": "2026-08-01T16:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260801-1600",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-01T20:00:00-04:00",
+          "end_time": "2026-08-01T20:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260801-2000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-01T00:00:00-04:00",
+          "end_time": "2026-08-01T00:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260801-0000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-02T01:00:00-04:00",
+          "end_time": "2026-08-02T01:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260802-0100",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-02T05:00:00-04:00",
+          "end_time": "2026-08-02T05:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260802-0500",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-02T09:00:00-04:00",
+          "end_time": "2026-08-02T09:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260802-0900",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-02T12:00:00-04:00",
+          "end_time": "2026-08-02T12:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260802-1200",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-02T16:00:00-04:00",
+          "end_time": "2026-08-02T16:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260802-1600",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-02T20:00:00-04:00",
+          "end_time": "2026-08-02T20:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260802-2000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-02T00:00:00-04:00",
+          "end_time": "2026-08-02T00:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260802-0000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-03T01:00:00-04:00",
+          "end_time": "2026-08-03T01:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260803-0100",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-03T05:00:00-04:00",
+          "end_time": "2026-08-03T05:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260803-0500",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-03T09:00:00-04:00",
+          "end_time": "2026-08-03T09:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260803-0900",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-03T12:00:00-04:00",
+          "end_time": "2026-08-03T12:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260803-1200",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-03T16:00:00-04:00",
+          "end_time": "2026-08-03T16:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260803-1600",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        },
+        {
+          "course_key": "heartcode-bls-skills",
+          "course_display_name": "AHA BLS HeartCode®",
+          "start_time": "2026-08-03T20:00:00-04:00",
+          "end_time": "2026-08-03T20:45:00-04:00",
+          "location_name": "Wilmington Office",
+          "offer_slug": "heartcode-bls-skills-wilmington-20260803-2000",
+          "offer_frequency_group": "core_bls",
+          "report_only": true
+        }
+      ]
+    }
+  },
+  "cross_course_portability_audit": {
+    "canonical_class_report_inventory_hubs": [
+      "bls",
+      "acls",
+      "pals",
+      "heartsaver",
+      "arc",
+      "hsi",
+      "uscg-elementary-first-aid-cpr",
+      "group-training"
+    ],
+    "requestable_offer_hubs_currently_rendering": [
+      "bls"
+    ],
+    "course_keys_with_offer_frequency_group": [
+      "bls",
+      "bls-renewal",
+      "heartcode-bls-skills",
+      "heartsaver-fa-cpr-aed"
+    ],
+    "course_keys_with_enrollware_display_name_mapping": [
+      "bls",
+      "bls-renewal",
+      "heartcode-bls-skills"
+    ],
+    "normalization_alias_scope": "BLS aliases are implemented in free_time_scheduler.py for bls, bls-renewal, and heartcode-bls-skills.",
+    "hub_display_strategy_support": "Implemented for BLS tabs only in this pass.",
+    "not_yet_safely_wired": "Other hubs use canonical real inventory, but public requestable offer rendering and display-priority tuning are not generalized beyond BLS.",
+    "recommended_next_generalization": "ACLS/PALS, because their higher-value classes benefit most from seated-real prioritization and future instructor-priority rules."
+  },
+  "amy_parallel_instructor_design": {
+    "status": "design_only_not_implemented",
+    "instructor_profiles": "Add instructor-specific profiles with name, aliases, home/base location, and eligible calendars.",
+    "allowed_courses_by_instructor": "Define which course_keys Amy can teach independently from Brian.",
+    "availability_source_by_instructor": "Read Amy availability from her own calendar or availability feed.",
+    "preferred_anchor_rules": "Treat broad windows like 12:30-5:00 as ranked opportunity windows, not equal slots.",
+    "course_priority_rules": "Prefer ACLS/PALS Renewal/Initial around 1:30 before lower-priority HeartCode skills anchors.",
+    "fallback_suppression_rules": "Release lower-priority skills offers only after higher-priority options are no longer viable or intentionally suppressed."
+  }
+}

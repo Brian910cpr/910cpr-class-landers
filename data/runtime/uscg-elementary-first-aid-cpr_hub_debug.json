@@ -1,6 +1,12 @@
 {
-  "generated_at": "2026-05-25T16:45:39.603907-04:00",
-  "source_schedule_future_path": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
+  "generated_at": "2026-06-05T07:30:23.154268-04:00",
+  "source_schedule_path": "docs/data/canonical_schedule_from_class_report.json",
   "page_slug": "uscg-elementary-first-aid-cpr",
+  "real_canonical_sessions_shown_count": 13,
+  "requestable_offers_shown_count": 0,
+  "requestable_offers_by_course_key": {},
+  "requestable_offers_by_month": {},
+  "requestable_offers_did_not_create_docs_classes_landers": true,
+  "schedule_rows_by_course_group": {},
   "records": []
 }

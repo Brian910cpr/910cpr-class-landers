@@ -27,10 +27,14 @@ TZ = ZoneInfo("America/New_York")
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATA_FILE = ROOT / "docs" / "data" / "schedule_future.json"
+CANONICAL_CLASS_REPORT_DATA_FILE = ROOT / "docs" / "data" / "canonical_schedule_from_class_report.json"
 PRIMARY_FULL_DATA_FILE = ROOT / "data" / "sessions_current.json"
 FALLBACK_FULL_DATA_FILE = ROOT / "docs" / "data" / "schedule.json"
 FULL_DATA_FILE = PRIMARY_FULL_DATA_FILE if PRIMARY_FULL_DATA_FILE.exists() else FALLBACK_FULL_DATA_FILE
 OUTPUT_DIR = ROOT / "docs" / "classes"
+DEBUG_DIR = ROOT / "debug"
+RETAINED_CLASS_LANDERS_JSON = DEBUG_DIR / "retained_course_landers_report.json"
+RETAINED_CLASS_LANDERS_MD = DEBUG_DIR / "retained_course_landers_report.md"
 IMAGES_DIR = ROOT / "docs" / "images"
 REVIEWS_SOURCE = ROOT / "data" / "raw" / "reviews"
 COURSE_MAP_FILE = ROOT / "data" / "config" / "course_map.json"
@@ -190,6 +194,22 @@ def normalize_session_record(session: dict) -> dict:
     return normalized
 
 
+def load_sessions_from_file(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    if isinstance(data, dict):
+        raw_sessions = data.get("sessions", [])
+    elif isinstance(data, list):
+        raw_sessions = data
+    else:
+        raw_sessions = []
+    return [normalize_session_record(item) for item in raw_sessions if isinstance(item, dict)]
+
+
 def is_mapped(session: dict) -> bool:
     return str(session.get("mapping_status") or "").strip().lower() == "mapped"
 
@@ -347,6 +367,64 @@ def enrollware_url_for_session(session: dict) -> str:
         return register
     sid = str(session.get("session_id") or "").strip()
     return f"https://coastalcprtraining.enrollware.com/enroll?id={sid}" if sid else ""
+
+
+def verified_enrollware_url(url: str) -> bool:
+    return bool(re.match(r"^https://coastalcprtraining\.enrollware\.com/enroll\?(?:.*&)?id=\d+(?:&.*)?$", str(url or "").strip()))
+
+
+def public_indexable_session(session: dict, register_url: str) -> bool:
+    status = str(session.get("session_status") or "").strip().lower()
+    # Current Class Report-derived records use "active" for real Enrollware sessions.
+    # Treat that as published-equivalent only when a verified Enrollware enroll URL exists.
+    return status in {"published", "active"} and verified_enrollware_url(register_url)
+
+
+def session_lander_status(session: dict, register_url: str, dt: datetime | None, now_dt: datetime) -> str:
+    raw_status = str(session.get("session_status") or "").strip().lower()
+    if raw_status == "proposed":
+        return "proposed"
+    if any(token in raw_status for token in ("cancel", "removed", "deleted")):
+        return "cancelled_or_removed"
+    if dt and dt <= now_dt:
+        return "past_completed"
+    if is_cancelled_or_full(session):
+        return "published_closed"
+    if public_indexable_session(session, register_url):
+        return "published_upcoming"
+    return "published_closed"
+
+
+def status_is_indexable(status: str, register_url: str) -> bool:
+    return status == "published_upcoming" and verified_enrollware_url(register_url)
+
+
+def robots_for_lander_status(status: str, register_url: str) -> str:
+    if status_is_indexable(status, register_url):
+        return "index,follow"
+    if status == "proposed":
+        return "noindex,nofollow"
+    return "noindex,follow"
+
+
+def render_removed_redirect_page(target_url: str, course_display: str) -> str:
+    target = escape(target_url or "/schedule.html", quote=True)
+    title = escape(f"{course_display} moved | 910CPR")
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta http-equiv="refresh" content="0; url={target}">
+<link rel="canonical" href="https://www.910cpr.com{target if target.startswith('/') else '/schedule.html'}">
+</head>
+<body>
+<p>This session is no longer available. Continue to <a href="{target}">current matching options</a>.</p>
+</body>
+</html>
+"""
 
 
 def time_of_day_label(dt: datetime | None) -> str:
@@ -1285,6 +1363,124 @@ def render_past_current_inventory_html(upcoming_sessions: list[dict], course_url
 """.strip()
 
 
+def render_retained_course_lander_page(
+    *,
+    session_id: str,
+    course_display: str,
+    course_label: str,
+    city: str,
+    state: str,
+    type_page_url: str,
+    canonical_url: str,
+    inventory_html: str,
+    build_stamp: str,
+    build_meta,
+) -> str:
+    page_title = f"{seo_course_phrase(course_display)} Options in {city} {state} | 910CPR"
+    meta_description = (
+        f"Find current {course_label} options from 910CPR. "
+        "This course page preserves the original class path and routes visitors to current available dates."
+    )
+    html_doc = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{escape(page_title)}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="{escape(meta_description)}">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="{escape(canonical_url)}">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="stylesheet" href="/css/lander.css">
+{render_gtm_head()}
+</head>
+<body class="lander course-{short_slug(course_display)}">
+{render_gtm_body()}
+<div class="wrap">
+  <div class="page-shell">
+    <header class="site-brand-bar">
+      <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+        <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+        <span class="site-brand-wordmark">910CPR</span>
+      </a>
+    </header>
+
+    <div class="notice">You came here for this course. Current available options are shown below.</div>
+
+    <section class="hero">
+      <div class="date-badge">
+        <div class="date-month">NOW</div>
+        <div class="date-day">+</div>
+        <div class="date-weekday">More</div>
+      </div>
+      <div class="hero-main">
+        <div class="eyebrow">{escape(course_display)}</div>
+        <h1>Current {escape(course_label)} Options</h1>
+        <p class="subhead">This page routes you to current {escape(course_label)} options instead of an unavailable older class registration.</p>
+      </div>
+      <div class="hero-side">
+        <div class="trust-badge">
+          <strong>Current schedule first</strong>
+          <span>Choose an available class below or use the matching course hub for more options.</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="hero-details">
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">Course</div>
+          <div class="meta-value">{escape(course_display)}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Area</div>
+          <div class="meta-value">{escape(city)}, {escape(state)}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Status</div>
+          <div class="meta-value">Current options shown below</div>
+        </div>
+      </div>
+      <div class="cta-panel">
+        <p class="cta-panel-label">Need more options?</p>
+        <p class="cta-panel-copy">Use the matching course hub to compare current dates, locations, and request-time options.</p>
+        <div class="cta-row">
+          <a class="button primary" href="{escape(type_page_url, quote=True)}">Need more options?</a>
+        </div>
+      </div>
+    </div>
+
+    {inventory_html}
+
+    <section class="section-box">
+      <h2>About This Course</h2>
+      <p>{escape(audience_blurb(course_display))}</p>
+      <p>910CPR keeps older class paths useful by routing students to current course options when the original class ID is no longer active in the current schedule report.</p>
+    </section>
+
+    <div class="build-stamp">build: {escape(build_stamp)}</div>
+  </div>
+</div>
+<script>
+window.dataLayer = window.dataLayer || [];
+window.dataLayer.push({{
+  event: "page_context",
+  page_type: "retained_course_lander",
+  session_id: "{escape(session_id)}",
+  course_name: "{js_escape(course_display)}",
+  register_url: "",
+  course_page_url: "{escape(type_page_url)}",
+  build_stamp: "{escape(build_stamp)}"
+}});
+</script>
+<script src="/assets/live-sessions.js"></script>
+<script src="/assets/session-expiry.js"></script>
+</body>
+</html>
+"""
+    return apply_build_metadata(html_doc, build_meta)
+
+
 def clean_review_text(text: str) -> str:
     text = strip_html(text)
     text = normalize_whitespace(text)
@@ -1993,7 +2189,98 @@ def resolve_data_file(dataset: str, data_file: str | None) -> Path:
         return (ROOT / data_file).resolve()
     if dataset == "full":
         return FULL_DATA_FILE
+    if CANONICAL_CLASS_REPORT_DATA_FILE.exists():
+        try:
+            payload = json.loads(CANONICAL_CLASS_REPORT_DATA_FILE.read_text(encoding="utf-8"))
+            if payload.get("build", {}).get("source_mode") == "class_report_authoritative":
+                return CANONICAL_CLASS_REPORT_DATA_FILE
+        except Exception:
+            pass
     return DEFAULT_DATA_FILE
+
+
+def determine_course_review_needed(session: dict) -> bool:
+    if is_mapped(session):
+        return False
+    return not display_course_name(session.get("course_name", ""))
+
+
+def write_retained_course_landers_report(
+    data_file: Path,
+    canonical_sessions: list[dict],
+    render_sessions: list[dict],
+) -> dict:
+    active_ids = {str(session.get("session_id") or "").strip() for session in canonical_sessions if str(session.get("session_id") or "").strip()}
+    render_by_id = {str(session.get("session_id") or "").strip(): session for session in render_sessions if str(session.get("session_id") or "").strip()}
+    existing_page_ids = {path.stem for path in OUTPUT_DIR.glob("*.html") if path.name.lower() != "index.html"}
+
+    live_specific_class_pages = []
+    retained_course_landers = []
+    needs_review = []
+
+    for class_id in sorted(active_ids | existing_page_ids):
+        path = OUTPUT_DIR / f"{class_id}.html"
+        if class_id in active_ids:
+            live_specific_class_pages.append({
+                "class_id": class_id,
+                "path": str(path.relative_to(ROOT)).replace("\\", "/"),
+            })
+            continue
+
+        session = render_by_id.get(class_id)
+        item = {
+            "class_id": class_id,
+            "path": str(path.relative_to(ROOT)).replace("\\", "/"),
+            "reason": "class_id_missing_from_current_report",
+        }
+        if session and not determine_course_review_needed(session):
+            item["action"] = "converted_to_course_schedule_lander"
+            item["course_title"] = display_course_name(session.get("course_name", ""))
+            item["course_hub"] = course_type_url_for_session(session, session.get("course_name", ""))
+            retained_course_landers.append(item)
+        else:
+            item["action"] = "needs_review"
+            item["reason"] = "course type cannot be determined"
+            needs_review.append(item)
+
+    payload = {
+        "dataset_used": str(data_file.relative_to(ROOT)).replace("\\", "/"),
+        "pages_deleted_count": 0,
+        "live_specific_class_pages_count": len(live_specific_class_pages),
+        "retained_course_landers_count": len(retained_course_landers),
+        "needs_review_count": len(needs_review),
+        "live_specific_class_pages": live_specific_class_pages,
+        "retained_course_landers": retained_course_landers,
+        "needs_review": needs_review,
+    }
+    DEBUG_DIR.mkdir(parents=True, exist_ok=True)
+    RETAINED_CLASS_LANDERS_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    lines = [
+        "# Retained Course Landers Report",
+        "",
+        f"- Dataset used: {payload['dataset_used']}",
+        f"- Live specific class pages: {len(live_specific_class_pages)}",
+        f"- Retained course landers: {len(retained_course_landers)}",
+        f"- Needs review: {len(needs_review)}",
+        f"- Pages deleted: 0",
+        "",
+        "## Retained Course Landers",
+    ]
+    lines.extend(
+        [
+            f"- {item['path']}: class_id_missing_from_current_report; converted_to_course_schedule_lander; {item.get('course_title', 'Course')}"
+            for item in retained_course_landers[:500]
+        ]
+        or ["- None"]
+    )
+    if len(retained_course_landers) > 500:
+        lines.append(f"- ... {len(retained_course_landers) - 500} more")
+    lines.extend(["", "## Needs Review"])
+    lines.extend([f"- {item['path']}: {item['reason']}" for item in needs_review[:500]] or ["- None"])
+    if len(needs_review) > 500:
+        lines.append(f"- ... {len(needs_review) - 500} more")
+    RETAINED_CLASS_LANDERS_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return payload
 
 
 def main() -> None:
@@ -2030,15 +2317,46 @@ def main() -> None:
 
     data_file = resolve_data_file(args.dataset, args.data_file.strip() or None)
 
-    with open(data_file, "r", encoding="utf-8") as handle:
-        data = json.load(handle)
+    canonical_sessions = load_sessions_from_file(data_file)
+    historical_sessions = []
+    for source in (FULL_DATA_FILE, DEFAULT_DATA_FILE):
+        if source.resolve() != data_file.resolve():
+            historical_sessions.extend(load_sessions_from_file(source))
 
-    sessions = [normalize_session_record(item) for item in data["sessions"]]
+    canonical_ids = {str(session.get("session_id") or "").strip() for session in canonical_sessions if str(session.get("session_id") or "").strip()}
+    render_by_id = {str(session.get("session_id") or "").strip(): session for session in historical_sessions if str(session.get("session_id") or "").strip()}
+    for session in canonical_sessions:
+        sid = str(session.get("session_id") or "").strip()
+        if sid:
+            render_by_id[sid] = session
+
+    existing_page_ids = {path.stem for path in OUTPUT_DIR.glob("*.html") if path.name.lower() != "index.html"}
+    for class_id in existing_page_ids:
+        if class_id not in render_by_id:
+            render_by_id[class_id] = {
+                "session_id": class_id,
+                "course_name": "",
+                "location_display": "",
+                "session_status": "retained_course_lander",
+                "_retained_course_lander": True,
+                "_needs_review": True,
+            }
+
+    sessions = []
+    for session_id in sorted(canonical_ids | existing_page_ids):
+        session = dict(render_by_id[session_id])
+        if session_id not in canonical_ids:
+            session["_retained_course_lander"] = True
+            session["session_status"] = "retained_course_lander"
+            session["registration_url"] = ""
+        sessions.append(session)
+
+    retained_report = write_retained_course_landers_report(data_file, canonical_sessions, sessions)
     all_reviews = load_reviews()
     build_meta = current_build_metadata("scripts/build_landers.py", str(data_file))
     build_stamp = build_meta.visible
     now_dt = datetime.now(TZ)
-    future_replacement_index = build_future_replacement_index(sessions, now_dt)
+    future_replacement_index = build_future_replacement_index(canonical_sessions, now_dt)
 
     count = 0
 
@@ -2077,7 +2395,9 @@ def main() -> None:
 
         raw_location = str(session.get("location_display", "")).strip()
         location = clean_location_display(raw_location) or "Wilmington; Shipyard Blvd"
-        register = enrollware_url_for_session(session) or "#"
+        retained_course_lander = bool(session.get("_retained_course_lander"))
+        register = "" if retained_course_lander else (enrollware_url_for_session(session) or "#")
+        is_public_indexable = public_indexable_session(session, register)
         dt = parse_dt(session.get("start_at"))
 
         if dt:
@@ -2112,8 +2432,17 @@ def main() -> None:
 
         canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
         is_past = bool(dt and dt <= now_dt)
+        lander_status = session_lander_status(session, register, dt, now_dt)
 
-        if is_past:
+        if retained_course_lander:
+            lander_status = "published_closed"
+
+        if lander_status == "cancelled_or_removed" and not is_past:
+            output_path.write_text(render_removed_redirect_page(type_page_url, course_display), encoding="utf-8")
+            count += 1
+            continue
+
+        if lander_status == "past_completed":
             state_notice = """
 <div class="notice">
   This class has passed. Choose a current option below.
@@ -2122,11 +2451,63 @@ def main() -> None:
             button_html = f'<a class="button secondary" href="{escape(register, quote=True)}">Source registration record</a>'
             cta_panel_label = "Historical class record"
             hero_subhead = "This class is no longer bookable. Current options are shown above; this record remains for validation."
+        elif retained_course_lander:
+            state_notice = f"""
+<div class="notice">
+  You came here for this course. Current available options are shown below.
+</div>
+"""
+            button_html = f'<a class="button primary" href="{escape(type_page_url, quote=True)}">Need more options?</a>'
+            cta_panel_label = "Current course options"
+            hero_subhead = f"This page now routes you to current {course_label} options instead of an unavailable older class registration."
+        elif lander_status == "published_closed":
+            state_notice = f"""
+<div class="notice">
+  Registration for this class is closed, full, or unavailable. Use the matching current options below.
+</div>
+"""
+            button_html = f'<a class="button secondary" href="{escape(type_page_url, quote=True)}">See Matching Current Sessions</a>'
+            cta_panel_label = "Registration unavailable"
+            hero_subhead = f"This class is listed for {city}, but registration is not currently available. Matching course options are linked below."
+        elif lander_status == "proposed":
+            state_notice = f"""
+<div class="notice">
+  This time is proposed and is not a published Enrollware class.
+</div>
+"""
+            button_html = f'<a class="button secondary" href="{escape(type_page_url, quote=True)}">Request a Time</a>'
+            cta_panel_label = "Proposed time"
+            hero_subhead = f"This proposed time is not bookable. Use current course options or request a matching time."
         else:
             state_notice = ""
             button_html = f'<a class="button primary" href="{escape(register, quote=True)}">Continue to Registration</a>'
             cta_panel_label = "Reserve your seat"
             hero_subhead = f"{session_daypart_phrase(dt).capitalize()} in {city} with direct registration after the class details below."
+
+        if retained_course_lander:
+            upcoming_sessions = get_upcoming_sessions(
+                session,
+                canonical_sessions,
+                now_dt,
+                limit=8,
+                future_index=future_replacement_index,
+            )
+            inventory_html = render_past_current_inventory_html(upcoming_sessions, type_page_url, course_label)
+            html_doc = render_retained_course_lander_page(
+                session_id=session_id,
+                course_display=course_display or "910CPR Course",
+                course_label=course_label,
+                city=city,
+                state=state,
+                type_page_url=type_page_url,
+                canonical_url=canonical_url,
+                inventory_html=inventory_html,
+                build_stamp=build_stamp,
+                build_meta=build_meta,
+            )
+            output_path.write_text(html_doc, encoding="utf-8")
+            count += 1
+            continue
 
         logo_key = str(session.get("mapped_logo_key") or mapped_entry.get("logo_key") or "").strip().lower()
         if logo_key == "aha":
@@ -2196,7 +2577,7 @@ def main() -> None:
             limit=5,
             future_index=future_replacement_index,
         )
-        if is_past:
+        if lander_status in {"past_completed", "published_closed", "proposed"} or retained_course_lander:
             top_inventory_html = render_past_current_inventory_html(upcoming_sessions, type_page_url, course_label)
             upcoming_sessions_html = ""
         else:
@@ -2223,7 +2604,7 @@ def main() -> None:
         html_doc = TEMPLATE.format(
             page_title=escape(page_title),
             meta_description=escape(meta_description),
-            robots_value="index,follow",
+            robots_value=robots_for_lander_status(lander_status, register),
             canonical_url=escape(canonical_url),
             gtm_head=render_gtm_head(),
             gtm_body=render_gtm_body(),
@@ -2240,7 +2621,7 @@ def main() -> None:
                 description=f"{course_label} in {city} on {date}. {ENTITY_IDENTITY} {schema_description}",
                 price=session.get("price"),
                 valid_from_dt=schema_valid_from_dt,
-            ),
+            ) if status_is_indexable(lander_status, register) else "",
             state_notice=state_notice,
             top_inventory_html=top_inventory_html,
             month_abbr=escape(month_abbr),
@@ -2275,7 +2656,7 @@ def main() -> None:
             course_slug=short_slug(course_display),
             location_js=js_escape(location),
             is_past_js="true" if is_past else "false",
-            register_js=js_escape(register),
+            register_js=js_escape(register if not retained_course_lander else ""),
             schedule_url=escape(schedule_url),
             course_page_url=escape(course_page_url),
         )
@@ -2286,6 +2667,10 @@ def main() -> None:
 
     print(f"Dataset used: {data_file}")
     print(f"Landers built: {count}")
+    print(f"Live specific class pages: {retained_report['live_specific_class_pages_count']}")
+    print(f"Retained course landers: {retained_report['retained_course_landers_count']}")
+    print(f"Needs review: {retained_report['needs_review_count']}")
+    print(f"Pages deleted: {retained_report['pages_deleted_count']}")
     print(f"Reviews loaded: {len(all_reviews)}")
 
 

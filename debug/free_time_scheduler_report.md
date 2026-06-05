@@ -1,0 +1,386 @@
+# Free-Time Scheduler Report
+
+## Calendars Loaded
+- ADR Schedule ICS: https://calendar.google.com/calendar/ical/2fbc3612e56a0a2ce28fe826443e20a88c500e1c5b3c56b126cb4afb88fd233e%40group.calendar.google.com/public/basic.ics
+- DoNotSchedule calendar loaded successfully from private ICS URL from local secrets file.
+- DoNotSchedule ICS URL: [REDACTED]
+
+## Counts
+- ADR events found: 504
+- Brian ADR blocks found: 51
+- DoNotSchedule blocks found: 1
+- Class Report XLSX found: True
+- Class Report sessions found: 300
+- schedule_future.json fallback used: False
+- schedule_future sessions found: 1252
+- Merged existing Enrollware sessions: 300
+- Existing Enrollware source mode: class_report_authoritative
+- Duplicate existing Enrollware sessions deduped: 0
+- Hot-sync active file exists: False
+- Hot-sync active entries found: 0
+- Hot-sync entries absorbed by Class Report: 0
+- Hot-sync entries kept active: 0
+- Hot-sync entries flagged for review: 0
+- Hot-sync entries merged into blocking source: 0
+- Existing Enrollware sessions found: 300
+- Existing Enrollware sessions assigned to Brian: 241
+- Existing Enrollware sessions ignored because instructor was not Brian: 59
+- Accepted proposed sessions: 106
+- Rejected candidate sessions: 190
+- Proposed sessions rejected because of Brian Enrollware sessions: 158
+- Existing Enrollware source mismatches: 50
+
+## Calendar Fetch Warnings
+- None
+
+## Accepted Proposed Sessions
+- 2026-06-08T09:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-08-0900)
+- 2026-06-08T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-08-0900)
+- 2026-06-08T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-08-0900)
+- 2026-06-08T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-08-0900)
+- 2026-06-08T12:30:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-08-1230)
+- 2026-06-08T12:30:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-08-1230)
+- 2026-06-08T12:30:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-08-1230)
+- 2026-06-08T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-08-1230)
+- 2026-06-08T18:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-08-1800)
+- 2026-06-08T18:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-08-1800)
+- 2026-06-08T18:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-08-1800)
+- 2026-06-08T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-08-1800)
+- 2026-06-09T09:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-09-0900)
+- 2026-06-09T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-09-0900)
+- 2026-06-09T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-09-0900)
+- 2026-06-09T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-09-0900)
+- 2026-06-09T12:30:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-09-1230)
+- 2026-06-09T12:30:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-09-1230)
+- 2026-06-09T12:30:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-09-1230)
+- 2026-06-09T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-09-1230)
+- 2026-06-09T18:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-09-1800)
+- 2026-06-09T18:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-09-1800)
+- 2026-06-09T18:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-09-1800)
+- 2026-06-09T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-09-1800)
+- 2026-06-13T09:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-13-0900)
+- 2026-06-13T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-13-0900)
+- 2026-06-13T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-13-0900)
+- 2026-06-13T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-13-0900)
+- 2026-06-13T12:30:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-13-1230)
+- 2026-06-13T12:30:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-13-1230)
+- 2026-06-13T12:30:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-13-1230)
+- 2026-06-13T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-13-1230)
+- 2026-06-15T09:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-15-0900)
+- 2026-06-15T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-15-0900)
+- 2026-06-15T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-15-0900)
+- 2026-06-15T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-15-0900)
+- 2026-06-15T12:30:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-15-1230)
+- 2026-06-15T12:30:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-15-1230)
+- 2026-06-15T12:30:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-15-1230)
+- 2026-06-15T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-15-1230)
+- 2026-06-15T18:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-15-1800)
+- 2026-06-15T18:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-15-1800)
+- 2026-06-15T18:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-15-1800)
+- 2026-06-15T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-15-1800)
+- 2026-06-16T09:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-16-0900)
+- 2026-06-16T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-16-0900)
+- 2026-06-16T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-16-0900)
+- 2026-06-16T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-16-0900)
+- 2026-06-16T12:30:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-16-1230)
+- 2026-06-16T12:30:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-16-1230)
+- 2026-06-16T12:30:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-16-1230)
+- 2026-06-16T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-16-1230)
+- 2026-06-16T18:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-16-1800)
+- 2026-06-16T18:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-16-1800)
+- 2026-06-16T18:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-16-1800)
+- 2026-06-16T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-16-1800)
+- 2026-06-17T09:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-17-0900)
+- 2026-06-17T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-17-0900)
+- 2026-06-17T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-17-0900)
+- 2026-06-17T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-17-0900)
+- 2026-06-17T12:30:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-17-1230)
+- 2026-06-17T12:30:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-17-1230)
+- 2026-06-17T12:30:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-17-1230)
+- 2026-06-17T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-17-1230)
+- 2026-06-17T18:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-17-1800)
+- 2026-06-17T18:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-17-1800)
+- 2026-06-17T18:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-17-1800)
+- 2026-06-17T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-17-1800)
+- 2026-06-18T09:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-18-0900)
+- 2026-06-18T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-18-0900)
+- 2026-06-18T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-18-0900)
+- 2026-06-18T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-18-0900)
+- 2026-06-18T12:30:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-18-1230)
+- 2026-06-18T12:30:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-18-1230)
+- 2026-06-18T12:30:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-18-1230)
+- 2026-06-18T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-18-1230)
+- 2026-06-18T18:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-18-1800)
+- 2026-06-18T18:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-18-1800)
+- 2026-06-18T18:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-18-1800)
+- 2026-06-18T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-18-1800)
+- 2026-06-19T09:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-19-0900)
+- 2026-06-19T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-19-0900)
+- 2026-06-19T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-19-0900)
+- 2026-06-19T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-19-0900)
+- 2026-06-19T12:30:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-19-1230)
+- 2026-06-19T12:30:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-19-1230)
+- 2026-06-19T12:30:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-19-1230)
+- 2026-06-19T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-19-1230)
+- 2026-06-19T18:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-19-1800)
+- 2026-06-19T18:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-19-1800)
+- 2026-06-19T18:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-19-1800)
+- 2026-06-19T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-19-1800)
+- 2026-06-20T09:00:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-20-0900)
+- 2026-06-20T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-20-0900)
+- 2026-06-20T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-20-0900)
+- 2026-06-20T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-20-0900)
+- 2026-06-20T12:30:00-04:00 - AHA BLS Provider at Wilmington Office (bls-wilmington-2026-06-20-1230)
+- 2026-06-20T12:30:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-20-1230)
+- 2026-06-20T12:30:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-20-1230)
+- 2026-06-20T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED at Wilmington Office (heartsaver-fa-cpr-aed-wilmington-2026-06-20-1230)
+- 2026-06-22T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-22-0900)
+- 2026-06-22T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-22-0900)
+- 2026-06-29T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-06-29-0900)
+- 2026-06-29T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-06-29-0900)
+- 2026-07-01T09:00:00-04:00 - AHA BLS Renewal at Wilmington Office (bls-renewal-wilmington-2026-07-01-0900)
+- 2026-07-01T09:00:00-04:00 - HeartCode BLS Skills at Wilmington Office (heartcode-bls-skills-wilmington-2026-07-01-0900)
+
+## Rejected Candidate Sessions
+- 2026-06-04T09:00:00-04:00 - AHA BLS Provider: Rejected because it overlaps blocking event(s): do_not_schedule: TESTies 1, 2, ...  Three?.
+- 2026-06-04T09:00:00-04:00 - AHA BLS Renewal: Rejected because it overlaps blocking event(s): do_not_schedule: TESTies 1, 2, ...  Three?.
+- 2026-06-04T09:00:00-04:00 - HeartCode BLS Skills: Rejected because only 0 minutes are available before next block 'TESTies 1, 2, ...  Three?'; 35 minutes are required.
+- 2026-06-04T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because it overlaps blocking event(s): do_not_schedule: TESTies 1, 2, ...  Three?.
+- 2026-06-04T12:30:00-04:00 - AHA BLS Provider: Rejected because only 0 minutes are available after previous block 'TESTies 1, 2, ...  Three?'; 35 minutes are required.
+- 2026-06-04T12:30:00-04:00 - AHA BLS Renewal: Rejected because only 0 minutes are available after previous block 'TESTies 1, 2, ...  Three?'; 35 minutes are required.
+- 2026-06-04T12:30:00-04:00 - HeartCode BLS Skills: Rejected because only 0 minutes are available after previous block 'TESTies 1, 2, ...  Three?'; 35 minutes are required.
+- 2026-06-04T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because only 0 minutes are available after previous block 'TESTies 1, 2, ...  Three?'; 35 minutes are required.
+- 2026-06-04T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-04 5:30 PM.
+- 2026-06-04T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-04 5:30 PM.
+- 2026-06-04T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-04 5:30 PM.
+- 2026-06-04T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-04 5:30 PM.
+- 2026-06-05T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-05 8:30 AM.
+- 2026-06-05T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-05 8:30 AM.
+- 2026-06-05T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-05 8:30 AM.
+- 2026-06-05T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-05 8:30 AM.
+- 2026-06-05T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-05 12:30 PM.
+- 2026-06-05T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-05 12:30 PM.
+- 2026-06-05T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-05 12:30 PM.
+- 2026-06-05T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-05 12:30 PM.
+- 2026-06-05T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-05 5:30 PM.
+- 2026-06-05T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-05 5:30 PM.
+- 2026-06-05T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-05 5:30 PM.
+- 2026-06-05T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-05 5:30 PM.
+- 2026-06-06T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-06 9:15 AM.
+- 2026-06-06T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-06 9:15 AM.
+- 2026-06-06T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-06 9:15 AM.
+- 2026-06-06T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-06 9:15 AM.
+- 2026-06-06T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-06 12:30 PM.
+- 2026-06-06T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-06 12:30 PM.
+- 2026-06-06T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-06 12:30 PM.
+- 2026-06-06T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-06 12:30 PM.
+- 2026-06-10T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-10 11:45 AM.
+- 2026-06-10T09:00:00-04:00 - AHA BLS Renewal: Rejected because it overlaps blocking event(s): adr: Brian.
+- 2026-06-10T09:00:00-04:00 - HeartCode BLS Skills: Rejected because it overlaps blocking event(s): adr: Brian.
+- 2026-06-10T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-10 11:45 AM.
+- 2026-06-10T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-10 12:30 PM.
+- 2026-06-10T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-10 12:30 PM.
+- 2026-06-10T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-10 12:30 PM.
+- 2026-06-10T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-10 12:30 PM.
+- 2026-06-10T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-10 5:30 PM.
+- 2026-06-10T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-10 5:30 PM.
+- 2026-06-10T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-10 5:30 PM.
+- 2026-06-10T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-10 5:30 PM.
+- 2026-06-11T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-11 8:30 AM.
+- 2026-06-11T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-11 8:30 AM.
+- 2026-06-11T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-11 8:30 AM.
+- 2026-06-11T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-11 8:30 AM.
+- 2026-06-11T12:30:00-04:00 - AHA BLS Provider: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-11T12:30:00-04:00 - AHA BLS Renewal: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-11T12:30:00-04:00 - HeartCode BLS Skills: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-11T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-11T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 5:30 PM.
+- 2026-06-11T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 5:30 PM.
+- 2026-06-11T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 5:30 PM.
+- 2026-06-11T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-11 5:30 PM.
+- 2026-06-12T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-12 8:30 AM.
+- 2026-06-12T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-12 8:30 AM.
+- 2026-06-12T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-12 8:30 AM.
+- 2026-06-12T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-12 8:30 AM.
+- 2026-06-12T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-12 12:30 PM.
+- 2026-06-12T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-12 12:30 PM.
+- 2026-06-12T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-12 12:30 PM.
+- 2026-06-12T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-12 12:30 PM.
+- 2026-06-12T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-12 5:30 PM.
+- 2026-06-12T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-12 5:30 PM.
+- 2026-06-12T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-12 5:30 PM.
+- 2026-06-12T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-12 5:30 PM.
+- 2026-06-22T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-22 11:45 AM.
+- 2026-06-22T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-22 11:45 AM.
+- 2026-06-22T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-22 12:30 PM.
+- 2026-06-22T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-22 12:30 PM.
+- 2026-06-22T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-22 12:30 PM.
+- 2026-06-22T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-22 12:30 PM.
+- 2026-06-22T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-22 5:30 PM.
+- 2026-06-22T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-22 5:30 PM.
+- 2026-06-22T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-22 5:30 PM.
+- 2026-06-22T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-22 5:30 PM.
+- 2026-06-23T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 8:30 AM.
+- 2026-06-23T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 8:30 AM.
+- 2026-06-23T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 8:30 AM.
+- 2026-06-23T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 8:30 AM.
+- 2026-06-23T12:30:00-04:00 - AHA BLS Provider: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-23T12:30:00-04:00 - AHA BLS Renewal: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-23T12:30:00-04:00 - HeartCode BLS Skills: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-23T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-23T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 5:30 PM.
+- 2026-06-23T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 5:30 PM.
+- 2026-06-23T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 5:30 PM.
+- 2026-06-23T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-23 5:30 PM.
+- 2026-06-24T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-24 11:45 AM.
+- 2026-06-24T09:00:00-04:00 - AHA BLS Renewal: Rejected because it overlaps blocking event(s): adr: Brian.
+- 2026-06-24T09:00:00-04:00 - HeartCode BLS Skills: Rejected because it overlaps blocking event(s): adr: Brian.
+- 2026-06-24T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-24 11:45 AM.
+- 2026-06-24T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-24 12:30 PM.
+- 2026-06-24T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-24 12:30 PM.
+- 2026-06-24T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-24 12:30 PM.
+- 2026-06-24T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-24 12:30 PM.
+- 2026-06-24T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-24 5:30 PM.
+- 2026-06-24T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-24 5:30 PM.
+- 2026-06-24T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-24 5:30 PM.
+- 2026-06-24T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-24 5:30 PM.
+- 2026-06-25T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-25 8:30 AM.
+- 2026-06-25T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-25 8:30 AM.
+- 2026-06-25T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-25 8:30 AM.
+- 2026-06-25T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-25 8:30 AM.
+- 2026-06-25T12:30:00-04:00 - AHA BLS Provider: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-25T12:30:00-04:00 - AHA BLS Renewal: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-25T12:30:00-04:00 - HeartCode BLS Skills: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-25T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-25T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-25 5:30 PM.
+- 2026-06-25T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-25 5:30 PM.
+- 2026-06-25T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-25 5:30 PM.
+- 2026-06-25T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-25 5:30 PM.
+- 2026-06-26T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-26 8:30 AM.
+- 2026-06-26T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-26 8:30 AM.
+- 2026-06-26T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-26 8:30 AM.
+- 2026-06-26T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-26 8:30 AM.
+- 2026-06-26T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-26 12:30 PM.
+- 2026-06-26T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-26 12:30 PM.
+- 2026-06-26T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-26 12:30 PM.
+- 2026-06-26T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-26 12:30 PM.
+- 2026-06-26T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-26 5:30 PM.
+- 2026-06-26T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-26 5:30 PM.
+- 2026-06-26T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-26 5:30 PM.
+- 2026-06-26T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-26 5:30 PM.
+- 2026-06-27T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-27 9:15 AM.
+- 2026-06-27T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-27 9:15 AM.
+- 2026-06-27T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-27 9:15 AM.
+- 2026-06-27T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED at :: Wilmington; Shipyard Blvd, 2026-06-27 9:15 AM.
+- 2026-06-27T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-27 12:30 PM.
+- 2026-06-27T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-27 12:30 PM.
+- 2026-06-27T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-27 12:30 PM.
+- 2026-06-27T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Renewal) at :: Wilmington; Shipyard Blvd, 2026-06-27 12:30 PM.
+- 2026-06-29T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-29 11:45 AM.
+- 2026-06-29T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-29 11:45 AM.
+- 2026-06-29T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-29 12:30 PM.
+- 2026-06-29T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-29 12:30 PM.
+- 2026-06-29T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-29 12:30 PM.
+- 2026-06-29T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-06-29 12:30 PM.
+- 2026-06-29T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-29 5:30 PM.
+- 2026-06-29T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-29 5:30 PM.
+- 2026-06-29T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-29 5:30 PM.
+- 2026-06-29T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-06-29 5:30 PM.
+- 2026-06-30T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-30 8:30 AM.
+- 2026-06-30T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-30 8:30 AM.
+- 2026-06-30T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-30 8:30 AM.
+- 2026-06-30T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-30 8:30 AM.
+- 2026-06-30T12:30:00-04:00 - AHA BLS Provider: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-30T12:30:00-04:00 - AHA BLS Renewal: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-30T12:30:00-04:00 - HeartCode BLS Skills: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-30T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-06-30T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-30 5:30 PM.
+- 2026-06-30T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-30 5:30 PM.
+- 2026-06-30T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-30 5:30 PM.
+- 2026-06-30T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-06-30 5:30 PM.
+- 2026-07-01T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-01 11:45 AM.
+- 2026-07-01T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-01 11:45 AM.
+- 2026-07-01T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-07-01 12:30 PM.
+- 2026-07-01T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-07-01 12:30 PM.
+- 2026-07-01T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-07-01 12:30 PM.
+- 2026-07-01T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-07-01 12:30 PM.
+- 2026-07-01T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-01 5:30 PM.
+- 2026-07-01T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-01 5:30 PM.
+- 2026-07-01T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-01 5:30 PM.
+- 2026-07-01T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-01 5:30 PM.
+- 2026-07-02T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-02 8:30 AM.
+- 2026-07-02T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-02 8:30 AM.
+- 2026-07-02T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-02 8:30 AM.
+- 2026-07-02T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-02 8:30 AM.
+- 2026-07-02T12:30:00-04:00 - AHA BLS Provider: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-07-02T12:30:00-04:00 - AHA BLS Renewal: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-07-02T12:30:00-04:00 - HeartCode BLS Skills: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-07-02T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because only 0 minutes are available after previous block 'AHA BLS HeartCode®'; 15 minutes are required.
+- 2026-07-02T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-07-02 5:30 PM.
+- 2026-07-02T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-07-02 5:30 PM.
+- 2026-07-02T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-07-02 5:30 PM.
+- 2026-07-02T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-07-02 5:30 PM.
+- 2026-07-03T09:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-07-03 8:30 AM.
+- 2026-07-03T09:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-07-03 8:30 AM.
+- 2026-07-03T09:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-07-03 8:30 AM.
+- 2026-07-03T09:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS HeartCode® at :: Wilmington; Shipyard Blvd, 2026-07-03 8:30 AM.
+- 2026-07-03T12:30:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-07-03 12:30 PM.
+- 2026-07-03T12:30:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-07-03 12:30 PM.
+- 2026-07-03T12:30:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-07-03 12:30 PM.
+- 2026-07-03T12:30:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA BLS Provider (Initial) at :: Wilmington; Shipyard Blvd, 2026-07-03 12:30 PM.
+- 2026-07-03T18:00:00-04:00 - AHA BLS Provider: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-03 5:30 PM.
+- 2026-07-03T18:00:00-04:00 - AHA BLS Renewal: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-03 5:30 PM.
+- 2026-07-03T18:00:00-04:00 - HeartCode BLS Skills: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-03 5:30 PM.
+- 2026-07-03T18:00:00-04:00 - AHA Heartsaver First Aid CPR AED: Rejected because proposed session overlaps existing Brian Enrollware session: AHA Heartsaver® First Aid CPR AED – Blended at :: Wilmington; Shipyard Blvd, 2026-07-03 5:30 PM.
+
+## Existing Enrollware Source Mismatches
+- schedule_future session not in authoritative Class Report: 12775754
+- schedule_future session not in authoritative Class Report: 12774564
+- schedule_future session not in authoritative Class Report: 12775276
+- schedule_future session not in authoritative Class Report: 12776278
+- schedule_future session not in authoritative Class Report: 12776003
+- schedule_future session not in authoritative Class Report: 13295751
+- schedule_future session not in authoritative Class Report: 12776695
+- schedule_future session not in authoritative Class Report: 12783393
+- schedule_future session not in authoritative Class Report: 12776384
+- schedule_future session not in authoritative Class Report: 12776553
+- schedule_future session not in authoritative Class Report: 12776769
+- schedule_future session not in authoritative Class Report: 12776335
+- schedule_future session not in authoritative Class Report: 12776138
+- schedule_future session not in authoritative Class Report: 12774321
+- schedule_future session not in authoritative Class Report: 12775522
+- schedule_future session not in authoritative Class Report: 13295731
+- schedule_future session not in authoritative Class Report: 12775767
+- schedule_future session not in authoritative Class Report: 12774558
+- schedule_future session not in authoritative Class Report: 12775289
+- schedule_future session not in authoritative Class Report: 10009265
+- schedule_future session not in authoritative Class Report: 10009276
+- schedule_future session not in authoritative Class Report: 11341054
+- schedule_future session not in authoritative Class Report: 12776270
+- schedule_future session not in authoritative Class Report: 12776416
+- schedule_future session not in authoritative Class Report: 12774327
+- schedule_future session not in authoritative Class Report: 12776554
+- schedule_future session not in authoritative Class Report: 12776770
+- schedule_future session not in authoritative Class Report: 12774034
+- schedule_future session not in authoritative Class Report: 12776865
+- schedule_future session not in authoritative Class Report: 12776144
+- schedule_future session not in authoritative Class Report: 12775529
+- schedule_future session not in authoritative Class Report: 13460876
+- schedule_future session not in authoritative Class Report: 13460886
+- schedule_future session not in authoritative Class Report: 13460896
+- schedule_future session not in authoritative Class Report: 13460904
+- schedule_future session not in authoritative Class Report: 12775774
+- schedule_future session not in authoritative Class Report: 12774572
+- schedule_future session not in authoritative Class Report: 12775296
+- schedule_future session not in authoritative Class Report: 12776696
+- schedule_future session not in authoritative Class Report: 12783387
+- schedule_future session not in authoritative Class Report: 12776421
+- schedule_future session not in authoritative Class Report: 13472463
+- schedule_future session not in authoritative Class Report: 13472471
+- schedule_future session not in authoritative Class Report: 13472478
+- schedule_future session not in authoritative Class Report: 13472485
+- schedule_future session not in authoritative Class Report: 12774331
+- schedule_future session not in authoritative Class Report: 12774029
+- schedule_future session not in authoritative Class Report: 12776140
+- schedule_future session not in authoritative Class Report: 12774323
+- schedule_future session not in authoritative Class Report: 12775525

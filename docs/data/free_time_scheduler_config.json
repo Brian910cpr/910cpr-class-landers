@@ -1,0 +1,335 @@
+{
+  "timezone": "America/New_York",
+  "planning_days": 30,
+  "calendars": {
+    "adr": {
+      "name": "9",
+      "ics_url": "https://calendar.google.com/calendar/ical/2fbc3612e56a0a2ce28fe826443e20a88c500e1c5b3c56b126cb4afb88fd233e%40group.calendar.google.com/public/basic.ics"
+    },
+    "do_not_schedule": {
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "ics_url": "https://calendar.google.com/calendar/ical/c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7%40group.calendar.google.com/public/basic.ics"
+    }
+  },
+  "existing_enrollware_sessions": {
+    "source_path": "docs/data/schedule_future.json"
+  },
+  "enrollware_class_report": {
+    "enabled": true,
+    "path": "data/Class Report.xlsx",
+    "prefer_over_schedule_future": true
+  },
+  "hot_sync_delta": {
+    "enabled": true,
+    "active_path": "data/runtime/free_time_scheduler/hot_sync_active.json",
+    "absorbed_archive_path": "data/runtime/free_time_scheduler/hot_sync_absorbed.jsonl"
+  },
+  "click_time_creation": {
+    "enabled": false,
+    "dry_run": true,
+    "allow_public_creation": false
+  },
+  "offer_click_target": {
+    "mode": "worker",
+    "enabled": false,
+    "base_url": "https://schedule.910cpr.com/check-time",
+    "sign_links": true,
+    "signing_secret_env": "OFFER_LINK_SIGNING_SECRET"
+  },
+  "hub_display_strategy": {
+    "prefer_seated_real_classes": true,
+    "requestable_fill_only": true,
+    "minimum_real_rows_before_requestable": 3,
+    "max_requestable_rows_in_default_view_per_course": 3,
+    "show_requestable_when_real_gap_days_exceeds": 10,
+    "keep_full_interwoven_view_behind_show_more": true
+  },
+  "expanded_offer_strategy": {
+    "enabled": false,
+    "start_date": "2026-08-01",
+    "render_behind_show_more": true,
+    "only_truly_open_days": true,
+    "max_days_shown": 30,
+    "max_requestable_offers_per_day_per_course": 8,
+    "anchor_times": [
+      "01:00",
+      "05:00",
+      "09:00",
+      "12:00",
+      "16:00",
+      "20:00",
+      "00:00"
+    ]
+  },
+  "offer_strategy": {
+    "clean_slate_anchor_times": [
+      "01:00",
+      "05:00",
+      "09:00",
+      "12:00",
+      "16:00",
+      "20:00",
+      "00:00"
+    ],
+    "default_max_options_per_course_page": 6,
+    "high_demand_max_options_per_course_page": 8,
+    "high_demand_course_keys": [
+      "bls",
+      "bls-renewal",
+      "heartcode-bls-skills"
+    ],
+    "max_options_per_day_per_course_page": 3,
+    "minimum_customer_notice_minutes": 120,
+    "minimum_customer_notice_minutes_by_group": {
+      "core_bls": 120,
+      "core_10_hour": 120,
+      "standard_heartsaver": 240,
+      "low_value_public": 1440,
+      "arc_limited": 1440,
+      "appointment_only": 10080
+    },
+    "normal_hours_only": false,
+    "allow_overnight_anchors": true,
+    "default_offer_frequency_group": "core_10_hour",
+    "horizon_spread": {
+      "enabled": true,
+      "default": {
+        "buckets": [
+          {
+            "key": "next_7_days",
+            "start_day_offset": 0,
+            "end_day_offset": 7,
+            "target_count": 2
+          },
+          {
+            "key": "days_8_to_21",
+            "start_day_offset": 8,
+            "end_day_offset": 21,
+            "target_count": 2
+          },
+          {
+            "key": "days_22_to_45",
+            "start_day_offset": 22,
+            "end_day_offset": 45,
+            "target_count": 2
+          },
+          {
+            "key": "days_46_to_90",
+            "start_day_offset": 46,
+            "end_day_offset": 90,
+            "target_count": 2
+          }
+        ],
+        "fill_unused_slots_from_earliest_valid": true
+      },
+      "by_group": {
+        "core_bls": {
+          "buckets": [
+            {
+              "key": "next_7_days",
+              "start_day_offset": 0,
+              "end_day_offset": 7,
+              "target_count": 1
+            },
+            {
+              "key": "days_8_to_21",
+              "start_day_offset": 8,
+              "end_day_offset": 21,
+              "target_count": 1
+            },
+            {
+              "key": "days_22_to_45",
+              "start_day_offset": 22,
+              "end_day_offset": 45,
+              "target_count": 2
+            },
+            {
+              "key": "days_46_to_60",
+              "start_day_offset": 46,
+              "end_day_offset": 60,
+              "target_count": 2
+            },
+            {
+              "key": "days_61_to_90",
+              "start_day_offset": 61,
+              "end_day_offset": 90,
+              "target_count": 2
+            }
+          ],
+          "fill_unused_slots_from_earliest_valid": true
+        }
+      }
+    },
+    "offer_frequency_groups": {
+      "core_10_hour": {
+        "same_program_gap_hours": 10,
+        "allow_same_day_reoffer": true,
+        "max_offers_per_day_after_claim": 3,
+        "max_offers_per_week": null,
+        "public_offer_enabled": true
+      },
+      "core_bls": {
+        "same_program_gap_hours": 10,
+        "allow_same_day_reoffer": true,
+        "max_offers_per_day_after_claim": 3,
+        "max_offers_per_week": null,
+        "public_offer_enabled": true
+      },
+      "standard_heartsaver": {
+        "same_program_gap_hours": 24,
+        "allow_same_day_reoffer": false,
+        "max_offers_per_day_after_claim": 2,
+        "max_offers_per_week": null,
+        "public_offer_enabled": true
+      },
+      "low_value_public": {
+        "same_program_gap_hours": 72,
+        "allow_same_day_reoffer": false,
+        "max_offers_per_day_after_claim": 1,
+        "max_offers_per_week": null,
+        "public_offer_enabled": true
+      },
+      "arc_limited": {
+        "same_program_gap_hours": 72,
+        "allow_same_day_reoffer": false,
+        "max_offers_per_day_after_claim": 1,
+        "max_offers_per_week": 2,
+        "public_offer_enabled": true
+      },
+      "appointment_only": {
+        "same_program_gap_hours": 168,
+        "allow_same_day_reoffer": false,
+        "max_offers_per_day_after_claim": 0,
+        "max_offers_per_week": 0,
+        "public_offer_enabled": false
+      }
+    },
+    "course_offer_overrides": {
+      "bls": "core_bls",
+      "bls-renewal": "core_bls",
+      "heartcode-bls-skills": "core_bls",
+      "heartsaver-fa-cpr-aed": "standard_heartsaver"
+    }
+  },
+  "primary_instructor": {
+    "name": "Brian",
+    "match_terms": [
+      "Brian",
+      "Brian Ennis",
+      "Christopher Brian Ennis",
+      "C. Brian Ennis",
+      "B. Ennis"
+    ]
+  },
+  "instructor_day_bases": {
+    "Brian": {
+      "appointment_start_date": "2026-06-21",
+      "appointment_start_day_id": 260670,
+      "valid_through_date": "2027-06-20"
+    },
+    "Amy": {
+      "appointment_start_date": "2026-06-06",
+      "appointment_start_day_id": 261393,
+      "valid_through_date": "2027-06-05"
+    },
+    "Nick": {
+      "appointment_start_date": "2026-06-06",
+      "appointment_start_day_id": 261013,
+      "valid_through_date": "2027-06-05"
+    }
+  },
+  "enrollware_appointment_links": {
+    "enabled": false,
+    "fail_closed": true,
+    "base_url": "https://coastalcprtraining.enrollware.com/enroll",
+    "max_days_from_start": 365,
+    "course_ids": {
+      "bls": 209806,
+      "bls-renewal": 359474,
+      "heartcode-bls-skills": 210549
+    }
+  },
+  "requestable_appointment_url_mode": {
+    "enabled": false,
+    "report_only": true,
+    "only_confirmed_course_ids": true,
+    "fallback_url": "/bls.html?appointment_link_failed=1"
+  },
+  "course_display_names": {
+    "bls": "AHA BLS Provider (Initial)",
+    "bls-renewal": "AHA BLS Provider (Renewal)",
+    "heartcode-bls-skills": "AHA BLS HeartCode®"
+  },
+  "locations": {
+    "ADR Station": {
+      "address": "100 John D Riegel Rd, Riegelwood, NC",
+      "city": "Riegelwood"
+    },
+    "Home": {
+      "address": "4902 Merlot Ct, Wilmington, NC",
+      "city": "Wilmington"
+    },
+    "Wilmington Office": {
+      "address": "4018 Shipyard Blvd, Wilmington, NC",
+      "city": "Wilmington"
+    }
+  },
+  "historical_locations": [
+    "Holly Ridge Office",
+    "Burgaw Office"
+  ],
+  "course_templates": [
+    {
+      "course_key": "bls",
+      "course_title": "AHA BLS Provider",
+      "duration_minutes": 180,
+      "cleanup_minutes": 15,
+      "location": "Wilmington Office",
+      "capacity": 6,
+      "enrollware_class_id": null,
+      "enrollware_enroll_url": null
+    },
+    {
+      "course_key": "bls-renewal",
+      "course_title": "AHA BLS Renewal",
+      "duration_minutes": 120,
+      "cleanup_minutes": 15,
+      "location": "Wilmington Office",
+      "capacity": 6,
+      "enrollware_class_id": null,
+      "enrollware_enroll_url": null
+    },
+    {
+      "course_key": "heartcode-bls-skills",
+      "course_title": "HeartCode BLS Skills",
+      "duration_minutes": 45,
+      "cleanup_minutes": 15,
+      "location": "Wilmington Office",
+      "capacity": 4,
+      "enrollware_class_id": null,
+      "enrollware_enroll_url": null
+    },
+    {
+      "course_key": "heartsaver-fa-cpr-aed",
+      "course_title": "AHA Heartsaver First Aid CPR AED",
+      "duration_minutes": 150,
+      "cleanup_minutes": 30,
+      "location": "Wilmington Office",
+      "capacity": 6,
+      "enrollware_class_id": null,
+      "enrollware_enroll_url": null
+    }
+  ],
+  "candidate_start_times": {
+    "weekday": [
+      "09:00",
+      "12:30",
+      "18:00"
+    ],
+    "saturday": [
+      "09:00",
+      "12:30"
+    ],
+    "sunday": []
+  }
+}

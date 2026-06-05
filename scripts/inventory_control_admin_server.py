@@ -8,7 +8,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
+
+from scripts.free_time_scheduler import check_customer_facing_offer_request
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -191,6 +193,35 @@ def run_resolver():
         )
     except Exception as exc:
         return error_response(str(exc), 500)
+
+
+@app.route("/api/free-time/check-time", methods=["POST", "OPTIONS"])
+def check_free_time_offer():
+    if request.method == "OPTIONS":
+        return jsonify({"ok": True})
+    try:
+        data = request.get_json(force=True)
+        if not isinstance(data, dict):
+            return error_response("Request body must be a JSON object.")
+        result = check_customer_facing_offer_request(data)
+        status_code = 200 if result.get("ok") else 400
+        if result.get("status") == "unavailable":
+            status_code = 409
+        response = jsonify(result)
+        response.status_code = status_code
+        return response
+    except Exception as exc:
+        return error_response(str(exc), 500)
+
+
+@app.route("/", methods=["GET"])
+def serve_docs_index():
+    return send_from_directory(ROOT / "docs", "index.html")
+
+
+@app.route("/<path:asset_path>", methods=["GET"])
+def serve_docs_asset(asset_path: str):
+    return send_from_directory(ROOT / "docs", asset_path)
 
 
 def main() -> int:
