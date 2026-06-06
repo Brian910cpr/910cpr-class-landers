@@ -7,6 +7,10 @@ import sys
 from pathlib import Path
 from typing import Iterable, Optional
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from scripts.build_status import BuildStatusReporter
 
 
@@ -69,6 +73,14 @@ def main() -> int:
     print(f"Repo root    : {root}")
     print(f"Course export: {course_file}")
     print(f"Class report : {class_file}")
+    print()
+
+    print("=== CONFIG VALIDATION PHASE ===")
+    rc = run_python_script(root / "scripts" / "validate_calendar_sources.py", root)
+    if rc != 0:
+        print("\nCONFIG VALIDATION FAILED.")
+        reporter.error(current=0, total=total_steps, message="Calendar source config validation failed.")
+        return rc
     print()
 
     if not args.skip_landers:

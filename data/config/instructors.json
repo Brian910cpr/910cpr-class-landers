@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.1",
+  "description": "Reusable instructor profiles for configuration-driven scheduling. Calendar URLs and private secrets must stay out of this public config.",
+  "instructors": [
+    {
+      "instructor_key": "brian",
+      "display_name": "Brian",
+      "calendar_mode": "inverse_blocking",
+      "calendar_source_key": "brian_do_not_schedule",
+      "default_location_key": "shipyard",
+      "allowed_course_groups": [
+        "BLS",
+        "Heartsaver",
+        "HSI",
+        "ARC"
+      ],
+      "priority_rule_key": "brian_popular_close",
+      "stacking_rule_key": "brian_smart_stack",
+      "dashboard_enabled": true,
+      "production_notes": "Available unless blocked by DoNotSchedule or protected legacy/Enrollware inventory. Do not hard-code recurring business hours."
+    },
+    {
+      "instructor_key": "amy",
+      "display_name": "Amy",
+      "calendar_mode": "explicit_availability",
+      "calendar_source_key": "amy_availability",
+      "default_location_key": "shipyard",
+      "allowed_course_groups": [
+        "ACLS",
+        "PALS",
+        "BLS"
+      ],
+      "priority_rule_key": "amy_advanced_first",
+      "stacking_rule_key": "limited_stack",
+      "dashboard_enabled": true,
+      "production_notes": "Unavailable by default. Only availability windows from her calendar may create public offerings."
+    },
+    {
+      "instructor_key": "nick",
+      "display_name": "Nick",
+      "calendar_mode": "explicit_availability",
+      "calendar_source_key": "nick_availability",
+      "default_location_key": "shipyard",
+      "allowed_course_groups": [
+        "BLS",
+        "Heartsaver"
+      ],
+      "priority_rule_key": "nick_bls_heartsaver_strict",
+      "stacking_rule_key": "strict_window_stack",
+      "dashboard_enabled": true,
+      "production_notes": "Unavailable by default. Use exact calendar windows and avoid loose sliding unless a rule explicitly allows it."
+    }
+  ]
+}

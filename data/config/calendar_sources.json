@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1",
+  "description": "Report-only calendar source declarations for the configuration-driven scheduler shell. These records do not seed public classes by themselves.",
+  "safe_rollout_mode": "config_and_validation_only",
+  "public_behavior_changed": false,
+  "supported_calendar_modes": [
+    "explicit_availability",
+    "inverse_blocking"
+  ],
+  "supported_explicit_availability_titles": [
+    "HARD",
+    "SOFT",
+    "UNAVAILABLE"
+  ],
+  "calendar_sources": [
+    {
+      "calendar_source_key": "amy_availability",
+      "instructor_key": "amy",
+      "owner_instructor_key": "amy",
+      "display_name": "910CPR - Amy Availability",
+      "calendar_mode": "explicit_availability",
+      "mode": "explicit_availability",
+      "source_url": "https://calendar.google.com/calendar/u/1?cid=Y185NDcyNDA3MWFhMzFhMDA2M2ZiYzQ4YmU4MGZkYzczZDc2ZTYwNGNhZDUwNDNmZjA4ODE1NmViOTdlNTBiZTk3QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20",
+      "url_env_var": "AMY_AVAILABILITY_ICS_URL",
+      "local_secret_key": "amy_availability.ics_url",
+      "event_title_vocabulary": [
+        "HARD",
+        "SOFT",
+        "UNAVAILABLE"
+      ],
+      "default_location_key": "shipyard",
+      "missing_access_policy": "warn_and_produce_no_offerable_windows",
+      "active": true
+    },
+    {
+      "calendar_source_key": "nick_availability",
+      "instructor_key": "nick",
+      "owner_instructor_key": "nick",
+      "display_name": "910CPR - Nick Availability",
+      "calendar_mode": "explicit_availability",
+      "mode": "explicit_availability",
+      "source_url": "https://calendar.google.com/calendar/u/1?cid=Y185OTJiNjU0ZDlhZGZjN2E3Y2VkMWZmZTQ1MzJhMTg2YjExYjRhMWU3NGM2MmQ0OGZiYTA3ZGM0NzYzNjc3YjlkQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20",
+      "url_env_var": "NICK_AVAILABILITY_ICS_URL",
+      "local_secret_key": "nick_availability.ics_url",
+      "event_title_vocabulary": [
+        "HARD",
+        "SOFT",
+        "UNAVAILABLE"
+      ],
+      "default_location_key": "shipyard",
+      "missing_access_policy": "warn_and_produce_no_offerable_windows",
+      "active": true
+    },
+    {
+      "calendar_source_key": "brian_do_not_schedule",
+      "instructor_key": "brian",
+      "owner_instructor_key": "brian",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "calendar_mode": "inverse_blocking",
+      "mode": "inverse_blocking",
+      "source_url": "https://calendar.google.com/calendar/u/1?cid=Y19kMmY5NDc0ODExODFmNDYwOTg1YzE4YjRiYTVkNzEzYTY3YjQ4OGY0MDg4ODlmMjQ4M2Q3MWVmNDk4YWIyZGY3QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20",
+      "url_env_var": "BRIAN_BLOCKING_CALENDAR_ICS_URL",
+      "local_secret_key": "do_not_schedule.ics_url",
+      "event_title_vocabulary": [],
+      "default_location_key": "shipyard",
+      "missing_access_policy": "warn_and_do_not_invent_availability",
+      "recurring_business_hours_configured": false,
+      "active": true
+    }
+  ]
+}

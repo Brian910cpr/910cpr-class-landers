@@ -1,0 +1,72 @@
+{
+  "schema_version": "0.1",
+  "description": "Reusable scheduling and stacking rule shells. These are config targets for the next scheduler refactor and do not replace current production logic by themselves.",
+  "rules": [
+    {
+      "rule_key": "brian_popular_close",
+      "type": "priority_order",
+      "keep_high_demand_within_business_hours": 10,
+      "push_low_demand_further_out": true,
+      "allow_aggressive_stacking": true,
+      "priority_order": [
+        "aha_bls_renewal",
+        "aha_bls_initial",
+        "aha_bls_heartcode_skills",
+        "aha_heartsaver_fa_cpr_aed",
+        "aha_heartsaver_cpr_aed",
+        "hsi_adult_fa_cpr_aed",
+        "arc_bls"
+      ]
+    },
+    {
+      "rule_key": "amy_advanced_first",
+      "type": "priority_order",
+      "soft_policy": "skills_or_stack_support_only",
+      "priority_order": [
+        "aha_acls_renewal",
+        "aha_acls_initial",
+        "aha_pals_renewal",
+        "aha_pals_initial",
+        "aha_acls_heartcode_skills",
+        "aha_pals_heartcode_skills",
+        "aha_bls_renewal",
+        "aha_bls_initial",
+        "aha_bls_heartcode_skills"
+      ]
+    },
+    {
+      "rule_key": "nick_bls_heartsaver_strict",
+      "type": "priority_order",
+      "only_use_calendar_start_times": false,
+      "allow_partial_slot_sliding": false,
+      "soft_policy": "skills_or_stack_support_only",
+      "priority_order": [
+        "aha_bls_renewal",
+        "aha_bls_initial",
+        "aha_bls_heartcode_skills",
+        "aha_heartsaver_fa_cpr_aed",
+        "aha_heartsaver_cpr_aed",
+        "aha_heartsaver_online_skills"
+      ]
+    },
+    {
+      "rule_key": "brian_smart_stack",
+      "type": "stacking",
+      "promote_compatible_courses_near_seeded_classes": true,
+      "protect_legacy_enrollware_classes": true,
+      "avoid_duplicate_same_program_offers": true
+    },
+    {
+      "rule_key": "limited_stack",
+      "type": "stacking",
+      "promote_compatible_courses_near_seeded_classes": true,
+      "max_stack_items_per_window": 2
+    },
+    {
+      "rule_key": "strict_window_stack",
+      "type": "stacking",
+      "promote_compatible_courses_near_seeded_classes": true,
+      "only_inside_explicit_availability_window": true
+    }
+  ]
+}

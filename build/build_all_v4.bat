@@ -58,6 +58,15 @@ echo Course export: %COURSE_XLSX%
 echo Class report : %CLASS_XLSX%
 echo.
 
+echo === CONFIG VALIDATION PHASE ===
+python "scripts\validate_calendar_sources.py"
+if errorlevel 1 (
+  echo.
+  echo CONFIG VALIDATION FAILED.
+  exit /b 1
+)
+echo.
+
 if "%SKIP_LANDERS%"=="1" goto RUN_INDEX_PIPELINE
 
 echo === LANDER BUILD PHASE ===
