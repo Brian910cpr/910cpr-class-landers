@@ -1,0 +1,79 @@
+{
+  "schema_version": "0.1",
+  "description": "Report-only controls for thinning candidate slots into a sane seed proposal set. These rules do not publish classes or change Enrollware links.",
+  "seed_selection_rules": [
+    {
+      "selection_rule_key": "brian_conservative_report_only",
+      "instructor_key": "brian",
+      "report_only": true,
+      "active": true,
+      "max_selected_seed_stacks_per_day": 2,
+      "max_selected_seed_proposals_per_window": 8,
+      "max_selected_per_course_per_window": 3,
+      "window_days": 14,
+      "avoid_duplicate_same_course_same_day": true,
+      "prefer_hard_over_soft": true,
+      "soft_policy": "skills_or_stack_support_only",
+      "allow_stack_support": true,
+      "priority_course_order": [
+        "aha_bls_renewal",
+        "aha_bls_initial",
+        "aha_bls_heartcode_skills",
+        "aha_heartsaver_fa_cpr_aed",
+        "aha_heartsaver_cpr_aed"
+      ],
+      "lower_demand_course_keys": [
+        "hsi_adult_fa_cpr_aed",
+        "arc_bls"
+      ],
+      "lower_demand_not_before_day": 15
+    },
+    {
+      "selection_rule_key": "amy_advanced_report_only",
+      "instructor_key": "amy",
+      "report_only": true,
+      "active": true,
+      "max_selected_seed_stacks_per_day": 2,
+      "max_selected_seed_proposals_per_window": 4,
+      "max_selected_per_course_per_window": 2,
+      "window_days": 14,
+      "avoid_duplicate_same_course_same_day": true,
+      "prefer_hard_over_soft": true,
+      "soft_policy": "skills_or_stack_support_only",
+      "allow_stack_support": true,
+      "priority_course_order": [
+        "aha_acls_renewal",
+        "aha_acls_initial",
+        "aha_pals_renewal",
+        "aha_pals_initial",
+        "aha_acls_heartcode_skills",
+        "aha_pals_heartcode_skills",
+        "aha_bls_renewal",
+        "aha_bls_initial",
+        "aha_bls_heartcode_skills"
+      ]
+    },
+    {
+      "selection_rule_key": "nick_bls_report_only",
+      "instructor_key": "nick",
+      "report_only": true,
+      "active": true,
+      "max_selected_seed_stacks_per_day": 2,
+      "max_selected_seed_proposals_per_window": 4,
+      "max_selected_per_course_per_window": 2,
+      "window_days": 14,
+      "avoid_duplicate_same_course_same_day": true,
+      "prefer_hard_over_soft": true,
+      "soft_policy": "skills_or_stack_support_only",
+      "allow_stack_support": true,
+      "priority_course_order": [
+        "aha_bls_renewal",
+        "aha_bls_initial",
+        "aha_bls_heartcode_skills",
+        "aha_heartsaver_fa_cpr_aed",
+        "aha_heartsaver_cpr_aed",
+        "aha_heartsaver_online_skills"
+      ]
+    }
+  ]
+}
