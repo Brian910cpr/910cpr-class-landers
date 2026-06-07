@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import sys
+import argparse
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,7 @@ from scripts.build_candidate_slot_report import (
     CONFIG_DIR,
     DEBUG_DIR,
     REPORT_JSON_PATH as CANDIDATE_REPORT_JSON_PATH,
+    SOURCE_MODES,
     TZ,
     build_report_payload as build_candidate_report_payload,
     load_json,
@@ -128,13 +130,13 @@ def simulate_instructor(
     }
 
 
-def build_report_payload() -> dict[str, Any]:
+def build_report_payload(source_mode: str = "auto") -> dict[str, Any]:
     load_json(CONFIG_DIR / "course_options.json")
     load_json(CONFIG_DIR / "locations.json")
     if (CONFIG_DIR / "courses.json").exists():
         load_json(CONFIG_DIR / "courses.json")
 
-    candidate_report = build_candidate_report_payload()
+    candidate_report = build_candidate_report_payload(source_mode=source_mode)
     instructors = load_instructors()
     rules = load_rules()
     rows = []
@@ -146,6 +148,7 @@ def build_report_payload() -> dict[str, Any]:
         "generated_at": datetime.now(TZ).isoformat(),
         "report_only": True,
         "public_behavior_changed": False,
+        "source_mode": source_mode,
         "candidate_report_source": str(CANDIDATE_REPORT_JSON_PATH.relative_to(ROOT)),
         "candidate_report_generated_inline": True,
         "instructors": rows,
@@ -161,6 +164,7 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Generated at: {report['generated_at']}",
         f"- Report only: {report['report_only']}",
         f"- Public behavior changed: {report['public_behavior_changed']}",
+        f"- Source mode: {report['source_mode']}",
         "",
     ]
     for row in report["instructors"]:
@@ -198,8 +202,15 @@ def write_reports(report: dict[str, Any]) -> None:
     REPORT_MD_PATH.write_text("\n".join(lines), encoding="utf-8")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build report-only seed simulation from fixture or live calendar sources.")
+    parser.add_argument("--source", choices=sorted(SOURCE_MODES), default="auto", help="Event source mode passed through to candidate/availability ingestion.")
+    return parser.parse_args()
+
+
 def main() -> int:
-    report = build_report_payload()
+    args = parse_args()
+    report = build_report_payload(source_mode=args.source)
     write_reports(report)
     print(f"Wrote {REPORT_JSON_PATH}")
     print(f"Wrote {REPORT_MD_PATH}")

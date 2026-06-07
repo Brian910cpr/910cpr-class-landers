@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import sys
+import argparse
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -13,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.build_instructor_availability_report import CONFIG_DIR, DEBUG_DIR, TZ, build_report, load_json, parse_dt
+from scripts.build_instructor_availability_report import CONFIG_DIR, DEBUG_DIR, SOURCE_MODES, TZ, build_report, load_json, parse_dt
 
 
 COURSES_PATH = CONFIG_DIR / "courses.json"
@@ -150,13 +151,13 @@ def build_explicit_candidates(
     return candidates, skipped, warnings
 
 
-def build_report_payload() -> dict[str, Any]:
+def build_report_payload(source_mode: str = "auto") -> dict[str, Any]:
     instructor_config = load_json(CONFIG_DIR / "instructors.json")
     load_json(COURSE_OPTIONS_PATH)
     load_json(LOCATIONS_PATH)
     courses, course_source = load_courses()
     rules = load_rules()
-    availability_report = build_report()
+    availability_report = build_report(source_mode=source_mode)
     instructors = {
         str(item.get("instructor_key") or ""): item
         for item in instructor_config.get("instructors", [])
@@ -200,6 +201,7 @@ def build_report_payload() -> dict[str, Any]:
         "generated_at": datetime.now(TZ).isoformat(),
         "report_only": True,
         "public_behavior_changed": False,
+        "source_mode": source_mode,
         "course_source": course_source,
         "fixture_loaded": availability_report.get("fixture_loaded"),
         "instructors": rows,
@@ -216,6 +218,7 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Generated at: {report['generated_at']}",
         f"- Report only: {report['report_only']}",
         f"- Public behavior changed: {report['public_behavior_changed']}",
+        f"- Source mode: {report['source_mode']}",
         f"- Course source: {report['course_source']}",
         f"- Fixture loaded: {report['fixture_loaded']}",
         "",
@@ -256,8 +259,15 @@ def write_reports(report: dict[str, Any]) -> None:
     REPORT_MD_PATH.write_text("\n".join(lines), encoding="utf-8")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build report-only candidate slots from fixture or live calendar sources.")
+    parser.add_argument("--source", choices=sorted(SOURCE_MODES), default="auto", help="Event source mode passed through to instructor availability ingestion.")
+    return parser.parse_args()
+
+
 def main() -> int:
-    report = build_report_payload()
+    args = parse_args()
+    report = build_report_payload(source_mode=args.source)
     write_reports(report)
     print(f"Wrote {REPORT_JSON_PATH}")
     print(f"Wrote {REPORT_MD_PATH}")
