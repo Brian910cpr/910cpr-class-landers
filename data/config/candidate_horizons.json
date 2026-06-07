@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1",
+  "description": "Report-only base candidate horizons for inverse-blocking instructors. These are search windows, not permanent business hours, and do not seed public classes.",
+  "candidate_horizons": [
+    {
+      "horizon_key": "brian_report_only_45_day_shipyard",
+      "instructor_key": "brian",
+      "calendar_mode": "inverse_blocking",
+      "report_only": true,
+      "active": true,
+      "timezone": "America/New_York",
+      "horizon_start_date": "2026-08-01",
+      "lookahead_days": 45,
+      "location_key": "shipyard",
+      "candidate_day_rules": {
+        "allowed_weekdays": [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday"
+        ]
+      },
+      "candidate_time_windows": [
+        {
+          "start_time": "09:00",
+          "end_time": "12:00",
+          "label": "report_only_morning_candidate_window"
+        },
+        {
+          "start_time": "13:00",
+          "end_time": "16:00",
+          "label": "report_only_afternoon_candidate_window"
+        }
+      ],
+      "safety_note": "These windows are report-only candidate search windows. They must not be treated as hard-coded Brian recurring business hours or used for public class generation."
+    }
+  ]
+}

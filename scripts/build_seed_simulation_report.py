@@ -75,7 +75,7 @@ def simulate_instructor(
 ) -> dict[str, Any]:
     instructor_key = str(row.get("instructor_key") or "")
     mode = str(row.get("calendar_mode") or "")
-    if mode == "inverse_blocking":
+    if mode == "inverse_blocking" and not row.get("candidates"):
         return {
             "instructor_key": instructor_key,
             "calendar_mode": mode,
@@ -86,6 +86,9 @@ def simulate_instructor(
                 "Brian seed simulation requires future configured search horizon/base candidate windows."
             ],
             "blocking_windows": row.get("blocking_windows", []),
+            "base_candidate_windows": row.get("base_candidate_windows", []),
+            "windows_removed_or_trimmed_by_blocks": row.get("windows_removed_or_trimmed_by_blocks", []),
+            "final_usable_windows": row.get("final_usable_windows", []),
         }
 
     rule_key = str(instructor.get("priority_rule_key") or "")
@@ -127,6 +130,9 @@ def simulate_instructor(
         "skipped_candidates": skipped,
         "warnings": row.get("warnings", []),
         "blocking_windows": row.get("blocking_windows", []),
+        "base_candidate_windows": row.get("base_candidate_windows", []),
+        "windows_removed_or_trimmed_by_blocks": row.get("windows_removed_or_trimmed_by_blocks", []),
+        "final_usable_windows": row.get("final_usable_windows", []),
     }
 
 
@@ -175,6 +181,9 @@ def write_reports(report: dict[str, Any]) -> None:
                 f"- Candidate count: {row['candidate_count']}",
                 f"- Selected seed proposals: {len(row['selected_seed_proposals'])}",
                 f"- Skipped candidates: {len(row['skipped_candidates'])}",
+                f"- Base candidate windows: {len(row.get('base_candidate_windows', []))}",
+                f"- Windows removed/trimmed by blocks: {len(row.get('windows_removed_or_trimmed_by_blocks', []))}",
+                f"- Final usable windows: {len(row.get('final_usable_windows', []))}",
                 f"- Blocking windows: {len(row['blocking_windows'])}",
                 f"- Warnings: {len(row['warnings'])}",
                 "",
