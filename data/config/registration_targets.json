@@ -27,6 +27,22 @@
       "active": true
     },
     {
+      "registration_target_key": "enrollware_aha_acls_heartcode_skills",
+      "provider": "enrollware",
+      "course_key": "aha_acls_heartcode_skills",
+      "course_id": "209811",
+      "mode": "existing_session_or_verified_link",
+      "active": true
+    },
+    {
+      "registration_target_key": "enrollware_aha_pals_heartcode_skills",
+      "provider": "enrollware",
+      "course_key": "aha_pals_heartcode_skills",
+      "course_id": "209812",
+      "mode": "existing_session_or_verified_link",
+      "active": true
+    },
+    {
       "registration_target_key": "enrollware_aha_heartsaver_fa_cpr_aed",
       "provider": "enrollware",
       "course_key": "aha_heartsaver_fa_cpr_aed",
