@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.1",
+  "description": "Report-only operator approval state for publishable seed candidates. This does not create public classes or change Enrollware.",
+  "supported_statuses": [
+    "needs_review",
+    "approved_for_preview",
+    "approved_for_public",
+    "rejected",
+    "hold"
+  ],
+  "approvals": []
+}
