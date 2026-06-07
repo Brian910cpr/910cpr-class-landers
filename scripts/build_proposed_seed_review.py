@@ -109,6 +109,66 @@ def registration_display(seed: dict[str, Any]) -> str:
     return "Registration: missing target"
 
 
+def has_hard_blocking_warning(seed: dict[str, Any], row: dict[str, Any]) -> bool:
+    course = FALLBACK_COURSES.get(str(seed.get("course_key") or ""), {})
+    expected = int(course.get("duration_minutes") or 0)
+    actual_start = parse_dt(seed.get("candidate_start"))
+    actual_end = parse_dt(seed.get("candidate_end"))
+    actual = int((actual_end - actual_start).total_seconds() // 60) if actual_start and actual_end else 0
+    if expected and actual and expected > actual:
+        return True
+    return any("No live ICS URL configured" in str(warning) for warning in row.get("warnings", []))
+
+
+def publishability_for_seed(seed: dict[str, Any], row: dict[str, Any]) -> dict[str, str]:
+    registration_status = seed.get("registration_status")
+    backend = seed.get("registration_backend")
+    if registration_status == "missing_registration_target":
+        return {
+            "publishability_status": "blocked_missing_registration_target",
+            "publishability_note": "DO NOT PUBLISH - missing registration target.",
+        }
+    if registration_status == "disabled_registration_target":
+        return {
+            "publishability_status": "blocked_disabled_registration_target",
+            "publishability_note": "DO NOT PUBLISH - registration target is disabled.",
+        }
+    if registration_status == "experimental_registration_target":
+        return {
+            "publishability_status": "blocked_experimental_registration_target",
+            "publishability_note": "DO NOT PUBLISH - registration target is experimental.",
+        }
+    if registration_status != "known_enrollware_target" or backend != "enrollware":
+        return {
+            "publishability_status": "blocked_experimental_registration_target",
+            "publishability_note": "DO NOT PUBLISH - registration target is not an active Enrollware target.",
+        }
+    if has_hard_blocking_warning(seed, row):
+        return {
+            "publishability_status": "blocked_warning",
+            "publishability_note": "DO NOT PUBLISH - hard review warning must be resolved first.",
+        }
+    return {
+        "publishability_status": "publishable_candidate",
+        "publishability_note": "Publishable candidate after review; report remains advisory only.",
+    }
+
+
+def publishability_display(seed: dict[str, Any]) -> str:
+    status = seed.get("publishability_status")
+    if status == "publishable_candidate":
+        return "Publishability: publishable candidate"
+    if status == "blocked_missing_registration_target":
+        return "Publishability: DO NOT PUBLISH - missing registration target"
+    if status == "blocked_disabled_registration_target":
+        return "Publishability: DO NOT PUBLISH - disabled registration target"
+    if status == "blocked_experimental_registration_target":
+        return "Publishability: DO NOT PUBLISH - experimental registration target"
+    if status == "blocked_warning":
+        return "Publishability: DO NOT PUBLISH - blocking warning"
+    return "Publishability: DO NOT PUBLISH - unresolved review status"
+
+
 def course_title(course_key: str) -> str:
     return COURSE_TITLES.get(course_key) or course_key.replace("_", " ").title()
 
@@ -162,6 +222,7 @@ def review_row(row: dict[str, Any], targets_by_course: dict[str, dict[str, Any]]
     for seed in selected:
         enriched_seed = dict(seed)
         enriched_seed.update(registration_status_for_seed(enriched_seed, targets_by_course))
+        enriched_seed.update(publishability_for_seed(enriched_seed, row))
         key = date_key(enriched_seed.get("candidate_start"))
         labels[key] = format_date(enriched_seed.get("candidate_start"))
         grouped[key].append(enriched_seed)
@@ -197,6 +258,12 @@ def build_review(source_mode: str) -> dict[str, Any]:
     ]
     registration_status_counts = Counter(str(seed.get("registration_status") or "missing_registration_target") for seed in selected_seeds)
     registration_backend_counts = Counter(str(seed.get("registration_backend") or "missing") for seed in selected_seeds)
+    publishability_status_counts = Counter(str(seed.get("publishability_status") or "blocked_warning") for seed in selected_seeds)
+    not_publishable = defaultdict(list)
+    for seed in selected_seeds:
+        status = str(seed.get("publishability_status") or "blocked_warning")
+        if status != "publishable_candidate":
+            not_publishable[status].append(seed)
     return {
         "generated_at": datetime.now(TZ).isoformat(),
         "report_only": True,
@@ -217,8 +284,20 @@ def build_review(source_mode: str) -> dict[str, Any]:
             ),
             "selected_seeds_by_backend": dict(sorted(registration_backend_counts.items())),
             "registration_status_counts": dict(sorted(registration_status_counts.items())),
+            "publishable_candidates": publishability_status_counts.get("publishable_candidate", 0),
+            "blocked_missing_registration_target": publishability_status_counts.get("blocked_missing_registration_target", 0),
+            "blocked_disabled_or_experimental": (
+                publishability_status_counts.get("blocked_disabled_registration_target", 0)
+                + publishability_status_counts.get("blocked_experimental_registration_target", 0)
+            ),
+            "blocked_other_warning": publishability_status_counts.get("blocked_warning", 0),
+            "publishability_status_counts": dict(sorted(publishability_status_counts.items())),
         },
         "instructors": rows,
+        "not_publishable_yet": {
+            key: sorted(items, key=lambda item: (str(item.get("candidate_start") or ""), str(item.get("course_key") or "")))
+            for key, items in sorted(not_publishable.items())
+        },
     }
 
 
@@ -242,6 +321,10 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Selected seeds missing targets: {report['summary']['selected_seeds_missing_targets']}",
         f"- Selected seeds experimental/disabled: {report['summary']['selected_seeds_experimental_or_disabled']}",
         f"- Selected seeds by backend: {json.dumps(report['summary']['selected_seeds_by_backend'], sort_keys=True)}",
+        f"- Publishable candidates: {report['summary']['publishable_candidates']}",
+        f"- Blocked missing registration target: {report['summary']['blocked_missing_registration_target']}",
+        f"- Blocked disabled/experimental: {report['summary']['blocked_disabled_or_experimental']}",
+        f"- Blocked other warning: {report['summary']['blocked_other_warning']}",
         "",
     ]
 
@@ -280,8 +363,26 @@ def write_reports(report: dict[str, Any]) -> None:
                 lines.append(f"  - Reason: {reason}")
                 lines.append(f"  - {registration_display(seed)}")
                 lines.append(f"  - Registration note: {seed.get('registration_note')}")
+                lines.append(f"  - {publishability_display(seed)}")
+                lines.append(f"  - Publishability note: {seed.get('publishability_note')}")
                 if flags:
                     lines.append(f"  - Caution flags: {', '.join(flags)}")
+            lines.append("")
+
+    if report["not_publishable_yet"]:
+        lines.extend(["## Not Publishable Yet", ""])
+        for status, seeds in report["not_publishable_yet"].items():
+            label = status.replace("_", " ").title()
+            lines.append(f"### {label}")
+            for seed in seeds:
+                title = course_title(str(seed.get("course_key") or ""))
+                start_date = format_date(seed.get("candidate_start"))
+                start = format_time(seed.get("candidate_start"))
+                end = format_time(seed.get("candidate_end"))
+                instructor = str(seed.get("instructor_key") or "").title()
+                lines.append(f"- {start_date}, {start} - {end} - {instructor} - {title}")
+                lines.append(f"  - {publishability_display(seed)}")
+                lines.append(f"  - Note: {seed.get('publishability_note')}")
             lines.append("")
 
     REPORT_MD_PATH.write_text("\n".join(lines), encoding="utf-8")
