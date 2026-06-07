@@ -31,6 +31,7 @@ SEO_HUBS_PATH = CONFIG_DIR / "seo_hubs.json"
 SLUG_HUBS_PATH = CONFIG_DIR / "slug_hubs.json"
 REGISTRATION_TARGETS_PATH = CONFIG_DIR / "registration_targets.json"
 SEED_APPROVALS_PATH = ROOT / "data" / "state" / "seed_approvals.json"
+HUB_EMPTY_STATES_PATH = CONFIG_DIR / "hub_empty_states.json"
 
 
 def norm(value: Any) -> str:
@@ -67,6 +68,77 @@ def load_seed_approval_count() -> int:
         return 0
     config = load_json(SEED_APPROVALS_PATH)
     return sum(1 for row in config.get("approvals", []) if isinstance(row, dict))
+
+
+def load_empty_state_rules() -> dict[str, Any]:
+    if not HUB_EMPTY_STATES_PATH.exists():
+        return {
+            "default_rules": {},
+            "requestable_hub_keys": [],
+            "hub_overrides": {},
+        }
+    return load_json(HUB_EMPTY_STATES_PATH)
+
+
+def empty_state_rule(rules: dict[str, Any], rule_key: str) -> dict[str, Any]:
+    default_rules = rules.get("default_rules") if isinstance(rules.get("default_rules"), dict) else {}
+    rule = default_rules.get(rule_key) if isinstance(default_rules.get(rule_key), dict) else None
+    if rule:
+        return rule
+    return {
+        "empty_state_type": "needs_review",
+        "headline": "Hub offer state needs review",
+        "body": "The report could not determine a safe empty-state contract for this hub.",
+        "recommended_cta_label": None,
+        "recommended_cta_target": None,
+    }
+
+
+def decide_empty_state(
+    hub: dict[str, Any],
+    rules: dict[str, Any],
+    current_count: int,
+    approved_seed_count: int,
+    needs_review_seed_count: int,
+) -> dict[str, Any]:
+    hub_key = norm(hub.get("hub_key"))
+    overrides = rules.get("hub_overrides") if isinstance(rules.get("hub_overrides"), dict) else {}
+    requestable = {
+        norm(key)
+        for key in rules.get("requestable_hub_keys", [])
+        if norm(key)
+    }
+    caution_flags: list[str] = []
+    if needs_review_seed_count:
+        caution_flags.append("needs_review_seed_offers_exist")
+
+    if current_count:
+        rule = empty_state_rule(rules, "current_classes")
+    elif approved_seed_count:
+        rule = empty_state_rule(rules, "approved_seed_offers")
+    elif isinstance(overrides.get(hub_key), dict):
+        rule = overrides[hub_key]
+        caution_flags.extend(str(flag) for flag in rule.get("caution_flags", []) if str(flag))
+    elif hub_key in requestable:
+        rule = empty_state_rule(rules, "requestable")
+    elif not active_flag(hub, default=True):
+        rule = empty_state_rule(rules, "suppress_hub_offer_block")
+        caution_flags.append("inactive_hub")
+    else:
+        rule = empty_state_rule(rules, "needs_review")
+        caution_flags.append("no_empty_state_rule")
+
+    return {
+        "has_current_enrollware_classes": current_count > 0,
+        "has_approved_seed_offers": approved_seed_count > 0,
+        "has_needs_review_seed_offers": needs_review_seed_count > 0,
+        "empty_state_type": rule.get("empty_state_type") or "needs_review",
+        "empty_state_headline": rule.get("headline") or "",
+        "empty_state_body": rule.get("body") or "",
+        "recommended_cta_label": rule.get("recommended_cta_label"),
+        "recommended_cta_target": rule.get("recommended_cta_target"),
+        "caution_flags": sorted(set(caution_flags)),
+    }
 
 
 def course_key_for_session(session: dict[str, Any], targets_by_course: dict[str, dict[str, Any]]) -> str | None:
@@ -269,6 +341,7 @@ def hub_matches_session(hub: dict[str, Any], session: dict[str, Any], targets_by
 
 def build_report(source_mode: str) -> dict[str, Any]:
     targets_by_course = load_registration_targets()
+    empty_state_rules = load_empty_state_rules()
     hubs = load_hubs()
     sessions_source = load_current_sessions(targets_by_course)
     seed_export = build_export(source_mode)
@@ -324,6 +397,13 @@ def build_report(source_mode: str) -> dict[str, Any]:
         if not sessions_source["source_available"]:
             suppressed_counter["suppressed_missing_enrollware"] += 1
 
+        empty_state = decide_empty_state(
+            hub,
+            empty_state_rules,
+            len(current_classes),
+            len(approved_seed_offers),
+            len(needs_review_seed_offers),
+        )
         hub_empty = not current_classes and not approved_seed_offers and not needs_review_seed_offers
         hub_reports.append(
             {
@@ -343,15 +423,24 @@ def build_report(source_mode: str) -> dict[str, Any]:
                 "blocked_suppressed_seed_offer_count": len(suppressed_seed_offers),
                 "would_appear_empty": hub_empty,
                 "fallback_message_if_empty": hub["fallback_message_if_empty"] if hub_empty else None,
+                **empty_state,
             }
         )
 
+    empty_state_counts = Counter(str(hub.get("empty_state_type") or "needs_review") for hub in hub_reports)
     summary = {
         "hubs_checked": len(hub_reports),
         "hubs_with_current_enrollware_classes": sum(1 for hub in hub_reports if hub["current_enrollware_class_count"] > 0),
         "hubs_with_approved_seed_offers": sum(1 for hub in hub_reports if hub["approved_seed_offer_count"] > 0),
         "hubs_with_needs_review_seed_offers": sum(1 for hub in hub_reports if hub["needs_review_seed_offer_count"] > 0),
         "hubs_empty": sum(1 for hub in hub_reports if hub["would_appear_empty"]),
+        "hubs_using_current_classes": empty_state_counts.get("show_current_classes", 0),
+        "hubs_using_approved_seed_offers": empty_state_counts.get("show_approved_seed_offers", 0),
+        "hubs_using_request_cta": empty_state_counts.get("show_request_class_cta", 0),
+        "hubs_using_call_to_schedule": empty_state_counts.get("show_call_to_schedule", 0),
+        "hubs_needs_review": empty_state_counts.get("needs_review", 0),
+        "hubs_suppressing_offer_block": empty_state_counts.get("suppress_hub_offer_block", 0),
+        "empty_state_type_counts": dict(sorted(empty_state_counts.items())),
         "suppressed_offers_by_reason": dict(sorted(suppressed_counter.items())),
         "seed_display_item_counts": dict(sorted(display_counter.items())),
         "current_enrollware_classes_matched_to_hubs": sum(hub["current_enrollware_class_count"] for hub in hub_reports),
@@ -372,6 +461,7 @@ def build_report(source_mode: str) -> dict[str, Any]:
             "slug_hubs": str(SLUG_HUBS_PATH),
             "registration_targets": str(REGISTRATION_TARGETS_PATH),
             "seed_approvals": str(SEED_APPROVALS_PATH),
+            "hub_empty_states": str(HUB_EMPTY_STATES_PATH),
             "seed_approval_count": load_seed_approval_count(),
         },
         "rules": {
@@ -404,6 +494,13 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Hubs with approved seed offers: {report['summary']['hubs_with_approved_seed_offers']}",
         f"- Hubs with needs-review seed offers: {report['summary']['hubs_with_needs_review_seed_offers']}",
         f"- Hubs empty: {report['summary']['hubs_empty']}",
+        f"- Hubs using current classes: {report['summary']['hubs_using_current_classes']}",
+        f"- Hubs using approved seed offers: {report['summary']['hubs_using_approved_seed_offers']}",
+        f"- Hubs using request CTA: {report['summary']['hubs_using_request_cta']}",
+        f"- Hubs using call-to-schedule: {report['summary']['hubs_using_call_to_schedule']}",
+        f"- Hubs needs review: {report['summary']['hubs_needs_review']}",
+        f"- Hubs suppressing offer block: {report['summary']['hubs_suppressing_offer_block']}",
+        f"- Empty-state type counts: {json.dumps(report['summary']['empty_state_type_counts'], sort_keys=True)}",
         f"- Suppressed offers by reason: {json.dumps(report['summary']['suppressed_offers_by_reason'], sort_keys=True)}",
         "",
         "## Display Contract",
@@ -414,6 +511,16 @@ def write_reports(report: dict[str, Any]) -> None:
         "- `suppressed_missing_enrollware`: Enrollware source is unavailable for validation.",
         "- `suppressed_not_approved`: seed exists but approval state blocks public display.",
         "- `suppressed_missing_registration_target`: seed lacks a valid registration target/publishability gate.",
+        "",
+        "## Empty-State Contract",
+        "",
+        "- `show_current_classes`: current Enrollware-backed classes exist; show the normal class/session offer block.",
+        "- `show_approved_seed_offers`: no current classes, but approved hub-only seed offers are available.",
+        "- `show_request_class_cta`: no modeled offers; show a request-class path instead of fake dates.",
+        "- `show_call_to_schedule`: professional available-by-request/contact message.",
+        "- `show_check_back_soon`: neutral fallback when a public offer block is still appropriate.",
+        "- `suppress_hub_offer_block`: hide the offer block until real/approved offers exist.",
+        "- `needs_review`: no safe fallback rule was found.",
         "",
         "## Hubs",
         "",
@@ -428,6 +535,11 @@ def write_reports(report: dict[str, Any]) -> None:
         lines.append(f"- Needs-review seed offers: {hub['needs_review_seed_offer_count']}")
         lines.append(f"- Suppressed seed offers: {hub['blocked_suppressed_seed_offer_count']}")
         lines.append(f"- Would appear empty: {hub['would_appear_empty']}")
+        lines.append(f"- Empty-state type: {hub['empty_state_type']}")
+        lines.append(f"- Empty-state headline: {hub['empty_state_headline']}")
+        lines.append(f"- Empty-state body: {hub['empty_state_body']}")
+        lines.append(f"- Recommended CTA: {hub['recommended_cta_label']} -> {hub['recommended_cta_target']}")
+        lines.append(f"- Caution flags: {', '.join(hub['caution_flags']) if hub['caution_flags'] else 'none'}")
         if hub["fallback_message_if_empty"]:
             lines.append(f"- Empty fallback message: {hub['fallback_message_if_empty']}")
 

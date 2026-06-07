@@ -1,0 +1,89 @@
+{
+  "schema_version": "0.1",
+  "description": "Report-only hub empty-state contract. These rules do not modify public hub pages, CTAs, schedules, or Enrollware links.",
+  "default_rules": {
+    "current_classes": {
+      "empty_state_type": "show_current_classes",
+      "headline": "Current classes available",
+      "body": "Show current Enrollware-backed class/session offers for this hub.",
+      "recommended_cta_label": "View available classes",
+      "recommended_cta_target": "existing_hub_schedule_block"
+    },
+    "approved_seed_offers": {
+      "empty_state_type": "show_approved_seed_offers",
+      "headline": "Additional class times available by review",
+      "body": "Show approved report-only seed offers as hub offers only. Do not create standalone class landers from these offers.",
+      "recommended_cta_label": "Review available options",
+      "recommended_cta_target": "existing_hub_offer_block"
+    },
+    "requestable": {
+      "empty_state_type": "show_request_class_cta",
+      "headline": "Need this class for your group?",
+      "body": "No current public class dates are modeled for this hub. Use a request path or contact workflow instead of showing fake dates.",
+      "recommended_cta_label": "Request a class",
+      "recommended_cta_target": "/group-training.html"
+    },
+    "call_to_schedule": {
+      "empty_state_type": "show_call_to_schedule",
+      "headline": "Available by request",
+      "body": "This training option may be available by request. Contact 910CPR to review timing and requirements.",
+      "recommended_cta_label": "Contact 910CPR",
+      "recommended_cta_target": "/group-training.html"
+    },
+    "check_back_soon": {
+      "empty_state_type": "show_check_back_soon",
+      "headline": "Check back soon",
+      "body": "No current public class dates are modeled for this hub yet.",
+      "recommended_cta_label": "View all classes",
+      "recommended_cta_target": "/index.html"
+    },
+    "suppress_hub_offer_block": {
+      "empty_state_type": "suppress_hub_offer_block",
+      "headline": "No public offer block recommended",
+      "body": "Suppress the hub offer block until current Enrollware classes or approved seed offers exist.",
+      "recommended_cta_label": null,
+      "recommended_cta_target": null
+    },
+    "needs_review": {
+      "empty_state_type": "needs_review",
+      "headline": "Hub offer state needs review",
+      "body": "The report could not determine a safe empty-state contract for this hub.",
+      "recommended_cta_label": null,
+      "recommended_cta_target": null
+    }
+  },
+  "requestable_hub_keys": [
+    "acls",
+    "bls",
+    "group-training",
+    "heartsaver",
+    "pals",
+    "uscg-elementary-first-aid-cpr",
+    "bls_dental_assistant_wilmington",
+    "bls_healthcare_provider_wilmington"
+  ],
+  "hub_overrides": {
+    "arc": {
+      "empty_state_type": "show_call_to_schedule",
+      "headline": "Red Cross classes are available by request",
+      "body": "No current Red Cross class dates are modeled for this hub. Use a professional contact or group-training path instead of showing placeholder dates.",
+      "recommended_cta_label": "Request Red Cross training",
+      "recommended_cta_target": "/group-training.html",
+      "caution_flags": [
+        "empty_arc_hub",
+        "do_not_show_fake_dates"
+      ]
+    },
+    "hsi": {
+      "empty_state_type": "show_call_to_schedule",
+      "headline": "HSI classes are available by request",
+      "body": "No current HSI class dates are modeled for this hub. Use a professional contact or group-training path instead of showing placeholder dates.",
+      "recommended_cta_label": "Request HSI training",
+      "recommended_cta_target": "/group-training.html",
+      "caution_flags": [
+        "empty_hsi_hub",
+        "do_not_show_fake_dates"
+      ]
+    }
+  }
+}
