@@ -293,8 +293,22 @@ def seed_display_classification(seed: dict[str, Any]) -> tuple[str, str]:
     if seed.get("registration_target_key") in (None, ""):
         return "suppressed_missing_registration_target", "Seed has no registration target key."
     if seed.get("approval_status") == "approved_for_public":
-        if seed.get("publishability_status") == "publishable_candidate":
+        if (
+            seed.get("publishability_status") == "publishable_candidate"
+            and seed.get("public_ready") is True
+            and seed.get("enrollware_presence_status") == "present_in_enrollware"
+        ):
             return "approved_seed_offer", "Approved for public hub-offer review; not a class lander."
+        if seed.get("enrollware_presence_status") != "present_in_enrollware":
+            return (
+                "suppressed_approved_but_not_public_ready",
+                "Approved but missing Enrollware presence; hub preview display is blocked.",
+            )
+        if seed.get("public_ready") is not True:
+            return (
+                "suppressed_approved_but_not_public_ready",
+                "Approved but public_ready is false; hub preview display is blocked.",
+            )
         return "suppressed_missing_registration_target", "Approved seed is not publishable because registration/publishability gate failed."
     if seed.get("approval_status") == "needs_review":
         return "needs_review_seed_offer", "Seed is publishable in config but still needs operator approval."
@@ -382,6 +396,7 @@ def build_report(source_mode: str) -> dict[str, Any]:
                 "publishability_status": seed.get("publishability_status"),
                 "enrollware_presence_status": seed.get("enrollware_presence_status"),
                 "public_ready": seed.get("public_ready"),
+                "public_ready_block_reason": seed.get("public_ready_block_reason"),
                 "reason": reason,
                 "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed.",
             }
@@ -434,6 +449,8 @@ def build_report(source_mode: str) -> dict[str, Any]:
         "hubs_with_approved_seed_offers": sum(1 for hub in hub_reports if hub["approved_seed_offer_count"] > 0),
         "hubs_with_needs_review_seed_offers": sum(1 for hub in hub_reports if hub["needs_review_seed_offer_count"] > 0),
         "hubs_empty": sum(1 for hub in hub_reports if hub["would_appear_empty"]),
+        "approved_but_not_public_ready": suppressed_counter.get("suppressed_approved_but_not_public_ready", 0),
+        "suppressed_approved_but_not_public_ready": suppressed_counter.get("suppressed_approved_but_not_public_ready", 0),
         "hubs_using_current_classes": empty_state_counts.get("show_current_classes", 0),
         "hubs_using_approved_seed_offers": empty_state_counts.get("show_approved_seed_offers", 0),
         "hubs_using_request_cta": empty_state_counts.get("show_request_class_cta", 0),
@@ -494,6 +511,7 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Hubs with approved seed offers: {report['summary']['hubs_with_approved_seed_offers']}",
         f"- Hubs with needs-review seed offers: {report['summary']['hubs_with_needs_review_seed_offers']}",
         f"- Hubs empty: {report['summary']['hubs_empty']}",
+        f"- Approved but not public ready: {report['summary']['approved_but_not_public_ready']}",
         f"- Hubs using current classes: {report['summary']['hubs_using_current_classes']}",
         f"- Hubs using approved seed offers: {report['summary']['hubs_using_approved_seed_offers']}",
         f"- Hubs using request CTA: {report['summary']['hubs_using_request_cta']}",
@@ -508,6 +526,7 @@ def write_reports(report: dict[str, Any]) -> None:
         "- `current_enrollware_class`: real future Enrollware-backed class/session that can be modeled as a hub class offer.",
         "- `approved_seed_offer`: report-only generated availability approved for public hub display; hub offer only, not a class lander.",
         "- `needs_review_seed_offer`: generated availability with a valid publishable target but no public approval yet.",
+        "- `suppressed_approved_but_not_public_ready`: seed is approved, but public_ready or current Enrollware presence blocks display.",
         "- `suppressed_missing_enrollware`: Enrollware source is unavailable for validation.",
         "- `suppressed_not_approved`: seed exists but approval state blocks public display.",
         "- `suppressed_missing_registration_target`: seed lacks a valid registration target/publishability gate.",
@@ -551,6 +570,8 @@ def write_reports(report: dict[str, Any]) -> None:
             lines.append(f"  - Needs review seed: {item.get('date')} {item.get('start_time')} - {item.get('course_title')} ({item.get('seed_id')})")
         for item in hub["blocked_suppressed_seed_offers"][:5]:
             lines.append(f"  - Suppressed: {item.get('display_item_type')} - {item.get('course_title')} - {item.get('reason')}")
+            if item.get("public_ready_block_reason"):
+                lines.append(f"    - Public-ready block: {item.get('public_ready_block_reason')}")
         lines.append("")
 
     REPORT_MD_PATH.write_text("\n".join(lines), encoding="utf-8")
