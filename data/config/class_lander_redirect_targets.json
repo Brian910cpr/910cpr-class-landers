@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1",
+  "description": "Dry-run redirect destination mapping for stale class landers. This config does not modify public output.",
+  "default_destination": {
+    "destination_hub": "/index.html",
+    "destination_reason": "No specific course hub mapping matched; route to home pending operator review.",
+    "destination_confidence": "low",
+    "destination_needs_review": true
+  },
+  "targets": [
+    {
+      "target_key": "bls",
+      "destination_hub": "/bls.html",
+      "keywords": ["bls", "basic life support", "heartcode bls", "bls renewal"],
+      "destination_reason": "BLS/BLS Renewal/HeartCode BLS stale class landers should redirect to the BLS hub.",
+      "destination_confidence": "high"
+    },
+    {
+      "target_key": "acls",
+      "destination_hub": "/acls.html",
+      "keywords": ["acls", "advanced cardiovascular life support", "heartcode acls"],
+      "destination_reason": "ACLS stale class landers should redirect to the ACLS hub.",
+      "destination_confidence": "high"
+    },
+    {
+      "target_key": "pals",
+      "destination_hub": "/pals.html",
+      "keywords": ["pals", "pediatric advanced life support", "heartcode pals"],
+      "destination_reason": "PALS stale class landers should redirect to the PALS hub.",
+      "destination_confidence": "high"
+    },
+    {
+      "target_key": "heartsaver",
+      "destination_hub": "/heartsaver.html",
+      "keywords": ["heartsaver", "first aid", "cpr aed", "cpr/aed"],
+      "destination_reason": "Heartsaver, First Aid, and CPR AED stale class landers should redirect to the Heartsaver hub.",
+      "destination_confidence": "high"
+    },
+    {
+      "target_key": "arc",
+      "destination_hub": "/arc.html",
+      "keywords": ["arc", "american red cross", "red cross"],
+      "destination_reason": "ARC stale class landers should redirect to the ARC hub.",
+      "destination_confidence": "high"
+    },
+    {
+      "target_key": "hsi",
+      "destination_hub": "/hsi.html",
+      "keywords": ["hsi", "health and safety institute"],
+      "destination_reason": "HSI stale class landers should redirect to the HSI hub.",
+      "destination_confidence": "high"
+    },
+    {
+      "target_key": "uscg_elementary_first_aid",
+      "destination_hub": "/uscg-elementary-first-aid-cpr.html",
+      "keywords": ["uscg", "coast guard", "elementary first aid"],
+      "destination_reason": "USCG Elementary First Aid stale class landers should redirect to the USCG Elementary First Aid CPR hub.",
+      "destination_confidence": "high"
+    }
+  ]
+}
