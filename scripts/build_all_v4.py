@@ -83,6 +83,12 @@ def main() -> int:
         return rc
     print()
 
+    print("=== INSTRUCTOR AVAILABILITY REPORT PHASE ===")
+    rc = run_python_script(root / "scripts" / "build_instructor_availability_report.py", root)
+    if rc != 0:
+        print("\nWARNING: Instructor availability report failed. Continuing because this phase is report-only.")
+    print()
+
     if not args.skip_landers:
         reporter.start(total=total_steps)
         print("=== LANDER BUILD PHASE ===")

@@ -67,6 +67,14 @@ if errorlevel 1 (
 )
 echo.
 
+echo === INSTRUCTOR AVAILABILITY REPORT PHASE ===
+python "scripts\build_instructor_availability_report.py"
+if errorlevel 1 (
+  echo.
+  echo WARNING: Instructor availability report failed. Continuing because this phase is report-only.
+)
+echo.
+
 if "%SKIP_LANDERS%"=="1" goto RUN_INDEX_PIPELINE
 
 echo === LANDER BUILD PHASE ===
