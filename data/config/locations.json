@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.1",
+  "description": "Reusable location profiles. Alternate location forcing is intentionally out of scope for the current reset.",
+  "locations": [
+    {
+      "location_key": "shipyard",
+      "display_name": "910CPR - Shipyard Blvd",
+      "short_name": "Shipyard",
+      "address": "4018 Shipyard Blvd, Wilmington, NC",
+      "city": "Wilmington",
+      "state": "NC",
+      "active": true,
+      "default_public_location": true
+    }
+  ]
+}

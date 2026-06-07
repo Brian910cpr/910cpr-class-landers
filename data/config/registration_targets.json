@@ -1,0 +1,50 @@
+{
+  "schema_version": "0.1",
+  "description": "Registration targets keep Enrollware as the production back-office destination. Do not put API secrets here.",
+  "registration_targets": [
+    {
+      "registration_target_key": "enrollware_aha_bls_initial",
+      "provider": "enrollware",
+      "course_key": "aha_bls_initial",
+      "course_id": "209806",
+      "mode": "existing_session_or_verified_link",
+      "active": true
+    },
+    {
+      "registration_target_key": "enrollware_aha_bls_renewal",
+      "provider": "enrollware",
+      "course_key": "aha_bls_renewal",
+      "course_id": "359474",
+      "mode": "existing_session_or_verified_link",
+      "active": true
+    },
+    {
+      "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+      "provider": "enrollware",
+      "course_key": "aha_bls_heartcode_skills",
+      "course_id": "210549",
+      "mode": "existing_session_or_verified_link",
+      "active": true
+    },
+    {
+      "registration_target_key": "enrollware_aha_heartsaver_fa_cpr_aed",
+      "provider": "enrollware",
+      "course_key": "aha_heartsaver_fa_cpr_aed",
+      "course_id": "209809",
+      "mode": "existing_session_or_verified_link",
+      "active": true
+    }
+  ],
+  "disabled_experimental_targets": [
+    {
+      "target_key": "stripe_checkout_replacement",
+      "status": "do_not_use_for_production",
+      "reason": "Enrollware remains registration, checkout, roster, and back-office destination."
+    },
+    {
+      "target_key": "worker_click_time_creation",
+      "status": "do_not_use_for_production",
+      "reason": "Appointment shell / click-to-create flow is not the current production direction."
+    }
+  ]
+}

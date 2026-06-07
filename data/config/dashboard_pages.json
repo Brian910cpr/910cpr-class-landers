@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.1",
+  "description": "Read-only instructor dashboard page scaffold. Dashboards do not edit, cancel, collect payment, or issue cards.",
+  "dashboards": [
+    {
+      "dashboard_key": "instructor_brian",
+      "path": "/i/brian",
+      "instructor_key": "brian",
+      "enabled": false,
+      "visibility": "local_or_private_path",
+      "modules": [
+        "next_class",
+        "upcoming_classes",
+        "student_counts",
+        "location",
+        "enrollware_roster_link",
+        "availability_calendar_link",
+        "directions_link"
+      ]
+    },
+    {
+      "dashboard_key": "instructor_amy",
+      "path": "/i/amy",
+      "instructor_key": "amy",
+      "enabled": false,
+      "visibility": "local_or_private_path",
+      "modules": [
+        "next_class",
+        "upcoming_classes",
+        "student_counts",
+        "location",
+        "enrollware_roster_link",
+        "availability_calendar_link",
+        "directions_link"
+      ]
+    },
+    {
+      "dashboard_key": "instructor_nick",
+      "path": "/i/nick",
+      "instructor_key": "nick",
+      "enabled": false,
+      "visibility": "local_or_private_path",
+      "modules": [
+        "next_class",
+        "upcoming_classes",
+        "student_counts",
+        "location",
+        "enrollware_roster_link",
+        "availability_calendar_link",
+        "directions_link"
+      ]
+    }
+  ]
+}

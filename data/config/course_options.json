@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "description": "Customer-facing purchase/registration options map to operational course keys. They must not create separate scheduling logic per option.",
+  "course_options": [
+    {
+      "option_key": "aha_bls_customer_supplied_manual",
+      "course_key": "aha_bls_initial",
+      "label": "Customer-supplied manual",
+      "public_name": "AHA BLS Provider - Customer-supplied manual",
+      "student_note": "Bring the current AHA BLS Provider Manual.",
+      "manual_included": false,
+      "heartcode_included": false,
+      "active": true
+    },
+    {
+      "option_key": "aha_bls_with_emanual",
+      "course_key": "aha_bls_initial",
+      "label": "With eManual",
+      "public_name": "AHA BLS Provider - with eManual",
+      "manual_included": true,
+      "manual_type": "eManual",
+      "heartcode_included": false,
+      "active": true
+    },
+    {
+      "option_key": "aha_bls_heartcode_skills_only",
+      "course_key": "aha_bls_heartcode_skills",
+      "label": "HeartCode Skills Session",
+      "heartcode_included": false,
+      "requires_online_completion": true,
+      "active": true
+    },
+    {
+      "option_key": "aha_bls_heartcode_plus_skills",
+      "course_key": "aha_bls_heartcode_skills",
+      "label": "HeartCode + Skills Session",
+      "heartcode_included": true,
+      "requires_online_completion": true,
+      "active": true
+    }
+  ]
+}

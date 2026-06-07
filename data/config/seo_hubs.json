@@ -1,0 +1,55 @@
+{
+  "schema_version": "0.1",
+  "description": "SEO hub scaffold. Generate focused useful landers from this config, avoiding thin duplicate pages.",
+  "hub_templates": [
+    {
+      "template_key": "course_city",
+      "modules": [
+        "local_course_availability",
+        "who_needs_this_certification",
+        "accepted_course_options",
+        "what_to_expect",
+        "related_courses",
+        "nearby_service_areas",
+        "register_cta"
+      ]
+    },
+    {
+      "template_key": "course_audience_city",
+      "modules": [
+        "local_course_availability",
+        "audience_requirement_guidance",
+        "accepted_course_options",
+        "renewal_vs_initial_guidance",
+        "related_courses",
+        "register_cta"
+      ]
+    }
+  ],
+  "hubs": [
+    {
+      "hub_key": "bls_dental_assistant_wilmington",
+      "template_key": "course_audience_city",
+      "course_key": "aha_bls_initial",
+      "city_key": "wilmington_nc",
+      "audience_key": "dental_assistant",
+      "title": "BLS Certification for Dental Assistants in Wilmington, NC",
+      "meta_description": "AHA BLS Provider classes for dental assistants in Wilmington, NC. Register for in-person or HeartCode BLS skills sessions with 910CPR.",
+      "canonical_url": "/bls/dental-assistant-wilmington-nc",
+      "primary_cta": "View BLS Classes",
+      "active": false
+    },
+    {
+      "hub_key": "bls_healthcare_provider_wilmington",
+      "template_key": "course_audience_city",
+      "course_key": "aha_bls_initial",
+      "city_key": "wilmington_nc",
+      "audience_key": "healthcare_provider",
+      "title": "BLS Classes for Healthcare Providers in Wilmington, NC",
+      "meta_description": "AHA BLS Provider classes for healthcare providers in Wilmington, NC with 910CPR.",
+      "canonical_url": "/bls/healthcare-provider-wilmington-nc",
+      "primary_cta": "View BLS Classes",
+      "active": false
+    }
+  ]
+}

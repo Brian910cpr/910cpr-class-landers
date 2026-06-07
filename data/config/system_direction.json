@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "direction": "configuration_driven_lander_scheduler_seo_dashboard",
+  "production_registration_system": "enrollware",
+  "instructor_availability_system": "google_calendar",
+  "public_front_door": "lander",
+  "rollout_stage": "scaffold_and_audit",
+  "do_not_use_in_production": [
+    "stripe_checkout_replacement",
+    "google_sheets_as_registration_back_office",
+    "appointment_shells_as_primary_scheduler",
+    "worker_click_to_create_enrollware_sessions"
+  ],
+  "protected_legacy_window": {
+    "start_date": "2026-06-01",
+    "end_date": "2026-07-31",
+    "rule": "Treat June and July legacy Enrollware schedules as occupied/protected. Do not delete or overwrite."
+  }
+}
