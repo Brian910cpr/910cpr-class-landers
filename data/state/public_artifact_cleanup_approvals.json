@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "description": "Report-only operator approval state for public artifact cleanup actions. This does not modify public files.",
+  "supported_statuses": [
+    "needs_review",
+    "approved_for_redirect",
+    "approved_for_suppression",
+    "approved_for_archive",
+    "hold",
+    "rejected"
+  ],
+  "approvals": []
+}

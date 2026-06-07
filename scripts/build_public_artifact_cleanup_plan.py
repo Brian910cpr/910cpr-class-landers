@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 import sys
 from collections import Counter, defaultdict
@@ -24,6 +25,7 @@ REPORT_MD_PATH = DEBUG_DIR / "public_artifact_cleanup_plan.md"
 REDIRECT_TARGETS_PATH = ROOT / "data" / "config" / "class_lander_redirect_targets.json"
 PUBLIC_SCHEDULE_PATH = ROOT / "public_schedule.json"
 SCHEDULE_PATH = ROOT / "data" / "schedule.json"
+APPROVALS_PATH = ROOT / "data" / "state" / "public_artifact_cleanup_approvals.json"
 CLEANUP_ACTION_ORDER = [
     "redirect_class_lander_to_hub",
     "archive_class_lander",
@@ -32,10 +34,33 @@ CLEANUP_ACTION_ORDER = [
     "keep_as_hub_offer",
     "needs_review",
 ]
+SUPPORTED_APPROVAL_STATUSES = {
+    "needs_review",
+    "approved_for_redirect",
+    "approved_for_suppression",
+    "approved_for_archive",
+    "hold",
+    "rejected",
+}
 
 
 def load_redirect_targets() -> dict[str, Any]:
     return json.loads(REDIRECT_TARGETS_PATH.read_text(encoding="utf-8"))
+
+
+def load_cleanup_approvals() -> dict[str, dict[str, Any]]:
+    if not APPROVALS_PATH.exists():
+        return {}
+    data = json.loads(APPROVALS_PATH.read_text(encoding="utf-8"))
+    approvals: dict[str, dict[str, Any]] = {}
+    for approval in data.get("approvals", []):
+        if not isinstance(approval, dict):
+            continue
+        action_id = str(approval.get("cleanup_action_id") or "")
+        status = str(approval.get("cleanup_approval_status") or "")
+        if action_id and status in SUPPORTED_APPROVAL_STATUSES:
+            approvals[action_id] = approval
+    return approvals
 
 
 def clean_html(value: Any) -> str:
@@ -148,7 +173,61 @@ def proposed_cleanup_action(candidate: dict[str, Any]) -> str:
     return "needs_review"
 
 
-def cleanup_item(candidate: dict[str, Any], redirect_config: dict[str, Any], historical_context: dict[str, dict[str, Any]]) -> dict[str, Any]:
+def cleanup_action_id_for(
+    artifact_id: Any,
+    current_file_path: Any,
+    proposed_action: Any,
+    destination_hub: Any,
+) -> str:
+    fingerprint = "|".join(
+        str(value or "")
+        for value in [artifact_id, current_file_path, proposed_action, destination_hub]
+    )
+    digest = hashlib.sha256(fingerprint.encode("utf-8")).hexdigest()[:16]
+    return f"cleanup_{digest}"
+
+
+def cleanup_approval_for(action_id: str, approvals: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    approval = approvals.get(action_id)
+    if not approval:
+        return {
+            "cleanup_approval_status": "needs_review",
+            "cleanup_approval_note": "Awaiting operator review.",
+            "approved_by": None,
+            "approved_at": None,
+        }
+    return {
+        "cleanup_approval_status": approval.get("cleanup_approval_status") or "needs_review",
+        "cleanup_approval_note": approval.get("cleanup_approval_note") or "",
+        "approved_by": approval.get("approved_by"),
+        "approved_at": approval.get("approved_at"),
+    }
+
+
+def executable_status(proposed_action: str, approval_status: str, destination_needs_review: bool) -> tuple[bool, str]:
+    if proposed_action == "redirect_class_lander_to_hub":
+        if destination_needs_review:
+            return False, "Destination still needs review."
+        if approval_status == "approved_for_redirect":
+            return True, "Approved redirect action with reviewed destination."
+        return False, "Redirect requires approved_for_redirect."
+    if proposed_action == "suppress_schedule_offer":
+        if approval_status == "approved_for_suppression":
+            return True, "Approved suppression action."
+        return False, "Suppression requires approved_for_suppression."
+    if proposed_action in {"archive_class_lander", "remove_class_lander"}:
+        if approval_status == "approved_for_archive":
+            return True, "Approved archive action."
+        return False, "Archive/remove requires approved_for_archive."
+    return False, "This proposed action is not executable by the cleanup approval gate."
+
+
+def cleanup_item(
+    candidate: dict[str, Any],
+    redirect_config: dict[str, Any],
+    historical_context: dict[str, dict[str, Any]],
+    approvals: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
     action = proposed_cleanup_action(candidate)
     historical = historical_context.get(str(session_id_from_artifact_id(candidate.get("artifact_id")) or ""), {})
     destination = destination_mapping_for(candidate, redirect_config, historical_context) if action == "redirect_class_lander_to_hub" else {
@@ -160,7 +239,20 @@ def cleanup_item(candidate: dict[str, Any], redirect_config: dict[str, Any], his
         "destination_source_title": None,
         "destination_source": None,
     }
+    action_id = cleanup_action_id_for(
+        candidate.get("artifact_id"),
+        candidate.get("current_source_file"),
+        action,
+        destination["destination_hub"],
+    )
+    approval = cleanup_approval_for(action_id, approvals)
+    executable, executable_reason = executable_status(
+        action,
+        str(approval["cleanup_approval_status"]),
+        bool(destination["destination_needs_review"]),
+    )
     return {
+        "cleanup_action_id": action_id,
         "artifact_id": candidate.get("artifact_id"),
         "current_file_path": candidate.get("current_source_file"),
         "public_artifact_type": candidate.get("public_artifact_type"),
@@ -178,6 +270,12 @@ def cleanup_item(candidate: dict[str, Any], redirect_config: dict[str, Any], his
         "destination_target_key": destination["destination_target_key"],
         "destination_source_title": destination["destination_source_title"],
         "destination_source": destination["destination_source"],
+        "cleanup_approval_status": approval["cleanup_approval_status"],
+        "cleanup_approval_note": approval["cleanup_approval_note"],
+        "approved_by": approval["approved_by"],
+        "approved_at": approval["approved_at"],
+        "cleanup_action_executable": executable,
+        "cleanup_action_block_reason": None if executable else executable_reason,
         "reason": candidate.get("reason"),
         "confidence": candidate.get("confidence"),
         "enrollware_backing_status": candidate.get("enrollware_backing_status"),
@@ -189,7 +287,8 @@ def build_cleanup_plan() -> dict[str, Any]:
     action_report = build_action_report()
     redirect_config = load_redirect_targets()
     historical_context = load_historical_session_context()
-    items = [cleanup_item(candidate, redirect_config, historical_context) for candidate in action_report.get("action_candidates", [])]
+    approvals = load_cleanup_approvals()
+    items = [cleanup_item(candidate, redirect_config, historical_context, approvals) for candidate in action_report.get("action_candidates", [])]
     items.sort(
         key=lambda item: (
             CLEANUP_ACTION_ORDER.index(str(item["proposed_action"]))
@@ -205,6 +304,7 @@ def build_cleanup_plan() -> dict[str, Any]:
     action_counts = Counter(str(item["proposed_action"]) for item in items)
     redirect_items = [item for item in items if item["proposed_action"] == "redirect_class_lander_to_hub"]
     redirect_hub_counts = Counter(str(item.get("destination_hub") or "") for item in redirect_items)
+    approval_counts = Counter(str(item.get("cleanup_approval_status") or "needs_review") for item in items)
     sister_groups = sorted({str(item["sister_conflict_group_key"]) for item in items if item.get("sister_conflict_group_key")})
     grouped: dict[str, list[dict[str, Any]]] = {action: [] for action in CLEANUP_ACTION_ORDER}
     for item in items:
@@ -224,6 +324,16 @@ def build_cleanup_plan() -> dict[str, Any]:
             "redirects_mapped_to_specific_hubs": sum(1 for item in redirect_items if item.get("destination_hub") != "/index.html"),
             "redirects_falling_back_to_index": sum(1 for item in redirect_items if item.get("destination_hub") == "/index.html"),
             "destination_needs_review_count": sum(1 for item in redirect_items if item.get("destination_needs_review")),
+            "cleanup_approval_status_counts": {
+                status: approval_counts.get(status, 0)
+                for status in sorted(SUPPORTED_APPROVAL_STATUSES)
+            },
+            "executable_cleanup_actions": sum(1 for item in items if item.get("cleanup_action_executable")),
+            "blocked_fallback_redirects": sum(
+                1
+                for item in redirect_items
+                if item.get("destination_hub") == "/index.html" and item.get("destination_needs_review")
+            ),
             "redirect_destination_counts": dict(sorted(redirect_hub_counts.items())),
             "sister_conflict_groups_affected": len(sister_groups),
             "cleanup_action_counts": dict(sorted(action_counts.items())),
@@ -257,8 +367,19 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Redirects mapped to specific hubs: {report['summary']['redirects_mapped_to_specific_hubs']}",
         f"- Redirects falling back to /index.html: {report['summary']['redirects_falling_back_to_index']}",
         f"- Destination needs review: {report['summary']['destination_needs_review_count']}",
+        f"- Executable cleanup actions: {report['summary']['executable_cleanup_actions']}",
+        f"- Blocked fallback redirects: {report['summary']['blocked_fallback_redirects']}",
         f"- Redirect destinations: {json.dumps(report['summary']['redirect_destination_counts'], sort_keys=True)}",
         f"- Sister/conflict groups affected: {report['summary']['sister_conflict_groups_affected']}",
+        "",
+        "## Cleanup Approval Summary",
+        "",
+        f"- Needs review: {report['summary']['cleanup_approval_status_counts']['needs_review']}",
+        f"- Approved for redirect: {report['summary']['cleanup_approval_status_counts']['approved_for_redirect']}",
+        f"- Approved for suppression: {report['summary']['cleanup_approval_status_counts']['approved_for_suppression']}",
+        f"- Approved for archive: {report['summary']['cleanup_approval_status_counts']['approved_for_archive']}",
+        f"- Hold: {report['summary']['cleanup_approval_status_counts']['hold']}",
+        f"- Rejected: {report['summary']['cleanup_approval_status_counts']['rejected']}",
         "",
     ]
 
@@ -287,6 +408,7 @@ def write_reports(report: dict[str, Any]) -> None:
                     for item in sorted(by_group[group], key=lambda value: (str(value.get("date") or ""), str(value.get("time") or ""), str(value.get("artifact_id") or "")))[:50]:
                         when = " ".join(part for part in [str(item.get("date") or ""), str(item.get("time") or "")] if part)
                         lines.append(f"  - {when} {item['artifact_id']}")
+                        lines.append(f"    - Cleanup action ID: {item['cleanup_action_id']}")
                         lines.append(f"    - File: {item['current_file_path']}")
                         if item.get("destination_hub"):
                             lines.append(f"    - Destination hub: {item['destination_hub']}")
@@ -298,6 +420,10 @@ def write_reports(report: dict[str, Any]) -> None:
                             if item.get("destination_source"):
                                 lines.append(f"    - Destination source: {item['destination_source']}")
                         lines.append(f"    - Backing: {item['enrollware_backing_status']}")
+                        lines.append(f"    - Cleanup approval: {item['cleanup_approval_status']}")
+                        lines.append(f"    - Approval note: {item['cleanup_approval_note']}")
+                        lines.append(f"    - Executable: {item['cleanup_action_executable']}")
+                        lines.append(f"    - Execution block reason: {item['cleanup_action_block_reason']}")
                         lines.append(f"    - Confidence: {item['confidence']}")
                         lines.append(f"    - Reason: {item['reason']}")
                 lines.append("")
