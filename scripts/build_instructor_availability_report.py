@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import os
 import urllib.request
+import argparse
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -26,6 +27,7 @@ REPORT_JSON_PATH = DEBUG_DIR / "instructor_availability_report.json"
 REPORT_MD_PATH = DEBUG_DIR / "instructor_availability_report.md"
 TZ = ZoneInfo("America/New_York")
 EXPLICIT_VOCABULARY = {"HARD", "SOFT", "UNAVAILABLE"}
+SOURCE_MODES = {"fixture", "live", "auto"}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -119,11 +121,19 @@ def parse_property(line: str) -> tuple[str, dict[str, str], str]:
     return parts[0].upper(), params, value
 
 
-def fetch_ics_events(source: dict[str, Any]) -> tuple[list[dict[str, Any]], str | None]:
+def live_ics_url(source: dict[str, Any]) -> tuple[str, str]:
     env_var = str(source.get("url_env_var") or "").strip()
     ics_url = os.environ.get(env_var, "").strip() if env_var else ""
+    return ics_url, env_var
+
+
+def fetch_ics_events(source: dict[str, Any]) -> tuple[list[dict[str, Any]], str | None]:
+    ics_url, env_var = live_ics_url(source)
     if not ics_url:
-        return [], f"No live ICS URL configured in {env_var or 'environment'}."
+        return [], (
+            f"No live ICS URL configured in {env_var or 'environment'}. "
+            "Public Google Calendar CID web URLs are not fetched directly; provide a public/basic ICS URL or private ICS URL via the configured environment variable."
+        )
     try:
         request = urllib.request.Request(ics_url, headers={"User-Agent": "910CPR-Availability-Report/1.0"})
         with urllib.request.urlopen(request, timeout=20) as response:
@@ -148,23 +158,50 @@ def fetch_ics_events(source: dict[str, Any]) -> tuple[list[dict[str, Any]], str 
     return events, None
 
 
-def raw_events_for_source(source: dict[str, Any], fixture_events: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
+def fixture_events_for_source(source: dict[str, Any], fixture_events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     source_key = str(source.get("calendar_source_key") or "")
     instructor_key = str(source.get("instructor_key") or source.get("owner_instructor_key") or "")
-    matched = [
+    return [
         event
         for event in fixture_events
         if str(event.get("calendar_source_key") or "") == source_key
         or str(event.get("source_key") or "") == source_key
         or str(event.get("instructor_key") or "") == instructor_key
     ]
+
+
+def raw_events_for_source(source: dict[str, Any], fixture_events: list[dict[str, Any]], source_mode: str) -> tuple[list[dict[str, Any]], list[str], str]:
+    source_key = str(source.get("calendar_source_key") or "")
+    matched = fixture_events_for_source(source, fixture_events)
+    if source_mode == "fixture":
+        if not matched:
+            return [], [f"Fixture mode requested but no fixture events matched {source_key}."], "fixture"
+        return matched, [f"Loaded {len(matched)} event(s) from local fixture for {source_key}."], "fixture"
+    if source_mode == "live":
+        live_events, warning = fetch_ics_events(source)
+        warnings = [warning] if warning else []
+        if live_events:
+            warnings.append(f"Loaded {len(live_events)} event(s) from live ICS for {source_key}.")
+        return live_events, warnings, "live"
+
+    ics_url, _ = live_ics_url(source)
+    if ics_url:
+        live_events, warning = fetch_ics_events(source)
+        warnings = [warning] if warning else []
+        if live_events:
+            warnings.append(f"Loaded {len(live_events)} event(s) from live ICS for {source_key}.")
+            return live_events, warnings, "live"
+        if matched:
+            warnings.append(f"Falling back to {len(matched)} local fixture event(s) for {source_key}.")
+            return matched, warnings, "fixture"
+        return [], warnings, "live"
     if matched:
-        return matched, [f"Loaded {len(matched)} event(s) from local fixture for {source_key}."]
+        return matched, [f"Loaded {len(matched)} event(s) from local fixture for {source_key}."], "fixture"
     live_events, warning = fetch_ics_events(source)
     warnings = [warning] if warning else []
     if live_events:
         warnings.append(f"Loaded {len(live_events)} event(s) from live ICS for {source_key}.")
-    return live_events, warnings
+    return live_events, warnings, "none"
 
 
 def normalize_event(raw: dict[str, Any], source: dict[str, Any]) -> tuple[dict[str, Any] | None, str | None]:
@@ -219,11 +256,12 @@ def build_instructor_report(
     source: dict[str, Any],
     fixture_events: list[dict[str, Any]],
     fixture_warnings: list[str],
+    source_mode: str,
 ) -> dict[str, Any]:
     source_key = str(source.get("calendar_source_key") or "")
     mode = str(source.get("calendar_mode") or source.get("mode") or instructor.get("calendar_mode") or "")
-    raw_events, source_warnings = raw_events_for_source(source, fixture_events)
-    warnings = list(fixture_warnings) + source_warnings
+    raw_events, source_warnings, events_source = raw_events_for_source(source, fixture_events, source_mode)
+    warnings = ([] if source_mode == "live" else list(fixture_warnings)) + source_warnings
     ignored_events: list[str] = []
     normalized: list[dict[str, Any]] = []
     for raw in raw_events:
@@ -268,6 +306,7 @@ def build_instructor_report(
         "calendar_source_key": source_key,
         "calendar_source_loaded": bool(source),
         "calendar_mode": mode,
+        "events_source": events_source,
         "default_location_key": source.get("default_location_key") or instructor.get("default_location_key"),
         "events_found": len(raw_events),
         "normalized_hard_windows": usable_hard,
@@ -281,7 +320,9 @@ def build_instructor_report(
     }
 
 
-def build_report() -> dict[str, Any]:
+def build_report(source_mode: str = "auto") -> dict[str, Any]:
+    if source_mode not in SOURCE_MODES:
+        raise ValueError(f"source_mode must be one of {sorted(SOURCE_MODES)}")
     calendar_config = load_json(CONFIG_DIR / "calendar_sources.json")
     instructor_config = load_json(CONFIG_DIR / "instructors.json")
     load_json(CONFIG_DIR / "locations.json")
@@ -298,7 +339,7 @@ def build_report() -> dict[str, Any]:
     for instructor in instructors:
         source_key = str(instructor.get("calendar_source_key") or "")
         source = sources.get(source_key, {})
-        rows.append(build_instructor_report(instructor, source, fixture_events, fixture_warnings))
+        rows.append(build_instructor_report(instructor, source, fixture_events, fixture_warnings, source_mode))
 
     return {
         "generated_at": datetime.now(TZ).isoformat(),
@@ -306,6 +347,8 @@ def build_report() -> dict[str, Any]:
         "public_behavior_changed": False,
         "fixture_path": str(FIXTURE_PATH.relative_to(ROOT)),
         "fixture_loaded": FIXTURE_PATH.exists(),
+        "source_mode": source_mode,
+        "live_ics_policy": "Live mode uses only the configured *_ICS_URL environment variables. Public Google Calendar CID web URLs are not converted to ICS URLs here; public/basic.ics or private ICS URLs must be supplied explicitly.",
         "calendar_access_optional": True,
         "instructors": rows,
     }
@@ -321,7 +364,9 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Generated at: {report['generated_at']}",
         f"- Report only: {report['report_only']}",
         f"- Public behavior changed: {report['public_behavior_changed']}",
+        f"- Source mode: {report['source_mode']}",
         f"- Fixture loaded: {report['fixture_loaded']} ({report['fixture_path']})",
+        f"- Live ICS policy: {report['live_ics_policy']}",
         "",
     ]
     for item in report["instructors"]:
@@ -330,6 +375,7 @@ def write_reports(report: dict[str, Any]) -> None:
                 f"## {item['display_name']} ({item['instructor_key']})",
                 f"- Calendar source loaded: {item['calendar_source_loaded']} ({item['calendar_source_key']})",
                 f"- Instructor mode: {item['calendar_mode']}",
+                f"- Events source: {item['events_source']}",
                 f"- Events found: {item['events_found']}",
                 f"- HARD windows: {len(item['normalized_hard_windows'])}",
                 f"- SOFT edge windows: {len(item['normalized_soft_windows'])}",
@@ -349,8 +395,15 @@ def write_reports(report: dict[str, Any]) -> None:
     REPORT_MD_PATH.write_text("\n".join(lines), encoding="utf-8")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build report-only instructor availability from fixture or live ICS sources.")
+    parser.add_argument("--source", choices=sorted(SOURCE_MODES), default="auto", help="Event source mode. live uses only configured ICS URL environment variables.")
+    return parser.parse_args()
+
+
 def main() -> int:
-    report = build_report()
+    args = parse_args()
+    report = build_report(source_mode=args.source)
     write_reports(report)
     print(f"Wrote {REPORT_JSON_PATH}")
     print(f"Wrote {REPORT_MD_PATH}")
