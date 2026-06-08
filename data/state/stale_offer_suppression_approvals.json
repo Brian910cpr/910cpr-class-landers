@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1",
+  "description": "Report-only approval state for suppressing stale/missing Enrollware-backed Lander offers. This does not modify public offer files.",
+  "supported_statuses": [
+    "needs_review",
+    "approved_for_suppression",
+    "hold",
+    "rejected"
+  ],
+  "approvals": []
+}
