@@ -7,5 +7,90 @@
     "hold",
     "rejected"
   ],
-  "approvals": []
+  "approvals": [
+    {
+      "suppression_action_id": "suppress_0dfbecb9a0e8b812",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_104d1a6bc66ecba2",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_14916c178a10366a",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_28328db3183cff48",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_28841571514f940b",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_302e3089a4fcd965",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_32ffacbf16f72eb6",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_47a759e0df805e93",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_a4dd0d2092753392",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_c6284128b6e66647",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_ca4c101dd0ba832f",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_f939e1839d6ae562",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T10:57:53.363469-04:00",
+      "approval_note": "approved batch course_family_pals"
+    }
+  ]
 }
