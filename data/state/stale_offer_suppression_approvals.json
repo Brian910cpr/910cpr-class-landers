@@ -86,6 +86,13 @@
       "approval_note": "approved batch public_schedule_march_2026_bls"
     },
     {
+      "suppression_action_id": "suppress_1f662e24e62130e4",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
+    },
+    {
       "suppression_action_id": "suppress_20ec99849e35c9fd",
       "suppression_approval_status": "approved_for_suppression",
       "approved_by": "brian",
@@ -107,11 +114,25 @@
       "approval_note": "approved batch course_family_pals"
     },
     {
+      "suppression_action_id": "suppress_283fadf69c9dc96d",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
+    },
+    {
       "suppression_action_id": "suppress_28841571514f940b",
       "suppression_approval_status": "approved_for_suppression",
       "approved_by": "brian",
       "approved_at": "2026-06-08T10:57:53.363469-04:00",
       "approval_note": "approved batch course_family_pals"
+    },
+    {
+      "suppression_action_id": "suppress_2a038b3d71f507aa",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
     },
     {
       "suppression_action_id": "suppress_2da9b30fdf88c9cc",
@@ -177,11 +198,25 @@
       "approval_note": "approved batch public_schedule_march_2026_bls"
     },
     {
+      "suppression_action_id": "suppress_5dde5ce9b2ad9fb7",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
+    },
+    {
       "suppression_action_id": "suppress_5e450784bc854ded",
       "suppression_approval_status": "approved_for_suppression",
       "approved_by": "brian",
       "approved_at": "2026-06-08T13:31:01.829117-04:00",
       "approval_note": "approved batch public_schedule_march_2026_bls"
+    },
+    {
+      "suppression_action_id": "suppress_6a2c1c19b2e9895b",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
     },
     {
       "suppression_action_id": "suppress_74bb512d4aff0104",
@@ -198,11 +233,25 @@
       "approval_note": "approved batch public_schedule_march_2026_bls"
     },
     {
+      "suppression_action_id": "suppress_78aaecf599b460c7",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
+    },
+    {
       "suppression_action_id": "suppress_7afa99d772a23a1b",
       "suppression_approval_status": "approved_for_suppression",
       "approved_by": "brian",
       "approved_at": "2026-06-08T11:56:02.920951-04:00",
       "approval_note": "approved batch public_schedule_march_2026_acls"
+    },
+    {
+      "suppression_action_id": "suppress_7cc6877f1d6888fc",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
     },
     {
       "suppression_action_id": "suppress_7d1514d88403c910",
@@ -231,6 +280,13 @@
       "approved_by": "brian",
       "approved_at": "2026-06-08T13:31:01.829117-04:00",
       "approval_note": "approved batch public_schedule_march_2026_bls"
+    },
+    {
+      "suppression_action_id": "suppress_92b8d60026d52dcd",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
     },
     {
       "suppression_action_id": "suppress_9377a384de1e61d3",
@@ -296,6 +352,13 @@
       "approval_note": "approved batch public_schedule_march_2026_acls"
     },
     {
+      "suppression_action_id": "suppress_aa331f7ea4db0983",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
+    },
+    {
       "suppression_action_id": "suppress_b335a82d0f5b1d90",
       "suppression_approval_status": "approved_for_suppression",
       "approved_by": "brian",
@@ -315,6 +378,13 @@
       "approved_by": "brian",
       "approved_at": "2026-06-08T11:56:02.920951-04:00",
       "approval_note": "approved batch public_schedule_march_2026_acls"
+    },
+    {
+      "suppression_action_id": "suppress_bf846c320b74a633",
+      "suppression_approval_status": "approved_for_suppression",
+      "approved_by": "brian",
+      "approved_at": "2026-06-08T16:13:38.076196-04:00",
+      "approval_note": "approved batch course_family_acls"
     },
     {
       "suppression_action_id": "suppress_c175d03448eb77cf",
