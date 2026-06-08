@@ -19,6 +19,7 @@ from scripts.audit_lander_offers_against_enrollware import build_report as build
 from scripts.build_instructor_availability_report import DEBUG_DIR, SOURCE_MODES, TZ
 from scripts.validate_hub_render_preview import validate_preview
 from scripts.validate_public_artifact_cleanup_execution import build_validation_report as build_cleanup_validation
+from scripts.validate_stale_offer_suppression_execution import build_validation_report as build_stale_offer_suppression_validation
 
 
 REPORT_JSON_PATH = DEBUG_DIR / "lander_safety_preflight.json"
@@ -65,9 +66,11 @@ def final_status(
 def build_preflight(source_mode: str) -> dict[str, Any]:
     hub_validation = validate_preview(source_mode)
     cleanup_validation = build_cleanup_validation()
+    stale_suppression_validation = build_stale_offer_suppression_validation()
     offer_audit = build_offer_audit()
     public_status_lines = git_status_for_public_paths()
     cleanup_summary = cleanup_validation.get("summary", {})
+    stale_suppression_summary = stale_suppression_validation.get("summary", {})
     hub_summary = hub_validation.get("summary", {})
     audit_summary = offer_audit.get("summary", {})
     public_files_changed = bool(public_status_lines)
@@ -97,6 +100,12 @@ def build_preflight(source_mode: str) -> dict[str, Any]:
             "cleanup_executable_actions": int(cleanup_summary.get("executable_actions") or 0),
             "cleanup_blocked_actions": int(cleanup_summary.get("blocked_actions") or 0),
             "fallback_redirects_blocked": int(cleanup_summary.get("fallback_redirects_blocked") or 0),
+            "stale_offer_suppression_candidates": int(stale_suppression_summary.get("total_suppression_candidates") or 0),
+            "stale_offer_executable_suppressions": int(stale_suppression_summary.get("executable_suppressions") or 0),
+            "stale_offer_blocked_suppressions": int(stale_suppression_summary.get("blocked_suppressions") or 0),
+            "stale_offer_suppression_approval_mismatch_blocks": int(stale_suppression_summary.get("approval_action_mismatch_blocks") or 0),
+            "stale_offer_suppression_by_source_file": stale_suppression_summary.get("by_source_file", {}),
+            "stale_offer_suppression_by_action": stale_suppression_summary.get("by_action", {}),
             "stale_missing_enrollware_offers": int(audit_summary.get("missing") or 0),
             "ambiguous_enrollware_offers": int(audit_summary.get("ambiguous") or 0),
             "recommended_public_offer_removals": int(audit_summary.get("recommended_removals") or 0),
@@ -113,6 +122,10 @@ def build_preflight(source_mode: str) -> dict[str, Any]:
         "public_artifact_cleanup_execution_validation": {
             "summary": cleanup_summary,
             "approval_record_count": cleanup_validation.get("approval_record_count"),
+        },
+        "stale_offer_suppression_execution_validation": {
+            "summary": stale_suppression_summary,
+            "approval_state_path": stale_suppression_validation.get("approval_state_path"),
         },
         "lander_offer_enrollware_presence_audit": {
             "summary": audit_summary,
@@ -149,6 +162,10 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Cleanup executable actions: {summary['cleanup_executable_actions']}",
         f"- Cleanup blocked actions: {summary['cleanup_blocked_actions']}",
         f"- Fallback redirects blocked: {summary['fallback_redirects_blocked']}",
+        f"- Stale offer suppression candidates: {summary['stale_offer_suppression_candidates']}",
+        f"- Stale offer executable suppressions: {summary['stale_offer_executable_suppressions']}",
+        f"- Stale offer blocked suppressions: {summary['stale_offer_blocked_suppressions']}",
+        f"- Stale offer suppression approval/action mismatch blocks: {summary['stale_offer_suppression_approval_mismatch_blocks']}",
         f"- Stale/missing Enrollware offers: {summary['stale_missing_enrollware_offers']}",
         f"- Ambiguous Enrollware offers: {summary['ambiguous_enrollware_offers']}",
         f"- Recommended public offer removals: {summary['recommended_public_offer_removals']}",
@@ -165,6 +182,15 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Executable actions: {summary['cleanup_executable_actions']}",
         f"- Blocked actions: {summary['cleanup_blocked_actions']}",
         f"- Fallback redirects blocked: {summary['fallback_redirects_blocked']}",
+        "",
+        "## Stale Offer Suppression Validation",
+        "",
+        f"- Candidates: {summary['stale_offer_suppression_candidates']}",
+        f"- Executable suppressions: {summary['stale_offer_executable_suppressions']}",
+        f"- Blocked suppressions: {summary['stale_offer_blocked_suppressions']}",
+        f"- Approval/action mismatch blocks: {summary['stale_offer_suppression_approval_mismatch_blocks']}",
+        f"- By source file: {json.dumps(summary['stale_offer_suppression_by_source_file'], sort_keys=True)}",
+        f"- By action: {json.dumps(summary['stale_offer_suppression_by_action'], sort_keys=True)}",
         "",
         "## Enrollware Offer Audit",
         "",
