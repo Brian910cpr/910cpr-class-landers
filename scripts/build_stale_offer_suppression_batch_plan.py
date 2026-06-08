@@ -68,6 +68,11 @@ def date_range(items: list[dict[str, Any]]) -> dict[str, str | None]:
     }
 
 
+def is_current_or_future(item: dict[str, Any], today: str) -> bool:
+    date_text = str(item.get("date") or "")
+    return bool(date_text) and date_text >= today
+
+
 def confidence_level(items: list[dict[str, Any]]) -> str:
     levels = {str(item.get("confidence") or "unknown") for item in items}
     if levels == {"high"}:
@@ -148,10 +153,18 @@ def sorted_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def build_batches(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
     batches: list[dict[str, Any]] = []
+    today = datetime.now(TZ).date().isoformat()
     public_schedule = [item for item in candidates if source_label(item.get("source_file")) == "public_schedule"]
     customer_facing = [item for item in candidates if source_label(item.get("source_file")) == "customer_facing_offers"]
     high_confidence = [item for item in candidates if item.get("confidence") == "high"]
 
+    add_batch_if_items(
+        batches,
+        "current_future_public_schedule",
+        "Current-or-future public schedule stale offers",
+        [item for item in public_schedule if is_current_or_future(item, today)],
+        "Current-or-future public_schedule stale offers only; approval would affect visible schedule rows dated today or later.",
+    )
     add_batch_if_items(
         batches,
         "public_schedule_march_2026_acls",
