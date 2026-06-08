@@ -32,6 +32,7 @@ SLUG_HUBS_PATH = CONFIG_DIR / "slug_hubs.json"
 REGISTRATION_TARGETS_PATH = CONFIG_DIR / "registration_targets.json"
 SEED_APPROVALS_PATH = ROOT / "data" / "state" / "seed_approvals.json"
 HUB_EMPTY_STATES_PATH = CONFIG_DIR / "hub_empty_states.json"
+PUBLIC_VISIBILITY_RULES_PATH = CONFIG_DIR / "public_offer_visibility_rules.json"
 
 
 def norm(value: Any) -> str:
@@ -78,6 +79,45 @@ def load_empty_state_rules() -> dict[str, Any]:
             "hub_overrides": {},
         }
     return load_json(HUB_EMPTY_STATES_PATH)
+
+
+def load_public_visibility_rules() -> dict[str, Any]:
+    if not PUBLIC_VISIBILITY_RULES_PATH.exists():
+        return {
+            "public_offer_cutoff_hours": None,
+            "timezone": "America/New_York",
+            "applies_to": [],
+            "does_not_apply_to": [],
+            "notes": [],
+        }
+    return load_json(PUBLIC_VISIBILITY_RULES_PATH)
+
+
+def public_visibility_for_start(start_value: Any, rules: dict[str, Any], now: datetime | None = None) -> dict[str, Any]:
+    cutoff_hours = rules.get("public_offer_cutoff_hours")
+    start_dt = parse_dt(start_value)
+    if cutoff_hours is None or not start_dt:
+        return {
+            "public_visibility_status": "not_checked",
+            "public_visibility_note": "Public display cutoff was not checked.",
+            "cutoff_hours": cutoff_hours,
+            "hours_until_start": None,
+        }
+    current = now or datetime.now(TZ)
+    hours_until_start = (start_dt - current).total_seconds() / 3600
+    if hours_until_start < float(cutoff_hours):
+        return {
+            "public_visibility_status": "suppressed_cutoff_window",
+            "public_visibility_note": "Suppressed from public display because class starts within cutoff window. Registration may still be available by direct/manual link.",
+            "cutoff_hours": cutoff_hours,
+            "hours_until_start": round(hours_until_start, 2),
+        }
+    return {
+        "public_visibility_status": "visible_publicly",
+        "public_visibility_note": "Outside public display cutoff window.",
+        "cutoff_hours": cutoff_hours,
+        "hours_until_start": round(hours_until_start, 2),
+    }
 
 
 def empty_state_rule(rules: dict[str, Any], rule_key: str) -> dict[str, Any]:
@@ -241,7 +281,7 @@ def load_hubs() -> list[dict[str, Any]]:
     return hubs
 
 
-def load_current_sessions(targets_by_course: dict[str, dict[str, Any]]) -> dict[str, Any]:
+def load_current_sessions(targets_by_course: dict[str, dict[str, Any]], visibility_rules: dict[str, Any]) -> dict[str, Any]:
     if not SESSIONS_CURRENT_PATH.exists():
         return {
             "source_available": False,
@@ -261,6 +301,7 @@ def load_current_sessions(targets_by_course: dict[str, dict[str, Any]]) -> dict[
             continue
         course = session.get("course") if isinstance(session.get("course"), dict) else {}
         course_key = course_key_for_session(session, targets_by_course)
+        visibility = public_visibility_for_start(start_dt.isoformat(), visibility_rules, now)
         sessions.append(
             {
                 "display_item_type": "current_enrollware_class",
@@ -277,6 +318,7 @@ def load_current_sessions(targets_by_course: dict[str, dict[str, Any]]) -> dict[
                 "location": session.get("location") or session.get("location_name") or session.get("location_key"),
                 "instructor": session.get("instructor") or session.get("instructor_name"),
                 "reason": "Current future session exists in data/sessions_current.json.",
+                **visibility,
             }
         )
     build = config.get("build") if isinstance(config.get("build"), dict) else {}
@@ -356,8 +398,9 @@ def hub_matches_session(hub: dict[str, Any], session: dict[str, Any], targets_by
 def build_report(source_mode: str) -> dict[str, Any]:
     targets_by_course = load_registration_targets()
     empty_state_rules = load_empty_state_rules()
+    visibility_rules = load_public_visibility_rules()
     hubs = load_hubs()
-    sessions_source = load_current_sessions(targets_by_course)
+    sessions_source = load_current_sessions(targets_by_course, visibility_rules)
     seed_export = build_export(source_mode)
     seeds = seed_export.get("publishable_seed_candidates", [])
 
@@ -366,10 +409,20 @@ def build_report(source_mode: str) -> dict[str, Any]:
     display_counter: Counter[str] = Counter()
 
     for hub in hubs:
-        current_classes = [
+        matched_current_classes = [
             session
             for session in sessions_source["sessions"]
             if hub_matches_session(hub, session, targets_by_course)
+        ]
+        current_classes = [
+            session
+            for session in matched_current_classes
+            if session.get("public_visibility_status") != "suppressed_cutoff_window"
+        ]
+        cutoff_suppressed_classes = [
+            session
+            for session in matched_current_classes
+            if session.get("public_visibility_status") == "suppressed_cutoff_window"
         ]
         approved_seed_offers: list[dict[str, Any]] = []
         needs_review_seed_offers: list[dict[str, Any]] = []
@@ -430,6 +483,8 @@ def build_report(source_mode: str) -> dict[str, Any]:
                 "course_key": hub.get("course_key"),
                 "current_enrollware_classes": current_classes[:25],
                 "current_enrollware_class_count": len(current_classes),
+                "cutoff_suppressed_current_enrollware_classes": cutoff_suppressed_classes[:25],
+                "cutoff_suppressed_current_enrollware_class_count": len(cutoff_suppressed_classes),
                 "approved_seed_offers": approved_seed_offers,
                 "approved_seed_offer_count": len(approved_seed_offers),
                 "needs_review_seed_offers": needs_review_seed_offers,
@@ -443,12 +498,15 @@ def build_report(source_mode: str) -> dict[str, Any]:
         )
 
     empty_state_counts = Counter(str(hub.get("empty_state_type") or "needs_review") for hub in hub_reports)
+    cutoff_suppressed_total = sum(hub["cutoff_suppressed_current_enrollware_class_count"] for hub in hub_reports)
     summary = {
         "hubs_checked": len(hub_reports),
         "hubs_with_current_enrollware_classes": sum(1 for hub in hub_reports if hub["current_enrollware_class_count"] > 0),
         "hubs_with_approved_seed_offers": sum(1 for hub in hub_reports if hub["approved_seed_offer_count"] > 0),
         "hubs_with_needs_review_seed_offers": sum(1 for hub in hub_reports if hub["needs_review_seed_offer_count"] > 0),
         "hubs_empty": sum(1 for hub in hub_reports if hub["would_appear_empty"]),
+        "suppressed_cutoff_window": cutoff_suppressed_total,
+        "current_enrollware_classes_suppressed_by_cutoff": cutoff_suppressed_total,
         "approved_but_not_public_ready": suppressed_counter.get("suppressed_approved_but_not_public_ready", 0),
         "suppressed_approved_but_not_public_ready": suppressed_counter.get("suppressed_approved_but_not_public_ready", 0),
         "hubs_using_current_classes": empty_state_counts.get("show_current_classes", 0),
@@ -479,6 +537,8 @@ def build_report(source_mode: str) -> dict[str, Any]:
             "registration_targets": str(REGISTRATION_TARGETS_PATH),
             "seed_approvals": str(SEED_APPROVALS_PATH),
             "hub_empty_states": str(HUB_EMPTY_STATES_PATH),
+            "public_offer_visibility_rules": str(PUBLIC_VISIBILITY_RULES_PATH),
+            "public_offer_cutoff_hours": visibility_rules.get("public_offer_cutoff_hours"),
             "seed_approval_count": load_seed_approval_count(),
         },
         "rules": {
@@ -511,6 +571,7 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Hubs with approved seed offers: {report['summary']['hubs_with_approved_seed_offers']}",
         f"- Hubs with needs-review seed offers: {report['summary']['hubs_with_needs_review_seed_offers']}",
         f"- Hubs empty: {report['summary']['hubs_empty']}",
+        f"- Current Enrollware classes suppressed by cutoff: {report['summary']['current_enrollware_classes_suppressed_by_cutoff']}",
         f"- Approved but not public ready: {report['summary']['approved_but_not_public_ready']}",
         f"- Hubs using current classes: {report['summary']['hubs_using_current_classes']}",
         f"- Hubs using approved seed offers: {report['summary']['hubs_using_approved_seed_offers']}",
@@ -530,6 +591,7 @@ def write_reports(report: dict[str, Any]) -> None:
         "- `suppressed_missing_enrollware`: Enrollware source is unavailable for validation.",
         "- `suppressed_not_approved`: seed exists but approval state blocks public display.",
         "- `suppressed_missing_registration_target`: seed lacks a valid registration target/publishability gate.",
+        "- `suppressed_cutoff_window`: Enrollware-backed offer is hidden from public display because it starts within the configured cutoff window; direct/manual registration may still be available.",
         "",
         "## Empty-State Contract",
         "",
@@ -550,6 +612,7 @@ def write_reports(report: dict[str, Any]) -> None:
         lines.append(f"- Path: {hub.get('hub_path')}")
         lines.append(f"- Course key: {hub.get('course_key')}")
         lines.append(f"- Current Enrollware classes: {hub['current_enrollware_class_count']}")
+        lines.append(f"- Current classes suppressed by cutoff: {hub['cutoff_suppressed_current_enrollware_class_count']}")
         lines.append(f"- Approved seed offers: {hub['approved_seed_offer_count']}")
         lines.append(f"- Needs-review seed offers: {hub['needs_review_seed_offer_count']}")
         lines.append(f"- Suppressed seed offers: {hub['blocked_suppressed_seed_offer_count']}")
@@ -564,6 +627,10 @@ def write_reports(report: dict[str, Any]) -> None:
 
         for item in hub["current_enrollware_classes"][:5]:
             lines.append(f"  - Current: {item.get('date')} {item.get('start_time')} - {item.get('course_title')} (session {item.get('session_id')})")
+        for item in hub["cutoff_suppressed_current_enrollware_classes"][:5]:
+            lines.append(f"  - Cutoff-suppressed: {item.get('date')} {item.get('start_time')} - {item.get('course_title')} (session {item.get('session_id')})")
+            lines.append(f"    - Public visibility: {item.get('public_visibility_status')} - {item.get('public_visibility_note')}")
+            lines.append(f"    - Hours until start: {item.get('hours_until_start')} / cutoff hours: {item.get('cutoff_hours')}")
         for item in hub["approved_seed_offers"][:5]:
             lines.append(f"  - Approved seed: {item.get('date')} {item.get('start_time')} - {item.get('course_title')} ({item.get('seed_id')})")
         for item in hub["needs_review_seed_offers"][:5]:

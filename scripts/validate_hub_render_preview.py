@@ -51,6 +51,7 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
     approved_seed_offers = 0
     held_needs_review = 0
     suppressed_approved_but_not_public_ready = int(preview.get("summary", {}).get("suppressed_approved_but_not_public_ready") or 0)
+    suppressed_cutoff_window = int(preview.get("summary", {}).get("suppressed_cutoff_window") or 0)
 
     for hub in preview.get("hubs", []):
         hub_key = str(hub.get("hub_key") or "")
@@ -63,6 +64,15 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
         held_needs_review += int(hub.get("held_needs_review_seed_offer_count") or 0)
 
         for item in approved_items:
+            if item.get("public_visibility_status") == "suppressed_cutoff_window":
+                add_violation(
+                    violations,
+                    "no_public_display_inside_cutoff_window",
+                    hub,
+                    "Suppress this item from public display until it is outside the cutoff policy or handle manually.",
+                    item,
+                    "Approved seed offer appears publicly even though public_visibility_status is suppressed_cutoff_window.",
+                )
             if item.get("public_ready") is not True:
                 add_violation(
                     violations,
@@ -89,6 +99,17 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
                     "Make the preview explicitly state hub offer only and no standalone class lander.",
                     item,
                     "Seed display note does not clearly block standalone class lander creation.",
+                )
+
+        for item in hub.get("current_enrollware_classes_preview", []):
+            if item.get("public_visibility_status") == "suppressed_cutoff_window":
+                add_violation(
+                    violations,
+                    "no_public_display_inside_cutoff_window",
+                    hub,
+                    "Suppress this current class from public display because it is inside the cutoff window.",
+                    item,
+                    "Current Enrollware class appears publicly even though public_visibility_status is suppressed_cutoff_window.",
                 )
 
         for item in held_items:
@@ -172,6 +193,7 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
             "approved_seed_offers": approved_seed_offers,
             "held_needs_review_seed_offers": held_needs_review,
             "suppressed_approved_but_not_public_ready": suppressed_approved_but_not_public_ready,
+            "suppressed_cutoff_window": suppressed_cutoff_window,
             "hubs_previewed": preview.get("summary", {}).get("hubs_previewed"),
             "display_mode_counts": preview.get("summary", {}).get("display_mode_counts", {}),
             "violations_by_rule": dict(sorted(by_rule.items())),
@@ -198,6 +220,7 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Approved seed offers: {report['summary']['approved_seed_offers']}",
         f"- Held needs-review seed offers: {report['summary']['held_needs_review_seed_offers']}",
         f"- Suppressed approved-but-not-public-ready: {report['summary']['suppressed_approved_but_not_public_ready']}",
+        f"- Suppressed by cutoff window: {report['summary']['suppressed_cutoff_window']}",
         f"- Violations by rule: {json.dumps(report['summary']['violations_by_rule'], sort_keys=True)}",
         "",
         "## ARC/HSI Empty-State Confirmation",

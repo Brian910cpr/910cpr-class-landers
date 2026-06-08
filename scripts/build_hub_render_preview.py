@@ -56,6 +56,10 @@ def preview_class_item(item: dict[str, Any]) -> dict[str, Any]:
         "session_id": item.get("session_id"),
         "course_key": item.get("course_key"),
         "course_id": item.get("course_id"),
+        "public_visibility_status": item.get("public_visibility_status"),
+        "public_visibility_note": item.get("public_visibility_note"),
+        "cutoff_hours": item.get("cutoff_hours"),
+        "hours_until_start": item.get("hours_until_start"),
         "source": "Enrollware-backed",
         "display_note": "Current Enrollware-backed class/session offer.",
     }
@@ -91,16 +95,22 @@ def build_preview(source_mode: str) -> dict[str, Any]:
     held_needs_review = 0
     suppressed_total = 0
     suppressed_approved_but_not_public_ready = 0
+    suppressed_cutoff_window = 0
 
     for hub in model.get("hubs", []):
         mode = display_mode_for_hub(hub)
         mode_counts[mode] += 1
         current_classes = [preview_class_item(item) for item in hub.get("current_enrollware_classes", [])[:10]]
+        cutoff_suppressed_classes = [
+            preview_class_item(item)
+            for item in hub.get("cutoff_suppressed_current_enrollware_classes", [])[:10]
+        ]
         approved_seed_offers = [preview_seed_item(item) for item in hub.get("approved_seed_offers", [])[:10]]
         held_seed_offers = [preview_seed_item(item) for item in hub.get("needs_review_seed_offers", [])[:10]]
         suppressed_seed_offers = [preview_seed_item(item) for item in hub.get("blocked_suppressed_seed_offers", [])[:10]]
         held_needs_review += int(hub.get("needs_review_seed_offer_count") or 0)
         suppressed_total += int(hub.get("blocked_suppressed_seed_offer_count") or 0)
+        suppressed_cutoff_window += int(hub.get("cutoff_suppressed_current_enrollware_class_count") or 0)
         suppressed_approved_but_not_public_ready += sum(
             1
             for item in hub.get("blocked_suppressed_seed_offers", [])
@@ -115,10 +125,12 @@ def build_preview(source_mode: str) -> dict[str, Any]:
                 "hub_source": hub.get("hub_source"),
                 "display_mode": mode,
                 "current_enrollware_class_count": hub.get("current_enrollware_class_count"),
+                "cutoff_suppressed_current_enrollware_class_count": hub.get("cutoff_suppressed_current_enrollware_class_count"),
                 "approved_seed_offer_count": hub.get("approved_seed_offer_count"),
                 "held_needs_review_seed_offer_count": hub.get("needs_review_seed_offer_count"),
                 "suppressed_offer_count": hub.get("blocked_suppressed_seed_offer_count"),
                 "current_enrollware_classes_preview": current_classes,
+                "cutoff_suppressed_current_enrollware_classes": cutoff_suppressed_classes,
                 "approved_seed_offers_preview": approved_seed_offers,
                 "needs_review_seed_offers_held_back": held_seed_offers,
                 "suppressed_seed_offers": suppressed_seed_offers,
@@ -141,6 +153,7 @@ def build_preview(source_mode: str) -> dict[str, Any]:
                     "No fake dates.",
                     "Generated seed offers remain hub offers only.",
                     "Approved seed offers require public_ready and present_in_enrollware.",
+                    "Offers inside the public display cutoff window are suppressed from public preview only.",
                     "Needs-review seed offers are held back from public preview.",
                 ],
             }
@@ -156,6 +169,8 @@ def build_preview(source_mode: str) -> dict[str, Any]:
         "needs_review_hubs": mode_counts.get("needs_review", 0),
         "held_needs_review_offers": held_needs_review,
         "suppressed_offers": suppressed_total,
+        "suppressed_cutoff_window": suppressed_cutoff_window,
+        "current_enrollware_classes_suppressed_by_cutoff": suppressed_cutoff_window,
         "approved_but_not_public_ready": suppressed_approved_but_not_public_ready,
         "suppressed_approved_but_not_public_ready": suppressed_approved_but_not_public_ready,
         "display_mode_counts": dict(sorted(mode_counts.items())),
@@ -189,6 +204,7 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Empty-state hubs: {report['summary']['empty_state_hubs']}",
         f"- Held needs-review offers: {report['summary']['held_needs_review_offers']}",
         f"- Suppressed offers: {report['summary']['suppressed_offers']}",
+        f"- Suppressed by cutoff window: {report['summary']['suppressed_cutoff_window']}",
         f"- Approved but not public ready: {report['summary']['approved_but_not_public_ready']}",
         f"- Display mode counts: {json.dumps(report['summary']['display_mode_counts'], sort_keys=True)}",
         "",
@@ -200,6 +216,7 @@ def write_reports(report: dict[str, Any]) -> None:
         lines.append(f"- URL: {hub.get('hub_url')}")
         lines.append(f"- Display mode: {hub.get('display_mode')}")
         lines.append(f"- Current classes: {hub.get('current_enrollware_class_count')}")
+        lines.append(f"- Current classes suppressed by cutoff: {hub.get('cutoff_suppressed_current_enrollware_class_count')}")
         lines.append(f"- Approved seed offers: {hub.get('approved_seed_offer_count')}")
         lines.append(f"- Held for review: {hub.get('held_needs_review_seed_offer_count')}")
         lines.append(f"- Suppressed offers: {hub.get('suppressed_offer_count')}")
@@ -233,6 +250,13 @@ def write_reports(report: dict[str, Any]) -> None:
                 lines.append(f"  - Reason: {item.get('suppression_reason')}")
                 if item.get("public_ready_block_reason"):
                     lines.append(f"  - Public-ready block: {item.get('public_ready_block_reason')}")
+        if hub["cutoff_suppressed_current_enrollware_classes"]:
+            lines.append("")
+            lines.append("Suppressed by public display cutoff:")
+            for item in hub["cutoff_suppressed_current_enrollware_classes"][:5]:
+                lines.append(f"- {item.get('title')} - {item.get('date_label')}, {item.get('start_time')} - {item.get('public_visibility_status')}")
+                lines.append(f"  - Note: {item.get('public_visibility_note')}")
+                lines.append(f"  - Hours until start: {item.get('hours_until_start')} / cutoff hours: {item.get('cutoff_hours')}")
         lines.append("")
 
     REPORT_MD_PATH.write_text("\n".join(lines), encoding="utf-8")

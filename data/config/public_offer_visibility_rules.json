@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "description": "Report-only public display cutoff rules. This suppresses public Lander availability display, not Enrollware registration.",
+  "public_offer_cutoff_hours": 10,
+  "timezone": "America/New_York",
+  "applies_to": [
+    "current_enrollware_classes",
+    "hub_offers",
+    "schedule_offers",
+    "customer_facing_offers"
+  ],
+  "does_not_apply_to": [
+    "direct_manual_links",
+    "Enrollware registration itself",
+    "admin/operator reports"
+  ],
+  "notes": [
+    "Registration may still be available by direct/manual link.",
+    "Suppressed from public display because class starts within cutoff window."
+  ]
+}
