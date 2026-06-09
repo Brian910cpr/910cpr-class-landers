@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "description": "Report-only test fixture for claimed appointment conflict validation. This does not represent live Enrollware state.",
+  "claims": [
+    {
+      "claim_id": "claim_brian_shipyard_20260803_0900_bls_renewal",
+      "seed_id": "seed_a551b998a0e43e79",
+      "instructor_key": "brian",
+      "location_key": "shipyard",
+      "date": "2026-08-03",
+      "start_time": "9:00 AM",
+      "end_time": "12:00 PM",
+      "appointmentDayId": 260713,
+      "course_key": "aha_bls_renewal",
+      "claim_status": "claimed_for_test",
+      "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
+      "note": "Local report-only proof that one claimed appointment suppresses conflicting generated appointment offers."
+    }
+  ]
+}
