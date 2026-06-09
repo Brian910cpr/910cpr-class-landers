@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -102,36 +102,77 @@ def conflict_reasons(offer: dict[str, Any], claim: dict[str, Any]) -> list[str]:
     return sorted(set(reasons))
 
 
+def is_winner(offer: dict[str, Any], claim: dict[str, Any]) -> bool:
+    return norm(offer.get("seed_id")) == norm(claim.get("seed_id"))
+
+
+def row_for_offer(offer: dict[str, Any], claim: dict[str, Any], reasons: list[str]) -> dict[str, Any]:
+    winner = is_winner(offer, claim)
+    alternate_suppressed = bool(reasons) and not winner
+    return {
+        "seed_id": offer.get("seed_id"),
+        "course_key": offer.get("course_key"),
+        "course_title": offer.get("course_title"),
+        "instructor_key": offer.get("instructor_key"),
+        "location_key": offer.get("location_key"),
+        "date": offer.get("date"),
+        "start_time": offer.get("start_time"),
+        "end_time": offer.get("end_time"),
+        "appointmentDayId": offer.get("appointmentDayId"),
+        "appointment_registration_url": offer.get("appointment_registration_url"),
+        "standalone_class_lander_allowed": offer.get("standalone_class_lander_allowed"),
+        "offer_source": offer.get("offer_source") or "appointment_offer_inventory",
+        "slot_winner_course_key": claim.get("course_key"),
+        "slot_winner_seed_id": claim.get("seed_id"),
+        "slot_winner_registration_url": claim.get("appointment_registration_url"),
+        "claimed_slot_status": "canonical_winner" if winner else ("suppressed_by_winner" if alternate_suppressed else "not_in_claimed_slot"),
+        "suppressed_by_slot_winner_policy": alternate_suppressed,
+        "slot_conflict_reason": ", ".join(reasons) if reasons else None,
+        "canonical_offer_for_claimed_slot": winner,
+        "alternate_course_suppressed": alternate_suppressed,
+    }
+
+
+def claim_test_alternates(claim: dict[str, Any]) -> list[dict[str, Any]]:
+    alternates: list[dict[str, Any]] = []
+    for offer in claim.get("test_conflicting_offers", []):
+        if isinstance(offer, dict):
+            row = dict(offer)
+            row["offer_source"] = "appointment_claims_test_fixture"
+            alternates.append(row)
+    return alternates
+
+
 def validate_claims(source_mode: str) -> dict[str, Any]:
     inventory = build_inventory(source_mode)
     claims = load_claims()
-    offers = inventory.get("appointment_offers", [])
+    inventory_offers = inventory.get("appointment_offers", [])
     suppressed: list[dict[str, Any]] = []
+    canonical: list[dict[str, Any]] = []
     retained: list[dict[str, Any]] = []
     claim_results: list[dict[str, Any]] = []
     violations: list[dict[str, Any]] = []
 
     for claim in claims:
+        offers = list(inventory_offers) + claim_test_alternates(claim)
         claim_suppressed: list[dict[str, Any]] = []
+        claim_canonical: list[dict[str, Any]] = []
         claim_retained: list[dict[str, Any]] = []
         for offer in offers:
             reasons = conflict_reasons(offer, claim)
-            row = {
-                "seed_id": offer.get("seed_id"),
-                "course_key": offer.get("course_key"),
-                "course_title": offer.get("course_title"),
-                "instructor_key": offer.get("instructor_key"),
-                "location_key": offer.get("location_key"),
-                "date": offer.get("date"),
-                "start_time": offer.get("start_time"),
-                "end_time": offer.get("end_time"),
-                "appointmentDayId": offer.get("appointmentDayId"),
-                "appointment_registration_url": offer.get("appointment_registration_url"),
-                "standalone_class_lander_allowed": offer.get("standalone_class_lander_allowed"),
-            }
-            if reasons:
+            row = row_for_offer(offer, claim, reasons)
+            if is_winner(offer, claim):
                 row["suppression_reasons"] = reasons
-                row["post_claim_inventory_status"] = "suppressed_claim_conflict"
+                row["post_claim_inventory_status"] = (
+                    "canonical_winner_available_for_additional_registration"
+                    if claim.get("additional_registrations_allowed")
+                    else "claimed_winner_not_open_unclaimed_seed"
+                )
+                claim_canonical.append(row)
+                canonical.append(row)
+            elif reasons:
+                row["suppression_reasons"] = reasons
+                row["post_claim_inventory_status"] = "suppressed_alternate_course_claim_conflict"
                 claim_suppressed.append(row)
                 suppressed.append(row)
             else:
@@ -139,21 +180,36 @@ def validate_claims(source_mode: str) -> dict[str, Any]:
                 claim_retained.append(row)
                 retained.append(row)
 
-        claimed_offer_rows = [row for row in claim_suppressed if row.get("seed_id") == claim.get("seed_id")]
-        if not claimed_offer_rows:
+        if len(claim_canonical) != 1:
             violations.append(
                 {
-                    "rule": "claimed_offer_not_shown_available",
+                    "rule": "one_canonical_winner_for_claimed_slot",
                     "claim_id": claim.get("claim_id"),
-                    "recommendation": "Claimed seed must be present in suppression set.",
+                    "recommendation": "Claimed slot must have exactly one canonical winner.",
                 }
             )
-        if not any(row.get("appointment_registration_url") for row in claimed_offer_rows):
+        if not any(row.get("appointment_registration_url") == claim.get("appointment_registration_url") for row in claim_canonical):
             violations.append(
                 {
-                    "rule": "claimed_offer_registration_path",
+                    "rule": "winner_registration_url_retained",
                     "claim_id": claim.get("claim_id"),
-                    "recommendation": "Claimed/real flow should retain appointment URL as registration path.",
+                    "recommendation": "Canonical winner must retain the winner registration URL.",
+                }
+            )
+        if any(row.get("seed_id") == claim.get("seed_id") for row in claim_retained):
+            violations.append(
+                {
+                    "rule": "claimed_winner_not_open_unclaimed_seed",
+                    "claim_id": claim.get("claim_id"),
+                    "recommendation": "Claimed winning seed must not remain in generic available inventory.",
+                }
+            )
+        if claim.get("test_conflicting_offers") and not claim_suppressed:
+            violations.append(
+                {
+                    "rule": "conflicting_alternate_courses_suppressed",
+                    "claim_id": claim.get("claim_id"),
+                    "recommendation": "Fixture alternate-course conflict should be suppressed by slot winner policy.",
                 }
             )
         for row in claim_suppressed:
@@ -169,7 +225,14 @@ def validate_claims(source_mode: str) -> dict[str, Any]:
         claim_results.append(
             {
                 "claim": claim,
+                "slot_winner_course_key": claim.get("course_key"),
+                "slot_winner_seed_id": claim.get("seed_id"),
+                "slot_winner_registration_url": claim.get("appointment_registration_url"),
+                "claimed_slot_status": "claimed_with_canonical_winner",
+                "canonical_winner": claim_canonical[0] if claim_canonical else None,
+                "canonical_winner_count": len(claim_canonical),
                 "suppressed_count": len(claim_suppressed),
+                "alternate_course_suppressed_count": sum(1 for row in claim_suppressed if row.get("alternate_course_suppressed")),
                 "retained_count": len(claim_retained),
                 "suppressed": claim_suppressed,
                 "retained_examples": claim_retained[:10],
@@ -202,16 +265,19 @@ def validate_claims(source_mode: str) -> dict[str, Any]:
         "violations": violations,
         "summary": {
             "claims_tested": len(claims),
-            "appointment_offers_checked": len(offers),
+            "appointment_offers_checked": len(inventory_offers),
+            "test_fixture_alternate_offers_checked": sum(len(claim_test_alternates(claim)) for claim in claims),
+            "canonical_winner_count": len(canonical),
             "conflicting_offers_suppressed": len({row.get("seed_id") for row in suppressed}),
+            "conflicting_alternate_offers_suppressed": sum(1 for row in suppressed if row.get("alternate_course_suppressed")),
             "non_conflicting_offers_retained": len({row.get("seed_id") for row in retained}),
             "suppression_reason_counts": dict(sorted(reason_counts.items())),
             "standalone_class_landers_created": 0,
             "claimed_registration_urls_retained": sum(
                 1
                 for result in claim_results
-                for row in result["suppressed"]
-                if row.get("seed_id") == result["claim"].get("seed_id") and row.get("appointment_registration_url")
+                for row in [result.get("canonical_winner")]
+                if row and row.get("seed_id") == result["claim"].get("seed_id") and row.get("appointment_registration_url")
             ),
         },
         "claim_results": claim_results,
@@ -232,7 +298,10 @@ def write_reports(report: dict[str, Any]) -> None:
         f"- Violation count: {report['violation_count']}",
         f"- Claims tested: {report['summary']['claims_tested']}",
         f"- Appointment offers checked: {report['summary']['appointment_offers_checked']}",
+        f"- Test fixture alternate offers checked: {report['summary']['test_fixture_alternate_offers_checked']}",
+        f"- Canonical winners: {report['summary']['canonical_winner_count']}",
         f"- Conflicting offers suppressed: {report['summary']['conflicting_offers_suppressed']}",
+        f"- Conflicting alternate offers suppressed: {report['summary']['conflicting_alternate_offers_suppressed']}",
         f"- Non-conflicting offers retained: {report['summary']['non_conflicting_offers_retained']}",
         f"- Suppression reasons: {json.dumps(report['summary']['suppression_reason_counts'], sort_keys=True)}",
         f"- Standalone class landers created: {report['summary']['standalone_class_landers_created']}",
@@ -257,8 +326,32 @@ def write_reports(report: dict[str, Any]) -> None:
                 f"- Course: {claim.get('course_key')}",
                 f"- AppointmentDayId: {claim.get('appointmentDayId')}",
                 f"- Appointment URL: {claim.get('appointment_registration_url')}",
+                f"- Slot winner course: {result.get('slot_winner_course_key')}",
+                f"- Slot winner seed: {result.get('slot_winner_seed_id')}",
+                f"- Slot winner URL: {result.get('slot_winner_registration_url')}",
+                f"- Claimed slot status: {result.get('claimed_slot_status')}",
+                f"- Canonical winner count: {result.get('canonical_winner_count')}",
                 f"- Suppressed: {result['suppressed_count']}",
+                f"- Alternate-course suppressed: {result.get('alternate_course_suppressed_count')}",
                 f"- Retained: {result['retained_count']}",
+                "",
+                "### Canonical Winner",
+                "",
+            ]
+        )
+        winner = result.get("canonical_winner") or {}
+        if winner:
+            lines.append(
+                f"- {winner.get('date')} {winner.get('start_time')} - {winner.get('end_time')} "
+                f"{winner.get('instructor_key')} {winner.get('course_key')} ({winner.get('seed_id')})"
+            )
+            lines.append(f"  - Canonical offer for claimed slot: {winner.get('canonical_offer_for_claimed_slot')}")
+            lines.append(f"  - Winner URL: {winner.get('slot_winner_registration_url')}")
+            lines.append(f"  - Post-claim status: {winner.get('post_claim_inventory_status')}")
+        else:
+            lines.append("- No canonical winner found.")
+        lines.extend(
+            [
                 "",
                 "### Suppressed Examples",
                 "",

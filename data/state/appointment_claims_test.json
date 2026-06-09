@@ -13,8 +13,28 @@
       "appointmentDayId": 260713,
       "course_key": "aha_bls_renewal",
       "claim_status": "claimed_for_test",
+      "additional_registrations_allowed": true,
       "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
-      "note": "Local report-only proof that one claimed appointment suppresses conflicting generated appointment offers."
+      "note": "Local report-only proof that one claimed appointment suppresses conflicting generated appointment offers.",
+      "test_conflicting_offers": [
+        {
+          "seed_id": "seed_test_alt_brian_shipyard_20260803_0900_bls_initial",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "course_family": "bls",
+          "instructor_key": "brian",
+          "location_key": "shipyard",
+          "date": "2026-08-03",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "start_datetime": "2026-08-03T09:00:00-04:00",
+          "end_datetime": "2026-08-03T12:00:00-04:00",
+          "appointmentDayId": 260713,
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
+          "standalone_class_lander_allowed": false,
+          "fixture_note": "Synthetic alternate-course proof row for slot-winner suppression validation only."
+        }
+      ]
     }
   ]
 }
