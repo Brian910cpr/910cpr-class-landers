@@ -34,6 +34,8 @@ REGISTRATION_TARGETS_PATH = CONFIG_DIR / "registration_targets.json"
 CALENDAR_SOURCES_PATH = CONFIG_DIR / "calendar_sources.json"
 APPOINTMENT_CONTAINER_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
+INSTRUCTOR_PRIORITY = {"amy": 1, "brian": 2, "nick": 3}
+EXCLUSIVE_LOCATION_KEYS = {"shipyard"}
 
 
 def norm(value: Any) -> str:
@@ -299,6 +301,115 @@ def overlaps(a_start: datetime, a_end: datetime, b_start: datetime, b_end: datet
     return a_start < b_end and b_start < a_end
 
 
+def offer_overlaps_offer(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    left_start = parse_dt(left.get("start_datetime"))
+    left_end = parse_dt(left.get("end_datetime"))
+    right_start = parse_dt(right.get("start_datetime"))
+    right_end = parse_dt(right.get("end_datetime"))
+    if not left_start or not left_end or not right_start or not right_end:
+        return False
+    return overlaps(left_start, left_end, right_start, right_end)
+
+
+def instructor_priority(instructor: Any) -> int:
+    return INSTRUCTOR_PRIORITY.get(norm(instructor).lower(), 99)
+
+
+def same_instructor_appointment_tuple(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    return (
+        norm(left.get("instructor_key")).lower() == norm(right.get("instructor_key")).lower()
+        and left.get("appointmentDayId") is not None
+        and right.get("appointmentDayId") is not None
+        and str(left.get("appointmentDayId")) == str(right.get("appointmentDayId"))
+        and norm(left.get("start_time")).lower() == norm(right.get("start_time")).lower()
+    )
+
+
+def public_candidate_for_seed_conflicts(offer: dict[str, Any]) -> bool:
+    return (
+        offer.get("publishability_status") == "publishable_candidate"
+        and bool(offer.get("appointment_registration_url"))
+        and offer.get("calendar_availability_status") == "calendar_window_reported"
+        and offer.get("public_visibility_status") == "visible_publicly"
+        and offer.get("standalone_class_lander_allowed") is False
+    )
+
+
+def empty_seed_conflict_state() -> dict[str, Any]:
+    return {
+        "suppressed_by_slot_winner_policy": False,
+        "slot_conflict_reason": None,
+        "slot_conflict_scope": None,
+        "slot_priority_rule": None,
+        "slot_winner_seed_id": None,
+        "slot_winner_course_key": None,
+        "slot_winner_registration_url": None,
+        "exclusive_location_priority_applied": False,
+        "canonical_offer_for_claimed_slot": False,
+        "alternate_course_suppressed": False,
+    }
+
+
+def seed_conflict_suppression_for_offer(offer: dict[str, Any], offers: list[dict[str, Any]]) -> dict[str, Any]:
+    if not public_candidate_for_seed_conflicts(offer):
+        return empty_seed_conflict_state()
+
+    conflicts: list[dict[str, Any]] = []
+    for other in offers:
+        if other is offer or not public_candidate_for_seed_conflicts(other):
+            continue
+        if not offer_overlaps_offer(offer, other):
+            continue
+
+        same_instructor = norm(offer.get("instructor_key")).lower() == norm(other.get("instructor_key")).lower()
+        same_location = norm(offer.get("location_key")).lower() == norm(other.get("location_key")).lower()
+        exclusive_location = same_location and norm(offer.get("location_key")).lower() in EXCLUSIVE_LOCATION_KEYS
+
+        reason = None
+        scope = None
+        if same_instructor:
+            if same_instructor_appointment_tuple(offer, other):
+                reason = "same_instructor_appointmentDayId_startTime_alternate_course"
+                scope = "same_instructor_appointment_slot"
+            else:
+                reason = "same_instructor_overlapping_time"
+                scope = "same_instructor_time_overlap"
+        elif exclusive_location:
+            reason = "exclusive_location_overlapping_time"
+            scope = "cross_instructor_exclusive_location_overlap"
+
+        if reason:
+            conflicts.append({"offer": other, "reason": reason, "scope": scope})
+
+    if not conflicts:
+        return empty_seed_conflict_state()
+
+    contenders = [offer, *[item["offer"] for item in conflicts]]
+    winner = sorted(
+        contenders,
+        key=lambda item: (
+            instructor_priority(item.get("instructor_key")),
+            norm(item.get("start_time")),
+            norm(item.get("seed_id")),
+        ),
+    )[0]
+    suppressed = winner is not offer
+    reasons = sorted({item["reason"] for item in conflicts})
+    scopes = sorted({item["scope"] for item in conflicts})
+    return {
+        "suppressed_by_slot_winner_policy": suppressed,
+        "slot_conflict_reason": "; ".join(reasons) if suppressed else None,
+        "slot_conflict_scope": "; ".join(scopes) if suppressed else None,
+        "slot_priority_rule": "Amy > Brian > Nick for exclusive location overlap; appointmentDayId/startTime scoped to same instructor.",
+        "slot_winner_seed_id": winner.get("seed_id"),
+        "slot_winner_course_key": winner.get("course_key"),
+        "slot_winner_registration_url": winner.get("appointment_registration_url"),
+        "exclusive_location_priority_applied": any(item["scope"] == "cross_instructor_exclusive_location_overlap" for item in conflicts),
+        "canonical_offer_for_claimed_slot": False,
+        "alternate_course_suppressed": suppressed,
+    }
+
+
 def conflict_check_for_offer(offer: dict[str, Any], sessions: list[dict[str, Any]], source_available: bool) -> dict[str, Any]:
     if not source_available:
         return {
@@ -494,17 +605,17 @@ def build_inventory(source_mode: str) -> dict[str, Any]:
             "caution_flags": seed.get("caution_flags", []),
             "standalone_class_lander_allowed": False,
             "claimed_slot_status": "unclaimed_available_seed",
-            "suppressed_by_slot_winner_policy": False,
-            "slot_conflict_reason": None,
-            "canonical_offer_for_claimed_slot": False,
-            "alternate_course_suppressed": False,
         }
+        offer.update(empty_seed_conflict_state())
+        offers.append(offer)
+
+    for offer in offers:
+        offer.update(seed_conflict_suppression_for_offer(offer, offers))
         readiness = appointment_auto_ready(offer)
         offer.update(readiness)
         offer["public_ready_block_reason"] = None if offer.get("public_ready") else readiness.get("block_reason") or block_reason_for_offer(offer)
         offer["block_reason"] = None if offer.get("public_ready") else block_reason_for_offer(offer)
         offer["display_mode"] = display_mode_for_offer(offer)
-        offers.append(offer)
 
     offers.sort(key=lambda item: (norm(item.get("date")), norm(item.get("start_time")), norm(item.get("instructor_key")), norm(item.get("course_key"))))
     by_date: dict[str, list[dict[str, Any]]] = defaultdict(list)

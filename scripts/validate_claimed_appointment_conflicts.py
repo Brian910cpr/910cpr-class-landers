@@ -66,7 +66,8 @@ def time_to_24h(value: Any) -> str:
 
 def same_appointment_tuple(offer: dict[str, Any], claim: dict[str, Any]) -> bool:
     return (
-        offer.get("appointmentDayId") is not None
+        norm(offer.get("instructor_key")) == norm(claim.get("instructor_key"))
+        and offer.get("appointmentDayId") is not None
         and str(offer.get("appointmentDayId")) == str(claim.get("appointmentDayId"))
         and time_matches(offer.get("start_time"), claim.get("start_time"))
     )
@@ -77,14 +78,18 @@ def same_instructor_overlap(offer: dict[str, Any], claim: dict[str, Any]) -> boo
 
 
 def same_location_overlap(offer: dict[str, Any], claim: dict[str, Any]) -> bool:
-    return norm(offer.get("location_key")) == norm(claim.get("location_key")) and overlaps(offer, claim)
+    return (
+        norm(offer.get("location_key")) == norm(claim.get("location_key"))
+        and norm(offer.get("location_key")) == "shipyard"
+        and overlaps(offer, claim)
+    )
 
 
 def sister_course_conflict(offer: dict[str, Any], claim: dict[str, Any]) -> bool:
     offer_family = norm(offer.get("course_family")) or course_family(offer.get("course_key"), offer.get("course_title"))
     claim_family = course_family(claim.get("course_key"), claim.get("course_key"))
     related = offer_family in SISTER_CONFLICT_FAMILIES.get(claim_family, set())
-    return related and norm(offer.get("location_key")) == norm(claim.get("location_key")) and overlaps(offer, claim)
+    return related and norm(offer.get("instructor_key")) == norm(claim.get("instructor_key")) and overlaps(offer, claim)
 
 
 def conflict_reasons(offer: dict[str, Any], claim: dict[str, Any]) -> list[str]:
