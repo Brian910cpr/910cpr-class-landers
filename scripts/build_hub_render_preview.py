@@ -86,6 +86,8 @@ def preview_seed_item(item: dict[str, Any]) -> dict[str, Any]:
         "public_ready": item.get("public_ready"),
         "public_ready_block_reason": item.get("public_ready_block_reason"),
         "seed_publication_mode": item.get("seed_publication_mode"),
+        "public_display_item_type": item.get("public_display_item_type") or item.get("display_item_type"),
+        "render_source": item.get("render_source"),
         "auto_public_ready_reason": item.get("auto_public_ready_reason"),
         "calendar_source_mode": item.get("calendar_source_mode"),
         "calendar_availability_status": item.get("calendar_availability_status"),
@@ -93,6 +95,8 @@ def preview_seed_item(item: dict[str, Any]) -> dict[str, Any]:
         "claimed_slot_status": item.get("claimed_slot_status"),
         "suppressed_by_slot_winner_policy": item.get("suppressed_by_slot_winner_policy"),
         "standalone_class_lander_allowed": item.get("standalone_class_lander_allowed"),
+        "class_lander_created": item.get("class_lander_created", False),
+        "public_schedule_row_created": item.get("public_schedule_row_created", False),
         "suppression_reason": item.get("reason"),
         "display_item_type": item.get("display_item_type"),
         "source": "Appointment seed offer" if item.get("seed_publication_mode") == "appointment_seed_offer" else "Approved seed offer",
@@ -247,6 +251,10 @@ def write_reports(report: dict[str, Any]) -> None:
                     lines.append(f"  - Appointment URL: {item.get('appointment_registration_url')}")
                 if item.get("auto_public_ready_reason"):
                     lines.append(f"  - Auto-public reason: {item.get('auto_public_ready_reason')}")
+                if item.get("render_source"):
+                    lines.append(f"  - Render source: {item.get('render_source')}")
+                lines.append(f"  - Standalone class lander created: {item.get('class_lander_created')}")
+                lines.append(f"  - Public schedule row created: {item.get('public_schedule_row_created')}")
         if hub["empty_state"]:
             empty = hub["empty_state"]
             lines.append(f"- Headline: {empty.get('headline')}")

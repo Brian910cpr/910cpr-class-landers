@@ -450,6 +450,8 @@ def build_report(source_mode: str) -> dict[str, Any]:
             classification, reason = seed_display_classification(seed)
             display_seed = {
                 "display_item_type": classification,
+                "public_display_item_type": classification,
+                "render_source": "auto_public_appointment_seed" if seed.get("seed_publication_mode") == "appointment_seed_offer" else "approved_seed_offer",
                 "seed_id": seed.get("seed_id"),
                 "course_key": seed.get("course_key"),
                 "course_title": seed.get("course_title"),
@@ -478,6 +480,8 @@ def build_report(source_mode: str) -> dict[str, Any]:
                 "claimed_slot_status": seed.get("claimed_slot_status"),
                 "suppressed_by_slot_winner_policy": seed.get("suppressed_by_slot_winner_policy"),
                 "standalone_class_lander_allowed": seed.get("standalone_class_lander_allowed"),
+                "class_lander_created": False,
+                "public_schedule_row_created": False,
                 "reason": reason,
                 "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed.",
             }

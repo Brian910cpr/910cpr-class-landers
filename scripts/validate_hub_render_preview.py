@@ -111,6 +111,33 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
                         item,
                         "Appointment seed offer does not explicitly block standalone class landers.",
                     )
+                if item.get("class_lander_created") is not False:
+                    add_violation(
+                        violations,
+                        "appointment_seed_no_class_lander_created",
+                        hub,
+                        "Appointment seed render preview must report class_lander_created false.",
+                        item,
+                        "Appointment seed offer indicates a class lander was created.",
+                    )
+                if item.get("public_schedule_row_created") is not False:
+                    add_violation(
+                        violations,
+                        "appointment_seed_no_public_schedule_row_created",
+                        hub,
+                        "Appointment seed render preview must report public_schedule_row_created false.",
+                        item,
+                        "Appointment seed offer indicates a public_schedule row was created.",
+                    )
+                if item.get("render_source") != "auto_public_appointment_seed":
+                    add_violation(
+                        violations,
+                        "appointment_seed_render_source",
+                        hub,
+                        "Appointment seed hub display should identify render_source as auto_public_appointment_seed.",
+                        item,
+                        "Appointment seed offer has missing or incorrect render_source.",
+                    )
             elif item.get("enrollware_presence_status") != "present_in_enrollware":
                 add_violation(
                     violations,
