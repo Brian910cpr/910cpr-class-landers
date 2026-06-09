@@ -1,1 +1,35 @@
-No git status yet.
+git status --short:
+
+ M docs/bls.html
+ M ops/handoff/latest_chatgpt_bundle.md
+ M ops/handoff/latest_codex_report.md
+ M ops/handoff/latest_git_status.txt
+ M ops/handoff/latest_validation_run.txt
+ M ops/handoff/next_task.md
+ M scripts/build_slug_hubs.py
+
+git diff --name-only:
+
+docs/bls.html
+ops/handoff/latest_chatgpt_bundle.md
+ops/handoff/latest_codex_report.md
+ops/handoff/latest_git_status.txt
+ops/handoff/latest_validation_run.txt
+ops/handoff/next_task.md
+scripts/build_slug_hubs.py
+
+Recent commits:
+
+3bce4ea61c Add ChatGPT Codex handoff workflow
+df455b73a4 Clarify appointment seed readiness safety wording
+ff28ec221a Render auto-public appointment seeds in hub preview
+2569b8f202 Add auto-public appointment seed readiness
+3300aa95ca Add claimed appointment slot winner policy
+a66203ae49 Add claimed appointment conflict validation
+afe3159336 Add report-only appointment offer inventory
+f4d34eaced Suppress current-future stale public schedule offers
+
+Unchanged protected files:
+
+public_schedule.json SHA256 DB2D2FE1F51CCE62877AAAE0AE5632FCE644EE0816D2C2D593B9E925890B5292
+live-schedule_future.json SHA256 6E36AF0523142F6AB6D1723FE374E90D74BC95FD0C9C84191BA693B023E5073F

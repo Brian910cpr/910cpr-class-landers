@@ -17,6 +17,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.build_metadata import apply_build_metadata, current_build_metadata
+from scripts.build_hub_offer_model_report import build_report as build_hub_offer_model_report
 from scripts.build_status import BuildStatusReporter
 from scripts.hybrid_inventory import (
     APPOINTMENT_ENDPOINT,
@@ -79,6 +80,15 @@ BLS_TAB_REQUESTABLE_COURSE_KEYS = {
     "bls-renewal": "bls-renewal",
     "bls-heartcode": "heartcode-bls-skills",
 }
+APPOINTMENT_COURSE_TAB_IDS = {
+    "aha_bls_initial": {"bls-provider"},
+    "aha_bls_renewal": {"bls-renewal"},
+    "aha_bls_heartcode_skills": {"bls-heartcode"},
+    "aha_acls_heartcode_skills": {"acls-heartcode"},
+    "aha_pals_heartcode_skills": {"pals-heartcode"},
+    "aha_heartsaver_fa_cpr_aed": {"hs-fa-cpr-aed-ip", "hs-fa-cpr-aed-bl"},
+    "aha_heartsaver_cpr_aed": {"hs-cpr-aed-ip", "hs-cpr-aed-bl"},
+}
 
 
 def authoritative_schedule_path() -> Path:
@@ -140,6 +150,46 @@ def load_customer_facing_offers() -> dict[str, list[dict[str, Any]]]:
     for course_offers in grouped.values():
         course_offers.sort(key=lambda offer: parse_dt(offer.get("start_time")) or datetime.max.replace(tzinfo=TZ))
     return grouped
+
+
+def load_hub_appointment_seed_offers() -> dict[str, list[dict[str, Any]]]:
+    """Return validated auto-public appointment seed offers keyed by slug hub."""
+    try:
+        report = build_hub_offer_model_report("auto")
+    except Exception as exc:
+        print(f"WARNING: Appointment seed hub offer report failed; continuing without appointment seed offers: {exc}")
+        return {}
+
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for hub in report.get("hubs", []):
+        if hub.get("hub_source") != "slug_hubs":
+            continue
+        hub_key = normalize_space(hub.get("hub_key"))
+        if not hub_key:
+            continue
+        offers: list[dict[str, Any]] = []
+        for offer in hub.get("approved_seed_offers", []):
+            if not is_renderable_appointment_seed_offer(offer):
+                continue
+            offers.append(dict(offer))
+        if offers:
+            grouped[hub_key] = sorted(offers, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
+    return grouped
+
+
+def is_renderable_appointment_seed_offer(offer: dict[str, Any]) -> bool:
+    return (
+        offer.get("public_display_item_type") == "appointment_seed_offer"
+        and offer.get("display_item_type") == "appointment_seed_offer"
+        and offer.get("seed_publication_mode") == "appointment_seed_offer"
+        and offer.get("approval_status") == "auto_approved_by_rules"
+        and offer.get("public_ready") is True
+        and bool(normalize_space(offer.get("appointment_registration_url")))
+        and offer.get("standalone_class_lander_allowed") is False
+        and offer.get("class_lander_created") is False
+        and offer.get("public_schedule_row_created") is False
+        and offer.get("render_source") == "auto_public_appointment_seed"
+    )
 
 
 def parse_dt(value: str | None) -> datetime | None:
@@ -1447,6 +1497,88 @@ def render_requestable_offers_section(page: dict[str, Any], offers: list[dict[st
 """.strip()
 
 
+def appointment_offers_for_tab(tab: dict[str, Any], appointment_offers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    tab_id = normalize_space(tab.get("id"))
+    selected: list[dict[str, Any]] = []
+    for offer in appointment_offers:
+        course_key = normalize_space(offer.get("course_key"))
+        if tab_id in APPOINTMENT_COURSE_TAB_IDS.get(course_key, set()):
+            selected.append(offer)
+    return sorted(selected, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
+
+
+def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
+    start_dt = parse_dt(offer.get("start_datetime"))
+    end_dt = parse_dt(offer.get("end_datetime"))
+    title = normalize_space(offer.get("course_title")) or "Available appointment slot"
+    instructor = normalize_space(offer.get("instructor_key")).title()
+    location = normalize_space(offer.get("location_key")).title()
+    url = escape(offer.get("appointment_registration_url") or "#", quote=True)
+    seed_id = escape(offer.get("seed_id") or "", quote=True)
+    course_key = escape(offer.get("course_key") or "", quote=True)
+    appointment_day_id = escape(str(offer.get("appointmentDayId") or ""), quote=True)
+    course_id = escape(str(offer.get("courseId") or ""), quote=True)
+    start_attr = escape(start_dt.isoformat() if start_dt else normalize_space(offer.get("start_datetime")), quote=True)
+    end_attr = escape(end_dt.isoformat() if end_dt else normalize_space(offer.get("end_datetime")), quote=True)
+    time_range = format_time_line(start_dt)
+    if start_dt and end_dt:
+        time_range = f"{format_time_line(start_dt)} - {format_time_line(end_dt)}"
+    data_attrs = (
+        'data-offer-source="auto_public_appointment_seed" '
+        'data-public-display-item-type="appointment_seed_offer" '
+        'data-real-enrollware-session="false" '
+        'data-standalone-class-lander-allowed="false" '
+        'data-class-lander-created="false" '
+        'data-public-schedule-row-created="false" '
+        f'data-seed-id="{seed_id}" '
+        f'data-course-key="{course_key}" '
+        f'data-appointment-day-id="{appointment_day_id}" '
+        f'data-course-id="{course_id}" '
+        f'data-start="{start_attr}" '
+        f'data-end="{end_attr}"'
+    )
+    return f"""
+<article class="slug-pill slug-appointment-seed-offer" {data_attrs}>
+  <div class="slug-pill-date">
+    <div class="slug-pill-month">{format_month(start_dt)}</div>
+    <div class="slug-pill-day">{format_day(start_dt)}</div>
+    <div class="slug-pill-weekday">{format_weekday(start_dt)}</div>
+  </div>
+  <div class="slug-pill-main">
+    <div class="slug-pill-title">{escape(format_date_line(start_dt))}</div>
+    <div class="slug-pill-meta-row">
+      <span class="slug-pill-chip">{escape(time_range)}</span>
+      <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
+      <span class="slug-pill-chip">Appointment slot</span>
+      <span class="slug-pill-chip">Instructor: {escape(instructor)}</span>
+    </div>
+    <div class="slug-pill-subtitle">{escape(title)}</div>
+    <p class="slug-pill-note">This is an appointment-style registration slot. It is not a pre-created standalone class page.</p>
+  </div>
+  <div class="slug-pill-actions">
+    <a class="button small primary" href="{url}" {data_attrs}>Book appointment slot</a>
+  </div>
+</article>
+""".strip()
+
+
+def render_appointment_seed_offers_section(offers: list[dict[str, Any]]) -> str:
+    if not offers:
+        return ""
+    cards = "\n".join(render_appointment_seed_offer_card(offer) for offer in offers)
+    return f"""
+<section class="slug-inventory-section slug-appointment-seed-section" aria-label="Available appointment registration slots">
+  <div class="slug-inventory-head">
+    <h3>Available appointment slot</h3>
+    <p>These are hub-only appointment registration options generated from validated instructor availability. They do not create standalone class pages.</p>
+  </div>
+  <div class="slug-pill-list slug-appointment-seed-list">
+    {cards}
+  </div>
+</section>
+""".strip()
+
+
 def build_flexible_lookup(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]]) -> dict[str, Any] | None:
     location_id = str(tab.get("flexible_location_id") or page.get("flexible_location_id") or "").strip()
     course_id = str(tab.get("flexible_course_id") or "").strip() or extract_schedule_course_id(tab.get("full_schedule_url"))
@@ -1552,6 +1684,7 @@ def render_tab_panel(
     active: bool,
     group_mode: bool,
     requestable_offers: list[dict[str, Any]] | None = None,
+    appointment_seed_offers: list[dict[str, Any]] | None = None,
 ) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
     keep_empty_tab_ids = {
@@ -1601,6 +1734,7 @@ def render_tab_panel(
 """.strip()
 
     tab_requestable_offers = requestable_offers_for_tab(page, tab, requestable_offers or [])
+    tab_appointment_seed_offers = appointment_offers_for_tab(tab, appointment_seed_offers or [])
     upcoming_sessions = sorted([*sort_by_start(sessions), *tab_requestable_offers], key=schedule_row_start)
     default_visible_count: int | None = None
     if str(page.get("slug") or "") == "bls":
@@ -1611,6 +1745,10 @@ def render_tab_panel(
     curated_html = render_curated_offers_section(page, tab, sessions)
     if curated_html:
         section_html.append(curated_html)
+
+    appointment_seed_html = render_appointment_seed_offers_section(tab_appointment_seed_offers)
+    if appointment_seed_html:
+        section_html.append(appointment_seed_html)
 
     if upcoming_sessions:
         section_html.append(
@@ -2057,6 +2195,7 @@ def render_page(
     banner_library: dict[str, dict[str, Any]],
     *,
     requestable_offers: list[dict[str, Any]] | None = None,
+    appointment_seed_offers: list[dict[str, Any]] | None = None,
 ) -> str:
     if page.get("ecosystem_hub"):
         return render_ecosystem_page(page, sessions, banner_library)
@@ -2099,6 +2238,7 @@ def render_page(
                 active=index == 0,
                 group_mode=group_mode,
                 requestable_offers=requestable_offers or [],
+                appointment_seed_offers=appointment_seed_offers or [],
             )
         )
 
@@ -2193,6 +2333,7 @@ def build() -> None:
 
     sessions, schedule_source_path = load_authoritative_schedule()
     grouped_customer_offers = load_customer_facing_offers()
+    appointment_seed_offers_by_page = load_hub_appointment_seed_offers()
     now = datetime.now(TZ)
     build_meta = current_build_metadata("scripts/build_slug_hubs.py", f"slug hub rebuild from {schedule_source_label(schedule_source_path)}")
 
@@ -2205,9 +2346,16 @@ def build() -> None:
         for index, page in enumerate(manifest, start=1):
             page_requestable_offers = requestable_offers_for_page(page, grouped_customer_offers)
             page_slug = str(page.get("slug") or "")
+            page_appointment_seed_offers = appointment_seed_offers_by_page.get(page_slug, [])
             requestable_offer_summary_by_page[page_slug] = summarize_requestable_offers(page_requestable_offers)
             schedule_rows_by_page[page_slug] = hub_group_schedule_summary(page, sessions, page_requestable_offers, now=now)
-            html = render_page(page, sessions, banner_library, requestable_offers=page_requestable_offers)
+            html = render_page(
+                page,
+                sessions,
+                banner_library,
+                requestable_offers=page_requestable_offers,
+                appointment_seed_offers=page_appointment_seed_offers,
+            )
             html = apply_build_metadata(html, build_meta)
             html = clean_generated_html(html)
             last_output = OUTPUT_DIR / f"{page['slug']}.html"

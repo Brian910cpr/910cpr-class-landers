@@ -1,1 +1,147 @@
-No validation run yet.
+
+$ python scripts/build_slug_hubs.py
+Wrote E:\GitHub\910cpr-class-landers\docs\bls.html
+Wrote E:\GitHub\910cpr-class-landers\docs\acls.html
+Wrote E:\GitHub\910cpr-class-landers\docs\pals.html
+Wrote E:\GitHub\910cpr-class-landers\docs\heartsaver.html
+Wrote E:\GitHub\910cpr-class-landers\docs\arc.html
+Wrote E:\GitHub\910cpr-class-landers\docs\hsi.html
+Wrote E:\GitHub\910cpr-class-landers\docs\uscg-elementary-first-aid-cpr.html
+Wrote E:\GitHub\910cpr-class-landers\docs\group-training.html
+exit_code=0
+
+$ python -m py_compile scripts/build_appointment_offer_inventory.py scripts/build_hub_offer_model_report.py scripts/build_hub_render_preview.py scripts/validate_hub_render_preview.py scripts/validate_claimed_appointment_conflicts.py scripts/run_lander_safety_preflight.py scripts/build_slug_hubs.py
+exit_code=0
+
+$ python scripts/build_appointment_offer_inventory.py
+Wrote E:\GitHub\910cpr-class-landers\debug\appointment_offer_inventory.json
+Wrote E:\GitHub\910cpr-class-landers\debug\appointment_offer_inventory.md
+Wrote E:\GitHub\910cpr-class-landers\debug\appointment_offer_calendar.html
+{
+  "august_appointment_offers": 12,
+  "auto_public_appointment_seed_offers": 1,
+  "blocked_or_needs_review": 11,
+  "by_course_family": {
+    "acls": 1,
+    "bls": 10,
+    "pals": 1
+  },
+  "by_instructor": {
+    "amy": 2,
+    "brian": 8,
+    "nick": 2
+  },
+  "display_mode_counts": {
+    "appointment_seed_offer": 1,
+    "needs_review": 11
+  },
+  "public_ready_appointment_offers": 1,
+  "public_visibility_status_counts": {
+    "visible_publicly": 12
+  },
+  "total_appointment_offers": 12,
+  "warnings": [],
+  "with_appointment_urls": 8
+}
+exit_code=0
+
+$ python scripts/build_hub_offer_model_report.py
+Wrote E:\GitHub\910cpr-class-landers\debug\hub_offer_model_report.json
+Wrote E:\GitHub\910cpr-class-landers\debug\hub_offer_model_report.md
+Hub offer model report generated.
+exit_code=0
+
+$ python scripts/build_hub_render_preview.py
+Wrote E:\GitHub\910cpr-class-landers\debug\hub_render_preview.json
+Wrote E:\GitHub\910cpr-class-landers\debug\hub_render_preview.md
+Hub render preview generated.
+exit_code=0
+
+$ python scripts/validate_claimed_appointment_conflicts.py
+Wrote E:\GitHub\910cpr-class-landers\debug\claimed_appointment_conflict_validation.json
+Wrote E:\GitHub\910cpr-class-landers\debug\claimed_appointment_conflict_validation.md
+{
+  "appointment_offers_checked": 12,
+  "canonical_winner_count": 1,
+  "claimed_registration_urls_retained": 1,
+  "claims_tested": 1,
+  "conflicting_alternate_offers_suppressed": 1,
+  "conflicting_offers_suppressed": 1,
+  "non_conflicting_offers_retained": 11,
+  "standalone_class_landers_created": 0,
+  "suppression_reason_counts": {
+    "same_appointmentDayId_startTime_tuple": 1,
+    "same_instructor_overlapping_time": 1,
+    "same_location_overlapping_time": 1,
+    "sister_conflict_course_practical_slot": 1
+  },
+  "test_fixture_alternate_offers_checked": 1
+}
+exit_code=0
+
+$ python scripts/validate_hub_render_preview.py
+Wrote E:\GitHub\910cpr-class-landers\debug\hub_render_preview_validation.json
+Wrote E:\GitHub\910cpr-class-landers\debug\hub_render_preview_validation.md
+Validation passed: True
+Violation count: 0
+exit_code=0
+
+$ python scripts/run_lander_safety_preflight.py
+Wrote E:\GitHub\910cpr-class-landers\debug\lander_safety_preflight.json
+Wrote E:\GitHub\910cpr-class-landers\debug\lander_safety_preflight.md
+{
+  "ambiguous_enrollware_offers": 0,
+  "approved_seed_offers": 3,
+  "cleanup_blocked_actions": 24695,
+  "cleanup_executable_actions": 0,
+  "failed_checks": [
+    "public_files_dirty",
+    "lander_offer_enrollware_presence_needs_review"
+  ],
+  "fallback_redirects_blocked": 23,
+  "final_preflight_status": "failed_validation",
+  "held_needs_review_seed_offers": 29,
+  "hub_preview_validation_passed": true,
+  "hub_preview_violation_count": 0,
+  "public_files_changed": true,
+  "recommended_public_offer_removals": 171,
+  "stale_missing_enrollware_offers": 171,
+  "stale_offer_blocked_suppressions": 171,
+  "stale_offer_executable_suppressions": 0,
+  "stale_offer_suppression_approval_mismatch_blocks": 0,
+  "stale_offer_suppression_by_action": {
+    "remove_from_public_output": 141,
+    "suppress_until_enrollware_backed": 30
+  },
+  "stale_offer_suppression_by_source_file": {
+    "E:\\GitHub\\910cpr-class-landers\\docs\\data\\customer_facing_offers.json": 30,
+    "E:\\GitHub\\910cpr-class-landers\\public_schedule.json": 141
+  },
+  "stale_offer_suppression_candidates": 171,
+  "suppressed_cutoff_window": 6
+}
+exit_code=1
+
+POST-RUN CHECKS
+
+Rendered appointment seed cards in docs/bls.html:
+1
+
+Rendered auto_public_appointment_seed attributes in docs/bls.html:
+2
+
+Rendered appointment URL:
+https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714
+
+Rendered seed:
+seed_7457baba994578af
+
+Protected file hash checks after build:
+public_schedule.json DB2D2FE1F51CCE62877AAAE0AE5632FCE644EE0816D2C2D593B9E925890B5292
+live-schedule_future.json 6E36AF0523142F6AB6D1723FE374E90D74BC95FD0C9C84191BA693B023E5073F
+
+Dirty protected file checks:
+git diff --name-only -- docs/classes public_schedule.json live-schedule_future.json
+(no output)
+git diff --name-only -- docs/data public_schedule.json live-schedule_future.json
+(no output)
