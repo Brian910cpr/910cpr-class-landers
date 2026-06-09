@@ -87,26 +87,65 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   line-height: 1.45;
 }
 
-.recent-student-help {
-  margin-top: 16px;
-  padding: 16px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #fffdf3 0%, #f5fbff 100%);
-  border: 1px solid var(--border);
+.recent-student-action-note {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
 }
 
-.recent-student-help h2 {
-  margin: 0 0 6px;
+.recent-student-action-note a {
   color: var(--heading);
-  font-size: 20px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.next-schedule {
+  margin-top: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.next-schedule h2 {
+  margin: 0 0 12px;
+  color: var(--heading);
+  font-size: 22px;
   line-height: 1.2;
 }
 
-.recent-student-help p {
-  margin: 0;
+.next-schedule-primary,
+.next-schedule-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.next-schedule-primary .button {
+  flex: 1 1 130px;
+}
+
+.next-schedule-more {
+  margin: 16px 0 8px;
   color: var(--muted);
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.next-schedule-secondary .button {
+  min-height: 38px;
+  padding: 8px 13px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.next-build-stamp {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.3;
+  opacity: 0.68;
+  text-align: center;
 }
 
 @media (max-width: 700px) {
@@ -130,6 +169,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   .recent-student-actions {
     grid-template-columns: 1fr;
+  }
+
+  .next-schedule-primary,
+  .next-schedule-secondary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 }
 </style>
@@ -161,17 +206,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <article class="recent-student-action">
           <a class="button primary" href="https://ecards.heart.org/student/myecards" target="_blank" rel="noopener noreferrer">Where's My Card?</a>
           <p>Look up your American Heart Association eCard.</p>
+          <div class="recent-student-action-note">Still having trouble? <a href="sms:+19103955193">Text us</a>.</div>
         </article>
         <article class="recent-student-action">
           <a class="button secondary" href="https://cpr.heart.org/en/resources/faqs/need-to-claim-your-aha-continuing-education-credits" target="_blank" rel="noopener noreferrer">Potential CME Credit?</a>
           <p>Information from the AHA about claiming continuing education credits.</p>
         </article>
+        <article class="recent-student-action">
+          <a class="button secondary" href="https://910cpr.com/go/pay">Make Payment</a>
+          <p>For balances, registration issues, or special arrangements.</p>
+        </article>
       </section>
 
-      <section class="recent-student-help" aria-labelledby="card-help-title">
-        <h2 id="card-help-title">Need Help Finding Your Card?</h2>
-        <p>Text us your name and class date.</p>
+      <section class="next-schedule" aria-labelledby="next-schedule-title">
+        <h2 id="next-schedule-title">Need a class schedule?</h2>
+        <div class="next-schedule-primary" aria-label="Common class schedules">
+          <a class="button secondary" href="/bls.html">BLS</a>
+          <a class="button secondary" href="/courses/aha-bls-heartcode.html">HeartCode</a>
+          <a class="button secondary" href="/acls.html">ACLS</a>
+          <a class="button secondary" href="/pals.html">PALS</a>
+        </div>
+        <p class="next-schedule-more">Don't see the course you need?</p>
+        <div class="next-schedule-secondary" aria-label="More course options">
+          <a class="button secondary" href="/heartsaver.html">More AHA</a>
+          <a class="button secondary" href="/arc.html">ARC</a>
+          <a class="button secondary" href="/hsi.html">HSI</a>
+        </div>
       </section>
+
+      <div class="next-build-stamp">Build: 2026-06-09 19:10</div>
     </main>
   </div>
 </div>
