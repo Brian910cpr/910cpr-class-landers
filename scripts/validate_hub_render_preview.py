@@ -64,6 +64,7 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
         held_needs_review += int(hub.get("held_needs_review_seed_offer_count") or 0)
 
         for item in approved_items:
+            is_appointment_seed = item.get("seed_publication_mode") == "appointment_seed_offer"
             if item.get("public_visibility_status") == "suppressed_cutoff_window":
                 add_violation(
                     violations,
@@ -82,12 +83,40 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
                     item,
                     "Approved seed offer appears in preview with public_ready != true.",
                 )
-            if item.get("enrollware_presence_status") != "present_in_enrollware":
+            if is_appointment_seed:
+                if item.get("enrollware_presence_status") != "not_required_for_appointment_seed":
+                    add_violation(
+                        violations,
+                        "appointment_seed_presence_must_be_not_required",
+                        hub,
+                        "Appointment seed offers should mark Enrollware presence as not_required_for_appointment_seed.",
+                        item,
+                        "Appointment seed offer has the wrong Enrollware presence status.",
+                    )
+                if not item.get("appointment_registration_url"):
+                    add_violation(
+                        violations,
+                        "appointment_seed_requires_registration_url",
+                        hub,
+                        "Suppress appointment seed offers until an appointment registration URL exists.",
+                        item,
+                        "Appointment seed offer appears without appointment registration URL.",
+                    )
+                if item.get("standalone_class_lander_allowed") is not False:
+                    add_violation(
+                        violations,
+                        "appointment_seed_must_not_create_class_lander",
+                        hub,
+                        "Keep appointment seed offers hub-only and block standalone class landers.",
+                        item,
+                        "Appointment seed offer does not explicitly block standalone class landers.",
+                    )
+            elif item.get("enrollware_presence_status") != "present_in_enrollware":
                 add_violation(
                     violations,
                     "approved_seed_requires_enrollware_presence",
                     hub,
-                    "Suppress this seed until it is present in current Enrollware source data.",
+                    "Suppress real class/session seed mode until it is present in current Enrollware source data.",
                     item,
                     "Approved seed offer appears without present_in_enrollware.",
                 )
@@ -125,7 +154,13 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
 
         for item in suppressed_items:
             if item.get("display_item_type") == "suppressed_approved_but_not_public_ready":
-                if item.get("public_ready") is True and item.get("enrollware_presence_status") == "present_in_enrollware":
+                is_appointment_seed = item.get("seed_publication_mode") == "appointment_seed_offer"
+                presence_ok = (
+                    item.get("enrollware_presence_status") == "not_required_for_appointment_seed"
+                    if is_appointment_seed
+                    else item.get("enrollware_presence_status") == "present_in_enrollware"
+                )
+                if item.get("public_ready") is True and presence_ok:
                     add_violation(
                         violations,
                         "approved_public_ready_seed_should_not_be_suppressed",
@@ -137,14 +172,20 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
 
         if display_mode == "mixed_current_and_seed":
             for item in approved_items:
-                if item.get("public_ready") is not True or item.get("enrollware_presence_status") != "present_in_enrollware":
+                is_appointment_seed = item.get("seed_publication_mode") == "appointment_seed_offer"
+                presence_ok = (
+                    item.get("enrollware_presence_status") == "not_required_for_appointment_seed"
+                    if is_appointment_seed
+                    else item.get("enrollware_presence_status") == "present_in_enrollware"
+                )
+                if item.get("public_ready") is not True or not presence_ok:
                     add_violation(
                         violations,
                         "mixed_mode_requires_public_ready_seed_offers",
                         hub,
-                        "Mixed display mode may include only public-ready seed offers.",
+                        "Mixed display mode may include only public-ready seed offers with the correct presence rule for their publication mode.",
                         item,
-                        "Mixed mode contains a seed that is not public-ready and present in Enrollware.",
+                        "Mixed mode contains a seed that is not public-ready or has an invalid presence status.",
                     )
 
         if hub_key in {"arc", "hsi"}:

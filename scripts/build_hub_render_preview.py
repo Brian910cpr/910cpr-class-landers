@@ -76,14 +76,26 @@ def preview_seed_item(item: dict[str, Any]) -> dict[str, Any]:
         "course_key": item.get("course_key"),
         "instructor_key": item.get("instructor_key"),
         "registration_target_key": item.get("registration_target_key"),
+        "appointment_registration_target": item.get("appointment_registration_target"),
+        "appointment_registration_url": item.get("appointment_registration_url"),
+        "appointmentDayId": item.get("appointmentDayId"),
+        "courseId": item.get("courseId"),
         "approval_status": item.get("approval_status"),
         "publishability_status": item.get("publishability_status"),
         "enrollware_presence_status": item.get("enrollware_presence_status"),
         "public_ready": item.get("public_ready"),
         "public_ready_block_reason": item.get("public_ready_block_reason"),
+        "seed_publication_mode": item.get("seed_publication_mode"),
+        "auto_public_ready_reason": item.get("auto_public_ready_reason"),
+        "calendar_source_mode": item.get("calendar_source_mode"),
+        "calendar_availability_status": item.get("calendar_availability_status"),
+        "conflict_check_status": item.get("conflict_check_status"),
+        "claimed_slot_status": item.get("claimed_slot_status"),
+        "suppressed_by_slot_winner_policy": item.get("suppressed_by_slot_winner_policy"),
+        "standalone_class_lander_allowed": item.get("standalone_class_lander_allowed"),
         "suppression_reason": item.get("reason"),
         "display_item_type": item.get("display_item_type"),
-        "source": "Approved seed offer",
+        "source": "Appointment seed offer" if item.get("seed_publication_mode") == "appointment_seed_offer" else "Approved seed offer",
         "display_note": "Hub offer only; no standalone class lander.",
     }
 
@@ -152,7 +164,8 @@ def build_preview(source_mode: str) -> dict[str, Any]:
                 "public_render_safety_notes": [
                     "No fake dates.",
                     "Generated seed offers remain hub offers only.",
-                    "Approved seed offers require public_ready and present_in_enrollware.",
+                    "Real class/session offers require current Enrollware presence.",
+                    "Appointment seed offers require public_ready and an appointment registration URL; Enrollware presence is not required for appointment seed mode.",
                     "Offers inside the public display cutoff window are suppressed from public preview only.",
                     "Needs-review seed offers are held back from public preview.",
                 ],
@@ -230,6 +243,10 @@ def write_reports(report: dict[str, Any]) -> None:
         if hub["approved_seed_offers_preview"]:
             for item in hub["approved_seed_offers_preview"][:5]:
                 lines.append(f"- {item.get('title')} - {item.get('date_label')}, {item.get('start_time')} - approved seed hub offer only")
+                if item.get("appointment_registration_url"):
+                    lines.append(f"  - Appointment URL: {item.get('appointment_registration_url')}")
+                if item.get("auto_public_ready_reason"):
+                    lines.append(f"  - Auto-public reason: {item.get('auto_public_ready_reason')}")
         if hub["empty_state"]:
             empty = hub["empty_state"]
             lines.append(f"- Headline: {empty.get('headline')}")

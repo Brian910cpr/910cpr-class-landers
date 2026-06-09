@@ -22,8 +22,6 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.build_hub_offer_model_report import build_report as build_hub_offer_model_report
-from scripts.build_hub_offer_model_report import load_public_visibility_rules, public_visibility_for_start
 from scripts.build_instructor_availability_report import CONFIG_DIR, DEBUG_DIR, SOURCE_MODES, TZ, load_json, parse_dt
 from scripts.build_proposed_seed_review import format_date
 from scripts.build_publishable_seed_candidates import build_export
@@ -150,6 +148,46 @@ def load_calendar_modes() -> dict[str, dict[str, Any]]:
                 "active": source.get("active"),
             }
     return modes
+
+
+def load_public_visibility_rules() -> dict[str, Any]:
+    path = CONFIG_DIR / "public_offer_visibility_rules.json"
+    if not path.exists():
+        return {
+            "public_offer_cutoff_hours": None,
+            "timezone": "America/New_York",
+            "applies_to": [],
+            "does_not_apply_to": [],
+            "notes": [],
+        }
+    return load_json(path)
+
+
+def public_visibility_for_start(start_value: Any, rules: dict[str, Any], now: datetime | None = None) -> dict[str, Any]:
+    cutoff_hours = rules.get("public_offer_cutoff_hours")
+    start_dt = parse_dt(start_value)
+    if cutoff_hours is None or not start_dt:
+        return {
+            "public_visibility_status": "not_checked",
+            "public_visibility_note": "Public display cutoff was not checked.",
+            "cutoff_hours": cutoff_hours,
+            "hours_until_start": None,
+        }
+    current = now or datetime.now(TZ)
+    hours_until_start = (start_dt - current).total_seconds() / 3600
+    if hours_until_start < float(cutoff_hours):
+        return {
+            "public_visibility_status": "suppressed_cutoff_window",
+            "public_visibility_note": "Suppressed from public display because class starts within cutoff window. Registration may still be available by direct/manual link.",
+            "cutoff_hours": cutoff_hours,
+            "hours_until_start": round(hours_until_start, 2),
+        }
+    return {
+        "public_visibility_status": "visible_publicly",
+        "public_visibility_note": "Outside public display cutoff window.",
+        "cutoff_hours": cutoff_hours,
+        "hours_until_start": round(hours_until_start, 2),
+    }
 
 
 def load_appointment_ranges(warnings: list[str]) -> list[dict[str, Any]]:
@@ -317,6 +355,8 @@ def calendar_availability_status(seed: dict[str, Any]) -> str:
 
 
 def display_mode_for_offer(offer: dict[str, Any]) -> str:
+    if offer.get("suppressed_by_slot_winner_policy"):
+        return "blocked"
     if offer.get("public_ready_status") == "public_ready" and offer.get("public_visibility_status") == "visible_publicly":
         return "appointment_seed_offer"
     if offer.get("approval_status") in {"needs_review", "approved_for_preview"}:
@@ -337,10 +377,64 @@ def block_reason_for_offer(offer: dict[str, Any]) -> str | None:
     return "; ".join(reason for reason in reasons if reason) or None
 
 
+def appointment_auto_ready(offer: dict[str, Any]) -> dict[str, Any]:
+    reasons: list[str] = []
+    blockers: list[str] = []
+    if offer.get("publishability_status") == "publishable_candidate":
+        reasons.append("publishability_status is publishable_candidate")
+    else:
+        blockers.append("publishability_status is not publishable_candidate")
+    if offer.get("registration_target_key") and offer.get("registration_backend") == "enrollware":
+        reasons.append("valid Enrollware appointment registration target exists")
+    else:
+        blockers.append("missing or invalid appointment registration target")
+    if offer.get("appointment_registration_url"):
+        reasons.append("appointment registration URL exists")
+    else:
+        blockers.append("missing appointment registration URL")
+    if offer.get("calendar_availability_status") == "calendar_window_reported":
+        reasons.append("calendar availability window reported")
+    else:
+        blockers.append("calendar availability not confirmed")
+    if offer.get("conflict_check_status") in {"no_conflict_found", "not_checked"}:
+        reasons.append("no blocking current Enrollware conflict found")
+    else:
+        blockers.append(f"conflict check status is {offer.get('conflict_check_status')}")
+    if offer.get("public_visibility_status") == "visible_publicly":
+        reasons.append("outside public display cutoff window")
+    else:
+        blockers.append("inside public display cutoff window or visibility not checked")
+    if offer.get("suppressed_by_slot_winner_policy"):
+        blockers.append("suppressed by claimed slot winner policy")
+    else:
+        reasons.append("not suppressed by claimed slot winner policy")
+    if offer.get("standalone_class_lander_allowed") is False:
+        reasons.append("standalone class lander generation blocked")
+    else:
+        blockers.append("standalone class lander policy missing")
+
+    if blockers:
+        return {
+            "public_ready": False,
+            "public_ready_status": "blocked_not_public_ready",
+            "approval_status": offer.get("approval_status") or "needs_review",
+            "enrollware_presence_status": offer.get("enrollware_presence_status"),
+            "auto_public_ready_reason": None,
+            "block_reason": "; ".join(blockers),
+        }
+    return {
+        "public_ready": True,
+        "public_ready_status": "public_ready",
+        "approval_status": "auto_approved_by_rules",
+        "enrollware_presence_status": "not_required_for_appointment_seed",
+        "auto_public_ready_reason": "; ".join(reasons),
+        "block_reason": None,
+    }
+
+
 def build_inventory(source_mode: str) -> dict[str, Any]:
     warnings: list[str] = []
     seed_export = build_export(source_mode)
-    hub_offer_model = build_hub_offer_model_report(source_mode)
     visibility_rules = load_public_visibility_rules()
     targets = load_registration_targets()
     calendar_modes = load_calendar_modes()
@@ -356,10 +450,11 @@ def build_inventory(source_mode: str) -> dict[str, Any]:
         conflict = conflict_check_for_offer(seed, current_sessions, current_sessions_available)
         instructor = norm(seed.get("instructor_key"))
         calendar = calendar_modes.get(instructor, {})
-        public_ready_status = "public_ready" if seed.get("public_ready") is True else "blocked_not_public_ready"
         offer = {
             "offer_id": seed.get("seed_id"),
             "seed_id": seed.get("seed_id"),
+            "display_item_type": "appointment_seed_offer",
+            "seed_publication_mode": "appointment_seed_offer",
             "course_key": seed.get("course_key"),
             "course_title": seed.get("course_title"),
             "course_family": course_family(seed.get("course_key"), seed.get("course_title")),
@@ -374,6 +469,7 @@ def build_inventory(source_mode: str) -> dict[str, Any]:
             "appointmentDayId": appointment.get("appointmentDayId"),
             "courseId": target.get("course_id") or seed.get("enrollware_course_id"),
             "registration_target_key": seed.get("registration_target_key"),
+            "appointment_registration_target": seed.get("registration_target_key"),
             "registration_backend": target.get("provider") or seed.get("registration_backend") or "enrollware",
             "appointment_registration_url": appointment.get("appointment_registration_url"),
             "appointment_url_status": appointment.get("appointment_url_status"),
@@ -388,8 +484,8 @@ def build_inventory(source_mode: str) -> dict[str, Any]:
             "public_visibility_note": visibility.get("public_visibility_note"),
             "cutoff_hours": visibility.get("cutoff_hours"),
             "hours_until_start": visibility.get("hours_until_start"),
-            "public_ready_status": public_ready_status,
-            "public_ready": seed.get("public_ready"),
+            "public_ready_status": "blocked_not_public_ready",
+            "public_ready": False,
             "public_ready_block_reason": seed.get("public_ready_block_reason"),
             "enrollware_presence_status": seed.get("enrollware_presence_status"),
             "approval_status": seed.get("approval_status"),
@@ -397,8 +493,16 @@ def build_inventory(source_mode: str) -> dict[str, Any]:
             "rule_reason": seed.get("rule_reason"),
             "caution_flags": seed.get("caution_flags", []),
             "standalone_class_lander_allowed": False,
+            "claimed_slot_status": "unclaimed_available_seed",
+            "suppressed_by_slot_winner_policy": False,
+            "slot_conflict_reason": None,
+            "canonical_offer_for_claimed_slot": False,
+            "alternate_course_suppressed": False,
         }
-        offer["block_reason"] = block_reason_for_offer(offer)
+        readiness = appointment_auto_ready(offer)
+        offer.update(readiness)
+        offer["public_ready_block_reason"] = None if offer.get("public_ready") else readiness.get("block_reason") or block_reason_for_offer(offer)
+        offer["block_reason"] = None if offer.get("public_ready") else block_reason_for_offer(offer)
         offer["display_mode"] = display_mode_for_offer(offer)
         offers.append(offer)
 
@@ -427,11 +531,11 @@ def build_inventory(source_mode: str) -> dict[str, Any]:
             "public_offer_visibility_rules": rel(CONFIG_DIR / "public_offer_visibility_rules.json"),
             "enrollware_presence_source": rel(SESSIONS_CURRENT_PATH),
         },
-        "hub_offer_model_summary": hub_offer_model.get("summary", {}),
         "summary": {
             "total_appointment_offers": len(offers),
             "august_appointment_offers": august_count,
             "public_ready_appointment_offers": public_ready_count,
+            "auto_public_appointment_seed_offers": public_ready_count,
             "blocked_or_needs_review": sum(1 for offer in offers if offer.get("display_mode") in {"blocked", "needs_review"}),
             "with_appointment_urls": sum(1 for offer in offers if offer.get("appointment_registration_url")),
             "display_mode_counts": dict(sorted(display_counts.items())),

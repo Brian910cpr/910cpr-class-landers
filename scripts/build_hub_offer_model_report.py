@@ -21,6 +21,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.build_instructor_availability_report import CONFIG_DIR, DEBUG_DIR, SOURCE_MODES, TZ, load_json, parse_dt
 from scripts.build_proposed_seed_review import course_title, format_date, format_time
+from scripts.build_appointment_offer_inventory import build_inventory as build_appointment_offer_inventory
 from scripts.build_publishable_seed_candidates import build_export
 
 
@@ -334,6 +335,20 @@ def load_current_sessions(targets_by_course: dict[str, dict[str, Any]], visibili
 def seed_display_classification(seed: dict[str, Any]) -> tuple[str, str]:
     if seed.get("registration_target_key") in (None, ""):
         return "suppressed_missing_registration_target", "Seed has no registration target key."
+    if seed.get("seed_publication_mode") == "appointment_seed_offer":
+        if (
+            seed.get("publishability_status") == "publishable_candidate"
+            and seed.get("public_ready") is True
+            and seed.get("public_ready_status") == "public_ready"
+            and seed.get("appointment_registration_url")
+            and seed.get("public_visibility_status") == "visible_publicly"
+            and seed.get("standalone_class_lander_allowed") is False
+            and not seed.get("suppressed_by_slot_winner_policy")
+        ):
+            return "appointment_seed_offer", "Auto-public appointment seed offer; hub offer only, not a class lander."
+        if seed.get("display_mode") == "needs_review":
+            return "needs_review_seed_offer", "Appointment seed offer exists but objective auto-public rules did not all pass."
+        return "suppressed_not_approved", seed.get("block_reason") or "Appointment seed offer is blocked by objective rules."
     if seed.get("approval_status") == "approved_for_public":
         if (
             seed.get("publishability_status") == "publishable_candidate"
@@ -402,7 +417,8 @@ def build_report(source_mode: str) -> dict[str, Any]:
     hubs = load_hubs()
     sessions_source = load_current_sessions(targets_by_course, visibility_rules)
     seed_export = build_export(source_mode)
-    seeds = seed_export.get("publishable_seed_candidates", [])
+    appointment_inventory = build_appointment_offer_inventory(source_mode)
+    seeds = appointment_inventory.get("appointment_offers", [])
 
     hub_reports: list[dict[str, Any]] = []
     suppressed_counter: Counter[str] = Counter()
@@ -445,15 +461,27 @@ def build_report(source_mode: str) -> dict[str, Any]:
                 "end_time": seed.get("end_time"),
                 "location_key": seed.get("location_key"),
                 "registration_target_key": seed.get("registration_target_key"),
+                "appointment_registration_target": seed.get("appointment_registration_target"),
+                "appointment_registration_url": seed.get("appointment_registration_url"),
+                "appointmentDayId": seed.get("appointmentDayId"),
+                "courseId": seed.get("courseId"),
                 "approval_status": seed.get("approval_status"),
                 "publishability_status": seed.get("publishability_status"),
                 "enrollware_presence_status": seed.get("enrollware_presence_status"),
                 "public_ready": seed.get("public_ready"),
                 "public_ready_block_reason": seed.get("public_ready_block_reason"),
+                "seed_publication_mode": seed.get("seed_publication_mode"),
+                "auto_public_ready_reason": seed.get("auto_public_ready_reason"),
+                "calendar_source_mode": seed.get("calendar_source_mode"),
+                "calendar_availability_status": seed.get("calendar_availability_status"),
+                "conflict_check_status": seed.get("conflict_check_status"),
+                "claimed_slot_status": seed.get("claimed_slot_status"),
+                "suppressed_by_slot_winner_policy": seed.get("suppressed_by_slot_winner_policy"),
+                "standalone_class_lander_allowed": seed.get("standalone_class_lander_allowed"),
                 "reason": reason,
                 "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed.",
             }
-            if classification == "approved_seed_offer":
+            if classification in {"approved_seed_offer", "appointment_seed_offer"}:
                 approved_seed_offers.append(display_seed)
             elif classification == "needs_review_seed_offer":
                 needs_review_seed_offers.append(display_seed)
@@ -544,12 +572,14 @@ def build_report(source_mode: str) -> dict[str, Any]:
         "rules": {
             "current_enrollware_classes": "May appear as class/session offers when present in current Enrollware source data.",
             "approved_seed_offers": "May appear only as hub offers after approved_for_public; they do not create standalone class landers.",
+            "appointment_seed_offers": "May appear as hub appointment offers when objective appointment rules pass; Enrollware presence is not required because Enrollware creates/groups the class when the appointment is claimed.",
             "unapproved_seed_offers": "Remain needs-review or suppressed and do not become public.",
             "report_only": "This report does not modify public pages, CTAs, Enrollware links, class landers, or schedule files.",
         },
         "summary": summary,
         "hubs": sorted(hub_reports, key=lambda hub: (str(hub.get("hub_source")), str(hub.get("hub_key")))),
         "seed_export_summary": seed_export.get("summary", {}),
+        "appointment_offer_inventory_summary": appointment_inventory.get("summary", {}),
     }
 
 
