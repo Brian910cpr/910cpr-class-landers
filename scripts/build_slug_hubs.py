@@ -1311,6 +1311,8 @@ def render_inventory_section(
 
 
 def render_schedule_row_card(row: dict[str, Any], *, group_mode: bool, page_slug: str) -> str:
+    if row.get("_appointment_seed_offer"):
+        return render_appointment_seed_offer_card(row)
     if row.get("_requestable_offer"):
         return render_requestable_offer_card(row, hub_slug=page_slug)
     return render_session_card(row, group_mode=group_mode, page_slug=page_slug)
@@ -1342,11 +1344,18 @@ def requestable_offers_for_tab(page: dict[str, Any], tab: dict[str, Any], reques
 
 
 def schedule_row_start(row: dict[str, Any]) -> datetime:
-    value = row.get("start_time") if row.get("_requestable_offer") else row.get("start_at")
+    if row.get("_appointment_seed_offer"):
+        value = row.get("start_datetime")
+    elif row.get("_requestable_offer"):
+        value = row.get("start_time")
+    else:
+        value = row.get("start_at")
     return parse_dt(value) or datetime.max.replace(tzinfo=TZ)
 
 
 def schedule_row_kind(row: dict[str, Any]) -> str:
+    if row.get("_appointment_seed_offer"):
+        return "appointment_seed"
     if row.get("_requestable_offer"):
         return "requestable"
     return "real_seated" if session_enrolled_count(row) >= 1 else "real_empty"
@@ -1503,14 +1512,16 @@ def appointment_offers_for_tab(tab: dict[str, Any], appointment_offers: list[dic
     for offer in appointment_offers:
         course_key = normalize_space(offer.get("course_key"))
         if tab_id in APPOINTMENT_COURSE_TAB_IDS.get(course_key, set()):
-            selected.append(offer)
+            row = dict(offer)
+            row["_appointment_seed_offer"] = True
+            selected.append(row)
     return sorted(selected, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
 
 
 def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     start_dt = parse_dt(offer.get("start_datetime"))
     end_dt = parse_dt(offer.get("end_datetime"))
-    title = normalize_space(offer.get("course_title")) or "Available appointment slot"
+    title = normalize_space(offer.get("course_title")) or "Available class time"
     instructor = normalize_space(offer.get("instructor_key")).title()
     location = normalize_space(offer.get("location_key")).title()
     url = escape(offer.get("appointment_registration_url") or "#", quote=True)
@@ -1553,10 +1564,9 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
       <span class="slug-pill-chip">Instructor: {escape(instructor)}</span>
     </div>
     <div class="slug-pill-subtitle">{escape(title)}</div>
-    <p class="slug-pill-note">This is an appointment-style registration slot. It is not a pre-created standalone class page.</p>
   </div>
   <div class="slug-pill-actions">
-    <a class="button small primary" href="{url}" {data_attrs}>Book appointment slot</a>
+    <a class="button small primary" href="{url}" {data_attrs}>Book Seat</a>
   </div>
 </article>
 """.strip()
@@ -1733,22 +1743,20 @@ def render_tab_panel(
 </section>
 """.strip()
 
-    tab_requestable_offers = requestable_offers_for_tab(page, tab, requestable_offers or [])
     tab_appointment_seed_offers = appointment_offers_for_tab(tab, appointment_seed_offers or [])
-    upcoming_sessions = sorted([*sort_by_start(sessions), *tab_requestable_offers], key=schedule_row_start)
+    tab_requestable_offers = requestable_offers_for_tab(page, tab, requestable_offers or [])
+    upcoming_sessions = sorted([*sort_by_start(sessions), *tab_requestable_offers, *tab_appointment_seed_offers], key=schedule_row_start)
     default_visible_count: int | None = None
-    if str(page.get("slug") or "") == "bls":
+    if str(page.get("slug") or "") == "bls" and not tab_appointment_seed_offers:
         upcoming_sessions, default_strategy = prioritize_bls_default_rows(upcoming_sessions, load_free_time_scheduler_config())
         default_visible_count = int(default_strategy.get("default_visible_count") or len(upcoming_sessions))
+    elif tab_appointment_seed_offers:
+        default_visible_count = len(upcoming_sessions)
 
     section_html: list[str] = []
     curated_html = render_curated_offers_section(page, tab, sessions)
     if curated_html:
         section_html.append(curated_html)
-
-    appointment_seed_html = render_appointment_seed_offers_section(tab_appointment_seed_offers)
-    if appointment_seed_html:
-        section_html.append(appointment_seed_html)
 
     if upcoming_sessions:
         section_html.append(
