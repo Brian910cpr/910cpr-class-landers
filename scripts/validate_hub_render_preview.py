@@ -145,7 +145,7 @@ def validate_preview(source_mode: str) -> dict[str, Any]:
                     hub,
                     "Suppress real class/session seed mode until it is present in current Enrollware source data.",
                     item,
-                    "Approved seed offer appears without present_in_enrollware.",
+                    "Real class/session seed offer appears without present_in_enrollware.",
                 )
             if item.get("display_note") and "class lander" not in str(item.get("display_note")).lower():
                 add_violation(

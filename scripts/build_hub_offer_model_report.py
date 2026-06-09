@@ -621,7 +621,7 @@ def write_reports(report: dict[str, Any]) -> None:
         "- `current_enrollware_class`: real future Enrollware-backed class/session that can be modeled as a hub class offer.",
         "- `approved_seed_offer`: report-only generated availability approved for public hub display; hub offer only, not a class lander.",
         "- `needs_review_seed_offer`: generated availability with a valid publishable target but no public approval yet.",
-        "- `suppressed_approved_but_not_public_ready`: seed is approved, but public_ready or current Enrollware presence blocks display.",
+        "- `suppressed_approved_but_not_public_ready`: seed is approved, but its publication-mode readiness gate blocks display. Real class/session modes require current Enrollware presence; appointment seed mode requires a valid appointment URL and does not require current Enrollware presence.",
         "- `suppressed_missing_enrollware`: Enrollware source is unavailable for validation.",
         "- `suppressed_not_approved`: seed exists but approval state blocks public display.",
         "- `suppressed_missing_registration_target`: seed lacks a valid registration target/publishability gate.",
