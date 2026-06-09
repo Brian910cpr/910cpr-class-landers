@@ -1,11 +1,16 @@
-<!-- BUILD_CODE: 2026-05-08 00:52 | scripts/stamp_generated_html.py | full class lander rebuild -->
+<!-- BUILD_CODE: 2026-06-09 18:55 | manual update | add /go/ shortlink fallback redirect -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="build-date" content="2026-05-08T00:52:58-04:00">
+<meta name="build-date" content="2026-06-09T18:55:00-04:00">
 <meta charset="UTF-8">
 <title>Schedule Page Error | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+if (location.pathname.indexOf("/go/") === 0) {
+  location.replace("https://910cpr.com" + location.pathname + location.search + location.hash);
+}
+</script>
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -82,7 +87,7 @@ window.dataLayer.push({
     <a class="button" href="https://coastalcprtraining.enrollware.com/">Go to Full Schedule</a>
   </div>
 </div>
-<div class="build-stamp">Build: 2026-05-08 00:52</div>
+<div class="build-stamp">Build: 2026-06-09 18:55</div>
 
 <p class="entity-identity">910CPR is an Authorized American Heart Association Training Site serving Coastal North Carolina.</p>
 </body>
