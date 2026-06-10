@@ -34,6 +34,7 @@ REGISTRATION_TARGETS_PATH = CONFIG_DIR / "registration_targets.json"
 CALENDAR_SOURCES_PATH = CONFIG_DIR / "calendar_sources.json"
 APPOINTMENT_CONTAINER_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
+CLASS_REPORT_PATH = ROOT / "data" / "Class Report.xlsx"
 INSTRUCTOR_PRIORITY = {"amy": 1, "brian": 2, "nick": 3}
 EXCLUSIVE_LOCATION_KEYS = {"shipyard"}
 
@@ -269,12 +270,74 @@ def appointment_mapping_for(offer: dict[str, Any], ranges: list[dict[str, Any]])
     }
 
 
+def parse_class_report_datetime(value: Any) -> datetime | None:
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            return value.replace(tzinfo=TZ)
+        return value.astimezone(TZ)
+    text = norm(value)
+    if not text:
+        return None
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%m/%d/%Y %I:%M %p", "%m/%d/%Y %H:%M"):
+        try:
+            return datetime.strptime(text, fmt).replace(tzinfo=TZ)
+        except ValueError:
+            continue
+    return parse_dt(text)
+
+
+def load_class_report_sessions(warnings: list[str]) -> list[dict[str, Any]]:
+    if not CLASS_REPORT_PATH.exists():
+        return []
+    try:
+        import openpyxl
+    except ImportError:
+        warnings.append(f"{rel(CLASS_REPORT_PATH)} exists, but openpyxl is unavailable; falling back to {rel(SESSIONS_CURRENT_PATH)}.")
+        return []
+
+    workbook = openpyxl.load_workbook(CLASS_REPORT_PATH, data_only=True, read_only=True)
+    sessions: list[dict[str, Any]] = []
+    for sheet in workbook.worksheets:
+        rows = list(sheet.iter_rows(values_only=True))
+        if not rows:
+            continue
+        headers = [clean_text(value) for value in rows[0]]
+        if "ID" not in headers or "Start Date / Time" not in headers:
+            continue
+        for row in rows[1:]:
+            record = {headers[index]: row[index] for index in range(min(len(headers), len(row))) if headers[index]}
+            start = parse_class_report_datetime(record.get("Start Date / Time"))
+            end = parse_class_report_datetime(record.get("End Date / Time"))
+            if not start:
+                continue
+            sessions.append(
+                {
+                    "session_id": norm(record.get("ID")),
+                    "start_datetime": start.isoformat(),
+                    "end_datetime": end.isoformat() if end else start.isoformat(),
+                    "course_name": clean_text(record.get("Course")),
+                    "location_name": clean_text(record.get("Location")),
+                    "instructor_name": clean_text(record.get("Instructor")),
+                    "registration_link": norm(record.get("Registration Link")),
+                    "source_file": rel(CLASS_REPORT_PATH),
+                    "source_sheet": sheet.title,
+                }
+            )
+    if sessions:
+        warnings.append(f"Conflict checks used latest uploaded class report: {rel(CLASS_REPORT_PATH)} ({len(sessions)} rows).")
+    return sessions
+
+
 def load_current_sessions(warnings: list[str]) -> list[dict[str, Any]]:
+    class_report_sessions = load_class_report_sessions(warnings)
+    if class_report_sessions:
+        return class_report_sessions
     if not SESSIONS_CURRENT_PATH.exists():
         warnings.append(f"{rel(SESSIONS_CURRENT_PATH)} missing; conflict checks are source_unavailable.")
         return []
     config = load_json(SESSIONS_CURRENT_PATH)
     sessions = config.get("sessions", []) if isinstance(config, dict) else []
+    warnings.append(f"Conflict checks used fallback current sessions source: {rel(SESSIONS_CURRENT_PATH)} ({len(sessions)} rows).")
     return [row for row in sessions if isinstance(row, dict)]
 
 
@@ -294,7 +357,36 @@ def session_instructor_key(session: dict[str, Any]) -> str:
 
 
 def session_location_key(session: dict[str, Any]) -> str:
-    return location_key(session.get("location") or session.get("location_name") or session.get("location_display"))
+    location = session.get("location")
+    if isinstance(location, dict):
+        location = location.get("location_name") or location.get("location_display")
+    return location_key(location or session.get("location_name") or session.get("location_display"))
+
+
+def session_location_label(session: dict[str, Any]) -> str:
+    location = session.get("location")
+    if isinstance(location, dict):
+        return clean_text(location.get("location_display") or location.get("location_name"))
+    return clean_text(location or session.get("location_name") or session.get("location_display"))
+
+
+def session_course_title(session: dict[str, Any]) -> str:
+    course = session.get("course") if isinstance(session.get("course"), dict) else {}
+    return clean_text(course.get("course_name_primary_clean") or course.get("course_name_raw") or session.get("course_name"))
+
+
+def session_course_id(session: dict[str, Any]) -> str:
+    course = session.get("course") if isinstance(session.get("course"), dict) else {}
+    return norm(course.get("course_id") or session.get("course_id"))
+
+
+def session_source_type(session: dict[str, Any]) -> str:
+    source_file = norm(session.get("source_file"))
+    if source_file.endswith("Class Report.xlsx"):
+        return "real_enrollware_class"
+    if source_file:
+        return "current_enrollware_source_row"
+    return "fallback_current_session_row"
 
 
 def overlaps(a_start: datetime, a_end: datetime, b_start: datetime, b_end: datetime) -> bool:
@@ -313,6 +405,29 @@ def offer_overlaps_offer(left: dict[str, Any], right: dict[str, Any]) -> bool:
 
 def instructor_priority(instructor: Any) -> int:
     return INSTRUCTOR_PRIORITY.get(norm(instructor).lower(), 99)
+
+
+def source_window_rank(offer: dict[str, Any]) -> int:
+    source_type = norm(offer.get("source_type") or offer.get("source_window_type"))
+    if source_type == "HARD":
+        return 0
+    if source_type == "SOFT-supported":
+        return 1
+    if source_type == "BASE-HORIZON":
+        return 3
+    return 2
+
+
+def course_fit_rank(offer: dict[str, Any]) -> int:
+    instructor = norm(offer.get("instructor_key")).lower()
+    family = norm(offer.get("course_family")).lower() or course_family(offer.get("course_key"), offer.get("course_title"))
+    if instructor == "amy" and family in {"acls", "pals"}:
+        return 0
+    if instructor == "nick" and family in {"bls", "heartsaver"}:
+        return 0
+    if instructor == "brian" and family in {"bls", "heartsaver"}:
+        return 1
+    return 2
 
 
 def same_instructor_appointment_tuple(left: dict[str, Any], right: dict[str, Any]) -> bool:
@@ -388,6 +503,8 @@ def seed_conflict_suppression_for_offer(offer: dict[str, Any], offers: list[dict
     winner = sorted(
         contenders,
         key=lambda item: (
+            source_window_rank(item),
+            course_fit_rank(item),
             instructor_priority(item.get("instructor_key")),
             norm(item.get("start_time")),
             norm(item.get("seed_id")),
@@ -400,7 +517,7 @@ def seed_conflict_suppression_for_offer(offer: dict[str, Any], offers: list[dict
         "suppressed_by_slot_winner_policy": suppressed,
         "slot_conflict_reason": "; ".join(reasons) if suppressed else None,
         "slot_conflict_scope": "; ".join(scopes) if suppressed else None,
-        "slot_priority_rule": "Amy > Brian > Nick for exclusive location overlap; appointmentDayId/startTime scoped to same instructor.",
+        "slot_priority_rule": "Real Enrollware class blocks first; explicit availability beats generated/base horizon; course fit beats generic priority; Amy > Brian > Nick is final tie-breaker.",
         "slot_winner_seed_id": winner.get("seed_id"),
         "slot_winner_course_key": winner.get("course_key"),
         "slot_winner_registration_url": winner.get("appointment_registration_url"),
@@ -439,13 +556,28 @@ def conflict_check_for_offer(offer: dict[str, Any], sessions: list[dict[str, Any
             reasons.append("same_location")
         if not reasons:
             continue
-        course = session.get("course") if isinstance(session.get("course"), dict) else {}
         conflicts.append(
             {
                 "session_id": session.get("session_id") or session.get("id"),
-                "course_title": clean_text(course.get("course_name_primary_clean") or course.get("course_name_raw") or session.get("course_name")),
+                "class_id": session.get("session_id") or session.get("id"),
+                "course_id": session_course_id(session),
+                "course_title": session_course_title(session),
                 "start_datetime": session_start.isoformat(),
                 "end_datetime": session_end.isoformat(),
+                "instructor": clean_text(
+                    session.get("instructor")
+                    or session.get("lead_instructor")
+                    or session.get("lead_instructor_name")
+                    or session.get("instructor_name")
+                ),
+                "location": session_location_label(session),
+                "source_file": session.get("source_file") or rel(CLASS_REPORT_PATH) if CLASS_REPORT_PATH.exists() else rel(SESSIONS_CURRENT_PATH),
+                "source_type": session_source_type(session),
+                "operator_guidance": (
+                    "Delete/cancel the real Enrollware class first if you want this appointment seed to become eligible."
+                    if session_source_type(session) == "real_enrollware_class"
+                    else "Review this fallback conflict source before suppressing an appointment seed."
+                ),
                 "reasons": reasons,
             }
         )
@@ -551,7 +683,7 @@ def build_inventory(source_mode: str) -> dict[str, Any]:
     calendar_modes = load_calendar_modes()
     appointment_ranges = load_appointment_ranges(warnings)
     current_sessions = load_current_sessions(warnings)
-    current_sessions_available = SESSIONS_CURRENT_PATH.exists()
+    current_sessions_available = bool(current_sessions) or SESSIONS_CURRENT_PATH.exists() or CLASS_REPORT_PATH.exists()
 
     offers: list[dict[str, Any]] = []
     for seed in seed_export.get("publishable_seed_candidates", []):
@@ -640,7 +772,7 @@ def build_inventory(source_mode: str) -> dict[str, Any]:
             "calendar_sources": rel(CALENDAR_SOURCES_PATH),
             "appointment_containers": rel(APPOINTMENT_CONTAINER_PATH),
             "public_offer_visibility_rules": rel(CONFIG_DIR / "public_offer_visibility_rules.json"),
-            "enrollware_presence_source": rel(SESSIONS_CURRENT_PATH),
+            "enrollware_presence_source": rel(CLASS_REPORT_PATH) if CLASS_REPORT_PATH.exists() else rel(SESSIONS_CURRENT_PATH),
         },
         "summary": {
             "total_appointment_offers": len(offers),

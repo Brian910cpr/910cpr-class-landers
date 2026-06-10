@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>910CPR Payment</title>
+<meta name="description" content="Use this 910CPR payment page for class balances, registration payment issues, group training payments, or special arrangements.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://910cpr.com/pay/">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<link rel="stylesheet" href="/css/lander.css">
+<style>
+.pay-shell {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.pay-card {
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+}
+
+.pay-header {
+  display: grid;
+  gap: 14px;
+}
+
+.pay-header h1 {
+  margin: 0 0 8px;
+  color: var(--heading);
+  font-size: 34px;
+  line-height: 1.12;
+}
+
+.pay-copy,
+.pay-section p,
+.pay-field-note,
+.pay-note-preview,
+.pay-footer-note {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.pay-copy,
+.pay-section p,
+.pay-footer-note {
+  margin: 0;
+}
+
+.pay-section {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface-soft);
+  box-shadow: var(--shadow-soft);
+}
+
+.pay-section h2 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.pay-section .button {
+  width: 100%;
+}
+
+.pay-primary {
+  background: linear-gradient(180deg, #fffdf3 0%, #f7fcff 100%);
+}
+
+.pay-form {
+  display: grid;
+  gap: 12px;
+}
+
+.pay-field {
+  display: grid;
+  gap: 6px;
+}
+
+.pay-field label {
+  color: var(--heading);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pay-field input,
+.pay-field textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  color: var(--text);
+  background: #fff;
+  font: inherit;
+}
+
+.pay-field textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.pay-amount-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.pay-lookup {
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--heading);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pay-lookup:disabled {
+  background: #edf3f7;
+  color: var(--muted);
+  cursor: wait;
+}
+
+.pay-field-note {
+  margin: -4px 0 0;
+  font-size: 13px;
+}
+
+.pay-note-box {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.pay-note-box strong {
+  color: var(--heading);
+  font-size: 13px;
+}
+
+.pay-note-preview {
+  margin: 0;
+  word-break: break-word;
+}
+
+.pay-copy-status {
+  min-height: 18px;
+  color: var(--medical-dark);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pay-lookup-result {
+  display: none;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.pay-lookup-result.is-visible {
+  display: grid;
+}
+
+.pay-lookup-result strong {
+  color: var(--heading);
+}
+
+.pay-lookup-result p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.pay-lookup-result .button {
+  width: 100%;
+}
+
+.pay-alt-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.pay-alt-method {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.pay-alt-method p {
+  font-size: 14px;
+}
+
+.pay-qr {
+  display: block;
+  width: min(100%, 220px);
+  max-width: 220px;
+  margin: 4px auto 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.pay-footer {
+  display: grid;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.pay-build-stamp {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.3;
+  opacity: 0.68;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .wrap {
+    padding-top: 18px;
+  }
+
+  .pay-card {
+    padding: 18px;
+  }
+
+  .pay-header h1 {
+    font-size: 30px;
+  }
+
+  .pay-amount-row {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="page-shell pay-shell">
+    <main class="card pay-card">
+      <header class="pay-header">
+        <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+          <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+          <span class="site-brand-wordmark">910CPR</span>
+        </a>
+        <section aria-labelledby="pay-title">
+          <div class="eyebrow">Payment</div>
+          <h1 id="pay-title">910CPR Payment</h1>
+          <p class="pay-copy">Use this page for class balances, registration payment issues, group training payments, or special arrangements directed by 910CPR.</p>
+        </section>
+      </header>
+
+      <section class="pay-section pay-primary" aria-labelledby="secure-payment-title">
+        <h2 id="secure-payment-title">Secure Card / ACH Checkout</h2>
+        <button class="button primary" id="stripe-checkout" type="button">Pay by Card or ACH</button>
+        <p>Recommended for the cleanest payment record.</p>
+        <div class="pay-copy-status" id="checkout-status" aria-live="polite"></div>
+      </section>
+
+      <section class="pay-section" id="payment-info" aria-labelledby="payment-info-title">
+        <h2 id="payment-info-title">Payment Information</h2>
+        <form class="pay-form">
+          <div class="pay-field">
+            <label for="student-name">Student name</label>
+            <input id="student-name" name="studentName" autocomplete="name" placeholder="Jane Smith">
+          </div>
+          <div class="pay-field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="jane@example.com">
+          </div>
+          <div class="pay-field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="910-395-5193">
+          </div>
+          <div class="pay-field">
+            <label for="course">Course</label>
+            <input id="course" name="course" placeholder="AHA BLS Provider">
+          </div>
+          <div class="pay-field">
+            <label for="class-date">Class date</label>
+            <input id="class-date" name="classDate" placeholder="June 10">
+          </div>
+          <div class="pay-amount-row">
+            <div class="pay-field">
+              <label for="amount">Amount</label>
+              <input id="amount" name="amount" inputmode="decimal" placeholder="75">
+            </div>
+            <button class="pay-lookup" id="lookup-balance" type="button">Look up possible balance</button>
+          </div>
+          <p class="pay-field-note">Balance lookup is optional. You may still enter the amount provided by 910CPR.</p>
+          <div class="pay-lookup-result" id="lookup-result" aria-live="polite"></div>
+          <div class="pay-field">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" placeholder="Payment reference, group name, or special instructions"></textarea>
+          </div>
+          <button class="button secondary" id="copy-payment-note" type="button">Copy Payment Note</button>
+          <div class="pay-note-box" aria-live="polite">
+            <strong>Payment note:</strong>
+            <p class="pay-note-preview" id="payment-note">910CPR - [Student Name] - [Course] - [Class Date] - $[Amount]</p>
+            <div class="pay-copy-status" id="copy-status"></div>
+          </div>
+        </form>
+      </section>
+
+      <section class="pay-section" aria-labelledby="alternate-payment-title">
+        <h2 id="alternate-payment-title">Alternate Payment Methods</h2>
+        <p>Use these only if directed by 910CPR or if you had trouble completing registration. Please include the student name, course, and class date in the payment note.</p>
+        <div class="pay-alt-grid">
+          <article class="pay-alt-method">
+            <!-- TODO: Replace with final PayPal payment link. -->
+            <a class="button secondary" href="#payment-info">PayPal</a>
+            <p>Use only when directed by 910CPR. Please include the copied payment note.</p>
+          </article>
+          <article class="pay-alt-method">
+            <!-- TODO: Replace with final Venmo profile/payment link if different. -->
+            <a class="button secondary" href="#payment-info">Venmo</a>
+            <p>Scan or open Venmo. Please include the copied payment note with student name, course, class date, and amount.</p>
+            <img class="pay-qr" src="/images/venmo-qr.png" alt="910CPR Venmo QR code" loading="lazy">
+          </article>
+          <article class="pay-alt-method">
+            <a class="button secondary" href="https://cash.app/$910CPR" target="_blank" rel="noopener noreferrer">Cash App</a>
+            <p>Opens $910CPR. Please include the copied payment note when sending payment.</p>
+          </article>
+          <article class="pay-alt-method">
+            <a class="button secondary" href="sms:+19103955193">Other Payment Method? Text 910CPR</a>
+            <p>Text your name, class date, and what you are trying to pay for.</p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="pay-footer">
+        <p class="pay-footer-note">Questions about a balance or payment? <a href="sms:+19103955193">Text 910CPR</a> with your name and class date.</p>
+        <a class="button secondary" href="/next/">Back to Cards, CME, and Classes</a>
+        <div class="pay-build-stamp">Build: 2026-06-09 19:20</div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+  var fields = {
+    studentName: document.getElementById("student-name"),
+    email: document.getElementById("email"),
+    phone: document.getElementById("phone"),
+    course: document.getElementById("course"),
+    classDate: document.getElementById("class-date"),
+    amount: document.getElementById("amount")
+  };
+  var noteEl = document.getElementById("payment-note");
+  var copyButton = document.getElementById("copy-payment-note");
+  var checkoutButton = document.getElementById("stripe-checkout");
+  var checkoutStatus = document.getElementById("checkout-status");
+  var statusEl = document.getElementById("copy-status");
+  var lookupButton = document.getElementById("lookup-balance");
+  var lookupResult = document.getElementById("lookup-result");
+  var balanceLookupUsed = false;
+  var balanceLookupAmount = "";
+
+  // TODO: Deploy scripts/pay_balance_lookup_apps_script.js as a Google Apps Script web app,
+  // then replace this empty value with that deployment URL. The endpoint must return only
+  // {match, amount, course, classDate, multiple, zeroBalance, message}.
+  var BALANCE_LOOKUP_ENDPOINT = "";
+
+  // TODO: Replace with the backend endpoint that creates a Stripe Checkout Session.
+  // The backend should POST to Stripe with secret keys server-side only, then return {url}.
+  var STRIPE_CHECKOUT_ENDPOINT = "";
+
+  function clean(value, fallback) {
+    var trimmed = (value || "").trim();
+    return trimmed || fallback;
+  }
+
+  function formatAmount(value) {
+    var trimmed = (value || "").trim().replace(/^\$/, "");
+    return trimmed || "[Amount]";
+  }
+
+  function buildNote() {
+    return "910CPR - " +
+      clean(fields.studentName.value, "[Student Name]") + " - " +
+      clean(fields.course.value, "[Course]") + " - " +
+      clean(fields.classDate.value, "[Class Date]") + " - $" +
+      formatAmount(fields.amount.value);
+  }
+
+  function updateNote() {
+    noteEl.textContent = buildNote();
+    statusEl.textContent = "";
+  }
+
+  Object.keys(fields).forEach(function (key) {
+    fields[key].addEventListener("input", updateNote);
+  });
+
+  function showLookup(message, kind, result) {
+    var html = "<p>" + message + "</p>";
+    if (result && result.course) {
+      html += "<p><strong>" + result.course + "</strong></p>";
+    }
+    if (result && result.classDate) {
+      html += "<p>" + result.classDate + "</p>";
+    }
+    if (result && result.amount && !result.zeroBalance) {
+      html += "<button class=\"button secondary\" id=\"use-lookup-amount\" type=\"button\">Use this amount</button>";
+    }
+    lookupResult.className = "pay-lookup-result is-visible";
+    lookupResult.setAttribute("data-kind", kind || "info");
+    lookupResult.innerHTML = html;
+    var useButton = document.getElementById("use-lookup-amount");
+    if (useButton) {
+      useButton.addEventListener("click", function () {
+        fields.amount.value = result.amount;
+        balanceLookupUsed = true;
+        balanceLookupAmount = result.amount || "";
+        if (result.course && !fields.course.value.trim()) {
+          fields.course.value = result.course;
+        }
+        if (result.classDate && !fields.classDate.value.trim()) {
+          fields.classDate.value = result.classDate;
+        }
+        updateNote();
+      });
+    }
+  }
+
+  function lookupBalance() {
+    if (!BALANCE_LOOKUP_ENDPOINT) {
+      showLookup("Balance lookup is not connected yet. You may still enter the amount provided by 910CPR.", "not-configured");
+      return;
+    }
+
+    lookupButton.disabled = true;
+    lookupButton.textContent = "Checking...";
+    fetch(BALANCE_LOOKUP_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        email: fields.email.value.trim(),
+        phone: fields.phone.value.trim(),
+        studentName: fields.studentName.value.trim(),
+        classDate: fields.classDate.value.trim()
+      })
+    }).then(function (response) {
+      if (!response.ok) {
+        throw new Error("Lookup failed");
+      }
+      return response.json();
+    }).then(function (result) {
+      if (result.match && result.zeroBalance) {
+        showLookup("This registration lookup did not show a balance due. If 910CPR gave you a payment amount, you can still enter it below.", "zero", result);
+      } else if (result.match && result.amount) {
+        showLookup("Possible balance found: $" + result.amount, "match", result);
+      } else if (result.multiple) {
+        showLookup("More than one possible registration was found. Please enter your class date or text 910CPR.", "multiple");
+      } else {
+        showLookup("We could not find a matching registration balance. You can still enter the amount provided by 910CPR.", "none");
+      }
+    }).catch(function () {
+      showLookup("Balance lookup is unavailable right now. You may still enter the amount provided by 910CPR.", "error");
+    }).finally(function () {
+      lookupButton.disabled = false;
+      lookupButton.textContent = "Look up possible balance";
+    });
+  }
+
+  lookupButton.addEventListener("click", lookupBalance);
+
+  function requiredValue(field, label) {
+    var value = (field.value || "").trim();
+    if (!value) {
+      throw new Error(label + " is required before secure checkout.");
+    }
+    return value;
+  }
+
+  function startCheckout() {
+    checkoutStatus.textContent = "";
+
+    if (!STRIPE_CHECKOUT_ENDPOINT) {
+      checkoutStatus.textContent = "Secure card/ACH checkout is not online yet. Please use an alternate method below or text 910CPR.";
+      return;
+    }
+
+    var payload;
+    try {
+      payload = {
+        source: "910cpr_pay_page",
+        student_name: requiredValue(fields.studentName, "Student name"),
+        student_email: requiredValue(fields.email, "Email"),
+        student_phone: (fields.phone.value || "").trim(),
+        course: requiredValue(fields.course, "Course"),
+        class_date: requiredValue(fields.classDate, "Class date"),
+        amount: requiredValue(fields.amount, "Amount"),
+        payment_note: buildNote(),
+        balance_lookup_used: String(balanceLookupUsed),
+        balance_lookup_amount: balanceLookupAmount,
+        notes: (document.getElementById("notes").value || "").trim()
+      };
+    } catch (err) {
+      checkoutStatus.textContent = err.message;
+      return;
+    }
+
+    checkoutButton.disabled = true;
+    checkoutButton.textContent = "Opening checkout...";
+
+    fetch(STRIPE_CHECKOUT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      if (!response.ok) {
+        throw new Error("Checkout unavailable");
+      }
+      return response.json();
+    }).then(function (session) {
+      if (!session || !session.url) {
+        throw new Error("Checkout unavailable");
+      }
+      window.location.href = session.url;
+    }).catch(function () {
+      checkoutStatus.textContent = "Secure card/ACH checkout is not online yet. Please use an alternate method below or text 910CPR.";
+      checkoutButton.disabled = false;
+      checkoutButton.textContent = "Pay by Card or ACH";
+    });
+  }
+
+  checkoutButton.addEventListener("click", startCheckout);
+
+  copyButton.addEventListener("click", function () {
+    var note = buildNote();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(note).then(function () {
+        statusEl.textContent = "Payment note copied.";
+      }).catch(function () {
+        statusEl.textContent = "Select and copy the payment note above.";
+      });
+    } else {
+      statusEl.textContent = "Select and copy the payment note above.";
+    }
+  });
+
+  updateNote();
+})();
+</script>
+</body>
+</html>

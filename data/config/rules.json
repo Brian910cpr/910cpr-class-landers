@@ -23,12 +23,12 @@
       "type": "priority_order",
       "soft_policy": "skills_or_stack_support_only",
       "priority_order": [
-        "aha_acls_renewal",
-        "aha_acls_initial",
-        "aha_pals_renewal",
-        "aha_pals_initial",
-        "aha_acls_heartcode_skills",
-        "aha_pals_heartcode_skills",
+          "aha_acls_initial",
+          "aha_acls_renewal",
+          "aha_pals_initial",
+          "aha_pals_renewal",
+          "aha_acls_heartcode_skills",
+          "aha_pals_heartcode_skills",
         "aha_bls_renewal",
         "aha_bls_initial",
         "aha_bls_heartcode_skills"
