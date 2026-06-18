@@ -1632,6 +1632,57 @@ a {
   line-height: 1.65;
 }
 
+.course-pathway-jumps {
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.course-pathway-card {
+  align-content: start;
+}
+
+.course-pathway-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.9fr);
+  gap: 18px;
+}
+
+.course-pathway-body strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--heading);
+}
+
+.course-pathway-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.format-choice-list {
+  display: grid;
+  gap: 9px;
+}
+
+.format-choice-link {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1f6b9c;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.format-choice-link:hover,
+.format-choice-link:focus-visible {
+  border-color: #b7cbdd;
+  box-shadow: var(--shadow-soft);
+}
+
 .ecosystem-hub {
   --ecosystem-accent: var(--cta);
   --ecosystem-soft: #f5f8fb;
@@ -1768,6 +1819,10 @@ a {
 
   .home-hero,
   .finder-card-head {
+    grid-template-columns: 1fr;
+  }
+
+  .course-pathway-body {
     grid-template-columns: 1fr;
   }
 
