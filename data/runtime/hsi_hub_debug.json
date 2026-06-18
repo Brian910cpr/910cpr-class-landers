@@ -1,12 +1,34 @@
 {
-  "generated_at": "2026-06-05T07:30:23.154268-04:00",
-  "source_schedule_path": "docs/data/canonical_schedule_from_class_report.json",
+  "generated_at": "2026-06-18T18:13:59.144584-04:00",
+  "source_schedule_path": "docs/data/schedule_future.json",
   "page_slug": "hsi",
-  "real_canonical_sessions_shown_count": 0,
+  "real_canonical_sessions_shown_count": 1,
   "requestable_offers_shown_count": 0,
   "requestable_offers_by_course_key": {},
   "requestable_offers_by_month": {},
   "requestable_offers_did_not_create_docs_classes_landers": true,
   "schedule_rows_by_course_group": {},
-  "records": []
+  "records": [
+    {
+      "page_slug": "hsi",
+      "session_id": "13601272",
+      "course_id": "463743",
+      "course_name": "HSI BLS Challenge",
+      "official_course_name": "HSI BLS Challenge",
+      "course_key": "hsi_bls_challenge",
+      "course_code": "HSI_BLS_CHALLENGE",
+      "start_at": "2026-08-14T12:45:00-04:00",
+      "included": true,
+      "matched_tabs": [
+        "hsi-bls"
+      ],
+      "matched_classification": {
+        "family": "HSI",
+        "subtype": "BLS Challenge",
+        "certifying_body": "hsi",
+        "delivery_mode": "IP"
+      },
+      "reason_excluded": null
+    }
+  ]
 }
