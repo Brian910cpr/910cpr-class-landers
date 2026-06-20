@@ -458,7 +458,7 @@ def render_course_session_rows(sessions: list[dict]) -> str:
         session_id = str(session.get("session_id", "")).strip()
         session_url = f"/classes/{session_id}.html#ForwardToEnrollware" if session_id else register_url
         register_html = (
-            f'<a class="course-session-register" href="{html_escape(session_url)}" data-original-href="{html_escape(register_url)}">Book Seat</a>'
+            f'<a class="course-session-register" href="{html_escape(session_url)}" data-original-href="{html_escape(register_url)}">Book This Class</a>'
             if session_url
             else ""
         )
@@ -1086,7 +1086,7 @@ def build():
         line = " | ".join(html_escape(x) for x in left_parts if x)
         detail_link = f'<a href="{s["local_path"]}">Details</a>'
         session_forward = f'{s["local_path"]}#ForwardToEnrollware'
-        register_link = f' | <a href="{session_forward}" data-original-href="{s["register_url"]}">Book Seat</a>' if s["register_url"] else ""
+        register_link = f' | <a href="{session_forward}" data-original-href="{s["register_url"]}">Book This Class</a>' if s["register_url"] else ""
 
         class_lines.append(
             f"<li class=\"js-session-item\" data-session-id=\"{html_escape(str(s.get('session_id', '')).strip())}\" data-start=\"{html_escape(str(s.get('display_date', '')).strip())}\">{line} | {detail_link}{register_link}</li>"
@@ -1198,7 +1198,7 @@ def build():
             line = " | ".join(html_escape(x) for x in bits if x)
             detail_link = f'<a href="{s["local_path"]}">Details</a>'
             session_forward = f'{s["local_path"]}#ForwardToEnrollware'
-            register_link = f' | <a href="{session_forward}" data-original-href="{s["register_url"]}">Book Seat</a>' if s["register_url"] else ""
+            register_link = f' | <a href="{session_forward}" data-original-href="{s["register_url"]}">Book This Class</a>' if s["register_url"] else ""
 
             lines.append(
                 f"<li class=\"js-session-item\" data-session-id=\"{html_escape(str(s.get('session_id', '')).strip())}\" data-start=\"{html_escape(str(s.get('display_date', '')).strip())}\">{line} | {detail_link}{register_link}</li>"

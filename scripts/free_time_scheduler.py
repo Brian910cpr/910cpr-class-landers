@@ -1711,7 +1711,7 @@ def generate_reports(
 def render_button(session: dict[str, Any]) -> str:
     url = session.get("enrollware_enroll_url")
     if url:
-        return f'<a class="button" href="{html.escape(url)}">Book Seat</a>'
+        return f'<a class="button" href="{html.escape(url)}">Book This Class</a>'
     return '<button class="button disabled" disabled>Proposed Time - Not Yet Bookable</button>'
 
 

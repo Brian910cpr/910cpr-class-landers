@@ -137,8 +137,8 @@
     const existing = button.getAttribute("data-normal-label");
     if (existing && !isEmergencyFallbackLabel(existing)) return existing;
     const current = button.textContent.trim();
-    if (isEmergencyFallbackLabel(current)) return sessionIdForButton(button) ? "Book Seat" : current;
-    return current || (sessionIdForButton(button) ? "Book Seat" : "Register");
+    if (isEmergencyFallbackLabel(current)) return sessionIdForButton(button) ? "Book This Class" : current;
+    return current || (sessionIdForButton(button) ? "Book This Class" : "Book This Class");
   }
 
   function loadEmergencySettings() {
@@ -1068,7 +1068,7 @@
 
   function handleRequestableResponse(button, payload) {
     if (payload && payload.enrollware_enroll_url) {
-      button.textContent = "Book Seat";
+      button.textContent = "Book This Class";
       button.href = payload.enrollware_enroll_url;
       button.classList.remove("secondary");
       button.classList.add("primary");

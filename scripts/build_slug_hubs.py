@@ -1085,7 +1085,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
             f' data-certifying-logo="{escape(cert_logo, quote=True)}"'
         )
 
-    action_label = "See Public Class" if group_mode else "Book Seat"
+    action_label = "See Public Class" if group_mode else "Book This Class"
     action_url = escape(f"/classes/{str(session.get('session_id') or '').strip()}.html#ForwardToEnrollware", quote=True) if str(session.get("session_id") or "").strip() else register_url
     action_hint = ""
     badge_html = ""
@@ -1134,7 +1134,7 @@ def session_key(session: dict[str, Any]) -> str:
 
 def session_action(session: dict[str, Any], *, page_slug: str) -> tuple[str, str, str]:
     register_url = escape(session.get("registration_url") or "#", quote=True)
-    action_label = "Book Seat"
+    action_label = "Book This Class"
     session_id = str(session.get("session_id") or "").strip()
     action_url = escape(f"/classes/{session_id}.html#ForwardToEnrollware", quote=True) if session_id else register_url
     return action_label, action_url, register_url
@@ -1525,26 +1525,12 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     instructor = normalize_space(offer.get("instructor_key")).title()
     location = normalize_space(offer.get("location_key")).title()
     url = escape(offer.get("appointment_registration_url") or "#", quote=True)
-    seed_id = escape(offer.get("seed_id") or "", quote=True)
-    course_key = escape(offer.get("course_key") or "", quote=True)
-    appointment_day_id = escape(str(offer.get("appointmentDayId") or ""), quote=True)
-    course_id = escape(str(offer.get("courseId") or ""), quote=True)
     start_attr = escape(start_dt.isoformat() if start_dt else normalize_space(offer.get("start_datetime")), quote=True)
     end_attr = escape(end_dt.isoformat() if end_dt else normalize_space(offer.get("end_datetime")), quote=True)
     time_range = format_time_line(start_dt)
     if start_dt and end_dt:
         time_range = f"{format_time_line(start_dt)} - {format_time_line(end_dt)}"
     data_attrs = (
-        'data-offer-source="auto_public_appointment_seed" '
-        'data-public-display-item-type="appointment_seed_offer" '
-        'data-real-enrollware-session="false" '
-        'data-standalone-class-lander-allowed="false" '
-        'data-class-lander-created="false" '
-        'data-public-schedule-row-created="false" '
-        f'data-seed-id="{seed_id}" '
-        f'data-course-key="{course_key}" '
-        f'data-appointment-day-id="{appointment_day_id}" '
-        f'data-course-id="{course_id}" '
         f'data-start="{start_attr}" '
         f'data-end="{end_attr}"'
     )
@@ -1560,13 +1546,13 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     <div class="slug-pill-meta-row">
       <span class="slug-pill-chip">{escape(time_range)}</span>
       <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
-      <span class="slug-pill-chip">Appointment slot</span>
+      <span class="slug-pill-chip">Available class option</span>
       <span class="slug-pill-chip">Instructor: {escape(instructor)}</span>
     </div>
     <div class="slug-pill-subtitle">{escape(title)}</div>
   </div>
   <div class="slug-pill-actions">
-    <a class="button small primary" href="{url}" {data_attrs}>Book Seat</a>
+    <a class="button small primary" href="{url}">Book This Class</a>
   </div>
 </article>
 """.strip()
@@ -1577,10 +1563,10 @@ def render_appointment_seed_offers_section(offers: list[dict[str, Any]]) -> str:
         return ""
     cards = "\n".join(render_appointment_seed_offer_card(offer) for offer in offers)
     return f"""
-<section class="slug-inventory-section slug-appointment-seed-section" aria-label="Available appointment registration slots">
+<section class="slug-inventory-section slug-appointment-seed-section" aria-label="Available class options">
   <div class="slug-inventory-head">
-    <h3>Available appointment slot</h3>
-    <p>These are hub-only appointment registration options generated from validated instructor availability. They do not create standalone class pages.</p>
+    <h3>Available class option</h3>
+    <p>These available options can be booked through the normal 910CPR registration path.</p>
   </div>
   <div class="slug-pill-list slug-appointment-seed-list">
     {cards}
@@ -1765,7 +1751,7 @@ def render_tab_panel(
                 (
                     "Browse upcoming class times here. Some times are requestable and confirmed before a booking link is created."
                     if tab_requestable_offers
-                    else "Browse upcoming class times here, then use Book Seat for the exact session you want."
+                    else "Browse upcoming class times here, then use Book This Class for the exact session you want."
                 ),
                 upcoming_sessions,
                 group_mode=group_mode,

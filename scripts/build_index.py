@@ -164,7 +164,7 @@ def format_session_line(session: dict) -> str:
     details_path = f"/classes/{session.get('session_id')}.html"
     register_url = str(session.get("registration_url") or "").strip()
     detail_link = f'<a href="{details_path}">Details</a>'
-    register_link = f' | <a href="{escape(register_url)}">Register</a>' if register_url else ""
+    register_link = f' | <a href="{escape(register_url)}">Book This Class</a>' if register_url else ""
     bits = " | ".join(escape(part) for part in date_bits if part)
     meta = f" <span class=\"archive-meta\">{bits} • {location}</span>" if bits or location else ""
     return f"<li>{course_name}{meta} | {detail_link}{register_link}</li>"

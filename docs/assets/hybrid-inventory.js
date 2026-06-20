@@ -65,7 +65,7 @@
           </div>
         </div>
         <div class="slug-flex-row-actions">
-          <a class="button small primary" href="${escapeHtml(row.enrollmentUrl)}">Register</a>
+          <a class="button small primary" href="${escapeHtml(row.enrollmentUrl)}">Book This Class</a>
         </div>
       </article>
     `).join("");

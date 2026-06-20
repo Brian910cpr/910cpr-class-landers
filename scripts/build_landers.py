@@ -1130,7 +1130,7 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], course_url: str
   <div class="upcoming-location">{escape(location_label)}</div>
   {seats_label}
   <div class="upcoming-actions">
-    <a class="button small primary" href="{escape(register_url)}">Register</a>
+    <a class="button small primary" href="{escape(register_url)}">Book This Class</a>
   </div>
 </div>
 """
@@ -1246,7 +1246,7 @@ def render_modern_day_groups(sessions: list[dict]) -> str:
               <div class="slug-time-subtitle">{escape(title)}</div>
             </div>
             <div class="slug-time-actions">
-              <a class="button small primary" href="{escape(register_url, quote=True)}" data-original-href="{escape(register_url, quote=True)}" data-session-id="{escape(session_id, quote=True)}">Book Seat</a>
+              <a class="button small primary" href="{escape(register_url, quote=True)}" data-original-href="{escape(register_url, quote=True)}" data-session-id="{escape(session_id, quote=True)}">Book This Class</a>
             </div>
           </div>
 """

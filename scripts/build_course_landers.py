@@ -432,7 +432,7 @@ def session_card(session: dict[str, Any]) -> str:
       <span class="session-time">{html.escape(time_label)}</span>
       <span class="session-location">{html.escape(location_label)}</span>
       {momentum}
-      <span class="session-cta">Register</span>
+      <span class="session-cta">Book This Class</span>
     </a>
     """
 

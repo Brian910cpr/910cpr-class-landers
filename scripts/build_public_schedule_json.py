@@ -377,7 +377,7 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], schedule_url: s
   <div class="upcoming-time">{escape(time_label)}</div>
   <div class="upcoming-location">{escape(location_label)}</div>
   <div class="upcoming-actions">
-    <a class="button small primary" href="{escape(register_url)}">Register</a>
+    <a class="button small primary" href="{escape(register_url)}">Book This Class</a>
   </div>
 </div>
 """
@@ -987,7 +987,7 @@ This specific session has passed. See upcoming classes below.
         hero_subhead = "Use the schedule button or the upcoming list below to pick the next available class."
     else:
         state_notice = ""
-        button_html = f'<a class="button primary" href="{register}">Register Now</a>'
+        button_html = f'<a class="button primary" href="{register}">Book This Class</a>'
         robots_value = "index,follow"
         hero_subhead = "Use the register button for this session or the upcoming list below for other dates and times."
 
