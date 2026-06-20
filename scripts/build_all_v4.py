@@ -28,9 +28,13 @@ def run_python_script(script: Path, cwd: Path) -> int:
 
 def find_first_existing(root: Path, candidates: Iterable[str]) -> Optional[Path]:
     for rel in candidates:
-        candidate = root / rel
+        if not rel:
+            continue
+        candidate = Path(rel)
+        if not candidate.is_absolute():
+            candidate = root / rel
         if candidate.exists():
-            return candidate
+            return candidate.resolve()
     return None
 
 
@@ -49,8 +53,18 @@ def main() -> int:
         print(f"ERROR: Missing data folder: {data_dir}")
         return 1
 
-    course_candidates = ["course-export.xlsx", "enrollware_export.xlsx"]
-    class_candidates = ["Class Report.xlsx", "class-report.xlsx"]
+    course_candidates = [
+        os.environ.get("LANDER_ENROLLWARE_EXPORT_PATH") or "",
+        "private/enrollware/enrollware_export.xlsx",
+        "course-export.xlsx",
+        "enrollware_export.xlsx",
+    ]
+    class_candidates = [
+        os.environ.get("LANDER_CLASS_REPORT_PATH") or "",
+        "private/enrollware/Class Report.xlsx",
+        "Class Report.xlsx",
+        "class-report.xlsx",
+    ]
 
     course_file = find_first_existing(data_dir, course_candidates)
     class_file = find_first_existing(data_dir, class_candidates)

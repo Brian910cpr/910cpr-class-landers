@@ -7,22 +7,41 @@ from pathlib import Path
 from typing import Any
 
 from openpyxl import load_workbook
+from scripts.local_data_paths import missing_live_input_message, print_resolved_path, resolve_live_input_path
 
 
 ID_FROM_LINK_RE = re.compile(r"[?&]id=(\d+)")
 TZ_SUFFIX_RE = re.compile(r"(Z|[+-]\d{2}:\d{2})$")
 
 
+CLASS_REPORT_LEGACY_PATHS = [
+    "data/Class Report.xlsx",
+    "data/raw/Class Report.xlsx",
+    "data/raw/class_report.xlsx",
+]
+
+
 def resolve_class_report_path(repo_root: Path) -> Path:
-    candidates = [
-        repo_root / "data" / "Class Report.xlsx",
-        repo_root / "data" / "raw" / "Class Report.xlsx",
-        repo_root / "data" / "raw" / "class_report.xlsx",
-    ]
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate
-    return candidates[0]
+    resolved = resolve_live_input_path(
+        repo_root,
+        label="Class report",
+        cli_path=None,
+        env_var="LANDER_CLASS_REPORT_PATH",
+        private_path="data/private/enrollware/Class Report.xlsx",
+        legacy_paths=CLASS_REPORT_LEGACY_PATHS,
+    )
+    print_resolved_path(resolved)
+    if not resolved.path.exists():
+        raise SystemExit(
+            missing_live_input_message(
+                resolved,
+                private_path="data/private/enrollware/Class Report.xlsx",
+                env_var="LANDER_CLASS_REPORT_PATH",
+                cli_flag=None,
+                legacy_paths=CLASS_REPORT_LEGACY_PATHS,
+            )
+        )
+    return resolved.path
 
 
 def extract_session_id(registration_link: Any, fallback_id: Any) -> str:

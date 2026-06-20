@@ -25,6 +25,7 @@ if str(ROOT) not in sys.path:
 from scripts.build_instructor_availability_report import CONFIG_DIR, DEBUG_DIR, SOURCE_MODES, TZ, load_json, parse_dt
 from scripts.build_proposed_seed_review import format_date
 from scripts.build_publishable_seed_candidates import build_export
+from scripts.local_data_paths import resolve_live_input_path
 
 
 REPORT_JSON_PATH = DEBUG_DIR / "appointment_offer_inventory.json"
@@ -34,7 +35,18 @@ REGISTRATION_TARGETS_PATH = CONFIG_DIR / "registration_targets.json"
 CALENDAR_SOURCES_PATH = CONFIG_DIR / "calendar_sources.json"
 APPOINTMENT_CONTAINER_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
-CLASS_REPORT_PATH = ROOT / "data" / "Class Report.xlsx"
+CLASS_REPORT_PATH = resolve_live_input_path(
+    ROOT,
+    label="Class report",
+    cli_path=None,
+    env_var="LANDER_CLASS_REPORT_PATH",
+    private_path="data/private/enrollware/Class Report.xlsx",
+    legacy_paths=[
+        "data/Class Report.xlsx",
+        "data/raw/Class Report.xlsx",
+        "data/raw/class_report.xlsx",
+    ],
+).path
 INSTRUCTOR_PRIORITY = {"amy": 1, "brian": 2, "nick": 3}
 EXCLUSIVE_LOCATION_KEYS = {"shipyard"}
 

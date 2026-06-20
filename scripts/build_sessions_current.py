@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 from openpyxl import load_workbook
 from scripts.course_identity_resolver import normalize_title
 from scripts.build_status import BuildStatusReporter
+from scripts.local_data_paths import missing_live_input_message, print_resolved_path, resolve_live_input_path
 
 
 TZ = ZoneInfo("America/New_York")
@@ -40,23 +41,15 @@ DESCRIPTION_PLACEHOLDER_PATTERN = re.compile(
 )
 
 
-def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
-    requested_path = (repo_root / requested).resolve()
-    if requested_path.exists():
-        return requested_path
-
-    candidates = [
-        repo_root / "data" / "Class Report.xlsx",
-        repo_root / "data" / "raw" / "Class Report.xlsx",
-        repo_root / "data" / "raw" / "class_report.xlsx",
-        repo_root / "Class Report (37).xlsx",
-        repo_root / "class-report.xlsx",
-    ]
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate.resolve()
-
-    return requested_path
+CLASS_REPORT_LEGACY_PATHS = [
+    "data/Class Report.xlsx",
+    "data/raw/Class Report.xlsx",
+    "data/raw/class_report.xlsx",
+    "Class Report (37).xlsx",
+    "class-report.xlsx",
+]
+CLASSES_CSV_LEGACY_PATHS = ["data/raw/classes_raw_live.csv"]
+STUDENTS_CSV_LEGACY_PATHS = ["data/raw/students_raw_live.csv"]
 
 
 def clean_string(value: Any) -> Optional[str]:
@@ -640,9 +633,9 @@ def main() -> int:
     reporter = BuildStatusReporter("build_sessions_current")
     parser = argparse.ArgumentParser(description="Build merged sessions_current.json from raw files.")
     parser.add_argument("--repo-root", default=".", help="Path to repo root.")
-    parser.add_argument("--class-report", default="data/Class Report.xlsx")
-    parser.add_argument("--classes-csv", default="data/raw/classes_raw_live.csv")
-    parser.add_argument("--students-csv", default="data/raw/students_raw_live.csv")
+    parser.add_argument("--class-report", default=None)
+    parser.add_argument("--classes-csv", default=None)
+    parser.add_argument("--students-csv", default=None)
     parser.add_argument("--output", default="data/sessions_current.json")
     parser.add_argument("--course-map", default="data/config/course_map.json")
     parser.add_argument("--audit-dir", default="data/audit")
@@ -650,9 +643,33 @@ def main() -> int:
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
-    class_report_path = resolve_class_report_path(repo_root, args.class_report)
-    classes_csv_path = (repo_root / args.classes_csv).resolve()
-    students_csv_path = (repo_root / args.students_csv).resolve()
+    class_report = resolve_live_input_path(
+        repo_root,
+        label="Class report",
+        cli_path=args.class_report,
+        env_var="LANDER_CLASS_REPORT_PATH",
+        private_path="data/private/enrollware/Class Report.xlsx",
+        legacy_paths=CLASS_REPORT_LEGACY_PATHS,
+    )
+    classes_csv = resolve_live_input_path(
+        repo_root,
+        label="Classes CSV",
+        cli_path=args.classes_csv,
+        env_var="LANDER_CLASSES_CSV_PATH",
+        private_path="data/private/raw/classes_raw_live.csv",
+        legacy_paths=CLASSES_CSV_LEGACY_PATHS,
+    )
+    students_csv = resolve_live_input_path(
+        repo_root,
+        label="Students CSV",
+        cli_path=args.students_csv,
+        env_var="LANDER_STUDENTS_CSV_PATH",
+        private_path="data/private/raw/students_raw_live.csv",
+        legacy_paths=STUDENTS_CSV_LEGACY_PATHS,
+    )
+    class_report_path = class_report.path
+    classes_csv_path = classes_csv.path
+    students_csv_path = students_csv.path
     output_path = (repo_root / args.output).resolve()
     audit_dir = (repo_root / args.audit_dir).resolve()
     course_map = load_course_map(repo_root, args.course_map)
@@ -668,9 +685,25 @@ def main() -> int:
         ],
     )
 
-    for path in [class_report_path, classes_csv_path, students_csv_path]:
-        if not path.exists():
-            raise SystemExit(f"Required input file not found: {path}")
+    missing_messages = []
+    for resolved, private_path, env_var, cli_flag, legacy_paths in [
+        (class_report, "data/private/enrollware/Class Report.xlsx", "LANDER_CLASS_REPORT_PATH", "--class-report", CLASS_REPORT_LEGACY_PATHS),
+        (classes_csv, "data/private/raw/classes_raw_live.csv", "LANDER_CLASSES_CSV_PATH", "--classes-csv", CLASSES_CSV_LEGACY_PATHS),
+        (students_csv, "data/private/raw/students_raw_live.csv", "LANDER_STUDENTS_CSV_PATH", "--students-csv", STUDENTS_CSV_LEGACY_PATHS),
+    ]:
+        print_resolved_path(resolved)
+        if not resolved.path.exists():
+            missing_messages.append(
+                missing_live_input_message(
+                    resolved,
+                    private_path=private_path,
+                    env_var=env_var,
+                    cli_flag=cli_flag,
+                    legacy_paths=legacy_paths,
+                )
+            )
+    if missing_messages:
+        raise SystemExit("\n\n".join(missing_messages))
 
     reporter.waiting(total=0)
     print(f"Reading class report: {class_report_path}")

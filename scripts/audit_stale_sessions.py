@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from openpyxl import load_workbook
+from scripts.local_data_paths import missing_live_input_message, print_resolved_path, resolve_live_input_path
 
 
 ID_RE = re.compile(r"\d+")
@@ -44,19 +45,11 @@ def normalize_id(value: Any) -> str:
     return digits
 
 
-def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
-    requested_path = (repo_root / requested).resolve()
-    if requested_path.exists():
-        return requested_path
-    candidates = [
-        repo_root / "data" / "Class Report.xlsx",
-        repo_root / "data" / "raw" / "Class Report.xlsx",
-        repo_root / "data" / "raw" / "class_report.xlsx",
-    ]
-    for path in candidates:
-        if path.exists():
-            return path.resolve()
-    return requested_path
+CLASS_REPORT_LEGACY_PATHS = [
+    "data/Class Report.xlsx",
+    "data/raw/Class Report.xlsx",
+    "data/raw/class_report.xlsx",
+]
 
 
 def read_class_report_ids(class_report_path: Path) -> set[str]:
@@ -338,15 +331,32 @@ def write_stale_summary_csv(repo_root: Path, result: ScanResult) -> Path:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Audit and quarantine stale sessions not present in Class Report.xlsx")
     parser.add_argument("--repo-root", default=".")
-    parser.add_argument("--class-report", default="data/Class Report.xlsx")
+    parser.add_argument("--class-report", default=None)
     parser.add_argument("--warn-only", action="store_true", help="Always return exit code 0")
     parser.add_argument("--cleanup", action="store_true", help="Move stale class pages into quarantine")
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
-    class_report_path = resolve_class_report_path(repo_root, args.class_report)
+    class_report = resolve_live_input_path(
+        repo_root,
+        label="Class report",
+        cli_path=args.class_report,
+        env_var="LANDER_CLASS_REPORT_PATH",
+        private_path="data/private/enrollware/Class Report.xlsx",
+        legacy_paths=CLASS_REPORT_LEGACY_PATHS,
+    )
+    class_report_path = class_report.path
+    print_resolved_path(class_report)
     if not class_report_path.exists():
-        raise SystemExit(f"Class report not found: {class_report_path}")
+        raise SystemExit(
+            missing_live_input_message(
+                class_report,
+                private_path="data/private/enrollware/Class Report.xlsx",
+                env_var="LANDER_CLASS_REPORT_PATH",
+                cli_flag="--class-report",
+                legacy_paths=CLASS_REPORT_LEGACY_PATHS,
+            )
+        )
 
     result = scan(repo_root, class_report_path)
     quarantine_count = 0

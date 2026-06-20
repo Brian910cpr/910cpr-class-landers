@@ -6,6 +6,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 from scripts.build_status import BuildStatusReporter
+from scripts.local_data_paths import missing_live_input_message, print_resolved_path, resolve_live_input_path
 from supervisor.status_snapshot import write_status_snapshot
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
@@ -147,19 +148,11 @@ def safe_console_text(value: str) -> str:
     return value.encode("ascii", errors="backslashreplace").decode("ascii")
 
 
-def resolve_class_report_path(repo_root: Path, requested: str) -> Path:
-    requested_path = (repo_root / requested).resolve()
-    if requested_path.exists():
-        return requested_path
-    candidates = [
-        repo_root / "data" / "Class Report.xlsx",
-        repo_root / "data" / "raw" / "Class Report.xlsx",
-        repo_root / "data" / "raw" / "class_report.xlsx",
-    ]
-    for path in candidates:
-        if path.exists():
-            return path.resolve()
-    return requested_path
+CLASS_REPORT_LEGACY_PATHS = [
+    "data/Class Report.xlsx",
+    "data/raw/Class Report.xlsx",
+    "data/raw/class_report.xlsx",
+]
 
 
 def extract_id_from_report_row(row: tuple[Any, ...], reg_idx: int | None, id_idx: int | None) -> str:
@@ -289,7 +282,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--class-report",
-        default="data/Class Report.xlsx",
+        default=None,
         help="Relative path from repo root to Class Report.xlsx used for hard reconciliation",
     )
     parser.add_argument(
@@ -317,7 +310,15 @@ def main() -> int:
     repo_root = Path(args.repo_root).resolve()
     input_path = (repo_root / args.input).resolve()
     output_path = (repo_root / args.output).resolve()
-    class_report_path = resolve_class_report_path(repo_root, args.class_report)
+    class_report = resolve_live_input_path(
+        repo_root,
+        label="Class report",
+        cli_path=args.class_report,
+        env_var="LANDER_CLASS_REPORT_PATH",
+        private_path="data/private/enrollware/Class Report.xlsx",
+        legacy_paths=CLASS_REPORT_LEGACY_PATHS,
+    )
+    class_report_path = class_report.path
     aliases_path = (repo_root / args.course_aliases).resolve()
     course_map_path = (repo_root / args.course_map).resolve()
     unmatched_path = repo_root / "debug" / "unmatched_courses.json"
@@ -326,8 +327,17 @@ def main() -> int:
 
     if not input_path.exists():
         raise SystemExit(f"Input file not found: {input_path}")
+    print_resolved_path(class_report)
     if not class_report_path.exists():
-        raise SystemExit(f"Class report not found: {class_report_path}")
+        raise SystemExit(
+            missing_live_input_message(
+                class_report,
+                private_path="data/private/enrollware/Class Report.xlsx",
+                env_var="LANDER_CLASS_REPORT_PATH",
+                cli_flag="--class-report",
+                legacy_paths=CLASS_REPORT_LEGACY_PATHS,
+            )
+        )
     if not course_map_path.exists():
         raise SystemExit(f"Course map not found: {course_map_path}")
 

@@ -14,6 +14,12 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from openpyxl import load_workbook
+from scripts.local_data_paths import (
+    missing_live_input_message,
+    print_resolved_path,
+    resolve_live_input_path,
+    resolve_live_output_dir,
+)
 
 
 TZ = ZoneInfo("America/New_York")
@@ -36,9 +42,8 @@ HEADER_ALIASES = {
     "registration url": "registration_link",
 }
 DEFAULT_RULES_PATH = Path("data/config/enrollware_sync_rules.example.json")
-DEFAULT_OUTPUT_DIR = Path("data/runtime/enrollware_sync")
-DEFAULT_MASTER_PATH = Path("data/Class Report.xlsx")
-DEFAULT_EXPORT_PATH = Path("data/enrollware_export.xlsx")
+MASTER_LEGACY_PATHS = ["data/Class Report.xlsx", "data/raw/Class Report.xlsx", "data/raw/class_report.xlsx"]
+EXPORT_LEGACY_PATHS = ["data/enrollware_export.xlsx"]
 
 
 @dataclass
@@ -606,8 +611,8 @@ def build_markdown_report(payload: dict[str, Any]) -> str:
 
 def dry_run(args: argparse.Namespace) -> int:
     repo_root = Path(args.repo_root).resolve()
-    master_path = (repo_root / args.master).resolve()
-    export_path = (repo_root / args.enrollware_export).resolve()
+    master_path = Path(args.master).resolve()
+    export_path = Path(args.enrollware_export).resolve()
     rules_path = (repo_root / args.rules).resolve() if args.rules else None
     output_dir = (repo_root / args.output_dir).resolve()
     timestamp = datetime.now(TZ).strftime("%Y%m%d-%H%M%S")
@@ -881,29 +886,29 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     dry = subparsers.add_parser("dry-run", help="Build desired sessions, validate them, and compare against Enrollware export.")
-    dry.add_argument("--master", default=str(DEFAULT_MASTER_PATH), help="Master schedule CSV/XLSX path relative to repo root.")
-    dry.add_argument("--enrollware-export", default=str(DEFAULT_EXPORT_PATH), help="Enrollware export CSV/XLSX path relative to repo root.")
+    dry.add_argument("--master", default=None, help="Master schedule CSV/XLSX path relative to repo root.")
+    dry.add_argument("--enrollware-export", default=None, help="Enrollware export CSV/XLSX path relative to repo root.")
     dry.add_argument("--rules", default=str(DEFAULT_RULES_PATH), help="Rules JSON path relative to repo root.")
-    dry.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR), help="Output directory for desired sessions and reports.")
+    dry.add_argument("--output-dir", default=None, help="Output directory for desired sessions and reports.")
     dry.add_argument("--include-past", action="store_true", help="Include historical sessions instead of defaulting to future-only sync.")
     dry.set_defaults(handler=dry_run)
 
     scaffold = subparsers.add_parser("playwright-scaffold", help="Open Enrollware pages and fill fields, but stop before save unless --apply is explicitly passed.")
     scaffold.add_argument("--dry-run-report", required=True, help="Path to sync_report.json from a prior dry run.")
-    scaffold.add_argument("--master", default=str(DEFAULT_MASTER_PATH), help="Master schedule path used for the dry run.")
+    scaffold.add_argument("--master", default=None, help="Master schedule path used for the dry run.")
     scaffold.add_argument("--rules", default=str(DEFAULT_RULES_PATH), help="Rules JSON path with Playwright selectors.")
     scaffold.add_argument("--storage-state", help="Optional Playwright storage-state JSON from an authorized session.")
     scaffold.add_argument("--headed", action="store_true", help="Launch browser visibly for manual observation.")
     scaffold.add_argument("--apply", action="store_true", help="Allow final save click if all safety gates pass.")
     scaffold.add_argument("--limit", type=int, help="Maximum number of create/update actions to attempt.")
     scaffold.add_argument("--enrollware-snapshot", help="Timestamped Enrollware export path required for live writes.")
-    scaffold.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR), help="Output directory for scaffold logs.")
+    scaffold.add_argument("--output-dir", default=None, help="Output directory for scaffold logs.")
     scaffold.set_defaults(handler=playwright_scaffold)
 
     reconcile_parser = subparsers.add_parser("reconcile", help="Recompare desired sessions against a fresh Enrollware export after any write.")
     reconcile_parser.add_argument("--desired-sessions", required=True, help="Path to desired_sessions.json")
     reconcile_parser.add_argument("--enrollware-export", required=True, help="Fresh Enrollware export CSV/XLSX path")
-    reconcile_parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR), help="Output directory for reconciliation reports.")
+    reconcile_parser.add_argument("--output-dir", default=None, help="Output directory for reconciliation reports.")
     reconcile_parser.set_defaults(handler=reconcile)
     return parser
 
@@ -914,13 +919,64 @@ def main() -> int:
     repo_root = Path(args.repo_root).resolve()
     args.repo_root = str(repo_root)
     if hasattr(args, "master"):
-        args.master = str((repo_root / args.master).resolve()) if not Path(args.master).is_absolute() else str(Path(args.master).resolve())
-    if hasattr(args, "enrollware_export") and args.enrollware_export:
-        args.enrollware_export = str((repo_root / args.enrollware_export).resolve()) if not Path(args.enrollware_export).is_absolute() else str(Path(args.enrollware_export).resolve())
+        master = resolve_live_input_path(
+            repo_root,
+            label="Master schedule",
+            cli_path=args.master,
+            env_var="LANDER_CLASS_REPORT_PATH",
+            private_path="data/private/enrollware/Class Report.xlsx",
+            legacy_paths=MASTER_LEGACY_PATHS,
+        )
+        print_resolved_path(master)
+        if not master.path.exists():
+            raise SystemExit(
+                missing_live_input_message(
+                    master,
+                    private_path="data/private/enrollware/Class Report.xlsx",
+                    env_var="LANDER_CLASS_REPORT_PATH",
+                    cli_flag="--master",
+                    legacy_paths=MASTER_LEGACY_PATHS,
+                )
+            )
+        args.master = str(master.path)
+    if hasattr(args, "enrollware_export"):
+        if args.command == "reconcile":
+            export_path = Path(args.enrollware_export)
+            args.enrollware_export = str((repo_root / export_path).resolve() if not export_path.is_absolute() else export_path.resolve())
+        else:
+            export = resolve_live_input_path(
+                repo_root,
+                label="Enrollware export",
+                cli_path=args.enrollware_export,
+                env_var="LANDER_ENROLLWARE_EXPORT_PATH",
+                private_path="data/private/enrollware/enrollware_export.xlsx",
+                legacy_paths=EXPORT_LEGACY_PATHS,
+            )
+            print_resolved_path(export)
+            if not export.path.exists():
+                raise SystemExit(
+                    missing_live_input_message(
+                        export,
+                        private_path="data/private/enrollware/enrollware_export.xlsx",
+                        env_var="LANDER_ENROLLWARE_EXPORT_PATH",
+                        cli_flag="--enrollware-export",
+                        legacy_paths=EXPORT_LEGACY_PATHS,
+                    )
+                )
+            args.enrollware_export = str(export.path)
     if hasattr(args, "rules") and args.rules:
         args.rules = str((repo_root / args.rules).resolve()) if not Path(args.rules).is_absolute() else str(Path(args.rules).resolve())
-    if hasattr(args, "output_dir") and args.output_dir:
-        args.output_dir = str((repo_root / args.output_dir).resolve()) if not Path(args.output_dir).is_absolute() else str(Path(args.output_dir).resolve())
+    if hasattr(args, "output_dir"):
+        output_dir = resolve_live_output_dir(
+            repo_root,
+            label="Enrollware sync output directory",
+            cli_path=args.output_dir,
+            env_var="LANDER_ENROLLWARE_SYNC_OUTPUT_DIR",
+            private_path="data/private/runtime/enrollware_sync",
+            legacy_path="data/runtime/enrollware_sync",
+        )
+        print_resolved_path(output_dir)
+        args.output_dir = str(output_dir.path)
     return args.handler(args)
 
 

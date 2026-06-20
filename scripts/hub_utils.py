@@ -7,9 +7,21 @@ from html import unescape
 from pathlib import Path
 
 import pandas as pd
+from scripts.local_data_paths import resolve_live_input_path
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_REPORT = ROOT / "data" / "Class Report.xlsx"
+RAW_REPORT = resolve_live_input_path(
+    ROOT,
+    label="Class report",
+    cli_path=None,
+    env_var="LANDER_CLASS_REPORT_PATH",
+    private_path="data/private/enrollware/Class Report.xlsx",
+    legacy_paths=[
+        "data/Class Report.xlsx",
+        "data/raw/Class Report.xlsx",
+        "data/raw/class_report.xlsx",
+    ],
+).path
 CSS_PATH = "/css/lander.css"
 GROUP_URL = "/request_group_session.html"
 NEARBY_MAP_PATH = ROOT / "data" / "config" / "nearby_cities.json"
