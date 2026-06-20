@@ -361,14 +361,39 @@ def schedule_future_to_public_session(session: dict) -> dict | None:
     if start:
         display_date = start.strftime("%B %d, %Y")
         display_time = start.strftime("%I:%M %p").lstrip("0")
+        date_key = start.strftime("%Y-%m-%d")
+        date_label = start.strftime("%a, %b %-d") if sys.platform != "win32" else start.strftime("%a, %b %#d")
+        start_sort = start.isoformat()
     else:
         display_date = ""
         display_time = ""
+        date_key = ""
+        date_label = ""
+        start_sort = ""
 
     course_name = str(session.get("course_name") or session.get("course") or session.get("title") or "CPR Class").strip()
     location_name = clean_location_name(
         str(session.get("location_display") or session.get("location_name") or session.get("location") or "").strip()
     )
+    city = str(session.get("city") or "").strip()
+    if not city:
+        location_upper = location_name.upper()
+        if "WILMINGTON" in location_upper:
+            city = "Wilmington"
+        elif "BURGAW" in location_upper:
+            city = "Burgaw"
+        elif "HOLLY RIDGE" in location_upper:
+            city = "Holly Ridge"
+        elif "JACKSONVILLE" in location_upper:
+            city = "Jacksonville"
+    price = session.get("price")
+    if price in (None, ""):
+        price_label = ""
+    else:
+        try:
+            price_label = f"${float(price):.0f}"
+        except Exception:
+            price_label = str(price).strip()
     register_url = str(session.get("registration_url") or session.get("register_url") or session.get("registration_link") or "").strip()
     status = str(session.get("session_status") or "").strip().lower()
     if status not in {"published", "active"}:
@@ -397,6 +422,11 @@ def schedule_future_to_public_session(session: dict) -> dict | None:
         "meta_description": str(session.get("description") or "").strip(),
         "display_date": display_date,
         "display_time": display_time,
+        "date_key": date_key,
+        "date_label": date_label,
+        "start_sort": start_sort,
+        "city": city,
+        "price": price_label,
         "canonical": f"{SITE_BASE}/classes/{session_id}.html",
         "local_path": f"/classes/{session_id}.html",
         "register_url": register_url,
@@ -476,6 +506,318 @@ def render_course_session_rows(sessions: list[dict]) -> str:
 """
         )
     return "".join(rows)
+
+
+def render_classes_finder_index(sessions: list[dict]) -> str:
+    course_options = sorted({s["course_name"] for s in sessions if s.get("course_name")}, key=str.lower)
+    date_options = []
+    seen_dates = set()
+    for s in sorted(sessions, key=lambda item: (item.get("start_sort", ""), item.get("course_name", ""))):
+        date_key = s.get("date_key", "")
+        if date_key and date_key not in seen_dates:
+            seen_dates.add(date_key)
+            date_options.append((date_key, s.get("date_label") or s.get("display_date") or date_key))
+    location_options = sorted({s["location_name"] for s in sessions if s.get("location_name")}, key=str.lower)
+
+    def option_html(value: str, label: str) -> str:
+        return f'<option value="{html_escape(value)}">{html_escape(label)}</option>'
+
+    course_select_options = "\n".join([option_html("", "All courses")] + [option_html(course, course) for course in course_options])
+    date_select_options = "\n".join([option_html("", "All dates")] + [option_html(value, label) for value, label in date_options])
+    location_select_options = "\n".join([option_html("", "All locations")] + [option_html(location, location) for location in location_options])
+
+    result_cards = []
+    for s in sessions:
+        bits = []
+        if s.get("display_date"):
+            bits.append(s["display_date"])
+        if s.get("display_time"):
+            bits.append(s["display_time"])
+        if s.get("location_name"):
+            bits.append(s["location_name"])
+        if s.get("city") and s["city"].lower() not in str(s.get("location_name", "")).lower():
+            bits.append(s["city"])
+        meta_line = " | ".join(html_escape(bit) for bit in bits if bit)
+        price_html = f'<span class="class-finder-price">{html_escape(s["price"])}</span>' if s.get("price") else ""
+        detail_link = f'<a class="class-finder-secondary" href="{html_escape(s["local_path"])}">Details</a>'
+        register_link = (
+            f'<a class="class-finder-primary" href="{html_escape(s["register_url"])}">Book This Class</a>'
+            if s.get("register_url")
+            else ""
+        )
+        result_cards.append(
+            f"""
+<article class="class-finder-card js-class-result"
+  data-course="{html_escape(s.get('course_name', ''))}"
+  data-date="{html_escape(s.get('date_key', ''))}"
+  data-location="{html_escape(s.get('location_name', ''))}"
+>
+  <div>
+    <h2>{html_escape(s.get("course_name", "CPR Class"))}</h2>
+    <p class="class-finder-meta">{meta_line}</p>
+    {price_html}
+  </div>
+  <div class="class-finder-actions">
+    {register_link}
+    {detail_link}
+  </div>
+</article>
+""".rstrip()
+        )
+
+    finder_styles = """
+<style>
+.class-finder-hero {
+  border: 1px solid #dbe4ee;
+  border-radius: 20px;
+  padding: 24px;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+.class-finder-hero p {
+  max-width: 760px;
+  color: #475569;
+  font-size: 1.03rem;
+}
+.class-filter-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+  margin: 22px 0;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+}
+.class-filter-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #334155;
+  font-weight: 800;
+}
+.class-filter-field select,
+.class-filter-reset {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 1rem;
+  padding: 0 12px;
+}
+.class-filter-reset {
+  cursor: pointer;
+  font-weight: 800;
+  background: #f8fafc;
+}
+.class-filter-summary {
+  margin: 8px 0 14px;
+  color: #475569;
+  font-weight: 700;
+}
+.class-finder-results {
+  display: grid;
+  gap: 12px;
+}
+.class-finder-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #dbe4ee;
+  border-radius: 18px;
+  background: #ffffff;
+}
+.class-finder-card h2 {
+  margin: 0 0 6px;
+  font-size: 1.08rem;
+}
+.class-finder-meta {
+  margin: 0;
+  color: #475569;
+}
+.class-finder-price {
+  display: inline-block;
+  margin-top: 8px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.class-finder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.class-finder-primary,
+.class-finder-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  text-decoration: none;
+}
+.class-finder-primary {
+  background: #0f5e9c;
+  color: #ffffff;
+}
+.class-finder-secondary {
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #0f172a;
+}
+.class-filter-empty {
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 18px;
+  color: #475569;
+  background: #f8fafc;
+}
+@media (max-width: 760px) {
+  .class-filter-panel,
+  .class-finder-card {
+    grid-template-columns: 1fr;
+  }
+  .class-finder-actions {
+    justify-content: stretch;
+  }
+  .class-finder-primary,
+  .class-finder-secondary {
+    width: 100%;
+  }
+}
+</style>
+""".rstrip()
+
+    finder_script = """
+<script>
+(function () {
+  const controls = {
+    course: document.getElementById("class-filter-course"),
+    date: document.getElementById("class-filter-date"),
+    location: document.getElementById("class-filter-location")
+  };
+  const cards = Array.from(document.querySelectorAll(".js-class-result"));
+  const count = document.getElementById("class-filter-count");
+  const empty = document.getElementById("class-filter-empty");
+  const reset = document.getElementById("class-filter-reset");
+
+  function currentState() {
+    return {
+      course: controls.course.value,
+      date: controls.date.value,
+      location: controls.location.value
+    };
+  }
+
+  function matches(card, state, ignoreKey) {
+    return Object.keys(controls).every(function (key) {
+      if (key === ignoreKey || !state[key]) return true;
+      return card.dataset[key] === state[key];
+    });
+  }
+
+  function updateOptions(state) {
+    Object.keys(controls).forEach(function (key) {
+      const select = controls[key];
+      Array.from(select.options).forEach(function (option) {
+        if (!option.value) {
+          option.disabled = false;
+          option.hidden = false;
+          return;
+        }
+        const available = cards.some(function (card) {
+          return card.dataset[key] === option.value && matches(card, state, key);
+        });
+        option.disabled = !available;
+        option.hidden = !available && select.value !== option.value;
+      });
+      if (select.value && select.selectedOptions[0] && select.selectedOptions[0].disabled) {
+        select.value = "";
+      }
+    });
+  }
+
+  function applyFilters() {
+    let state = currentState();
+    updateOptions(state);
+    state = currentState();
+    let visible = 0;
+    cards.forEach(function (card) {
+      const show = matches(card, state);
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+    count.textContent = visible + " class" + (visible === 1 ? "" : "es") + " found";
+    empty.hidden = visible !== 0;
+  }
+
+  Object.keys(controls).forEach(function (key) {
+    controls[key].addEventListener("change", applyFilters);
+  });
+  reset.addEventListener("click", function () {
+    Object.keys(controls).forEach(function (key) {
+      controls[key].value = "";
+    });
+    applyFilters();
+  });
+  applyFilters();
+})();
+</script>
+""".rstrip()
+
+    body = f"""
+{finder_styles}
+<section class="class-finder-hero">
+  <p class="course-eyebrow">Upcoming class finder</p>
+  <h1>Find CPR, BLS, ACLS, PALS, and First Aid classes</h1>
+  <p>Find an upcoming CPR, BLS, ACLS, PALS, or First Aid class by course, date, and location. Filters work together, so choosing one option narrows the other dropdowns to available combinations.</p>
+</section>
+
+<section class="class-filter-panel" aria-label="Class filters">
+  <div class="class-filter-field">
+    <label for="class-filter-course">Course</label>
+    <select id="class-filter-course">
+      {course_select_options}
+    </select>
+  </div>
+  <div class="class-filter-field">
+    <label for="class-filter-date">Date</label>
+    <select id="class-filter-date">
+      {date_select_options}
+    </select>
+  </div>
+  <div class="class-filter-field">
+    <label for="class-filter-location">Location</label>
+    <select id="class-filter-location">
+      {location_select_options}
+    </select>
+  </div>
+  <button class="class-filter-reset" id="class-filter-reset" type="button">Reset filters</button>
+</section>
+
+<p class="class-filter-summary" id="class-filter-count">{len(sessions)} classes found</p>
+<div class="class-filter-empty" id="class-filter-empty" hidden>No classes match those filters. Try changing the course, date, or location.</div>
+<section class="class-finder-results" aria-label="Class results">
+  {''.join(result_cards)}
+</section>
+{finder_script}
+""".strip()
+
+    return page_template(
+        title="Find CPR Classes | 910CPR",
+        description="Find upcoming CPR, BLS, ACLS, PALS, and First Aid classes by course, date, and location.",
+        body_html=body,
+        page_type="classes_index",
+        page_name="Class Finder",
+        canonical_path="/classes/index.html",
+        robots_content="index,follow",
+    )
 
 
 def render_course_page_body(course_meta: dict, future_sessions: list[dict]) -> str:
@@ -1073,43 +1415,7 @@ def build():
     # -----------------------------------------------------------------
     # Classes index
     # -----------------------------------------------------------------
-    class_lines = []
-    for s in sessions:
-        left_parts = [s["course_name"]]
-        if s["display_date"]:
-            left_parts.append(s["display_date"])
-        if s["display_time"]:
-            left_parts.append(s["display_time"])
-        if s["location_name"]:
-            left_parts.append(s["location_name"])
-
-        line = " | ".join(html_escape(x) for x in left_parts if x)
-        detail_link = f'<a href="{s["local_path"]}">Details</a>'
-        session_forward = f'{s["local_path"]}#ForwardToEnrollware'
-        register_link = f' | <a href="{session_forward}" data-original-href="{s["register_url"]}">Book This Class</a>' if s["register_url"] else ""
-
-        class_lines.append(
-            f"<li class=\"js-session-item\" data-session-id=\"{html_escape(str(s.get('session_id', '')).strip())}\" data-start=\"{html_escape(str(s.get('display_date', '')).strip())}\">{line} | {detail_link}{register_link}</li>"
-        )
-
-    CLASSES_INDEX_FILE.write_text(
-        page_template(
-            title="All Class Pages | 910CPR",
-            description="Archive support index of generated class pages.",
-            body_html=f"""
-<h1>All Class Pages</h1>
-<p class="meta">Archive support page for generated class files. Current booking paths live on the homepage, hubs, and exact-course schedule pages.</p>
-<ul>
-{''.join(class_lines)}
-</ul>
-""",
-            page_type="classes_index",
-            page_name="All Class Pages",
-            canonical_path="/classes/index.html",
-            robots_content="noindex,follow",
-        ),
-        encoding="utf-8",
-    )
+    CLASSES_INDEX_FILE.write_text(render_classes_finder_index(sessions), encoding="utf-8")
 
     # -----------------------------------------------------------------
     # Courses index
