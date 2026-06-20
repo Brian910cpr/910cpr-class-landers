@@ -639,6 +639,9 @@ def render_classes_finder_index(
   border-radius: 18px;
   background: #ffffff;
 }
+.class-finder-card[hidden] {
+  display: none;
+}
 .class-finder-card h2 {
   margin: 0 0 6px;
   font-size: 1.08rem;
@@ -759,6 +762,7 @@ def render_classes_finder_index(
     cards.forEach(function (card) {
       const show = matches(card, state);
       card.hidden = !show;
+      card.style.display = show ? "" : "none";
       if (show) visible += 1;
     });
     count.textContent = visible + " class" + (visible === 1 ? "" : "es") + " found";
