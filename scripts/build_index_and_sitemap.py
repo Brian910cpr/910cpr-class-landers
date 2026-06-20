@@ -508,7 +508,15 @@ def render_course_session_rows(sessions: list[dict]) -> str:
     return "".join(rows)
 
 
-def render_classes_finder_index(sessions: list[dict]) -> str:
+def render_classes_finder_index(
+    sessions: list[dict],
+    *,
+    title: str = "Find CPR Classes | 910CPR",
+    h1: str = "Find CPR, BLS, ACLS, PALS, and First Aid classes",
+    intro: str = "Find an upcoming CPR, BLS, ACLS, PALS, or First Aid class by course, date, and location. Filters work together, so choosing one option narrows the other dropdowns to available combinations.",
+    canonical_path: str = "/classes/index.html",
+    page_name: str = "Class Finder",
+) -> str:
     course_options = sorted({s["course_name"] for s in sessions if s.get("course_name")}, key=str.lower)
     date_options = []
     seen_dates = set()
@@ -775,8 +783,8 @@ def render_classes_finder_index(sessions: list[dict]) -> str:
 {finder_styles}
 <section class="class-finder-hero">
   <p class="course-eyebrow">Upcoming class finder</p>
-  <h1>Find CPR, BLS, ACLS, PALS, and First Aid classes</h1>
-  <p>Find an upcoming CPR, BLS, ACLS, PALS, or First Aid class by course, date, and location. Filters work together, so choosing one option narrows the other dropdowns to available combinations.</p>
+  <h1>{html_escape(h1)}</h1>
+  <p>{html_escape(intro)}</p>
 </section>
 
 <section class="class-filter-panel" aria-label="Class filters">
@@ -810,12 +818,12 @@ def render_classes_finder_index(sessions: list[dict]) -> str:
 """.strip()
 
     return page_template(
-        title="Find CPR Classes | 910CPR",
+        title=title,
         description="Find upcoming CPR, BLS, ACLS, PALS, and First Aid classes by course, date, and location.",
         body_html=body,
         page_type="classes_index",
-        page_name="Class Finder",
-        canonical_path="/classes/index.html",
+        page_name=page_name,
+        canonical_path=canonical_path,
         robots_content="index,follow",
     )
 
@@ -1420,48 +1428,14 @@ def build():
     # -----------------------------------------------------------------
     # Courses index
     # -----------------------------------------------------------------
-    course_sections = []
-    for course_name, items in sorted(course_groups.items(), key=lambda x: x[0].lower()):
-        slug = short_slug(course_name)
-
-        preview = []
-        for s in items[:10]:
-            bits = []
-            if s["display_date"]:
-                bits.append(s["display_date"])
-            if s["display_time"]:
-                bits.append(s["display_time"])
-            if s["location_name"]:
-                bits.append(s["location_name"])
-
-            line = " | ".join(html_escape(x) for x in bits if x)
-            preview.append(
-                f'<li class="js-session-item" data-session-id="{html_escape(str(s.get("session_id", "")).strip())}" data-start="{html_escape(str(s.get("display_date", "")).strip())}">{line} | <a href="{s["local_path"]}">Details</a></li>'
-            )
-
-        course_sections.append(f"""
-<section class="section plain-card">
-  <h2><a href="/courses/{slug}.html">{html_escape(course_name)}</a></h2>
-  <p class="meta">{len(items)} class pages</p>
-  <ul>
-    {''.join(preview)}
-  </ul>
-</section>
-""")
-
     COURSES_INDEX_FILE.write_text(
-        page_template(
-            title="Course Index | 910CPR",
-            description="Archive support index of generated course pages.",
-            body_html=f"""
-<h1>Course Index</h1>
-<p class="meta">Archive support page for generated course files. For current booking options, use the homepage, family hubs, or exact-course schedule pages.</p>
-{''.join(course_sections)}
-""",
-            page_type="courses_index",
-            page_name="Course Index",
+        render_classes_finder_index(
+            sessions,
+            title="Find a Course | 910CPR",
+            h1="Find a Course",
+            intro="Find upcoming CPR, BLS, ACLS, PALS, and First Aid classes by course, date, and location.",
             canonical_path="/courses/index.html",
-            robots_content="noindex,follow",
+            page_name="Course Finder",
         ),
         encoding="utf-8",
     )
