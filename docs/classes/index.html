@@ -225,7 +225,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a href="/pals.html">PALS</a>
       <a href="/heartsaver.html">Heartsaver</a>
       <a href="tel:+19103955193">Call 910-395-5193</a>
-      <a href="https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule">Enrollware Schedule</a>
+      <a href="https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule">Full class schedule</a>
     </div>
   </div>
 </header>
@@ -302,6 +302,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   font-size: 0.9rem;
   line-height: 1.35;
 }
+.class-category-copy strong {
+  display: block;
+  margin-top: 10px;
+  color: #0f172a;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
 .class-category-copy ul {
   display: flex;
   flex-wrap: wrap;
@@ -311,15 +319,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   list-style: none;
 }
 .class-category-copy li {
+  display: flex;
+  min-width: 0;
+}
+.class-category-chip-link,
+.class-category-chip-muted {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
   padding: 3px 7px;
   border-radius: 999px;
-  background: #eff6ff;
-  color: #1e3a8a;
   font-size: 0.78rem;
   font-weight: 700;
   max-width: 100%;
   overflow-wrap: anywhere;
   white-space: normal;
+  text-decoration: none;
+}
+.class-category-chip-link {
+  background: #e0f2fe;
+  color: #0f5e9c;
+  border: 1px solid #bae6fd;
+}
+.class-category-chip-link:hover,
+.class-category-chip-link:focus-visible {
+  background: #0f5e9c;
+  color: #ffffff;
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+.class-category-chip-muted {
+  background: #f1f5f9;
+  color: #64748b;
 }
 .class-category-action {
   display: inline-flex;
@@ -336,6 +367,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   max-width: 100%;
   box-sizing: border-box;
   text-align: center;
+}
+.class-category-links {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+  font-size: 0.82rem;
+}
+.class-category-links span {
+  color: #64748b;
+  font-weight: 800;
+}
+.class-category-links a {
+  color: #0f5e9c;
+  font-weight: 800;
+  text-decoration: none;
+}
+.class-category-links a:hover,
+.class-category-links a:focus-visible {
+  text-decoration: underline;
 }
 .class-filter-panel {
   display: grid;
@@ -502,9 +552,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     margin: 7px 0;
   }
   .class-category-copy li {
-    padding: 2px 6px;
-    font-size: 0.68rem;
     line-height: 1.18;
+  }
+  .class-category-chip-link,
+  .class-category-chip-muted {
+    min-height: 40px;
+    padding: 6px 8px;
+    font-size: 0.7rem;
   }
   .class-category-action {
     min-height: 32px;
@@ -585,54 +639,66 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <img src="/images/nurse%20doing%20CPR.jpg" alt="" loading="lazy">
   <div class="class-category-copy">
     <h2>Healthcare Provider</h2>
-    <p>For nursing, dental, EMT, clinical, and healthcare job or school requirements.</p>
-    <ul><li>BLS</li><li>ACLS</li><li>PALS</li></ul>
-    <a class="class-category-action" href="/bls.html">Find healthcare classes</a>
+    <p>For nurses, EMTs, dental teams, clinical staff, healthcare students, and providers who need BLS, ACLS, or PALS.</p>
+    <strong>Common requirements</strong>
+    <ul><li><a class="class-category-chip-link" href="/bls.html">BLS</a></li><li><a class="class-category-chip-link" href="/acls.html">ACLS</a></li><li><a class="class-category-chip-link" href="/pals.html">PALS</a></li><li><a class="class-category-chip-link" href="/bls.html">HeartCode skills</a></li></ul>
+    <a class="class-category-action" href="/bls.html">Find BLS, ACLS, or PALS</a>
+    <div class="class-category-links"><span>Choose your class</span><a href="/bls.html">BLS classes</a><a href="/acls.html">ACLS classes</a><a href="/pals.html">PALS classes</a></div>
   </div>
 </article>
 <article class="class-category-card">
   <img src="/images/HS-FA-CPR-AED.jpeg" alt="" loading="lazy">
   <div class="class-category-copy">
-    <h2>Workplace / Daycare / Coach</h2>
-    <p>For workplace safety, childcare, coaching, school, camp, and first aid requirements.</p>
-    <ul><li>First Aid CPR AED</li><li>Pediatric</li><li>Family &amp; Friends</li></ul>
-    <a class="class-category-action" href="/heartsaver.html">Find workplace classes</a>
+    <h2>Workplace, Daycare, School, or Coach</h2>
+    <p>For childcare, school staff, coaches, foster care, workplace safety, camps, and general CPR or First Aid requirements.</p>
+    <strong>Common requirements</strong>
+    <ul><li><a class="class-category-chip-link" href="/heartsaver.html">First Aid CPR AED</a></li><li><a class="class-category-chip-link" href="/heartsaver.html">CPR AED</a></li><li><a class="class-category-chip-link" href="/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended">Pediatric First Aid</a></li><li><a class="class-category-chip-link" href="/heartsaver.html">Family &amp; Friends</a></li></ul>
+    <a class="class-category-action" href="/heartsaver.html">Find CPR / First Aid classes</a>
+    <div class="class-category-links"><span>Choose your class</span><a href="/heartsaver.html">First Aid CPR AED</a><a href="/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended">Pediatric First Aid CPR AED</a><a href="/heartsaver.html">Family &amp; Friends CPR</a></div>
   </div>
 </article>
 <article class="class-category-card">
   <img src="/images/bystanderAED_JPEG.jpg" alt="" loading="lazy">
   <div class="class-category-copy">
-    <h2>American Red Cross</h2>
-    <p>Use this path when your requirement specifically says American Red Cross.</p>
-    <ul><li>ARC BLS</li><li>ARC First Aid CPR AED</li></ul>
-    <a class="class-category-action" href="/arc.html">Find Red Cross options</a>
+    <h2>Red Cross Required</h2>
+    <p>Use this option only if your employer, school, or program specifically says American Red Cross.</p>
+    <strong>Common requirements</strong>
+    <ul><li><a class="class-category-chip-link" href="/arc.html">ARC BLS</a></li><li><a class="class-category-chip-link" href="/arc.html">ARC First Aid CPR AED</a></li><li><span class="class-category-chip-muted">Blended learning</span></li></ul>
+    <a class="class-category-action" href="/arc.html">Find Red Cross classes</a>
+    <div class="class-category-links"><span>Choose your class</span><a href="/arc.html">Red Cross BLS</a><a href="/arc.html">Red Cross First Aid CPR AED</a></div>
   </div>
 </article>
 <article class="class-category-card">
   <img src="/images/4_cards_.jpg" alt="" loading="lazy">
   <div class="class-category-copy">
     <h2>HSI Required</h2>
-    <p>For employers or programs asking for Health &amp; Safety Institute training.</p>
-    <ul><li>HSI CPR AED</li><li>HSI First Aid CPR AED</li></ul>
-    <a class="class-category-action" href="/hsi.html">Find HSI options</a>
+    <p>Use this option if your employer or program specifically asks for HSI, ASHI, or Health &amp; Safety Institute training.</p>
+    <strong>Common requirements</strong>
+    <ul><li><a class="class-category-chip-link" href="/hsi.html">HSI CPR AED</a></li><li><a class="class-category-chip-link" href="/hsi.html">HSI First Aid CPR AED</a></li><li><span class="class-category-chip-muted">Blended learning</span></li></ul>
+    <a class="class-category-action" href="/hsi.html">Find HSI classes</a>
+    <div class="class-category-links"><span>Choose your class</span><a href="/hsi.html">HSI CPR AED</a><a href="/hsi.html">HSI First Aid CPR AED</a></div>
   </div>
 </article>
 <article class="class-category-card">
   <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Cdefs%3E%3ClinearGradient id='s' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23dff3ff'/%3E%3Cstop offset='1' stop-color='%23f8fbff'/%3E%3C/linearGradient%3E%3ClinearGradient id='w' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%230f5e9c'/%3E%3Cstop offset='1' stop-color='%2338bdf8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='640' height='360' fill='url(%23s)'/%3E%3Ccircle cx='520' cy='78' r='42' fill='%23facc15' opacity='.85'/%3E%3Cpath d='M0 250c58-28 110-28 168 0s110 28 168 0 110-28 168 0 88 30 136 6v104H0z' fill='url(%23w)'/%3E%3Cpath d='M72 228h398l-54 74H140z' fill='%230f172a'/%3E%3Cpath d='M138 168h196l58 60H104z' fill='%23fff' stroke='%230f172a' stroke-width='8' stroke-linejoin='round'/%3E%3Cpath d='M188 126h96v42h-96z' fill='%230f5e9c'/%3E%3Cpath d='M388 112h80v92h-80z' fill='%23fff' stroke='%230f172a' stroke-width='7' rx='10'/%3E%3Cpath d='M424 132v52M398 158h52' stroke='%23dc2626' stroke-width='16' stroke-linecap='round'/%3E%3Cpath d='M166 198h42M238 198h42M310 198h42' stroke='%230f5e9c' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M28 300c48-18 86-18 134 0s86 18 134 0 86-18 134 0 86 18 134 0' fill='none' stroke='%23e0f2fe' stroke-width='12' stroke-linecap='round' opacity='.9'/%3E%3C/svg%3E" alt="" loading="lazy">
   <div class="class-category-copy">
     <h2>USCG / Maritime</h2>
-    <p>For maritime, captain, vessel, and USCG-aligned first aid and CPR needs.</p>
-    <ul><li>USCG Elementary First Aid CPR AED</li></ul>
+    <p>For captains, mariners, vessel crews, and maritime employers who need USCG-aligned First Aid and CPR training.</p>
+    <strong>Common requirement</strong>
+    <ul><li><a class="class-category-chip-link" href="/uscg-elementary-first-aid-cpr.html">USCG Elementary First Aid CPR AED</a></li></ul>
     <a class="class-category-action" href="/uscg-elementary-first-aid-cpr.html">Find maritime classes</a>
+    <div class="class-category-links"><span>Choose your class</span><a href="/uscg-elementary-first-aid-cpr.html">USCG Elementary First Aid CPR AED</a></div>
   </div>
 </article>
 <article class="class-category-card">
   <img src="/images/confused-frustrated.png" alt="" loading="lazy">
   <div class="class-category-copy">
     <h2>Not Sure What I Need</h2>
-    <p>Start here if your job, school, employer, or licensing board gave unclear wording.</p>
-    <ul><li>Requirement help</li><li>Group training</li><li>Private classes</li></ul>
-    <a class="class-category-action" href="/group-training.html">Get help choosing</a>
+    <p>Use this if the wording from your job, school, agency, or licensing board is unclear. We can help you avoid choosing the wrong class.</p>
+    <strong>Best when</strong>
+    <ul><li><span class="class-category-chip-muted">Unclear requirement</span></li><li><a class="class-category-chip-link" href="/group-training.html">Group training</a></li><li><a class="class-category-chip-link" href="/group-training.html">Private class</a></li><li><span class="class-category-chip-muted">Employer request</span></li></ul>
+    <a class="class-category-action" href="/group-training.html">Help me choose</a>
+    <div class="class-category-links"><span>Contact us</span><a href="tel:9103955193">Call 910-395-5193</a><a href="/request_group_session.html">Request help choosing</a><a href="/group-training.html">Group training request</a></div>
   </div>
 </article>
 </section>

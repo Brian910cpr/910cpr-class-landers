@@ -115,9 +115,9 @@ def load_google_review_stats() -> dict:
 
 def review_theme_summaries() -> list[str]:
     return [
-        "Students often mention knowledgeable instructors who make certification requirements easy to understand.",
-        "Renewing providers regularly describe the classes as organized, direct, and respectful of their time.",
-        "Reviewers commonly point to clear explanations, hands-on practice, and a class experience that feels manageable.",
+        "Clear guidance when students are unsure which class they need.",
+        "Organized classes that respect renewing providers' time.",
+        "Hands-on practice that helps the skills feel manageable.",
     ]
 
 
@@ -131,18 +131,18 @@ def render_google_trust_block() -> str:
 """.rstrip()
         for theme in stats["themes"]
     )
-    themes_html = f'<div class="review-snippets" aria-label="Common themes from Google reviews"><div class="review-theme-label">Common themes from Google reviews</div>{themes}</div>' if themes else ""
+    themes_html = f'<div class="review-snippets" aria-label="Review highlights">{themes}</div>' if themes else ""
     return f"""
       <section class="top-trust" aria-label="910CPR trust and reviews">
         <div class="top-trust-copy">
-          <div class="home-status-label">Serving North And South Carolina</div>
-          <p>From the mountains to the coast, 910CPR helps healthcare teams, dental offices, schools, workplaces, and students meet real certification requirements with clear, organized classes.</p>
+          <div class="home-status-label">Training that fits real requirements</div>
+          <p>910CPR helps healthcare workers, students, dental offices, schools, childcare teams, workplaces, and maritime crews meet certification requirements without making the process harder than it needs to be.</p>
         </div>
         <a class="google-review-card" href="{GOOGLE_REVIEWS_URL}" target="_blank" rel="noopener noreferrer" aria-label="Open 910CPR Google reviews in a new tab">
           <span class="review-stars review-stars-large" aria-hidden="true">★★★★★</span>
-          <strong>Trusted by {html_escape(stats['label'])}</strong>
-          <em>As of May 5, 2026</em>
-          <span>Read 910CPR reviews on Google</span>
+          <strong>Trusted by {html_escape(stats['label']).replace(' on Google', '')}</strong>
+          <span>Students and professionals often mention clear explanations, organized classes, and instructors who make the skills feel manageable.</span>
+          <span>Read Google reviews</span>
         </a>
         {themes_html}
       </section>
@@ -537,56 +537,119 @@ def render_classes_finder_index(
     category_cards = [
         {
             "title": "Healthcare Provider",
-            "description": "For nursing, dental, EMT, clinical, and healthcare job or school requirements.",
+            "description": "For nurses, EMTs, dental teams, clinical staff, healthcare students, and providers who need BLS, ACLS, or PALS.",
             "image": "/images/nurse%20doing%20CPR.jpg",
             "href": "/bls.html",
-            "action": "Find healthcare classes",
-            "common": ["BLS", "ACLS", "PALS"],
+            "action": "Find BLS, ACLS, or PALS",
+            "label": "Common requirements",
+            "common": [
+                {"label": "BLS", "href": "/bls.html"},
+                {"label": "ACLS", "href": "/acls.html"},
+                {"label": "PALS", "href": "/pals.html"},
+                {"label": "HeartCode skills", "href": "/bls.html"},
+            ],
+            "link_label": "Choose your class",
+            "links": [("BLS classes", "/bls.html"), ("ACLS classes", "/acls.html"), ("PALS classes", "/pals.html")],
         },
         {
-            "title": "Workplace / Daycare / Coach",
-            "description": "For workplace safety, childcare, coaching, school, camp, and first aid requirements.",
+            "title": "Workplace, Daycare, School, or Coach",
+            "description": "For childcare, school staff, coaches, foster care, workplace safety, camps, and general CPR or First Aid requirements.",
             "image": "/images/HS-FA-CPR-AED.jpeg",
             "href": "/heartsaver.html",
-            "action": "Find workplace classes",
-            "common": ["First Aid CPR AED", "Pediatric", "Family & Friends"],
+            "action": "Find CPR / First Aid classes",
+            "label": "Common requirements",
+            "common": [
+                {"label": "First Aid CPR AED", "href": "/heartsaver.html"},
+                {"label": "CPR AED", "href": "/heartsaver.html"},
+                {"label": "Pediatric First Aid", "href": "/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended"},
+                {"label": "Family & Friends", "href": "/heartsaver.html"},
+            ],
+            "link_label": "Choose your class",
+            "links": [
+                ("First Aid CPR AED", "/heartsaver.html"),
+                ("Pediatric First Aid CPR AED", "/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended"),
+                ("Family & Friends CPR", "/heartsaver.html"),
+            ],
         },
         {
-            "title": "American Red Cross",
-            "description": "Use this path when your requirement specifically says American Red Cross.",
+            "title": "Red Cross Required",
+            "description": "Use this option only if your employer, school, or program specifically says American Red Cross.",
             "image": "/images/bystanderAED_JPEG.jpg",
             "href": "/arc.html",
-            "action": "Find Red Cross options",
-            "common": ["ARC BLS", "ARC First Aid CPR AED"],
+            "action": "Find Red Cross classes",
+            "label": "Common requirements",
+            "common": [
+                {"label": "ARC BLS", "href": "/arc.html"},
+                {"label": "ARC First Aid CPR AED", "href": "/arc.html"},
+                "Blended learning",
+            ],
+            "link_label": "Choose your class",
+            "links": [("Red Cross BLS", "/arc.html"), ("Red Cross First Aid CPR AED", "/arc.html")],
         },
         {
             "title": "HSI Required",
-            "description": "For employers or programs asking for Health & Safety Institute training.",
+            "description": "Use this option if your employer or program specifically asks for HSI, ASHI, or Health & Safety Institute training.",
             "image": "/images/4_cards_.jpg",
             "href": "/hsi.html",
-            "action": "Find HSI options",
-            "common": ["HSI CPR AED", "HSI First Aid CPR AED"],
+            "action": "Find HSI classes",
+            "label": "Common requirements",
+            "common": [
+                {"label": "HSI CPR AED", "href": "/hsi.html"},
+                {"label": "HSI First Aid CPR AED", "href": "/hsi.html"},
+                "Blended learning",
+            ],
+            "link_label": "Choose your class",
+            "links": [("HSI CPR AED", "/hsi.html"), ("HSI First Aid CPR AED", "/hsi.html")],
         },
         {
             "title": "USCG / Maritime",
-            "description": "For maritime, captain, vessel, and USCG-aligned first aid and CPR needs.",
+            "description": "For captains, mariners, vessel crews, and maritime employers who need USCG-aligned First Aid and CPR training.",
             "image": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Cdefs%3E%3ClinearGradient id='s' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23dff3ff'/%3E%3Cstop offset='1' stop-color='%23f8fbff'/%3E%3C/linearGradient%3E%3ClinearGradient id='w' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%230f5e9c'/%3E%3Cstop offset='1' stop-color='%2338bdf8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='640' height='360' fill='url(%23s)'/%3E%3Ccircle cx='520' cy='78' r='42' fill='%23facc15' opacity='.85'/%3E%3Cpath d='M0 250c58-28 110-28 168 0s110 28 168 0 110-28 168 0 88 30 136 6v104H0z' fill='url(%23w)'/%3E%3Cpath d='M72 228h398l-54 74H140z' fill='%230f172a'/%3E%3Cpath d='M138 168h196l58 60H104z' fill='%23fff' stroke='%230f172a' stroke-width='8' stroke-linejoin='round'/%3E%3Cpath d='M188 126h96v42h-96z' fill='%230f5e9c'/%3E%3Cpath d='M388 112h80v92h-80z' fill='%23fff' stroke='%230f172a' stroke-width='7' rx='10'/%3E%3Cpath d='M424 132v52M398 158h52' stroke='%23dc2626' stroke-width='16' stroke-linecap='round'/%3E%3Cpath d='M166 198h42M238 198h42M310 198h42' stroke='%230f5e9c' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M28 300c48-18 86-18 134 0s86 18 134 0 86-18 134 0 86 18 134 0' fill='none' stroke='%23e0f2fe' stroke-width='12' stroke-linecap='round' opacity='.9'/%3E%3C/svg%3E",
             "href": "/uscg-elementary-first-aid-cpr.html",
             "action": "Find maritime classes",
-            "common": ["USCG Elementary First Aid CPR AED"],
+            "label": "Common requirement",
+            "common": [
+                {"label": "USCG Elementary First Aid CPR AED", "href": "/uscg-elementary-first-aid-cpr.html"},
+            ],
+            "link_label": "Choose your class",
+            "links": [("USCG Elementary First Aid CPR AED", "/uscg-elementary-first-aid-cpr.html")],
         },
         {
             "title": "Not Sure What I Need",
-            "description": "Start here if your job, school, employer, or licensing board gave unclear wording.",
+            "description": "Use this if the wording from your job, school, agency, or licensing board is unclear. We can help you avoid choosing the wrong class.",
             "image": "/images/confused-frustrated.png",
             "href": "/group-training.html",
-            "action": "Get help choosing",
-            "common": ["Requirement help", "Group training", "Private classes"],
+            "action": "Help me choose",
+            "label": "Best when",
+            "common": [
+                "Unclear requirement",
+                {"label": "Group training", "href": "/group-training.html"},
+                {"label": "Private class", "href": "/group-training.html"},
+                "Employer request",
+            ],
+            "link_label": "Contact us",
+            "links": [
+                ("Call 910-395-5193", "tel:9103955193"),
+                ("Request help choosing", "/request_group_session.html"),
+                ("Group training request", "/group-training.html"),
+            ],
         },
     ]
     category_cards_html = []
     for card in category_cards:
-        common_html = "".join(f"<li>{html_escape(item)}</li>" for item in card["common"])
+        common_items = []
+        for item in card["common"]:
+            if isinstance(item, dict) and item.get("href"):
+                common_items.append(
+                    f'<li><a class="class-category-chip-link" href="{html_escape(item["href"])}">{html_escape(item["label"])}</a></li>'
+                )
+            else:
+                common_items.append(f'<li><span class="class-category-chip-muted">{html_escape(item)}</span></li>')
+        common_html = "".join(common_items)
+        links_html = "".join(
+            f'<a href="{html_escape(href)}">{html_escape(label)}</a>'
+            for label, href in card.get("links", [])
+        )
         category_cards_html.append(
             f"""
 <article class="class-category-card">
@@ -594,8 +657,10 @@ def render_classes_finder_index(
   <div class="class-category-copy">
     <h2>{html_escape(card["title"])}</h2>
     <p>{html_escape(card["description"])}</p>
+    <strong>{html_escape(card["label"])}</strong>
     <ul>{common_html}</ul>
     <a class="class-category-action" href="{html_escape(card["href"])}">{html_escape(card["action"])}</a>
+    <div class="class-category-links"><span>{html_escape(card["link_label"])}</span>{links_html}</div>
   </div>
 </article>
 """.rstrip()
@@ -712,6 +777,14 @@ def render_classes_finder_index(
   font-size: 0.9rem;
   line-height: 1.35;
 }
+.class-category-copy strong {
+  display: block;
+  margin-top: 10px;
+  color: #0f172a;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
 .class-category-copy ul {
   display: flex;
   flex-wrap: wrap;
@@ -721,15 +794,38 @@ def render_classes_finder_index(
   list-style: none;
 }
 .class-category-copy li {
+  display: flex;
+  min-width: 0;
+}
+.class-category-chip-link,
+.class-category-chip-muted {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
   padding: 3px 7px;
   border-radius: 999px;
-  background: #eff6ff;
-  color: #1e3a8a;
   font-size: 0.78rem;
   font-weight: 700;
   max-width: 100%;
   overflow-wrap: anywhere;
   white-space: normal;
+  text-decoration: none;
+}
+.class-category-chip-link {
+  background: #e0f2fe;
+  color: #0f5e9c;
+  border: 1px solid #bae6fd;
+}
+.class-category-chip-link:hover,
+.class-category-chip-link:focus-visible {
+  background: #0f5e9c;
+  color: #ffffff;
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+.class-category-chip-muted {
+  background: #f1f5f9;
+  color: #64748b;
 }
 .class-category-action {
   display: inline-flex;
@@ -746,6 +842,25 @@ def render_classes_finder_index(
   max-width: 100%;
   box-sizing: border-box;
   text-align: center;
+}
+.class-category-links {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+  font-size: 0.82rem;
+}
+.class-category-links span {
+  color: #64748b;
+  font-weight: 800;
+}
+.class-category-links a {
+  color: #0f5e9c;
+  font-weight: 800;
+  text-decoration: none;
+}
+.class-category-links a:hover,
+.class-category-links a:focus-visible {
+  text-decoration: underline;
 }
 .class-filter-panel {
   display: grid;
@@ -912,9 +1027,13 @@ def render_classes_finder_index(
     margin: 7px 0;
   }
   .class-category-copy li {
-    padding: 2px 6px;
-    font-size: 0.68rem;
     line-height: 1.18;
+  }
+  .class-category-chip-link,
+  .class-category-chip-muted {
+    min-height: 40px;
+    padding: 6px 8px;
+    font-size: 0.7rem;
   }
   .class-category-action {
     min-height: 32px;
@@ -1435,7 +1554,7 @@ ul {{
       <a href="/pals.html">PALS</a>
       <a href="/heartsaver.html">Heartsaver</a>
       <a href="{PHONE_LINK}">Call {PHONE_DISPLAY}</a>
-      <a href="{ENROLLWARE_SCHEDULE_URL}">Enrollware Schedule</a>
+      <a href="{ENROLLWARE_SCHEDULE_URL}">Full class schedule</a>
     </div>
   </div>
 </header>
@@ -1466,7 +1585,7 @@ def render_homepage() -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Find the Right CPR or Medical Training Class | 910CPR</title>
-<meta name="description" content="Choose the right CPR, BLS, ACLS, PALS, Heartsaver, Red Cross, HSI, or USCG training path before selecting matching class dates.">
+<meta name="description" content="Find the right CPR, First Aid, BLS, ACLS, PALS, Red Cross, HSI, or USCG training class for your job, school, employer, licensing board, or agency.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="{SITE_BASE}/">
 <link rel="icon" type="image/png" href="/images/logo.png">
@@ -1499,51 +1618,38 @@ def render_homepage() -> str:
       </header>
       <section class="hero home-hero">
         <div class="hero-main">
-          <div class="eyebrow">CPR, BLS, ACLS, PALS, First Aid</div>
-          <h1>Find the CPR or medical training course you need</h1>
-          <p class="subhead">Answer a few simple questions, choose the course format that fits your requirement, and then pick a matching class date.</p>
+          <div class="eyebrow">CPR • First Aid • BLS • ACLS • PALS</div>
+          <h1>Find the right CPR or medical training class</h1>
+          <p class="subhead">Tell us what your job, school, employer, or licensing board asked for. We'll help you find the right class and the next available dates.</p>
           <div class="hero-actions">
-            <a class="button primary" href="#class-finder">Help me choose a course</a>
-            <a class="button secondary" href="/group-training.html">Need training for a team?</a>
+            <a class="button primary" href="#class-finder">Help me choose</a>
+            <a class="button secondary" href="/group-training.html">Training for a group or workplace</a>
           </div>
         </div>
         <div class="hero-side">
           <div class="trust-badge">
-            <strong>Choose Course First</strong>
-            <span>Start with your requirement, then compare only the dates that match that course and format.</span>
-          </div>
-          <div class="trust-badge">
-            <strong>Enrollware Registration</strong>
-            <span>Course pages keep the existing Enrollware registration paths for posted class dates.</span>
+            <strong>Not sure what they meant?</strong>
+            <span>Use the exact wording from your email, form, or job requirement. If it says BLS, ACLS, PALS, First Aid, Red Cross, HSI, or USCG, start below.</span>
           </div>
         </div>
       </section>
 {render_google_trust_block()}
 
-      <section class="home-jumps course-pathway-jumps" aria-label="Jump to course pathways">
-        <a class="jump-chip" href="#healthcare">Healthcare / BLS, ACLS, PALS</a>
-        <a class="jump-chip" href="#workplace">Workplace / First Aid CPR AED</a>
-        <a class="jump-chip" href="#arc">American Red Cross</a>
-        <a class="jump-chip" href="#hsi">HSI</a>
-        <a class="jump-chip" href="#uscg">USCG / Maritime</a>
-        <a class="jump-chip" href="#not-sure">Not sure what I need</a>
-      </section>
-
       <section class="home-finder" id="class-finder">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Course Finder</div>
-            <h2>Choose your course path before viewing dates</h2>
+            <div class="eyebrow">Start here</div>
+            <h2>Choose your class to see dates</h2>
           </div>
-          <p class="section-copy">The homepage no longer shows every class date at once. Pick the course family and delivery format first, then the matching course page will show dates and registration buttons.</p>
+          <p class="section-copy">Pick the course name you were told to take. Each option opens the matching course page with delivery options and upcoming dates.</p>
         </div>
 
         <div class="finder-grid" data-home-sections>
           <article class="finder-card finder-card-loading">
             <div class="finder-card-head">
               <div>
-                <h3>Loading course pathways</h3>
-                <p class="finder-card-copy">Choose a course family first, then view matching class dates.</p>
+                <h3>Loading course links</h3>
+                <p class="finder-card-copy">Choose your class to see available dates.</p>
               </div>
             </div>
           </article>
@@ -1557,8 +1663,8 @@ def render_homepage() -> str:
   <div class="wrap">
     <div class="card home-noscript">
       <h2>Quick class links</h2>
-      <p>Course pathway cards could not load in this browser. You can still choose a course page below.</p>
-      <p><a class="button primary" href="/bls.html">BLS</a> <a class="button secondary" href="/acls.html">ACLS</a> <a class="button secondary" href="/pals.html">PALS</a> <a class="button secondary" href="/heartsaver.html">Heartsaver</a> <a class="button secondary" href="/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended">Pediatric First Aid CPR AED</a> <a class="button secondary" href="/arc.html">ARC</a> <a class="button secondary" href="/hsi.html">HSI</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG</a> <a class="button secondary" href="/group-training.html">Group Training</a></p>
+      <p>Course links could not load in this browser. You can still choose a class below.</p>
+      <p><a class="button primary" href="/bls.html">AHA BLS</a> <a class="button secondary" href="/acls.html">AHA ACLS</a> <a class="button secondary" href="/pals.html">AHA PALS</a> <a class="button secondary" href="/heartsaver.html">First Aid CPR AED</a> <a class="button secondary" href="/arc.html">Red Cross</a> <a class="button secondary" href="/hsi.html">HSI</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG / Maritime</a></p>
     </div>
   </div>
 </noscript>
@@ -1821,7 +1927,7 @@ def build():
     <p class="course-description">This page remains available for archive support and crawl coverage, but current public booking flows live on the homepage and family hubs.</p>
     <div class="course-cta-row">
       <a class="course-primary-cta" href="/index.html">Find current classes</a>
-      <a class="course-secondary-cta" href="{ENROLLWARE_SCHEDULE_URL}">Open full Enrollware schedule</a>
+      <a class="course-secondary-cta" href="{ENROLLWARE_SCHEDULE_URL}">Open full class schedule</a>
     </div>
   </div>
 </section>

@@ -2,102 +2,91 @@
   const sectionsRoot = document.querySelector("[data-home-sections]");
   if (!sectionsRoot) return;
 
-  const PATHWAYS = [
+  const COURSES = [
     {
-      id: "healthcare",
-      title: "Healthcare Provider",
-      audience: "For healthcare workers, nursing students, dental offices, hospital staff, EMS, and clinical requirements.",
-      courses: ["BLS", "ACLS", "PALS"],
-      formats: [
-        { label: "BLS Provider / Renewal / HeartCode Skills", href: "/bls.html" },
-        { label: "ACLS Provider / Renewal / HeartCode Skills", href: "/acls.html" },
-        { label: "PALS Provider / Renewal / HeartCode Skills", href: "/pals.html" },
-      ],
-      primary: { label: "Start with BLS", href: "/bls.html" },
+      title: "AHA BLS",
+      href: "/bls.html",
+      image: "/images/bls_general.png",
     },
     {
-      id: "workplace",
-      title: "Workplace, Daycare, School, or Coach",
-      audience: "For workplace safety, childcare, schools, coaches, foster care, camps, and general CPR / first aid needs.",
-      courses: ["Heartsaver First Aid CPR AED", "Heartsaver CPR AED", "Pediatric First Aid CPR AED", "Family & Friends CPR"],
-      formats: [
-        { label: "Heartsaver First Aid CPR AED", href: "/heartsaver.html" },
-        { label: "Pediatric First Aid CPR AED", href: "/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended" },
-        { label: "Family & Friends / non-certification", href: "/heartsaver.html" },
-      ],
-      primary: { label: "Choose workplace or community class", href: "/heartsaver.html" },
+      title: "AHA ACLS",
+      href: "/acls.html",
+      image: "/images/acls_general.png",
     },
     {
-      id: "arc",
-      title: "American Red Cross Required",
-      audience: "For students, employers, schools, or programs that specifically require Red Cross certification.",
-      courses: ["ARC BLS", "ARC First Aid CPR AED", "ARC blended options where available"],
-      formats: [
-        { label: "Compare Red Cross options", href: "/arc.html" },
-      ],
-      primary: { label: "View Red Cross options", href: "/arc.html" },
+      title: "AHA PALS",
+      href: "/pals.html",
+      image: "/images/pals_general.png",
     },
     {
-      id: "hsi",
-      title: "HSI Required",
-      audience: "For employers, schools, or organizations that specifically accept or request HSI certification.",
-      courses: ["HSI CPR AED", "HSI First Aid CPR AED", "HSI blended options where available"],
-      formats: [
-        { label: "Compare HSI options", href: "/hsi.html" },
-      ],
-      primary: { label: "View HSI options", href: "/hsi.html" },
+      title: "First Aid CPR AED",
+      href: "/heartsaver.html",
+      image: "/images/heartsaver_general.png",
     },
     {
-      id: "uscg",
+      title: "CPR AED",
+      href: "/heartsaver.html",
+      image: "/images/HS-FA-CPR-AED.jpeg",
+    },
+    {
+      title: "Red Cross BLS",
+      href: "/arc.html",
+      image: "/images/0arc.png",
+    },
+    {
+      title: "Red Cross First Aid CPR AED",
+      href: "/arc.html",
+      image: "/images/bystanderAED_JPEG.jpg",
+    },
+    {
+      title: "HSI CPR AED",
+      href: "/hsi.html",
+      image: "/images/0hsi.png",
+    },
+    {
+      title: "HSI First Aid CPR AED",
+      href: "/hsi.html",
+      image: "/images/4_cards_.jpg",
+    },
+    {
       title: "USCG / Maritime",
-      audience: "For mariners, captains, crews, and maritime employers who need USCG-aligned first aid and CPR.",
-      courses: ["USCG Elementary First Aid CPR AED"],
-      formats: [
-        { label: "USCG Elementary First Aid CPR AED", href: "/uscg-elementary-first-aid-cpr.html" },
-      ],
-      primary: { label: "View maritime options", href: "/uscg-elementary-first-aid-cpr.html" },
+      href: "/uscg-elementary-first-aid-cpr.html",
+      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 120'%3E%3Crect width='160' height='120' rx='20' fill='%23e0f2fe'/%3E%3Cpath d='M18 82c17-8 31-8 48 0s31 8 48 0 29 8 46 0v38H18z' fill='%230f5e9c'/%3E%3Cpath d='M30 70h98l-14 22H45z' fill='%230f172a'/%3E%3Cpath d='M48 44h47l15 26H36z' fill='%23fff' stroke='%230f172a' stroke-width='4'/%3E%3Cpath d='M105 33h28v32h-28z' rx='5' fill='%23fff' stroke='%230f172a' stroke-width='4'/%3E%3Cpath d='M119 40v18M110 49h18' stroke='%23dc2626' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E",
     },
     {
-      id: "not-sure",
-      title: "Not Sure What I Need",
-      audience: "Use this path if your school, employer, licensing board, or agency gave you unclear course wording.",
-      courses: ["Check the exact requirement before choosing a date"],
-      formats: [
-        { label: "Call 910-395-5193", href: "tel:9103955193" },
-        { label: "Request group or help choosing", href: "/request_group_session.html" },
-      ],
-      primary: { label: "Get help choosing", href: "/request_group_session.html" },
+      title: "Family & Friends CPR",
+      href: "/heartsaver.html",
+      image: "/images/confused-frustrated.png",
     },
   ];
 
-  function renderPathway(pathway) {
-    const courseItems = pathway.courses.map((course) => `<li>${escapeHtml(course)}</li>`).join("");
-    const formatLinks = pathway.formats
-      .map((format) => `<a class="format-choice-link" href="${escapeAttribute(format.href)}">${escapeHtml(format.label)}</a>`)
-      .join("");
-
+  function renderCourseTile(course) {
     return `
-      <article class="finder-card course-pathway-card" id="${escapeAttribute(pathway.id)}">
-        <div class="finder-card-head">
-          <div>
-            <h3>${escapeHtml(pathway.title)}</h3>
-            <p class="finder-card-copy">${escapeHtml(pathway.audience)}</p>
-          </div>
-          <a class="button secondary" href="${escapeAttribute(pathway.primary.href)}">${escapeHtml(pathway.primary.label)}</a>
-        </div>
-        <div class="course-pathway-body">
-          <div>
-            <strong>Common course names</strong>
-            <ul class="course-pathway-list">${courseItems}</ul>
-          </div>
-          <div>
-            <strong>Choose a delivery format or course page</strong>
-            <div class="format-choice-list">${formatLinks}</div>
-          </div>
-        </div>
-      </article>
+      <a class="home-course-tile" href="${escapeAttribute(course.href)}">
+        <img src="${escapeAttribute(course.image)}" alt="" loading="lazy" onerror="this.hidden=true">
+        <span class="home-course-tile-copy">
+          <strong>${escapeHtml(course.title)}</strong>
+        </span>
+      </a>
     `;
   }
+
+  sectionsRoot.innerHTML = `
+    <div class="home-course-grid" aria-label="Choose a course">
+      ${COURSES.map(renderCourseTile).join("")}
+    </div>
+    <section class="home-help-panel" aria-label="Help choosing a class">
+      <div>
+        <h3>Not sure which class you need?</h3>
+        <p>Send us the wording from your job, school, email, or form. We'll help you avoid choosing the wrong class.</p>
+      </div>
+      <div class="home-help-actions">
+        <a class="button primary" href="/request_group_session.html">Help me choose</a>
+        <a class="button secondary" href="/group-training.html">Training for a group or workplace</a>
+        <a class="button secondary" href="tel:9103955193">Call 910-395-5193</a>
+      </div>
+    </section>
+  `;
 
   function escapeHtml(value) {
     return String(value || "")
@@ -111,6 +100,4 @@
   function escapeAttribute(value) {
     return escapeHtml(value);
   }
-
-  sectionsRoot.innerHTML = PATHWAYS.map(renderPathway).join("");
 })();
