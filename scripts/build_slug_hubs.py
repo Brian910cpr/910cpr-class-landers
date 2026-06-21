@@ -2261,10 +2261,10 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
             "copy": "A focused CPR/AED path for people who do not need the first aid module. It reinforces adult and child choking response and why breaths may matter in opioid-related respiratory arrest.",
         },
         {
-            "href": "#hs-fa-cpr-aed-ip",
+            "href": "/request_group_session.html?program=Heartsaver%20First%20Aid",
             "image": "images/HS-FA.jpeg",
-            "title": "Heartsaver First Aid CPR AED",
-            "copy": "The broad workplace/community First Aid CPR AED path, with in-person and blended options shown below when available.",
+            "title": "Heartsaver First Aid",
+            "copy": "First aid only, without CPR or AED. This course focuses on recognizing and responding to common injuries and illnesses such as bleeding, burns, allergic reactions, fainting, seizures, heat illness, and other everyday emergencies.",
         },
         {
             "href": "#hs-pediatric-ip",
