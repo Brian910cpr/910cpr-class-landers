@@ -534,6 +534,73 @@ def render_classes_finder_index(
     date_select_options = "\n".join([option_html("", "All dates")] + [option_html(value, label) for value, label in date_options])
     location_select_options = "\n".join([option_html("", "All locations")] + [option_html(location, location) for location in location_options])
 
+    category_cards = [
+        {
+            "title": "Healthcare Provider",
+            "description": "For nursing, dental, EMT, clinical, and healthcare job or school requirements.",
+            "image": "/images/nurse%20doing%20CPR.jpg",
+            "href": "/bls.html",
+            "action": "Find healthcare classes",
+            "common": ["BLS", "ACLS", "PALS"],
+        },
+        {
+            "title": "Workplace / Daycare / Coach",
+            "description": "For workplace safety, childcare, coaching, school, camp, and first aid requirements.",
+            "image": "/images/HS-FA-CPR-AED.jpeg",
+            "href": "/heartsaver.html",
+            "action": "Find workplace classes",
+            "common": ["First Aid CPR AED", "Pediatric", "Family & Friends"],
+        },
+        {
+            "title": "American Red Cross",
+            "description": "Use this path when your requirement specifically says American Red Cross.",
+            "image": "/images/bystanderAED_JPEG.jpg",
+            "href": "/arc.html",
+            "action": "Find Red Cross options",
+            "common": ["ARC BLS", "ARC First Aid CPR AED"],
+        },
+        {
+            "title": "HSI Required",
+            "description": "For employers or programs asking for Health & Safety Institute training.",
+            "image": "/images/4_cards_.jpg",
+            "href": "/hsi.html",
+            "action": "Find HSI options",
+            "common": ["HSI CPR AED", "HSI First Aid CPR AED"],
+        },
+        {
+            "title": "USCG / Maritime",
+            "description": "For maritime, captain, vessel, and USCG-aligned first aid and CPR needs.",
+            "image": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Cdefs%3E%3ClinearGradient id='s' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23dff3ff'/%3E%3Cstop offset='1' stop-color='%23f8fbff'/%3E%3C/linearGradient%3E%3ClinearGradient id='w' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%230f5e9c'/%3E%3Cstop offset='1' stop-color='%2338bdf8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='640' height='360' fill='url(%23s)'/%3E%3Ccircle cx='520' cy='78' r='42' fill='%23facc15' opacity='.85'/%3E%3Cpath d='M0 250c58-28 110-28 168 0s110 28 168 0 110-28 168 0 88 30 136 6v104H0z' fill='url(%23w)'/%3E%3Cpath d='M72 228h398l-54 74H140z' fill='%230f172a'/%3E%3Cpath d='M138 168h196l58 60H104z' fill='%23fff' stroke='%230f172a' stroke-width='8' stroke-linejoin='round'/%3E%3Cpath d='M188 126h96v42h-96z' fill='%230f5e9c'/%3E%3Cpath d='M388 112h80v92h-80z' fill='%23fff' stroke='%230f172a' stroke-width='7' rx='10'/%3E%3Cpath d='M424 132v52M398 158h52' stroke='%23dc2626' stroke-width='16' stroke-linecap='round'/%3E%3Cpath d='M166 198h42M238 198h42M310 198h42' stroke='%230f5e9c' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M28 300c48-18 86-18 134 0s86 18 134 0 86-18 134 0 86 18 134 0' fill='none' stroke='%23e0f2fe' stroke-width='12' stroke-linecap='round' opacity='.9'/%3E%3C/svg%3E",
+            "href": "/uscg-elementary-first-aid-cpr.html",
+            "action": "Find maritime classes",
+            "common": ["USCG Elementary First Aid CPR AED"],
+        },
+        {
+            "title": "Not Sure What I Need",
+            "description": "Start here if your job, school, employer, or licensing board gave unclear wording.",
+            "image": "/images/confused-frustrated.png",
+            "href": "/group-training.html",
+            "action": "Get help choosing",
+            "common": ["Requirement help", "Group training", "Private classes"],
+        },
+    ]
+    category_cards_html = []
+    for card in category_cards:
+        common_html = "".join(f"<li>{html_escape(item)}</li>" for item in card["common"])
+        category_cards_html.append(
+            f"""
+<article class="class-category-card">
+  <img src="{html_escape(card["image"])}" alt="" loading="lazy">
+  <div class="class-category-copy">
+    <h2>{html_escape(card["title"])}</h2>
+    <p>{html_escape(card["description"])}</p>
+    <ul>{common_html}</ul>
+    <a class="class-category-action" href="{html_escape(card["href"])}">{html_escape(card["action"])}</a>
+  </div>
+</article>
+""".rstrip()
+        )
+
     result_cards = []
     for s in sessions:
         bits = []
@@ -578,14 +645,107 @@ def render_classes_finder_index(
 .class-finder-hero {
   border: 1px solid #dbe4ee;
   border-radius: 20px;
-  padding: 24px;
+  padding: 18px 20px;
   background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+.class-finder-hero h1 {
+  margin-bottom: 8px;
 }
 .class-finder-hero p {
   max-width: 760px;
   color: #475569;
-  font-size: 1.03rem;
+  font-size: 0.98rem;
+}
+.class-trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 14px 0 18px;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.92rem;
+}
+.class-trust-strip strong {
+  color: #0f172a;
+}
+.class-trust-strip .review-stars {
+  color: #f59e0b;
+  letter-spacing: 0.03em;
+}
+.class-category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 16px 0 20px;
+}
+.class-category-card {
+  overflow: hidden;
+  border: 1px solid #dbe4ee;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+  min-width: 0;
+}
+.class-category-card img {
+  display: block;
+  width: 100%;
+  height: 108px;
+  object-fit: cover;
+  background: #e2e8f0;
+}
+.class-category-copy {
+  padding: 13px;
+  min-width: 0;
+}
+.class-category-copy h2 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+.class-category-copy p {
+  margin: 0;
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+.class-category-copy ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.class-category-copy li {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.class-category-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #0f5e9c;
+  color: #ffffff;
+  font-weight: 800;
+  text-decoration: none;
+  font-size: 0.88rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 .class-filter-panel {
   display: grid;
@@ -690,6 +850,9 @@ def render_classes_finder_index(
   background: #f8fafc;
 }
 @media (max-width: 760px) {
+  .class-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .class-filter-panel {
     grid-template-columns: 1fr;
   }
@@ -706,7 +869,7 @@ def render_classes_finder_index(
 }
 @media (max-width: 640px) {
   .class-finder-hero {
-    padding: 16px;
+    padding: 14px;
     border-radius: 16px;
   }
   .class-finder-hero h1 {
@@ -715,6 +878,48 @@ def render_classes_finder_index(
   }
   .class-finder-hero p {
     font-size: 0.95rem;
+  }
+  .class-trust-strip {
+    margin: 10px 0 12px;
+    border-radius: 14px;
+    font-size: 0.84rem;
+  }
+  .class-category-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 12px 0 14px;
+  }
+  .class-category-card {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    border-radius: 14px;
+  }
+  .class-category-card img {
+    height: 100%;
+    min-height: 118px;
+  }
+  .class-category-copy {
+    padding: 9px;
+  }
+  .class-category-copy h2 {
+    font-size: 0.96rem;
+  }
+  .class-category-copy p {
+    font-size: 0.84rem;
+  }
+  .class-category-copy ul {
+    gap: 4px;
+    margin: 7px 0;
+  }
+  .class-category-copy li {
+    padding: 2px 6px;
+    font-size: 0.68rem;
+    line-height: 1.18;
+  }
+  .class-category-action {
+    min-height: 32px;
+    padding: 0 9px;
+    font-size: 0.8rem;
   }
   .class-filter-panel {
     gap: 10px;
@@ -858,6 +1063,16 @@ def render_classes_finder_index(
   <p class="course-eyebrow">Upcoming class finder</p>
   <h1>{html_escape(h1)}</h1>
   <p>{html_escape(intro)}</p>
+</section>
+
+<div class="class-trust-strip" aria-label="910CPR trust">
+  <span class="review-stars" aria-hidden="true">★★★★★</span>
+  <strong>Trusted by 450+ 5-star Google reviews</strong>
+  <span>Serving healthcare, workplace, school, childcare, and maritime training needs.</span>
+</div>
+
+<section class="class-category-grid" aria-label="Choose the right training path">
+  {''.join(category_cards_html)}
 </section>
 
 <section class="class-filter-panel" aria-label="Class filters">
@@ -1034,6 +1249,24 @@ body {{
 header, footer {{
   border-bottom: 1px solid #e5e7eb;
 }}
+header .wrap {{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}}
+.site-brand-link {{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}}
+.site-brand-logo {{
+  display: block;
+  width: 92px;
+  height: auto;
+}}
+.site-brand-wordmark {{
+  font-weight: 800;
+}}
 footer {{
   border-top: 1px solid #e5e7eb;
   border-bottom: 0;
@@ -1057,6 +1290,9 @@ ul {{
 }}
 .nav a {{
   margin-right: 12px;
+}}
+.nav {{
+  margin-top: 6px;
 }}
 .section {{
   margin-top: 28px;
@@ -1154,6 +1390,28 @@ ul {{
   color: #475569;
 }}
 @media (max-width: 760px) {{
+  header .wrap {{
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }}
+  .site-brand-logo {{
+    width: 46px;
+  }}
+  .site-brand-link {{
+    gap: 5px;
+  }}
+  .site-brand-wordmark {{
+    font-size: 0.84rem;
+  }}
+  .nav {{
+    margin-top: 0 !important;
+    line-height: 1.18;
+  }}
+  .nav a {{
+    display: inline-block;
+    margin-right: 8px;
+    margin-bottom: 2px;
+  }}
   .course-session-row {{
     grid-template-columns: 1fr;
   }}
