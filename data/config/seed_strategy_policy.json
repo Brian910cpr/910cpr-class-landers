@@ -7,7 +7,8 @@
     "BLS": 1,
     "Heartsaver": 1,
     "ACLS": 1,
-    "PALS": 1
+    "PALS": 1,
+    "HSI": 1
   },
   "required_seed_mix_by_date": {
     "BLS": {
@@ -27,12 +28,17 @@
       "count": 1,
       "required": false,
       "not_before": "13:00"
+    },
+    "HSI": {
+      "count": 1,
+      "required": false
     }
   },
   "avoid_same_start_time_per_date": true,
   "morning_friendly_families": [
     "BLS",
-    "Heartsaver"
+    "Heartsaver",
+    "HSI"
   ],
   "advanced_families": [
     "ACLS",
@@ -56,6 +62,7 @@
     "morning": [
       "BLS",
       "Heartsaver",
+      "HSI",
       "ACLS",
       "PALS"
     ],
@@ -63,11 +70,13 @@
       "ACLS",
       "PALS",
       "BLS",
-      "Heartsaver"
+      "Heartsaver",
+      "HSI"
     ],
     "evening": [
       "BLS",
       "Heartsaver",
+      "HSI",
       "ACLS",
       "PALS"
     ]
@@ -87,6 +96,11 @@
     ],
     "PALS": [
       "13:00"
+    ],
+    "HSI": [
+      "10:30",
+      "13:00",
+      "18:00"
     ]
   },
   "allow_multiple_course_variants_same_time": false,
@@ -95,6 +109,7 @@
   "course_title_priority_terms": [
     "BLS Provider",
     "Heartsaver First Aid CPR AED",
+    "HSI BLS + Adult First Aid",
     "PALS Provider",
     "ACLS Provider"
   ],

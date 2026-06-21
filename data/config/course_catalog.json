@@ -824,7 +824,7 @@
       "course_id": "445670",
       "course_key": "hsi_bls_adult_first_aid_blended",
       "official_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "short_title": "HSI BLS and Adult First Aid | Blended Learning",
+      "short_title": "HSI BLS + Adult First Aid",
       "provider": "HSI",
       "family": "HSI",
       "subtype": "BLS + First Aid",
@@ -832,14 +832,14 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 12,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
       "appointment_allowed": true,
       "deterministic_url_supported": "UNKNOWN",
-      "appointment_container_required": "UNKNOWN",
+      "appointment_container_required": true,
       "known_appointmentDayId_range": "UNKNOWN",
       "manual_only": "UNKNOWN",
       "online_only": "UNKNOWN",
@@ -851,15 +851,20 @@
         "UNKNOWN"
       ],
       "relationships": {
-        "compatible_with": "UNKNOWN",
+        "compatible_with": [
+          "AHA_BLS_HEARTCODE_SKILLS",
+          "ARC_BLS_SKILLS",
+          "HSI_BLS_SKILLS",
+          "HSI_FA_CPR_AED"
+        ],
         "satisfies": "UNKNOWN",
         "does_not_satisfy": "UNKNOWN",
-        "occupancy_pool": "UNKNOWN",
-        "escalation_tier": "UNKNOWN"
+        "occupancy_pool": "HSI_BLS_FA_SKILLS_POOL",
+        "escalation_tier": 2
       },
       "source_trace": {
         "identity_source": "data/config/course_map.json",
-        "scheduling_rule_source": "UNKNOWN",
+        "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
       }

@@ -115,10 +115,19 @@ TITLE_OVERRIDES: dict[str, dict[str, str]] = {
         "clarifier": "The online pediatric course may be purchased separately if needed.",
     },
     "445670": {
-        "title": "HSI BLS and Adult First Aid Skills Session",
+        "title": "HSI BLS + Adult First Aid",
         "subtitle": "For students completing the blended online course before skills testing",
         "price_label": "Skills session from ${price:.2f}",
-        "clarifier": "The online HSI course may be separate if not already included in your registration.",
+        "clarifier": "Complete the assigned online course before your 30-60 minute in-person skills session.",
+        "content_html": (
+            "<p><strong>HSI BLS and Adult First Aid &ndash; Blended Learning</strong></p>"
+            "<p>This blended learning course combines HSI Basic Life Support (BLS) and Adult First Aid/CPR/AED into one certification. Students complete the online coursework first, then attend a brief in-person skills session with an authorized HSI instructor.</p>"
+            "<p><strong>Step 1:</strong> Complete the assigned online course.<br /> <strong>Step 2:</strong> Attend a 30&ndash;60 minute in-person skills session.</p>"
+            "<p>This course is often a strong fit for workplaces, medical or dental offices, ABA providers, and other organizations that need both BLS and First Aid coverage in one program.</p>"
+            "<p><strong>Certification:</strong> HSI certification issued upon successful completion and valid for two years.</p>"
+            "<p><strong>Important:</strong> The online portion must be completed before your in-person skills session. The blended course link is non-refundable once issued.</p>"
+            "<p>HSI&reg; is a registered trademark of Health &amp; Safety Institute. 910CPR is an authorized provider offering blended learning and in-person HSI courses.</p>"
+        ),
     },
     "448630": {
         "title": "HSI BLS Skills Session",
@@ -515,6 +524,11 @@ def build_session_blocks(course: dict[str, Any], sessions: list[dict[str, Any]])
 
 
 def build_body_html(course: dict[str, Any]) -> str:
+    course_id = safe_text(course.get("course_id")).strip()
+    override = TITLE_OVERRIDES.get(course_id, {})
+    override_html = safe_text(override.get("content_html")).strip()
+    if override_html:
+        return override_html
     for key in ("lander_html", "raw_enrollware_html", "original_html"):
         value = safe_text(course.get(key)).strip()
         if value:

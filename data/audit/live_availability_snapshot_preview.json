@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-19T17:21:22.064786-04:00",
+  "generated_at": "2026-06-21T02:56:40.374531-04:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -236,6 +236,7 @@
       "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "allowed_course_families": [
         "BLS",
+        "HSI",
         "Heartsaver",
         "USCG"
       ],
@@ -263,6 +264,7 @@
       "location_name": "CVS\\, 4600 Oleander Dr\\, Wilmington\\, NC 28403\\, USA",
       "allowed_course_families": [
         "BLS",
+        "HSI",
         "Heartsaver",
         "USCG"
       ],
@@ -290,6 +292,7 @@
       "location_name": "Wilmington International Airport\\, 1740 Airport Blvd\\, Wilmington\\, NC 28405\\, USA",
       "allowed_course_families": [
         "BLS",
+        "HSI",
         "Heartsaver",
         "USCG"
       ],
@@ -340,6 +343,7 @@
       "location_name": "4902 Merlot Crt\\nWilmington\\nNC\\n28409\\nUSA",
       "allowed_course_families": [
         "BLS",
+        "HSI",
         "Heartsaver",
         "USCG"
       ],
@@ -367,6 +371,7 @@
       "location_name": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
       "allowed_course_families": [
         "BLS",
+        "HSI",
         "Heartsaver",
         "USCG"
       ],

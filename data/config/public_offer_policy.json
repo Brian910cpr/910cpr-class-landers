@@ -1,7 +1,9 @@
 {
   "schema_version": "0.1",
   "description": "Read-only public sellability policy for filtering dynamic offer previews. This config does not publish offers, create appointments, or change Enrollware behavior.",
-  "enabled_course_ids": [],
+  "enabled_course_ids": [
+    "445670"
+  ],
   "disabled_course_ids": [],
   "enabled_course_families": [
     "BLS",

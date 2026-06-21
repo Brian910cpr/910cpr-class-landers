@@ -674,20 +674,20 @@
         },
         {
           "id": "hsi-bls-fa",
-          "label": "HSI BLS With First Aid",
+          "label": "HSI BLS + Adult First Aid",
           "tab_badge": "BLS + First Aid",
           "tab_icon": "/images/tab_classroom.png",
-          "program": "HSI BLS With First Aid",
-          "description": "A combined HSI path for students who need BLS plus first aid in the same certification cycle.",
+          "program": "HSI BLS + Adult First Aid",
+          "description": "Blended learning for students who need both HSI BLS and Adult First Aid/CPR/AED. Complete the online portion first, then attend a short in-person skills session.",
           "card_image": "/images/0hsi.png",
           "category_chips": [
             "BLS",
             "First Aid"
           ],
           "ecosystem_points": [
-            "For workers who need BLS and first aid aligned in the same renewal cycle.",
-            "Good fit for industrial, safety, and workplace teams with mixed requirements.",
-            "Call/text support can coordinate dates when public inventory is not listed."
+            "For workplaces, medical or dental offices, ABA providers, and organizations that need both BLS and First Aid coverage.",
+            "Complete the assigned online course first, then attend a 30-60 minute in-person skills session.",
+            "HSI certification is issued after successful completion and is valid for two years."
           ],
           "certifying_bodies": [
             "HSI",
@@ -698,14 +698,19 @@
             "Basic Life Support (BLS) with Adult First Aid",
             "BLS with Adult First Aid",
             "BLS With First Aid",
-            "HSI BLS First Aid"
+            "HSI BLS First Aid",
+            "HSI BLS and Adult First Aid",
+            "BLS & Adult First Aid",
+            "HSI BLS First Aid blended",
+            "HSI BLS + First Aid",
+            "HSI BLS and Adult First Aid | Blended Learning"
           ],
           "exclude_name_contains": [
             "Instructor"
           ],
-          "full_schedule_url": "/hsi.html",
-          "full_schedule_label": "Call/text 910-395-5193 for HSI BLS with First Aid dates",
-          "primary_cta_label": "Review HSI BLS + First Aid",
+          "full_schedule_url": "/courses/bls-first-aid-combo.html",
+          "full_schedule_label": "See HSI BLS + First Aid dates",
+          "primary_cta_label": "See HSI BLS + First Aid dates",
           "secondary_cta_label": "Ask about combo dates"
         },
         {

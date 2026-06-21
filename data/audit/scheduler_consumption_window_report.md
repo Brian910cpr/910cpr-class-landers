@@ -4,8 +4,8 @@ Read-only audit. Lander scheduling uses course duration plus setup/cleanup buffe
 
 ## Summary
 
-- Offers with scheduler consumption windows: 640
-- Warnings where appointment display is shorter than scheduler consumption: 640
+- Offers with scheduler consumption windows: 856
+- Warnings where appointment display is shorter than scheduler consumption: 856
 - Default setup buffer minutes: 15
 - Default cleanup buffer minutes: 30
 

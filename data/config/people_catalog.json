@@ -827,6 +827,16 @@
           "source_column": "BLS",
           "source_row": 16,
           "observed_value": "✓"
+        },
+        {
+          "certification_code": "HSI_INSTRUCTOR",
+          "provider": "HSI",
+          "family": "HSI",
+          "expiration_date": "UNKNOWN",
+          "source": "Brian confirmed in Codex thread",
+          "source_column": "manual_confirmation",
+          "source_row": "UNKNOWN",
+          "observed_value": "Brian is an HSI Instructor"
         }
       ],
       "source": {

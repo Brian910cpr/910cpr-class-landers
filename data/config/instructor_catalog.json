@@ -41,17 +41,17 @@
       "active": true,
       "certifications": [
         {
-          "certification_code": "UNKNOWN",
-          "provider": "UNKNOWN",
-          "family": "UNKNOWN",
+          "certification_code": "HSI_INSTRUCTOR",
+          "provider": "HSI",
+          "family": "HSI",
           "expiration_date": "UNKNOWN",
-          "source": "data/inventory/instructor_availability.json",
-          "notes": "Exact instructor certification is not confirmed by local config/data."
+          "source": "Brian confirmed in Codex thread",
+          "notes": "Brian manually confirmed he is an HSI Instructor."
         }
       ],
-      "certification_code": "UNKNOWN",
-      "provider": "UNKNOWN",
-      "family": "UNKNOWN",
+      "certification_code": "HSI_INSTRUCTOR",
+      "provider": "HSI",
+      "family": "HSI",
       "can_teach_course_ids": [],
       "can_teach_course_families": [
         "ACLS",
@@ -139,6 +139,7 @@
       "can_teach_course_families": [
         "ACLS",
         "BLS",
+        "HSI",
         "Heartsaver",
         "PALS",
         "USCG"
@@ -149,7 +150,7 @@
         "data/inventory/appointment_containers.json",
         "data/inventory/instructor_availability.json"
       ],
-      "notes": "Local availability lists certification ceiling ACLS_PALS; exact instructor certification codes are not confirmed here. Confirmed appointment container shipyard_brian_continuous_20260621_20270430 is tied to this instructor; exact certification codes are not stated in the container. Calendar source brian_do_not_schedule is declared for this instructor; no certification code is declared."
+      "notes": "Local availability lists certification ceiling ACLS_PALS. Confirmed appointment container shipyard_brian_continuous_20260621_20270430 is tied to this instructor. Brian manually confirmed HSI_INSTRUCTOR in the Codex thread."
     },
     {
       "instructor_id": "n___tripp",

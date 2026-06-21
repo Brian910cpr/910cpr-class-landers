@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-19T16:58:41.021363-04:00",
+  "generated_at": "2026-06-21T03:02:23.392081-04:00",
   "report_only": true,
   "public_behavior_changed": false,
-  "source_mode": "live",
+  "source_mode": "auto",
   "inputs": {
     "current_enrollware_source": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
     "current_enrollware_source_available": true,
-    "current_enrollware_generated_at": "2026-06-19T13:33:23.155960-04:00",
+    "current_enrollware_generated_at": "2026-06-20T16:10:17.956423-04:00",
     "publishable_seed_pipeline": "scripts/build_publishable_seed_candidates.py",
     "seo_hubs": "E:\\GitHub\\910cpr-class-landers\\data\\config\\seo_hubs.json",
     "slug_hubs": "E:\\GitHub\\910cpr-class-landers\\data\\config\\slug_hubs.json",
@@ -27,8 +27,8 @@
   "summary": {
     "hubs_checked": 10,
     "hubs_with_current_enrollware_classes": 8,
-    "hubs_with_approved_seed_offers": 0,
-    "hubs_with_needs_review_seed_offers": 0,
+    "hubs_with_approved_seed_offers": 3,
+    "hubs_with_needs_review_seed_offers": 5,
     "hubs_empty": 2,
     "suppressed_cutoff_window": 0,
     "current_enrollware_classes_suppressed_by_cutoff": 0,
@@ -46,10 +46,13 @@
       "show_request_class_cta": 1
     },
     "suppressed_offers_by_reason": {},
-    "seed_display_item_counts": {},
-    "current_enrollware_classes_matched_to_hubs": 822,
-    "approved_seed_offers_matched_to_hubs": 0,
-    "needs_review_seed_offers_matched_to_hubs": 0
+    "seed_display_item_counts": {
+      "appointment_seed_offer": 24,
+      "needs_review_seed_offer": 8
+    },
+    "current_enrollware_classes_matched_to_hubs": 730,
+    "approved_seed_offers_matched_to_hubs": 24,
+    "needs_review_seed_offers_matched_to_hubs": 8
   },
   "hubs": [
     {
@@ -82,7 +85,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 67.52
+          "hours_until_start": 33.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -106,7 +109,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 67.52
+          "hours_until_start": 33.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -130,7 +133,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 73.27
+          "hours_until_start": 39.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -154,7 +157,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 87.52
+          "hours_until_start": 53.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -178,7 +181,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 90.77
+          "hours_until_start": 56.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -202,7 +205,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 91.52
+          "hours_until_start": 57.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -226,7 +229,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 96.52
+          "hours_until_start": 62.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -250,7 +253,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 121.77
+          "hours_until_start": 87.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -274,7 +277,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 121.77
+          "hours_until_start": 87.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -298,7 +301,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 138.77
+          "hours_until_start": 104.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -322,7 +325,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 144.52
+          "hours_until_start": 110.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -346,7 +349,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 159.52
+          "hours_until_start": 125.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -370,7 +373,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 163.52
+          "hours_until_start": 129.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -394,7 +397,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 163.52
+          "hours_until_start": 129.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -418,7 +421,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 186.77
+          "hours_until_start": 152.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -442,7 +445,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 187.52
+          "hours_until_start": 153.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -466,7 +469,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 187.52
+          "hours_until_start": 153.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -490,7 +493,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 193.27
+          "hours_until_start": 159.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -514,7 +517,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 193.27
+          "hours_until_start": 159.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -538,7 +541,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 232.27
+          "hours_until_start": 198.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -562,7 +565,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 232.27
+          "hours_until_start": 198.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -586,7 +589,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 235.52
+          "hours_until_start": 201.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -610,7 +613,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 235.52
+          "hours_until_start": 201.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -634,7 +637,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 241.27
+          "hours_until_start": 207.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -658,29 +661,403 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 241.27
+          "hours_until_start": 207.21
         }
       ],
-      "current_enrollware_class_count": 153,
+      "current_enrollware_class_count": 141,
       "cutoff_suppressed_current_enrollware_classes": [],
       "cutoff_suppressed_current_enrollware_class_count": 0,
-      "approved_seed_offers": [],
-      "approved_seed_offer_count": 0,
-      "needs_review_seed_offers": [],
-      "needs_review_seed_offer_count": 0,
+      "approved_seed_offers": [
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_f7b314e904b117e2",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-03T13:00:00-04:00",
+          "end_datetime": "2026-08-03T16:00:00-04:00",
+          "date": "2026-08-03",
+          "start_time": "1:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_initial",
+          "appointment_registration_target": "enrollware_aha_bls_initial",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
+          "appointmentDayId": 260713,
+          "courseId": "209806",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_a551b998a0e43e79",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-03T09:00:00-04:00",
+          "end_datetime": "2026-08-03T12:00:00-04:00",
+          "date": "2026-08-03",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
+          "appointmentDayId": 260713,
+          "courseId": "359474",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_7457baba994578af",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-04T13:00:00-04:00",
+          "end_datetime": "2026-08-04T16:00:00-04:00",
+          "date": "2026-08-04",
+          "start_time": "1:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_initial",
+          "appointment_registration_target": "enrollware_aha_bls_initial",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714",
+          "appointmentDayId": 260714,
+          "courseId": "209806",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_39f23793bbafaecc",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-04T09:00:00-04:00",
+          "end_datetime": "2026-08-04T12:00:00-04:00",
+          "date": "2026-08-04",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714",
+          "appointmentDayId": 260714,
+          "courseId": "359474",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_90b2c2b9dca23c00",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-05T13:00:00-04:00",
+          "end_datetime": "2026-08-05T16:00:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "1:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_initial",
+          "appointment_registration_target": "enrollware_aha_bls_initial",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715",
+          "appointmentDayId": 260715,
+          "courseId": "209806",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_1d709168122a2cc9",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-05T09:00:00-04:00",
+          "end_datetime": "2026-08-05T12:00:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715",
+          "appointmentDayId": 260715,
+          "courseId": "359474",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_fc18968e3964df75",
+          "course_key": "aha_bls_heartcode_skills",
+          "course_title": "AHA BLS HeartCode Skills",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-06T09:00:00-04:00",
+          "end_datetime": "2026-08-06T10:00:00-04:00",
+          "date": "2026-08-06",
+          "start_time": "9:00 AM",
+          "end_time": "10:00 AM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260716",
+          "appointmentDayId": 260716,
+          "courseId": "210549",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_23051f2c66637ac9",
+          "course_key": "aha_bls_heartcode_skills",
+          "course_title": "AHA BLS HeartCode Skills",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-07T09:00:00-04:00",
+          "end_datetime": "2026-08-07T12:00:00-04:00",
+          "date": "2026-08-07",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260717",
+          "appointmentDayId": 260717,
+          "courseId": "210549",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        }
+      ],
+      "approved_seed_offer_count": 8,
+      "needs_review_seed_offers": [
+        {
+          "display_item_type": "needs_review_seed_offer",
+          "public_display_item_type": "needs_review_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_8db3493d37758377",
+          "course_key": "aha_bls_heartcode_skills",
+          "course_title": "AHA BLS HeartCode Skills",
+          "instructor_key": "nick",
+          "start_datetime": "2026-08-05T11:00:00-04:00",
+          "end_datetime": "2026-08-05T12:00:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "11:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_url": null,
+          "appointmentDayId": null,
+          "courseId": "210549",
+          "approval_status": "needs_review",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "missing_from_enrollware",
+          "public_ready": false,
+          "public_ready_block_reason": "missing appointment registration URL",
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": null,
+          "calendar_source_mode": "explicit_availability",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Appointment seed offer exists but objective auto-public rules did not all pass.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "needs_review_seed_offer",
+          "public_display_item_type": "needs_review_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_99a39ce1521a1dad",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "nick",
+          "start_datetime": "2026-08-05T09:00:00-04:00",
+          "end_datetime": "2026-08-05T10:30:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "9:00 AM",
+          "end_time": "10:30 AM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": null,
+          "appointmentDayId": null,
+          "courseId": "359474",
+          "approval_status": "needs_review",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "missing_from_enrollware",
+          "public_ready": false,
+          "public_ready_block_reason": "missing appointment registration URL",
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": null,
+          "calendar_source_mode": "explicit_availability",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Appointment seed offer exists but objective auto-public rules did not all pass.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        }
+      ],
+      "needs_review_seed_offer_count": 2,
       "blocked_suppressed_seed_offers": [],
       "blocked_suppressed_seed_offer_count": 0,
       "would_appear_empty": false,
       "fallback_message_if_empty": null,
       "has_current_enrollware_classes": true,
-      "has_approved_seed_offers": false,
-      "has_needs_review_seed_offers": false,
+      "has_approved_seed_offers": true,
+      "has_needs_review_seed_offers": true,
       "empty_state_type": "show_current_classes",
       "empty_state_headline": "Current classes available",
       "empty_state_body": "Show current Enrollware-backed class/session offers for this hub.",
       "recommended_cta_label": "View available classes",
       "recommended_cta_target": "existing_hub_schedule_block",
-      "caution_flags": []
+      "caution_flags": [
+        "needs_review_seed_offers_exist"
+      ]
     },
     {
       "hub_key": "bls_healthcare_provider_wilmington",
@@ -712,7 +1089,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 67.52
+          "hours_until_start": 33.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -736,7 +1113,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 67.52
+          "hours_until_start": 33.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -760,7 +1137,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 73.27
+          "hours_until_start": 39.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -784,7 +1161,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 87.52
+          "hours_until_start": 53.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -808,7 +1185,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 90.77
+          "hours_until_start": 56.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -832,7 +1209,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 91.52
+          "hours_until_start": 57.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -856,7 +1233,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 96.52
+          "hours_until_start": 62.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -880,7 +1257,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 121.77
+          "hours_until_start": 87.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -904,7 +1281,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 121.77
+          "hours_until_start": 87.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -928,7 +1305,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 138.77
+          "hours_until_start": 104.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -952,7 +1329,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 144.52
+          "hours_until_start": 110.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -976,7 +1353,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 159.52
+          "hours_until_start": 125.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1000,7 +1377,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 163.52
+          "hours_until_start": 129.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1024,7 +1401,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 163.52
+          "hours_until_start": 129.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1048,7 +1425,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 186.77
+          "hours_until_start": 152.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1072,7 +1449,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 187.52
+          "hours_until_start": 153.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1096,7 +1473,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 187.52
+          "hours_until_start": 153.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1120,7 +1497,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 193.27
+          "hours_until_start": 159.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1144,7 +1521,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 193.27
+          "hours_until_start": 159.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1168,7 +1545,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 232.27
+          "hours_until_start": 198.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1192,7 +1569,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 232.27
+          "hours_until_start": 198.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1216,7 +1593,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 235.52
+          "hours_until_start": 201.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1240,7 +1617,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 235.52
+          "hours_until_start": 201.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1264,7 +1641,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 241.27
+          "hours_until_start": 207.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1288,29 +1665,403 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 241.27
+          "hours_until_start": 207.21
         }
       ],
-      "current_enrollware_class_count": 153,
+      "current_enrollware_class_count": 141,
       "cutoff_suppressed_current_enrollware_classes": [],
       "cutoff_suppressed_current_enrollware_class_count": 0,
-      "approved_seed_offers": [],
-      "approved_seed_offer_count": 0,
-      "needs_review_seed_offers": [],
-      "needs_review_seed_offer_count": 0,
+      "approved_seed_offers": [
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_f7b314e904b117e2",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-03T13:00:00-04:00",
+          "end_datetime": "2026-08-03T16:00:00-04:00",
+          "date": "2026-08-03",
+          "start_time": "1:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_initial",
+          "appointment_registration_target": "enrollware_aha_bls_initial",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
+          "appointmentDayId": 260713,
+          "courseId": "209806",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_a551b998a0e43e79",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-03T09:00:00-04:00",
+          "end_datetime": "2026-08-03T12:00:00-04:00",
+          "date": "2026-08-03",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
+          "appointmentDayId": 260713,
+          "courseId": "359474",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_7457baba994578af",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-04T13:00:00-04:00",
+          "end_datetime": "2026-08-04T16:00:00-04:00",
+          "date": "2026-08-04",
+          "start_time": "1:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_initial",
+          "appointment_registration_target": "enrollware_aha_bls_initial",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714",
+          "appointmentDayId": 260714,
+          "courseId": "209806",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_39f23793bbafaecc",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-04T09:00:00-04:00",
+          "end_datetime": "2026-08-04T12:00:00-04:00",
+          "date": "2026-08-04",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714",
+          "appointmentDayId": 260714,
+          "courseId": "359474",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_90b2c2b9dca23c00",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-05T13:00:00-04:00",
+          "end_datetime": "2026-08-05T16:00:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "1:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_initial",
+          "appointment_registration_target": "enrollware_aha_bls_initial",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715",
+          "appointmentDayId": 260715,
+          "courseId": "209806",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_1d709168122a2cc9",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-05T09:00:00-04:00",
+          "end_datetime": "2026-08-05T12:00:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715",
+          "appointmentDayId": 260715,
+          "courseId": "359474",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_fc18968e3964df75",
+          "course_key": "aha_bls_heartcode_skills",
+          "course_title": "AHA BLS HeartCode Skills",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-06T09:00:00-04:00",
+          "end_datetime": "2026-08-06T10:00:00-04:00",
+          "date": "2026-08-06",
+          "start_time": "9:00 AM",
+          "end_time": "10:00 AM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260716",
+          "appointmentDayId": 260716,
+          "courseId": "210549",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_23051f2c66637ac9",
+          "course_key": "aha_bls_heartcode_skills",
+          "course_title": "AHA BLS HeartCode Skills",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-07T09:00:00-04:00",
+          "end_datetime": "2026-08-07T12:00:00-04:00",
+          "date": "2026-08-07",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260717",
+          "appointmentDayId": 260717,
+          "courseId": "210549",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        }
+      ],
+      "approved_seed_offer_count": 8,
+      "needs_review_seed_offers": [
+        {
+          "display_item_type": "needs_review_seed_offer",
+          "public_display_item_type": "needs_review_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_8db3493d37758377",
+          "course_key": "aha_bls_heartcode_skills",
+          "course_title": "AHA BLS HeartCode Skills",
+          "instructor_key": "nick",
+          "start_datetime": "2026-08-05T11:00:00-04:00",
+          "end_datetime": "2026-08-05T12:00:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "11:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_url": null,
+          "appointmentDayId": null,
+          "courseId": "210549",
+          "approval_status": "needs_review",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "missing_from_enrollware",
+          "public_ready": false,
+          "public_ready_block_reason": "missing appointment registration URL",
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": null,
+          "calendar_source_mode": "explicit_availability",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Appointment seed offer exists but objective auto-public rules did not all pass.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "needs_review_seed_offer",
+          "public_display_item_type": "needs_review_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_99a39ce1521a1dad",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "nick",
+          "start_datetime": "2026-08-05T09:00:00-04:00",
+          "end_datetime": "2026-08-05T10:30:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "9:00 AM",
+          "end_time": "10:30 AM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": null,
+          "appointmentDayId": null,
+          "courseId": "359474",
+          "approval_status": "needs_review",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "missing_from_enrollware",
+          "public_ready": false,
+          "public_ready_block_reason": "missing appointment registration URL",
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": null,
+          "calendar_source_mode": "explicit_availability",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Appointment seed offer exists but objective auto-public rules did not all pass.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        }
+      ],
+      "needs_review_seed_offer_count": 2,
       "blocked_suppressed_seed_offers": [],
       "blocked_suppressed_seed_offer_count": 0,
       "would_appear_empty": false,
       "fallback_message_if_empty": null,
       "has_current_enrollware_classes": true,
-      "has_approved_seed_offers": false,
-      "has_needs_review_seed_offers": false,
+      "has_approved_seed_offers": true,
+      "has_needs_review_seed_offers": true,
       "empty_state_type": "show_current_classes",
       "empty_state_headline": "Current classes available",
       "empty_state_body": "Show current Enrollware-backed class/session offers for this hub.",
       "recommended_cta_label": "View available classes",
       "recommended_cta_target": "existing_hub_schedule_block",
-      "caution_flags": []
+      "caution_flags": [
+        "needs_review_seed_offers_exist"
+      ]
     },
     {
       "hub_key": "acls",
@@ -1320,30 +2071,6 @@
       "active": true,
       "course_key": null,
       "current_enrollware_classes": [
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12774031",
-          "course_key": "aha_acls_heartcode_skills",
-          "course_title": "AHA ACLS HeartCode",
-          "course_id": "209811",
-          "course_code_hint": "AHA_ACLS_HEARTCODE",
-          "start_datetime": "2026-06-22T08:30:00-04:00",
-          "end_datetime": "2026-06-22T09:15:00-04:00",
-          "date": "2026-06-22",
-          "start_time": "8:30 AM",
-          "end_time": "9:15 AM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 63.52
-        },
         {
           "display_item_type": "current_enrollware_class",
           "session_id": "13472467",
@@ -1366,7 +2093,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 69.02
+          "hours_until_start": 34.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1390,7 +2117,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 69.02
+          "hours_until_start": 34.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1414,7 +2141,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 93.02
+          "hours_until_start": 58.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1438,7 +2165,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 93.02
+          "hours_until_start": 58.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1462,7 +2189,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 165.02
+          "hours_until_start": 130.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1486,7 +2213,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 165.02
+          "hours_until_start": 130.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1510,7 +2237,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 183.52
+          "hours_until_start": 149.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1534,31 +2261,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 231.52
-        },
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12774089",
-          "course_key": "aha_acls_heartcode_skills",
-          "course_title": "AHA ACLS HeartCode",
-          "course_id": "209811",
-          "course_code_hint": "AHA_ACLS_HEARTCODE",
-          "start_datetime": "2026-07-01T08:30:00-04:00",
-          "end_datetime": "2026-07-01T09:15:00-04:00",
-          "date": "2026-07-01",
-          "start_time": "8:30 AM",
-          "end_time": "9:15 AM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 279.52
+          "hours_until_start": 197.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1582,7 +2285,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 351.52
+          "hours_until_start": 317.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1606,31 +2309,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 399.52
-        },
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12774090",
-          "course_key": "aha_acls_heartcode_skills",
-          "course_title": "AHA ACLS HeartCode",
-          "course_id": "209811",
-          "course_code_hint": "AHA_ACLS_HEARTCODE",
-          "start_datetime": "2026-07-08T08:30:00-04:00",
-          "end_datetime": "2026-07-08T09:15:00-04:00",
-          "date": "2026-07-08",
-          "start_time": "8:30 AM",
-          "end_time": "9:15 AM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 447.52
+          "hours_until_start": 365.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1654,7 +2333,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 519.52
+          "hours_until_start": 485.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1678,31 +2357,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 567.52
-        },
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12774091",
-          "course_key": "aha_acls_heartcode_skills",
-          "course_title": "AHA ACLS HeartCode",
-          "course_id": "209811",
-          "course_code_hint": "AHA_ACLS_HEARTCODE",
-          "start_datetime": "2026-07-15T08:30:00-04:00",
-          "end_datetime": "2026-07-15T09:15:00-04:00",
-          "date": "2026-07-15",
-          "start_time": "8:30 AM",
-          "end_time": "9:15 AM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 615.52
+          "hours_until_start": 533.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1726,7 +2381,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 687.52
+          "hours_until_start": 653.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1750,31 +2405,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 735.52
-        },
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12774092",
-          "course_key": "aha_acls_heartcode_skills",
-          "course_title": "AHA ACLS HeartCode",
-          "course_id": "209811",
-          "course_code_hint": "AHA_ACLS_HEARTCODE",
-          "start_datetime": "2026-07-22T08:30:00-04:00",
-          "end_datetime": "2026-07-22T09:15:00-04:00",
-          "date": "2026-07-22",
-          "start_time": "8:30 AM",
-          "end_time": "9:15 AM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 783.52
+          "hours_until_start": 701.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1798,7 +2429,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 855.52
+          "hours_until_start": 821.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1822,31 +2453,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 903.52
-        },
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12774093",
-          "course_key": "aha_acls_heartcode_skills",
-          "course_title": "AHA ACLS HeartCode",
-          "course_id": "209811",
-          "course_code_hint": "AHA_ACLS_HEARTCODE",
-          "start_datetime": "2026-07-29T08:30:00-04:00",
-          "end_datetime": "2026-07-29T09:15:00-04:00",
-          "date": "2026-07-29",
-          "start_time": "8:30 AM",
-          "end_time": "9:15 AM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 951.52
+          "hours_until_start": 869.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -1870,29 +2477,69 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 1242.52
+          "hours_until_start": 1208.46
         }
       ],
-      "current_enrollware_class_count": 23,
+      "current_enrollware_class_count": 17,
       "cutoff_suppressed_current_enrollware_classes": [],
       "cutoff_suppressed_current_enrollware_class_count": 0,
       "approved_seed_offers": [],
       "approved_seed_offer_count": 0,
-      "needs_review_seed_offers": [],
-      "needs_review_seed_offer_count": 0,
+      "needs_review_seed_offers": [
+        {
+          "display_item_type": "needs_review_seed_offer",
+          "public_display_item_type": "needs_review_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_bf300a7015f05101",
+          "course_key": "aha_acls_heartcode_skills",
+          "course_title": "ACLS HeartCode Skills",
+          "instructor_key": "amy",
+          "start_datetime": "2026-08-04T13:30:00-04:00",
+          "end_datetime": "2026-08-04T14:30:00-04:00",
+          "date": "2026-08-04",
+          "start_time": "1:30 PM",
+          "end_time": "2:30 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_acls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_acls_heartcode_skills",
+          "appointment_registration_url": null,
+          "appointmentDayId": null,
+          "courseId": "209811",
+          "approval_status": "needs_review",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "missing_from_enrollware",
+          "public_ready": false,
+          "public_ready_block_reason": "missing appointment registration URL",
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": null,
+          "calendar_source_mode": "explicit_availability",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Appointment seed offer exists but objective auto-public rules did not all pass.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        }
+      ],
+      "needs_review_seed_offer_count": 1,
       "blocked_suppressed_seed_offers": [],
       "blocked_suppressed_seed_offer_count": 0,
       "would_appear_empty": false,
       "fallback_message_if_empty": null,
       "has_current_enrollware_classes": true,
       "has_approved_seed_offers": false,
-      "has_needs_review_seed_offers": false,
+      "has_needs_review_seed_offers": true,
       "empty_state_type": "show_current_classes",
       "empty_state_headline": "Current classes available",
       "empty_state_body": "Show current Enrollware-backed class/session offers for this hub.",
       "recommended_cta_label": "View available classes",
       "recommended_cta_target": "existing_hub_schedule_block",
-      "caution_flags": []
+      "caution_flags": [
+        "needs_review_seed_offers_exist"
+      ]
     },
     {
       "hub_key": "arc",
@@ -1936,30 +2583,6 @@
       "current_enrollware_classes": [
         {
           "display_item_type": "current_enrollware_class",
-          "session_id": "12774031",
-          "course_key": "aha_acls_heartcode_skills",
-          "course_title": "AHA ACLS HeartCode",
-          "course_id": "209811",
-          "course_code_hint": "AHA_ACLS_HEARTCODE",
-          "start_datetime": "2026-06-22T08:30:00-04:00",
-          "end_datetime": "2026-06-22T09:15:00-04:00",
-          "date": "2026-06-22",
-          "start_time": "8:30 AM",
-          "end_time": "9:15 AM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 63.52
-        },
-        {
-          "display_item_type": "current_enrollware_class",
           "session_id": "12774325",
           "course_key": "aha_bls_initial",
           "course_title": "AHA BLS Provider",
@@ -1980,7 +2603,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 67.52
+          "hours_until_start": 33.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2004,7 +2627,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 67.52
+          "hours_until_start": 33.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2028,7 +2651,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 73.27
+          "hours_until_start": 39.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2052,7 +2675,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 87.52
+          "hours_until_start": 53.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2076,7 +2699,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 90.77
+          "hours_until_start": 56.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2100,7 +2723,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 91.52
+          "hours_until_start": 57.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2124,7 +2747,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 96.52
+          "hours_until_start": 62.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2148,7 +2771,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 121.77
+          "hours_until_start": 87.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2172,7 +2795,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 121.77
+          "hours_until_start": 87.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2196,7 +2819,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 138.77
+          "hours_until_start": 104.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2220,7 +2843,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 144.52
+          "hours_until_start": 110.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2244,7 +2867,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 159.52
+          "hours_until_start": 125.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2268,7 +2891,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 163.52
+          "hours_until_start": 129.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2292,7 +2915,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 163.52
+          "hours_until_start": 129.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2316,7 +2939,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 183.52
+          "hours_until_start": 149.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2340,7 +2963,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 186.77
+          "hours_until_start": 152.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2364,7 +2987,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 187.52
+          "hours_until_start": 153.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2388,7 +3011,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 187.52
+          "hours_until_start": 153.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2412,7 +3035,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 193.27
+          "hours_until_start": 159.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2436,7 +3059,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 193.27
+          "hours_until_start": 159.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2460,7 +3083,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 231.52
+          "hours_until_start": 197.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2484,7 +3107,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 232.27
+          "hours_until_start": 198.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2508,7 +3131,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 232.27
+          "hours_until_start": 198.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2532,29 +3155,427 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 235.52
+          "hours_until_start": 201.46
+        },
+        {
+          "display_item_type": "current_enrollware_class",
+          "session_id": "12775528",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Provider Renewal",
+          "course_id": "359474",
+          "course_code_hint": "AHA_BLS_IP_RENEWAL",
+          "start_datetime": "2026-06-29T12:30:00-04:00",
+          "end_datetime": "2026-06-29T14:00:00-04:00",
+          "date": "2026-06-29",
+          "start_time": "12:30 PM",
+          "end_time": "2:00 PM",
+          "location": {
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "location_display": ":: Wilmington; Shipyard Blvd - B",
+            "client": null
+          },
+          "instructor": null,
+          "reason": "Current future session exists in data/sessions_current.json.",
+          "public_visibility_status": "visible_publicly",
+          "public_visibility_note": "Outside public display cutoff window.",
+          "cutoff_hours": 10,
+          "hours_until_start": 201.46
         }
       ],
-      "current_enrollware_class_count": 169,
+      "current_enrollware_class_count": 151,
       "cutoff_suppressed_current_enrollware_classes": [],
       "cutoff_suppressed_current_enrollware_class_count": 0,
-      "approved_seed_offers": [],
-      "approved_seed_offer_count": 0,
-      "needs_review_seed_offers": [],
-      "needs_review_seed_offer_count": 0,
+      "approved_seed_offers": [
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_f7b314e904b117e2",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-03T13:00:00-04:00",
+          "end_datetime": "2026-08-03T16:00:00-04:00",
+          "date": "2026-08-03",
+          "start_time": "1:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_initial",
+          "appointment_registration_target": "enrollware_aha_bls_initial",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
+          "appointmentDayId": 260713,
+          "courseId": "209806",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_a551b998a0e43e79",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-03T09:00:00-04:00",
+          "end_datetime": "2026-08-03T12:00:00-04:00",
+          "date": "2026-08-03",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
+          "appointmentDayId": 260713,
+          "courseId": "359474",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_7457baba994578af",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-04T13:00:00-04:00",
+          "end_datetime": "2026-08-04T16:00:00-04:00",
+          "date": "2026-08-04",
+          "start_time": "1:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_initial",
+          "appointment_registration_target": "enrollware_aha_bls_initial",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714",
+          "appointmentDayId": 260714,
+          "courseId": "209806",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_39f23793bbafaecc",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-04T09:00:00-04:00",
+          "end_datetime": "2026-08-04T12:00:00-04:00",
+          "date": "2026-08-04",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714",
+          "appointmentDayId": 260714,
+          "courseId": "359474",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_90b2c2b9dca23c00",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Initial",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-05T13:00:00-04:00",
+          "end_datetime": "2026-08-05T16:00:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "1:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_initial",
+          "appointment_registration_target": "enrollware_aha_bls_initial",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715",
+          "appointmentDayId": 260715,
+          "courseId": "209806",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_1d709168122a2cc9",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-05T09:00:00-04:00",
+          "end_datetime": "2026-08-05T12:00:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715",
+          "appointmentDayId": 260715,
+          "courseId": "359474",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_fc18968e3964df75",
+          "course_key": "aha_bls_heartcode_skills",
+          "course_title": "AHA BLS HeartCode Skills",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-06T09:00:00-04:00",
+          "end_datetime": "2026-08-06T10:00:00-04:00",
+          "date": "2026-08-06",
+          "start_time": "9:00 AM",
+          "end_time": "10:00 AM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260716",
+          "appointmentDayId": 260716,
+          "courseId": "210549",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "appointment_seed_offer",
+          "public_display_item_type": "appointment_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_23051f2c66637ac9",
+          "course_key": "aha_bls_heartcode_skills",
+          "course_title": "AHA BLS HeartCode Skills",
+          "instructor_key": "brian",
+          "start_datetime": "2026-08-07T09:00:00-04:00",
+          "end_datetime": "2026-08-07T12:00:00-04:00",
+          "date": "2026-08-07",
+          "start_time": "9:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260717",
+          "appointmentDayId": 260717,
+          "courseId": "210549",
+          "approval_status": "auto_approved_by_rules",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "not_required_for_appointment_seed",
+          "public_ready": true,
+          "public_ready_block_reason": null,
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": "publishability_status is publishable_candidate; valid Enrollware appointment registration target exists; appointment registration URL exists; calendar availability window reported; no blocking current Enrollware conflict found; outside public display cutoff window; not suppressed by claimed slot winner policy; standalone class lander generation blocked",
+          "calendar_source_mode": "inverse_blocking",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Auto-public appointment seed offer; hub offer only, not a class lander.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        }
+      ],
+      "approved_seed_offer_count": 8,
+      "needs_review_seed_offers": [
+        {
+          "display_item_type": "needs_review_seed_offer",
+          "public_display_item_type": "needs_review_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_8db3493d37758377",
+          "course_key": "aha_bls_heartcode_skills",
+          "course_title": "AHA BLS HeartCode Skills",
+          "instructor_key": "nick",
+          "start_datetime": "2026-08-05T11:00:00-04:00",
+          "end_datetime": "2026-08-05T12:00:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "11:00 AM",
+          "end_time": "12:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_bls_heartcode_skills",
+          "appointment_registration_url": null,
+          "appointmentDayId": null,
+          "courseId": "210549",
+          "approval_status": "needs_review",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "missing_from_enrollware",
+          "public_ready": false,
+          "public_ready_block_reason": "missing appointment registration URL",
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": null,
+          "calendar_source_mode": "explicit_availability",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Appointment seed offer exists but objective auto-public rules did not all pass.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        },
+        {
+          "display_item_type": "needs_review_seed_offer",
+          "public_display_item_type": "needs_review_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_99a39ce1521a1dad",
+          "course_key": "aha_bls_renewal",
+          "course_title": "AHA BLS Renewal",
+          "instructor_key": "nick",
+          "start_datetime": "2026-08-05T09:00:00-04:00",
+          "end_datetime": "2026-08-05T10:30:00-04:00",
+          "date": "2026-08-05",
+          "start_time": "9:00 AM",
+          "end_time": "10:30 AM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_bls_renewal",
+          "appointment_registration_target": "enrollware_aha_bls_renewal",
+          "appointment_registration_url": null,
+          "appointmentDayId": null,
+          "courseId": "359474",
+          "approval_status": "needs_review",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "missing_from_enrollware",
+          "public_ready": false,
+          "public_ready_block_reason": "missing appointment registration URL",
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": null,
+          "calendar_source_mode": "explicit_availability",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Appointment seed offer exists but objective auto-public rules did not all pass.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        }
+      ],
+      "needs_review_seed_offer_count": 2,
       "blocked_suppressed_seed_offers": [],
       "blocked_suppressed_seed_offer_count": 0,
       "would_appear_empty": false,
       "fallback_message_if_empty": null,
       "has_current_enrollware_classes": true,
-      "has_approved_seed_offers": false,
-      "has_needs_review_seed_offers": false,
+      "has_approved_seed_offers": true,
+      "has_needs_review_seed_offers": true,
       "empty_state_type": "show_current_classes",
       "empty_state_headline": "Current classes available",
       "empty_state_body": "Show current Enrollware-backed class/session offers for this hub.",
       "recommended_cta_label": "View available classes",
       "recommended_cta_target": "existing_hub_schedule_block",
-      "caution_flags": []
+      "caution_flags": [
+        "needs_review_seed_offers_exist"
+      ]
     },
     {
       "hub_key": "group-training",
@@ -2564,54 +3585,6 @@
       "active": true,
       "course_key": null,
       "current_enrollware_classes": [
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12774031",
-          "course_key": "aha_acls_heartcode_skills",
-          "course_title": "AHA ACLS HeartCode",
-          "course_id": "209811",
-          "course_code_hint": "AHA_ACLS_HEARTCODE",
-          "start_datetime": "2026-06-22T08:30:00-04:00",
-          "end_datetime": "2026-06-22T09:15:00-04:00",
-          "date": "2026-06-22",
-          "start_time": "8:30 AM",
-          "end_time": "9:15 AM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 63.52
-        },
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12776142",
-          "course_key": "aha_heartsaver_fa_cpr_aed",
-          "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
-          "course_id": "329495",
-          "course_code_hint": "AHA_HS_FA_CPR_BL",
-          "start_datetime": "2026-06-22T11:45:00-04:00",
-          "end_datetime": "2026-06-22T12:30:00-04:00",
-          "date": "2026-06-22",
-          "start_time": "11:45 AM",
-          "end_time": "12:30 PM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 66.77
-        },
         {
           "display_item_type": "current_enrollware_class",
           "session_id": "12774325",
@@ -2634,7 +3607,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 67.52
+          "hours_until_start": 33.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2658,7 +3631,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 67.52
+          "hours_until_start": 33.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2682,7 +3655,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 69.02
+          "hours_until_start": 34.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2706,7 +3679,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 69.02
+          "hours_until_start": 34.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2730,7 +3703,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 73.27
+          "hours_until_start": 39.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2754,7 +3727,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 87.52
+          "hours_until_start": 53.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2778,7 +3751,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 88.27
+          "hours_until_start": 54.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2802,7 +3775,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 90.77
+          "hours_until_start": 56.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2826,7 +3799,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 91.52
+          "hours_until_start": 57.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2850,7 +3823,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 93.02
+          "hours_until_start": 58.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2874,7 +3847,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 93.02
+          "hours_until_start": 58.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2898,7 +3871,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 93.02
+          "hours_until_start": 58.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2922,7 +3895,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 93.02
+          "hours_until_start": 58.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2946,7 +3919,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 96.52
+          "hours_until_start": 62.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2970,7 +3943,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 97.27
+          "hours_until_start": 63.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -2994,7 +3967,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 121.77
+          "hours_until_start": 87.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3018,7 +3991,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 121.77
+          "hours_until_start": 87.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3042,7 +4015,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 135.52
+          "hours_until_start": 101.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3066,7 +4039,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 136.27
+          "hours_until_start": 102.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3090,7 +4063,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 138.77
+          "hours_until_start": 104.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3114,7 +4087,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 144.52
+          "hours_until_start": 110.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3138,7 +4111,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 145.27
+          "hours_until_start": 111.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3162,10 +4135,58 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 159.52
+          "hours_until_start": 125.46
+        },
+        {
+          "display_item_type": "current_enrollware_class",
+          "session_id": "12776151",
+          "course_key": "aha_heartsaver_fa_cpr_aed",
+          "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+          "course_id": "329495",
+          "course_code_hint": "AHA_HS_FA_CPR_BL",
+          "start_datetime": "2026-06-26T11:45:00-04:00",
+          "end_datetime": "2026-06-26T12:30:00-04:00",
+          "date": "2026-06-26",
+          "start_time": "11:45 AM",
+          "end_time": "12:30 PM",
+          "location": {
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "location_display": ":: Wilmington; Shipyard Blvd - B",
+            "client": null
+          },
+          "instructor": null,
+          "reason": "Current future session exists in data/sessions_current.json.",
+          "public_visibility_status": "visible_publicly",
+          "public_visibility_note": "Outside public display cutoff window.",
+          "cutoff_hours": 10,
+          "hours_until_start": 128.71
+        },
+        {
+          "display_item_type": "current_enrollware_class",
+          "session_id": "12774334",
+          "course_key": "aha_bls_initial",
+          "course_title": "AHA BLS Provider",
+          "course_id": "209806",
+          "course_code_hint": "AHA_BLS_IP_INITIAL",
+          "start_datetime": "2026-06-26T12:30:00-04:00",
+          "end_datetime": "2026-06-26T14:30:00-04:00",
+          "date": "2026-06-26",
+          "start_time": "12:30 PM",
+          "end_time": "2:30 PM",
+          "location": {
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "location_display": ":: Wilmington; Shipyard Blvd - B",
+            "client": null
+          },
+          "instructor": null,
+          "reason": "Current future session exists in data/sessions_current.json.",
+          "public_visibility_status": "visible_publicly",
+          "public_visibility_note": "Outside public display cutoff window.",
+          "cutoff_hours": 10,
+          "hours_until_start": 129.46
         }
       ],
-      "current_enrollware_class_count": 245,
+      "current_enrollware_class_count": 214,
       "cutoff_suppressed_current_enrollware_classes": [],
       "cutoff_suppressed_current_enrollware_class_count": 0,
       "approved_seed_offers": [],
@@ -3196,30 +4217,6 @@
       "current_enrollware_classes": [
         {
           "display_item_type": "current_enrollware_class",
-          "session_id": "12776142",
-          "course_key": "aha_heartsaver_fa_cpr_aed",
-          "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
-          "course_id": "329495",
-          "course_code_hint": "AHA_HS_FA_CPR_BL",
-          "start_datetime": "2026-06-22T11:45:00-04:00",
-          "end_datetime": "2026-06-22T12:30:00-04:00",
-          "date": "2026-06-22",
-          "start_time": "11:45 AM",
-          "end_time": "12:30 PM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 66.77
-        },
-        {
-          "display_item_type": "current_enrollware_class",
           "session_id": "12775990",
           "course_key": "aha_heartsaver_fa_cpr_aed",
           "course_title": "AHA Heartsaver First Aid CPR AED",
@@ -3240,7 +4237,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 88.27
+          "hours_until_start": 54.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3264,7 +4261,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 97.27
+          "hours_until_start": 63.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3288,7 +4285,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 135.52
+          "hours_until_start": 101.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3312,7 +4309,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 135.52
+          "hours_until_start": 101.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3336,7 +4333,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 136.27
+          "hours_until_start": 102.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3360,7 +4357,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 145.27
+          "hours_until_start": 111.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3384,7 +4381,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 162.77
+          "hours_until_start": 128.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3408,7 +4405,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 184.27
+          "hours_until_start": 150.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3432,7 +4429,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 192.52
+          "hours_until_start": 158.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3456,7 +4453,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 234.77
+          "hours_until_start": 200.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3480,7 +4477,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 240.52
+          "hours_until_start": 206.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3504,55 +4501,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 256.27
-        },
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12776156",
-          "course_key": "aha_heartsaver_fa_cpr_aed",
-          "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
-          "course_id": "329495",
-          "course_code_hint": "AHA_HS_FA_CPR_BL",
-          "start_datetime": "2026-07-01T11:45:00-04:00",
-          "end_datetime": "2026-07-01T12:30:00-04:00",
-          "date": "2026-07-01",
-          "start_time": "11:45 AM",
-          "end_time": "12:30 PM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 282.77
-        },
-        {
-          "display_item_type": "current_enrollware_class",
-          "session_id": "12775790",
-          "course_key": "aha_heartsaver_fa_cpr_aed",
-          "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
-          "course_id": "329495",
-          "course_code_hint": "AHA_HS_FA_CPR_BL",
-          "start_datetime": "2026-07-01T17:30:00-04:00",
-          "end_datetime": "2026-07-01T18:15:00-04:00",
-          "date": "2026-07-01",
-          "start_time": "5:30 PM",
-          "end_time": "6:15 PM",
-          "location": {
-            "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "location_display": ":: Wilmington; Shipyard Blvd - B",
-            "client": null
-          },
-          "instructor": null,
-          "reason": "Current future session exists in data/sessions_current.json.",
-          "public_visibility_status": "visible_publicly",
-          "public_visibility_note": "Outside public display cutoff window.",
-          "cutoff_hours": 10,
-          "hours_until_start": 288.52
+          "hours_until_start": 222.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3576,7 +4525,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 303.52
+          "hours_until_start": 269.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3600,7 +4549,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 303.52
+          "hours_until_start": 269.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3624,7 +4573,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 313.27
+          "hours_until_start": 279.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3648,7 +4597,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 330.77
+          "hours_until_start": 296.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3672,7 +4621,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 336.52
+          "hours_until_start": 302.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3696,7 +4645,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 352.27
+          "hours_until_start": 318.21
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3720,7 +4669,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 360.52
+          "hours_until_start": 326.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3744,7 +4693,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 402.77
+          "hours_until_start": 368.71
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3768,7 +4717,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 408.52
+          "hours_until_start": 374.46
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3792,10 +4741,82 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 424.27
+          "hours_until_start": 390.21
+        },
+        {
+          "display_item_type": "current_enrollware_class",
+          "session_id": "12776779",
+          "course_key": "aha_heartsaver_fa_cpr_aed",
+          "course_title": "AHA Heartsaver First Aid CPR AED",
+          "course_id": "209809",
+          "course_code_hint": "AHA_HS_FA_CPR_IP",
+          "start_datetime": "2026-07-07T18:15:00-04:00",
+          "end_datetime": "2026-07-07T20:15:00-04:00",
+          "date": "2026-07-07",
+          "start_time": "6:15 PM",
+          "end_time": "8:15 PM",
+          "location": {
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "location_display": ":: Wilmington; Shipyard Blvd - B",
+            "client": null
+          },
+          "instructor": null,
+          "reason": "Current future session exists in data/sessions_current.json.",
+          "public_visibility_status": "visible_publicly",
+          "public_visibility_note": "Outside public display cutoff window.",
+          "cutoff_hours": 10,
+          "hours_until_start": 399.21
+        },
+        {
+          "display_item_type": "current_enrollware_class",
+          "session_id": "12776701",
+          "course_key": "aha_heartsaver_fa_cpr_aed",
+          "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+          "course_id": "329495",
+          "course_code_hint": "AHA_HS_FA_CPR_BL",
+          "start_datetime": "2026-07-09T08:30:00-04:00",
+          "end_datetime": "2026-07-09T09:15:00-04:00",
+          "date": "2026-07-09",
+          "start_time": "8:30 AM",
+          "end_time": "9:15 AM",
+          "location": {
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "location_display": ":: Wilmington; Shipyard Blvd - B",
+            "client": null
+          },
+          "instructor": null,
+          "reason": "Current future session exists in data/sessions_current.json.",
+          "public_visibility_status": "visible_publicly",
+          "public_visibility_note": "Outside public display cutoff window.",
+          "cutoff_hours": 10,
+          "hours_until_start": 437.46
+        },
+        {
+          "display_item_type": "current_enrollware_class",
+          "session_id": "12783383",
+          "course_key": "aha_heartsaver_fa_cpr_aed",
+          "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+          "course_id": "251545",
+          "course_code_hint": "AHA_HS_PED_FA_CPR_BL",
+          "start_datetime": "2026-07-09T08:30:00-04:00",
+          "end_datetime": "2026-07-09T09:15:00-04:00",
+          "date": "2026-07-09",
+          "start_time": "8:30 AM",
+          "end_time": "9:15 AM",
+          "location": {
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "location_display": ":: Wilmington; Shipyard Blvd - B",
+            "client": null
+          },
+          "instructor": null,
+          "reason": "Current future session exists in data/sessions_current.json.",
+          "public_visibility_status": "visible_publicly",
+          "public_visibility_note": "Outside public display cutoff window.",
+          "cutoff_hours": 10,
+          "hours_until_start": 437.46
         }
       ],
-      "current_enrollware_class_count": 72,
+      "current_enrollware_class_count": 59,
       "cutoff_suppressed_current_enrollware_classes": [],
       "cutoff_suppressed_current_enrollware_class_count": 0,
       "approved_seed_offers": [],
@@ -3846,7 +4867,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 1339.77
+          "hours_until_start": 1305.71
         }
       ],
       "current_enrollware_class_count": 1,
@@ -3900,7 +4921,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 93.02
+          "hours_until_start": 58.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3924,7 +4945,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 93.02
+          "hours_until_start": 58.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3948,7 +4969,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 165.02
+          "hours_until_start": 130.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3972,7 +4993,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 165.02
+          "hours_until_start": 130.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -3996,7 +5017,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 271.02
+          "hours_until_start": 236.96
         },
         {
           "display_item_type": "current_enrollware_class",
@@ -4020,7 +5041,7 @@
           "public_visibility_status": "visible_publicly",
           "public_visibility_note": "Outside public display cutoff window.",
           "cutoff_hours": 10,
-          "hours_until_start": 1245.02
+          "hours_until_start": 1210.96
         }
       ],
       "current_enrollware_class_count": 6,
@@ -4028,21 +5049,61 @@
       "cutoff_suppressed_current_enrollware_class_count": 0,
       "approved_seed_offers": [],
       "approved_seed_offer_count": 0,
-      "needs_review_seed_offers": [],
-      "needs_review_seed_offer_count": 0,
+      "needs_review_seed_offers": [
+        {
+          "display_item_type": "needs_review_seed_offer",
+          "public_display_item_type": "needs_review_seed_offer",
+          "render_source": "auto_public_appointment_seed",
+          "seed_id": "seed_4e08b9a5ea5e8c69",
+          "course_key": "aha_pals_heartcode_skills",
+          "course_title": "PALS HeartCode Skills",
+          "instructor_key": "amy",
+          "start_datetime": "2026-08-04T15:00:00-04:00",
+          "end_datetime": "2026-08-04T16:00:00-04:00",
+          "date": "2026-08-04",
+          "start_time": "3:00 PM",
+          "end_time": "4:00 PM",
+          "location_key": "shipyard",
+          "registration_target_key": "enrollware_aha_pals_heartcode_skills",
+          "appointment_registration_target": "enrollware_aha_pals_heartcode_skills",
+          "appointment_registration_url": null,
+          "appointmentDayId": null,
+          "courseId": "209812",
+          "approval_status": "needs_review",
+          "publishability_status": "publishable_candidate",
+          "enrollware_presence_status": "missing_from_enrollware",
+          "public_ready": false,
+          "public_ready_block_reason": "missing appointment registration URL",
+          "seed_publication_mode": "appointment_seed_offer",
+          "auto_public_ready_reason": null,
+          "calendar_source_mode": "explicit_availability",
+          "calendar_availability_status": "calendar_window_reported",
+          "conflict_check_status": "no_conflict_found",
+          "claimed_slot_status": "unclaimed_available_seed",
+          "suppressed_by_slot_winner_policy": false,
+          "standalone_class_lander_allowed": false,
+          "class_lander_created": false,
+          "public_schedule_row_created": false,
+          "reason": "Appointment seed offer exists but objective auto-public rules did not all pass.",
+          "hub_display_note": "Hub offer only; do not create a standalone class lander from this seed."
+        }
+      ],
+      "needs_review_seed_offer_count": 1,
       "blocked_suppressed_seed_offers": [],
       "blocked_suppressed_seed_offer_count": 0,
       "would_appear_empty": false,
       "fallback_message_if_empty": null,
       "has_current_enrollware_classes": true,
       "has_approved_seed_offers": false,
-      "has_needs_review_seed_offers": false,
+      "has_needs_review_seed_offers": true,
       "empty_state_type": "show_current_classes",
       "empty_state_headline": "Current classes available",
       "empty_state_body": "Show current Enrollware-backed class/session offers for this hub.",
       "recommended_cta_label": "View available classes",
       "recommended_cta_target": "existing_hub_schedule_block",
-      "caution_flags": []
+      "caution_flags": [
+        "needs_review_seed_offers_exist"
+      ]
     },
     {
       "hub_key": "uscg-elementary-first-aid-cpr",
@@ -4075,44 +5136,67 @@
     }
   ],
   "seed_export_summary": {
-    "total_selected_seeds": 8,
-    "total_publishable_candidates_exported": 0,
-    "blocked_seeds_omitted": 8,
-    "by_instructor": {},
-    "by_course": {},
-    "by_backend": {},
+    "total_selected_seeds": 12,
+    "total_publishable_candidates_exported": 12,
+    "blocked_seeds_omitted": 0,
+    "by_instructor": {
+      "amy": 2,
+      "brian": 8,
+      "nick": 2
+    },
+    "by_course": {
+      "aha_acls_heartcode_skills": 1,
+      "aha_bls_heartcode_skills": 3,
+      "aha_bls_initial": 3,
+      "aha_bls_renewal": 4,
+      "aha_pals_heartcode_skills": 1
+    },
+    "by_backend": {
+      "enrollware": 12
+    },
     "approval_status_counts": {
       "approved_for_preview": 0,
       "approved_for_public": 0,
       "hold": 0,
-      "needs_review": 0,
+      "needs_review": 12,
       "rejected": 0
     },
     "public_ready_candidates": 0,
     "enrollware_presence_status_counts": {
       "present_in_enrollware": 0,
-      "missing_from_enrollware": 0,
+      "missing_from_enrollware": 12,
       "not_checked": 0,
       "source_unavailable": 0
     },
-    "blocked_not_in_enrollware": 0,
-    "omitted_by_reason": {
-      "blocked_warning": 8
-    }
+    "blocked_not_in_enrollware": 12,
+    "omitted_by_reason": {}
   },
   "appointment_offer_inventory_summary": {
-    "total_appointment_offers": 0,
-    "august_appointment_offers": 0,
-    "public_ready_appointment_offers": 0,
-    "auto_public_appointment_seed_offers": 0,
-    "blocked_or_needs_review": 0,
-    "with_appointment_urls": 0,
-    "display_mode_counts": {},
-    "public_visibility_status_counts": {},
-    "by_instructor": {},
-    "by_course_family": {},
+    "total_appointment_offers": 12,
+    "august_appointment_offers": 12,
+    "public_ready_appointment_offers": 8,
+    "auto_public_appointment_seed_offers": 8,
+    "blocked_or_needs_review": 4,
+    "with_appointment_urls": 8,
+    "display_mode_counts": {
+      "appointment_seed_offer": 8,
+      "needs_review": 4
+    },
+    "public_visibility_status_counts": {
+      "visible_publicly": 12
+    },
+    "by_instructor": {
+      "amy": 2,
+      "brian": 8,
+      "nick": 2
+    },
+    "by_course_family": {
+      "acls": 1,
+      "bls": 10,
+      "pals": 1
+    },
     "warnings": [
-      "Conflict checks used latest uploaded class report: data/Class Report.xlsx (255 rows)."
+      "Conflict checks used latest uploaded class report: data/private/enrollware/Class Report.xlsx (224 rows)."
     ]
   }
 }

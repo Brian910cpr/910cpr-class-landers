@@ -176,13 +176,15 @@ def base_rejection_reasons(offer: dict[str, Any], course: dict[str, Any] | None,
     enabled_families = as_set(policy, "enabled_course_families")
     disabled_families = as_set(policy, "disabled_course_families")
 
+    explicitly_enabled_course = bool(enabled_ids and course_id in enabled_ids)
+
     if course_id in disabled_ids:
         reasons.append("course_id_disabled")
-    if disabled_families and family in disabled_families:
+    if disabled_families and family in disabled_families and not explicitly_enabled_course:
         reasons.append("course_family_disabled")
     if enabled_ids and course_id not in enabled_ids:
         reasons.append("course_id_not_enabled")
-    if enabled_families and family not in enabled_families:
+    if enabled_families and family not in enabled_families and not explicitly_enabled_course:
         reasons.append("course_family_not_enabled")
 
     start = parse_offer_start(offer)

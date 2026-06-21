@@ -9,7 +9,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209806",
     "cert_body": "AHA",
     "price": 75.0,
-    "upcoming_sessions_found": 256
+    "upcoming_sessions_found": 51
   },
   {
     "course_id": "359474",
@@ -21,7 +21,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474",
     "cert_body": "AHA",
     "price": 75.0,
-    "upcoming_sessions_found": 513
+    "upcoming_sessions_found": 51
   },
   {
     "course_id": "210549",
@@ -33,7 +33,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct210549",
     "cert_body": "AHA",
     "price": 55.0,
-    "upcoming_sessions_found": 480
+    "upcoming_sessions_found": 36
   },
   {
     "course_id": "241108",
@@ -45,7 +45,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct241108",
     "cert_body": "AHA",
     "price": 225.0,
-    "upcoming_sessions_found": 2
+    "upcoming_sessions_found": 3
   },
   {
     "course_id": "209818",
@@ -69,7 +69,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209811",
     "cert_body": "AHA",
     "price": 100.0,
-    "upcoming_sessions_found": 95
+    "upcoming_sessions_found": 10
   },
   {
     "course_id": "251496",
@@ -81,7 +81,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251496",
     "cert_body": "AHA",
     "price": 225.0,
-    "upcoming_sessions_found": 2
+    "upcoming_sessions_found": 4
   },
   {
     "course_id": "209812",
@@ -93,7 +93,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209812",
     "cert_body": "AHA",
     "price": 100.0,
-    "upcoming_sessions_found": 0
+    "upcoming_sessions_found": 2
   },
   {
     "course_id": "344085",
@@ -117,7 +117,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct329495",
     "cert_body": "AHA",
     "price": 95.0,
-    "upcoming_sessions_found": 256
+    "upcoming_sessions_found": 52
   },
   {
     "course_id": "351632",
@@ -177,13 +177,13 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359827",
     "cert_body": "AHA",
     "price": 95.0,
-    "upcoming_sessions_found": 63
+    "upcoming_sessions_found": 0
   },
   {
     "course_id": "445670",
     "clean_title": "HSI BLS + Adult First Aid \u2013 Blended Learning",
     "lander_title": "BLS + First Aid Certification (HSI Blended Learning)",
-    "display_title": "HSI BLS and Adult First Aid Skills Session",
+    "display_title": "HSI BLS + Adult First Aid",
     "slug": "bls-first-aid-combo",
     "url": "/courses/bls-first-aid-combo.html",
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct445670",
@@ -225,7 +225,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209809",
     "cert_body": "AHA",
     "price": 95.0,
-    "upcoming_sessions_found": 130
+    "upcoming_sessions_found": 20
   },
   {
     "course_id": "251545",
@@ -237,7 +237,7 @@
     "schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
     "cert_body": "AHA",
     "price": 85.0,
-    "upcoming_sessions_found": 32
+    "upcoming_sessions_found": 6
   },
   {
     "course_id": "374378",

@@ -27,13 +27,13 @@ This is a read-only V0 dynamic offer generator. It did not modify public pages, 
 - Availability windows read: 11
 - Scheduler-enabled instructors considered: 2
 - Courses considered: 30
-- Local occupancy blocks read: 504
-- Offers generated: 640
+- Local occupancy blocks read: 442
+- Offers generated: 856
 
 ## Offers Rejected By Reason
 
-- `course_family_not_allowed_by_window`: 162
-- `course_does_not_fit_window`: 79
+- `course_family_not_allowed_by_window`: 127
+- `course_does_not_fit_window`: 85
 
 ## Top 20 Example Offers
 
@@ -62,8 +62,8 @@ This is a read-only V0 dynamic offer generator. It did not modify public pages, 
 
 ## Blockers Preventing More Offers
 
-- `course_family_not_allowed_by_window`: 162
-- `course_does_not_fit_window`: 79
+- `course_family_not_allowed_by_window`: 127
+- `course_does_not_fit_window`: 85
 
 ## Next Safest Step
 
