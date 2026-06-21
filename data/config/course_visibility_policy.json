@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1",
+  "description": "Public visibility controls for course options. active_public courses may show menu entries, public inventory, and seed offers. menu_only_suppressed courses remain visible in course menus/hubs but are not shown as normal public inventory or seeded. hidden courses are removed from menus, hubs, inventory, and seeding.",
+  "default_state": "active_public",
+  "states": {
+    "active_public": {
+      "show_in_courses": true,
+      "show_on_hubs": true,
+      "show_public_inventory": true,
+      "eligible_for_dynamic_offers": true,
+      "eligible_for_classes_inventory": true
+    },
+    "menu_only_suppressed": {
+      "show_in_courses": true,
+      "show_on_hubs": true,
+      "show_public_inventory": false,
+      "eligible_for_dynamic_offers": false,
+      "eligible_for_classes_inventory": false,
+      "suppressed_public_copy": "Public dates are not currently listed for this option. This course may be available by request or for group training."
+    },
+    "hidden": {
+      "show_in_courses": false,
+      "show_on_hubs": false,
+      "show_public_inventory": false,
+      "eligible_for_dynamic_offers": false,
+      "eligible_for_classes_inventory": false
+    }
+  },
+  "courses": {
+    "351632": {
+      "state": "menu_only_suppressed",
+      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_in_person",
+      "title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "reason": "Visible as a real Heartsaver course option, but suppressed from normal public scheduled inventory until Brian re-enables public in-person pediatric dates."
+    }
+  }
+}

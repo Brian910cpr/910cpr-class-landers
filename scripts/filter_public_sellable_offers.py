@@ -15,6 +15,7 @@ COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
 APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 LOCATION_RESOURCE_MAP_PATH = ROOT / "data" / "config" / "location_resource_map.json"
 PUBLIC_OFFER_POLICY_PATH = ROOT / "data" / "config" / "public_offer_policy.json"
+COURSE_VISIBILITY_POLICY_PATH = ROOT / "data" / "config" / "course_visibility_policy.json"
 SELLABLE_OFFERS_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
 REPORT_PATH = AUDIT_DIR / "public_sellable_offers_report.md"
 UNKNOWN = "UNKNOWN"
@@ -73,6 +74,22 @@ def as_set(policy: dict[str, Any], key: str) -> set[str]:
 
 def is_true(value: Any) -> bool:
     return value is True or str(value).strip().lower() == "true"
+
+
+def load_course_visibility_policy() -> dict[str, Any]:
+    payload, error = read_json(COURSE_VISIBILITY_POLICY_PATH)
+    if error or not isinstance(payload, dict):
+        return {}
+    return payload
+
+
+def course_visibility_state(course_id: Any, policy: dict[str, Any] | None = None) -> str:
+    policy = policy if isinstance(policy, dict) else load_course_visibility_policy()
+    courses = policy.get("courses", {}) if isinstance(policy, dict) else {}
+    record = courses.get(str(course_id or "").strip(), {}) if isinstance(courses, dict) else {}
+    if isinstance(record, dict) and record.get("state"):
+        return str(record.get("state")).strip()
+    return str(policy.get("default_state") or "active_public").strip() or "active_public"
 
 
 def active_containers(containers_payload: Any) -> list[dict[str, Any]]:
@@ -171,6 +188,11 @@ def base_rejection_reasons(offer: dict[str, Any], course: dict[str, Any] | None,
     reasons: list[str] = []
     course_id = str(offer.get("course_id") or "")
     family = str(offer.get("course_family") or "")
+    visibility_state = course_visibility_state(course_id)
+    if visibility_state == "hidden":
+        reasons.append("course_visibility_hidden")
+    elif visibility_state == "menu_only_suppressed":
+        reasons.append("course_visibility_menu_only_suppressed")
     enabled_ids = as_set(policy, "enabled_course_ids")
     disabled_ids = as_set(policy, "disabled_course_ids")
     enabled_families = as_set(policy, "enabled_course_families")
@@ -228,22 +250,30 @@ def apply_offer_limits(offers: list[dict[str, Any]], policy: dict[str, Any]) -> 
     kept: list[dict[str, Any]] = []
     hidden: list[dict[str, Any]] = []
     per_course_day: Counter[tuple[str, str]] = Counter()
+    per_course_week: Counter[tuple[str, str]] = Counter()
     per_day: Counter[str] = Counter()
     max_per_course_day = int(policy.get("max_offers_per_course_per_day", 0) or 0)
+    max_per_course_week = int(policy.get("max_offers_per_course_per_week", 0) or 0)
     max_total_day = int(policy.get("max_total_offers_per_day", 0) or 0)
 
     for offer in sorted(offers, key=lambda item: (item.get("date", ""), item.get("start_time", ""), item.get("course_id", ""))):
         date = str(offer.get("date") or UNKNOWN)
         course_id = str(offer.get("course_id") or UNKNOWN)
+        parsed_date = parse_date(date)
+        week_key = f"{parsed_date.isocalendar().year}-W{parsed_date.isocalendar().week:02d}" if parsed_date else UNKNOWN
         if max_total_day and per_day[date] >= max_total_day:
             hidden.append({"offer": offer, "reason_codes": ["max_total_offers_per_day_exceeded"]})
             continue
         if max_per_course_day and per_course_day[(date, course_id)] >= max_per_course_day:
             hidden.append({"offer": offer, "reason_codes": ["max_offers_per_course_per_day_exceeded"]})
             continue
+        if max_per_course_week and per_course_week[(week_key, course_id)] >= max_per_course_week:
+            hidden.append({"offer": offer, "reason_codes": ["max_offers_per_course_per_week_exceeded"]})
+            continue
         kept.append(offer)
         per_day[date] += 1
         per_course_day[(date, course_id)] += 1
+        per_course_week[(week_key, course_id)] += 1
     return kept, hidden
 
 

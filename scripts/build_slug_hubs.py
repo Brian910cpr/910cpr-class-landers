@@ -11,7 +11,7 @@ from datetime import datetime
 from html import escape, unescape
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlencode
+from urllib.parse import parse_qs, quote, urlencode, urlparse
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -38,6 +38,11 @@ SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 CANONICAL_CLASS_REPORT_PATH = ROOT / "docs" / "data" / "canonical_schedule_from_class_report.json"
 CUSTOMER_FACING_OFFERS_PATH = ROOT / "docs" / "data" / "customer_facing_offers.json"
 FREE_TIME_SCHEDULER_CONFIG_PATH = ROOT / "docs" / "data" / "free_time_scheduler_config.json"
+SEED_APPOINTMENT_URL_PREVIEW_PATH = ROOT / "data" / "audit" / "seed_appointment_url_preview.json"
+PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH = ROOT / "data" / "audit" / "public_sellable_offers_preview.json"
+COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
+COURSE_VISIBILITY_POLICY_PATH = ROOT / "data" / "config" / "course_visibility_policy.json"
+COURSE_MAP_PATH = ROOT / "data" / "config" / "course_map.json"
 REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
 OUTPUT_DIR = ROOT / "docs"
 STATE_DIR = ROOT / "data" / "state"
@@ -87,7 +92,25 @@ APPOINTMENT_COURSE_TAB_IDS = {
     "aha_acls_heartcode_skills": {"acls-heartcode"},
     "aha_pals_heartcode_skills": {"pals-heartcode"},
     "aha_heartsaver_fa_cpr_aed": {"hs-fa-cpr-aed-ip", "hs-fa-cpr-aed-bl"},
+    "aha_heartsaver_first_aid_cpr_aed": {"hs-fa-cpr-aed-ip"},
+    "aha_heartsaver_first_aid_cpr_aed_blended": {"hs-fa-cpr-aed-bl"},
     "aha_heartsaver_cpr_aed": {"hs-cpr-aed-ip", "hs-cpr-aed-bl"},
+    "aha_heartsaver_cpr_aed_online": {"hs-cpr-aed-bl"},
+    "hsi_bls_adult_first_aid_blended": {"hsi-bls-fa"},
+}
+APPOINTMENT_HUB_BY_FAMILY = {
+    "ACLS": "acls",
+    "AHA ACLS": "acls",
+    "PALS": "pals",
+    "AHA PALS": "pals",
+    "BLS": "bls",
+    "AHA BLS": "bls",
+    "Heartsaver": "heartsaver",
+    "AHA Heartsaver": "heartsaver",
+    "ARC": "arc",
+    "American Red Cross": "arc",
+    "HSI": "hsi",
+    "USCG": "uscg-elementary-first-aid-cpr",
 }
 
 
@@ -154,13 +177,13 @@ def load_customer_facing_offers() -> dict[str, list[dict[str, Any]]]:
 
 def load_hub_appointment_seed_offers() -> dict[str, list[dict[str, Any]]]:
     """Return validated auto-public appointment seed offers keyed by slug hub."""
+    grouped: dict[str, list[dict[str, Any]]] = {}
     try:
         report = build_hub_offer_model_report("auto")
     except Exception as exc:
         print(f"WARNING: Appointment seed hub offer report failed; continuing without appointment seed offers: {exc}")
-        return {}
+        report = {}
 
-    grouped: dict[str, list[dict[str, Any]]] = {}
     for hub in report.get("hubs", []):
         if hub.get("hub_source") != "slug_hubs":
             continue
@@ -174,7 +197,136 @@ def load_hub_appointment_seed_offers() -> dict[str, list[dict[str, Any]]]:
             offers.append(dict(offer))
         if offers:
             grouped[hub_key] = sorted(offers, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
+
+    preview_offers = load_public_seed_appointment_url_previews()
+    for hub_key, offers in preview_offers.items():
+        grouped.setdefault(hub_key, []).extend(offers)
+
+    for hub_key, offers in list(grouped.items()):
+        grouped[hub_key] = sorted(offers, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
     return grouped
+
+
+def load_course_catalog_by_id() -> dict[str, dict[str, Any]]:
+    if not COURSE_CATALOG_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(COURSE_CATALOG_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    courses = payload.get("courses", []) if isinstance(payload, dict) else []
+    catalog: dict[str, dict[str, Any]] = {}
+    for course in courses:
+        if isinstance(course, dict):
+            course_id = normalize_space(course.get("course_id"))
+            if course_id:
+                catalog[course_id] = course
+    return catalog
+
+
+def load_public_sellable_offer_index() -> dict[str, dict[str, Any]]:
+    if not PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    offers = payload.get("offers", []) if isinstance(payload, dict) else []
+    indexed: dict[str, dict[str, Any]] = {}
+    for offer in offers:
+        if isinstance(offer, dict):
+            offer_id = normalize_space(offer.get("offer_id"))
+            if offer_id:
+                indexed[offer_id] = offer
+    return indexed
+
+
+def load_public_seed_appointment_url_previews() -> dict[str, list[dict[str, Any]]]:
+    """Return selected seed appointment URL previews that are safe for hub-only display."""
+    if not SEED_APPOINTMENT_URL_PREVIEW_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(SEED_APPOINTMENT_URL_PREVIEW_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+
+    public_sellable_by_id = load_public_sellable_offer_index()
+    course_catalog_by_id = load_course_catalog_by_id()
+    previews = payload.get("previews", []) if isinstance(payload, dict) else []
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for preview in previews:
+        if not isinstance(preview, dict):
+            continue
+        offer = build_hub_seed_offer_from_url_preview(preview, public_sellable_by_id, course_catalog_by_id)
+        if not offer:
+            continue
+        hub_slug = normalize_space(offer.get("hub_slug"))
+        if hub_slug:
+            grouped.setdefault(hub_slug, []).append(offer)
+    return grouped
+
+
+def build_hub_seed_offer_from_url_preview(
+    preview: dict[str, Any],
+    public_sellable_by_id: dict[str, dict[str, Any]],
+    course_catalog_by_id: dict[str, dict[str, Any]],
+) -> dict[str, Any] | None:
+    if preview.get("blocking_reason"):
+        return None
+    course_id = normalize_space(preview.get("course_id"))
+    source_offer_id = normalize_space(preview.get("source_offer_id"))
+    url = normalize_space(preview.get("appointment_url_preview"))
+    appointment_day_id = normalize_space(preview.get("appointmentDayId"))
+    if not course_id or not source_offer_id or not url or not appointment_day_id:
+        return None
+    public_offer = public_sellable_by_id.get(source_offer_id)
+    if not public_offer:
+        return None
+
+    parsed_url = urlparse(url)
+    query = parse_qs(parsed_url.query)
+    url_course_id = normalize_space((query.get("courseId") or [""])[0])
+    start_time_query = normalize_space((query.get("startTime") or [""])[0])
+    url_appointment_day_id = normalize_space((query.get("appointmentDayId") or [""])[0])
+    if parsed_url.netloc != "coastalcprtraining.enrollware.com" or not parsed_url.path.startswith("/enroll"):
+        return None
+    if url_course_id != course_id or url_appointment_day_id != appointment_day_id or not start_time_query:
+        return None
+
+    catalog = course_catalog_by_id.get(course_id, {})
+    if catalog and catalog.get("appointment_allowed") is False:
+        return None
+    course_key = normalize_space(catalog.get("course_key"))
+    course_family = normalize_space(public_offer.get("course_family") or catalog.get("family"))
+    hub_slug = APPOINTMENT_HUB_BY_FAMILY.get(course_family)
+    if not hub_slug:
+        return None
+
+    start_datetime = normalize_space(preview.get("appointment_display_start") or public_offer.get("appointment_display_start") or public_offer.get("start_datetime"))
+    end_datetime = normalize_space(preview.get("appointment_display_end") or public_offer.get("appointment_display_end") or public_offer.get("end_datetime"))
+    if not start_datetime:
+        return None
+
+    return {
+        "hub_slug": hub_slug,
+        "course_id": course_id,
+        "course_key": course_key,
+        "course_title": normalize_space(preview.get("course_title") or public_offer.get("course_title") or catalog.get("official_title")),
+        "start_datetime": start_datetime,
+        "end_datetime": end_datetime,
+        "location_name": clean_location(preview.get("location") or public_offer.get("offer_location") or public_offer.get("location")),
+        "instructor_display_name": normalize_space(preview.get("instructor_display_name") or public_offer.get("instructor_display_name")),
+        "appointment_registration_url": url,
+        "public_display_item_type": "appointment_seed_offer",
+        "display_item_type": "appointment_seed_offer",
+        "seed_publication_mode": "appointment_seed_offer",
+        "approval_status": "auto_approved_by_rules",
+        "public_ready": True,
+        "standalone_class_lander_allowed": False,
+        "class_lander_created": False,
+        "public_schedule_row_created": False,
+        "render_source": "seed_appointment_url_preview",
+    }
 
 
 def is_renderable_appointment_seed_offer(offer: dict[str, Any]) -> bool:
@@ -218,6 +370,131 @@ def clean_location(value: str | None) -> str:
 
 def normalize_space(value: str | None) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def load_course_visibility_policy() -> dict[str, Any]:
+    if not COURSE_VISIBILITY_POLICY_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(COURSE_VISIBILITY_POLICY_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def course_visibility_record(course_id: str | None, policy: dict[str, Any] | None = None) -> dict[str, Any]:
+    policy = policy if isinstance(policy, dict) else load_course_visibility_policy()
+    courses = policy.get("courses", {}) if isinstance(policy, dict) else {}
+    record = courses.get(normalize_space(course_id), {}) if isinstance(courses, dict) else {}
+    return record if isinstance(record, dict) else {}
+
+
+def course_visibility_state(course_id: str | None, policy: dict[str, Any] | None = None) -> str:
+    record = course_visibility_record(course_id, policy)
+    state = normalize_space(record.get("state"))
+    if state:
+        return state
+    policy = policy if isinstance(policy, dict) else load_course_visibility_policy()
+    return normalize_space(policy.get("default_state")) or "active_public"
+
+
+def course_allows_public_inventory(course_id: str | None, policy: dict[str, Any] | None = None) -> bool:
+    state = course_visibility_state(course_id, policy)
+    return state not in {"menu_only_suppressed", "hidden"}
+
+
+def course_is_hidden(course_id: str | None, policy: dict[str, Any] | None = None) -> bool:
+    return course_visibility_state(course_id, policy) == "hidden"
+
+
+def suppressed_course_copy(course_id: str | None, policy: dict[str, Any] | None = None) -> str:
+    policy = policy if isinstance(policy, dict) else load_course_visibility_policy()
+    record = course_visibility_record(course_id, policy)
+    states = policy.get("states", {}) if isinstance(policy, dict) else {}
+    menu_state = states.get("menu_only_suppressed", {}) if isinstance(states, dict) else {}
+    return normalize_space(record.get("suppressed_public_copy") or menu_state.get("suppressed_public_copy")) or (
+        "Public dates are not currently listed for this option. This course may be available by request or for group training."
+    )
+
+
+def load_course_code_lookup() -> dict[str, str]:
+    if not COURSE_MAP_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(COURSE_MAP_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    courses = payload.get("courses_by_id") or payload.get("courses") or {} if isinstance(payload, dict) else {}
+    lookup: dict[str, str] = {}
+    if not isinstance(courses, dict):
+        return lookup
+    for course_id, course in courses.items():
+        if not isinstance(course, dict):
+            continue
+        values = [
+            course_id,
+            course.get("course_id"),
+            course.get("course_number"),
+            course.get("course_code"),
+            course.get("course_key"),
+            course.get("clean_title"),
+            course.get("official_title"),
+        ]
+        values.extend(course.get("aliases", []) if isinstance(course.get("aliases"), list) else [])
+        for value in values:
+            key = normalize_match_text(value)
+            if key:
+                lookup[key] = str(course_id)
+    return lookup
+
+
+def tab_course_ids(tab: dict[str, Any]) -> set[str]:
+    lookup = load_course_code_lookup()
+    ids: set[str] = set()
+    for value in tab.get("course_codes", []) if isinstance(tab.get("course_codes"), list) else []:
+        text = normalize_space(value)
+        if not text:
+            continue
+        if re.fullmatch(r"\d+", text):
+            ids.add(text)
+        mapped = lookup.get(normalize_match_text(text))
+        if mapped:
+            ids.add(mapped)
+    return ids
+
+
+def tab_visibility_state(tab: dict[str, Any], policy: dict[str, Any] | None = None) -> str:
+    ids = tab_course_ids(tab)
+    if not ids:
+        return "active_public"
+    states = {course_visibility_state(course_id, policy) for course_id in ids}
+    if "active_public" in states:
+        return "active_public"
+    if "menu_only_suppressed" in states:
+        return "menu_only_suppressed"
+    if "hidden" in states:
+        return "hidden"
+    return "active_public"
+
+
+def public_internal_href_exists(href: str | None) -> bool:
+    value = normalize_space(href)
+    if not value or not value.startswith("/") or value.startswith("//"):
+        return True
+    path_part = value.split("#", 1)[0].split("?", 1)[0].strip("/")
+    if not path_part:
+        return True
+    candidate = OUTPUT_DIR / path_part
+    if value.endswith("/") or candidate.is_dir():
+        candidate = candidate / "index.html"
+    return candidate.exists()
+
+
+def safe_public_href(href: str | None, fallback: str) -> str:
+    value = normalize_space(href)
+    if not value:
+        return fallback
+    return value if public_internal_href_exists(value) else fallback
 
 
 def load_free_time_scheduler_config() -> dict[str, Any]:
@@ -398,6 +675,9 @@ def public_inventory_decision(session: dict[str, Any], page: dict[str, Any]) -> 
     course_subtitle = normalize_space(session.get("course_subtitle"))
     haystack = normalize_match_text(f"{course_name} {course_subtitle} {location_raw}")
     location_clean = clean_location(location_raw)
+    course_token = normalize_space(session.get("course_id") or session.get("course_number"))
+    if not course_allows_public_inventory(course_token):
+        return False, f"excluded:course_visibility_{course_visibility_state(course_token)}"
 
     if not has_public_raw_location(session):
         return False, "excluded:raw_location_not_public"
@@ -1250,6 +1530,21 @@ def group_request_href(program: str | None = None) -> str:
 
 
 def render_empty_state(page: dict[str, Any], tab: dict[str, Any], *, group_mode: bool) -> str:
+    if tab.get("_visibility_state") == "menu_only_suppressed":
+        copy = normalize_space(tab.get("_suppressed_public_copy")) or "Public dates are not currently listed for this option. This course may be available by request or for group training."
+        help_href = "/courses/"
+        group_href = group_request_href(tab.get("program") or page.get("hero_title"))
+        return (
+            "<div class='slug-empty slug-suppressed-option'>"
+            f"<strong>{escape(tab.get('label') or 'Course option')}</strong>"
+            f"<p>{escape(copy)}</p>"
+            "<div class='slug-empty-actions'>"
+            f"<a class='button primary' href='{escape(help_href, quote=True)}'>Help Me Choose</a>"
+            f"<a class='button secondary' href='{escape(group_href, quote=True)}'>Group Training Request</a>"
+            f"<a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a>"
+            "</div>"
+            "</div>"
+        )
     onsite_href = group_request_href(tab.get("program") or page.get("hero_title"))
     return (
         "<div class='slug-empty'>"
@@ -1522,8 +1817,8 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     start_dt = parse_dt(offer.get("start_datetime"))
     end_dt = parse_dt(offer.get("end_datetime"))
     title = normalize_space(offer.get("course_title")) or "Available class time"
-    instructor = normalize_space(offer.get("instructor_key")).title()
-    location = normalize_space(offer.get("location_key")).title()
+    instructor = normalize_space(offer.get("instructor_display_name") or offer.get("instructor_key")).title()
+    location = clean_location(offer.get("location_name") or offer.get("offer_location") or offer.get("location_key"))
     url = escape(offer.get("appointment_registration_url") or "#", quote=True)
     start_attr = escape(start_dt.isoformat() if start_dt else normalize_space(offer.get("start_datetime")), quote=True)
     end_attr = escape(end_dt.isoformat() if end_dt else normalize_space(offer.get("end_datetime")), quote=True)
@@ -1535,7 +1830,7 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
         f'data-end="{end_attr}"'
     )
     return f"""
-<article class="slug-pill slug-appointment-seed-offer" {data_attrs}>
+<article class="slug-pill slug-appointment-option" {data_attrs}>
   <div class="slug-pill-date">
     <div class="slug-pill-month">{format_month(start_dt)}</div>
     <div class="slug-pill-day">{format_day(start_dt)}</div>
@@ -1547,12 +1842,12 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
       <span class="slug-pill-chip">{escape(time_range)}</span>
       <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
       <span class="slug-pill-chip">Available class option</span>
-      <span class="slug-pill-chip">Instructor: {escape(instructor)}</span>
+      {f'<span class="slug-pill-chip">Instructor: {escape(instructor)}</span>' if instructor else ''}
     </div>
     <div class="slug-pill-subtitle">{escape(title)}</div>
   </div>
   <div class="slug-pill-actions">
-    <a class="button small primary" href="{url}">Book This Class</a>
+    <a class="button small primary" href="{url}">Check this date/time</a>
   </div>
 </article>
 """.strip()
@@ -1563,12 +1858,12 @@ def render_appointment_seed_offers_section(offers: list[dict[str, Any]]) -> str:
         return ""
     cards = "\n".join(render_appointment_seed_offer_card(offer) for offer in offers)
     return f"""
-<section class="slug-inventory-section slug-appointment-seed-section" aria-label="Available class options">
+<section class="slug-inventory-section slug-appointment-options-section" aria-label="Available class options">
   <div class="slug-inventory-head">
     <h3>Available class option</h3>
     <p>These available options can be booked through the normal 910CPR registration path.</p>
   </div>
-  <div class="slug-pill-list slug-appointment-seed-list">
+  <div class="slug-pill-list slug-appointment-options-list">
     {cards}
   </div>
 </section>
@@ -1684,7 +1979,14 @@ def render_tab_panel(
 ) -> str:
     panel_class = "tab-panel active" if active else "tab-panel"
     keep_empty_tab_ids = {
-        "heartsaver": {"hs-pediatric-ip", "hs-pediatric-bl"},
+        "heartsaver": {
+            "hs-fa-cpr-aed-ip",
+            "hs-fa-cpr-aed-bl",
+            "hs-cpr-aed-ip",
+            "hs-cpr-aed-bl",
+            "hs-pediatric-ip",
+            "hs-pediatric-bl",
+        },
         "pals": {"pals-heartcode"},
     }
     keep_empty_attr = (
@@ -1953,16 +2255,16 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
             "copy": "For workplace and community responders who need practical first aid, CPR, and AED training. Topics include choking, naloxone awareness, FAST stroke recognition, seizures, asthma, burns, heat illness, and common injury response.",
         },
         {
-            "href": "/courses/aha-heartsaver-cpr-aed.html",
+            "href": "#hs-cpr-aed-ip",
             "image": "images/HS-CPR-AED.jpeg",
             "title": "Heartsaver CPR AED",
             "copy": "A focused CPR/AED path for people who do not need the first aid module. It reinforces adult and child choking response and why breaths may matter in opioid-related respiratory arrest.",
         },
         {
-            "href": "/courses/heartsaver-first-aid.html",
+            "href": "#hs-fa-cpr-aed-ip",
             "image": "images/HS-FA.jpeg",
-            "title": "Heartsaver First Aid",
-            "copy": "Practical first aid recognition for people with limited or no medical training, including EMS activation, seizures, asthma support, stings, ticks, burns, eye injuries, heat/cold exposure, and poison plant exposure.",
+            "title": "Heartsaver First Aid CPR AED",
+            "copy": "The broad workplace/community First Aid CPR AED path, with in-person and blended options shown below when available.",
         },
         {
             "href": "#hs-pediatric-ip",
@@ -2024,14 +2326,20 @@ def render_ecosystem_session_preview(sessions: list[dict[str, Any]], *, page_slu
           <p>For help choosing a class path, call or text 910-395-5193.</p>
         </div>
 """.rstrip()
-    selected = sort_by_start(sessions)[:3]
-    return "\n".join(render_session_card(session, group_mode=False, page_slug=page_slug) for session in selected)
+    selected = sorted(sessions, key=schedule_row_start)[:3]
+    return "\n".join(render_schedule_row_card(session, group_mode=False, page_slug=page_slug) for session in selected)
 
 
-def render_ecosystem_category_card(page: dict[str, Any], tab: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
+def render_ecosystem_category_card(
+    page: dict[str, Any],
+    tab: dict[str, Any],
+    sessions: list[dict[str, Any]],
+    *,
+    appointment_seed_offers: list[dict[str, Any]] | None = None,
+) -> str:
     card_image = escape(hub_asset_url(tab.get("card_image") or page.get("hero_image"), "images/logo.png"), quote=True)
     card_alt = escape(tab.get("card_image_alt") or tab.get("label") or page.get("hero_title") or "", quote=True)
-    href = escape(tab.get("full_schedule_url") or f"#{tab.get('id')}", quote=True)
+    href = escape(safe_public_href(tab.get("full_schedule_url"), f"#{tab.get('id')}"), quote=True)
     request_href = escape(group_request_href(tab.get("program") or tab.get("label")), quote=True)
     empty_copy = tab.get("empty_copy") or page.get("empty_copy") or "Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance."
     chips = []
@@ -2042,7 +2350,8 @@ def render_ecosystem_category_card(page: dict[str, Any], tab: dict[str, Any], se
     chips_html = f"<div class=\"finder-pill-tags\">{''.join(chips)}</div>" if chips else ""
     points_html = "".join(f"<li>{escape(point)}</li>" for point in tab.get("ecosystem_points", []))
     points_block = f"<ul class=\"ecosystem-points\">{points_html}</ul>" if points_html else ""
-    session_count = len(sessions)
+    combined_sessions = sorted([*sessions, *(appointment_seed_offers or [])], key=schedule_row_start)
+    session_count = len(combined_sessions)
     session_label = f"{session_count} upcoming date{'s' if session_count != 1 else ''}" if session_count else "Scheduling assistance available"
 
     return f"""
@@ -2058,7 +2367,7 @@ def render_ecosystem_category_card(page: dict[str, Any], tab: dict[str, Any], se
         </div>
         {points_block}
         <div class="finder-pills ecosystem-session-list">
-          {render_ecosystem_session_preview(sessions, page_slug=str(page.get('slug') or ''), empty_copy=empty_copy)}
+          {render_ecosystem_session_preview(combined_sessions, page_slug=str(page.get('slug') or ''), empty_copy=empty_copy)}
         </div>
         <div class="finder-card-actions ecosystem-card-actions">
           <a class="button primary" href="{href}">{escape(tab.get('primary_cta_label') or 'View Details')}</a>
@@ -2068,7 +2377,13 @@ def render_ecosystem_category_card(page: dict[str, Any], tab: dict[str, Any], se
 """.rstrip()
 
 
-def render_ecosystem_page(page: dict[str, Any], sessions: list[dict[str, Any]], banner_library: dict[str, dict[str, Any]]) -> str:
+def render_ecosystem_page(
+    page: dict[str, Any],
+    sessions: list[dict[str, Any]],
+    banner_library: dict[str, dict[str, Any]],
+    *,
+    appointment_seed_offers: list[dict[str, Any]] | None = None,
+) -> str:
     now = datetime.now(TZ)
     tabs = page.get("tabs", [])
     category_cards: list[str] = []
@@ -2080,8 +2395,9 @@ def render_ecosystem_page(page: dict[str, Any], sessions: list[dict[str, Any]], 
             if enriched:
                 matched.append(enriched)
         matched = sort_sessions(matched)
+        tab_seed_offers = appointment_offers_for_tab(tab, appointment_seed_offers or [])
         jump_links.append(f"<a class=\"jump-chip\" href=\"#{escape(tab['id'], quote=True)}\">{escape(tab['label'])}</a>")
-        category_cards.append(render_ecosystem_category_card(page, tab, matched))
+        category_cards.append(render_ecosystem_category_card(page, tab, matched, appointment_seed_offers=tab_seed_offers))
 
     future_cards = []
     for card in page.get("future_categories", []):
@@ -2192,7 +2508,7 @@ def render_page(
     appointment_seed_offers: list[dict[str, Any]] | None = None,
 ) -> str:
     if page.get("ecosystem_hub"):
-        return render_ecosystem_page(page, sessions, banner_library)
+        return render_ecosystem_page(page, sessions, banner_library, appointment_seed_offers=appointment_seed_offers or [])
 
     group_mode = bool(page.get("group_mode"))
     page_slug = str(page.get("slug") or "")
@@ -2201,15 +2517,33 @@ def render_page(
     first_tab = tabs[0]
 
     visible_tabs: list[tuple[dict[str, Any], list[dict[str, Any]]]] = []
+    visibility_policy = load_course_visibility_policy()
     for tab in tabs:
+        visibility_state = tab_visibility_state(tab, visibility_policy)
+        if visibility_state == "hidden":
+            continue
+        tab_course_id = next(iter(sorted(tab_course_ids(tab))), "")
+        tab = {
+            **tab,
+            "_visibility_state": visibility_state,
+            "_suppressed_public_copy": suppressed_course_copy(tab_course_id, visibility_policy) if visibility_state == "menu_only_suppressed" else "",
+        }
         matched = []
-        for session in sessions:
-            enriched = enrich_session_for_page(session, page, tab, now=now)
-            if enriched:
-                matched.append(enriched)
+        if visibility_state != "menu_only_suppressed":
+            for session in sessions:
+                enriched = enrich_session_for_page(session, page, tab, now=now)
+                if enriched:
+                    matched.append(enriched)
         matched = sort_sessions(matched)
         keep_empty_tab_ids = {
-            "heartsaver": {"hs-pediatric-ip", "hs-pediatric-bl"},
+            "heartsaver": {
+                "hs-fa-cpr-aed-ip",
+                "hs-fa-cpr-aed-bl",
+                "hs-cpr-aed-ip",
+                "hs-cpr-aed-bl",
+                "hs-pediatric-ip",
+                "hs-pediatric-bl",
+            },
             "pals": {"pals-heartcode"},
         }
         keep_empty_tab = bool(page.get("keep_empty_tabs")) or tab.get("id") in keep_empty_tab_ids.get(page_slug, set())

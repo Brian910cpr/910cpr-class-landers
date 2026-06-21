@@ -2,7 +2,12 @@
   "schema_version": "0.1",
   "description": "Read-only public sellability policy for filtering dynamic offer previews. This config does not publish offers, create appointments, or change Enrollware behavior.",
   "enabled_course_ids": [
-    "445670"
+    "445670",
+    "344085",
+    "209808",
+    "209809",
+    "329495",
+    "351632"
   ],
   "disabled_course_ids": [],
   "enabled_course_families": [
@@ -31,6 +36,7 @@
     "PALS": []
   },
   "max_offers_per_course_per_day": 4,
+  "max_offers_per_course_per_week": 3,
   "max_total_offers_per_day": 24,
   "hide_online_only": true,
   "hide_manual_only": true,

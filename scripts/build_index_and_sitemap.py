@@ -28,6 +28,7 @@ SITEMAP_FILE = DOCS_DIR / "sitemap.xml"
 SCHEDULE_FUTURE_FILE = DOCS_DIR / "data" / "schedule_future.json"
 CANONICAL_CLASS_REPORT_FILE = DOCS_DIR / "data" / "canonical_schedule_from_class_report.json"
 REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
+COURSE_VISIBILITY_POLICY_FILE = ROOT / "data" / "config" / "course_visibility_policy.json"
 
 SITE_BASE = "https://www.910cpr.com"
 GTM_ID = "GTM-PQS8DCBH"
@@ -111,6 +112,41 @@ def load_google_review_stats() -> dict:
     ]
     label = f"{len(five_star)} 5-star reviews on Google" if five_star else fallback["label"]
     return {"label": label, "themes": review_theme_summaries()}
+
+
+def load_course_visibility_policy() -> dict:
+    if not COURSE_VISIBILITY_POLICY_FILE.exists():
+        return {}
+    try:
+        payload = json.loads(COURSE_VISIBILITY_POLICY_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def course_visibility_record(course_id: str | None, policy: dict | None = None) -> dict:
+    policy = policy if isinstance(policy, dict) else load_course_visibility_policy()
+    courses = policy.get("courses", {}) if isinstance(policy, dict) else {}
+    record = courses.get(str(course_id or "").strip(), {}) if isinstance(courses, dict) else {}
+    return record if isinstance(record, dict) else {}
+
+
+def course_visibility_state(course_id: str | None, policy: dict | None = None) -> str:
+    record = course_visibility_record(course_id, policy)
+    state = str(record.get("state") or "").strip()
+    if state:
+        return state
+    policy = policy if isinstance(policy, dict) else load_course_visibility_policy()
+    return str(policy.get("default_state") or "active_public").strip() or "active_public"
+
+
+def course_allows_classes_inventory(course_id: str | None, policy: dict | None = None) -> bool:
+    state = course_visibility_state(course_id, policy)
+    if state == "hidden":
+        return False
+    if state == "menu_only_suppressed":
+        return False
+    return True
 
 
 def review_theme_summaries() -> list[str]:
@@ -410,6 +446,10 @@ def schedule_future_to_public_session(session: dict) -> dict | None:
         pass
     course_id = str(session.get("course_id") or "").strip()
     course_number = str(session.get("course_number") or "").strip()
+    visibility_policy = load_course_visibility_policy()
+    visibility_token = course_id if is_valid_course_token(course_id) else course_number
+    if not course_allows_classes_inventory(visibility_token, visibility_policy):
+        return None
 
     return {
         "session_id": session_id,
@@ -516,6 +556,9 @@ def render_classes_finder_index(
     intro: str = "Find an upcoming CPR, BLS, ACLS, PALS, or First Aid class by course, date, and location. Filters work together, so choosing one option narrows the other dropdowns to available combinations.",
     canonical_path: str = "/classes/index.html",
     page_name: str = "Class Finder",
+    eyebrow: str = "Upcoming class inventory",
+    show_category_cards: bool = False,
+    show_inventory: bool = True,
 ) -> str:
     course_options = sorted({s["course_name"] for s in sessions if s.get("course_name")}, key=str.lower)
     date_options = []
@@ -559,14 +602,15 @@ def render_classes_finder_index(
             "action": "Find CPR / First Aid classes",
             "label": "Common requirements",
             "common": [
-                {"label": "First Aid CPR AED", "href": "/heartsaver.html"},
-                {"label": "CPR AED", "href": "/heartsaver.html"},
+                {"label": "First Aid CPR AED", "href": "/heartsaver.html#hs-fa-cpr-aed-ip"},
+                {"label": "CPR AED", "href": "/heartsaver.html#hs-cpr-aed-ip"},
                 {"label": "Pediatric First Aid", "href": "/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended"},
                 {"label": "Family & Friends", "href": "/heartsaver.html"},
             ],
             "link_label": "Choose your class",
             "links": [
-                ("First Aid CPR AED", "/heartsaver.html"),
+                ("First Aid CPR AED", "/heartsaver.html#hs-fa-cpr-aed-ip"),
+                ("CPR AED", "/heartsaver.html#hs-cpr-aed-ip"),
                 ("Pediatric First Aid CPR AED", "/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended"),
                 ("Family & Friends CPR", "/heartsaver.html"),
             ],
@@ -1176,24 +1220,17 @@ def render_classes_finder_index(
 </script>
 """.rstrip()
 
-    body = f"""
-{finder_styles}
-<section class="class-finder-hero">
-  <p class="course-eyebrow">Upcoming class finder</p>
-  <h1>{html_escape(h1)}</h1>
-  <p>{html_escape(intro)}</p>
-</section>
-
-<div class="class-trust-strip" aria-label="910CPR trust">
-  <span class="review-stars" aria-hidden="true">★★★★★</span>
-  <strong>Trusted by 450+ 5-star Google reviews</strong>
-  <span>Serving healthcare, workplace, school, childcare, and maritime training needs.</span>
-</div>
-
+    category_section = (
+        f"""
 <section class="class-category-grid" aria-label="Choose the right training path">
   {''.join(category_cards_html)}
 </section>
-
+""".strip()
+        if show_category_cards
+        else ""
+    )
+    inventory_section = (
+        f"""
 <section class="class-filter-panel" aria-label="Class filters">
   <div class="class-filter-field">
     <label for="class-filter-course">Course</label>
@@ -1223,6 +1260,27 @@ def render_classes_finder_index(
 </section>
 {finder_script}
 """.strip()
+        if show_inventory
+        else ""
+    )
+
+    body = f"""
+{finder_styles}
+<section class="class-finder-hero">
+  <p class="course-eyebrow">{html_escape(eyebrow)}</p>
+  <h1>{html_escape(h1)}</h1>
+  <p>{html_escape(intro)}</p>
+</section>
+
+<div class="class-trust-strip" aria-label="910CPR trust">
+  <span class="review-stars" aria-hidden="true">★★★★★</span>
+  <strong>Trusted by 450+ 5-star Google reviews</strong>
+  <span>Serving healthcare, workplace, school, childcare, and maritime training needs.</span>
+</div>
+
+{category_section}
+{inventory_section}
+""".strip()
 
     return page_template(
         title=title,
@@ -1233,6 +1291,99 @@ def render_classes_finder_index(
         canonical_path=canonical_path,
         robots_content="index,follow",
     )
+
+
+def render_heartsaver_bridge_course_page(*, title: str, description: str, canonical_path: str, primary_anchor: str) -> str:
+    options = [
+        {
+            "title": "In-person class",
+            "copy": "Choose this if you want the full classroom session with hands-on practice and instructor guidance.",
+            "href": primary_anchor,
+        },
+        {
+            "title": "Online + skills session",
+            "copy": "Choose this when the course is available as blended learning: complete the online portion first, then attend the in-person skills session.",
+            "href": primary_anchor.replace("-ip", "-bl"),
+        },
+        {
+            "title": "See all Heartsaver options",
+            "copy": "Compare First Aid CPR AED, CPR AED, Pediatric First Aid CPR AED, and related workplace/community training paths.",
+            "href": "/heartsaver.html",
+        },
+    ]
+    cards = "".join(
+        f"""
+<article class="training-option-card">
+  <h3>{html_escape(option["title"])}</h3>
+  <p>{html_escape(option["copy"])}</p>
+  <a class="text-link strong-link" href="{html_escape(option["href"])}">View this option</a>
+</article>
+""".strip()
+        for option in options
+    )
+    body = f"""
+<section class="course-hero">
+  <div class="course-hero-copy">
+    <p class="course-eyebrow">Heartsaver Course Options</p>
+    <h1>{html_escape(title)}</h1>
+    <p class="course-description">{html_escape(description)}</p>
+    <div class="course-cta-row">
+      <a class="course-primary-cta" href="{html_escape(primary_anchor)}">See dates and options</a>
+      <a class="course-secondary-cta" href="/classes/">Browse all classes</a>
+    </div>
+  </div>
+</section>
+<section class="slug-training-options">
+  <div class="section-heading">
+    <div>
+      <div class="eyebrow">Choose delivery format</div>
+      <h2>Pick the option that matches your requirement</h2>
+    </div>
+    <p class="section-copy">The Heartsaver hub shows the available delivery choices and upcoming dates from the current schedule.</p>
+  </div>
+  <div class="training-option-grid">
+    {cards}
+  </div>
+</section>
+""".strip()
+    return page_template(
+        title=f"{title} | 910CPR",
+        description=description,
+        body_html=body,
+        page_type="course_bridge",
+        page_name=title,
+        canonical_path=canonical_path,
+        robots_content="index,follow",
+    )
+
+
+def write_heartsaver_bridge_course_pages() -> None:
+    bridges = [
+        {
+            "path": COURSES_DIR / "aha-heartsaver-cpr-aed.html",
+            "title": "AHA Heartsaver CPR AED",
+            "description": "Choose Heartsaver CPR AED in-person or blended options, then view upcoming dates on the Heartsaver hub.",
+            "canonical_path": "/courses/aha-heartsaver-cpr-aed.html",
+            "primary_anchor": "/heartsaver.html#hs-cpr-aed-ip",
+        },
+        {
+            "path": COURSES_DIR / "heartsaver-first-aid.html",
+            "title": "Heartsaver First Aid CPR AED",
+            "description": "Choose Heartsaver First Aid CPR AED in-person or blended options, then view upcoming dates on the Heartsaver hub.",
+            "canonical_path": "/courses/heartsaver-first-aid.html",
+            "primary_anchor": "/heartsaver.html#hs-fa-cpr-aed-ip",
+        },
+    ]
+    for bridge in bridges:
+        bridge["path"].write_text(
+            render_heartsaver_bridge_course_page(
+                title=bridge["title"],
+                description=bridge["description"],
+                canonical_path=bridge["canonical_path"],
+                primary_anchor=bridge["primary_anchor"],
+            ),
+            encoding="utf-8",
+        )
 
 
 def render_course_page_body(course_meta: dict, future_sessions: list[dict]) -> str:
@@ -1622,8 +1773,8 @@ def render_homepage() -> str:
           <h1>Find the right CPR or medical training class</h1>
           <p class="subhead">Tell us what your job, school, employer, or licensing board asked for. We'll help you find the right class and the next available dates.</p>
           <div class="hero-actions">
-            <a class="button primary" href="#class-finder">Help me choose</a>
-            <a class="button secondary" href="/group-training.html">Training for a group or workplace</a>
+            <a class="button primary" href="#class-finder">Choose your class</a>
+            <a class="button secondary" href="/classes/">See upcoming classes</a>
           </div>
         </div>
         <div class="hero-side">
@@ -1633,7 +1784,6 @@ def render_homepage() -> str:
           </div>
         </div>
       </section>
-{render_google_trust_block()}
 
       <section class="home-finder" id="class-finder">
         <div class="section-heading">
@@ -1654,6 +1804,7 @@ def render_homepage() -> str:
           </article>
         </div>
       </section>
+{render_google_trust_block()}
     </main>
   </div>
 </div>
@@ -1859,7 +2010,20 @@ def build():
     # -----------------------------------------------------------------
     # Classes index
     # -----------------------------------------------------------------
-    CLASSES_INDEX_FILE.write_text(render_classes_finder_index(sessions), encoding="utf-8")
+    CLASSES_INDEX_FILE.write_text(
+        render_classes_finder_index(
+            sessions,
+            title="Upcoming CPR Classes | 910CPR",
+            h1="Upcoming CPR, BLS, ACLS, PALS, and First Aid classes",
+            intro="Use the filters to narrow current scheduled classes by course, date, and location. This page is for available class inventory; use Courses if you still need help choosing the right class.",
+            canonical_path="/classes/index.html",
+            page_name="Class Inventory",
+            eyebrow="Upcoming class inventory",
+            show_category_cards=False,
+            show_inventory=True,
+        ),
+        encoding="utf-8",
+    )
 
     # -----------------------------------------------------------------
     # Courses index
@@ -1869,12 +2033,16 @@ def build():
             sessions,
             title="Find a Course | 910CPR",
             h1="Find a Course",
-            intro="Find upcoming CPR, BLS, ACLS, PALS, and First Aid classes by course, date, and location.",
+            intro="Choose the course family your job, school, employer, or licensing board named. If the wording is unclear, use Help me choose and we will help you avoid the wrong class.",
             canonical_path="/courses/index.html",
             page_name="Course Finder",
+            eyebrow="Course chooser",
+            show_category_cards=True,
+            show_inventory=False,
         ),
         encoding="utf-8",
     )
+    write_heartsaver_bridge_course_pages()
 
     # Individual /courses/ pages are generated by scripts.build_courses.
     # This script owns the root index, archive indexes, locations, and sitemap.
