@@ -1,0 +1,79 @@
+{
+  "generated_at": "2026-06-19T17:21:21.958229-04:00",
+  "read_only_snapshot_export": true,
+  "calendar_sources_path": "E:\\GitHub\\910cpr-class-landers\\data\\config\\calendar_sources.json",
+  "people_catalog_path": "E:\\GitHub\\910cpr-class-landers\\data\\config\\people_catalog.json",
+  "private_calendar_secrets_path": "E:\\GitHub\\910cpr-class-landers\\data\\private\\calendar_secrets.local.json",
+  "private_calendar_secrets_loaded": false,
+  "calendar_sources_found": 3,
+  "snapshots_written": 3,
+  "total_events_exported": 19,
+  "events_exported_per_source": {
+    "amy_availability": 6,
+    "nick_availability": 0,
+    "brian_do_not_schedule": 13
+  },
+  "date_range": {
+    "start": "2026-06-19T17:21:21.208861-04:00",
+    "end": "2026-08-18T17:21:21.208861-04:00",
+    "days": 60
+  },
+  "sources": [
+    {
+      "calendar_source_id": "amy_availability",
+      "calendar_id": "c_94724071aa31a0063fbc48be80fdc73d76e604cad5043ff088156eb97e50be97@group.calendar.google.com",
+      "calendar_id_present": true,
+      "source_type": "google_calendar",
+      "export_status": "ok",
+      "failure_reason": null,
+      "url_source": "derived_public_ics_from_calendar_id",
+      "attempted_ics_url_redacted": "https://calendar.google.com/...m/public/basic.ics",
+      "events_exported": 6,
+      "snapshot_path": "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\calendar_snapshots\\amy_availability.json",
+      "warnings": [],
+      "skipped": {
+        "outside_export_window": 6
+      }
+    },
+    {
+      "calendar_source_id": "nick_availability",
+      "calendar_id": "c_992b654d9adfc7a7ced1ffe4532a186b11b4a1e74c62d48fba07dc4763677b9d@group.calendar.google.com",
+      "calendar_id_present": true,
+      "source_type": "google_calendar",
+      "export_status": "ok",
+      "failure_reason": null,
+      "url_source": "derived_public_ics_from_calendar_id",
+      "attempted_ics_url_redacted": "https://calendar.google.com/...m/public/basic.ics",
+      "events_exported": 0,
+      "snapshot_path": "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\calendar_snapshots\\nick_availability.json",
+      "warnings": [],
+      "skipped": {}
+    },
+    {
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "calendar_id_present": true,
+      "source_type": "inverse_google_calendar",
+      "export_status": "ok",
+      "failure_reason": null,
+      "url_source": "derived_public_ics_from_calendar_id",
+      "attempted_ics_url_redacted": "https://calendar.google.com/...m/public/basic.ics",
+      "events_exported": 13,
+      "snapshot_path": "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\calendar_snapshots\\brian_do_not_schedule.json",
+      "warnings": [],
+      "skipped": {
+        "outside_export_window": 10
+      }
+    }
+  ],
+  "input_errors": {
+    "calendar_sources": null,
+    "people_catalog": null,
+    "private_calendar_secrets": "missing"
+  },
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_creation_enabled": false
+}

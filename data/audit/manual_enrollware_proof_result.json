@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-06-20T08:45:00-04:00",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_page_opened": true,
+  "enrollware_form_submitted": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "deployed": false,
+  "committed": false,
+  "seed_id": "seed-offer-209806-instructor_24057895173-20260621-1700",
+  "source_offer_id": "offer-209806-instructor_24057895173-20260621-1700",
+  "expected": {
+    "course_id": "209806",
+    "course_title": "AHA BLS Provider",
+    "appointmentDayId": 260670,
+    "appointment_display_start": "2026-06-21T17:00:00",
+    "scheduler_consumption_start": "2026-06-21T17:00:00",
+    "scheduler_consumption_end": "2026-06-21T19:45:00",
+    "registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260670&startTime=5%3A00%20PM&courseId=209806"
+  },
+  "observed_enrollware_page": {
+    "page_title": "Class Enrollment",
+    "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260670&startTime=5%3A00%20PM&courseId=209806",
+    "course_title": "AHA BLS Provider (Initial)",
+    "course_id_hidden_field": "209806",
+    "date_time": "Sun 6/21/2026 from 5:00 PM to 6:00 PM",
+    "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+    "price": "$75.00",
+    "registration_button_visible": true,
+    "registration_button_text": "Continue with Registration"
+  },
+  "result": {
+    "correct_registration_path": true,
+    "correct_course": true,
+    "correct_appointment_date": true,
+    "correct_customer_facing_start_time": true,
+    "notes": [
+      "No submit/continue action was performed.",
+      "Enrollware displays a one-hour appointment block from 5:00 PM to 6:00 PM.",
+      "Lander scheduler lock remains longer: 5:00 PM to 7:45 PM for BLS Provider with buffers.",
+      "Observed Enrollware room is Room B; Lander preview currently labels the public location as Shipyard Office."
+    ]
+  }
+}

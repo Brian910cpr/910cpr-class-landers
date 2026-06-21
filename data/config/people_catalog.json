@@ -1,0 +1,4252 @@
+{
+  "schema_version": "0.1",
+  "description": "Read-only People/Instructor qualification model imported from Brian's instructor roster workbook. This does not modify public pages, Enrollware behavior, appointment URLs, Worker behavior, or solver behavior.",
+  "unknown_value": "UNKNOWN",
+  "source_workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+  "worksheets": [
+    "Sheet1"
+  ],
+  "header_row": 1,
+  "mapped_columns": {
+    "acls": 10,
+    "alt_email": 23,
+    "bls": 9,
+    "email": 2,
+    "hs": 8,
+    "instructor_id": 5,
+    "job_association": 6,
+    "last_verified": 22,
+    "name": 1,
+    "pals": 11,
+    "pears": 12,
+    "phone": 3,
+    "prior_tc": 7,
+    "transfer_status": 21
+  },
+  "people": [
+    {
+      "person_id": "instructor_3200858342",
+      "display_name": "Mathew Cox",
+      "email": "mathew.w.cox@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "3200858342",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Pender EMS",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 2,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-01-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 2,
+          "observed_value": "2026-01-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 2
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24093180885_25051648498",
+      "display_name": "Michael Gray",
+      "email": "mgray@cfcc.edu",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24093180885 / 25051648498",
+        "prior_tc": "FRA/TS87857 & Vitali",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "CFCC - Interim Program Director",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 3,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 3,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 3,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 3,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PEARS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PEARS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PEARS",
+          "source_row": 3,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 3
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_12211010879",
+      "display_name": "Robert Meyer",
+      "email": "rmeyer@surfcitync.gov",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "12211010879",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Surf City",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [
+        "wes27915@gmail.com"
+      ],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 4,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 4,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 4
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23071367409",
+      "display_name": "Thomas Hall",
+      "email": "thall@surfcitync.gov",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "23071367409",
+        "prior_tc": "FRA/TS87857 (multiple IDs: 238938206096, 248934958837)",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Surf City FD - Asst Fire Chief",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [
+        "jrhall0388@yahoo.com"
+      ],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 5,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 5,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 5
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_1120072085",
+      "display_name": "Audrie Babineau",
+      "email": "audrie.d.babineau@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "1120072085",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UCFS (ababineau@ucfs.org)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 6,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 6,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 6
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23067670652",
+      "display_name": "Taylor Jones",
+      "email": "tjones@surfcitync.gov",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "23067670652",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Surf City",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 7,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 7,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 7
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_12211010880",
+      "display_name": "Timothy VanPelt",
+      "email": "tvanpelt@surfcitync.gov",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "12211010880",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Surf City",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [
+        "tvanpelt@live.com"
+      ],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 8,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 8,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 8
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24013437008",
+      "display_name": "Cori Kiefner",
+      "email": "ckiefner@nhcgov.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24013437008",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "NHCSO - Lt Support Services",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 9,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 9,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 9
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23125524581",
+      "display_name": "Crystal Jasper",
+      "email": "cjasper@nhcgov.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "23125524581",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "NHCSO",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 10,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 10,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 10
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24015433336",
+      "display_name": "Justin Bratton",
+      "email": "jbratton@nhcgov.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24015433336",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "NHCSO",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 11,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 11,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 11
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25051721672",
+      "display_name": "Keanya Britton",
+      "email": "keanya6@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25051721672",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "CNA Instructor",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 12,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 12,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 12
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_2221028576",
+      "display_name": "Lauren Brothers",
+      "email": "labrothers@nhcgov.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "2221028576",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "NHCSO",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 13,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 13,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 13
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_2221032118",
+      "display_name": "Virginia Carey",
+      "email": "vkcarey1@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "2221032118",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "NHCSO",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 14,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 14,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 14
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_4180671442",
+      "display_name": "Amy Arnold",
+      "email": "emschick@outlook.com",
+      "phone": "910-581-0215",
+      "external_ids": {
+        "instructor_id": "4180671442",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Pender EMS - Lt A Shift / Paramedic AAS",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 15,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 15,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 15,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 15,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PEARS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PEARS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PEARS",
+          "source_row": 15,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 15
+      },
+      "assignment_mode": "PRIMARY",
+      "availability_source": "google_calendar",
+      "scheduling_role": "primary",
+      "dynamic_offer_eligible": true,
+      "scheduler_notes": "Prefill: Amy is an operational availability bridge candidate. Review before applying."
+    },
+    {
+      "person_id": "instructor_24057895173",
+      "display_name": "Brian Ennis",
+      "email": "brian@910cpr.com",
+      "phone": "910-395-5193",
+      "external_ids": {
+        "instructor_id": "24057895173",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "910CPR Owner",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 16,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 16,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 16
+      },
+      "assignment_mode": "PRIMARY",
+      "availability_source": "inverse_google_calendar",
+      "scheduling_role": "primary",
+      "dynamic_offer_eligible": true,
+      "scheduler_notes": "Prefill: Brian is the owner/primary availability bridge candidate. Review before applying."
+    },
+    {
+      "person_id": "instructor_26032275123",
+      "display_name": "Chris Radke",
+      "email": "cradke12@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "26032275123",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 17,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 17,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 17
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_ilmmedic19",
+      "display_name": "Christopher Gilmore",
+      "email": "ilmmedic19@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Construction Medic - Fox Film",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 18,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 18,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 18
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_chiefgrantrvfd",
+      "display_name": "Curtis Grant",
+      "email": "chiefgrantrvfd@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Rocky Point VFD Chief",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 19,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 19,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 19
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23112410834",
+      "display_name": "David Barnes",
+      "email": "dave383fd28@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "23112410834",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Monroe NC",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 20,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 20,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 20
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_8180709444",
+      "display_name": "David Dyches",
+      "email": "ddyches@cfcc.edu",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "8180709444",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "CFCC",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [
+        "dedyches432@mail.cfcc.edu"
+      ],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 21,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 21,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 21,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 21,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PEARS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PEARS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PEARS",
+          "source_row": 21,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 21
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26035266004",
+      "display_name": "Eddie Rouse",
+      "email": "empkrouse@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "26035266004",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Asst. Chief GCFD",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 22,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 22,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 22
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26015916222",
+      "display_name": "Eric Brown",
+      "email": "ebrown@nhcgov.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "26015916222",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "NHCSO",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 23,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-01-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 23,
+          "observed_value": "2026-01-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 23
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_lyonh18006",
+      "display_name": "Hurst Lyon",
+      "email": "lyonh18006@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 24,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 24,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 24
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25101030688",
+      "display_name": "Ivy Floyd",
+      "email": "ivy.floyd@atkinsonnc.org",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25101030688",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Atkinson NC",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 25,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-12-27",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 25,
+          "observed_value": "2026-12-27"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 25
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25051684127",
+      "display_name": "Jamie Craner",
+      "email": "jcraner90@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25051684127",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "CFCC",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 26,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 26,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 26,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 26,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 26
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_7210969235",
+      "display_name": "Jana Gordon",
+      "email": "janagordon@live.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "7210969235",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Arkansas (relocated)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 27,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 27,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 27
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24028932395",
+      "display_name": "Jasmine Bryant",
+      "email": "jasminebryant1989@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24028932395",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 28,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 28,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 28
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24057864126",
+      "display_name": "Jessica Smith",
+      "email": "smithjess1616@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24057864126",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "AR (relocated)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 29,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 29,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 29
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24125098721",
+      "display_name": "Jewel Lowe",
+      "email": "jewel050111@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24125098721",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Phoenix Spirit Group",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 30,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 30,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 30
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25054324038",
+      "display_name": "Joel Cuza",
+      "email": "jcuza86@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25054324038",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 31,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 31,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 31,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 31,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 31
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25100963634",
+      "display_name": "Joseph Fyffe",
+      "email": "joefyffe22@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25100963634",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "GE Aerospace",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [
+        "joseph.fyffe@geaerospace.com"
+      ],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 32,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 32,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 32
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24070512131",
+      "display_name": "Katherine Raynor",
+      "email": "drjbraynor@aol.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24070512131",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Phoenix Spirit Group",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [
+        "katietaylor4502@gmail.com"
+      ],
+      "certifications": [
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 33,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 33,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PEARS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PEARS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PEARS",
+          "source_row": 33,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 33
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_9210980422",
+      "display_name": "Luke Raynor",
+      "email": "lraynor00@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "9210980422",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Turkey Creek VFD",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 34,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 34,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 34
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_10221108279",
+      "display_name": "Michele Kabay",
+      "email": "mmjmpkab@outlook.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "10221108279",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "910CPR",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 35,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 35,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 35
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23061715782",
+      "display_name": "Nicholas Hubbard",
+      "email": "nsh316@rocketmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "23061715782",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Surf City (via Penny Britt)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 36,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 36,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 36
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_10160506833",
+      "display_name": "Nicholas Tripp",
+      "email": "nicholas@910cpr.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "10160506833",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "910CPR",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 37,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 37,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 37,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 37
+      },
+      "assignment_mode": "ON_REQUEST",
+      "availability_source": "on_request",
+      "scheduling_role": "manual",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Prefill: known likely operational person, but no local availability-window proof found; keep manual/on-request until Brian confirms."
+    },
+    {
+      "person_id": "instructor_23079876374",
+      "display_name": "Paul Fowler",
+      "email": "paullivingston.fowler@geaerospace.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "23079876374",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "GE Aerospace",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 38,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 38,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 38
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25031075837",
+      "display_name": "Phillip Groves",
+      "email": "emtp81@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25031075837",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 39,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 39,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 39,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 39,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PEARS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PEARS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PEARS",
+          "source_row": 39,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 39
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24123612339",
+      "display_name": "Raymond Lowe",
+      "email": "rlowe0501@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24123612339",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Phoenix Spirit Group",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 40,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 40,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 40
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_10210993355",
+      "display_name": "Rodney Covault",
+      "email": "rcovault1@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "10210993355",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 41,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 41,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 41
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_11102105667",
+      "display_name": "Scott Wyland",
+      "email": "swyland2100@hotmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "11102105667",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "CFCC",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 42,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 42,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 42,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 42,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PEARS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PEARS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PEARS",
+          "source_row": 42,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 42
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24125980635",
+      "display_name": "Todd Deisler",
+      "email": "todddeisler@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24125980635",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Brighter Start Health",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 43,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 43
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25065874107",
+      "display_name": "Troy Ware",
+      "email": "troysware@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25065874107",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "CFCC",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 44,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 44,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 44,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PEARS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PEARS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PEARS",
+          "source_row": 44,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 44
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26033061958",
+      "display_name": "Brian Williamson",
+      "email": "bwilliamson8330@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "26033061958",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 45,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 45,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 45
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25041450289",
+      "display_name": "Brandon Grubbs",
+      "email": "bcgrubbs47@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25041450289",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Novant Health - NRP",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 46,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 46,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 46
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_4210944883",
+      "display_name": "Burke Bailey",
+      "email": "burkebbailey@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "4210944883",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Surf City FD (classes)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 47,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 47,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 47
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25104363966",
+      "display_name": "Clark Harvell",
+      "email": "clarkharvell@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25104363966",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 48,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 48,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 48
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24050859659",
+      "display_name": "Damiano Whittington",
+      "email": "domwhittington@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24050859659",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Bladen Co Schools",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 49,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 49,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 49
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25103788969",
+      "display_name": "Daniel Burgess",
+      "email": "dan.burgess83@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25103788969",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 50,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-12-27",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 50,
+          "observed_value": "2026-12-27"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 50
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25046599330",
+      "display_name": "Felicia Fisher",
+      "email": "fefisher212@mail.cfcc.edu",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25046599330",
+        "prior_tc": "Vitali/TN20925",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "CFCC",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 51,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 51,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 51,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 51,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PEARS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PEARS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PEARS",
+          "source_row": 51,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 51
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24059030952",
+      "display_name": "Irvine Furman IV",
+      "email": "kf0rm8n@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "24059030952",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "CFCC",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_ACLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "ACLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "ACLS",
+          "source_row": 52,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PALS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PALS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PALS",
+          "source_row": 52,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_PEARS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "PEARS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "PEARS",
+          "source_row": 52,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 52
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25103368549",
+      "display_name": "Karyn Borner",
+      "email": "karyn.borner@penderems.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25103368549",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Pender EMS",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [
+        "bvbarmy042@gmail.com"
+      ],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 53,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-12-27",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 53,
+          "observed_value": "2026-12-27"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 53
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25113293102",
+      "display_name": "Stacey Comer",
+      "email": "sfaulk618@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25113293102",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Lanes Creek VFD",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 54,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 54,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 54
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25101954545",
+      "display_name": "Thomas Turnage",
+      "email": "thomasturnage5@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25101954545",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "CFCC",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 55,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-12-27",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 55,
+          "observed_value": "2026-12-27"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 55
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23126191594",
+      "display_name": "Justin Brown",
+      "email": "jubrown@nhcgov.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "23126191594",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "NHCSO",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 56,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-01-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 56,
+          "observed_value": "2026-01-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 56
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25107066588",
+      "display_name": "Natavius Davis",
+      "email": "zyric2004@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25107066588",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 57,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 57,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 57
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26033828346",
+      "display_name": "Justin Kennedy",
+      "email": "justin_kennedy99@outlook.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "26033828346",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 58,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 58,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 58
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26034156493",
+      "display_name": "James Murphy",
+      "email": "murphyjnc@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "26034156493",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 59,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 59,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 59
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_8221093252",
+      "display_name": "Lynndoria Newkirk",
+      "email": "divinehands032@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "8221093252",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 60,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 60,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 60
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25041665948",
+      "display_name": "Maurice Peacock",
+      "email": "mpeacock@towb.org",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "25041665948",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Town of Wrightsville Beach",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 61,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 61,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 61
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_12211010881",
+      "display_name": "Joseph Tassi",
+      "email": "jlt0692@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "12211010881",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 62,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 62,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 62
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_alanmonds",
+      "display_name": "Alan Monds",
+      "email": "alanmonds@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 63,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 63,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 63
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_aj_deb97",
+      "display_name": "Anthony Debenedictis",
+      "email": "aj.deb97@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 64,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 64,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 64
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_fir3m3dic93",
+      "display_name": "Calvin Smith",
+      "email": "fir3m3dic93@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 65,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 65,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 65
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_nathanaelwgreene",
+      "display_name": "Nathanael Greene",
+      "email": "nathanaelwgreene@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 66,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 66,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 66
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_sidneydubois18",
+      "display_name": "Sidney DuBois",
+      "email": "sidneydubois18@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "UNKNOWN",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 67,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "2026-03-28",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 67,
+          "observed_value": "2026-03-28"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 67
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26011251670",
+      "display_name": "Robert Henderson",
+      "email": "rhenderson@nhcgov.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "26011251670",
+        "prior_tc": "FRA/TS87857",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "NHCSO",
+      "transfer_status": "Complete",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 68,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 68,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 68
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_acpgkl2009",
+      "display_name": "Anita Lanier",
+      "email": "acpgkl2009@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "(CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 69,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 69,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 69
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_richardmayrvfd",
+      "display_name": "Richard May",
+      "email": "richardmayrvfd@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "(CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 70,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 70,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 70
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_gklanier42",
+      "display_name": "Gerren Lanier",
+      "email": "gklanier42@hotmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Pender Co (CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 71,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 71,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 71
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_maggie_huddleston",
+      "display_name": "Maggie Huddleston",
+      "email": "maggie.huddleston@penderems.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Pender EMS (CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 72,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 72,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 72
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_southernrrtrains",
+      "display_name": "Joseph Hofmann",
+      "email": "southernrrtrains@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "(CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 73,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 73,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 73
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_mlreynoldsjr",
+      "display_name": "Melvin Reynolds",
+      "email": "mlreynoldsjr@yahoo.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "(CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 74,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 74,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 74
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_haleyrbrown122",
+      "display_name": "Haley Brown",
+      "email": "haleyrbrown122@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "(CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 75,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 75,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 75
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_williamtaylor0525",
+      "display_name": "William Taylor III",
+      "email": "williamtaylor0525@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Red Knights MC NC26/NC6 (CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 76,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 76,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 76
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_kperry",
+      "display_name": "Kyle Perry",
+      "email": "kperry@townofleland.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Town of Leland (CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 77,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 77,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 77
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_jsmith",
+      "display_name": "Joseph Smith Jr.",
+      "email": "jsmith@burgawnc.gov",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Burgaw FD (CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 78,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 78,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 78
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_tonia_smith",
+      "display_name": "Tonia Smith",
+      "email": "tonia.smith@penderems.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "Pender EMS (CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 79,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 79,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 79
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_sierra_brooke_1225",
+      "display_name": "Sierra Harrison",
+      "email": "sierra.brooke.1225@gmail.com",
+      "phone": "UNKNOWN",
+      "external_ids": {
+        "instructor_id": "UNKNOWN",
+        "prior_tc": "UNKNOWN",
+        "aligned_tc": "UNKNOWN"
+      },
+      "relationship_type": "UNKNOWN",
+      "scheduler_status": "UNKNOWN",
+      "active_for_dynamic_scheduling": false,
+      "job_association": "(CFCC Oct 2025)",
+      "transfer_status": "UNKNOWN",
+      "last_verified": "UNKNOWN",
+      "alternate_emails": [],
+      "certifications": [
+        {
+          "certification_code": "AHA_HEARTSAVER_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "HS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "HS",
+          "source_row": 80,
+          "observed_value": "✓"
+        },
+        {
+          "certification_code": "AHA_BLS_INSTRUCTOR",
+          "provider": "AHA",
+          "family": "BLS",
+          "expiration_date": "UNKNOWN",
+          "source": "910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+          "source_column": "BLS",
+          "source_row": 80,
+          "observed_value": "✓"
+        }
+      ],
+      "source": {
+        "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+        "worksheet": "Sheet1",
+        "row": 80
+      },
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "scheduler_notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    }
+  ]
+}

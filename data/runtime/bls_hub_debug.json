@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-06-18T18:13:59.144584-04:00",
+  "generated_at": "2026-06-20T16:38:26.324927-04:00",
   "source_schedule_path": "docs/data/schedule_future.json",
   "page_slug": "bls",
-  "real_canonical_sessions_shown_count": 150,
+  "real_canonical_sessions_shown_count": 138,
   "requestable_offers_shown_count": 0,
   "requestable_offers_by_course_key": {},
   "requestable_offers_by_month": {},
@@ -11,12 +11,12 @@
     "bls-provider": {
       "label": "BLS Provider",
       "requestable_course_key": "bls",
-      "real_canonical_sessions_shown_count": 56,
+      "real_canonical_sessions_shown_count": 51,
       "requestable_offers_shown_count": 0,
-      "combined_schedule_rows_count": 56,
-      "default_visible_count": 56,
-      "real_seated_default_visible": 2,
-      "real_empty_default_visible": 54,
+      "combined_schedule_rows_count": 51,
+      "default_visible_count": 51,
+      "real_seated_default_visible": 3,
+      "real_empty_default_visible": 48,
       "requestable_default_visible": 0,
       "requestable_hidden_from_default": 0,
       "largest_real_gap_days": 14,
@@ -25,12 +25,12 @@
     "bls-renewal": {
       "label": "BLS Renewal",
       "requestable_course_key": "bls-renewal",
-      "real_canonical_sessions_shown_count": 56,
+      "real_canonical_sessions_shown_count": 51,
       "requestable_offers_shown_count": 0,
-      "combined_schedule_rows_count": 56,
-      "default_visible_count": 56,
-      "real_seated_default_visible": 3,
-      "real_empty_default_visible": 53,
+      "combined_schedule_rows_count": 51,
+      "default_visible_count": 51,
+      "real_seated_default_visible": 4,
+      "real_empty_default_visible": 47,
       "requestable_default_visible": 0,
       "requestable_hidden_from_default": 0,
       "largest_real_gap_days": 2,
@@ -39,15 +39,15 @@
     "bls-heartcode": {
       "label": "BLS HeartCode",
       "requestable_course_key": "heartcode-bls-skills",
-      "real_canonical_sessions_shown_count": 38,
+      "real_canonical_sessions_shown_count": 36,
       "requestable_offers_shown_count": 0,
-      "combined_schedule_rows_count": 38,
-      "default_visible_count": 38,
+      "combined_schedule_rows_count": 36,
+      "default_visible_count": 36,
       "real_seated_default_visible": 3,
-      "real_empty_default_visible": 35,
+      "real_empty_default_visible": 33,
       "requestable_default_visible": 0,
       "requestable_hidden_from_default": 0,
-      "largest_real_gap_days": 3,
+      "largest_real_gap_days": 5,
       "requestable_allowed_in_default": false
     }
   },
@@ -642,55 +642,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12774339",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-01T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775545",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-01T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774592",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-01T18:15:00-04:00",
+      "start_at": "2026-07-01T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -711,7 +669,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-01T18:15:00-04:00",
+      "start_at": "2026-07-01T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -1209,55 +1167,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12774340",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-08T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775546",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-08T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774593",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-08T18:15:00-04:00",
+      "start_at": "2026-07-08T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -1278,7 +1194,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-08T18:15:00-04:00",
+      "start_at": "2026-07-08T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -1776,55 +1692,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12774341",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-15T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775547",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-15T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774594",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-15T18:15:00-04:00",
+      "start_at": "2026-07-15T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -1845,7 +1719,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-15T18:15:00-04:00",
+      "start_at": "2026-07-15T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -2322,76 +2196,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12776565",
-      "course_id": "210549",
-      "course_name": "AHA BLS HeartCode®",
-      "official_course_name": "AHA HeartCode BLS",
-      "course_key": "aha_heartcode_bls",
-      "course_code": "AHA_BLS_BL_SKILLS",
-      "start_at": "2026-07-21T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12774343",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-22T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775548",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-22T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774595",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-22T18:15:00-04:00",
+      "start_at": "2026-07-22T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -2412,7 +2223,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-22T18:15:00-04:00",
+      "start_at": "2026-07-22T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -2889,76 +2700,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12776566",
-      "course_id": "210549",
-      "course_name": "AHA BLS HeartCode®",
-      "official_course_name": "AHA HeartCode BLS",
-      "course_key": "aha_heartcode_bls",
-      "course_code": "AHA_BLS_BL_SKILLS",
-      "start_at": "2026-07-28T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12774342",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-29T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775549",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-29T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774596",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-29T18:15:00-04:00",
+      "start_at": "2026-07-29T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -2979,7 +2727,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-29T18:15:00-04:00",
+      "start_at": "2026-07-29T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"

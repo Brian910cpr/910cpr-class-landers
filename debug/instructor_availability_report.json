@@ -1,0 +1,75 @@
+{
+  "generated_at": "2026-06-19T16:58:39.258521-04:00",
+  "report_only": true,
+  "public_behavior_changed": false,
+  "fixture_path": "data\\fixtures\\instructor_calendar_events.json",
+  "fixture_loaded": true,
+  "source_mode": "live",
+  "live_ics_policy": "Live mode uses only the configured *_ICS_URL environment variables. Public Google Calendar CID web URLs are not converted to ICS URLs here; public/basic.ics or private ICS URLs must be supplied explicitly.",
+  "calendar_access_optional": true,
+  "instructors": [
+    {
+      "instructor_key": "brian",
+      "display_name": "Brian",
+      "calendar_source_key": "brian_do_not_schedule",
+      "calendar_source_loaded": true,
+      "calendar_mode": "inverse_blocking",
+      "events_source": "live",
+      "default_location_key": "shipyard",
+      "events_found": 0,
+      "normalized_hard_windows": [],
+      "normalized_soft_windows": [],
+      "unavailable_blocks": [],
+      "blocking_events": [],
+      "ignored_events": [],
+      "warnings": [
+        "No live ICS URL configured in BRIAN_BLOCKING_CALENDAR_ICS_URL. Public Google Calendar CID web URLs are not fetched directly; provide a public/basic ICS URL or private ICS URL via the configured environment variable.",
+        "Brian is inverse-blocking only in this report. No availability windows were invented; future offer generation needs a configured candidate-window generator."
+      ],
+      "final_usable_windows": [],
+      "soft_policy_note": "SOFT is flexible edge time only and is not treated as normal availability."
+    },
+    {
+      "instructor_key": "amy",
+      "display_name": "Amy",
+      "calendar_source_key": "amy_availability",
+      "calendar_source_loaded": true,
+      "calendar_mode": "explicit_availability",
+      "events_source": "live",
+      "default_location_key": "shipyard",
+      "events_found": 0,
+      "normalized_hard_windows": [],
+      "normalized_soft_windows": [],
+      "unavailable_blocks": [],
+      "blocking_events": [],
+      "ignored_events": [],
+      "warnings": [
+        "No live ICS URL configured in AMY_AVAILABILITY_ICS_URL. Public Google Calendar CID web URLs are not fetched directly; provide a public/basic ICS URL or private ICS URL via the configured environment variable.",
+        "No HARD/SOFT events found; explicit-availability instructor has no offerable availability."
+      ],
+      "final_usable_windows": [],
+      "soft_policy_note": "SOFT is flexible edge time only and is not treated as normal availability."
+    },
+    {
+      "instructor_key": "nick",
+      "display_name": "Nick",
+      "calendar_source_key": "nick_availability",
+      "calendar_source_loaded": true,
+      "calendar_mode": "explicit_availability",
+      "events_source": "live",
+      "default_location_key": "shipyard",
+      "events_found": 0,
+      "normalized_hard_windows": [],
+      "normalized_soft_windows": [],
+      "unavailable_blocks": [],
+      "blocking_events": [],
+      "ignored_events": [],
+      "warnings": [
+        "No live ICS URL configured in NICK_AVAILABILITY_ICS_URL. Public Google Calendar CID web URLs are not fetched directly; provide a public/basic ICS URL or private ICS URL via the configured environment variable.",
+        "No HARD/SOFT events found; explicit-availability instructor has no offerable availability."
+      ],
+      "final_usable_windows": [],
+      "soft_policy_note": "SOFT is flexible edge time only and is not treated as normal availability."
+    }
+  ]
+}

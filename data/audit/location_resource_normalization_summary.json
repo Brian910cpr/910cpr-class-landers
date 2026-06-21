@@ -1,0 +1,56 @@
+{
+  "generated_at": "2026-06-19T13:20:33.522833-04:00",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "canonical_shipyard_public_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+  "canonical_shipyard_restored": true,
+  "shipyard_aliases": [
+    "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+    ":: Wilmington; Shipyard Blvd",
+    "Wilmington; Shipyard Blvd",
+    "Shipyard Office"
+  ],
+  "shipyard_internal_resources": [
+    {
+      "resource_name": ":: Wilmington; Shipyard Blvd - A",
+      "confirmed_appointment_container": false,
+      "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+    },
+    {
+      "resource_name": ":: Wilmington; Shipyard Blvd - B",
+      "confirmed_appointment_container": false,
+      "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+    },
+    {
+      "resource_name": ":: Wilmington; Shipyard Blvd - C",
+      "confirmed_appointment_container": false,
+      "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+    },
+    {
+      "resource_name": ":: Wilmington; Shipyard Blvd - C (Other)",
+      "confirmed_appointment_container": false,
+      "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+    },
+    {
+      "resource_name": "Shipyard Office",
+      "confirmed_appointment_container": true,
+      "notes": "Matches the currently confirmed Brian Shipyard appointment container resource label."
+    }
+  ],
+  "live_shipyard_blocks": 7,
+  "dynamic_shipyard_offers_generated": 465,
+  "container_backed_public_offers_kept": 0,
+  "public_sellable_offers_kept": 0,
+  "seeds_selected": 0,
+  "url_previews_generated": 0,
+  "url_preview_blocked_reasons": {},
+  "notes": [
+    "Shipyard aliases normalize to one canonical public location.",
+    "A/B/C remain internal resources and do not create appointment containers.",
+    "Current Brian Shipyard live block is zero length (00:00-00:00), so it does not generate dynamic offers."
+  ]
+}

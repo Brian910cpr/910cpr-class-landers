@@ -1,0 +1,342 @@
+{
+  "generated_at": "2026-06-19T08:15:56.261991-04:00",
+  "read_only": true,
+  "public_site_affected": false,
+  "external_network_calls": false,
+  "files_read": [
+    "availability_window_policies",
+    "calendar_sources",
+    "course_catalog",
+    "course_consumption_rules",
+    "course_map",
+    "instructor_availability",
+    "instructor_catalog",
+    "people_catalog",
+    "schedule_future",
+    "sessions_current"
+  ],
+  "files_missing_or_unreadable": {},
+  "course_inventory_summary": {
+    "active_course_count": 30,
+    "course_ids_found": [
+      "209805",
+      "209806",
+      "209808",
+      "209809",
+      "209811",
+      "209812",
+      "209818",
+      "210549",
+      "241108",
+      "248287",
+      "248288",
+      "251496",
+      "251545",
+      "253768",
+      "329495",
+      "344085",
+      "351632",
+      "359474",
+      "359827",
+      "369209",
+      "371954",
+      "374378",
+      "410694",
+      "422270",
+      "440431",
+      "444919",
+      "445670",
+      "448630",
+      "449422",
+      "463743"
+    ],
+    "course_families_found": [
+      "ACLS",
+      "ARC",
+      "BLS",
+      "HSI",
+      "Heartsaver",
+      "PALS",
+      "USCG"
+    ],
+    "duration_capacity_rules_found": 30,
+    "primary_course_rule_source": "data/config/course_catalog.json",
+    "courses_missing_duration_rules": [],
+    "courses_missing_capacity_rules": [],
+    "courses_unsafe_for_appointment_generation": []
+  },
+  "instructor_catalog_summary": {
+    "instructors_found": 7,
+    "active_instructors": 3,
+    "certifications_known": [],
+    "certifications_unknown_instructors": [
+      "A.  Arnold",
+      "Amy",
+      "B.  Ennis",
+      "BLS Sample Instructor",
+      "Brian",
+      "N.  Tripp",
+      "Nick"
+    ],
+    "certifications_unknown_count": 7,
+    "courses_with_no_exact_qualified_instructor": [
+      {
+        "course_id": "209811",
+        "course_title": "AHA ACLS HeartCode",
+        "required_instructor_certifications": "AHA_ACLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "241108",
+        "course_title": "AHA ACLS Provider (Initial)",
+        "required_instructor_certifications": "AHA_ACLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "209818",
+        "course_title": "AHA ACLS Provider (Renewal)",
+        "required_instructor_certifications": "AHA_ACLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "369209",
+        "course_title": "American Red Cross Adult and Pediatric First Aid/CPR/AED",
+        "required_instructor_certifications": "ARC_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "410694",
+        "course_title": "American Red Cross Adult and Pediatric First Aid/CPR/AED Blended Learning",
+        "required_instructor_certifications": "ARC_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "444919",
+        "course_title": "American Red Cross BLS Challenge",
+        "required_instructor_certifications": "ARC_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "248288",
+        "course_title": "American Red Cross Basic Life Support",
+        "required_instructor_certifications": "ARC_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "248287",
+        "course_title": "American Red Cross Basic Life Support - Blended Learning",
+        "required_instructor_certifications": "ARC_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "209806",
+        "course_title": "AHA BLS Provider",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "359474",
+        "course_title": "AHA BLS Provider Renewal",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "210549",
+        "course_title": "AHA HeartCode BLS",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "440431",
+        "course_title": "BLS Provider Blended Learning (Online Course; Group; In-person Skills Testing)",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "374378",
+        "course_title": "HSI Adult First Aid | CPR AED",
+        "required_instructor_certifications": "HSI_INSTRUCTOR"
+      },
+      {
+        "course_id": "422270",
+        "course_title": "HSI Adult First Aid | CPR AED",
+        "required_instructor_certifications": "HSI_INSTRUCTOR"
+      },
+      {
+        "course_id": "371954",
+        "course_title": "HSI Adult First Aid | CPR AED - Blended Learning",
+        "required_instructor_certifications": "HSI_INSTRUCTOR"
+      },
+      {
+        "course_id": "463743",
+        "course_title": "HSI BLS Challenge",
+        "required_instructor_certifications": "HSI_INSTRUCTOR"
+      },
+      {
+        "course_id": "445670",
+        "course_title": "HSI BLS and Adult First Aid | Blended Learning",
+        "required_instructor_certifications": "HSI_INSTRUCTOR"
+      },
+      {
+        "course_id": "448630",
+        "course_title": "HSI Basic Life Support",
+        "required_instructor_certifications": "HSI_INSTRUCTOR"
+      },
+      {
+        "course_id": "449422",
+        "course_title": "HSI Pediatric First Aid | CPR AED - Blended",
+        "required_instructor_certifications": "HSI_INSTRUCTOR"
+      },
+      {
+        "course_id": "344085",
+        "course_title": "AHA Heartsaver CPR AED",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "209808",
+        "course_title": "AHA Heartsaver CPR AED Online",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "209809",
+        "course_title": "AHA Heartsaver First Aid CPR AED",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "329495",
+        "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "351632",
+        "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "251545",
+        "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "209812",
+        "course_title": "AHA PALS HeartCode",
+        "required_instructor_certifications": "AHA_PALS_INSTRUCTOR"
+      },
+      {
+        "course_id": "209805",
+        "course_title": "AHA PALS Provider",
+        "required_instructor_certifications": "AHA_PALS_INSTRUCTOR"
+      },
+      {
+        "course_id": "251496",
+        "course_title": "AHA PALS Renewal",
+        "required_instructor_certifications": "AHA_PALS_INSTRUCTOR"
+      },
+      {
+        "course_id": "253768",
+        "course_title": "USCG Elementary First Aid | CPR (AHA Heartsaver)",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      },
+      {
+        "course_id": "359827",
+        "course_title": "USCG Elementary First Aid | CPR - Blended",
+        "required_instructor_certifications": "AHA_BLS_INSTRUCTOR"
+      }
+    ],
+    "remaining_missing_instructor_qualification_count": 166
+  },
+  "people_catalog_summary": {
+    "people_catalog_read": true,
+    "people_count": 79,
+    "people_with_certifications": 79,
+    "people_scheduler_enabled": 2,
+    "availability_instructors": [
+      "Amy",
+      "BLS Sample Instructor",
+      "Brian"
+    ],
+    "availability_instructors_matched_to_people": [
+      {
+        "availability_instructor": "Amy",
+        "person_id": "instructor_4180671442",
+        "display_name": "Amy Arnold",
+        "scheduler_enabled": true,
+        "assignment_mode": "PRIMARY",
+        "dynamic_offer_eligible": true,
+        "certification_codes": [
+          "AHA_ACLS_INSTRUCTOR",
+          "AHA_BLS_INSTRUCTOR",
+          "AHA_HEARTSAVER_INSTRUCTOR",
+          "AHA_PALS_INSTRUCTOR",
+          "AHA_PEARS_INSTRUCTOR"
+        ]
+      },
+      {
+        "availability_instructor": "Brian",
+        "person_id": "instructor_24057895173",
+        "display_name": "Brian Ennis",
+        "scheduler_enabled": true,
+        "assignment_mode": "PRIMARY",
+        "dynamic_offer_eligible": true,
+        "certification_codes": [
+          "AHA_BLS_INSTRUCTOR",
+          "AHA_HEARTSAVER_INSTRUCTOR"
+        ]
+      }
+    ],
+    "courses_with_qualified_scheduler_enabled_instructor": [
+      "209805",
+      "209806",
+      "209808",
+      "209809",
+      "209811",
+      "209812",
+      "209818",
+      "210549",
+      "241108",
+      "251496",
+      "251545",
+      "253768",
+      "329495",
+      "344085",
+      "351632",
+      "359474",
+      "359827",
+      "440431"
+    ],
+    "courses_with_availability_bridge_qualified_instructor": [],
+    "remaining_missing_instructor_qualification": 166
+  },
+  "existing_scheduled_occupancy_count": 566,
+  "availability_input_summary": {
+    "calendar_sources_declared": [
+      {
+        "calendar_source_key": "amy_availability",
+        "display_name": "910CPR - Amy Availability",
+        "calendar_mode": "explicit_availability",
+        "active": true,
+        "missing_access_policy": "warn_and_produce_no_offerable_windows",
+        "live_fetch_performed": false
+      },
+      {
+        "calendar_source_key": "nick_availability",
+        "display_name": "910CPR - Nick Availability",
+        "calendar_mode": "explicit_availability",
+        "active": true,
+        "missing_access_policy": "warn_and_produce_no_offerable_windows",
+        "live_fetch_performed": false
+      },
+      {
+        "calendar_source_key": "brian_do_not_schedule",
+        "display_name": "910CPR - Brian DoNotSchedule",
+        "calendar_mode": "inverse_blocking",
+        "active": true,
+        "missing_access_policy": "warn_and_do_not_invent_availability",
+        "live_fetch_performed": false
+      }
+    ],
+    "live_calendar_fetch_performed": false,
+    "explicit_local_availability_window_count": 15,
+    "availability_status_counts": {
+      "available": 14,
+      "diagnostic_out_of_range": 1
+    },
+    "dns_or_do_not_schedule_markers": "UNKNOWN unless represented in local snapshots; live calendars were not fetched",
+    "adr_or_employment_blocks": "UNKNOWN unless represented in local snapshots; live calendars were not fetched"
+  },
+  "candidate_count": 190,
+  "rejection_count": 231,
+  "top_rejection_reasons": {
+    "missing_instructor_qualification": 166,
+    "outside_configured_policy_window": 43,
+    "course_family_only_available_as_manual_fallback": 22
+  }
+}

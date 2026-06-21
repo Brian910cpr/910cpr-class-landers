@@ -1,0 +1,274 @@
+{
+  "created_at": "2026-06-19T14:07:32",
+  "roadmap": "March 2027 Enrollware exit roadmap",
+  "target_cutoff_date": "2027-03-01",
+  "current_appointment_window": {
+    "first_valid_date": "2026-06-21",
+    "last_valid_date": "2027-04-30",
+    "active_container_count": 1,
+    "active_container_ids": [
+      "shipyard_brian_continuous_20260621_20270430"
+    ]
+  },
+  "current_dependency_risks": [
+    "Current deterministic appointmentDayId bridge depends on known container ranges that expire around 2027-04-30.",
+    "Public sellable dynamic offers currently filter to zero under confirmed-container policy.",
+    "Lander does not yet own registration/payment/roster/attendance/card workflows.",
+    "Waiting until April 2027 leaves no operational buffer if native replacement or renewed container ranges fail."
+  ],
+  "current_pipeline_state": {
+    "fixed_schedule_sessions": 249,
+    "fixed_schedule_last_listed_start": "2026-08-14T12:45:00-04:00",
+    "dynamic_offers_read": 694,
+    "public_sellable_offers_kept": 0,
+    "seeds_selected": 0,
+    "urls_previewed": 0,
+    "container_hidden_reasons": {
+      "missing_container_for_instructor": 465,
+      "location_mismatch": 229
+    }
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Shadow dynamic scheduling",
+      "goal": "Run the dynamic scheduler beside fixed Enrollware classes with no customer-facing behavior change.",
+      "required_components": [
+        "Class Report ingestion",
+        "course_catalog.json",
+        "people_catalog.json",
+        "live availability snapshots",
+        "dynamic offer generation",
+        "audit reports"
+      ],
+      "current_repo_artifacts": [
+        "scripts/build_sessions_current.py",
+        "scripts/build_schedule_future.py",
+        "scripts/export_calendar_snapshots.py",
+        "scripts/build_live_availability_snapshot.py",
+        "scripts/generate_dynamic_offers.py",
+        "data/audit/dynamic_offers_preview.json"
+      ],
+      "missing_work": [
+        "Keep calendar export reliable",
+        "Close remaining course/container mismatches",
+        "Operator review cadence"
+      ],
+      "go_no_go_criteria": [
+        "No public pages changed",
+        "No appointments created",
+        "Occupancy blocks existing classes",
+        "Reports explain all major rejection reasons"
+      ],
+      "rollback_plan": "Stop running preview pipeline and continue fixed Enrollware schedule only."
+    },
+    {
+      "phase": 2,
+      "name": "Internal live preview",
+      "goal": "Let Brian/admin review proposed dynamic seeds before they are public.",
+      "required_components": [
+        "reviewable seed reports",
+        "container coverage reports",
+        "admin preview surface or files",
+        "manual approval process"
+      ],
+      "current_repo_artifacts": [
+        "scripts/filter_public_sellable_offers.py",
+        "scripts/select_schedule_seeds.py",
+        "data/audit/public_sellable_offers_preview.json",
+        "data/audit/schedule_seeds_preview.json",
+        "data/audit/appointment_container_coverage_review.md"
+      ],
+      "missing_work": [
+        "Internal preview UI",
+        "review annotations/import path",
+        "clear approval records"
+      ],
+      "go_no_go_criteria": [
+        "Seeds are understandable",
+        "No seed is published automatically",
+        "Rejected seeds are traceable to policy reasons"
+      ],
+      "rollback_plan": "Hide/ignore internal preview output; keep fixed public schedule."
+    },
+    {
+      "phase": 3,
+      "name": "Limited public pilot",
+      "goal": "Publish a very small set of dynamic options for one proven path only.",
+      "required_components": [
+        "confirmed appointment container",
+        "URL preview success",
+        "customer fallback message",
+        "feature flag",
+        "manual monitoring"
+      ],
+      "current_repo_artifacts": [
+        "data/inventory/appointment_containers.json",
+        "scripts/build_seed_appointment_url_preview.py",
+        "worker/recheck_seed_worker_plan.md"
+      ],
+      "missing_work": [
+        "Nonzero Brian + Shipyard URL-capable seeds",
+        "disabled-by-default public wiring",
+        "click-time recheck implementation"
+      ],
+      "go_no_go_criteria": [
+        "At least one reviewed seed generates correct preview URL",
+        "No missing container coverage for pilot path",
+        "Rollback flag tested"
+      ],
+      "rollback_plan": "Disable dynamic flag and show fixed schedule/contact fallback."
+    },
+    {
+      "phase": 4,
+      "name": "Container-backed Enrollware bridge",
+      "goal": "Use Enrollware as enrollment/roster endpoint while Lander owns offer selection.",
+      "required_components": [
+        "appointment container registry",
+        "server-side URL rebuild",
+        "click-time calendar recheck",
+        "occupancy refresh",
+        "bridge monitoring"
+      ],
+      "current_repo_artifacts": [
+        "data/inventory/appointment_containers.json",
+        "scripts/build_seed_appointment_url_preview.py",
+        "worker/src/recheckSeed.ts"
+      ],
+      "missing_work": [
+        "Worker route implementation",
+        "Google API auth",
+        "server-side deterministic URL rebuild",
+        "runtime monitoring/logging"
+      ],
+      "go_no_go_criteria": [
+        "Worker refuses stale/invalid seeds",
+        "Worker rebuilds URL from trusted config",
+        "No browser-supplied URL is trusted"
+      ],
+      "rollback_plan": "Return buttons to fixed Enrollware class links only."
+    },
+    {
+      "phase": 5,
+      "name": "Native Lander registration/payment",
+      "goal": "Move registration intent, customer intake, and payment into Lander-controlled flow.",
+      "required_components": [
+        "registration intake model",
+        "customer records",
+        "payment provider",
+        "confirmation flow",
+        "admin review tools"
+      ],
+      "current_repo_artifacts": [
+        "docs/910cpr_lander_scheduler_scope_lock.md",
+        "data/config/people_catalog.json",
+        "data/config/course_catalog.json"
+      ],
+      "missing_work": [
+        "Registration schema",
+        "payment integration decision",
+        "receipt/refund flow",
+        "privacy/security review"
+      ],
+      "go_no_go_criteria": [
+        "Payment and registration state are reliable",
+        "Manual admin recovery path exists",
+        "No duplicate booking risk"
+      ],
+      "rollback_plan": "Stop native checkout and route registrations back to Enrollware."
+    },
+    {
+      "phase": 6,
+      "name": "Native roster/attendance/card workflow support",
+      "goal": "Support the operational workflows Enrollware currently covers after payment.",
+      "required_components": [
+        "roster management",
+        "attendance",
+        "instructor view",
+        "completion status",
+        "card/certificate workflow integration or export"
+      ],
+      "current_repo_artifacts": [
+        "data/config/course_catalog.json",
+        "data/config/people_catalog.json",
+        "docs/910cpr_lander_scheduler_punchlist.md"
+      ],
+      "missing_work": [
+        "Roster UI",
+        "attendance capture",
+        "completion/card workflow design",
+        "audit trail",
+        "exports"
+      ],
+      "go_no_go_criteria": [
+        "Admin can run a class from Lander data",
+        "Completion/card workflow is accounted for",
+        "Records are auditable"
+      ],
+      "rollback_plan": "Keep Enrollware as roster/source of record until workflow parity exists."
+    },
+    {
+      "phase": 7,
+      "name": "Enrollware fallback reduction",
+      "goal": "Reduce Enrollware from scheduling brain to backup/exception path.",
+      "required_components": [
+        "native registration confidence",
+        "native roster confidence",
+        "operational reporting",
+        "support procedures"
+      ],
+      "current_repo_artifacts": [
+        "docs/schedule_handoff_transition_plan.md",
+        "docs/scheduler_pipeline_operator_runbook.md"
+      ],
+      "missing_work": [
+        "Production operating checklist",
+        "incident response",
+        "data backup/export strategy",
+        "owner signoff"
+      ],
+      "go_no_go_criteria": [
+        "Most normal classes can be sold and managed without Enrollware",
+        "Fallback remains tested",
+        "No critical workflow depends on appointmentDayId bridge"
+      ],
+      "rollback_plan": "Renew/refresh appointmentDayId ranges and keep Enrollware as active bridge."
+    },
+    {
+      "phase": 8,
+      "name": "Enrollware exit or backup-only mode",
+      "goal": "Choose whether to retire Enrollware from core operations or retain it as a backup.",
+      "required_components": [
+        "final workflow parity review",
+        "data retention/export",
+        "financial reconciliation",
+        "support docs",
+        "owner approval"
+      ],
+      "current_repo_artifacts": [
+        "This roadmap",
+        "scheduler audit artifacts"
+      ],
+      "missing_work": [
+        "Final business decision",
+        "data migration/export plan",
+        "vendor cancellation/renewal decision"
+      ],
+      "go_no_go_criteria": [
+        "Lander owns scheduling, registration, payment, roster, attendance, and reporting needed for operations",
+        "Backup mode is explicitly documented if retained"
+      ],
+      "rollback_plan": "Keep/renew Enrollware as backup-only or active bridge if any critical native workflow is not ready."
+    }
+  ],
+  "march_2027_cutoff_checklist": [
+    "Native schedule generation produces reviewed public options.",
+    "Click-time recheck is live or an equivalent server-side safety gate exists.",
+    "Registration intake is native or bridge-safe.",
+    "Payment handling is native or intentionally delegated.",
+    "Roster/attendance/completion/card workflow is native or formally retained in Enrollware.",
+    "Fallback plan for renewed appointmentDayId ranges is ready by January 2027.",
+    "Owner go/no-go decision made no later than March 1, 2027."
+  ],
+  "next_safest_build_step": "Implement an internal preview/admin surface for dynamic seeds and close confirmed container coverage so at least one Brian + Shipyard seed can preview a URL, before any public wiring."
+}

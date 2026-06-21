@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1",
+  "description": "Read-only scheduler normalization map. Public locations stay customer-friendly while internal resources remain available for occupancy/conflict logic.",
+  "locations": [
+    {
+      "location_key": "shipyard",
+      "canonical_public_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_name": "910CPR Shipyard Office",
+      "aliases": [
+        "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+        ":: Wilmington; Shipyard Blvd",
+        "Wilmington; Shipyard Blvd",
+        "Shipyard Office"
+      ],
+      "internal_resources": [
+        {
+          "resource_name": ":: Wilmington; Shipyard Blvd - A",
+          "confirmed_appointment_container": false,
+          "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+        },
+        {
+          "resource_name": ":: Wilmington; Shipyard Blvd - B",
+          "confirmed_appointment_container": false,
+          "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+        },
+        {
+          "resource_name": ":: Wilmington; Shipyard Blvd - C",
+          "confirmed_appointment_container": false,
+          "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+        },
+        {
+          "resource_name": ":: Wilmington; Shipyard Blvd - C (Other)",
+          "confirmed_appointment_container": false,
+          "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+        },
+        {
+          "resource_name": "Shipyard Office",
+          "confirmed_appointment_container": true,
+          "notes": "Matches the currently confirmed Brian Shipyard appointment container resource label."
+        }
+      ]
+    }
+  ],
+  "public_display_rule": "Show Shipyard as one public office. Keep A/B/C and Shipyard Office as internal resource labels unless Brian explicitly approves showing them.",
+  "safety_note": "This map normalizes public location names. It does not create or infer appointment containers for A/B/C."
+}

@@ -1,17 +1,13 @@
 {
   "dataset_used": "docs/data/schedule_future.json",
   "pages_deleted_count": 0,
-  "live_specific_class_pages_count": 250,
-  "retained_course_landers_count": 48,
+  "live_specific_class_pages_count": 218,
+  "retained_course_landers_count": 80,
   "needs_review_count": 0,
   "live_specific_class_pages": [
     {
       "class_id": "10009277",
       "path": "docs/classes/10009277.html"
-    },
-    {
-      "class_id": "12774031",
-      "path": "docs/classes/12774031.html"
     },
     {
       "class_id": "12774032",
@@ -36,26 +32,6 @@
     {
       "class_id": "12774088",
       "path": "docs/classes/12774088.html"
-    },
-    {
-      "class_id": "12774089",
-      "path": "docs/classes/12774089.html"
-    },
-    {
-      "class_id": "12774090",
-      "path": "docs/classes/12774090.html"
-    },
-    {
-      "class_id": "12774091",
-      "path": "docs/classes/12774091.html"
-    },
-    {
-      "class_id": "12774092",
-      "path": "docs/classes/12774092.html"
-    },
-    {
-      "class_id": "12774093",
-      "path": "docs/classes/12774093.html"
     },
     {
       "class_id": "12774094",
@@ -100,26 +76,6 @@
     {
       "class_id": "12774338",
       "path": "docs/classes/12774338.html"
-    },
-    {
-      "class_id": "12774339",
-      "path": "docs/classes/12774339.html"
-    },
-    {
-      "class_id": "12774340",
-      "path": "docs/classes/12774340.html"
-    },
-    {
-      "class_id": "12774341",
-      "path": "docs/classes/12774341.html"
-    },
-    {
-      "class_id": "12774342",
-      "path": "docs/classes/12774342.html"
-    },
-    {
-      "class_id": "12774343",
-      "path": "docs/classes/12774343.html"
     },
     {
       "class_id": "12774344",
@@ -346,26 +302,6 @@
       "path": "docs/classes/12775544.html"
     },
     {
-      "class_id": "12775545",
-      "path": "docs/classes/12775545.html"
-    },
-    {
-      "class_id": "12775546",
-      "path": "docs/classes/12775546.html"
-    },
-    {
-      "class_id": "12775547",
-      "path": "docs/classes/12775547.html"
-    },
-    {
-      "class_id": "12775548",
-      "path": "docs/classes/12775548.html"
-    },
-    {
-      "class_id": "12775549",
-      "path": "docs/classes/12775549.html"
-    },
-    {
       "class_id": "12775550",
       "path": "docs/classes/12775550.html"
     },
@@ -424,26 +360,6 @@
     {
       "class_id": "12775789",
       "path": "docs/classes/12775789.html"
-    },
-    {
-      "class_id": "12775790",
-      "path": "docs/classes/12775790.html"
-    },
-    {
-      "class_id": "12775791",
-      "path": "docs/classes/12775791.html"
-    },
-    {
-      "class_id": "12775792",
-      "path": "docs/classes/12775792.html"
-    },
-    {
-      "class_id": "12775793",
-      "path": "docs/classes/12775793.html"
-    },
-    {
-      "class_id": "12775794",
-      "path": "docs/classes/12775794.html"
     },
     {
       "class_id": "12775795",
@@ -522,10 +438,6 @@
       "path": "docs/classes/12776000.html"
     },
     {
-      "class_id": "12776142",
-      "path": "docs/classes/12776142.html"
-    },
-    {
       "class_id": "12776143",
       "path": "docs/classes/12776143.html"
     },
@@ -548,26 +460,6 @@
     {
       "class_id": "12776155",
       "path": "docs/classes/12776155.html"
-    },
-    {
-      "class_id": "12776156",
-      "path": "docs/classes/12776156.html"
-    },
-    {
-      "class_id": "12776157",
-      "path": "docs/classes/12776157.html"
-    },
-    {
-      "class_id": "12776158",
-      "path": "docs/classes/12776158.html"
-    },
-    {
-      "class_id": "12776159",
-      "path": "docs/classes/12776159.html"
-    },
-    {
-      "class_id": "12776160",
-      "path": "docs/classes/12776160.html"
     },
     {
       "class_id": "12776161",
@@ -714,14 +606,6 @@
       "path": "docs/classes/12776564.html"
     },
     {
-      "class_id": "12776565",
-      "path": "docs/classes/12776565.html"
-    },
-    {
-      "class_id": "12776566",
-      "path": "docs/classes/12776566.html"
-    },
-    {
       "class_id": "12776567",
       "path": "docs/classes/12776567.html"
     },
@@ -806,14 +690,6 @@
       "path": "docs/classes/12776780.html"
     },
     {
-      "class_id": "12776781",
-      "path": "docs/classes/12776781.html"
-    },
-    {
-      "class_id": "12776782",
-      "path": "docs/classes/12776782.html"
-    },
-    {
       "class_id": "12776783",
       "path": "docs/classes/12776783.html"
     },
@@ -896,10 +772,6 @@
     {
       "class_id": "13472491",
       "path": "docs/classes/13472491.html"
-    },
-    {
-      "class_id": "13600390",
-      "path": "docs/classes/13600390.html"
     },
     {
       "class_id": "13601250",
@@ -1012,335 +884,567 @@
       "path": "docs/classes/10009265.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA PALS Instructor Renewal",
-      "course_hub": "/pals.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "10009276",
       "path": "docs/classes/10009276.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA PALS Instructor Renewal",
-      "course_hub": "/pals.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "11341054",
       "path": "docs/classes/11341054.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Instructor Renewal",
-      "course_hub": "/bls.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774031",
+      "path": "docs/classes/12774031.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12774033",
       "path": "docs/classes/12774033.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA ACLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209811"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12774034",
       "path": "docs/classes/12774034.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA ACLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209811"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12774037",
       "path": "docs/classes/12774037.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA ACLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209811"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774089",
+      "path": "docs/classes/12774089.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774090",
+      "path": "docs/classes/12774090.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774091",
+      "path": "docs/classes/12774091.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774092",
+      "path": "docs/classes/12774092.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774093",
+      "path": "docs/classes/12774093.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12774327",
       "path": "docs/classes/12774327.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12774328",
       "path": "docs/classes/12774328.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774339",
+      "path": "docs/classes/12774339.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774340",
+      "path": "docs/classes/12774340.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774341",
+      "path": "docs/classes/12774341.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774342",
+      "path": "docs/classes/12774342.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12774343",
+      "path": "docs/classes/12774343.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12774572",
       "path": "docs/classes/12774572.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12774577",
       "path": "docs/classes/12774577.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12774579",
       "path": "docs/classes/12774579.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775296",
       "path": "docs/classes/12775296.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775297",
       "path": "docs/classes/12775297.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775300",
       "path": "docs/classes/12775300.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775301",
       "path": "docs/classes/12775301.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775302",
       "path": "docs/classes/12775302.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775529",
       "path": "docs/classes/12775529.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775530",
       "path": "docs/classes/12775530.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775533",
       "path": "docs/classes/12775533.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775534",
       "path": "docs/classes/12775534.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775536",
       "path": "docs/classes/12775536.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775545",
+      "path": "docs/classes/12775545.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775546",
+      "path": "docs/classes/12775546.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775547",
+      "path": "docs/classes/12775547.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775548",
+      "path": "docs/classes/12775548.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775549",
+      "path": "docs/classes/12775549.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775779",
       "path": "docs/classes/12775779.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775781",
       "path": "docs/classes/12775781.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775790",
+      "path": "docs/classes/12775790.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775791",
+      "path": "docs/classes/12775791.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775792",
+      "path": "docs/classes/12775792.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775793",
+      "path": "docs/classes/12775793.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12775794",
+      "path": "docs/classes/12775794.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12775997",
       "path": "docs/classes/12775997.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776142",
+      "path": "docs/classes/12776142.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776144",
       "path": "docs/classes/12776144.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776145",
       "path": "docs/classes/12776145.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776148",
       "path": "docs/classes/12776148.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776149",
       "path": "docs/classes/12776149.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776156",
+      "path": "docs/classes/12776156.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776157",
+      "path": "docs/classes/12776157.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776158",
+      "path": "docs/classes/12776158.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776159",
+      "path": "docs/classes/12776159.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776160",
+      "path": "docs/classes/12776160.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776270",
       "path": "docs/classes/12776270.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776336",
       "path": "docs/classes/12776336.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776337",
       "path": "docs/classes/12776337.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776416",
       "path": "docs/classes/12776416.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776421",
       "path": "docs/classes/12776421.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776422",
       "path": "docs/classes/12776422.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776425",
       "path": "docs/classes/12776425.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776554",
       "path": "docs/classes/12776554.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776559",
       "path": "docs/classes/12776559.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS HeartCode Skills Session",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct210549"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776565",
+      "path": "docs/classes/12776565.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776566",
+      "path": "docs/classes/12776566.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776632",
       "path": "docs/classes/12776632.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209806"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776696",
       "path": "docs/classes/12776696.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776697",
       "path": "docs/classes/12776697.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776770",
       "path": "docs/classes/12776770.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776775",
       "path": "docs/classes/12776775.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "Family & Friends",
+      "course_title": "Course",
       "course_hub": "/schedule.html"
     },
     {
@@ -1348,48 +1452,72 @@
       "path": "docs/classes/12776776.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776781",
+      "path": "docs/classes/12776781.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "12776782",
+      "path": "docs/classes/12776782.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12776866",
       "path": "docs/classes/12776866.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "HSI First Aid CPR AED",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct422270"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12783387",
       "path": "docs/classes/12783387.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA BLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct359474"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "12783389",
       "path": "docs/classes/12783389.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED",
-      "course_hub": "/heartsaver.html"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "13460876",
       "path": "docs/classes/13460876.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA ACLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct241108"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     },
     {
       "class_id": "13472474",
       "path": "docs/classes/13472474.html",
       "reason": "class_id_missing_from_current_report",
       "action": "converted_to_course_schedule_lander",
-      "course_title": "AHA ACLS Provider",
-      "course_hub": "https://coastalcprtraining.enrollware.com/schedule#ct209818"
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
+    },
+    {
+      "class_id": "13600390",
+      "path": "docs/classes/13600390.html",
+      "reason": "class_id_missing_from_current_report",
+      "action": "converted_to_course_schedule_lander",
+      "course_title": "Course",
+      "course_hub": "/schedule.html"
     }
   ],
   "needs_review": []

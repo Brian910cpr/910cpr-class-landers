@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "description": "Read-only public sellability policy for filtering dynamic offer previews. This config does not publish offers, create appointments, or change Enrollware behavior.",
+  "enabled_course_ids": [],
+  "disabled_course_ids": [],
+  "enabled_course_families": [
+    "BLS",
+    "Heartsaver",
+    "ACLS",
+    "PALS"
+  ],
+  "disabled_course_families": [
+    "ARC",
+    "HSI",
+    "USCG"
+  ],
+  "allowed_start_minutes": [
+    "00",
+    "15",
+    "30",
+    "45"
+  ],
+  "minimum_lead_hours": 24,
+  "maximum_days_out": 60,
+  "preferred_start_times_by_family": {
+    "BLS": [],
+    "Heartsaver": [],
+    "ACLS": [],
+    "PALS": []
+  },
+  "max_offers_per_course_per_day": 4,
+  "max_total_offers_per_day": 24,
+  "hide_online_only": true,
+  "hide_manual_only": true,
+  "hide_low_capacity_offers": false,
+  "require_confirmed_appointment_container": true,
+  "notes": "Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families."
+}

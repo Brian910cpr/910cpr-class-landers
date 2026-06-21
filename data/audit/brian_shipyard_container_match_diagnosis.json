@@ -1,0 +1,123 @@
+{
+  "generated_at": "2026-06-19T14:39:00",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "inputs": {
+    "live_availability": "data/audit/live_availability_snapshot_preview.json",
+    "dynamic_offers": "data/audit/dynamic_offers_preview.json",
+    "public_sellable_offers": "data/audit/public_sellable_offers_preview.json",
+    "appointment_containers": "data/inventory/appointment_containers.json",
+    "location_resource_map": "data/config/location_resource_map.json",
+    "public_offer_policy": "data/config/public_offer_policy.json"
+  },
+  "brian_shipyard_live_blocks_found": 1,
+  "brian_shipyard_live_blocks": [
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "date": "2026-07-04",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "offerable_calendar_window"
+      ]
+    }
+  ],
+  "source_window_ids": [
+    "4jgsd3masf2ccq7algku6rs7j8@google.com"
+  ],
+  "dynamic_offers_generated_from_brian_shipyard_blocks": 0,
+  "dynamic_offers_with_brian_shipyard_labels": 0,
+  "total_dynamic_offers": 694,
+  "public_sellable_offers_kept": 0,
+  "public_hidden_container_reasons": {
+    "missing_container_for_instructor": 465,
+    "location_mismatch": 229
+  },
+  "active_containers_considered": [
+    {
+      "container_id": "shipyard_brian_continuous_20260621_20270430",
+      "container_group": "shipyard",
+      "container_name": "Shipyard continuous appointment range",
+      "instructor_name": "Brian",
+      "instructor_id_optional": null,
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "location_id": "101560",
+      "room_or_resource_name": "Shipyard Office",
+      "base_date": "2026-06-21",
+      "base_appointmentDayId": 260670,
+      "first_valid_date": "2026-06-21",
+      "first_valid_appointmentDayId": 260670,
+      "last_valid_date": "2027-04-30",
+      "last_valid_appointmentDayId": 260983,
+      "first_invalid_appointmentDayId": 260984,
+      "default_slot_minutes": 60,
+      "status": "active",
+      "priority": 100,
+      "tags": [
+        "shipyard",
+        "brian",
+        "bls_public",
+        "advanced_provider",
+        "skills_testing"
+      ],
+      "notes": "Validated first-party owned range. appointmentDayId 260984 crossed outside the owned block and must be treated as unsafe."
+    }
+  ],
+  "policy": {
+    "require_confirmed_appointment_container": true,
+    "allowed_start_minutes": [
+      "00",
+      "30"
+    ],
+    "enabled_course_families": [
+      "BLS",
+      "Heartsaver",
+      "ACLS",
+      "PALS"
+    ],
+    "disabled_course_families": [
+      "ARC",
+      "HSI",
+      "USCG"
+    ]
+  },
+  "issue_classification": "availability window duration issue before container matching",
+  "comparison_issue_counts": {},
+  "public_filter_reason_counts_for_source_offers": {},
+  "first_failing_comparison": {
+    "stage": "dynamic_offer_generation_before_public_container_filter",
+    "comparison": "availability_window_duration_vs_course_duration",
+    "details": "Brian + Shipyard live block normalizes to start_time 00:00 and end_time 00:00 on 2026-07-04. The offer generator therefore treats it as a zero-length window. Allowed BLS/Heartsaver/USCG courses do not fit; other families are rejected by allowed_course_families before container matching.",
+    "source_window_ids": [
+      "4jgsd3masf2ccq7algku6rs7j8@google.com"
+    ],
+    "dynamic_rejection_reason_counts": {
+      "course_family_not_allowed_by_window": 18,
+      "course_does_not_fit_window": 12
+    }
+  },
+  "source_offer_comparisons": [],
+  "dynamic_rejections_for_brian_shipyard_blocks": 30,
+  "dynamic_rejection_reason_counts_for_brian_shipyard_blocks": {
+    "course_family_not_allowed_by_window": 18,
+    "course_does_not_fit_window": 12
+  },
+  "smallest_safe_fix": "Fix the source calendar/snapshot interpretation so Brian inverse availability produces a real start/end window for Shipyard, or remove the zero-length event from offerable availability. Do not change appointment container aliases yet."
+}

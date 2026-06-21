@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-18T18:13:59.144584-04:00",
+  "generated_at": "2026-06-20T16:38:26.324927-04:00",
   "source_schedule_path": "docs/data/schedule_future.json",
   "customer_facing_offers_path": "docs/data/customer_facing_offers.json",
   "requestable_offer_summary_by_page": {
@@ -57,12 +57,12 @@
       "bls-provider": {
         "label": "BLS Provider",
         "requestable_course_key": "bls",
-        "real_canonical_sessions_shown_count": 56,
+        "real_canonical_sessions_shown_count": 51,
         "requestable_offers_shown_count": 0,
-        "combined_schedule_rows_count": 56,
-        "default_visible_count": 56,
-        "real_seated_default_visible": 2,
-        "real_empty_default_visible": 54,
+        "combined_schedule_rows_count": 51,
+        "default_visible_count": 51,
+        "real_seated_default_visible": 3,
+        "real_empty_default_visible": 48,
         "requestable_default_visible": 0,
         "requestable_hidden_from_default": 0,
         "largest_real_gap_days": 14,
@@ -71,12 +71,12 @@
       "bls-renewal": {
         "label": "BLS Renewal",
         "requestable_course_key": "bls-renewal",
-        "real_canonical_sessions_shown_count": 56,
+        "real_canonical_sessions_shown_count": 51,
         "requestable_offers_shown_count": 0,
-        "combined_schedule_rows_count": 56,
-        "default_visible_count": 56,
-        "real_seated_default_visible": 3,
-        "real_empty_default_visible": 53,
+        "combined_schedule_rows_count": 51,
+        "default_visible_count": 51,
+        "real_seated_default_visible": 4,
+        "real_empty_default_visible": 47,
         "requestable_default_visible": 0,
         "requestable_hidden_from_default": 0,
         "largest_real_gap_days": 2,
@@ -85,15 +85,15 @@
       "bls-heartcode": {
         "label": "BLS HeartCode",
         "requestable_course_key": "heartcode-bls-skills",
-        "real_canonical_sessions_shown_count": 38,
+        "real_canonical_sessions_shown_count": 36,
         "requestable_offers_shown_count": 0,
-        "combined_schedule_rows_count": 38,
-        "default_visible_count": 38,
+        "combined_schedule_rows_count": 36,
+        "default_visible_count": 36,
         "real_seated_default_visible": 3,
-        "real_empty_default_visible": 35,
+        "real_empty_default_visible": 33,
         "requestable_default_visible": 0,
         "requestable_hidden_from_default": 0,
-        "largest_real_gap_days": 3,
+        "largest_real_gap_days": 5,
         "requestable_allowed_in_default": false
       }
     },
@@ -696,55 +696,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12774339",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-01T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775545",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-01T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774592",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-01T18:15:00-04:00",
+      "start_at": "2026-07-01T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -765,7 +723,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-01T18:15:00-04:00",
+      "start_at": "2026-07-01T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -1263,55 +1221,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12774340",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-08T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775546",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-08T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774593",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-08T18:15:00-04:00",
+      "start_at": "2026-07-08T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -1332,7 +1248,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-08T18:15:00-04:00",
+      "start_at": "2026-07-08T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -1830,55 +1746,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12774341",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-15T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775547",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-15T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774594",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-15T18:15:00-04:00",
+      "start_at": "2026-07-15T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -1899,7 +1773,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-15T18:15:00-04:00",
+      "start_at": "2026-07-15T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -2376,76 +2250,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12776565",
-      "course_id": "210549",
-      "course_name": "AHA BLS HeartCode®",
-      "official_course_name": "AHA HeartCode BLS",
-      "course_key": "aha_heartcode_bls",
-      "course_code": "AHA_BLS_BL_SKILLS",
-      "start_at": "2026-07-21T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12774343",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-22T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775548",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-22T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774595",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-22T18:15:00-04:00",
+      "start_at": "2026-07-22T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -2466,7 +2277,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-22T18:15:00-04:00",
+      "start_at": "2026-07-22T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -2943,76 +2754,13 @@
     },
     {
       "page_slug": "bls",
-      "session_id": "12776566",
-      "course_id": "210549",
-      "course_name": "AHA BLS HeartCode®",
-      "official_course_name": "AHA HeartCode BLS",
-      "course_key": "aha_heartcode_bls",
-      "course_code": "AHA_BLS_BL_SKILLS",
-      "start_at": "2026-07-28T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12774342",
-      "course_id": "209806",
-      "course_name": "AHA BLS Provider (Initial)",
-      "official_course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-29T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-provider"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Provider",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
-      "session_id": "12775549",
-      "course_id": "359474",
-      "course_name": "AHA BLS Provider (Renewal)",
-      "official_course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-29T12:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "bls-renewal"
-      ],
-      "matched_classification": {
-        "family": "BLS",
-        "subtype": "Renewal",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "bls",
       "session_id": "12774596",
       "course_id": "209806",
       "course_name": "AHA BLS Provider (Initial)",
       "official_course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "course_code": "AHA_BLS_IP_INITIAL",
-      "start_at": "2026-07-29T18:15:00-04:00",
+      "start_at": "2026-07-29T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-provider"
@@ -3033,7 +2781,7 @@
       "official_course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "course_code": "AHA_BLS_IP_RENEWAL",
-      "start_at": "2026-07-29T18:15:00-04:00",
+      "start_at": "2026-07-29T18:45:00-04:00",
       "included": true,
       "matched_tabs": [
         "bls-renewal"
@@ -3279,27 +3027,6 @@
     },
     {
       "page_slug": "acls",
-      "session_id": "12774031",
-      "course_id": "209811",
-      "course_name": "AHA ACLS HeartCode",
-      "official_course_name": "AHA ACLS HeartCode",
-      "course_key": "aha_acls_heartcode",
-      "course_code": "AHA_ACLS_HEARTCODE",
-      "start_at": "2026-06-22T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
       "session_id": "13472467",
       "course_id": "241108",
       "course_name": "AHA ACLS Provider (Initial)",
@@ -3468,27 +3195,6 @@
     },
     {
       "page_slug": "acls",
-      "session_id": "12774089",
-      "course_id": "209811",
-      "course_name": "AHA ACLS HeartCode",
-      "official_course_name": "AHA ACLS HeartCode",
-      "course_key": "aha_acls_heartcode",
-      "course_code": "AHA_ACLS_HEARTCODE",
-      "start_at": "2026-07-01T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
       "session_id": "12774085",
       "course_id": "209811",
       "course_name": "AHA ACLS HeartCode",
@@ -3517,27 +3223,6 @@
       "course_key": "aha_acls_heartcode",
       "course_code": "AHA_ACLS_HEARTCODE",
       "start_at": "2026-07-06T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
-      "session_id": "12774090",
-      "course_id": "209811",
-      "course_name": "AHA ACLS HeartCode",
-      "official_course_name": "AHA ACLS HeartCode",
-      "course_key": "aha_acls_heartcode",
-      "course_code": "AHA_ACLS_HEARTCODE",
-      "start_at": "2026-07-08T08:30:00-04:00",
       "included": true,
       "matched_tabs": [
         "acls-heartcode"
@@ -3594,27 +3279,6 @@
     },
     {
       "page_slug": "acls",
-      "session_id": "12774091",
-      "course_id": "209811",
-      "course_name": "AHA ACLS HeartCode",
-      "official_course_name": "AHA ACLS HeartCode",
-      "course_key": "aha_acls_heartcode",
-      "course_code": "AHA_ACLS_HEARTCODE",
-      "start_at": "2026-07-15T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
       "session_id": "12774087",
       "course_id": "209811",
       "course_name": "AHA ACLS HeartCode",
@@ -3657,27 +3321,6 @@
     },
     {
       "page_slug": "acls",
-      "session_id": "12774092",
-      "course_id": "209811",
-      "course_name": "AHA ACLS HeartCode",
-      "official_course_name": "AHA ACLS HeartCode",
-      "course_key": "aha_acls_heartcode",
-      "course_code": "AHA_ACLS_HEARTCODE",
-      "start_at": "2026-07-22T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
       "session_id": "12774088",
       "course_id": "209811",
       "course_name": "AHA ACLS HeartCode",
@@ -3706,27 +3349,6 @@
       "course_key": "aha_acls_heartcode",
       "course_code": "AHA_ACLS_HEARTCODE",
       "start_at": "2026-07-27T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "acls-heartcode"
-      ],
-      "matched_classification": {
-        "family": "ACLS",
-        "subtype": "HeartCode",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "acls",
-      "session_id": "12774093",
-      "course_id": "209811",
-      "course_name": "AHA ACLS HeartCode",
-      "official_course_name": "AHA ACLS HeartCode",
-      "course_key": "aha_acls_heartcode",
-      "course_code": "AHA_ACLS_HEARTCODE",
-      "start_at": "2026-07-29T08:30:00-04:00",
       "included": true,
       "matched_tabs": [
         "acls-heartcode"
@@ -3846,48 +3468,6 @@
     },
     {
       "page_slug": "heartsaver",
-      "session_id": "13600390",
-      "course_id": "209809",
-      "course_name": "AHA Heartsaver® First Aid CPR AED",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed",
-      "course_code": "AHA_HS_FA_CPR_IP",
-      "start_at": "2026-06-21T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776142",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-06-22T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
       "session_id": "12775990",
       "course_id": "209809",
       "course_name": "AHA Heartsaver® First Aid CPR AED",
@@ -3895,17 +3475,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-06-23T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -3916,17 +3496,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-06-23T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -3937,17 +3517,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-06-25T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -3958,17 +3538,17 @@
       "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
       "course_code": "AHA_HS_PED_FA_CPR_BL",
       "start_at": "2026-06-25T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-pediatric-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "Pediatric First Aid",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -3979,17 +3559,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-06-25T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4000,17 +3580,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-06-25T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4021,17 +3601,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-06-26T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4042,17 +3622,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-06-27T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4063,17 +3643,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-06-27T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4084,17 +3664,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-06-29T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4105,17 +3685,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-06-29T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4126,59 +3706,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-06-30T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776156",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-01T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12775790",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-01T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4189,17 +3727,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-02T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4210,17 +3748,17 @@
       "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
       "course_code": "AHA_HS_PED_FA_CPR_BL",
       "start_at": "2026-07-02T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-pediatric-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "Pediatric First Aid",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4231,17 +3769,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-02T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4252,17 +3790,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-03T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4273,17 +3811,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-03T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4294,17 +3832,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-04T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4315,17 +3853,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-04T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4336,17 +3874,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-06T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4357,17 +3895,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-06T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4378,17 +3916,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-07T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4399,59 +3937,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-07T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776157",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-08T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12775791",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-08T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4462,17 +3958,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-09T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4483,17 +3979,17 @@
       "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
       "course_code": "AHA_HS_PED_FA_CPR_BL",
       "start_at": "2026-07-09T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-pediatric-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "Pediatric First Aid",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4504,17 +4000,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-09T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4525,17 +4021,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-10T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4546,17 +4042,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-10T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4567,17 +4063,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-11T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4588,17 +4084,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-11T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4609,17 +4105,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-13T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4630,17 +4126,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-13T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4651,17 +4147,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-14T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4672,59 +4168,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-14T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776158",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-15T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12775794",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-15T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4735,17 +4189,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-16T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4756,17 +4210,17 @@
       "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
       "course_code": "AHA_HS_PED_FA_CPR_BL",
       "start_at": "2026-07-16T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-pediatric-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "Pediatric First Aid",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4777,17 +4231,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-16T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4798,17 +4252,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-17T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4819,17 +4273,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-17T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4840,17 +4294,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-18T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4861,17 +4315,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-18T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4882,17 +4336,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-20T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4903,80 +4357,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-20T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776781",
-      "course_id": "209809",
-      "course_name": "AHA Heartsaver® First Aid CPR AED",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed",
-      "course_code": "AHA_HS_FA_CPR_IP",
-      "start_at": "2026-07-21T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776159",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-22T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12775792",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-22T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -4987,17 +4378,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-23T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5008,17 +4399,17 @@
       "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
       "course_code": "AHA_HS_PED_FA_CPR_BL",
       "start_at": "2026-07-23T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-pediatric-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "Pediatric First Aid",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5029,17 +4420,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-23T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5050,17 +4441,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-24T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5071,17 +4462,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-24T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5092,17 +4483,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-25T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5113,17 +4504,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-25T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5134,17 +4525,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-27T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5155,17 +4546,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-27T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5176,80 +4567,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-28T09:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776782",
-      "course_id": "209809",
-      "course_name": "AHA Heartsaver® First Aid CPR AED",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed",
-      "course_code": "AHA_HS_FA_CPR_IP",
-      "start_at": "2026-07-28T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "IP"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12776160",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-29T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
-    },
-    {
-      "page_slug": "heartsaver",
-      "session_id": "12775793",
-      "course_id": "329495",
-      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
-      "official_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "course_code": "AHA_HS_FA_CPR_BL",
-      "start_at": "2026-07-29T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
-      "matched_classification": {
-        "family": "Heartsaver",
-        "subtype": "First Aid + CPR + AED",
-        "certifying_body": "aha",
-        "delivery_mode": "BL"
-      },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5260,17 +4588,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-30T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5281,17 +4609,17 @@
       "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
       "course_code": "AHA_HS_PED_FA_CPR_BL",
       "start_at": "2026-07-30T08:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-pediatric-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "Pediatric First Aid",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5302,17 +4630,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed",
       "course_code": "AHA_HS_FA_CPR_IP",
       "start_at": "2026-07-30T18:15:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-ip"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "IP"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5323,17 +4651,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-31T11:45:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "heartsaver",
@@ -5344,17 +4672,17 @@
       "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
       "course_code": "AHA_HS_FA_CPR_BL",
       "start_at": "2026-07-31T17:30:00-04:00",
-      "included": true,
-      "matched_tabs": [
-        "hs-fa-cpr-aed-bl"
-      ],
+      "included": false,
+      "matched_tabs": [],
       "matched_classification": {
         "family": "Heartsaver",
         "subtype": "First Aid + CPR + AED",
         "certifying_body": "aha",
         "delivery_mode": "BL"
       },
-      "reason_excluded": null
+      "reason_excluded": [
+        "excluded:unapproved_location"
+      ]
     },
     {
       "page_slug": "hsi",

@@ -1,0 +1,101 @@
+{
+  "generated_at": "2026-06-19T12:57:04.215086-04:00",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "public_location": {
+    "name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+    "customer_facing_display_rule": "Display all internal resources as one Shipyard office unless Brian explicitly wants room/resource names shown."
+  },
+  "internal_resources": [
+    {
+      "resource_name": ":: Wilmington; Shipyard Blvd - C (Other)",
+      "public_location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "confirmed_appointment_container": false,
+      "matching_container_ids": [],
+      "current_status": "not_confirmed",
+      "safe_public_dynamic_use": false,
+      "notes": "No matching active appointment container is currently configured for this exact resource."
+    },
+    {
+      "resource_name": ":: Wilmington; Shipyard Blvd - B",
+      "public_location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "confirmed_appointment_container": false,
+      "matching_container_ids": [],
+      "current_status": "not_confirmed",
+      "safe_public_dynamic_use": false,
+      "notes": "No matching active appointment container is currently configured for this exact resource."
+    },
+    {
+      "resource_name": ":: Wilmington; Shipyard Blvd - A",
+      "public_location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "confirmed_appointment_container": false,
+      "matching_container_ids": [],
+      "current_status": "not_confirmed",
+      "safe_public_dynamic_use": false,
+      "notes": "No matching active appointment container is currently configured for this exact resource."
+    }
+  ],
+  "currently_configured_shipyard_containers": [
+    {
+      "container_id": "shipyard_brian_continuous_20260621_20270430",
+      "container_group": "shipyard",
+      "container_name": "Shipyard continuous appointment range",
+      "instructor_name": "Brian",
+      "instructor_id_optional": null,
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "location_id": "101560",
+      "room_or_resource_name": "Shipyard Office",
+      "base_date": "2026-06-21",
+      "base_appointmentDayId": 260670,
+      "first_valid_date": "2026-06-21",
+      "first_valid_appointmentDayId": 260670,
+      "last_valid_date": "2027-04-30",
+      "last_valid_appointmentDayId": 260983,
+      "first_invalid_appointmentDayId": 260984,
+      "default_slot_minutes": 60,
+      "status": "active",
+      "priority": 100,
+      "tags": [
+        "shipyard",
+        "brian",
+        "bls_public",
+        "advanced_provider",
+        "skills_testing"
+      ],
+      "notes": "Validated first-party owned range. appointmentDayId 260984 crossed outside the owned block and must be treated as unsafe."
+    }
+  ],
+  "current_brian_shipyard_container_assessment": {
+    "can_safely_represent_all_three_resources": false,
+    "safe_assumption": "only_one_resource_until_confirmed",
+    "reason": "The active container is named Shipyard continuous appointment range with room_or_resource_name Shipyard Office. It does not explicitly identify A, B, or C, and deterministic appointmentDayId behavior across multiple Enrollware resources has not been confirmed.",
+    "required_confirmation": [
+      "Whether A, B, and C each have separate appointmentDayId ranges.",
+      "Whether one appointmentDayId range can represent all Shipyard resources without double-booking or wrong-room enrollment.",
+      "Whether Enrollware appointment URL parameters encode resource/room implicitly through appointmentDayId."
+    ]
+  },
+  "overlap_check_policy": {
+    "resource_level": "Classes may overlap only when they use different confirmed internal resources and different instructor time.",
+    "instructor_level": "The same instructor cannot overlap across resources.",
+    "location_level": "The public location can have concurrent classes only up to confirmed resource capacity.",
+    "unconfirmed_resource_behavior": "Treat unconfirmed resources as unavailable for public deterministic URL generation."
+  },
+  "before_dynamic_public_use_brian_or_enrollware_must_confirm": [
+    "Exact Enrollware location/resource names for A, B, and C.",
+    "Whether each resource has its own appointment container / appointmentDayId range.",
+    "First valid date and first valid appointmentDayId per resource.",
+    "Last valid date, last valid appointmentDayId, and first invalid boundary per resource.",
+    "Which instructors can use which resource for public dynamic scheduling.",
+    "Whether customer-facing display should remain one Shipyard office for all resources."
+  ],
+  "safest_next_step": "keep_one_shipyard_resource_until_tested",
+  "next_step_options": [
+    "add_confirmed_containers_per_resource_after_Brian_or_Enrollware_validation",
+    "keep_one_shipyard_resource_until_tested"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "created_at": "2026-06-19T13:40:48",
+  "mode": "read_only_transition_plan",
+  "fixed_schedule": {
+    "schedule_future_sessions": 249,
+    "first_listed_start": "2026-06-22T08:30:00-04:00",
+    "last_listed_start": "2026-08-14T12:45:00-04:00",
+    "sessions_by_family": {
+      "BLS": 150,
+      "Heartsaver": 71,
+      "ACLS": 22,
+      "PALS": 4,
+      "aha_pals_instructor_renewal": 1,
+      "HSI": 1
+    },
+    "sessions_by_location": {
+      ":: Wilmington; Shipyard Blvd - B": 239,
+      ":: Wilmington; Shipyard Blvd - A": 10
+    },
+    "sessions_by_instructor": {
+      "B.  Ennis": 221,
+      "N.  Tripp": 18,
+      "A.  Arnold": 10
+    },
+    "per_course_family_last_listed_start": {
+      "ACLS": "2026-07-29T08:30:00-04:00",
+      "Heartsaver": "2026-07-31T17:30:00-04:00",
+      "BLS": "2026-08-14T12:45:00-04:00",
+      "PALS": "2026-06-26T14:00:00-04:00",
+      "aha_pals_instructor_renewal": "2026-07-01T00:00:00-04:00",
+      "HSI": "2026-08-14T12:45:00-04:00"
+    },
+    "per_location_last_listed_start": {
+      ":: Wilmington; Shipyard Blvd - B": "2026-08-14T12:45:00-04:00",
+      ":: Wilmington; Shipyard Blvd - A": "2026-06-26T14:00:00-04:00"
+    },
+    "class_report_sessions_current": 255,
+    "amy_sessions_found": 10,
+    "brian_sessions_found": 223
+  },
+  "dynamic_pipeline_current_state": {
+    "total_dynamic_offers_read": 694,
+    "confirmed_container_policy_enabled": true,
+    "public_sellable_offers_kept": 0,
+    "container_hidden_reasons": {
+      "missing_container_for_instructor": 465,
+      "location_mismatch": 229
+    },
+    "seeds_selected": 0,
+    "amy_mode": "protected_pilot",
+    "amy_stack_fill_candidates_found": 66,
+    "urls_previewed": 0,
+    "seeds_blocked": 0,
+    "active_appointment_containers": 1,
+    "active_container_ids": [
+      "shipyard_brian_continuous_20260621_20270430"
+    ]
+  },
+  "recommended_transition_modes": [
+    "shadow_mode",
+    "internal_preview_mode",
+    "limited_live_mode",
+    "expanded_pilot",
+    "full_dynamic_mode"
+  ],
+  "safest_next_operational_step": "Keep fixed Enrollware classes live. Continue shadow/internal-preview dynamic runs, then add or confirm appointment containers until at least Brian + Shipyard produces URL-capable seeds before any public handoff.",
+  "minimum_go_live_checklist": [
+    "Fixed Enrollware classes remain available until replacement dynamic seeds are verified.",
+    "Class Report ingestion is current and sessions_current.json is refreshed.",
+    "Live availability snapshot is current.",
+    "Dynamic offers account for current occupancy.",
+    "Confirmed active appointment container exists for each live instructor/location path.",
+    "Seed URL preview produces valid preview URLs for intended live seeds.",
+    "Worker click-time recheck exists and is enabled only behind approval.",
+    "Rollback can hide dynamic buttons and restore fixed-class-only schedule immediately."
+  ],
+  "risks_if_fixed_classes_deleted_too_early": [
+    "Public schedule vacuum if dynamic seeds remain filtered to zero.",
+    "Customers cannot self-select dates if no confirmed-container-backed seed is public.",
+    "Unverified Amy/other-instructor availability could be exposed without appointment URL support.",
+    "Existing Enrollware occupancy could be lost as a blocking source if ingestion is not refreshed first.",
+    "Manual recovery load increases because customer-facing pages may show too few or no options."
+  ]
+}

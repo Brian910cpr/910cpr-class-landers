@@ -1,0 +1,320 @@
+{
+  "generated_at": "2026-06-19T17:04:20.038220-04:00",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "target": "2026-07-04 Brian TEST Shipyard availability through confirmed-container filter",
+  "availability_block_found": true,
+  "availability_block": {
+    "instructor_name": "Brian Ennis",
+    "person_id": "instructor_24057895173",
+    "start_datetime": "2026-07-04T12:00:00",
+    "end_datetime": "2026-07-04T17:00:00",
+    "date": "2026-07-04",
+    "end_date": "2026-07-04",
+    "start_time": "12:00",
+    "end_time": "17:00",
+    "availability_status": "available",
+    "location_name": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+    "allowed_course_families": [
+      "BLS",
+      "Heartsaver",
+      "USCG"
+    ],
+    "source_calendar_id": "brian_do_not_schedule",
+    "source_event_id": "37d9u0mq0lh09sngouh6alou82@google.com",
+    "source_type": "inverse_google_calendar",
+    "reasons": [
+      "read_only_preview",
+      "local_calendar_snapshot",
+      "offerable_calendar_window"
+    ]
+  },
+  "dynamic_offers_from_block_count": 168,
+  "dynamic_offers_from_block_by_family": {
+    "BLS": 54,
+    "Heartsaver": 87,
+    "USCG": 27
+  },
+  "selected_offer": {
+    "offer_id": "offer-209806-instructor_24057895173-20260704-1200",
+    "start_datetime": "2026-07-04T12:00:00",
+    "end_datetime": "2026-07-04T14:00:00",
+    "date": "2026-07-04",
+    "start_time": "12:00",
+    "end_time": "14:00",
+    "course_id": "209806",
+    "course_title": "AHA BLS Provider",
+    "course_family": "BLS",
+    "duration_minutes": 120,
+    "capacity": 6,
+    "instructor_person_id": "instructor_24057895173",
+    "instructor_display_name": "Brian Ennis",
+    "instructor_assignment_mode": "PRIMARY",
+    "location": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+    "resource": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+    "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+    "confidence": "high",
+    "reasons": [
+      "live_calendar_availability_window",
+      "scheduler_enabled_person",
+      "course_catalog_duration_capacity_appointment_allowed",
+      "instructor_has_required_certification",
+      "no_known_local_occupancy_conflict",
+      "read_only_preview_not_public_offer"
+    ]
+  },
+  "public_sellable_current_stats": {
+    "total_dynamic_offers_read": 838,
+    "confirmed_container_policy_enabled": true,
+    "appointment_container_backed_offers_kept": 0,
+    "offers_hidden_by_container_reason": {
+      "missing_container_for_instructor": 465,
+      "location_mismatch": 373
+    },
+    "public_sellable_offers_kept": 0,
+    "hidden_offers_by_reason": {
+      "missing_container_for_instructor": 465,
+      "start_minute_not_allowed": 384,
+      "location_mismatch": 373,
+      "course_family_disabled": 123,
+      "course_family_not_enabled": 123
+    },
+    "offers_by_date": {},
+    "offers_by_course_family": {}
+  },
+  "policy_summary": {
+    "enabled_course_families": [
+      "BLS",
+      "Heartsaver",
+      "ACLS",
+      "PALS"
+    ],
+    "disabled_course_families": [
+      "ARC",
+      "HSI",
+      "USCG"
+    ],
+    "allowed_start_minutes": [
+      "00",
+      "30"
+    ],
+    "minimum_lead_hours": 24,
+    "maximum_days_out": 60,
+    "require_confirmed_appointment_container": true,
+    "max_offers_per_course_per_day": 4,
+    "max_total_offers_per_day": 24
+  },
+  "checks": [
+    {
+      "check": "course_family_enabled",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "family": "BLS",
+        "enabled_course_families": [
+          "ACLS",
+          "BLS",
+          "Heartsaver",
+          "PALS"
+        ]
+      }
+    },
+    {
+      "check": "course_family_not_disabled",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "family": "BLS",
+        "disabled_course_families": [
+          "ARC",
+          "HSI",
+          "USCG"
+        ]
+      }
+    },
+    {
+      "check": "course_id_enabled",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "course_id": "209806",
+        "enabled_course_ids": []
+      }
+    },
+    {
+      "check": "course_id_not_disabled",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "course_id": "209806",
+        "disabled_course_ids": []
+      }
+    },
+    {
+      "check": "start_minute_allowed",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "start_time": "12:00",
+        "minute": "00",
+        "allowed_start_minutes": [
+          "00",
+          "30"
+        ]
+      }
+    },
+    {
+      "check": "lead_time",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "now": "2026-06-19T17:04:20.038220",
+        "minimum_lead_hours": 24,
+        "offer_start": "2026-07-04T12:00:00"
+      }
+    },
+    {
+      "check": "max_days_out",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "now": "2026-06-19T17:04:20.038220",
+        "maximum_days_out": 60,
+        "offer_start": "2026-07-04T12:00:00"
+      }
+    },
+    {
+      "check": "appointment_allowed",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "course_id": "209806",
+        "appointment_allowed": true
+      }
+    },
+    {
+      "check": "confirmed_container_policy_enabled",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "require_confirmed_appointment_container": true
+      }
+    },
+    {
+      "check": "instructor_match",
+      "passed": true,
+      "reason_code": null,
+      "details": {
+        "active_container_instructors": [
+          "Brian"
+        ],
+        "offer_instructor": "Brian Ennis"
+      }
+    },
+    {
+      "check": "normalized_location_match",
+      "passed": false,
+      "reason_code": "location_mismatch",
+      "details": {
+        "offer_location": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+        "active_container_locations": [
+          "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office"
+        ],
+        "container_traces": [
+          {
+            "container_id": "shipyard_brian_continuous_20260621_20270430",
+            "normalized_location_comparison": {
+              "offer": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+              "container": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+              "passed": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "check": "date_range",
+      "passed": false,
+      "reason_code": "date_outside_container_range",
+      "details": {
+        "offer_date": "2026-07-04",
+        "matching_location_container_ids": []
+      }
+    }
+  ],
+  "container_traces": [
+    {
+      "container_id": "shipyard_brian_continuous_20260621_20270430",
+      "container_name": "Shipyard continuous appointment range",
+      "instructor_comparison": {
+        "offer": "Brian Ennis",
+        "container": "Brian",
+        "passed": true
+      },
+      "raw_location_comparison": {
+        "offer": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+        "container": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+        "passed": false
+      },
+      "normalized_location_comparison": {
+        "offer": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+        "container": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+        "passed": false
+      },
+      "resource_comparison": {
+        "offer": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+        "container": "Shipyard Office",
+        "normalized_offer": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+        "normalized_container": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+        "passed": false
+      },
+      "date_range_comparison": {
+        "offer_date": "2026-07-04",
+        "first_valid_date": "2026-06-21",
+        "last_valid_date": "2027-04-30",
+        "passed": true
+      },
+      "appointment_day_id_comparison": {
+        "computed_appointmentDayId": 260683,
+        "first_valid_appointmentDayId": 260670,
+        "last_valid_appointmentDayId": 260983,
+        "first_invalid_appointmentDayId": 260984,
+        "passed": true
+      },
+      "would_match_confirmed_container": false
+    }
+  ],
+  "first_failing_comparison": {
+    "check": "normalized_location_match",
+    "passed": false,
+    "reason_code": "location_mismatch",
+    "details": {
+      "offer_location": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+      "active_container_locations": [
+        "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office"
+      ],
+      "container_traces": [
+        {
+          "container_id": "shipyard_brian_continuous_20260621_20270430",
+          "normalized_location_comparison": {
+            "offer": "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+            "container": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+            "passed": false
+          }
+        }
+      ]
+    }
+  },
+  "reason_code": "location_mismatch",
+  "filter_container_rejection_reason": "location_mismatch",
+  "smallest_safe_fix": "Add a location alias mapping for the Google event location to the canonical Shipyard location. The actual offer location is \"4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA\"; the user-facing short alias \"4018 Shipyard Blvd\" alone will not match this exact normalized string unless matching is broadened.",
+  "proposed_location_aliases_not_applied": [
+    "4018 Shipyard Blvd",
+    "4018 Shipyard Blvd\\, Wilmington\\, NC 28403\\, USA",
+    "4018 Shipyard Blvd, Wilmington, NC 28403, USA"
+  ]
+}

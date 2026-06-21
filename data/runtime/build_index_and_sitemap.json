@@ -3,13 +3,13 @@
   "worker": "build_index_and_sitemap",
   "script": "scripts/build_index_and_sitemap.py",
   "status": "done",
-  "last_run": "2026-06-18T18:14:03.697707-04:00",
+  "last_run": "2026-06-20T20:01:16.062114-04:00",
   "current_count": 298,
   "total_count": 298,
   "percent_complete": 100.0,
   "last_output_file": "E:\\GitHub\\910cpr-class-landers\\docs\\sitemap.xml",
-  "timestamp": "2026-06-18T18:14:03.697707-04:00",
-  "last_successful_run": "2026-06-18T18:14:03.697707-04:00",
+  "timestamp": "2026-06-20T20:01:16.062114-04:00",
+  "last_successful_run": "2026-06-20T20:01:16.062114-04:00",
   "inputs": [
     "E:\\GitHub\\910cpr-class-landers\\docs\\classes",
     "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
@@ -26,13 +26,14 @@
   "counts": {
     "class_pages_scanned": 298,
     "valid_class_pages": 298,
-    "public_sessions_from_canonical_source": 250,
+    "public_sessions_from_canonical_source": 218,
     "public_session_source": "docs\\data\\schedule_future.json",
-    "course_pages": 13,
-    "location_pages": 1,
-    "sitemap_urls": 277
+    "course_pages": 5,
+    "location_pages": 2,
+    "stale_location_pages_removed": 0,
+    "sitemap_urls": 238
   },
-  "pages_generated": 17,
+  "pages_generated": 18,
   "warnings": [],
   "errors": [],
   "files_needing_review": []

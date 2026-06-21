@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Appointment Offer Calendar Preview</title>
+  <style>
+    :root { color-scheme: light; --line: #d8dee4; --ink: #1f2933; --muted: #637083; --panel: #f7f9fb; --accent: #0f766e; }
+    body { margin: 0; font-family: Arial, sans-serif; color: var(--ink); background: white; }
+    header { padding: 24px; border-bottom: 1px solid var(--line); background: var(--panel); }
+    h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 20px; }
+    h3 { margin: 4px 0 8px; font-size: 16px; }
+    .summary { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .summary span, .badge { display: inline-block; border: 1px solid var(--line); border-radius: 4px; padding: 3px 7px; background: white; font-size: 12px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 12px; padding: 16px 24px; border-bottom: 1px solid var(--line); }
+    label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+    select { min-width: 160px; padding: 6px; border: 1px solid var(--line); border-radius: 4px; background: white; }
+    main { padding: 24px; display: grid; gap: 20px; }
+    .day { border-top: 3px solid var(--accent); padding-top: 12px; }
+    .offers { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+    .offer { border: 1px solid var(--line); border-radius: 6px; padding: 12px; background: #fff; }
+    .offer-time { color: var(--accent); font-weight: 700; }
+    .meta { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+    dl { display: grid; grid-template-columns: 112px 1fr; gap: 4px 8px; font-size: 12px; }
+    dt { color: var(--muted); }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Appointment Offer Calendar Preview</h1>
+    <p>REPORT ONLY - no public schedule files, class landers, CTAs, or Enrollware records were changed.</p>
+    <div class="summary">
+      <span>Total: 0</span>
+      <span>August: 0</span>
+      <span>Public ready: 0</span>
+      <span>Blocked/needs review: 0</span>
+      <span>With URLs: 0</span>
+    </div>
+  </header>
+  <nav class="filters">
+    <label>Instructor<select id="filter-instructor"><option value="">All</option></select></label>
+    <label>Family<select id="filter-family"><option value="">All</option></select></label>
+    <label>Location<select id="filter-location"><option value="">All</option></select></label>
+    <label>Status<select id="filter-status"><option value="">All</option></select></label>
+  </nav>
+  <main></main>
+  <script>
+    const filters = ['instructor', 'family', 'location', 'status'];
+    function applyFilters() {
+      const selected = Object.fromEntries(filters.map(name => [name, document.getElementById(`filter-${name}`).value]));
+      document.querySelectorAll('.offer').forEach(card => {
+        const visible = filters.every(name => !selected[name] || card.dataset[name] === selected[name]);
+        card.classList.toggle('hidden', !visible);
+      });
+    }
+    filters.forEach(name => document.getElementById(`filter-${name}`).addEventListener('change', applyFilters));
+  </script>
+</body>
+</html>

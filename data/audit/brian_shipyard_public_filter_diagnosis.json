@@ -1,0 +1,113 @@
+{
+  "generated_at": "2026-06-19T15:23:36",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "brian_shipyard_availability_blocks_found": 1,
+  "brian_shipyard_timed_availability_blocks_found": 1,
+  "brian_shipyard_availability_blocks": [
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "date": "2026-07-04",
+      "start_time": "16:01",
+      "end_time": "03:59",
+      "availability_status": "available",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "offerable_calendar_window"
+      ]
+    }
+  ],
+  "dynamic_offers_created_from_timed_brian_shipyard_blocks": 0,
+  "dynamic_offers_created_from_all_brian_shipyard_blocks": 0,
+  "public_filter_reason_counts_for_timed_brian_shipyard_offers": {},
+  "active_containers_considered": [
+    {
+      "container_id": "shipyard_brian_continuous_20260621_20270430",
+      "container_group": "shipyard",
+      "container_name": "Shipyard continuous appointment range",
+      "instructor_name": "Brian",
+      "instructor_id_optional": null,
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "location_id": "101560",
+      "room_or_resource_name": "Shipyard Office",
+      "base_date": "2026-06-21",
+      "base_appointmentDayId": 260670,
+      "first_valid_date": "2026-06-21",
+      "first_valid_appointmentDayId": 260670,
+      "last_valid_date": "2027-04-30",
+      "last_valid_appointmentDayId": 260983,
+      "first_invalid_appointmentDayId": 260984,
+      "default_slot_minutes": 60,
+      "status": "active",
+      "priority": 100,
+      "tags": [
+        "shipyard",
+        "brian",
+        "bls_public",
+        "advanced_provider",
+        "skills_testing"
+      ],
+      "notes": "Validated first-party owned range. appointmentDayId 260984 crossed outside the owned block and must be treated as unsafe."
+    }
+  ],
+  "policy_snapshot": {
+    "enabled_course_families": [
+      "BLS",
+      "Heartsaver",
+      "ACLS",
+      "PALS"
+    ],
+    "disabled_course_families": [
+      "ARC",
+      "HSI",
+      "USCG"
+    ],
+    "allowed_start_minutes": [
+      "00",
+      "30"
+    ],
+    "minimum_lead_hours": 24,
+    "maximum_days_out": 60,
+    "max_offers_per_course_per_day": 4,
+    "max_total_offers_per_day": 24,
+    "require_confirmed_appointment_container": true
+  },
+  "first_failing_comparison": {
+    "stage": "dynamic_offer_generation_before_public_filter",
+    "comparison": "availability_end_time_after_start_time",
+    "reason": "Brian + Shipyard availability block has an end time that is not after its start time when interpreted on the same date, so no course duration can fit before public confirmed-container filtering runs.",
+    "invalid_windows": [
+      {
+        "source_event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+        "date": "2026-07-04",
+        "start_time": "16:01",
+        "end_time": "03:59",
+        "comparison": "end_time_not_after_start_time",
+        "start_datetime": "2026-07-04T16:01:00",
+        "end_datetime_same_date": "2026-07-04T03:59:00"
+      }
+    ],
+    "dynamic_rejection_counts": {
+      "course_family_not_allowed_by_window": 18,
+      "course_does_not_fit_window": 12
+    }
+  },
+  "smallest_safe_fix": "Fix live availability snapshot interpretation for overnight/cross-midnight timed events, or correct the calendar event so end is after start on the intended date. Do not change appointment containers or Shipyard aliases for this blocker.",
+  "offer_filter_decisions": [],
+  "issue_classification": "availability_window_end_before_start_before_public_filter"
+}

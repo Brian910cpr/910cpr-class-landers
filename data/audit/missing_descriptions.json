@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-06-18T18:13:28.019785-04:00",
+  "generated_at": "2026-06-20T16:10:17.956423-04:00",
   "counts": {
-    "mapped_courses": 15,
+    "mapped_courses": 12,
     "courses_with_complete_descriptions": 0,
-    "courses_needing_review_or_missing": 15,
-    "sessions_affected": 304
+    "courses_needing_review_or_missing": 12,
+    "sessions_affected": 221
   },
   "missing_field_counts": {
-    "description_status": 15,
-    "long_description": 15,
-    "who_class_for": 3
+    "description_status": 12,
+    "long_description": 12,
+    "who_class_for": 1
   },
   "items": [
     {
@@ -49,13 +49,13 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "12774327",
-        "12774572",
-        "12776632",
-        "12774577",
-        "13614037"
+        "12774325",
+        "12774575",
+        "12774334",
+        "12776635",
+        "12774582"
       ],
-      "count_of_affected_sessions": 65
+      "count_of_affected_sessions": 51
     },
     {
       "course_id": "209809",
@@ -73,13 +73,13 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "12776770",
-        "13628610",
-        "12775997",
-        "13625360",
-        "12776776"
+        "12775990",
+        "12776773",
+        "13652911",
+        "12776778",
+        "12776000"
       ],
-      "count_of_affected_sessions": 29
+      "count_of_affected_sessions": 21
     },
     {
       "course_id": "209811",
@@ -97,13 +97,13 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "12774034",
-        "12774037",
-        "12774033",
-        "12774031",
-        "12774040"
+        "12774040",
+        "12774032",
+        "12774085",
+        "12774094",
+        "12774086"
       ],
-      "count_of_affected_sessions": 19
+      "count_of_affected_sessions": 10
     },
     {
       "course_id": "209818",
@@ -121,13 +121,12 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "13472474",
         "13472475",
         "13472476",
         "13472477",
         "12946261"
       ],
-      "count_of_affected_sessions": 5
+      "count_of_affected_sessions": 4
     },
     {
       "course_id": "210549",
@@ -145,13 +144,13 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "12776270",
-        "12776416",
-        "12776554",
-        "12776421",
-        "12776559"
+        "12776273",
+        "12776419",
+        "12776557",
+        "12776424",
+        "12776562"
       ],
-      "count_of_affected_sessions": 47
+      "count_of_affected_sessions": 36
     },
     {
       "course_id": "241108",
@@ -169,12 +168,11 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "13460876",
         "13472467",
         "13472468",
         "13472469"
       ],
-      "count_of_affected_sessions": 4
+      "count_of_affected_sessions": 3
     },
     {
       "course_id": "251496",
@@ -214,13 +212,13 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "12783389",
         "12783390",
         "12783382",
         "12783383",
-        "12783384"
+        "12783384",
+        "12783385"
       ],
-      "count_of_affected_sessions": 7
+      "count_of_affected_sessions": 6
     },
     {
       "course_id": "329495",
@@ -238,33 +236,13 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "12776144",
-        "12776696",
-        "12776148",
-        "12775779",
-        "12776145"
+        "12776699",
+        "12776151",
+        "12775784",
+        "12776143",
+        "12775772"
       ],
-      "count_of_affected_sessions": 51
-    },
-    {
-      "course_id": "344085",
-      "course_number": "344085",
-      "clean_title": "AHA Heartsaver CPR AED",
-      "official_title": "AHA Heartsaver® CPR AED",
-      "family": "Heartsaver",
-      "subtype": "CPR + AED",
-      "certifying_body": "AHA",
-      "delivery_mode": "IP",
-      "description_status": "needs_review",
-      "missing_fields": [
-        "description_status",
-        "long_description"
-      ],
-      "placeholder_fields": [],
-      "example_session_ids": [
-        "13572071"
-      ],
-      "count_of_affected_sessions": 1
+      "count_of_affected_sessions": 32
     },
     {
       "course_id": "359474",
@@ -282,55 +260,13 @@
       ],
       "placeholder_fields": [],
       "example_session_ids": [
-        "12775529",
-        "12775296",
-        "12783387",
-        "12775533",
-        "12775300"
+        "12775527",
+        "12775294",
+        "13653161",
+        "12775298",
+        "12775540"
       ],
-      "count_of_affected_sessions": 68
-    },
-    {
-      "course_id": "422270",
-      "course_number": "422270",
-      "clean_title": "HSI Adult First Aid | CPR AED",
-      "official_title": "HSI Adult First Aid | Adult CPR AED",
-      "family": "HSI",
-      "subtype": "First Aid + CPR + AED",
-      "certifying_body": "HSI",
-      "delivery_mode": "IP",
-      "description_status": "needs_review",
-      "missing_fields": [
-        "description_status",
-        "long_description",
-        "who_class_for"
-      ],
-      "placeholder_fields": [],
-      "example_session_ids": [
-        "12776866"
-      ],
-      "count_of_affected_sessions": 1
-    },
-    {
-      "course_id": "445670",
-      "course_number": "445670",
-      "clean_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "official_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "family": "HSI",
-      "subtype": "BLS + First Aid",
-      "certifying_body": "HSI",
-      "delivery_mode": "BL",
-      "description_status": "needs_review",
-      "missing_fields": [
-        "description_status",
-        "long_description",
-        "who_class_for"
-      ],
-      "placeholder_fields": [],
-      "example_session_ids": [
-        "13610326"
-      ],
-      "count_of_affected_sessions": 1
+      "count_of_affected_sessions": 52
     },
     {
       "course_id": "463743",

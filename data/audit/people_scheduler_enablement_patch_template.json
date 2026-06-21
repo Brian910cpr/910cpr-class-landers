@@ -1,0 +1,751 @@
+{
+  "schema_version": "0.1",
+  "description": "Review-only People scheduler enablement patch template. This file does not update people_catalog.json by itself.",
+  "source_files": [
+    "data/config/people_catalog.json",
+    "data/audit/solver_audit_summary.json"
+  ],
+  "valid_scheduler_status_values": [
+    "owner",
+    "employee",
+    "contractor",
+    "manual_only",
+    "unavailable",
+    "archived"
+  ],
+  "valid_availability_source_values": [
+    "google_calendar",
+    "inverse_google_calendar",
+    "manual_window",
+    "none",
+    "unknown"
+  ],
+  "valid_scheduling_role_values": [
+    "primary",
+    "backup",
+    "subcontractor",
+    "admin_only",
+    "instructor_customer",
+    "inactive"
+  ],
+  "instructions": [
+    "Match people by person_id only.",
+    "Default active_for_dynamic_scheduling remains false unless Brian explicitly approves a person.",
+    "Do not infer scheduler status from Enrollware Training Site/Admin fields.",
+    "Do not infer availability_source unless Brian confirms it or local scheduler config explicitly represents it.",
+    "Apply this template later with a separate audited import step; do not edit people_catalog.json directly during review."
+  ],
+  "patches": [
+    {
+      "person_id": "instructor_24057895173",
+      "display_name": "Brian Ennis",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "inverse_google_calendar",
+      "scheduling_role": "inactive",
+      "notes": "Matched solver availability instructor: Brian Likely operational candidate; Brian review required before enabling."
+    },
+    {
+      "person_id": "instructor_4180671442",
+      "display_name": "Amy Arnold",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "manual_window",
+      "scheduling_role": "inactive",
+      "notes": "Matched solver availability instructor: Amy Likely operational candidate; Brian review required before enabling."
+    },
+    {
+      "person_id": "instructor_10160506833",
+      "display_name": "Nicholas Tripp",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Likely operational candidate; Brian review required before enabling."
+    },
+    {
+      "person_id": "person_alanmonds",
+      "display_name": "Alan Monds",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_acpgkl2009",
+      "display_name": "Anita Lanier",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_aj_deb97",
+      "display_name": "Anthony Debenedictis",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_1120072085",
+      "display_name": "Audrie Babineau",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25041450289",
+      "display_name": "Brandon Grubbs",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_26033061958",
+      "display_name": "Brian Williamson",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_4210944883",
+      "display_name": "Burke Bailey",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_fir3m3dic93",
+      "display_name": "Calvin Smith",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_26032275123",
+      "display_name": "Chris Radke",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_ilmmedic19",
+      "display_name": "Christopher Gilmore",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25104363966",
+      "display_name": "Clark Harvell",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24013437008",
+      "display_name": "Cori Kiefner",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_23125524581",
+      "display_name": "Crystal Jasper",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_chiefgrantrvfd",
+      "display_name": "Curtis Grant",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24050859659",
+      "display_name": "Damiano Whittington",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25103788969",
+      "display_name": "Daniel Burgess",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_23112410834",
+      "display_name": "David Barnes",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_8180709444",
+      "display_name": "David Dyches",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_26035266004",
+      "display_name": "Eddie Rouse",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_26015916222",
+      "display_name": "Eric Brown",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25046599330",
+      "display_name": "Felicia Fisher",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_gklanier42",
+      "display_name": "Gerren Lanier",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_haleyrbrown122",
+      "display_name": "Haley Brown",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_lyonh18006",
+      "display_name": "Hurst Lyon",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24059030952",
+      "display_name": "Irvine Furman IV",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25101030688",
+      "display_name": "Ivy Floyd",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_26034156493",
+      "display_name": "James Murphy",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25051684127",
+      "display_name": "Jamie Craner",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_7210969235",
+      "display_name": "Jana Gordon",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24028932395",
+      "display_name": "Jasmine Bryant",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24057864126",
+      "display_name": "Jessica Smith",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24125098721",
+      "display_name": "Jewel Lowe",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25054324038",
+      "display_name": "Joel Cuza",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25100963634",
+      "display_name": "Joseph Fyffe",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_southernrrtrains",
+      "display_name": "Joseph Hofmann",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_jsmith",
+      "display_name": "Joseph Smith Jr.",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_12211010881",
+      "display_name": "Joseph Tassi",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24015433336",
+      "display_name": "Justin Bratton",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_23126191594",
+      "display_name": "Justin Brown",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_26033828346",
+      "display_name": "Justin Kennedy",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25103368549",
+      "display_name": "Karyn Borner",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24070512131",
+      "display_name": "Katherine Raynor",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25051721672",
+      "display_name": "Keanya Britton",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_kperry",
+      "display_name": "Kyle Perry",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_2221028576",
+      "display_name": "Lauren Brothers",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_9210980422",
+      "display_name": "Luke Raynor",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_8221093252",
+      "display_name": "Lynndoria Newkirk",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_maggie_huddleston",
+      "display_name": "Maggie Huddleston",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_3200858342",
+      "display_name": "Mathew Cox",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25041665948",
+      "display_name": "Maurice Peacock",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_mlreynoldsjr",
+      "display_name": "Melvin Reynolds",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24093180885_25051648498",
+      "display_name": "Michael Gray",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_10221108279",
+      "display_name": "Michele Kabay",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25107066588",
+      "display_name": "Natavius Davis",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_nathanaelwgreene",
+      "display_name": "Nathanael Greene",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_23061715782",
+      "display_name": "Nicholas Hubbard",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_23079876374",
+      "display_name": "Paul Fowler",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25031075837",
+      "display_name": "Phillip Groves",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24123612339",
+      "display_name": "Raymond Lowe",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_richardmayrvfd",
+      "display_name": "Richard May",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_26011251670",
+      "display_name": "Robert Henderson",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_12211010879",
+      "display_name": "Robert Meyer",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_10210993355",
+      "display_name": "Rodney Covault",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_11102105667",
+      "display_name": "Scott Wyland",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_sidneydubois18",
+      "display_name": "Sidney DuBois",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_sierra_brooke_1225",
+      "display_name": "Sierra Harrison",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25113293102",
+      "display_name": "Stacey Comer",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_23067670652",
+      "display_name": "Taylor Jones",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_23071367409",
+      "display_name": "Thomas Hall",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25101954545",
+      "display_name": "Thomas Turnage",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_12211010880",
+      "display_name": "Timothy VanPelt",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_24125980635",
+      "display_name": "Todd Deisler",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_tonia_smith",
+      "display_name": "Tonia Smith",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_25065874107",
+      "display_name": "Troy Ware",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "instructor_2221032118",
+      "display_name": "Virginia Carey",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    },
+    {
+      "person_id": "person_williamtaylor0525",
+      "display_name": "William Taylor III",
+      "active_for_dynamic_scheduling": false,
+      "scheduler_status": "unavailable",
+      "availability_source": "unknown",
+      "scheduling_role": "inactive",
+      "notes": "Default false. Do not enable unless Brian confirms this person should receive dynamic scheduling offers."
+    }
+  ]
+}

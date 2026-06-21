@@ -1,0 +1,114 @@
+{
+  "generated_at": "2026-06-19T16:58:39.834307-04:00",
+  "report_only": true,
+  "public_behavior_changed": false,
+  "do_not_create_classes_yet": true,
+  "source_mode": "live",
+  "enrollware_presence_source": {
+    "path": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
+    "status": "loaded",
+    "session_count": 252,
+    "generated_at": "2026-06-19T13:33:23.155960-04:00"
+  },
+  "summary": {
+    "total_selected_seeds": 8,
+    "total_publishable_candidates_exported": 0,
+    "blocked_seeds_omitted": 8,
+    "by_instructor": {},
+    "by_course": {},
+    "by_backend": {},
+    "approval_status_counts": {
+      "approved_for_preview": 0,
+      "approved_for_public": 0,
+      "hold": 0,
+      "needs_review": 0,
+      "rejected": 0
+    },
+    "public_ready_candidates": 0,
+    "enrollware_presence_status_counts": {
+      "present_in_enrollware": 0,
+      "missing_from_enrollware": 0,
+      "not_checked": 0,
+      "source_unavailable": 0
+    },
+    "blocked_not_in_enrollware": 0,
+    "omitted_by_reason": {
+      "blocked_warning": 8
+    }
+  },
+  "publishable_seed_candidates": [],
+  "blocked_omitted": [
+    {
+      "instructor_key": "brian",
+      "course_key": "aha_bls_renewal",
+      "course_title": "AHA BLS Renewal",
+      "candidate_start": "2026-08-03T09:00:00-04:00",
+      "publishability_status": "blocked_warning",
+      "registration_status": "known_enrollware_target",
+      "omit_reason": "DO NOT PUBLISH - hard review warning must be resolved first."
+    },
+    {
+      "instructor_key": "brian",
+      "course_key": "aha_bls_initial",
+      "course_title": "AHA BLS Initial",
+      "candidate_start": "2026-08-03T13:00:00-04:00",
+      "publishability_status": "blocked_warning",
+      "registration_status": "known_enrollware_target",
+      "omit_reason": "DO NOT PUBLISH - hard review warning must be resolved first."
+    },
+    {
+      "instructor_key": "brian",
+      "course_key": "aha_bls_renewal",
+      "course_title": "AHA BLS Renewal",
+      "candidate_start": "2026-08-04T09:00:00-04:00",
+      "publishability_status": "blocked_warning",
+      "registration_status": "known_enrollware_target",
+      "omit_reason": "DO NOT PUBLISH - hard review warning must be resolved first."
+    },
+    {
+      "instructor_key": "brian",
+      "course_key": "aha_bls_initial",
+      "course_title": "AHA BLS Initial",
+      "candidate_start": "2026-08-04T13:00:00-04:00",
+      "publishability_status": "blocked_warning",
+      "registration_status": "known_enrollware_target",
+      "omit_reason": "DO NOT PUBLISH - hard review warning must be resolved first."
+    },
+    {
+      "instructor_key": "brian",
+      "course_key": "aha_bls_renewal",
+      "course_title": "AHA BLS Renewal",
+      "candidate_start": "2026-08-05T09:00:00-04:00",
+      "publishability_status": "blocked_warning",
+      "registration_status": "known_enrollware_target",
+      "omit_reason": "DO NOT PUBLISH - hard review warning must be resolved first."
+    },
+    {
+      "instructor_key": "brian",
+      "course_key": "aha_bls_initial",
+      "course_title": "AHA BLS Initial",
+      "candidate_start": "2026-08-05T13:00:00-04:00",
+      "publishability_status": "blocked_warning",
+      "registration_status": "known_enrollware_target",
+      "omit_reason": "DO NOT PUBLISH - hard review warning must be resolved first."
+    },
+    {
+      "instructor_key": "brian",
+      "course_key": "aha_bls_heartcode_skills",
+      "course_title": "AHA BLS HeartCode Skills",
+      "candidate_start": "2026-08-06T09:00:00-04:00",
+      "publishability_status": "blocked_warning",
+      "registration_status": "known_enrollware_target",
+      "omit_reason": "DO NOT PUBLISH - hard review warning must be resolved first."
+    },
+    {
+      "instructor_key": "brian",
+      "course_key": "aha_bls_heartcode_skills",
+      "course_title": "AHA BLS HeartCode Skills",
+      "candidate_start": "2026-08-07T09:00:00-04:00",
+      "publishability_status": "blocked_warning",
+      "registration_status": "known_enrollware_target",
+      "omit_reason": "DO NOT PUBLISH - hard review warning must be resolved first."
+    }
+  ]
+}

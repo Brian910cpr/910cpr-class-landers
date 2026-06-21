@@ -1,0 +1,196 @@
+{
+  "generated_at": "2026-06-19T16:47:03",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "runtime_snapshot_path": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+  "selected_event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+  "raw_event_found": true,
+  "raw_event": {
+    "raw_properties": {
+      "DTSTART": "20260704T160100Z",
+      "DTEND": "20260705T035900Z",
+      "DTSTAMP": "20260619T195655Z",
+      "UID": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+      "CREATED": "20260619T001758Z",
+      "LAST-MODIFIED": "20260619T190834Z",
+      "SEQUENCE": "1",
+      "STATUS": "CONFIRMED",
+      "SUMMARY": "Fourth of July",
+      "TRANSP": "TRANSPARENT"
+    },
+    "recurrence": [],
+    "start_raw": "20260704T160100Z",
+    "start": "2026-07-04T16:01:00+00:00",
+    "calendar_source_id": "brian_do_not_schedule",
+    "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+    "source_type": "inverse_google_calendar",
+    "read_only_snapshot": true,
+    "end_raw": "20260705T035900Z",
+    "end": "2026-07-05T03:59:00+00:00",
+    "updated": "2026-06-19T19:08:34+00:00",
+    "event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+    "created": "2026-06-19T00:17:58+00:00",
+    "status": "CONFIRMED",
+    "title": "Fourth of July",
+    "summary": "Fourth of July",
+    "description": "",
+    "location": "",
+    "creator": "UNKNOWN",
+    "organizer": "UNKNOWN"
+  },
+  "raw_event_fields": {
+    "event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+    "title": "Fourth of July",
+    "summary": "Fourth of July",
+    "start_raw": "20260704T160100Z",
+    "start": "2026-07-04T16:01:00+00:00",
+    "end_raw": "20260705T035900Z",
+    "end": "2026-07-05T03:59:00+00:00",
+    "location": "",
+    "description": "",
+    "timezone_fields": {
+      "DTSTART": "20260704T160100Z",
+      "DTEND": "20260705T035900Z"
+    },
+    "raw_properties": {
+      "DTSTART": "20260704T160100Z",
+      "DTEND": "20260705T035900Z",
+      "DTSTAMP": "20260619T195655Z",
+      "UID": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+      "CREATED": "20260619T001758Z",
+      "LAST-MODIFIED": "20260619T190834Z",
+      "SEQUENCE": "1",
+      "STATUS": "CONFIRMED",
+      "SUMMARY": "Fourth of July",
+      "TRANSP": "TRANSPARENT"
+    }
+  },
+  "normalized_live_block": {
+    "source_event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+    "date": "2026-07-04",
+    "start_time": "16:01",
+    "end_time": "03:59",
+    "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+    "instructor_name": "Brian Ennis",
+    "allowed_course_families": [
+      "BLS",
+      "Heartsaver",
+      "USCG"
+    ],
+    "reasons": [
+      "read_only_preview",
+      "local_calendar_snapshot",
+      "offerable_calendar_window"
+    ]
+  },
+  "source_of_16_01_and_03_59": "16:01 comes from exported event.start `2026-07-04T16:01:00+00:00`, which comes from raw DTSTART `20260704T160100Z`. 03:59 comes from exported event.end `2026-07-05T03:59:00+00:00`, which comes from raw DTEND `20260705T035900Z`.",
+  "classification": {
+    "all_day": false,
+    "timezone_shifted": true,
+    "cross_midnight": true,
+    "stale": "UNKNOWN"
+  },
+  "multiple_2026_07_04_brian_events_found": 2,
+  "july4_events": [
+    {
+      "raw_properties": {
+        "DTSTART": "20260704T163000Z",
+        "DTEND": "20260704T210100Z",
+        "DTSTAMP": "20260619T195655Z",
+        "UID": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
+        "CREATED": "20260616T200353Z",
+        "LAST-MODIFIED": "20260616T200353Z",
+        "LOCATION": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Beya's Fourth of July",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [],
+      "start_raw": "20260704T163000Z",
+      "start": "2026-07-04T16:30:00+00:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260704T210100Z",
+      "end": "2026-07-04T21:01:00+00:00",
+      "updated": "2026-06-16T20:03:53+00:00",
+      "event_id": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
+      "created": "2026-06-16T20:03:53+00:00",
+      "location": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Beya's Fourth of July",
+      "summary": "Beya's Fourth of July",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260704T160100Z",
+        "DTEND": "20260705T035900Z",
+        "DTSTAMP": "20260619T195655Z",
+        "UID": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+        "CREATED": "20260619T001758Z",
+        "LAST-MODIFIED": "20260619T190834Z",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Fourth of July",
+        "TRANSP": "TRANSPARENT"
+      },
+      "recurrence": [],
+      "start_raw": "20260704T160100Z",
+      "start": "2026-07-04T16:01:00+00:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260705T035900Z",
+      "end": "2026-07-05T03:59:00+00:00",
+      "updated": "2026-06-19T19:08:34+00:00",
+      "event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+      "created": "2026-06-19T00:17:58+00:00",
+      "status": "CONFIRMED",
+      "title": "Fourth of July",
+      "summary": "Fourth of July",
+      "description": "",
+      "location": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN"
+    }
+  ],
+  "brian_shipyard_blocks": [
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "date": "2026-07-04",
+      "start_time": "16:01",
+      "end_time": "03:59",
+      "availability_status": "available",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "offerable_calendar_window"
+      ]
+    }
+  ],
+  "export_parse_notes": [
+    "export_calendar_snapshots.py stores raw DTSTART as start_raw and ics_datetime_to_iso(DTSTART) as start.",
+    "export_calendar_snapshots.py stores raw DTEND as end_raw and ics_datetime_to_iso(DTEND) as end.",
+    "build_live_availability_snapshot.py parses event.start/event.end, then formats start_time/end_time from those parsed datetimes."
+  ]
+}

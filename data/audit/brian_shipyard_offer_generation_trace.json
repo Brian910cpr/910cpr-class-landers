@@ -1,0 +1,256 @@
+{
+  "generated_at": "2026-06-19T16:22:00",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "brian_shipyard_blocks_found": 1,
+  "first_failing_condition": {
+    "check": "window_end_after_start",
+    "passed": false,
+    "reason_code_if_failed": "course_does_not_fit_window",
+    "details": {
+      "window_start": "2026-07-04T16:01:00",
+      "window_end_same_date": "2026-07-04T03:59:00",
+      "duration_minutes": -722.0
+    }
+  },
+  "reason_code": "course_does_not_fit_window",
+  "smallest_safe_fix": "Fix cross-midnight/overnight interpretation in live availability normalization, or correct the calendar event so end is after start on the same intended date.",
+  "traces": [
+    {
+      "block": {
+        "instructor_name": "Brian Ennis",
+        "person_id": "instructor_24057895173",
+        "date": "2026-07-04",
+        "start_time": "16:01",
+        "end_time": "03:59",
+        "availability_status": "available",
+        "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+        "allowed_course_families": [
+          "BLS",
+          "Heartsaver",
+          "USCG"
+        ],
+        "source_calendar_id": "brian_do_not_schedule",
+        "source_event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+        "source_type": "inverse_google_calendar",
+        "reasons": [
+          "read_only_preview",
+          "local_calendar_snapshot",
+          "offerable_calendar_window"
+        ],
+        "_index": 14,
+        "normalized_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+        "normalized_resource": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+        "location_normalized": true,
+        "source_availability_window": "4jgsd3masf2ccq7algku6rs7j8@google.com"
+      },
+      "bls_course": {
+        "course_id": "209806",
+        "course_key": "aha_bls_provider",
+        "official_title": "AHA BLS Provider",
+        "short_title": "AHA BLS Provider",
+        "provider": "AHA",
+        "family": "BLS",
+        "subtype": "Provider",
+        "delivery_type": "IP",
+        "renewal_or_initial": "initial",
+        "blended_classroom_skills": "classroom",
+        "duration_minutes": 120,
+        "setup_buffer_minutes": "UNKNOWN",
+        "cleanup_buffer_minutes": "UNKNOWN",
+        "default_capacity": 6,
+        "minimum_capacity": "UNKNOWN",
+        "maximum_capacity": "UNKNOWN",
+        "appointment_allowed": true,
+        "deterministic_url_supported": "UNKNOWN",
+        "appointment_container_required": true,
+        "known_appointmentDayId_range": [
+          {
+            "container_id": "shipyard_brian_continuous_20260621_20270430",
+            "instructor_name": "Brian",
+            "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+            "first_valid_date": "2026-06-21",
+            "last_valid_date": "2027-04-30",
+            "first_valid_appointmentDayId": 260670,
+            "last_valid_appointmentDayId": 260983
+          }
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "required_instructor_certifications": [
+          "AHA_BLS_INSTRUCTOR"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "relationships": {
+          "compatible_with": [],
+          "satisfies": "UNKNOWN",
+          "does_not_satisfy": "UNKNOWN",
+          "occupancy_pool": "AHA_BLS_INITIAL",
+          "escalation_tier": 1
+        },
+        "source_trace": {
+          "identity_source": "data/config/course_map.json",
+          "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
+          "appointment_container_source": "data/inventory/appointment_containers.json",
+          "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
+        }
+      },
+      "trace": [
+        {
+          "check": "availability_status_available",
+          "passed": true,
+          "reason_code_if_failed": "availability_window_not_available",
+          "details": {
+            "availability_status": "available"
+          }
+        },
+        {
+          "check": "window_start_parseable",
+          "passed": true,
+          "reason_code_if_failed": "unknown_availability_window_time",
+          "details": {
+            "date": "2026-07-04",
+            "start_time": "16:01"
+          }
+        },
+        {
+          "check": "window_end_parseable",
+          "passed": true,
+          "reason_code_if_failed": "unknown_availability_window_time",
+          "details": {
+            "date": "2026-07-04",
+            "end_time": "03:59"
+          }
+        },
+        {
+          "check": "window_end_after_start",
+          "passed": false,
+          "reason_code_if_failed": "course_does_not_fit_window",
+          "details": {
+            "window_start": "2026-07-04T16:01:00",
+            "window_end_same_date": "2026-07-04T03:59:00",
+            "duration_minutes": -722.0
+          }
+        },
+        {
+          "check": "scheduler_enabled_person_match",
+          "passed": true,
+          "reason_code_if_failed": "missing_scheduler_enabled_person",
+          "details": {
+            "window_person_id": "instructor_24057895173",
+            "window_instructor_name": "Brian Ennis",
+            "matched_person_id": "instructor_24057895173",
+            "matched_person_name": "Brian Ennis"
+          }
+        },
+        {
+          "check": "course_appointment_allowed",
+          "passed": true,
+          "reason_code_if_failed": "appointment_not_allowed",
+          "details": {
+            "course_id": "209806",
+            "appointment_allowed": true
+          }
+        },
+        {
+          "check": "family_allowed_by_window",
+          "passed": true,
+          "reason_code_if_failed": "course_family_not_allowed_by_window",
+          "details": {
+            "course_family": "BLS",
+            "allowed_course_families": [
+              "BLS",
+              "Heartsaver",
+              "USCG"
+            ]
+          }
+        },
+        {
+          "check": "course_duration_numeric",
+          "passed": true,
+          "reason_code_if_failed": "missing_course_duration",
+          "details": {
+            "duration_minutes": 120
+          }
+        },
+        {
+          "check": "course_capacity_numeric",
+          "passed": true,
+          "reason_code_if_failed": "missing_course_capacity",
+          "details": {
+            "default_capacity": 6
+          }
+        },
+        {
+          "check": "required_instructor_certification_present",
+          "passed": true,
+          "reason_code_if_failed": "missing_required_instructor_certification",
+          "details": {
+            "requirements": [
+              "AHA_BLS_INSTRUCTOR"
+            ]
+          }
+        },
+        {
+          "check": "instructor_certification_match",
+          "passed": true,
+          "reason_code_if_failed": "instructor_lacks_required_certification",
+          "details": {
+            "person_codes": [
+              "AHA_BLS_INSTRUCTOR",
+              "AHA_HEARTSAVER_INSTRUCTOR"
+            ],
+            "requirements": [
+              "AHA_BLS_INSTRUCTOR"
+            ],
+            "intersection": [
+              "AHA_BLS_INSTRUCTOR"
+            ]
+          }
+        },
+        {
+          "check": "course_fits_window",
+          "passed": false,
+          "reason_code_if_failed": "course_does_not_fit_window",
+          "details": {
+            "window_start": "2026-07-04T16:01:00",
+            "window_end": "2026-07-04T03:59:00",
+            "duration_minutes": 120,
+            "latest_start": "2026-07-04T01:59:00",
+            "candidate_start_count": 0,
+            "candidate_starts": []
+          }
+        },
+        {
+          "check": "no_existing_occupancy_conflict_for_any_candidate",
+          "passed": false,
+          "reason_code_if_failed": "conflicts_with_existing_occupancy",
+          "details": {
+            "conflicting_candidate_count": 0,
+            "total_candidate_count": 0,
+            "first_conflicts": []
+          }
+        }
+      ],
+      "first_failing_condition": {
+        "check": "window_end_after_start",
+        "passed": false,
+        "reason_code_if_failed": "course_does_not_fit_window",
+        "details": {
+          "window_start": "2026-07-04T16:01:00",
+          "window_end_same_date": "2026-07-04T03:59:00",
+          "duration_minutes": -722.0
+        }
+      },
+      "existing_bls_offers_from_block": [],
+      "existing_bls_offer_count": 0
+    }
+  ]
+}

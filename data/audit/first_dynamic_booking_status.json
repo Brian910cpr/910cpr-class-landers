@@ -1,0 +1,153 @@
+{
+  "generated_at": "2026-06-20T10:36:12",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "files_read": {
+    "live_availability": "E:\\GitHub\\910cpr-class-landers\\data\\audit\\live_availability_snapshot_preview.json",
+    "dynamic_offers": "E:\\GitHub\\910cpr-class-landers\\data\\audit\\dynamic_offers_preview.json",
+    "public_sellable_offers": "E:\\GitHub\\910cpr-class-landers\\data\\audit\\public_sellable_offers_preview.json",
+    "schedule_seeds": "E:\\GitHub\\910cpr-class-landers\\data\\audit\\schedule_seeds_preview.json",
+    "seed_url_preview": "E:\\GitHub\\910cpr-class-landers\\data\\audit\\seed_appointment_url_preview.json",
+    "internal_dynamic_seed_preview": "E:\\GitHub\\910cpr-class-landers\\data\\audit\\internal_dynamic_seed_preview.json",
+    "appointment_seed_registration_matches": "E:\\GitHub\\910cpr-class-landers\\data\\audit\\appointment_seed_registration_matches.json",
+    "sessions_current": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
+    "schedule_future": "E:\\GitHub\\910cpr-class-landers\\docs\\data\\schedule_future.json",
+    "class_report_ingest": "E:\\GitHub\\910cpr-class-landers\\data\\audit\\class_report_ingest_summary.json"
+  },
+  "load_errors": {},
+  "stages": [
+    {
+      "number": 1,
+      "name": "Live calendar availability produces at least one Brian offerable-time block",
+      "passed": true,
+      "current_value": 5,
+      "requirement": ">= 1 available Brian block, including instructor_time_only availability that can later target confirmed containers",
+      "blocker": null,
+      "next_action": "Create or expose a valid Brian availability window in the live calendar snapshot, then rerun the read-only pipeline."
+    },
+    {
+      "number": 2,
+      "name": "Dynamic offers are generated from live availability",
+      "passed": true,
+      "current_value": {
+        "availability_source_used": "live_availability_snapshot",
+        "offers_generated": 640,
+        "brian_shipyard_offers": 340
+      },
+      "requirement": "live_availability_snapshot source and at least one generated offer",
+      "blocker": null,
+      "next_action": "Rerun live snapshot and dynamic offer generation; fix source selection only if it stops using live availability."
+    },
+    {
+      "number": 3,
+      "name": "Confirmed-container public filter keeps at least one offer",
+      "passed": true,
+      "current_value": {
+        "public_sellable_offers_kept": 83,
+        "container_hidden_reasons": {
+          "missing_container_for_instructor": 300
+        }
+      },
+      "requirement": ">= 1 public sellable offer after confirmed-container filtering",
+      "blocker": null,
+      "next_action": "Add/confirm container coverage or align Brian + Shipyard availability/location matching so at least one offer survives confirmed-container filtering."
+    },
+    {
+      "number": 4,
+      "name": "Seed selection selects at least one seed",
+      "passed": true,
+      "current_value": {
+        "seeds_selected": 5,
+        "input_offers_read": 83
+      },
+      "requirement": ">= 1 selected schedule seed",
+      "blocker": null,
+      "next_action": "Review seed strategy policy after at least one public sellable offer exists."
+    },
+    {
+      "number": 5,
+      "name": "Deterministic appointment URL preview generates at least one URL",
+      "passed": true,
+      "current_value": {
+        "urls_previewed": 5,
+        "seeds_blocked": 0,
+        "blocked_by_reason": {}
+      },
+      "requirement": ">= 1 appointment URL preview",
+      "blocker": null,
+      "next_action": "Run URL preview after seeds exist; fix container/date/range mismatches if seeds block."
+    },
+    {
+      "number": 6,
+      "name": "Internal/admin preview shows the customer-facing button",
+      "passed": true,
+      "current_value": {
+        "preview_rows_rendered": 5,
+        "urls_matched": 5,
+        "missing_urls": 0
+      },
+      "requirement": "Internal/admin preview exists and renders a button for the selected seed",
+      "blocker": null,
+      "next_action": "Build an internal preview surface that renders selected seed details and a disabled/review-only customer-facing button."
+    },
+    {
+      "number": 7,
+      "name": "Manual click/registration creates class in Enrollware",
+      "passed": true,
+      "current_value": {
+        "matched_registration_signals": 2,
+        "matched_seed_ids": [
+          "seed-offer-209806-instructor_24057895173-20260621-1700",
+          "seed-offer-209806-instructor_24057895173-20260621-1700"
+        ],
+        "courseSchedIds": [
+          "13657403"
+        ]
+      },
+      "requirement": "Zapier/Sheet registration event is normalized and matched to an appointment seed",
+      "blocker": null,
+      "next_action": "Import the Zapier-backed registration sheet CSV with scripts.import_enrollware_registration_events, then rerun this status check."
+    },
+    {
+      "number": 8,
+      "name": "Routine public Enrollware scrape/hot-sync sees the created class",
+      "passed": false,
+      "current_value": "manual_not_confirmed",
+      "requirement": "Existing read-only scrape/hot-sync detects the new Enrollware class",
+      "blocker": "No created dynamic class has been observed in local sessions yet.",
+      "next_action": "Run existing read-only hot-sync/scrape after a manual test booking exists."
+    },
+    {
+      "number": 9,
+      "name": "Lander treats that class as real occupancy and recalculates around it",
+      "passed": false,
+      "current_value": {
+        "sessions_current_count": 255,
+        "schedule_future_count": 249
+      },
+      "requirement": "New dynamic booking appears in occupancy and blocks overlapping offers",
+      "blocker": "No dynamic test class marker is present to verify recalculation around it.",
+      "next_action": "After hot-sync sees the class, rerun sessions/current schedule and dynamic offer generation; verify overlap rejections."
+    },
+    {
+      "number": 10,
+      "name": "Class Report later confirms roster details",
+      "passed": false,
+      "current_value": {
+        "class_report_rows_read": 255,
+        "sessions_current_written": 255
+      },
+      "requirement": "Updated Class Report includes the created dynamic class and roster details",
+      "blocker": "Current Class Report ingest exists, but no dynamic test booking can be identified yet.",
+      "next_action": "After the manual booking is real, import the next Class Report and confirm the class/roster appears."
+    }
+  ],
+  "first_failing_link": 8,
+  "first_failing_name": "Routine public Enrollware scrape/hot-sync sees the created class",
+  "current_blocker": "No created dynamic class has been observed in local sessions yet.",
+  "next_single_action": "Run existing read-only hot-sync/scrape after a manual test booking exists."
+}

@@ -1,0 +1,169 @@
+{
+  "schema_version": "0.1",
+  "generated_at": "2026-06-19T10:05:46.557062-04:00",
+  "read_only": true,
+  "public_pages_modified": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_creation_enabled": false,
+  "current_proof": {
+    "description": "A deterministic appointment URL opened the intended Enrollware enrollment page.",
+    "appointmentDayId": 260671,
+    "startTime": "8:30 AM",
+    "courseId": "209806",
+    "status": "operator_observed_success"
+  },
+  "availability_sources": [
+    {
+      "source_key": "brian_inverse_availability_calendar",
+      "owner": "Brian",
+      "mode": "inverse_blocking",
+      "purpose": "Treat open time as potentially available unless blocked by DNS/personal/employment/occupancy rules.",
+      "live_required_for": [
+        "page_load_refresh",
+        "click_time_recheck"
+      ],
+      "static_snapshot_allowed_for": [
+        "build_time_preview"
+      ]
+    },
+    {
+      "source_key": "amy_actual_availability_calendar",
+      "owner": "Amy",
+      "mode": "explicit_availability",
+      "purpose": "Treat only explicit availability windows as potentially available.",
+      "live_required_for": [
+        "page_load_refresh",
+        "click_time_recheck"
+      ],
+      "static_snapshot_allowed_for": [
+        "build_time_preview"
+      ]
+    },
+    {
+      "source_key": "dns_do_not_schedule_markers",
+      "mode": "blocking",
+      "purpose": "Block any seed overlapping explicit DNS markers.",
+      "live_required_for": [
+        "click_time_recheck"
+      ],
+      "static_snapshot_allowed_for": [
+        "build_time_preview",
+        "page_load_refresh_cache"
+      ]
+    },
+    {
+      "source_key": "adr_employment_blocks",
+      "mode": "blocking",
+      "purpose": "Block employment/ADR obligations that make instruction unavailable.",
+      "live_required_for": [
+        "click_time_recheck"
+      ],
+      "static_snapshot_allowed_for": [
+        "build_time_preview",
+        "page_load_refresh_cache"
+      ]
+    },
+    {
+      "source_key": "personal_calendar_blocks",
+      "mode": "blocking",
+      "purpose": "Block personal conflicts before displaying or sending a user to Enrollware.",
+      "live_required_for": [
+        "page_load_refresh",
+        "click_time_recheck"
+      ],
+      "static_snapshot_allowed_for": [
+        "build_time_preview"
+      ]
+    },
+    {
+      "source_key": "existing_enrollware_occupancy",
+      "mode": "blocking_or_capacity",
+      "purpose": "Prevent duplicate/conflicting seeds and stale public links when Enrollware already has class/appointment occupancy.",
+      "live_required_for": [
+        "click_time_recheck"
+      ],
+      "static_snapshot_allowed_for": [
+        "build_time_preview",
+        "page_load_refresh_cache"
+      ]
+    }
+  ],
+  "architecture": {
+    "build_time_preview": {
+      "allowed_inputs": [
+        "local snapshots",
+        "course_catalog",
+        "people_catalog",
+        "seed_strategy_policy",
+        "appointment_containers"
+      ],
+      "outputs": [
+        "candidate seeds",
+        "deterministic URL previews",
+        "audit reports"
+      ],
+      "must_not_do": [
+        "publish buttons",
+        "call Enrollware live",
+        "call Google Calendar live"
+      ]
+    },
+    "page_load_refresh": {
+      "purpose": "Refresh availability status shortly before the customer sees options.",
+      "recommended_shape": "Lightweight serverless/API endpoint reading cached/live calendar snapshots and returning only still-displayable seeds.",
+      "must_check": [
+        "calendar blocks",
+        "seed policy freshness",
+        "appointment container range",
+        "stale snapshot age"
+      ]
+    },
+    "click_time_recheck": {
+      "purpose": "Final gate before redirecting to Enrollware.",
+      "must_check": [
+        "Brian/Amy availability",
+        "DNS blocks",
+        "personal/employment blocks",
+        "Enrollware occupancy if available",
+        "appointmentDayId range",
+        "course still allowed",
+        "slot still desirable"
+      ],
+      "allowed_result": [
+        "redirect_to_previewed_url",
+        "show_unavailable_fallback"
+      ]
+    },
+    "fallback_message": {
+      "customer_copy": "That class time is no longer available. Please choose another option or contact 910CPR and we can help find the right class.",
+      "admin_logging": [
+        "seed_id",
+        "source_offer_id",
+        "course_id",
+        "appointmentDayId",
+        "startTime",
+        "recheck_failure_reason"
+      ]
+    }
+  },
+  "seed_invalid_outcomes": [
+    {
+      "condition": "no_longer_available",
+      "action": "hide seed and show fallback if clicked"
+    },
+    {
+      "condition": "url_valid_but_no_longer_desirable",
+      "action": "do not redirect; log policy rejection and suggest alternate times"
+    },
+    {
+      "condition": "calendar_uncertain_or_stale",
+      "action": "fail closed for public redirect; show contact/help fallback"
+    },
+    {
+      "condition": "enrollware_occupancy_unknown",
+      "action": "allow display only if policy permits, but require click-time recheck before redirect"
+    }
+  ]
+}

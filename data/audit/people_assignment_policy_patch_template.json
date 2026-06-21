@@ -1,0 +1,755 @@
+{
+  "schema_version": "0.1",
+  "description": "Review-only People assignment-policy patch template. This file does not update people_catalog.json or solver behavior by itself.",
+  "source_files": [
+    "data/config/people_catalog.json",
+    "data/audit/people_scheduler_enablement_review.csv",
+    "data/audit/solver_audit_summary.json"
+  ],
+  "valid_assignment_modes": [
+    "PRIMARY",
+    "SECONDARY",
+    "SUBCONTRACTOR",
+    "ON_REQUEST",
+    "INSTRUCTOR_CUSTOMER",
+    "INACTIVE",
+    "ARCHIVED"
+  ],
+  "valid_availability_sources": [
+    "inverse_google_calendar",
+    "google_calendar",
+    "manual_window",
+    "on_request",
+    "none",
+    "unknown"
+  ],
+  "valid_scheduling_roles": [
+    "primary",
+    "backup",
+    "subcontractor",
+    "admin_only",
+    "instructor_customer",
+    "inactive",
+    "manual"
+  ],
+  "instructions": [
+    "Match people by person_id only.",
+    "Do not ask Brian to edit all rows; review likely operational rows first.",
+    "Do not infer from Enrollware Training Site/Admin fields.",
+    "Automatic candidates should require assignment_mode PRIMARY or SECONDARY plus dynamic_offer_eligible true in a later audited solver change.",
+    "Apply this template later with a separate audited import step; do not directly edit people_catalog.json during review."
+  ],
+  "patches": [
+    {
+      "person_id": "instructor_24057895173",
+      "display_name": "Brian Ennis",
+      "assignment_mode": "PRIMARY",
+      "availability_source": "inverse_google_calendar",
+      "scheduling_role": "primary",
+      "dynamic_offer_eligible": true,
+      "notes": "Prefill: Brian is the owner/primary availability bridge candidate. Review before applying."
+    },
+    {
+      "person_id": "instructor_4180671442",
+      "display_name": "Amy Arnold",
+      "assignment_mode": "PRIMARY",
+      "availability_source": "google_calendar",
+      "scheduling_role": "primary",
+      "dynamic_offer_eligible": true,
+      "notes": "Prefill: Amy is an operational availability bridge candidate. Review before applying."
+    },
+    {
+      "person_id": "instructor_10160506833",
+      "display_name": "Nicholas Tripp",
+      "assignment_mode": "ON_REQUEST",
+      "availability_source": "on_request",
+      "scheduling_role": "manual",
+      "dynamic_offer_eligible": false,
+      "notes": "Prefill: known likely operational person, but no local availability-window proof found; keep manual/on-request until Brian confirms."
+    },
+    {
+      "person_id": "person_alanmonds",
+      "display_name": "Alan Monds",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_acpgkl2009",
+      "display_name": "Anita Lanier",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_aj_deb97",
+      "display_name": "Anthony Debenedictis",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_1120072085",
+      "display_name": "Audrie Babineau",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25041450289",
+      "display_name": "Brandon Grubbs",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26033061958",
+      "display_name": "Brian Williamson",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_4210944883",
+      "display_name": "Burke Bailey",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_fir3m3dic93",
+      "display_name": "Calvin Smith",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26032275123",
+      "display_name": "Chris Radke",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_ilmmedic19",
+      "display_name": "Christopher Gilmore",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25104363966",
+      "display_name": "Clark Harvell",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24013437008",
+      "display_name": "Cori Kiefner",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23125524581",
+      "display_name": "Crystal Jasper",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_chiefgrantrvfd",
+      "display_name": "Curtis Grant",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24050859659",
+      "display_name": "Damiano Whittington",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25103788969",
+      "display_name": "Daniel Burgess",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23112410834",
+      "display_name": "David Barnes",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_8180709444",
+      "display_name": "David Dyches",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26035266004",
+      "display_name": "Eddie Rouse",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26015916222",
+      "display_name": "Eric Brown",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25046599330",
+      "display_name": "Felicia Fisher",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_gklanier42",
+      "display_name": "Gerren Lanier",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_haleyrbrown122",
+      "display_name": "Haley Brown",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_lyonh18006",
+      "display_name": "Hurst Lyon",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24059030952",
+      "display_name": "Irvine Furman IV",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25101030688",
+      "display_name": "Ivy Floyd",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26034156493",
+      "display_name": "James Murphy",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25051684127",
+      "display_name": "Jamie Craner",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_7210969235",
+      "display_name": "Jana Gordon",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24028932395",
+      "display_name": "Jasmine Bryant",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24057864126",
+      "display_name": "Jessica Smith",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24125098721",
+      "display_name": "Jewel Lowe",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25054324038",
+      "display_name": "Joel Cuza",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25100963634",
+      "display_name": "Joseph Fyffe",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_southernrrtrains",
+      "display_name": "Joseph Hofmann",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_jsmith",
+      "display_name": "Joseph Smith Jr.",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_12211010881",
+      "display_name": "Joseph Tassi",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24015433336",
+      "display_name": "Justin Bratton",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23126191594",
+      "display_name": "Justin Brown",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26033828346",
+      "display_name": "Justin Kennedy",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25103368549",
+      "display_name": "Karyn Borner",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24070512131",
+      "display_name": "Katherine Raynor",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25051721672",
+      "display_name": "Keanya Britton",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_kperry",
+      "display_name": "Kyle Perry",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_2221028576",
+      "display_name": "Lauren Brothers",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_9210980422",
+      "display_name": "Luke Raynor",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_8221093252",
+      "display_name": "Lynndoria Newkirk",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_maggie_huddleston",
+      "display_name": "Maggie Huddleston",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_3200858342",
+      "display_name": "Mathew Cox",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25041665948",
+      "display_name": "Maurice Peacock",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_mlreynoldsjr",
+      "display_name": "Melvin Reynolds",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24093180885_25051648498",
+      "display_name": "Michael Gray",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_10221108279",
+      "display_name": "Michele Kabay",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25107066588",
+      "display_name": "Natavius Davis",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_nathanaelwgreene",
+      "display_name": "Nathanael Greene",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23061715782",
+      "display_name": "Nicholas Hubbard",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23079876374",
+      "display_name": "Paul Fowler",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25031075837",
+      "display_name": "Phillip Groves",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24123612339",
+      "display_name": "Raymond Lowe",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_richardmayrvfd",
+      "display_name": "Richard May",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_26011251670",
+      "display_name": "Robert Henderson",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_12211010879",
+      "display_name": "Robert Meyer",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_10210993355",
+      "display_name": "Rodney Covault",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_11102105667",
+      "display_name": "Scott Wyland",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_sidneydubois18",
+      "display_name": "Sidney DuBois",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_sierra_brooke_1225",
+      "display_name": "Sierra Harrison",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25113293102",
+      "display_name": "Stacey Comer",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23067670652",
+      "display_name": "Taylor Jones",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_23071367409",
+      "display_name": "Thomas Hall",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25101954545",
+      "display_name": "Thomas Turnage",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_12211010880",
+      "display_name": "Timothy VanPelt",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_24125980635",
+      "display_name": "Todd Deisler",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_tonia_smith",
+      "display_name": "Tonia Smith",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_25065874107",
+      "display_name": "Troy Ware",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "instructor_2221032118",
+      "display_name": "Virginia Carey",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    },
+    {
+      "person_id": "person_williamtaylor0525",
+      "display_name": "William Taylor III",
+      "assignment_mode": "INACTIVE",
+      "availability_source": "none",
+      "scheduling_role": "inactive",
+      "dynamic_offer_eligible": false,
+      "notes": "Default inactive. Do not schedule unless Brian explicitly assigns a mode and availability source."
+    }
+  ]
+}

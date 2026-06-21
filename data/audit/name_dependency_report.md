@@ -3,8 +3,8 @@
 This build keeps legacy Course HTML parsing for backward compatibility, but mapping is authoritative for operational metadata.
 
 - Course map: `E:\GitHub\910cpr-class-landers\data\config\course_map.json`
-- Sessions written: `316`
-- Unmapped sessions: `12`
+- Sessions written: `224`
+- Unmapped sessions: `3`
 - Mapping conflicts: `0`
 
 ## Phase 1 Rules

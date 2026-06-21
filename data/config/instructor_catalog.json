@@ -1,0 +1,205 @@
+{
+  "schema_version": "0.1",
+  "description": "Read-only instructor qualification model for the 910CPR / Lander scheduler audit. This file does not modify public pages, Enrollware behavior, appointment URLs, or Worker behavior.",
+  "unknown_value": "UNKNOWN",
+  "source_files": [
+    "data/inventory/instructor_availability.json",
+    "data/inventory/appointment_containers.json",
+    "data/config/calendar_sources.json",
+    "data/sessions_current.json",
+    "docs/data/schedule_future.json"
+  ],
+  "instructors": [
+    {
+      "instructor_id": "a___arnold",
+      "display_name": "A.  Arnold",
+      "active": "UNKNOWN",
+      "certifications": [
+        {
+          "certification_code": "UNKNOWN",
+          "provider": "UNKNOWN",
+          "family": "UNKNOWN",
+          "expiration_date": "UNKNOWN",
+          "source": "docs/data/schedule_future.json",
+          "notes": "Exact instructor certification is not confirmed by local config/data."
+        }
+      ],
+      "certification_code": "UNKNOWN",
+      "provider": "UNKNOWN",
+      "family": "UNKNOWN",
+      "can_teach_course_ids": [],
+      "can_teach_course_families": [],
+      "expiration_date": "UNKNOWN",
+      "source": [
+        "docs/data/schedule_future.json"
+      ],
+      "notes": "Appears as lead instructor in local scheduled-class snapshot; exact certification codes are not declared in the snapshot."
+    },
+    {
+      "instructor_id": "amy",
+      "display_name": "Amy",
+      "active": true,
+      "certifications": [
+        {
+          "certification_code": "UNKNOWN",
+          "provider": "UNKNOWN",
+          "family": "UNKNOWN",
+          "expiration_date": "UNKNOWN",
+          "source": "data/inventory/instructor_availability.json",
+          "notes": "Exact instructor certification is not confirmed by local config/data."
+        }
+      ],
+      "certification_code": "UNKNOWN",
+      "provider": "UNKNOWN",
+      "family": "UNKNOWN",
+      "can_teach_course_ids": [],
+      "can_teach_course_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "expiration_date": "UNKNOWN",
+      "source": [
+        "data/config/calendar_sources.json",
+        "data/inventory/instructor_availability.json"
+      ],
+      "notes": "Local availability lists certification ceiling ACLS_PALS; exact instructor certification codes are not confirmed here. Calendar source amy_availability is declared for this instructor; no certification code is declared."
+    },
+    {
+      "instructor_id": "b___ennis",
+      "display_name": "B.  Ennis",
+      "active": "UNKNOWN",
+      "certifications": [
+        {
+          "certification_code": "UNKNOWN",
+          "provider": "UNKNOWN",
+          "family": "UNKNOWN",
+          "expiration_date": "UNKNOWN",
+          "source": "docs/data/schedule_future.json",
+          "notes": "Exact instructor certification is not confirmed by local config/data."
+        }
+      ],
+      "certification_code": "UNKNOWN",
+      "provider": "UNKNOWN",
+      "family": "UNKNOWN",
+      "can_teach_course_ids": [],
+      "can_teach_course_families": [],
+      "expiration_date": "UNKNOWN",
+      "source": [
+        "docs/data/schedule_future.json"
+      ],
+      "notes": "Appears as lead instructor in local scheduled-class snapshot; exact certification codes are not declared in the snapshot."
+    },
+    {
+      "instructor_id": "bls_sample_instructor",
+      "display_name": "BLS Sample Instructor",
+      "active": false,
+      "certifications": [
+        {
+          "certification_code": "UNKNOWN",
+          "provider": "UNKNOWN",
+          "family": "UNKNOWN",
+          "expiration_date": "UNKNOWN",
+          "source": "data/inventory/instructor_availability.json",
+          "notes": "Exact instructor certification is not confirmed by local config/data."
+        }
+      ],
+      "certification_code": "UNKNOWN",
+      "provider": "UNKNOWN",
+      "family": "UNKNOWN",
+      "can_teach_course_ids": [],
+      "can_teach_course_families": [
+        "BLS",
+        "HeartCode",
+        "Heartsaver"
+      ],
+      "expiration_date": "UNKNOWN",
+      "source": [
+        "data/inventory/instructor_availability.json"
+      ],
+      "notes": "Local availability lists certification ceiling BLS; exact instructor certification codes are not confirmed here. Name appears to be a prototype/sample instructor, not a confirmed production instructor."
+    },
+    {
+      "instructor_id": "brian",
+      "display_name": "Brian",
+      "active": true,
+      "certifications": [
+        {
+          "certification_code": "UNKNOWN",
+          "provider": "UNKNOWN",
+          "family": "UNKNOWN",
+          "expiration_date": "UNKNOWN",
+          "source": "data/inventory/instructor_availability.json",
+          "notes": "Exact instructor certification is not confirmed by local config/data."
+        }
+      ],
+      "certification_code": "UNKNOWN",
+      "provider": "UNKNOWN",
+      "family": "UNKNOWN",
+      "can_teach_course_ids": [],
+      "can_teach_course_families": [
+        "ACLS",
+        "BLS",
+        "Heartsaver",
+        "PALS",
+        "USCG"
+      ],
+      "expiration_date": "UNKNOWN",
+      "source": [
+        "data/config/calendar_sources.json",
+        "data/inventory/appointment_containers.json",
+        "data/inventory/instructor_availability.json"
+      ],
+      "notes": "Local availability lists certification ceiling ACLS_PALS; exact instructor certification codes are not confirmed here. Confirmed appointment container shipyard_brian_continuous_20260621_20270430 is tied to this instructor; exact certification codes are not stated in the container. Calendar source brian_do_not_schedule is declared for this instructor; no certification code is declared."
+    },
+    {
+      "instructor_id": "n___tripp",
+      "display_name": "N.  Tripp",
+      "active": "UNKNOWN",
+      "certifications": [
+        {
+          "certification_code": "UNKNOWN",
+          "provider": "UNKNOWN",
+          "family": "UNKNOWN",
+          "expiration_date": "UNKNOWN",
+          "source": "docs/data/schedule_future.json",
+          "notes": "Exact instructor certification is not confirmed by local config/data."
+        }
+      ],
+      "certification_code": "UNKNOWN",
+      "provider": "UNKNOWN",
+      "family": "UNKNOWN",
+      "can_teach_course_ids": [],
+      "can_teach_course_families": [],
+      "expiration_date": "UNKNOWN",
+      "source": [
+        "docs/data/schedule_future.json"
+      ],
+      "notes": "Appears as lead instructor in local scheduled-class snapshot; exact certification codes are not declared in the snapshot."
+    },
+    {
+      "instructor_id": "nick",
+      "display_name": "Nick",
+      "active": true,
+      "certifications": [
+        {
+          "certification_code": "UNKNOWN",
+          "provider": "UNKNOWN",
+          "family": "UNKNOWN",
+          "expiration_date": "UNKNOWN",
+          "source": "data/config/calendar_sources.json",
+          "notes": "Exact instructor certification is not confirmed by local config/data."
+        }
+      ],
+      "certification_code": "UNKNOWN",
+      "provider": "UNKNOWN",
+      "family": "UNKNOWN",
+      "can_teach_course_ids": [],
+      "can_teach_course_families": [],
+      "expiration_date": "UNKNOWN",
+      "source": [
+        "data/config/calendar_sources.json"
+      ],
+      "notes": "Calendar source nick_availability is declared for this instructor; no certification code is declared."
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "schema_version": "0.1",
+  "description": "Read-only seed strategy policy for converting public-sellable offer possibilities into intentional schedule seeds. This config does not publish offers, create appointments, or change Enrollware behavior.",
+  "max_seeds_per_instructor_window": 4,
+  "max_seeds_per_date": 8,
+  "max_seeds_per_family_per_date": {
+    "BLS": 1,
+    "Heartsaver": 1,
+    "ACLS": 1,
+    "PALS": 1
+  },
+  "required_seed_mix_by_date": {
+    "BLS": {
+      "count": 1,
+      "required": true
+    },
+    "Heartsaver": {
+      "count": 1,
+      "required": true
+    },
+    "ACLS": {
+      "count": 1,
+      "required": false,
+      "not_before": "13:00"
+    },
+    "PALS": {
+      "count": 1,
+      "required": false,
+      "not_before": "13:00"
+    }
+  },
+  "avoid_same_start_time_per_date": true,
+  "morning_friendly_families": [
+    "BLS",
+    "Heartsaver"
+  ],
+  "advanced_families": [
+    "ACLS",
+    "PALS"
+  ],
+  "amy_advanced_not_before": "13:00",
+  "amy_mode": "protected_pilot",
+  "amy_advanced_seed_start": "14:00",
+  "amy_heartcode_stack_fill_start": "13:00",
+  "amy_advanced_public_seed_courses": [
+    "ACLS Provider Initial",
+    "ACLS Provider Renewal",
+    "PALS Provider",
+    "PALS Renewal"
+  ],
+  "amy_heartcode_stack_fill_courses": [
+    "ACLS HeartCode",
+    "PALS HeartCode"
+  ],
+  "family_priority_by_time_band": {
+    "morning": [
+      "BLS",
+      "Heartsaver",
+      "ACLS",
+      "PALS"
+    ],
+    "afternoon": [
+      "ACLS",
+      "PALS",
+      "BLS",
+      "Heartsaver"
+    ],
+    "evening": [
+      "BLS",
+      "Heartsaver",
+      "ACLS",
+      "PALS"
+    ]
+  },
+  "preferred_start_times_by_family": {
+    "BLS": [
+      "08:30",
+      "09:00"
+    ],
+    "Heartsaver": [
+      "10:30",
+      "13:00",
+      "18:00"
+    ],
+    "ACLS": [
+      "13:00"
+    ],
+    "PALS": [
+      "13:00"
+    ]
+  },
+  "allow_multiple_course_variants_same_time": false,
+  "default_setup_buffer_minutes": 15,
+  "default_cleanup_buffer_minutes": 30,
+  "course_title_priority_terms": [
+    "BLS Provider",
+    "Heartsaver First Aid CPR AED",
+    "PALS Provider",
+    "ACLS Provider"
+  ],
+  "notes": "V0 conservative stack-seed strategy. Selects a small intentional seed set from public-sellable possibilities and preserves source offer lineage."
+}

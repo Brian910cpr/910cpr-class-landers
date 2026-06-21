@@ -1,0 +1,736 @@
+{
+  "generated_at": "2026-06-18T23:08:36.879452-04:00",
+  "spreadsheet_file_read": "d:\\Users\\ten77\\Downloads\\Untitled11.csv",
+  "worksheet_name": "Untitled11.csv",
+  "header_row": 1,
+  "mapped_columns": [
+    "appointment_allowed",
+    "course_id",
+    "default_capacity",
+    "duration_minutes",
+    "needs brian review?",
+    "per participant resources",
+    "required_instructor_certifications",
+    "resources",
+    "title"
+  ],
+  "rows_processed": 37,
+  "rows_updated": 30,
+  "rows_skipped": 7,
+  "fields_updated": {
+    "required_instructor_certifications": 30,
+    "duration_minutes": 23,
+    "default_capacity": 16,
+    "appointment_allowed": 13
+  },
+  "unknowns_remaining_after_import": {
+    "missing_duration": 0,
+    "missing_capacity": 0,
+    "missing_appointment_allowed": 0,
+    "missing_required_instructor_certifications": 0
+  },
+  "updated_courses": [
+    {
+      "row_number": 3,
+      "course_id": "209806",
+      "title": "AHA BLS Provider",
+      "fields_updated": {
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 4,
+      "course_id": "359474",
+      "title": "AHA BLS Provider Renewal",
+      "fields_updated": {
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 5,
+      "course_id": "210549",
+      "title": "AHA HeartCode BLS",
+      "fields_updated": {
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 6,
+      "course_id": "440431",
+      "title": "BLS Provider Blended Learning (Online Course; Group; In-person Skills Testing)",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 150
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 18
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 8,
+      "course_id": "209811",
+      "title": "AHA ACLS HeartCode",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 240,
+          "new": 90
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_ACLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 9,
+      "course_id": "241108",
+      "title": "AHA ACLS Provider (Initial)",
+      "fields_updated": {
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_ACLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 10,
+      "course_id": "209818",
+      "title": "AHA ACLS Provider (Renewal)",
+      "fields_updated": {
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_ACLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 12,
+      "course_id": "209812",
+      "title": "AHA PALS HeartCode",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 240,
+          "new": 90
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_PALS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 13,
+      "course_id": "209805",
+      "title": "AHA PALS Provider",
+      "fields_updated": {
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_PALS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 14,
+      "course_id": "251496",
+      "title": "AHA PALS Renewal",
+      "fields_updated": {
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_PALS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 16,
+      "course_id": "344085",
+      "title": "AHA Heartsaver CPR AED",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 120,
+          "new": 90
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 17,
+      "course_id": "209808",
+      "title": "AHA Heartsaver CPR AED Online",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 45
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 2
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 18,
+      "course_id": "209809",
+      "title": "AHA Heartsaver First Aid CPR AED",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 150,
+          "new": 180
+        },
+        "default_capacity": {
+          "old": 10,
+          "new": 12
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 19,
+      "course_id": "329495",
+      "title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 45
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 2
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 20,
+      "course_id": "351632",
+      "title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 180
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 12
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 21,
+      "course_id": "251545",
+      "title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 120,
+          "new": 45
+        },
+        "default_capacity": {
+          "old": 10,
+          "new": 2
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 23,
+      "course_id": "369209",
+      "title": "American Red Cross Adult and Pediatric First Aid/CPR/AED",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 150
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 12
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "ARC_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 24,
+      "course_id": "410694",
+      "title": "American Red Cross Adult and Pediatric First Aid/CPR/AED Blended Learning",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 45
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 2
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "ARC_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 25,
+      "course_id": "444919",
+      "title": "American Red Cross BLS Challenge",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 45
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 2
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "ARC_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 26,
+      "course_id": "248288",
+      "title": "American Red Cross Basic Life Support",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 120,
+          "new": 150
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "ARC_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 27,
+      "course_id": "248287",
+      "title": "American Red Cross Basic Life Support - Blended Learning",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 120,
+          "new": 45
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "ARC_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 29,
+      "course_id": "374378",
+      "title": "HSI Adult First Aid | CPR AED",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 180
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 12
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "HSI_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 30,
+      "course_id": "422270",
+      "title": "HSI Adult First Aid | CPR AED",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 180
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 12
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "HSI_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 31,
+      "course_id": "371954",
+      "title": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 45
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 2
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "HSI_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 32,
+      "course_id": "463743",
+      "title": "HSI BLS Challenge",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 120,
+          "new": 45
+        },
+        "default_capacity": {
+          "old": 6,
+          "new": 2
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "HSI_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 33,
+      "course_id": "445670",
+      "title": "HSI BLS and Adult First Aid | Blended Learning",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 45
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 12
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "HSI_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 34,
+      "course_id": "448630",
+      "title": "HSI Basic Life Support",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 150
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 12
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "HSI_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 35,
+      "course_id": "449422",
+      "title": "HSI Pediatric First Aid | CPR AED - Blended",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": "UNKNOWN",
+          "new": 45
+        },
+        "default_capacity": {
+          "old": "UNKNOWN",
+          "new": 2
+        },
+        "appointment_allowed": {
+          "old": "UNKNOWN",
+          "new": true
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "HSI_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 37,
+      "course_id": "253768",
+      "title": "USCG Elementary First Aid | CPR (AHA Heartsaver)",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 240,
+          "new": 180
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    },
+    {
+      "row_number": 38,
+      "course_id": "359827",
+      "title": "USCG Elementary First Aid | CPR - Blended",
+      "fields_updated": {
+        "duration_minutes": {
+          "old": 120,
+          "new": 45
+        },
+        "required_instructor_certifications": {
+          "old": [
+            "UNKNOWN"
+          ],
+          "new": [
+            "AHA_BLS_INSTRUCTOR"
+          ]
+        }
+      }
+    }
+  ],
+  "skipped_rows": [
+    {
+      "row_number": 2,
+      "course_id": "AHA BLS",
+      "title": "",
+      "reason": "missing_course_id_or_group_row"
+    },
+    {
+      "row_number": 7,
+      "course_id": "AHA ACLS",
+      "title": "",
+      "reason": "missing_course_id_or_group_row"
+    },
+    {
+      "row_number": 11,
+      "course_id": "AHA PALS",
+      "title": "",
+      "reason": "missing_course_id_or_group_row"
+    },
+    {
+      "row_number": 15,
+      "course_id": "AHA Heartsaver",
+      "title": "",
+      "reason": "missing_course_id_or_group_row"
+    },
+    {
+      "row_number": 22,
+      "course_id": "ARC",
+      "title": "",
+      "reason": "missing_course_id_or_group_row"
+    },
+    {
+      "row_number": 28,
+      "course_id": "HSI",
+      "title": "",
+      "reason": "missing_course_id_or_group_row"
+    },
+    {
+      "row_number": 36,
+      "course_id": "USCG",
+      "title": "",
+      "reason": "missing_course_id_or_group_row"
+    }
+  ]
+}

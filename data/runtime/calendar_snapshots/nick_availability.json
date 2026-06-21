@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.1",
+  "generated_at": "2026-06-19T17:21:21.705387-04:00",
+  "read_only_snapshot": true,
+  "calendar_source_id": "nick_availability",
+  "calendar_id": "c_992b654d9adfc7a7ced1ffe4532a186b11b4a1e74c62d48fba07dc4763677b9d@group.calendar.google.com",
+  "source_type": "google_calendar",
+  "source_display_name": "910CPR - Nick Availability",
+  "date_range": {
+    "start": "2026-06-19T17:21:21.208861-04:00",
+    "end": "2026-08-18T17:21:21.208861-04:00",
+    "days": 60
+  },
+  "export_status": "ok",
+  "url_source": "derived_public_ics_from_calendar_id",
+  "event_count": 0,
+  "events": [],
+  "warnings": [],
+  "skipped": {},
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_creation_enabled": false
+}

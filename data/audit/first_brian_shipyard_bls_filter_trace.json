@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-06-19T16:11:13",
+  "read_only": true,
+  "public_site_affected": false,
+  "enrollware_called": false,
+  "appointments_created": false,
+  "appointment_urls_changed": false,
+  "worker_routes_enabled": false,
+  "selected_offer_id": null,
+  "selected_offer": null,
+  "trace": [],
+  "first_failing_condition": {
+    "check": "select_offer",
+    "expression": "first Brian + Shipyard BLS offer exists",
+    "passed": false,
+    "reason_code_if_failed": "no_matching_offer",
+    "details": {
+      "candidate_count": 0
+    }
+  },
+  "reason_code": "no_matching_offer",
+  "smallest_safe_fix": "No Brian + Shipyard BLS dynamic offer exists in current dynamic_offers_preview.json; create/fix a valid timed Brian Shipyard availability window that can fit BLS first.",
+  "candidate_count": 0
+}

@@ -1,0 +1,743 @@
+{
+  "schema_version": "0.1",
+  "generated_at": "2026-06-18T21:52:12.286699-04:00",
+  "description": "Editable draft for filling course_catalog scheduling rules. This file does not modify course_catalog.json or public behavior.",
+  "source_file": "data/config/course_catalog.json",
+  "unknown_value": "UNKNOWN",
+  "groups": {
+    "AHA BLS": [
+      {
+        "course_id": "209806",
+        "course_key": "aha_bls_provider",
+        "official_title": "AHA BLS Provider",
+        "provider": "AHA",
+        "family": "BLS",
+        "subtype": "Provider",
+        "delivery_type": "IP",
+        "duration_minutes": 120,
+        "default_capacity": 6,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "359474",
+        "course_key": "aha_bls_provider_renewal",
+        "official_title": "AHA BLS Provider Renewal",
+        "provider": "AHA",
+        "family": "BLS",
+        "subtype": "Renewal",
+        "delivery_type": "IP",
+        "duration_minutes": 120,
+        "default_capacity": 6,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "210549",
+        "course_key": "aha_heartcode_bls",
+        "official_title": "AHA HeartCode BLS",
+        "provider": "AHA",
+        "family": "BLS",
+        "subtype": "HeartCode",
+        "delivery_type": "BL",
+        "duration_minutes": 60,
+        "default_capacity": 1,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "440431",
+        "course_key": "aha_bls_provider_blended_group_skills",
+        "official_title": "BLS Provider Blended Learning (Online Course; Group; In-person Skills Testing)",
+        "provider": "AHA",
+        "family": "BLS",
+        "subtype": "HeartCode",
+        "delivery_type": "BL",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      }
+    ],
+    "AHA ACLS": [
+      {
+        "course_id": "209811",
+        "course_key": "aha_acls_heartcode",
+        "official_title": "AHA ACLS HeartCode",
+        "provider": "AHA",
+        "family": "ACLS",
+        "subtype": "HeartCode",
+        "delivery_type": "BL",
+        "duration_minutes": 240,
+        "default_capacity": 1,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "241108",
+        "course_key": "aha_acls_provider_initial",
+        "official_title": "AHA ACLS Provider (Initial)",
+        "provider": "AHA",
+        "family": "ACLS",
+        "subtype": "Provider Initial",
+        "delivery_type": "IP",
+        "duration_minutes": 240,
+        "default_capacity": 6,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "209818",
+        "course_key": "aha_acls_provider_renewal",
+        "official_title": "AHA ACLS Provider (Renewal)",
+        "provider": "AHA",
+        "family": "ACLS",
+        "subtype": "Renewal",
+        "delivery_type": "IP",
+        "duration_minutes": 240,
+        "default_capacity": 6,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      }
+    ],
+    "AHA PALS": [
+      {
+        "course_id": "209812",
+        "course_key": "aha_pals_heartcode",
+        "official_title": "AHA PALS HeartCode",
+        "provider": "AHA",
+        "family": "PALS",
+        "subtype": "HeartCode",
+        "delivery_type": "BL",
+        "duration_minutes": 240,
+        "default_capacity": 1,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "209805",
+        "course_key": "aha_pals_provider",
+        "official_title": "AHA PALS Provider",
+        "provider": "AHA",
+        "family": "PALS",
+        "subtype": "Provider Initial",
+        "delivery_type": "IP",
+        "duration_minutes": 240,
+        "default_capacity": 6,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "251496",
+        "course_key": "aha_pals_renewal",
+        "official_title": "AHA PALS Renewal",
+        "provider": "AHA",
+        "family": "PALS",
+        "subtype": "Renewal",
+        "delivery_type": "IP",
+        "duration_minutes": 240,
+        "default_capacity": 6,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      }
+    ],
+    "AHA Heartsaver": [
+      {
+        "course_id": "344085",
+        "course_key": "aha_heartsaver_cpr_aed",
+        "official_title": "AHA Heartsaver CPR AED",
+        "provider": "AHA",
+        "family": "Heartsaver",
+        "subtype": "CPR + AED",
+        "delivery_type": "IP",
+        "duration_minutes": 120,
+        "default_capacity": 10,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "209808",
+        "course_key": "aha_heartsaver_cpr_aed_online",
+        "official_title": "AHA Heartsaver CPR AED Online",
+        "provider": "AHA",
+        "family": "Heartsaver",
+        "subtype": "CPR + AED",
+        "delivery_type": "BL",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "209809",
+        "course_key": "aha_heartsaver_first_aid_cpr_aed",
+        "official_title": "AHA Heartsaver First Aid CPR AED",
+        "provider": "AHA",
+        "family": "Heartsaver",
+        "subtype": "First Aid + CPR + AED",
+        "delivery_type": "IP",
+        "duration_minutes": 150,
+        "default_capacity": 10,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "329495",
+        "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+        "official_title": "AHA Heartsaver First Aid CPR AED - Blended",
+        "provider": "AHA",
+        "family": "Heartsaver",
+        "subtype": "First Aid + CPR + AED",
+        "delivery_type": "BL",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "351632",
+        "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_in_person",
+        "official_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+        "provider": "AHA",
+        "family": "Heartsaver",
+        "subtype": "Pediatric First Aid",
+        "delivery_type": "IP",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "251545",
+        "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
+        "official_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+        "provider": "AHA",
+        "family": "Heartsaver",
+        "subtype": "Pediatric First Aid",
+        "delivery_type": "BL",
+        "duration_minutes": 120,
+        "default_capacity": 10,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      }
+    ],
+    "ARC": [
+      {
+        "course_id": "369209",
+        "course_key": "arc_adult_pediatric_first_aid_cpr_aed",
+        "official_title": "American Red Cross Adult and Pediatric First Aid/CPR/AED",
+        "provider": "ARC",
+        "family": "ARC",
+        "subtype": "First Aid + CPR + AED",
+        "delivery_type": "IP",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "410694",
+        "course_key": "arc_adult_pediatric_first_aid_cpr_aed_blended",
+        "official_title": "American Red Cross Adult and Pediatric First Aid/CPR/AED Blended Learning",
+        "provider": "ARC",
+        "family": "ARC",
+        "subtype": "First Aid + CPR + AED",
+        "delivery_type": "BL",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "444919",
+        "course_key": "arc_bls_challenge",
+        "official_title": "American Red Cross BLS Challenge",
+        "provider": "ARC",
+        "family": "ARC",
+        "subtype": "BLS Challenge",
+        "delivery_type": "IP",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "248288",
+        "course_key": "arc_bls",
+        "official_title": "American Red Cross Basic Life Support",
+        "provider": "ARC",
+        "family": "ARC",
+        "subtype": "BLS",
+        "delivery_type": "IP",
+        "duration_minutes": 120,
+        "default_capacity": 6,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "248287",
+        "course_key": "arc_bls_blended",
+        "official_title": "American Red Cross Basic Life Support - Blended Learning",
+        "provider": "ARC",
+        "family": "ARC",
+        "subtype": "BLS",
+        "delivery_type": "BL",
+        "duration_minutes": 120,
+        "default_capacity": 6,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      }
+    ],
+    "HSI": [
+      {
+        "course_id": "374378",
+        "course_key": "hsi_adult_first_aid_cpr_aed",
+        "official_title": "HSI Adult First Aid | CPR AED",
+        "provider": "HSI",
+        "family": "HSI",
+        "subtype": "First Aid + CPR + AED",
+        "delivery_type": "IP",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "422270",
+        "course_key": "hsi_adult_first_aid_cpr_aed_alt",
+        "official_title": "HSI Adult First Aid | CPR AED",
+        "provider": "HSI",
+        "family": "HSI",
+        "subtype": "First Aid + CPR + AED",
+        "delivery_type": "IP",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "371954",
+        "course_key": "hsi_adult_first_aid_cpr_aed_blended",
+        "official_title": "HSI Adult First Aid | CPR AED - Blended Learning",
+        "provider": "HSI",
+        "family": "HSI",
+        "subtype": "First Aid + CPR + AED",
+        "delivery_type": "BL",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "463743",
+        "course_key": "hsi_bls_challenge",
+        "official_title": "HSI BLS Challenge",
+        "provider": "HSI",
+        "family": "HSI",
+        "subtype": "BLS Challenge",
+        "delivery_type": "IP",
+        "duration_minutes": 120,
+        "default_capacity": 6,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "445670",
+        "course_key": "hsi_bls_adult_first_aid_blended",
+        "official_title": "HSI BLS and Adult First Aid | Blended Learning",
+        "provider": "HSI",
+        "family": "HSI",
+        "subtype": "BLS + First Aid",
+        "delivery_type": "BL",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "448630",
+        "course_key": "hsi_basic_life_support",
+        "official_title": "HSI Basic Life Support",
+        "provider": "HSI",
+        "family": "HSI",
+        "subtype": "BLS",
+        "delivery_type": "IP",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": true,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "449422",
+        "course_key": "hsi_pediatric_first_aid_cpr_aed_blended",
+        "official_title": "HSI Pediatric First Aid | CPR AED - Blended",
+        "provider": "HSI",
+        "family": "HSI",
+        "subtype": "Pediatric First Aid",
+        "delivery_type": "BL",
+        "duration_minutes": "UNKNOWN",
+        "default_capacity": "UNKNOWN",
+        "appointment_allowed": "UNKNOWN",
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      }
+    ],
+    "USCG": [
+      {
+        "course_id": "253768",
+        "course_key": "UNKNOWN",
+        "official_title": "USCG Elementary First Aid | CPR (AHA Heartsaver)",
+        "provider": "USCG/AHA",
+        "family": "USCG",
+        "subtype": "Elementary First Aid | CPR",
+        "delivery_type": "ILT",
+        "duration_minutes": 240,
+        "default_capacity": 10,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": "UNKNOWN",
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      },
+      {
+        "course_id": "359827",
+        "course_key": "UNKNOWN",
+        "official_title": "USCG Elementary First Aid | CPR - Blended",
+        "provider": "USCG/AHA",
+        "family": "USCG",
+        "subtype": "Elementary First Aid | CPR",
+        "delivery_type": "BL",
+        "duration_minutes": 120,
+        "default_capacity": 10,
+        "appointment_allowed": true,
+        "required_instructor_certifications": [
+          "UNKNOWN"
+        ],
+        "required_resources": [
+          "UNKNOWN"
+        ],
+        "manual_only": "UNKNOWN",
+        "online_only": "UNKNOWN",
+        "classroom_only": false,
+        "needs_brian_review": true,
+        "review_notes": "",
+        "source_note": "Drafted from data/config/course_catalog.json. UNKNOWN means not confidently available from local files."
+      }
+    ]
+  }
+}

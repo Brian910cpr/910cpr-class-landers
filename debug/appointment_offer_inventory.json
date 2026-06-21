@@ -1,0 +1,35 @@
+{
+  "generated_at": "2026-06-19T16:58:40.408654-04:00",
+  "report_only": true,
+  "public_behavior_changed": false,
+  "standalone_class_landers_created": false,
+  "source_mode": "live",
+  "inputs": {
+    "publishable_seed_candidates": "scripts/build_publishable_seed_candidates.py",
+    "hub_offer_model_report": "scripts/build_hub_offer_model_report.py",
+    "registration_targets": "data/config/registration_targets.json",
+    "calendar_sources": "data/config/calendar_sources.json",
+    "appointment_containers": "data/inventory/appointment_containers.json",
+    "public_offer_visibility_rules": "data/config/public_offer_visibility_rules.json",
+    "enrollware_presence_source": "data/Class Report.xlsx"
+  },
+  "summary": {
+    "total_appointment_offers": 0,
+    "august_appointment_offers": 0,
+    "public_ready_appointment_offers": 0,
+    "auto_public_appointment_seed_offers": 0,
+    "blocked_or_needs_review": 0,
+    "with_appointment_urls": 0,
+    "display_mode_counts": {},
+    "public_visibility_status_counts": {},
+    "by_instructor": {},
+    "by_course_family": {},
+    "warnings": [
+      "Conflict checks used latest uploaded class report: data/Class Report.xlsx (255 rows)."
+    ]
+  },
+  "calendar": {
+    "dates": []
+  },
+  "appointment_offers": []
+}

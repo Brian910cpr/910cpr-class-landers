@@ -1,0 +1,43 @@
+{
+  "source_workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
+  "worksheets": [
+    "Sheet1"
+  ],
+  "primary_worksheet": "Sheet1",
+  "header_row": 1,
+  "mapped_columns": {
+    "acls": 10,
+    "alt_email": 23,
+    "bls": 9,
+    "email": 2,
+    "hs": 8,
+    "instructor_id": 5,
+    "job_association": 6,
+    "last_verified": 22,
+    "name": 1,
+    "pals": 11,
+    "pears": 12,
+    "phone": 3,
+    "prior_tc": 7,
+    "transfer_status": 21
+  },
+  "rows_processed": 79,
+  "people_created": 79,
+  "duplicate_emails": [],
+  "duplicate_names": [],
+  "certifications_found_by_type": {
+    "AHA_ACLS_INSTRUCTOR": 12,
+    "AHA_BLS_INSTRUCTOR": 74,
+    "AHA_HEARTSAVER_INSTRUCTOR": 75,
+    "AHA_PALS_INSTRUCTOR": 14,
+    "AHA_PEARS_INSTRUCTOR": 9
+  },
+  "missing_emails": [],
+  "unclear_credential_values": [],
+  "active_for_dynamic_scheduling_count": 0,
+  "public_site_affected": false,
+  "enrollware_behavior_changed": false,
+  "appointment_urls_changed": false,
+  "worker_creation_enabled": false,
+  "recommended_next_step": "Brian should review people_catalog.json and confirm which people should be active for dynamic scheduling before any solver integration."
+}
