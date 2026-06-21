@@ -1618,7 +1618,7 @@ def render_homepage() -> str:
       </header>
       <section class="hero home-hero">
         <div class="hero-main">
-          <div class="eyebrow">CPR • First Aid • BLS • ACLS • PALS</div>
+          <div class="eyebrow home-hero-links" aria-label="Quick course links"><a href="/heartsaver.html">CPR</a><span aria-hidden="true">•</span><a href="/heartsaver.html">First Aid</a><span aria-hidden="true">•</span><a href="/bls.html">BLS</a><span aria-hidden="true">•</span><a href="/acls.html">ACLS</a><span aria-hidden="true">•</span><a href="/pals.html">PALS</a></div>
           <h1>Find the right CPR or medical training class</h1>
           <p class="subhead">Tell us what your job, school, employer, or licensing board asked for. We'll help you find the right class and the next available dates.</p>
           <div class="hero-actions">
@@ -1638,7 +1638,6 @@ def render_homepage() -> str:
       <section class="home-finder" id="class-finder">
         <div class="section-heading">
           <div>
-            <div class="eyebrow">Start here</div>
             <h2>Choose your class to see dates</h2>
           </div>
           <p class="section-copy">Pick the course name you were told to take. Each option opens the matching course page with delivery options and upcoming dates.</p>

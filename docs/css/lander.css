@@ -161,6 +161,24 @@ a {
   margin-bottom: 12px;
 }
 
+.home-hero-links {
+  flex-wrap: wrap;
+}
+
+.home-hero-links a {
+  color: inherit;
+  text-decoration: none;
+  border-radius: 999px;
+}
+
+.home-hero-links a:hover,
+.home-hero-links a:focus-visible {
+  color: #0f5e9c;
+  text-decoration: underline;
+  outline: 2px solid rgba(15, 94, 156, 0.22);
+  outline-offset: 3px;
+}
+
 .hero h1 {
   margin: 0 0 10px 0;
   font-size: 36px;
