@@ -3,11 +3,14 @@ from __future__ import annotations
 import argparse
 import csv
 import html
+import hashlib
 import json
+import os
 import re
+import urllib.request
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
@@ -50,6 +53,8 @@ CLASS_REPORT_LEGACY_PATHS = [
 ]
 CLASSES_CSV_LEGACY_PATHS = ["data/raw/classes_raw_live.csv"]
 STUDENTS_CSV_LEGACY_PATHS = ["data/raw/students_raw_live.csv"]
+DEFAULT_ENROLLWARE_ICAL_URL = "https://www.enrollware.com/calendar/ical.ashx?Bsd2bwNowUkB4RQAmjnCBA=="
+ENROLLWARE_ICAL_USER_AGENT = "910CPR-Lander-Build/1.0 (+https://www.910cpr.com)"
 
 
 def clean_string(value: Any) -> Optional[str]:
@@ -172,6 +177,448 @@ def parse_datetime_flexible(value: Any) -> Optional[str]:
         return dt.isoformat()
     except Exception:
         return None
+
+
+def unfold_ical_lines(text: str) -> list[str]:
+    unfolded: list[str] = []
+    for raw_line in text.replace("\r\n", "\n").replace("\r", "\n").split("\n"):
+        if not raw_line:
+            continue
+        if raw_line.startswith((" ", "\t")) and unfolded:
+            unfolded[-1] += raw_line[1:]
+        else:
+            unfolded.append(raw_line)
+    return unfolded
+
+
+def parse_ical_property(line: str) -> tuple[str, dict[str, str], str] | None:
+    if ":" not in line:
+        return None
+    name_and_params, value = line.split(":", 1)
+    parts = name_and_params.split(";")
+    name = parts[0].upper()
+    params: dict[str, str] = {}
+    for part in parts[1:]:
+        if "=" not in part:
+            continue
+        key, param_value = part.split("=", 1)
+        params[key.upper()] = param_value.strip('"')
+    return name, params, value
+
+
+def ical_unescape(value: Any) -> str:
+    text = str(value or "")
+    text = text.replace("\\n", "\n").replace("\\N", "\n")
+    text = text.replace("\\,", ",").replace("\\;", ";").replace("\\\\", "\\")
+    return html.unescape(text).strip()
+
+
+def parse_ical_datetime(value: str, params: dict[str, str]) -> Optional[str]:
+    raw = clean_string(value)
+    if not raw:
+        return None
+    raw = raw.strip()
+    try:
+        if re.fullmatch(r"\d{8}", raw):
+            dt = datetime.strptime(raw, "%Y%m%d").replace(tzinfo=TZ)
+        elif raw.endswith("Z"):
+            dt = datetime.strptime(raw, "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc).astimezone(TZ)
+        else:
+            fmt = "%Y%m%dT%H%M%S" if len(raw) >= 15 else "%Y%m%dT%H%M"
+            dt = datetime.strptime(raw, fmt)
+            dt = dt.replace(tzinfo=TZ)
+        return dt.isoformat()
+    except Exception:
+        return None
+
+
+def parse_ical_events(text: str) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
+    for line in unfold_ical_lines(text):
+        if line == "BEGIN:VEVENT":
+            current = {"raw_properties": {}}
+            continue
+        if line == "END:VEVENT":
+            if current is not None:
+                events.append(current)
+            current = None
+            continue
+        if current is None:
+            continue
+        parsed = parse_ical_property(line)
+        if not parsed:
+            continue
+        name, params, value = parsed
+        current["raw_properties"][name] = {"params": params, "value": value}
+        if name in {"SUMMARY", "DESCRIPTION", "LOCATION", "UID", "URL", "STATUS", "DTSTAMP", "LAST-MODIFIED"}:
+            current[name.lower().replace("-", "_")] = ical_unescape(value)
+        elif name in {"DTSTART", "DTEND"}:
+            current[name.lower()] = parse_ical_datetime(value, params)
+            current[f"{name.lower()}_raw"] = value
+            current[f"{name.lower()}_params"] = params
+    return events
+
+
+def fetch_ical_text(url: str) -> str:
+    request = urllib.request.Request(url, headers={"User-Agent": ENROLLWARE_ICAL_USER_AGENT})
+    with urllib.request.urlopen(request, timeout=45) as response:
+        raw = response.read()
+    return raw.decode("utf-8", errors="replace")
+
+
+def extract_lead_instructor(description: Optional[str]) -> Optional[str]:
+    text = ical_unescape(description)
+    if not text:
+        return None
+    match = re.search(r"Instructors:\s*(.*?)(?:\n\s*\n|Directions:|$)", text, flags=re.IGNORECASE | re.DOTALL)
+    if not match:
+        return None
+    lines = [clean_whitespace(re.sub(r"\(lead\)", "", line, flags=re.IGNORECASE)) for line in match.group(1).splitlines()]
+    lines = [line for line in lines if line]
+    for line in lines:
+        if "(lead)" in line.lower():
+            return clean_whitespace(re.sub(r"\(lead\)", "", line, flags=re.IGNORECASE))
+    return lines[0] if lines else None
+
+
+def stable_ical_session_id(event: dict[str, Any]) -> str:
+    uid = clean_string(event.get("uid"))
+    if uid:
+        return uid
+    key = "|".join(
+        clean_string(event.get(name)) or ""
+        for name in ["summary", "dtstart", "dtend", "location", "url"]
+    )
+    return "ical_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
+
+
+def previous_sessions_by_id(path: Path) -> dict[str, dict[str, Any]]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    sessions = payload.get("sessions", []) if isinstance(payload, dict) else []
+    return {
+        str(session.get("session_id")): session
+        for session in sessions
+        if isinstance(session, dict) and session.get("session_id") is not None
+    }
+
+
+def build_session_from_ical_event(
+    event: dict[str, Any],
+    now_iso: str,
+    course_map: dict[str, Any],
+    previous_session: Optional[dict[str, Any]] = None,
+) -> Optional[dict[str, Any]]:
+    session_id = stable_ical_session_id(event)
+    start_at = clean_string(event.get("dtstart"))
+    end_at = clean_string(event.get("dtend"))
+    if not session_id or not start_at:
+        return None
+
+    raw_summary = clean_string(event.get("summary"))
+    course_title = strip_tags(raw_summary)
+    parsed = parse_course_blob(course_title)
+    mapped, mapping_status, mapping_notes = resolve_course_mapping(
+        course_map,
+        course_id=None,
+        course_number=None,
+        raw_course_title=parsed.course_name_primary_clean or course_title,
+    )
+    course_id = clean_string(mapped.get("course_id")) if mapped else None
+    course_number = clean_string(mapped.get("course_number") or course_id) if mapped else None
+
+    mapped_family = clean_string(mapped.get("family")) if mapped else None
+    mapped_subtype = clean_string(mapped.get("subtype")) if mapped else None
+    mapped_certifying_body = clean_string(mapped.get("certifying_body")) if mapped else None
+    mapped_delivery_mode = clean_string(mapped.get("delivery_mode")) if mapped else None
+    mapped_course_code = clean_string(mapped.get("course_code")) if mapped else None
+    mapped_logo_key = clean_string(mapped.get("logo_key")) if mapped else None
+    mapped_price = parse_float(mapped.get("price")) if mapped else None
+    mapped_clean_title = clean_string(mapped.get("clean_title")) if mapped else None
+    mapped_short_description = clean_string(mapped.get("short_description")) if mapped else None
+    mapped_long_description = clean_string(mapped.get("long_description")) if mapped else None
+    mapped_who_class_for = clean_string(mapped.get("who_class_for") or mapped.get("who_for")) if mapped else None
+    mapped_prerequisites = clean_string(mapped.get("prerequisites")) if mapped else None
+    mapped_what_to_expect = clean_string(mapped.get("what_to_expect")) if mapped else None
+    mapped_certification_card = clean_string(mapped.get("certification_card")) if mapped else None
+    mapped_renewal_info = clean_string(mapped.get("renewal_info")) if mapped else None
+    mapped_official_description_source = clean_string(mapped.get("official_description_source")) if mapped else None
+    mapped_description_status = normalize_description_status(mapped.get("description_status") if mapped else None)
+
+    previous_capacity = previous_session.get("capacity", {}) if isinstance(previous_session, dict) and isinstance(previous_session.get("capacity"), dict) else {}
+    previous_commerce = previous_session.get("commerce", {}) if isinstance(previous_session, dict) and isinstance(previous_session.get("commerce"), dict) else {}
+    registration_url = clean_string(event.get("url")) or clean_string(previous_commerce.get("registration_url"))
+
+    location_name = clean_string(event.get("location"))
+    lead_instructor_name = extract_lead_instructor(clean_string(event.get("description")))
+
+    return {
+        "session_id": session_id,
+        "source": "enrollware_ical",
+        "start": start_at,
+        "end": end_at,
+        "start_datetime": start_at,
+        "end_datetime": end_at,
+        "source_keys": {
+            "enrollware_ical_uid": clean_string(event.get("uid")),
+            "enrollware_ical_url": registration_url,
+        },
+        "course": {
+            "course_id": course_id,
+            "course_name_raw": raw_summary,
+            "course_name_primary_raw": course_title,
+            "course_name_primary_clean": parsed.course_name_primary_clean or course_title,
+            "course_tail_raw": parsed.course_tail_raw,
+            "course_subtitle_text": parsed.course_subtitle_text,
+            "course_number": course_number,
+            "course_code_hint": parsed.course_code_hint or mapped_course_code,
+            "certifying_body_hint": parsed.certifying_body_hint or mapped_certifying_body,
+            "source_hint": "enrollware_ical",
+            "price_hint": parsed.price_hint,
+            "delivery_mode_hint": parsed.delivery_mode_hint or mapped_delivery_mode,
+            "image_src": parsed.image_src,
+            "parse_confidence": parsed.parse_confidence,
+            "parse_notes": parsed.parse_notes,
+            "mapped_family": mapped_family,
+            "mapped_subtype": mapped_subtype,
+            "mapped_certifying_body": mapped_certifying_body,
+            "mapped_delivery_mode": mapped_delivery_mode,
+            "mapped_logo_key": mapped_logo_key,
+            "mapped_price": mapped_price,
+            "mapped_clean_title": mapped_clean_title,
+            "mapped_short_description": mapped_short_description,
+            "mapped_long_description": mapped_long_description,
+            "mapped_who_class_for": mapped_who_class_for,
+            "mapped_prerequisites": mapped_prerequisites,
+            "mapped_what_to_expect": mapped_what_to_expect,
+            "mapped_certification_card": mapped_certification_card,
+            "mapped_renewal_info": mapped_renewal_info,
+            "mapped_official_description_source": mapped_official_description_source,
+            "mapped_description_status": mapped_description_status,
+            "mapping_status": mapping_status,
+            "mapping_notes": mapping_notes,
+        },
+        "mapped_family": mapped_family,
+        "mapped_subtype": mapped_subtype,
+        "mapped_certifying_body": mapped_certifying_body,
+        "mapped_delivery_mode": mapped_delivery_mode,
+        "mapped_logo_key": mapped_logo_key,
+        "mapped_price": mapped_price,
+        "mapped_clean_title": mapped_clean_title,
+        "mapped_short_description": mapped_short_description,
+        "mapped_long_description": mapped_long_description,
+        "mapped_who_class_for": mapped_who_class_for,
+        "mapped_prerequisites": mapped_prerequisites,
+        "mapped_what_to_expect": mapped_what_to_expect,
+        "mapped_certification_card": mapped_certification_card,
+        "mapped_renewal_info": mapped_renewal_info,
+        "mapped_official_description_source": mapped_official_description_source,
+        "mapped_description_status": mapped_description_status,
+        "mapping_status": mapping_status,
+        "mapping_notes": mapping_notes,
+        "timing": {
+            "start_at": start_at,
+            "end_at": end_at,
+            "start": start_at,
+            "end": end_at,
+            "start_datetime": start_at,
+            "end_datetime": end_at,
+            "start_source": clean_string(event.get("dtstart_raw")),
+            "end_source": clean_string(event.get("dtend_raw")),
+            "timezone": "America/New_York",
+            "is_future": parse_datetime_flexible(start_at) >= now_iso if parse_datetime_flexible(start_at) else None,
+            "is_past": parse_datetime_flexible(start_at) < now_iso if parse_datetime_flexible(start_at) else None,
+        },
+        "location": {
+            "location_name": location_name,
+            "location_display": location_name,
+            "client": None,
+        },
+        "staffing": {
+            "lead_instructor_name": lead_instructor_name,
+        },
+        "capacity": {
+            "max_students": previous_capacity.get("max_students"),
+            "students_count_raw": previous_capacity.get("students_count_raw"),
+            "registered_count": previous_capacity.get("registered_count"),
+            "available_seats": previous_capacity.get("available_seats"),
+            "is_full": previous_capacity.get("is_full"),
+        },
+        "commerce": {
+            "price": mapped_price if mapped_price is not None else previous_commerce.get("price"),
+            "registration_url": registration_url,
+        },
+        "status": {
+            "session_status": "active",
+            "source_of_truth": "enrollware_ical",
+            "last_updated_at": now_iso,
+        },
+        "flags": {
+            "needs_review": mapping_status != "mapped",
+            "has_missing_start_time": start_at is None,
+            "has_missing_registration_url": registration_url is None,
+            "has_missing_course_name": not bool(parsed.course_name_primary_clean or course_title),
+        },
+    }
+
+
+def build_sessions_from_enrollware_ical(
+    *,
+    repo_root: Path,
+    ical_url: str,
+    output_path: Path,
+    audit_dir: Path,
+    course_map: dict[str, Any],
+) -> int:
+    previous_by_id = previous_sessions_by_id(output_path)
+    now_iso = datetime.now(TZ).isoformat()
+    text = fetch_ical_text(ical_url)
+    events = parse_ical_events(text)
+    sessions: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    unmapped_rows: list[dict[str, Any]] = []
+
+    for event in events:
+        session_id = stable_ical_session_id(event)
+        session = build_session_from_ical_event(
+            event,
+            now_iso,
+            course_map,
+            previous_session=previous_by_id.get(session_id),
+        )
+        if not session:
+            skipped.append(
+                {
+                    "uid": clean_string(event.get("uid")),
+                    "summary": strip_tags(event.get("summary")),
+                    "reason": "missing_uid_or_start",
+                }
+            )
+            continue
+        sessions.append(session)
+        if session.get("mapping_status") != "mapped":
+            unmapped_rows.append(
+                {
+                    "session_id": session.get("session_id"),
+                    "raw_course": session.get("course", {}).get("course_name_primary_clean"),
+                    "start_at": session.get("timing", {}).get("start_at"),
+                    "location": session.get("location", {}).get("location_display"),
+                    "mapping_status": session.get("mapping_status"),
+                    "mapping_notes": session.get("mapping_notes", []),
+                }
+            )
+
+    sessions.sort(key=lambda item: (item.get("timing", {}).get("start_at") or "", item.get("session_id") or ""))
+    current_ids = {str(session.get("session_id")) for session in sessions if session.get("session_id") is not None}
+    prior_ids = set(previous_by_id)
+    removed_ids = sorted(prior_ids - current_ids)
+    added_ids = sorted(current_ids - prior_ids)
+
+    output = {
+        "build": {
+            "generated_at": now_iso,
+            "repo_root": str(repo_root),
+            "source_mode": "enrollware_ical_authoritative",
+            "source": "enrollware_ical",
+            "course_map_path": course_map.get("_path"),
+            "inputs": {
+                "enrollware_ical_url": ical_url,
+                "prior_sessions_current": str(output_path),
+            },
+            "counts": {
+                "ical_events_read": len(events),
+                "sessions_written": len(sessions),
+                "skipped_events": len(skipped),
+                "unmapped_sessions": len(unmapped_rows),
+                "prior_sessions_read": len(previous_by_id),
+                "sessions_added_compared_with_prior_source": len(added_ids),
+                "classes_removed_compared_with_prior_source": len(removed_ids),
+                "stale_sheet_or_class_report_sessions_excluded": len(removed_ids),
+            },
+        },
+        "sessions": sessions,
+    }
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    audit_dir.mkdir(parents=True, exist_ok=True)
+    removed_examples = [
+        {
+            "session_id": session_id,
+            "course_name": (previous_by_id.get(session_id, {}).get("course", {}) or {}).get("course_name_primary_clean"),
+            "start_at": (previous_by_id.get(session_id, {}).get("timing", {}) or {}).get("start_at"),
+            "location": (previous_by_id.get(session_id, {}).get("location", {}) or {}).get("location_display"),
+        }
+        for session_id in removed_ids[:50]
+    ]
+    summary = {
+        "generated_at": now_iso,
+        "source": "enrollware_ical",
+        "ical_events_read": len(events),
+        "public_sessions_created": len(sessions),
+        "skipped_events": len(skipped),
+        "unmapped_sessions": len(unmapped_rows),
+        "prior_sessions_read": len(previous_by_id),
+        "sessions_added_compared_with_prior_source": len(added_ids),
+        "classes_removed_compared_with_prior_source": len(removed_ids),
+        "stale_zapier_sheet_sessions_excluded": 0,
+        "stale_manual_class_report_sessions_excluded": len(removed_ids),
+        "removed_examples": removed_examples,
+    }
+    (audit_dir / "enrollware_ical_import_summary.json").write_text(
+        json.dumps(summary, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    report_lines = [
+        "# Enrollware iCal Import Report",
+        "",
+        f"- Generated at: `{now_iso}`",
+        "- Source: `enrollware_ical`",
+        f"- iCal events read: `{len(events)}`",
+        f"- Public sessions created: `{len(sessions)}`",
+        f"- Skipped events: `{len(skipped)}`",
+        f"- Unmapped sessions: `{len(unmapped_rows)}`",
+        f"- Prior sessions read: `{len(previous_by_id)}`",
+        f"- Classes removed compared with prior source: `{len(removed_ids)}`",
+        f"- Stale manual/Class Report sessions excluded: `{len(removed_ids)}`",
+        "- Stale Zapier/Google Sheet public schedule sessions excluded: `0`",
+        "",
+        "Zapier/Google Sheet registration events are not used as the public schedule source in this build path.",
+        "They remain separate registration-signal/audit inputs only.",
+        "",
+        "## Removed Examples",
+        "",
+    ]
+    if removed_examples:
+        report_lines.append("| Session ID | Course | Start | Location |")
+        report_lines.append("|---|---|---|---|")
+        for item in removed_examples[:20]:
+            report_lines.append(
+                f"| `{item.get('session_id')}` | {item.get('course_name') or ''} | {item.get('start_at') or ''} | {item.get('location') or ''} |"
+            )
+    else:
+        report_lines.append("- None")
+    report_lines.extend(["", "## Unmapped Examples", ""])
+    if unmapped_rows:
+        for row in unmapped_rows[:20]:
+            report_lines.append(f"- `{row.get('session_id')}`: {row.get('raw_course')} ({row.get('start_at')})")
+    else:
+        report_lines.append("- None")
+    (audit_dir / "enrollware_ical_import_report.md").write_text("\n".join(report_lines) + "\n", encoding="utf-8")
+
+    print(f"Wrote {output_path}")
+    print(f"iCal events read: {len(events)}")
+    print(f"Public sessions created: {len(sessions)}")
+    print(f"Classes removed compared with prior source: {len(removed_ids)}")
+    print(f"Wrote {audit_dir / 'enrollware_ical_import_summary.json'}")
+    print(f"Wrote {audit_dir / 'enrollware_ical_import_report.md'}")
+    return 0
 
 
 @dataclass
@@ -633,6 +1080,17 @@ def main() -> int:
     reporter = BuildStatusReporter("build_sessions_current")
     parser = argparse.ArgumentParser(description="Build merged sessions_current.json from raw files.")
     parser.add_argument("--repo-root", default=".", help="Path to repo root.")
+    parser.add_argument(
+        "--source",
+        choices=["enrollware_ical", "class_report"],
+        default="enrollware_ical",
+        help="Public schedule source. Defaults to Enrollware iCal freshness source.",
+    )
+    parser.add_argument(
+        "--ical-url",
+        default=None,
+        help="Enrollware iCal feed URL. Defaults to LANDER_ENROLLWARE_ICAL_URL or the configured 910CPR feed.",
+    )
     parser.add_argument("--class-report", default=None)
     parser.add_argument("--classes-csv", default=None)
     parser.add_argument("--students-csv", default=None)
@@ -643,6 +1101,28 @@ def main() -> int:
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
+    output_path = (repo_root / args.output).resolve()
+    audit_dir = (repo_root / args.audit_dir).resolve()
+    course_map = load_course_map(repo_root, args.course_map)
+    if args.source == "enrollware_ical":
+        ical_url = clean_string(args.ical_url) or clean_string(os.environ.get("LANDER_ENROLLWARE_ICAL_URL")) or DEFAULT_ENROLLWARE_ICAL_URL
+        reporter.set_context(
+            inputs=[repo_root / args.course_map],
+            outputs=[
+                output_path,
+                audit_dir / "enrollware_ical_import_summary.json",
+                audit_dir / "enrollware_ical_import_report.md",
+            ],
+        )
+        reporter.waiting(total=0)
+        return build_sessions_from_enrollware_ical(
+            repo_root=repo_root,
+            ical_url=ical_url,
+            output_path=output_path,
+            audit_dir=audit_dir,
+            course_map=course_map,
+        )
+
     class_report = resolve_live_input_path(
         repo_root,
         label="Class report",
@@ -670,9 +1150,6 @@ def main() -> int:
     class_report_path = class_report.path
     classes_csv_path = classes_csv.path
     students_csv_path = students_csv.path
-    output_path = (repo_root / args.output).resolve()
-    audit_dir = (repo_root / args.audit_dir).resolve()
-    course_map = load_course_map(repo_root, args.course_map)
     reporter.set_context(
         inputs=[class_report_path, classes_csv_path, students_csv_path, repo_root / args.course_map],
         outputs=[

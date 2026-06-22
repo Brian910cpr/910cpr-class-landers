@@ -17,6 +17,18 @@ if not exist "scripts\generate_dynamic_offers.py" (
 )
 
 echo.
+echo === Build current sessions from Enrollware iCal ===
+python -m scripts.build_sessions_current || goto :fail
+
+echo.
+echo === Build public future schedule ===
+python -m scripts.build_schedule_future || goto :fail
+
+echo.
+echo === Build class lander pages ===
+python -m scripts.build_landers || goto :fail
+
+echo.
 echo === Generate dynamic offers ===
 python -m scripts.generate_dynamic_offers || goto :fail
 

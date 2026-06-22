@@ -148,6 +148,13 @@ def safe_console_text(value: str) -> str:
     return value.encode("ascii", errors="backslashreplace").decode("ascii")
 
 
+def repo_relative(path: Path, repo_root: Path) -> str:
+    try:
+        return str(path.relative_to(repo_root))
+    except Exception:
+        return str(path)
+
+
 CLASS_REPORT_LEGACY_PATHS = [
     "data/Class Report.xlsx",
     "data/raw/Class Report.xlsx",
@@ -327,30 +334,39 @@ def main() -> int:
 
     if not input_path.exists():
         raise SystemExit(f"Input file not found: {input_path}")
-    print_resolved_path(class_report)
-    if not class_report_path.exists():
-        raise SystemExit(
-            missing_live_input_message(
-                class_report,
-                private_path="data/private/enrollware/Class Report.xlsx",
-                env_var="LANDER_CLASS_REPORT_PATH",
-                cli_flag="--class-report",
-                legacy_paths=CLASS_REPORT_LEGACY_PATHS,
-            )
-        )
     if not course_map_path.exists():
         raise SystemExit(f"Course map not found: {course_map_path}")
 
     reporter.waiting(total=0)
     try:
-        class_report_ids = read_class_report_ids(class_report_path)
         aliases = load_aliases(aliases_path)
         course_reference = json.loads(course_map_path.read_text(encoding="utf-8"))
         raw = json.loads(input_path.read_text(encoding="utf-8"))
         sessions = raw.get("sessions", [])
+        source_mode = str(raw.get("build", {}).get("source_mode") or "").strip()
+        ical_authoritative = source_mode == "enrollware_ical_authoritative"
+        if ical_authoritative:
+            class_report_ids = {str(session.get("session_id")) for session in sessions if isinstance(session, dict) and session.get("session_id") is not None}
+            print("Using Enrollware iCal as schedule freshness authority")
+        else:
+            print_resolved_path(class_report)
+            if not class_report_path.exists():
+                raise SystemExit(
+                    missing_live_input_message(
+                        class_report,
+                        private_path="data/private/enrollware/Class Report.xlsx",
+                        env_var="LANDER_CLASS_REPORT_PATH",
+                        cli_flag="--class-report",
+                        legacy_paths=CLASS_REPORT_LEGACY_PATHS,
+                    )
+                )
+            class_report_ids = read_class_report_ids(class_report_path)
         reporter.start(total=len(sessions))
         print(f"Loaded {len(sessions)} sessions from {input_path}")
-        print(f"Loaded {len(class_report_ids)} session IDs from {class_report_path}")
+        if ical_authoritative:
+            print(f"Loaded {len(class_report_ids)} session IDs from Enrollware iCal")
+        else:
+            print(f"Loaded {len(class_report_ids)} session IDs from {class_report_path}")
         print("Filtering future sessions" if not args.include_past else "Classifying all sessions")
 
         now_dt = datetime.now(TZ)
@@ -425,7 +441,7 @@ def main() -> int:
                 skipped_past += 1
                 reporter.update(current=index, total=len(sessions))
                 continue
-            if not has_public_raw_location(session):
+            if not ical_authoritative and not has_public_raw_location(session):
                 print(f"NON-PUBLIC LOCATION SUPPRESSED: session_id={session_id} location={safe_console_text(debug_location_value(session))}")
                 skipped_non_public_location += 1
                 skipped_non_public_session_ids.append(session_id)
@@ -469,7 +485,7 @@ def main() -> int:
         output = {
             "build": {
                 "generated_at": now_iso,
-                "source_file": str(input_path),
+                "source_file": repo_relative(input_path, repo_root),
                 "counts": {
                     "sessions_input": len(sessions),
                     "sessions_output": len(future_sessions),
@@ -482,8 +498,10 @@ def main() -> int:
                     "included_by_course_identity_resolver": included_by_course_identity_resolver,
                     "skipped_unmapped_after_resolver": skipped_unmapped_after_resolver,
                     "include_past": args.include_past,
+                    "enrollware_ical_authoritative": ical_authoritative,
                 },
-                "class_report": str(class_report_path),
+                "class_report": None if ical_authoritative else repo_relative(class_report_path, repo_root),
+                "source_mode": source_mode or ("class_report_authoritative" if not ical_authoritative else "enrollware_ical_authoritative"),
             },
             "sessions": future_sessions,
         }
