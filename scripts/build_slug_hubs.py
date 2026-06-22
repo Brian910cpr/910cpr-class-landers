@@ -45,6 +45,7 @@ COURSE_VISIBILITY_POLICY_PATH = ROOT / "data" / "config" / "course_visibility_po
 COURSE_MAP_PATH = ROOT / "data" / "config" / "course_map.json"
 REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
 OUTPUT_DIR = ROOT / "docs"
+COURSES_OUTPUT_DIR = OUTPUT_DIR / "courses"
 STATE_DIR = ROOT / "data" / "state"
 RUNTIME_DIR = ROOT / "data" / "runtime"
 SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
@@ -2146,6 +2147,8 @@ def render_group_training_push(page: dict[str, Any], first_tab: dict[str, Any], 
         return ""
     onsite_href = group_request_href(first_tab.get("program") or page.get("hero_title"))
     classes_href = "#ecosystem-categories" if page.get("ecosystem_hub") else f"#slug-tabs-{escape(page['slug'], quote=True)}"
+    if str(page.get("slug") or "") == "heartsaver":
+        classes_href = "/courses/heartsaver-first-aid-cpr-aed.html"
     return f"""
   <section class="group-training-push" aria-label="On-site group training">
     <div class="group-training-copy">
@@ -2267,31 +2270,32 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
         return ""
     cards = [
         {
-            "href": "#heartsaver-first-aid-cpr-aed",
+            "href": "/courses/heartsaver-first-aid-cpr-aed.html",
             "image": "images/HS-FA-CPR-AED.jpeg",
             "title": "Heartsaver First Aid CPR AED",
             "copy": "For workplace and community responders who need practical first aid, CPR, and AED training. Topics include choking, naloxone awareness, FAST stroke recognition, seizures, asthma, burns, heat illness, and common injury response.",
+            "featured": True,
         },
         {
-            "href": "#heartsaver-cpr-aed",
+            "href": "/courses/heartsaver-cpr-aed.html",
             "image": "images/HS-CPR-AED.jpeg",
             "title": "Heartsaver CPR AED",
             "copy": "A focused CPR/AED path for people who do not need the first aid module. It reinforces adult and child choking response and why breaths may matter in opioid-related respiratory arrest.",
         },
         {
-            "href": "#heartsaver-first-aid",
+            "href": "/courses/heartsaver-first-aid.html",
             "image": "images/HS-FA.jpeg",
             "title": "Heartsaver First Aid",
             "copy": "First aid only, without CPR or AED. This course focuses on recognizing and responding to common injuries and illnesses such as bleeding, burns, allergic reactions, fainting, seizures, heat illness, and other everyday emergencies.",
         },
         {
-            "href": "#heartsaver-pediatric-first-aid-cpr-aed",
+            "href": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html",
             "image": "images/HS-PEDI-FA-CPR-AED.jpeg",
             "title": "Pediatric First Aid CPR AED",
             "copy": "For childcare, school, camp, and caregiver teams that need infant and child CPR, AED, choking, seizure, asthma, allergic reaction, heat illness, burn, and injury response practice.",
         },
         {
-            "href": "#heartsaver-bloodborne-pathogens",
+            "href": "/courses/bloodborne-pathogens.html",
             "image": "images/HS-BBP.jpeg",
             "title": "Bloodborne Pathogens",
             "copy": "Heartsaver Bloodborne Pathogens online course teaches employees how to protect themselves and others from being exposed to blood or blood-containing materials. This course is designed to meet OSHA requirements for bloodborne pathogens training when paired with site-specific instruction.",
@@ -2299,9 +2303,12 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
     ]
     rendered = []
     for card in cards:
+        card_class = "course-jump-card heartsaver-jump-card"
+        if card.get("featured"):
+            card_class += " heartsaver-featured-card"
         rendered.append(
             f"""
-        <a class="course-jump-card heartsaver-jump-card" href="{escape(card['href'], quote=True)}">
+        <a class="{card_class}" href="{escape(card['href'], quote=True)}">
           <img src="{escape(card['image'], quote=True)}" alt="" loading="lazy">
           <strong>{escape(card['title'])}</strong>
           <span>{escape(card['copy'])}</span>
@@ -2334,6 +2341,8 @@ def heartsaver_delivery_label(tab: dict[str, Any]) -> str:
 
 def render_heartsaver_delivery_choice(tab: dict[str, Any]) -> str:
     icon = escape(hub_asset_url(tab.get("tab_icon"), "images/tab_classroom.png"), quote=True)
+    if icon and not icon.startswith("/"):
+        icon = f"/{icon}"
     label = heartsaver_delivery_label(tab)
     return f"""
         <a class="course-jump-card heartsaver-delivery-card" href="#{escape(tab['id'], quote=True)}">
@@ -2375,6 +2384,7 @@ def render_heartsaver_course_flow(
     group_mode: bool,
     requestable_offers: list[dict[str, Any]] | None = None,
     appointment_seed_offers: list[dict[str, Any]] | None = None,
+    only_group_ids: set[str] | None = None,
 ) -> str:
     if page.get("slug") != "heartsaver":
         return ""
@@ -2427,6 +2437,8 @@ def render_heartsaver_course_flow(
 
     rendered: list[str] = []
     for group in groups:
+        if only_group_ids and str(group["id"]) not in only_group_ids:
+            continue
         if group.get("request_only"):
             rendered.append(render_heartsaver_request_only_section(group))
             continue
@@ -2475,6 +2487,185 @@ def render_heartsaver_course_flow(
         )
 
     return "\n".join(rendered)
+
+
+def render_heartsaver_split_course_page(
+    page: dict[str, Any],
+    visible_tabs: list[tuple[dict[str, Any], list[dict[str, Any]]]],
+    *,
+    group_id: str,
+    title: str,
+    description: str,
+    appointment_seed_offers: list[dict[str, Any]],
+    requestable_offers: list[dict[str, Any]],
+) -> str:
+    flow = render_heartsaver_course_flow(
+        page,
+        visible_tabs,
+        group_mode=False,
+        requestable_offers=requestable_offers,
+        appointment_seed_offers=appointment_seed_offers,
+        only_group_ids={group_id},
+    )
+    body = f"""
+<div class="card slug-hub-shell heartsaver-course-page">
+  <header class="site-brand-bar">
+    <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+      <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+      <span class="site-brand-wordmark">910CPR</span>
+    </a>
+  </header>
+  <section class="hero slug-hero">
+    <div class="hero-main">
+      <div class="eyebrow">Heartsaver Course Hub</div>
+      <h1>{escape(title)}</h1>
+      <p class="subhead">{escape(description)}</p>
+      <div class="slug-hero-actions">
+        <a class="button secondary" href="/heartsaver.html">Back to all Heartsaver options</a>
+      </div>
+    </div>
+  </section>
+  <div class="heartsaver-course-flow-stack">
+    {flow}
+  </div>
+  {render_other_training_options(page)}
+</div>
+"""
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{escape(title)} | 910CPR</title>
+<meta name="description" content="{escape(description)}">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.910cpr.com/courses/{escape(group_id)}.html">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="shortcut icon" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<link rel="stylesheet" href="/css/lander.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="page-shell">
+    {body}
+  </div>
+</div>
+<script src="/assets/hub-ui.js?v=20260511-hash-tabs"></script>
+<script src="/assets/live-sessions.js"></script>
+<script src="/assets/session-expiry.js"></script>
+<script src="/assets/hybrid-inventory.js"></script>
+</body>
+</html>"""
+
+
+def render_heartsaver_alias_page(*, title: str, target_path: str, canonical_path: str, description: str) -> str:
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{escape(title)} | 910CPR</title>
+<meta name="description" content="{escape(description)}">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.910cpr.com{escape(canonical_path)}">
+<meta http-equiv="refresh" content="0; url={escape(target_path)}">
+<link rel="stylesheet" href="/css/lander.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="page-shell">
+    <div class="card slug-hub-shell">
+      <header class="site-brand-bar">
+        <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+          <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager">
+          <span class="site-brand-wordmark">910CPR</span>
+        </a>
+      </header>
+      <section class="hero slug-hero">
+        <div class="hero-main">
+          <div class="eyebrow">Heartsaver Course Hub</div>
+          <h1>{escape(title)}</h1>
+          <p class="subhead">{escape(description)}</p>
+          <div class="slug-hero-actions">
+            <a class="button primary" href="{escape(target_path)}">Open current course page</a>
+            <a class="button secondary" href="/heartsaver.html">Back to Heartsaver options</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</body>
+</html>"""
+
+
+def write_heartsaver_split_course_pages(
+    page: dict[str, Any],
+    sessions: list[dict[str, Any]],
+    *,
+    requestable_offers: list[dict[str, Any]],
+    appointment_seed_offers: list[dict[str, Any]],
+    build_meta: dict[str, str],
+) -> list[Path]:
+    now = datetime.now(TZ)
+    visible_tabs = visible_tabs_for_page(page, sessions, now=now)
+    pages = [
+        {
+            "group_id": "heartsaver-first-aid-cpr-aed",
+            "title": "Heartsaver First Aid CPR AED",
+            "description": "The most common Heartsaver path for workplace and community responders who need First Aid, CPR, and AED training.",
+        },
+        {
+            "group_id": "heartsaver-cpr-aed",
+            "title": "Heartsaver CPR AED",
+            "description": "CPR and AED training for people who do not need the First Aid module.",
+        },
+        {
+            "group_id": "heartsaver-first-aid",
+            "title": "Heartsaver First Aid",
+            "description": "First Aid-only training for workplaces, groups, special requests, and individuals who need help choosing the best path.",
+        },
+        {
+            "group_id": "heartsaver-pediatric-first-aid-cpr-aed",
+            "title": "Pediatric First Aid CPR AED",
+            "description": "Pediatric first aid, CPR, and AED training for childcare, school, camp, and caregiver requirements.",
+        },
+        {
+            "group_id": "bloodborne-pathogens",
+            "title": "Bloodborne Pathogens",
+            "description": "Bloodborne pathogens training for workplace or site-specific exposure-control requirements.",
+        },
+    ]
+    COURSES_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    written: list[Path] = []
+    for spec in pages:
+        html = render_heartsaver_split_course_page(
+            page,
+            visible_tabs,
+            group_id=spec["group_id"],
+            title=spec["title"],
+            description=spec["description"],
+            appointment_seed_offers=appointment_seed_offers,
+            requestable_offers=requestable_offers,
+        )
+        html = apply_build_metadata(html, build_meta)
+        html = clean_generated_html(html)
+        output_path = COURSES_OUTPUT_DIR / f"{spec['group_id']}.html"
+        output_path.write_text(html, encoding="utf-8")
+        written.append(output_path)
+    alias_path = COURSES_OUTPUT_DIR / "aha-heartsaver-cpr-aed.html"
+    alias_html = render_heartsaver_alias_page(
+        title="AHA Heartsaver CPR AED",
+        target_path="/courses/heartsaver-cpr-aed.html",
+        canonical_path="/courses/heartsaver-cpr-aed.html",
+        description="Use the current Heartsaver CPR AED course hub for in-person and blended CPR/AED options.",
+    )
+    alias_html = apply_build_metadata(alias_html, build_meta)
+    alias_html = clean_generated_html(alias_html)
+    alias_path.write_text(alias_html, encoding="utf-8")
+    written.append(alias_path)
+    return written
 
 
 def render_brand_bar() -> str:
@@ -2669,26 +2860,11 @@ def render_ecosystem_page(
 </html>"""
 
 
-def render_page(
-    page: dict[str, Any],
-    sessions: list[dict[str, Any]],
-    banner_library: dict[str, dict[str, Any]],
-    *,
-    requestable_offers: list[dict[str, Any]] | None = None,
-    appointment_seed_offers: list[dict[str, Any]] | None = None,
-) -> str:
-    if page.get("ecosystem_hub"):
-        return render_ecosystem_page(page, sessions, banner_library, appointment_seed_offers=appointment_seed_offers or [])
-
-    group_mode = bool(page.get("group_mode"))
+def visible_tabs_for_page(page: dict[str, Any], sessions: list[dict[str, Any]], *, now: datetime) -> list[tuple[dict[str, Any], list[dict[str, Any]]]]:
     page_slug = str(page.get("slug") or "")
-    now = datetime.now(TZ)
-    tabs = page.get("tabs", [])
-    first_tab = tabs[0]
-
     visible_tabs: list[tuple[dict[str, Any], list[dict[str, Any]]]] = []
     visibility_policy = load_course_visibility_policy()
-    for tab in tabs:
+    for tab in page.get("tabs", []):
         visibility_state = tab_visibility_state(tab, visibility_policy)
         if visibility_state == "hidden":
             continue
@@ -2718,10 +2894,30 @@ def render_page(
         }
         keep_empty_tab = bool(page.get("keep_empty_tabs")) or tab.get("id") in keep_empty_tab_ids.get(page_slug, set())
         if matched or keep_empty_tab:
-            if page.get("slug") == "heartsaver":
+            if page_slug == "heartsaver":
                 display = heartsaver_tab_display(tab, matched)
                 tab = {**tab, **display}
             visible_tabs.append((tab, matched))
+    return visible_tabs
+
+
+def render_page(
+    page: dict[str, Any],
+    sessions: list[dict[str, Any]],
+    banner_library: dict[str, dict[str, Any]],
+    *,
+    requestable_offers: list[dict[str, Any]] | None = None,
+    appointment_seed_offers: list[dict[str, Any]] | None = None,
+) -> str:
+    if page.get("ecosystem_hub"):
+        return render_ecosystem_page(page, sessions, banner_library, appointment_seed_offers=appointment_seed_offers or [])
+
+    group_mode = bool(page.get("group_mode"))
+    page_slug = str(page.get("slug") or "")
+    now = datetime.now(TZ)
+    tabs = page.get("tabs", [])
+    first_tab = tabs[0]
+    visible_tabs = visible_tabs_for_page(page, sessions, now=now)
 
     buttons: list[str] = []
     panels: list[str] = []
@@ -2741,29 +2937,7 @@ def render_page(
         )
 
     if page_slug == "heartsaver":
-        heartsaver_flow = render_heartsaver_course_flow(
-            page,
-            visible_tabs,
-            group_mode=group_mode,
-            requestable_offers=requestable_offers or [],
-            appointment_seed_offers=appointment_seed_offers or [],
-        )
-        tabs_html = (
-            f"""
-  <div id="slug-tabs-{escape(page['slug'], quote=True)}" class="heartsaver-course-flow-stack">
-    {heartsaver_flow}
-  </div>
-"""
-            if heartsaver_flow
-            else f"""
-  <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}">
-    <div class="slug-empty hub-empty-state">
-      <strong>{escape(EMPTY_FALLBACK_TITLE)}</strong>
-      <p>{escape(EMPTY_FALLBACK_BODY)}</p>
-    </div>
-  </section>
-"""
-        )
+        tabs_html = ""
     else:
         tabs_html = (
             f"""
@@ -2896,6 +3070,14 @@ def build() -> None:
                 write_acls_runtime_debug(page, sessions, now=now, source_path=schedule_source_path)
             if page.get("slug") == "heartsaver":
                 write_heartsaver_runtime_debug(page, sessions, now=now, source_path=schedule_source_path)
+                for course_output in write_heartsaver_split_course_pages(
+                    page,
+                    sessions,
+                    requestable_offers=page_requestable_offers,
+                    appointment_seed_offers=page_appointment_seed_offers,
+                    build_meta=build_meta,
+                ):
+                    print(f"Wrote {course_output}")
             reporter.update(current=index, total=len(manifest), last_output_file=last_output)
             print(f"Wrote {last_output}")
         consolidated_debug_path = ROOT / "debug" / "hub_session_classification.json"

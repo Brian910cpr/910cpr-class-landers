@@ -3633,3 +3633,46 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+.heartsaver-featured-card {
+  border-color: rgba(18, 100, 163, 0.42);
+  box-shadow: 0 18px 42px rgba(18, 100, 163, 0.14);
+  transform: translateY(-2px);
+}
+
+.heartsaver-featured-card::before {
+  content: "Most common";
+  display: inline-flex;
+  align-self: flex-start;
+  margin-bottom: 2px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(18, 100, 163, 0.1);
+  color: #0b4f82;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.heartsaver-delivery-card img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.heartsaver-course-flow-stack {
+  display: grid;
+  gap: 18px;
+}
+
+@media (max-width: 640px) {
+  .heartsaver-featured-card {
+    transform: none;
+  }
+
+  .heartsaver-delivery-card img {
+    width: 34px;
+    height: 34px;
+  }
+}
