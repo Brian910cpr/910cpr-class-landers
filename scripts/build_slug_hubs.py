@@ -1546,6 +1546,17 @@ def render_empty_state(page: dict[str, Any], tab: dict[str, Any], *, group_mode:
             "</div>"
         )
     onsite_href = group_request_href(tab.get("program") or page.get("hero_title"))
+    if str(page.get("slug") or "") == "heartsaver":
+        return (
+            "<div class='slug-empty slug-heartsaver-empty'>"
+            "<strong>Public dates are not listed for this delivery option right now.</strong>"
+            "<p>910CPR regularly teaches Heartsaver CPR, AED, First Aid, Pediatric, and workplace/public courses. More appointment times may be available as instructor availability opens, and group or workplace sessions can often be arranged around your schedule.</p>"
+            "<div class='slug-empty-actions'>"
+            f"<a class='button primary' href='{escape(onsite_href, quote=True)}'>Ask About Dates</a>"
+            f"<a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a>"
+            "</div>"
+            "</div>"
+        )
     return (
         "<div class='slug-empty'>"
         f"<strong>{EMPTY_FALLBACK_TITLE}</strong>"
@@ -2047,14 +2058,21 @@ def render_tab_panel(
         section_html.append(curated_html)
 
     if upcoming_sessions:
+        inventory_title = "Upcoming dates"
+        inventory_body = (
+            "Browse upcoming class times here. Some times are requestable and confirmed before a booking link is created."
+            if tab_requestable_offers
+            else "Browse upcoming class times here, then use Book This Class for the exact session you want."
+        )
+        if str(page.get("slug") or "") == "heartsaver":
+            inventory_title = "Next scheduled class" if len(upcoming_sessions) == 1 else "Upcoming dates"
+            inventory_body = (
+                "Real scheduled or appointment-backed Heartsaver options show first. Additional Heartsaver training times may be available through instructor availability, group training, or request-based scheduling."
+            )
         section_html.append(
             render_inventory_section(
-                "Upcoming dates",
-                (
-                    "Browse upcoming class times here. Some times are requestable and confirmed before a booking link is created."
-                    if tab_requestable_offers
-                    else "Browse upcoming class times here, then use Book This Class for the exact session you want."
-                ),
+                inventory_title,
+                inventory_body,
                 upcoming_sessions,
                 group_mode=group_mode,
                 limit=None,
@@ -2249,31 +2267,31 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
         return ""
     cards = [
         {
-            "href": "#hs-fa-cpr-aed-ip",
+            "href": "#heartsaver-first-aid-cpr-aed",
             "image": "images/HS-FA-CPR-AED.jpeg",
             "title": "Heartsaver First Aid CPR AED",
             "copy": "For workplace and community responders who need practical first aid, CPR, and AED training. Topics include choking, naloxone awareness, FAST stroke recognition, seizures, asthma, burns, heat illness, and common injury response.",
         },
         {
-            "href": "#hs-cpr-aed-ip",
+            "href": "#heartsaver-cpr-aed",
             "image": "images/HS-CPR-AED.jpeg",
             "title": "Heartsaver CPR AED",
             "copy": "A focused CPR/AED path for people who do not need the first aid module. It reinforces adult and child choking response and why breaths may matter in opioid-related respiratory arrest.",
         },
         {
-            "href": "/request_group_session.html?program=Heartsaver%20First%20Aid",
+            "href": "#heartsaver-first-aid",
             "image": "images/HS-FA.jpeg",
             "title": "Heartsaver First Aid",
             "copy": "First aid only, without CPR or AED. This course focuses on recognizing and responding to common injuries and illnesses such as bleeding, burns, allergic reactions, fainting, seizures, heat illness, and other everyday emergencies.",
         },
         {
-            "href": "#hs-pediatric-ip",
+            "href": "#heartsaver-pediatric-first-aid-cpr-aed",
             "image": "images/HS-PEDI-FA-CPR-AED.jpeg",
             "title": "Pediatric First Aid CPR AED",
             "copy": "For childcare, school, camp, and caregiver teams that need infant and child CPR, AED, choking, seizure, asthma, allergic reaction, heat illness, burn, and injury response practice.",
         },
         {
-            "href": "/request_group_session.html?program=Bloodborne%20Pathogens",
+            "href": "#heartsaver-bloodborne-pathogens",
             "image": "images/HS-BBP.jpeg",
             "title": "Bloodborne Pathogens",
             "copy": "Heartsaver Bloodborne Pathogens online course teaches employees how to protect themselves and others from being exposed to blood or blood-containing materials. This course is designed to meet OSHA requirements for bloodborne pathogens training when paired with site-specific instruction.",
@@ -2305,6 +2323,158 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
     </div>
   </section>
 """.rstrip()
+
+
+def heartsaver_delivery_label(tab: dict[str, Any]) -> str:
+    badge = normalize_space(tab.get("tab_badge"))
+    if "online" in badge.lower() or "skills" in badge.lower() or "blended" in badge.lower():
+        return "Blended / Online + Skills"
+    return "In-person"
+
+
+def render_heartsaver_delivery_choice(tab: dict[str, Any]) -> str:
+    icon = escape(hub_asset_url(tab.get("tab_icon"), "images/tab_classroom.png"), quote=True)
+    label = heartsaver_delivery_label(tab)
+    return f"""
+        <a class="course-jump-card heartsaver-delivery-card" href="#{escape(tab['id'], quote=True)}">
+          <img src="{icon}" alt="" loading="lazy" onerror="this.style.display='none'">
+          <strong>{escape(label)}</strong>
+          <span>{escape(tab.get('description_short') or tab.get('description') or '')}</span>
+          <b>View {escape(label.lower())} options</b>
+        </a>
+""".rstrip()
+
+
+def render_heartsaver_request_only_section(section: dict[str, str]) -> str:
+    actions = "".join(
+        f"<a class=\"button {escape(action['variant'], quote=True)}\" href=\"{escape(action['href'], quote=True)}\">{escape(action['label'])}</a>"
+        for action in section["actions"]
+    )
+    return f"""
+  <section class="section-box heartsaver-course-flow" id="{escape(section['id'], quote=True)}">
+    <div class="section-heading heartsaver-course-heading">
+      <div>
+        <div class="eyebrow">Course selected</div>
+        <h2>{escape(section['title'])}</h2>
+      </div>
+      <p class="section-copy">{escape(section['copy'])}</p>
+    </div>
+    <div class="slug-empty">
+      <strong>{escape(section['status_title'])}</strong>
+      <p>{escape(section['status_copy'])}</p>
+      <div class="slug-empty-actions">{actions}</div>
+    </div>
+  </section>
+""".rstrip()
+
+
+def render_heartsaver_course_flow(
+    page: dict[str, Any],
+    visible_tabs: list[tuple[dict[str, Any], list[dict[str, Any]]]],
+    *,
+    group_mode: bool,
+    requestable_offers: list[dict[str, Any]] | None = None,
+    appointment_seed_offers: list[dict[str, Any]] | None = None,
+) -> str:
+    if page.get("slug") != "heartsaver":
+        return ""
+
+    tab_lookup = {tab.get("id"): (tab, matched) for tab, matched in visible_tabs}
+    groups = [
+        {
+            "id": "heartsaver-first-aid-cpr-aed",
+            "title": "Heartsaver First Aid CPR AED",
+            "copy": "Choose this when your requirement includes first aid, CPR, and AED.",
+            "tab_ids": ["hs-fa-cpr-aed-ip", "hs-fa-cpr-aed-bl"],
+        },
+        {
+            "id": "heartsaver-cpr-aed",
+            "title": "Heartsaver CPR AED",
+            "copy": "Choose this when your requirement is CPR and AED only, without first aid.",
+            "tab_ids": ["hs-cpr-aed-ip", "hs-cpr-aed-bl"],
+        },
+        {
+            "id": "heartsaver-first-aid",
+            "title": "Heartsaver First Aid",
+            "copy": "First Aid only, no CPR or AED.",
+            "request_only": True,
+            "status_title": "First Aid-only is usually arranged by request.",
+            "status_copy": "Heartsaver First Aid-only training is usually arranged for workplaces, groups, or special requests. If you need First Aid as an individual, contact us and we will help you find the best option.",
+            "actions": [
+                {"label": "Ask about First Aid options", "href": "/request_group_session.html?program=Heartsaver%20First%20Aid", "variant": "primary"},
+                {"label": "Call 910-395-5193", "href": "tel:9103955193", "variant": "secondary"},
+            ],
+        },
+        {
+            "id": "heartsaver-pediatric-first-aid-cpr-aed",
+            "title": "Pediatric First Aid CPR AED",
+            "copy": "Choose this for childcare, school, camp, and caregiver requirements.",
+            "tab_ids": ["hs-pediatric-ip", "hs-pediatric-bl"],
+        },
+        {
+            "id": "heartsaver-bloodborne-pathogens",
+            "title": "Bloodborne Pathogens",
+            "copy": "Bloodborne pathogens training is usually coordinated for workplace or site-specific needs.",
+            "request_only": True,
+            "status_title": "Bloodborne Pathogens is handled by request.",
+            "status_copy": "Tell us what your workplace or compliance requirement says and we will help route the right Heartsaver Bloodborne Pathogens option.",
+            "actions": [
+                {"label": "Request Bloodborne Pathogens training", "href": "/request_group_session.html?program=Bloodborne%20Pathogens", "variant": "primary"},
+                {"label": "Call 910-395-5193", "href": "tel:9103955193", "variant": "secondary"},
+            ],
+        },
+    ]
+
+    rendered: list[str] = []
+    for group in groups:
+        if group.get("request_only"):
+            rendered.append(render_heartsaver_request_only_section(group))
+            continue
+
+        choices: list[str] = []
+        panels: list[str] = []
+        for tab_id in group.get("tab_ids", []):
+            tab_match = tab_lookup.get(tab_id)
+            if not tab_match:
+                continue
+            tab, matched = tab_match
+            choices.append(render_heartsaver_delivery_choice(tab))
+            panels.append(
+                render_tab_panel(
+                    page,
+                    tab,
+                    matched,
+                    active=True,
+                    group_mode=group_mode,
+                    requestable_offers=requestable_offers or [],
+                    appointment_seed_offers=appointment_seed_offers or [],
+                )
+            )
+
+        if not choices and not panels:
+            continue
+
+        rendered.append(
+            f"""
+  <section class="section-box heartsaver-course-flow" id="{escape(group['id'], quote=True)}">
+    <div class="section-heading heartsaver-course-heading">
+      <div>
+        <div class="eyebrow">Course selected</div>
+        <h2>{escape(group['title'])}</h2>
+      </div>
+      <p class="section-copy">{escape(group['copy'])}</p>
+    </div>
+    <div class="heartsaver-course-grid heartsaver-delivery-grid" aria-label="{escape(group['title'], quote=True)} delivery choices">
+      {''.join(choices)}
+    </div>
+    <div class="heartsaver-delivery-panels">
+      {''.join(panels)}
+    </div>
+  </section>
+""".rstrip()
+        )
+
+    return "\n".join(rendered)
 
 
 def render_brand_bar() -> str:
@@ -2570,8 +2740,33 @@ def render_page(
             )
         )
 
-    tabs_html = (
-        f"""
+    if page_slug == "heartsaver":
+        heartsaver_flow = render_heartsaver_course_flow(
+            page,
+            visible_tabs,
+            group_mode=group_mode,
+            requestable_offers=requestable_offers or [],
+            appointment_seed_offers=appointment_seed_offers or [],
+        )
+        tabs_html = (
+            f"""
+  <div id="slug-tabs-{escape(page['slug'], quote=True)}" class="heartsaver-course-flow-stack">
+    {heartsaver_flow}
+  </div>
+"""
+            if heartsaver_flow
+            else f"""
+  <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}">
+    <div class="slug-empty hub-empty-state">
+      <strong>{escape(EMPTY_FALLBACK_TITLE)}</strong>
+      <p>{escape(EMPTY_FALLBACK_BODY)}</p>
+    </div>
+  </section>
+"""
+        )
+    else:
+        tabs_html = (
+            f"""
   <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
     <div class="tabs hub-tabs">
       {''.join(buttons)}
@@ -2579,8 +2774,8 @@ def render_page(
     {''.join(panels)}
   </section>
 """
-        if visible_tabs
-        else f"""
+            if visible_tabs
+            else f"""
   <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
     <div class="slug-empty hub-empty-state">
       <strong>{escape(EMPTY_FALLBACK_TITLE)}</strong>
@@ -2588,7 +2783,7 @@ def render_page(
     </div>
   </section>
 """
-    )
+        )
 
     body = f"""
 <div class="card slug-hub-shell">

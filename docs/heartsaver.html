@@ -1,8 +1,8 @@
-<!-- BUILD_CODE: 2026-06-21 12:52 | scripts/build_slug_hubs.py | slug hub rebuild from docs/data/schedule_future.json -->
+<!-- BUILD_CODE: 2026-06-22 15:55 | scripts/build_slug_hubs.py | slug hub rebuild from docs/data/schedule_future.json -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="build-date" content="2026-06-21T12:52:37-04:00">
+<meta name="build-date" content="2026-06-22T15:55:53-04:00">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Heartsaver CPR Classes | 910CPR</title>
@@ -49,31 +49,31 @@
     </div>
     <div class="heartsaver-course-grid">
 
-        <a class="course-jump-card heartsaver-jump-card" href="#hs-fa-cpr-aed-ip">
+        <a class="course-jump-card heartsaver-jump-card" href="#heartsaver-first-aid-cpr-aed">
           <img src="images/HS-FA-CPR-AED.jpeg" alt="" loading="lazy">
           <strong>Heartsaver First Aid CPR AED</strong>
           <span>For workplace and community responders who need practical first aid, CPR, and AED training. Topics include choking, naloxone awareness, FAST stroke recognition, seizures, asthma, burns, heat illness, and common injury response.</span>
           <b>View course options</b>
         </a>
-        <a class="course-jump-card heartsaver-jump-card" href="#hs-cpr-aed-ip">
+        <a class="course-jump-card heartsaver-jump-card" href="#heartsaver-cpr-aed">
           <img src="images/HS-CPR-AED.jpeg" alt="" loading="lazy">
           <strong>Heartsaver CPR AED</strong>
           <span>A focused CPR/AED path for people who do not need the first aid module. It reinforces adult and child choking response and why breaths may matter in opioid-related respiratory arrest.</span>
           <b>View course options</b>
         </a>
-        <a class="course-jump-card heartsaver-jump-card" href="/request_group_session.html?program=Heartsaver%20First%20Aid">
+        <a class="course-jump-card heartsaver-jump-card" href="#heartsaver-first-aid">
           <img src="images/HS-FA.jpeg" alt="" loading="lazy">
           <strong>Heartsaver First Aid</strong>
           <span>First aid only, without CPR or AED. This course focuses on recognizing and responding to common injuries and illnesses such as bleeding, burns, allergic reactions, fainting, seizures, heat illness, and other everyday emergencies.</span>
           <b>View course options</b>
         </a>
-        <a class="course-jump-card heartsaver-jump-card" href="#hs-pediatric-ip">
+        <a class="course-jump-card heartsaver-jump-card" href="#heartsaver-pediatric-first-aid-cpr-aed">
           <img src="images/HS-PEDI-FA-CPR-AED.jpeg" alt="" loading="lazy">
           <strong>Pediatric First Aid CPR AED</strong>
           <span>For childcare, school, camp, and caregiver teams that need infant and child CPR, AED, choking, seizure, asthma, allergic reaction, heat illness, burn, and injury response practice.</span>
           <b>View course options</b>
         </a>
-        <a class="course-jump-card heartsaver-jump-card" href="/request_group_session.html?program=Bloodborne%20Pathogens">
+        <a class="course-jump-card heartsaver-jump-card" href="#heartsaver-bloodborne-pathogens">
           <img src="images/HS-BBP.jpeg" alt="" loading="lazy">
           <strong>Bloodborne Pathogens</strong>
           <span>Heartsaver Bloodborne Pathogens online course teaches employees how to protect themselves and others from being exposed to blood or blood-containing materials. This course is designed to meet OSHA requirements for bloodborne pathogens training when paired with site-specific instruction.</span>
@@ -82,11 +82,33 @@
     </div>
   </section>
 
-  <section class="section-box slug-tabs-block" id="slug-tabs-heartsaver" data-tabs>
-    <div class="tabs hub-tabs">
-      <button class='tab-btn active' data-program='First Aid / CPR / AED' data-tab-target='#hs-fa-cpr-aed-ip' type='button'><img class="hub-tab-icon" src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">First Aid + CPR + AED</span><span class="hub-tab-tag">In-Person</span></span></button><button class='tab-btn' data-program='First Aid / CPR / AED' data-tab-target='#hs-fa-cpr-aed-bl' type='button'><img class="hub-tab-icon" src="images/tab_blended.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">First Aid + CPR + AED</span><span class="hub-tab-tag">Online + Skills</span></span></button><button class='tab-btn' data-program='Heartsaver CPR AED' data-tab-target='#hs-cpr-aed-ip' type='button'><img class="hub-tab-icon" src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">CPR + AED Only</span><span class="hub-tab-tag">In-Person</span></span></button><button class='tab-btn' data-program='Heartsaver CPR AED' data-tab-target='#hs-cpr-aed-bl' type='button'><img class="hub-tab-icon" src="images/tab_blended.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">CPR + AED Only</span><span class="hub-tab-tag">Online + Skills</span></span></button><button class='tab-btn' data-program='Pediatric First Aid CPR AED In-Person' data-tab-target='#hs-pediatric-ip' type='button'><img class="hub-tab-icon" src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">Pediatric First Aid</span><span class="hub-tab-tag">In-Person</span></span></button><button class='tab-btn' data-program='Pediatric First Aid CPR AED Blended' data-tab-target='#hs-pediatric-bl' type='button'><img class="hub-tab-icon" src="images/tab_blended.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">Pediatric First Aid</span><span class="hub-tab-tag">Online + Skills</span></span></button>
+  <div id="slug-tabs-heartsaver" class="heartsaver-course-flow-stack">
+
+  <section class="section-box heartsaver-course-flow" id="heartsaver-first-aid-cpr-aed">
+    <div class="section-heading heartsaver-course-heading">
+      <div>
+        <div class="eyebrow">Course selected</div>
+        <h2>Heartsaver First Aid CPR AED</h2>
+      </div>
+      <p class="section-copy">Choose this when your requirement includes first aid, CPR, and AED.</p>
     </div>
-    <section class="tab-panel active" id="hs-fa-cpr-aed-ip" data-banner="{&quot;url&quot;: &quot;/heartsaver.html&quot;, &quot;label&quot;: &quot;See full Heartsaver First Aid CPR AED schedule&quot;}" data-keep-empty-tab="true">
+    <div class="heartsaver-course-grid heartsaver-delivery-grid" aria-label="Heartsaver First Aid CPR AED delivery choices">
+
+        <a class="course-jump-card heartsaver-delivery-card" href="#hs-fa-cpr-aed-ip">
+          <img src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'">
+          <strong>In-person</strong>
+          <span>First aid, CPR, and AED training for practical workplace and community response.</span>
+          <b>View in-person options</b>
+        </a>
+        <a class="course-jump-card heartsaver-delivery-card" href="#hs-fa-cpr-aed-bl">
+          <img src="images/tab_blended.png" alt="" loading="lazy" onerror="this.style.display='none'">
+          <strong>Blended / Online + Skills</strong>
+          <span>First aid, CPR, and AED training for practical workplace and community response.</span>
+          <b>View blended / online + skills options</b>
+        </a>
+    </div>
+    <div class="heartsaver-delivery-panels">
+      <section class="tab-panel active" id="hs-fa-cpr-aed-ip" data-banner="{&quot;url&quot;: &quot;/heartsaver.html&quot;, &quot;label&quot;: &quot;See full Heartsaver First Aid CPR AED schedule&quot;}" data-keep-empty-tab="true">
   <div class="slug-panel-card">
     <div class="slug-panel-head">
       <div>
@@ -97,8 +119,8 @@
     </div>
     <section class="slug-inventory-section slug-scheduled-section">
   <div class="slug-inventory-head">
-    <h3>Upcoming dates</h3>
-    <p>Browse upcoming class times here, then use Book This Class for the exact session you want.</p>
+    <h3>Next scheduled class</h3>
+    <p>Real scheduled or appointment-backed Heartsaver options show first. Additional Heartsaver training times may be available through instructor availability, group training, or request-based scheduling.</p>
   </div>
   <div class="slug-pill-list" data-initial-visible="1" data-reveal-increment="15" data-reveal-label="First Aid + CPR + AED">
     <article class="slug-pill slug-appointment-option" data-start="2026-07-04T12:00:00-04:00" data-end="2026-07-04T15:00:00-04:00">
@@ -124,7 +146,7 @@
   </div>
 </section>
   </div>
-</section><section class="tab-panel" id="hs-fa-cpr-aed-bl" data-banner="{&quot;url&quot;: &quot;/heartsaver.html&quot;, &quot;label&quot;: &quot;See full Heartsaver First Aid CPR AED schedule&quot;}" data-keep-empty-tab="true">
+</section><section class="tab-panel active" id="hs-fa-cpr-aed-bl" data-banner="{&quot;url&quot;: &quot;/heartsaver.html&quot;, &quot;label&quot;: &quot;See full Heartsaver First Aid CPR AED schedule&quot;}" data-keep-empty-tab="true">
   <div class="slug-panel-card">
     <div class="slug-panel-head">
       <div>
@@ -133,36 +155,37 @@
         <div class="slug-panel-description"><p class="slug-panel-copy">First aid, CPR, and AED training for practical workplace and community response.</p><p class="slug-panel-copy slug-panel-copy-extra">Choose this path when you want hands-on practice plus current first aid topics such as opioid emergencies, FAST stroke recognition, seizure safety, asthma inhaler assistance, heat illness cooling, burns, eye injuries, ticks, stings, poison ivy/oak, and pulse oximetry limitations.</p></div>
       </div>
     </div>
-    <section class="slug-inventory-section slug-scheduled-section">
-  <div class="slug-inventory-head">
-    <h3>Upcoming dates</h3>
-    <p>Browse upcoming class times here, then use Book This Class for the exact session you want.</p>
-  </div>
-  <div class="slug-pill-list" data-initial-visible="1" data-reveal-increment="15" data-reveal-label="First Aid + CPR + AED">
-    <article class="slug-pill slug-appointment-option" data-start="2026-06-22T13:00:00-04:00" data-end="2026-06-22T13:45:00-04:00">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUN</div>
-    <div class="slug-pill-day">22</div>
-    <div class="slug-pill-weekday">Mon</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Monday, June 22</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">1:00 PM - 1:45 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">NC - Wilmington: 4018 Shipyard Blvd @ 910CPR&#x27;s Office</span>
-      <span class="slug-pill-chip">Available class option</span>
-      <span class="slug-pill-chip">Instructor: Brian Ennis</span>
-    </div>
-    <div class="slug-pill-subtitle">AHA Heartsaver First Aid CPR AED - Blended</div>
-  </div>
-  <div class="slug-pill-actions">
-    <a class="button small primary" href="https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260671&amp;startTime=1%3A00%20PM&amp;courseId=329495">Check this date/time</a>
-  </div>
-</article>
+    <div class='slug-empty slug-heartsaver-empty'><strong>Public dates are not listed for this delivery option right now.</strong><p>910CPR regularly teaches Heartsaver CPR, AED, First Aid, Pediatric, and workplace/public courses. More appointment times may be available as instructor availability opens, and group or workplace sessions can often be arranged around your schedule.</p><div class='slug-empty-actions'><a class='button primary' href='/request_group_session.html?program=First%20Aid%20/%20CPR%20/%20AED'>Ask About Dates</a><a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a></div></div>
   </div>
 </section>
-  </div>
-</section><section class="tab-panel" id="hs-cpr-aed-ip" data-banner="{&quot;url&quot;: &quot;/heartsaver.html&quot;, &quot;label&quot;: &quot;See full Heartsaver CPR AED schedule&quot;}" data-keep-empty-tab="true">
+    </div>
+  </section>
+
+  <section class="section-box heartsaver-course-flow" id="heartsaver-cpr-aed">
+    <div class="section-heading heartsaver-course-heading">
+      <div>
+        <div class="eyebrow">Course selected</div>
+        <h2>Heartsaver CPR AED</h2>
+      </div>
+      <p class="section-copy">Choose this when your requirement is CPR and AED only, without first aid.</p>
+    </div>
+    <div class="heartsaver-course-grid heartsaver-delivery-grid" aria-label="Heartsaver CPR AED delivery choices">
+
+        <a class="course-jump-card heartsaver-delivery-card" href="#hs-cpr-aed-ip">
+          <img src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'">
+          <strong>In-person</strong>
+          <span>CPR and AED training without the added first aid component.</span>
+          <b>View in-person options</b>
+        </a>
+        <a class="course-jump-card heartsaver-delivery-card" href="#hs-cpr-aed-bl">
+          <img src="images/tab_blended.png" alt="" loading="lazy" onerror="this.style.display='none'">
+          <strong>Blended / Online + Skills</strong>
+          <span>CPR and AED training without the added first aid component.</span>
+          <b>View blended / online + skills options</b>
+        </a>
+    </div>
+    <div class="heartsaver-delivery-panels">
+      <section class="tab-panel active" id="hs-cpr-aed-ip" data-banner="{&quot;url&quot;: &quot;/heartsaver.html&quot;, &quot;label&quot;: &quot;See full Heartsaver CPR AED schedule&quot;}" data-keep-empty-tab="true">
   <div class="slug-panel-card">
     <div class="slug-panel-head">
       <div>
@@ -171,9 +194,9 @@
         <div class="slug-panel-description"><p class="slug-panel-copy">CPR and AED training without the added first aid component.</p><p class="slug-panel-copy slug-panel-copy-extra">This option keeps the focus on CPR, AED use, and choking response. It also reinforces that hands-only CPR is not always enough in opioid-related respiratory arrest, where CPR with breaths and naloxone access may matter.</p></div>
       </div>
     </div>
-    <div class='slug-empty'><strong>No selected times showing here, but you still have options.</strong><p>View the full schedule for additional dates, request a class time, or ask about on-site training for your team.</p><div class='slug-empty-actions'><a class='button primary' href='/request_group_session.html?program=Heartsaver%20CPR%20AED'>Ask About Dates</a><a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a></div></div>
+    <div class='slug-empty slug-heartsaver-empty'><strong>Public dates are not listed for this delivery option right now.</strong><p>910CPR regularly teaches Heartsaver CPR, AED, First Aid, Pediatric, and workplace/public courses. More appointment times may be available as instructor availability opens, and group or workplace sessions can often be arranged around your schedule.</p><div class='slug-empty-actions'><a class='button primary' href='/request_group_session.html?program=Heartsaver%20CPR%20AED'>Ask About Dates</a><a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a></div></div>
   </div>
-</section><section class="tab-panel" id="hs-cpr-aed-bl" data-banner="{&quot;url&quot;: &quot;/heartsaver.html&quot;, &quot;label&quot;: &quot;See full Heartsaver CPR AED schedule&quot;}" data-keep-empty-tab="true">
+</section><section class="tab-panel active" id="hs-cpr-aed-bl" data-banner="{&quot;url&quot;: &quot;/heartsaver.html&quot;, &quot;label&quot;: &quot;See full Heartsaver CPR AED schedule&quot;}" data-keep-empty-tab="true">
   <div class="slug-panel-card">
     <div class="slug-panel-head">
       <div>
@@ -182,9 +205,52 @@
         <div class="slug-panel-description"><p class="slug-panel-copy">CPR and AED training without the added first aid component.</p><p class="slug-panel-copy slug-panel-copy-extra">This option keeps the focus on CPR, AED use, and choking response. It also reinforces that hands-only CPR is not always enough in opioid-related respiratory arrest, where CPR with breaths and naloxone access may matter.</p></div>
       </div>
     </div>
-    <div class='slug-empty'><strong>No selected times showing here, but you still have options.</strong><p>View the full schedule for additional dates, request a class time, or ask about on-site training for your team.</p><div class='slug-empty-actions'><a class='button primary' href='/request_group_session.html?program=Heartsaver%20CPR%20AED'>Ask About Dates</a><a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a></div></div>
+    <div class='slug-empty slug-heartsaver-empty'><strong>Public dates are not listed for this delivery option right now.</strong><p>910CPR regularly teaches Heartsaver CPR, AED, First Aid, Pediatric, and workplace/public courses. More appointment times may be available as instructor availability opens, and group or workplace sessions can often be arranged around your schedule.</p><div class='slug-empty-actions'><a class='button primary' href='/request_group_session.html?program=Heartsaver%20CPR%20AED'>Ask About Dates</a><a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a></div></div>
   </div>
-</section><section class="tab-panel" id="hs-pediatric-ip" data-banner="{&quot;url&quot;: &quot;https://coastalcprtraining.enrollware.com/schedule#ct251545&quot;, &quot;label&quot;: &quot;See full pediatric Heartsaver schedule&quot;}" data-keep-empty-tab="true">
+</section>
+    </div>
+  </section>
+
+  <section class="section-box heartsaver-course-flow" id="heartsaver-first-aid">
+    <div class="section-heading heartsaver-course-heading">
+      <div>
+        <div class="eyebrow">Course selected</div>
+        <h2>Heartsaver First Aid</h2>
+      </div>
+      <p class="section-copy">First Aid only, no CPR or AED.</p>
+    </div>
+    <div class="slug-empty">
+      <strong>First Aid-only is usually arranged by request.</strong>
+      <p>Heartsaver First Aid-only training is usually arranged for workplaces, groups, or special requests. If you need First Aid as an individual, contact us and we will help you find the best option.</p>
+      <div class="slug-empty-actions"><a class="button primary" href="/request_group_session.html?program=Heartsaver%20First%20Aid">Ask about First Aid options</a><a class="button secondary" href="tel:9103955193">Call 910-395-5193</a></div>
+    </div>
+  </section>
+
+  <section class="section-box heartsaver-course-flow" id="heartsaver-pediatric-first-aid-cpr-aed">
+    <div class="section-heading heartsaver-course-heading">
+      <div>
+        <div class="eyebrow">Course selected</div>
+        <h2>Pediatric First Aid CPR AED</h2>
+      </div>
+      <p class="section-copy">Choose this for childcare, school, camp, and caregiver requirements.</p>
+    </div>
+    <div class="heartsaver-course-grid heartsaver-delivery-grid" aria-label="Pediatric First Aid CPR AED delivery choices">
+
+        <a class="course-jump-card heartsaver-delivery-card" href="#hs-pediatric-ip">
+          <img src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'">
+          <strong>In-person</strong>
+          <span>Pediatric first aid, CPR, AED, and emergency recognition for childcare and youth settings.</span>
+          <b>View in-person options</b>
+        </a>
+        <a class="course-jump-card heartsaver-delivery-card" href="#hs-pediatric-bl">
+          <img src="images/tab_blended.png" alt="" loading="lazy" onerror="this.style.display='none'">
+          <strong>Blended / Online + Skills</strong>
+          <span>Pediatric first aid, CPR, AED, and emergency recognition for childcare and youth settings.</span>
+          <b>View blended / online + skills options</b>
+        </a>
+    </div>
+    <div class="heartsaver-delivery-panels">
+      <section class="tab-panel active" id="hs-pediatric-ip" data-banner="{&quot;url&quot;: &quot;https://coastalcprtraining.enrollware.com/schedule#ct251545&quot;, &quot;label&quot;: &quot;See full pediatric Heartsaver schedule&quot;}" data-keep-empty-tab="true">
   <div class="slug-panel-card">
     <div class="slug-panel-head">
       <div>
@@ -195,7 +261,7 @@
     </div>
     <div class='slug-empty slug-suppressed-option'><strong>Pediatric First Aid</strong><p>Public dates are not currently listed for this option. This course may be available by request or for group training.</p><div class='slug-empty-actions'><a class='button primary' href='/courses/'>Help Me Choose</a><a class='button secondary' href='/request_group_session.html?program=Pediatric%20First%20Aid%20CPR%20AED%20In-Person'>Group Training Request</a><a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a></div></div>
   </div>
-</section><section class="tab-panel" id="hs-pediatric-bl" data-banner="{&quot;url&quot;: &quot;https://coastalcprtraining.enrollware.com/schedule#ct251545&quot;, &quot;label&quot;: &quot;See full pediatric Heartsaver schedule&quot;}" data-keep-empty-tab="true">
+</section><section class="tab-panel active" id="hs-pediatric-bl" data-banner="{&quot;url&quot;: &quot;https://coastalcprtraining.enrollware.com/schedule#ct251545&quot;, &quot;label&quot;: &quot;See full pediatric Heartsaver schedule&quot;}" data-keep-empty-tab="true">
   <div class="slug-panel-card">
     <div class="slug-panel-head">
       <div>
@@ -204,10 +270,27 @@
         <div class="slug-panel-description"><p class="slug-panel-copy">Pediatric first aid, CPR, AED, and emergency recognition for childcare and youth settings.</p><p class="slug-panel-copy slug-panel-copy-extra">Use this path when your school, camp, childcare, or caregiver requirement calls for pediatric training that includes infant/child CPR, choking response, seizure safety, asthma support, severe allergic reaction response, heat illness, burns, and injury care.</p></div>
       </div>
     </div>
-    <div class='slug-empty'><strong>No selected times showing here, but you still have options.</strong><p>View the full schedule for additional dates, request a class time, or ask about on-site training for your team.</p><div class='slug-empty-actions'><a class='button primary' href='/request_group_session.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended'>Ask About Dates</a><a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a></div></div>
+    <div class='slug-empty slug-heartsaver-empty'><strong>Public dates are not listed for this delivery option right now.</strong><p>910CPR regularly teaches Heartsaver CPR, AED, First Aid, Pediatric, and workplace/public courses. More appointment times may be available as instructor availability opens, and group or workplace sessions can often be arranged around your schedule.</p><div class='slug-empty-actions'><a class='button primary' href='/request_group_session.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended'>Ask About Dates</a><a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a></div></div>
   </div>
 </section>
+    </div>
   </section>
+
+  <section class="section-box heartsaver-course-flow" id="heartsaver-bloodborne-pathogens">
+    <div class="section-heading heartsaver-course-heading">
+      <div>
+        <div class="eyebrow">Course selected</div>
+        <h2>Bloodborne Pathogens</h2>
+      </div>
+      <p class="section-copy">Bloodborne pathogens training is usually coordinated for workplace or site-specific needs.</p>
+    </div>
+    <div class="slug-empty">
+      <strong>Bloodborne Pathogens is handled by request.</strong>
+      <p>Tell us what your workplace or compliance requirement says and we will help route the right Heartsaver Bloodborne Pathogens option.</p>
+      <div class="slug-empty-actions"><a class="button primary" href="/request_group_session.html?program=Bloodborne%20Pathogens">Request Bloodborne Pathogens training</a><a class="button secondary" href="tel:9103955193">Call 910-395-5193</a></div>
+    </div>
+  </section>
+  </div>
 
 
   <section class="top-trust below-inventory-trust" aria-label="910CPR trust and reviews">
@@ -284,6 +367,6 @@
 <script src="assets/live-sessions.js"></script>
 <script src="assets/session-expiry.js"></script>
 <script src="assets/hybrid-inventory.js"></script>
-<div class="build-stamp">Build: 2026-06-21 12:52</div>
+<div class="build-stamp">Build: 2026-06-22 15:55</div>
 </body>
 </html>
