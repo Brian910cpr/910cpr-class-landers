@@ -151,6 +151,37 @@ def infer_industries(course_name: str, description: str = "") -> list[str]:
     return sorted(industries)
 
 
+def infer_current_public_destination(context: str) -> str:
+    text = re.sub(r"<[^>]+>", " ", as_text(context, "")).lower()
+    text = re.sub(r"\s+", " ", text).strip()
+    if not text:
+        return "/classes/"
+    if any(term in text for term in ("uscg", "maritime", "coast guard", "elementary first aid")):
+        return "/uscg-elementary-first-aid-cpr.html"
+    if any(term in text for term in ("red cross", "arc ")):
+        return "/arc.html"
+    if any(term in text for term in ("hsi", "ashi")):
+        return "/hsi.html"
+    if "acls" in text:
+        return "/acls.html"
+    if "pals" in text:
+        return "/pals.html"
+    if "bls" in text or "basic life support" in text:
+        return "/bls.html"
+    if any(term in text for term in ("heartsaver", "cpr aed", "cpr/aed", "first aid cpr", "pediatric")):
+        return "/heartsaver.html"
+    if any(term in text for term in ("group", "onsite", "on-site", "workplace", "company training")):
+        return "/group-training.html"
+    return "/classes/"
+
+
+def class_or_fallback_url(session_id: str, *context_parts: str) -> str:
+    class_path = os.path.join(BASE_DIR, f"{quote(session_id)}.html")
+    if os.path.exists(class_path):
+        return f"/classes/{quote(session_id)}.html"
+    return infer_current_public_destination(" ".join(as_text(part, "") for part in context_parts))
+
+
 def normalize_session(raw: dict) -> dict:
     session_id = as_text(
         get_first(raw, ("session_id", "id", "sessionId", "class_id", "classId"))
@@ -221,7 +252,7 @@ def normalize_session(raw: dict) -> dict:
         "certifying_body_slug": slugify(certifying_body),
         "industries": [slugify(as_text(x)) for x in industries if as_text(x)],
         "description": description,
-        "url": f"/classes/{quote(session_id)}.html",
+        "url": class_or_fallback_url(session_id, course_name, description, certifying_body, city, location_name),
         "course_city_key": course_city_key,
     }
 

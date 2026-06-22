@@ -38,6 +38,25 @@ ENROLLWARE_SCHEDULE_URL = "https://coastalcprtraining.enrollware.com/site/coasta
 GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403"
 LOCAL_TZ = ZoneInfo("America/New_York")
 COURSE_PAGE_VISIBLE_BATCH = 10
+STALE_CLASS_INDEX_DIRS = (
+    CLASSES_DIR / "cities",
+    CLASSES_DIR / "certifying-bodies",
+    CLASSES_DIR / "courses",
+    CLASSES_DIR / "course-at-city",
+    CLASSES_DIR / "months",
+    CLASSES_DIR / "industries",
+)
+STALE_CLASS_INDEX_FALLBACK_DESTINATIONS = {
+    "/bls.html",
+    "/acls.html",
+    "/pals.html",
+    "/heartsaver.html",
+    "/arc.html",
+    "/hsi.html",
+    "/uscg-elementary-first-aid-cpr.html",
+    "/group-training.html",
+    "/classes/",
+}
 
 
 # ---------------------------------------------------------------------
@@ -56,6 +75,86 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }})(window,document,'script','dataLayer','{GTM_ID}');
 </script>
 <!-- End Google Tag Manager -->"""
+
+
+def strip_html(value: str) -> str:
+    value = re.sub(r"<[^>]+>", " ", str(value or ""))
+    return re.sub(r"\s+", " ", unescape(value)).strip()
+
+
+def infer_current_public_destination(context: str) -> str:
+    text = strip_html(context).lower()
+    if not text:
+        return "/classes/"
+    if any(term in text for term in ("uscg", "maritime", "coast guard", "elementary first aid")):
+        return "/uscg-elementary-first-aid-cpr.html"
+    if any(term in text for term in ("red cross", "arc ")):
+        return "/arc.html"
+    if any(term in text for term in ("hsi", "ashi")):
+        return "/hsi.html"
+    if "acls" in text:
+        return "/acls.html"
+    if "pals" in text:
+        return "/pals.html"
+    if "bls" in text or "basic life support" in text:
+        return "/bls.html"
+    if any(term in text for term in ("heartsaver", "cpr aed", "cpr/aed", "first aid cpr", "pediatric")):
+        return "/heartsaver.html"
+    if any(term in text for term in ("group", "onsite", "on-site", "workplace", "company training")):
+        return "/group-training.html"
+    return "/classes/"
+
+
+def contain_stale_class_index_links() -> dict[str, int]:
+    stats = {
+        "files_checked": 0,
+        "files_changed": 0,
+        "missing_numeric_class_links_rewritten": 0,
+        "fallback_class_index_links_corrected": 0,
+        "existing_numeric_class_links_kept": 0,
+    }
+    link_re = re.compile(
+        r"""<a(?P<attrs_before>[^>]*?)href=(?P<quote>["'])(?P<href>(?:/classes/(?P<session_id>\d+)\.html(?:#[^"']*)?|/bls\.html|/acls\.html|/pals\.html|/heartsaver\.html|/arc\.html|/hsi\.html|/uscg-elementary-first-aid-cpr\.html|/group-training\.html|/classes/))(?P=quote)(?P<attrs_after>[^>]*)>(?P<label>.*?)</a>""",
+        re.IGNORECASE | re.DOTALL,
+    )
+
+    for directory in STALE_CLASS_INDEX_DIRS:
+        if not directory.exists():
+            continue
+        for path in sorted(directory.rglob("*.html")):
+            stats["files_checked"] += 1
+            original = path.read_text(encoding="utf-8", errors="replace")
+
+            def replace(match: re.Match[str]) -> str:
+                href = match.group("href")
+                context = " ".join(
+                    [
+                        path.stem.replace("-", " "),
+                        strip_html(match.group("label")),
+                    ]
+                )
+                fallback_href = infer_current_public_destination(context)
+                if match.group("session_id"):
+                    target_path = href.split("#", 1)[0]
+                    target_file = DOCS_DIR / target_path.lstrip("/")
+                    if target_file.exists():
+                        stats["existing_numeric_class_links_kept"] += 1
+                        return match.group(0)
+                    stats["missing_numeric_class_links_rewritten"] += 1
+                elif href in STALE_CLASS_INDEX_FALLBACK_DESTINATIONS and href != fallback_href:
+                    stats["fallback_class_index_links_corrected"] += 1
+                else:
+                    return match.group(0)
+                return (
+                    f"<a{match.group('attrs_before')}href={match.group('quote')}{fallback_href}{match.group('quote')}"
+                    f"{match.group('attrs_after')}>{match.group('label')}</a>"
+                )
+
+            updated = link_re.sub(replace, original)
+            if updated != original:
+                path.write_text(updated, encoding="utf-8")
+                stats["files_changed"] += 1
+    return stats
 
 
 def render_gtm_body() -> str:
@@ -2119,6 +2218,8 @@ def build():
             encoding="utf-8",
         )
 
+    stale_class_index_containment = contain_stale_class_index_links()
+
     # -----------------------------------------------------------------
     # Sitemap
     # -----------------------------------------------------------------
@@ -2181,6 +2282,11 @@ def build():
             "course_pages": len([p for p in COURSES_DIR.glob("*.html") if p.name.lower() != "index.html"]),
             "location_pages": len(location_groups),
             "stale_location_pages_removed": removed_stale_location_pages,
+            "stale_class_index_files_checked": stale_class_index_containment["files_checked"],
+            "stale_class_index_files_changed": stale_class_index_containment["files_changed"],
+            "missing_numeric_class_links_rewritten": stale_class_index_containment["missing_numeric_class_links_rewritten"],
+            "fallback_class_index_links_corrected": stale_class_index_containment["fallback_class_index_links_corrected"],
+            "existing_numeric_class_links_kept": stale_class_index_containment["existing_numeric_class_links_kept"],
             "sitemap_urls": len(deduped_urls),
         },
     )
@@ -2196,6 +2302,12 @@ def build():
     print(f"Scanned course pages in: {COURSES_DIR}")
     print(f"Built {len(location_groups)} location pages in: {LOCATIONS_DIR}")
     print(f"Removed stale location pages: {removed_stale_location_pages}")
+    print(
+        "Contained stale class index links: "
+        f"{stale_class_index_containment['missing_numeric_class_links_rewritten']} rewritten, "
+        f"{stale_class_index_containment['fallback_class_index_links_corrected']} corrected, "
+        f"{stale_class_index_containment['existing_numeric_class_links_kept']} kept"
+    )
     print(f"Built sitemap: {SITEMAP_FILE}")
 
 
