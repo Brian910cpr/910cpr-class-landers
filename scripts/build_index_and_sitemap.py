@@ -46,6 +46,10 @@ STALE_CLASS_INDEX_DIRS = (
     CLASSES_DIR / "months",
     CLASSES_DIR / "industries",
 )
+STALE_CLASS_INDEX_FILES = (
+    DOCS_DIR / "topics" / "misc.html",
+    DOCS_DIR / "topics-year" / "misc-undated.html",
+)
 STALE_CLASS_INDEX_FALLBACK_DESTINATIONS = {
     "/bls.html",
     "/acls.html",
@@ -118,42 +122,46 @@ def contain_stale_class_index_links() -> dict[str, int]:
         re.IGNORECASE | re.DOTALL,
     )
 
+    paths: list[Path] = []
     for directory in STALE_CLASS_INDEX_DIRS:
         if not directory.exists():
             continue
-        for path in sorted(directory.rglob("*.html")):
-            stats["files_checked"] += 1
-            original = path.read_text(encoding="utf-8", errors="replace")
+        paths.extend(sorted(directory.rglob("*.html")))
+    paths.extend(path for path in STALE_CLASS_INDEX_FILES if path.exists())
 
-            def replace(match: re.Match[str]) -> str:
-                href = match.group("href")
-                context = " ".join(
-                    [
-                        path.stem.replace("-", " "),
-                        strip_html(match.group("label")),
-                    ]
-                )
-                fallback_href = infer_current_public_destination(context)
-                if match.group("session_id"):
-                    target_path = href.split("#", 1)[0]
-                    target_file = DOCS_DIR / target_path.lstrip("/")
-                    if target_file.exists():
-                        stats["existing_numeric_class_links_kept"] += 1
-                        return match.group(0)
-                    stats["missing_numeric_class_links_rewritten"] += 1
-                elif href in STALE_CLASS_INDEX_FALLBACK_DESTINATIONS and href != fallback_href:
-                    stats["fallback_class_index_links_corrected"] += 1
-                else:
+    for path in paths:
+        stats["files_checked"] += 1
+        original = path.read_text(encoding="utf-8", errors="replace")
+
+        def replace(match: re.Match[str]) -> str:
+            href = match.group("href")
+            context = " ".join(
+                [
+                    path.stem.replace("-", " "),
+                    strip_html(match.group("label")),
+                ]
+            )
+            fallback_href = infer_current_public_destination(context)
+            if match.group("session_id"):
+                target_path = href.split("#", 1)[0]
+                target_file = DOCS_DIR / target_path.lstrip("/")
+                if target_file.exists():
+                    stats["existing_numeric_class_links_kept"] += 1
                     return match.group(0)
-                return (
-                    f"<a{match.group('attrs_before')}href={match.group('quote')}{fallback_href}{match.group('quote')}"
-                    f"{match.group('attrs_after')}>{match.group('label')}</a>"
-                )
+                stats["missing_numeric_class_links_rewritten"] += 1
+            elif href in STALE_CLASS_INDEX_FALLBACK_DESTINATIONS and href != fallback_href:
+                stats["fallback_class_index_links_corrected"] += 1
+            else:
+                return match.group(0)
+            return (
+                f"<a{match.group('attrs_before')}href={match.group('quote')}{fallback_href}{match.group('quote')}"
+                f"{match.group('attrs_after')}>{match.group('label')}</a>"
+            )
 
-            updated = link_re.sub(replace, original)
-            if updated != original:
-                path.write_text(updated, encoding="utf-8")
-                stats["files_changed"] += 1
+        updated = link_re.sub(replace, original)
+        if updated != original:
+            path.write_text(updated, encoding="utf-8")
+            stats["files_changed"] += 1
     return stats
 
 
