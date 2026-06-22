@@ -53,6 +53,10 @@ echo === Build index and sitemap ===
 python -m scripts.build_index_and_sitemap || goto :fail
 
 echo.
+echo === Ensure analytics tags ===
+python -m scripts.ensure_analytics_tags || goto :fail
+
+echo.
 echo === Run unit tests ===
 python -m unittest discover tests || goto :fail
 
