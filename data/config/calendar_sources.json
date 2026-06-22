@@ -32,7 +32,6 @@
       "default_location_key": "shipyard",
       "availability_location_mode": "location_specific",
       "all_day_means_available": false,
-      "allow_overnight_availability": false,
       "allow_non_standard_time_increment": false,
       "missing_access_policy": "warn_and_produce_no_offerable_windows",
       "active": true
@@ -56,7 +55,6 @@
       "default_location_key": "shipyard",
       "availability_location_mode": "location_specific",
       "all_day_means_available": false,
-      "allow_overnight_availability": false,
       "allow_non_standard_time_increment": false,
       "missing_access_policy": "warn_and_produce_no_offerable_windows",
       "active": true
@@ -76,7 +74,6 @@
       "default_location_key": "shipyard",
       "availability_location_mode": "instructor_time_only",
       "all_day_means_available": false,
-      "allow_overnight_availability": false,
       "allow_non_standard_time_increment": false,
       "missing_access_policy": "warn_and_do_not_invent_availability",
       "recurring_business_hours_configured": false,

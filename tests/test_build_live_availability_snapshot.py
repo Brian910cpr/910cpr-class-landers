@@ -227,7 +227,7 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
         self.assertEqual([], blocks)
         self.assertEqual("invalid_time_range", blocked[0]["reason_code"])
 
-    def test_cross_midnight_timed_event_is_blocked_by_default(self) -> None:
+    def test_cross_midnight_timed_event_is_ingested(self) -> None:
         calendar_payload = {
             "calendar_sources": [{
                 "calendar_source_key": "brian_inverse",
@@ -241,6 +241,36 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
                 "brian_inverse": [{
                     "id": "overnight1",
                     "summary": "Available",
+                    "start": "2026-07-04T16:00:00+00:00",
+                    "end": "2026-07-05T04:00:00+00:00",
+                }]
+            }
+        }
+
+        blocks, blocked, stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
+
+        self.assertEqual([], blocked)
+        self.assertEqual(1, len(blocks))
+        self.assertEqual("2026-07-04", blocks[0]["date"])
+        self.assertEqual("2026-07-05", blocks[0]["end_date"])
+        self.assertEqual("2026-07-04T16:00:00", blocks[0]["start_datetime"])
+        self.assertEqual("2026-07-05T04:00:00", blocks[0]["end_datetime"])
+        self.assertNotIn("overnight_not_allowed", stats["blocked_all_reason_counts"])
+
+    def test_cross_midnight_non_standard_increment_is_still_blocked(self) -> None:
+        calendar_payload = {
+            "calendar_sources": [{
+                "calendar_source_key": "brian_inverse",
+                "owner_instructor_key": "brian",
+                "mode": "inverse_blocking",
+                "default_location_key": "shipyard",
+            }]
+        }
+        local_snapshot = {
+            "events_by_source": {
+                "brian_inverse": [{
+                    "id": "overnight-odd",
+                    "summary": "Available",
                     "start": "2026-07-04T16:01:00+00:00",
                     "end": "2026-07-05T03:59:00+00:00",
                 }]
@@ -250,40 +280,9 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
         blocks, blocked, stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
 
         self.assertEqual([], blocks)
-        self.assertEqual("overnight_not_allowed", blocked[0]["reason_code"])
-        self.assertIn("non_standard_time_increment", blocked[0]["all_reason_codes"])
-        self.assertEqual(1, stats["blocked_all_reason_counts"]["overnight_not_allowed"])
+        self.assertEqual("non_standard_time_increment", blocked[0]["reason_code"])
+        self.assertEqual(["non_standard_time_increment"], blocked[0]["all_reason_codes"])
         self.assertEqual(1, stats["blocked_all_reason_counts"]["non_standard_time_increment"])
-
-    def test_cross_midnight_timed_event_preserves_end_date_when_allowed(self) -> None:
-        calendar_payload = {
-            "calendar_sources": [{
-                "calendar_source_key": "brian_inverse",
-                "owner_instructor_key": "brian",
-                "mode": "inverse_blocking",
-                "default_location_key": "shipyard",
-                "allow_overnight_availability": True,
-            }]
-        }
-        local_snapshot = {
-            "events_by_source": {
-                "brian_inverse": [{
-                    "id": "overnight-ok",
-                    "summary": "Available",
-                    "start": "2026-07-04T16:00:00+00:00",
-                    "end": "2026-07-05T04:00:00+00:00",
-                }]
-            }
-        }
-
-        blocks, blocked, _stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
-
-        self.assertEqual([], blocked)
-        self.assertEqual(1, len(blocks))
-        self.assertEqual("2026-07-04", blocks[0]["date"])
-        self.assertEqual("2026-07-05", blocks[0]["end_date"])
-        self.assertEqual("2026-07-04T16:00:00", blocks[0]["start_datetime"])
-        self.assertEqual("2026-07-05T04:00:00", blocks[0]["end_datetime"])
 
     def test_non_standard_time_increment_is_blocked_by_default(self) -> None:
         calendar_payload = {

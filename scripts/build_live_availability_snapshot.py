@@ -116,8 +116,6 @@ def event_policy_reason_codes(source: dict[str, Any], event: dict[str, Any], sta
         reasons.append("all_day_without_time")
     if end <= start:
         reasons.append("invalid_time_range")
-    if end.date() != start.date() and not bool(source.get("allow_overnight_availability")):
-        reasons.append("overnight_not_allowed")
     if (
         explicit_time
         and not bool(source.get("allow_non_standard_time_increment"))
@@ -334,7 +332,6 @@ def build_snapshot(calendar_payload: Any, people_payload: Any, course_payload: A
                     "event_missing_parseable_start_or_end": "Calendar event did not include parseable start/end datetimes.",
                     "invalid_time_range": "Calendar event end is not after start; no offerable availability was generated.",
                     "all_day_without_time": "Calendar event has no explicit start/end time and all_day_means_available is false; no offerable availability was generated.",
-                    "overnight_not_allowed": "Calendar event crosses midnight and allow_overnight_availability is false; no offerable availability was generated.",
                     "non_standard_time_increment": "Calendar event start/end is not on a standard 15-minute increment and allow_non_standard_time_increment is false; no offerable availability was generated.",
                 }
                 blocked.append({
