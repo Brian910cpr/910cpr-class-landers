@@ -2,16 +2,22 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from collections import defaultdict
 from datetime import datetime
 from html import escape
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-
 ROOT = Path(__file__).resolve().parents[1]
+if __package__ in (None, ""):
+    sys.path.insert(0, str(ROOT))
+
+from scripts.stale_class_link_fallbacks import safe_class_detail_href
+
 DOCS_DIR = ROOT / "docs"
 SCHEDULE_FILE = DOCS_DIR / "data" / "schedule.json"
+SCHEDULE_FALLBACK_FILE = DOCS_DIR / "data" / "schedule_future.json"
 
 TOPICS_DIR = DOCS_DIR / "topics"
 TOPICS_YEAR_DIR = DOCS_DIR / "topics-year"
@@ -161,7 +167,15 @@ def format_session_line(session: dict) -> str:
         date_bits.append(display_date(dt))
         date_bits.append(display_time(dt))
     location = escape(clean_location(session.get("location_display") or session.get("location_name")))
-    details_path = f"/classes/{session.get('session_id')}.html"
+    details_path = safe_class_detail_href(
+        session.get("session_id"),
+        DOCS_DIR,
+        session.get("course_name"),
+        session.get("description"),
+        session.get("certifying_body"),
+        session.get("location_display"),
+        session.get("location_name"),
+    )
     register_url = str(session.get("registration_url") or "").strip()
     detail_link = f'<a href="{details_path}">Details</a>'
     register_link = f' | <a href="{escape(register_url)}">Book This Class</a>' if register_url else ""
@@ -436,7 +450,8 @@ def year_page(year: str, grouped: dict[str, list[dict]], canonical_path: str) ->
 
 
 def load_sessions() -> list[dict]:
-    data = json.loads(SCHEDULE_FILE.read_text(encoding="utf-8"))
+    source = SCHEDULE_FILE if SCHEDULE_FILE.exists() else SCHEDULE_FALLBACK_FILE
+    data = json.loads(source.read_text(encoding="utf-8"))
     return data.get("sessions") or []
 
 

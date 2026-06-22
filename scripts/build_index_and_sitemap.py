@@ -12,6 +12,7 @@ if __package__ in (None, ""):
 
 from scripts.build_status import BuildStatusReporter
 from scripts.build_course_landers import COURSE_SESSION_ALIASES, TITLE_OVERRIDES
+from scripts.stale_class_link_fallbacks import infer_current_public_destination
 from supervisor.status_snapshot import write_status_snapshot
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -84,29 +85,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 def strip_html(value: str) -> str:
     value = re.sub(r"<[^>]+>", " ", str(value or ""))
     return re.sub(r"\s+", " ", unescape(value)).strip()
-
-
-def infer_current_public_destination(context: str) -> str:
-    text = strip_html(context).lower()
-    if not text:
-        return "/classes/"
-    if any(term in text for term in ("uscg", "maritime", "coast guard", "elementary first aid")):
-        return "/uscg-elementary-first-aid-cpr.html"
-    if any(term in text for term in ("red cross", "arc ")):
-        return "/arc.html"
-    if any(term in text for term in ("hsi", "ashi")):
-        return "/hsi.html"
-    if "acls" in text:
-        return "/acls.html"
-    if "pals" in text:
-        return "/pals.html"
-    if "bls" in text or "basic life support" in text:
-        return "/bls.html"
-    if any(term in text for term in ("heartsaver", "cpr aed", "cpr/aed", "first aid cpr", "pediatric")):
-        return "/heartsaver.html"
-    if any(term in text for term in ("group", "onsite", "on-site", "workplace", "company training")):
-        return "/group-training.html"
-    return "/classes/"
 
 
 def contain_stale_class_index_links() -> dict[str, int]:
