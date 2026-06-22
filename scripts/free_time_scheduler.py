@@ -1708,11 +1708,36 @@ def generate_reports(
     REPORT_MD_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def proposed_session_hub_link(session: dict[str, Any]) -> tuple[str, str]:
+    context = " ".join(
+        str(session.get(key, ""))
+        for key in ("course_title", "course_key", "page_slug", "program_key")
+    ).lower()
+    if any(term in context for term in ("uscg", "maritime", "coast guard", "elementary first aid")):
+        return "/uscg-elementary-first-aid-cpr.html", "See USCG / maritime options"
+    if any(term in context for term in ("red cross", " arc ", "arc-", "arc_")):
+        return "/arc.html", "See available Red Cross classes"
+    if any(term in context for term in ("hsi", "ashi")):
+        return "/hsi.html", "See available HSI classes"
+    if "acls" in context:
+        return "/acls.html", "View current ACLS options"
+    if "pals" in context:
+        return "/pals.html", "View current PALS options"
+    if any(term in context for term in ("heartsaver", "cpr aed", "first aid cpr aed", "pediatric")):
+        return "/heartsaver.html", "See available Heartsaver classes"
+    if any(term in context for term in ("group", "onsite", "workplace")):
+        return "/group-training.html", "View group training options"
+    if any(term in context for term in ("bls", "basic life support", "heartcode")):
+        return "/bls.html", "View current BLS options"
+    return "/classes/", "View current class options"
+
+
 def render_button(session: dict[str, Any]) -> str:
     url = session.get("enrollware_enroll_url")
     if url:
         return f'<a class="button" href="{html.escape(url)}">Book This Class</a>'
-    return '<button class="button disabled" disabled>Proposed Time - Not Yet Bookable</button>'
+    hub_url, label = proposed_session_hub_link(session)
+    return f'<a class="button" href="{html.escape(hub_url)}">{html.escape(label)}</a>'
 
 
 def page_shell(title: str, body: str) -> str:
