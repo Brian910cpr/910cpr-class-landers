@@ -1,7 +1,7 @@
 import re
 import unittest
 
-from scripts.build_slug_hubs import render_heartsaver_course_flow
+from scripts.build_slug_hubs import public_inventory_decision, render_heartsaver_course_flow
 
 
 def _section_start_tag(html, section_id):
@@ -19,6 +19,21 @@ def _section_chunk(html, section_id, next_section_id=None):
 
 
 class HeartsaverDeliveryBucketTests(unittest.TestCase):
+    def test_enrollware_ical_shipyard_room_location_is_public_inventory(self):
+        page = {
+            "slug": "heartsaver",
+            "approved_public_locations": ["Wilmington; Shipyard Blvd"],
+        }
+        session = {
+            "course_id": "329495",
+            "course_name": "AHA Heartsaver First Aid CPR AED - Blended",
+            "course_subtitle": "",
+            "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+            "location_display": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        }
+
+        self.assertEqual((True, "included:public_inventory"), public_inventory_decision(session, page))
+
     def test_blended_offer_stays_out_of_in_person_delivery_panel(self):
         page = {"slug": "heartsaver", "hero_title": "Heartsaver"}
         in_person_tab = {

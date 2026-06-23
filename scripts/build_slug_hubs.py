@@ -762,6 +762,23 @@ def approved_locations_for_page(page: dict[str, Any]) -> set[str]:
     }
 
 
+def location_matches_approved(location: str, approved_locations: set[str]) -> bool:
+    location_key = normalize_match_text(location)
+    if not approved_locations:
+        return False
+    for approved in approved_locations:
+        approved_key = normalize_match_text(approved)
+        if not approved_key:
+            continue
+        if location_key == approved_key or approved_key in location_key or location_key in approved_key:
+            return True
+        approved_tokens = set(approved_key.split())
+        location_tokens = set(location_key.split())
+        if approved_tokens and approved_tokens.issubset(location_tokens):
+            return True
+    return False
+
+
 def public_inventory_decision(session: dict[str, Any], page: dict[str, Any]) -> tuple[bool, str]:
     location_raw = normalize_space(session.get("location_display") or session.get("location_name"))
     course_name = normalize_space(session.get("course_name"))
@@ -772,12 +789,12 @@ def public_inventory_decision(session: dict[str, Any], page: dict[str, Any]) -> 
     if not course_allows_public_inventory(course_token):
         return False, f"excluded:course_visibility_{course_visibility_state(course_token)}"
 
-    if not has_public_raw_location(session):
-        return False, "excluded:raw_location_not_public"
-
     approved_locations = approved_locations_for_page(page)
-    if approved_locations and location_clean not in approved_locations:
+    approved_location_match = location_matches_approved(location_clean, approved_locations)
+    if approved_locations and not approved_location_match:
         return False, "excluded:unapproved_location"
+    if not has_public_raw_location(session) and not approved_location_match:
+        return False, "excluded:raw_location_not_public"
 
     if any(term in haystack for term in PRIVATE_HINTS):
         return False, "excluded:private_or_custom_signal"
