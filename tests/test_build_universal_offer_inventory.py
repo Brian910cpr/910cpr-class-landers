@@ -86,6 +86,10 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                 "minimum_visible_offers_per_course": 2,
                 "minimum_visible_offer_lookahead_days": 60,
                 "minimum_lead_hours": 24,
+                "enable_planned_visibility": True,
+                "planned_visibility_audit_only": True,
+                "default_first_public_lead_hours": 24,
+                "course_family_first_public_lead_hours": {},
                 "max_request_block_offers_per_course": 3,
                 "max_block_offers_per_course": 3,
                 "max_request_block_offers_per_course_per_week": 2,
@@ -177,6 +181,30 @@ class UniversalOfferInventoryTests(unittest.TestCase):
         self.assertEqual(2, payload["summary"]["request_only_block_offers_generated"])
         self.assertIn("max_start_times_per_block_per_page", payload["summary"]["rejections_by_reason"])
         self.assertEqual(1, payload["summary"]["stack_groups_created"])
+
+    def test_inside_lead_time_becomes_planned_visibility_candidate(self) -> None:
+        loaded = self.base_loaded()
+        start = datetime.now() + timedelta(hours=2)
+        loaded["dynamic_offers_preview"]["offers"][0].update({
+            "date": start.date().isoformat(),
+            "start_time": start.strftime("%H:%M"),
+            "appointment_display_start": start.isoformat(),
+            "appointment_display_end": (start + timedelta(minutes=45)).isoformat(),
+            "scheduler_consumption_start": start.isoformat(),
+            "scheduler_consumption_end": (start + timedelta(minutes=90)).isoformat(),
+        })
+
+        payload = engine.build_inventory(loaded)
+
+        self.assertEqual(0, payload["summary"]["request_only_block_offers_generated"])
+        self.assertEqual(1, payload["summary"]["planned_future_visibility_count"])
+        self.assertNotIn("inside_minimum_lead_time", payload["summary"]["rejections_by_reason"])
+        planned = payload["planned_future_visibility"][0]
+        self.assertEqual("planned_future_visibility", planned["candidate_state"])
+        self.assertEqual("inside_minimum_lead_time", planned["not_public_reason"])
+        self.assertTrue(planned["would_otherwise_fit"])
+        self.assertTrue(planned["request_only_fallback_available"])
+        self.assertFalse(planned["deterministic_appointment_url_available"])
 
 
 if __name__ == "__main__":

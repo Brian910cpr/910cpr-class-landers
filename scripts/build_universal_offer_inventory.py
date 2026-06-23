@@ -388,6 +388,68 @@ def minimum_visible_rejection_context(
     }
 
 
+def first_public_at_for_candidate(start_dt: datetime, family: str, policy: dict[str, Any]) -> tuple[datetime, int]:
+    family_hours = policy.get("course_family_first_public_lead_hours", {}) if isinstance(policy, dict) else {}
+    lead_hours = None
+    if isinstance(family_hours, dict) and clean_text(family_hours.get(family)):
+        lead_hours = int(family_hours.get(family) or 0)
+    if lead_hours is None:
+        raw_default = policy.get("default_first_public_lead_hours", policy.get("minimum_lead_hours", 0))
+        lead_hours = int(raw_default or 0)
+    return start_dt - timedelta(hours=lead_hours), lead_hours
+
+
+def optimizer_score_fields(
+    *,
+    block_id: str,
+    course_id: str,
+    course_key_value: str,
+    family: str,
+    hub_slug: str,
+    tab_ids: list[str],
+    counted_items: list[dict[str, Any]],
+    min_visible: int,
+    locks: list[dict[str, Any]],
+    offer: dict[str, Any],
+    policy: dict[str, Any],
+    appointment_url_available: bool,
+    request_only: bool,
+) -> dict[str, Any]:
+    minute = clean_text(offer.get("start_time"))[-2:]
+    preferred_minutes = [clean_text(item) for item in policy.get("preferred_start_minutes", []) if clean_text(item)]
+    compatibility_group = compatibility_group_for_course_key(course_key_value, policy)
+    same_location = any(
+        normalize_key(lock.get("location")) == normalize_key(offer.get("offer_location") or offer.get("location"))
+        for lock in locks
+    )
+    fields = {
+        "fits_existing_stack": compatibility_group != UNKNOWN,
+        "fills_low_inventory_course": len(counted_items) < min_visible,
+        "same_location_as_existing_anchor": same_location,
+        "clean_customer_start_time": minute in {"00", "15", "30", "45"} and (not preferred_minutes or minute in preferred_minutes),
+        "supports_multiple_courses": compatibility_group != UNKNOWN,
+        "avoids_one_off_low_value_class": compatibility_group != UNKNOWN or family in {"BLS", "ACLS", "PALS", "Heartsaver"},
+        "appointment_url_available": appointment_url_available,
+        "request_only_penalty": request_only,
+    }
+    score = sum(1 for key, value in fields.items() if value and key != "request_only_penalty")
+    if fields["request_only_penalty"]:
+        score -= 1
+    return {
+        "score": score,
+        "score_fields": fields,
+        "score_context": {
+            "block_id": block_id,
+            "course_id": course_id,
+            "course_key": course_key_value,
+            "hub_slug": hub_slug,
+            "delivery_bucket": delivery_bucket(tab_ids),
+            "visible_inventory_count": len(counted_items),
+            "minimum_visible_threshold": min_visible,
+        },
+    }
+
+
 def offer_sort_key(offer: dict[str, Any], preferred_minutes: list[str]) -> tuple[str, int, str, str]:
     minute = clean_text(offer.get("start_time"))[-2:]
     try:
@@ -481,6 +543,7 @@ def build_stack_trace(
     dynamic_payload: Any,
     accepted_offers: list[dict[str, Any]],
     rejections: list[dict[str, Any]],
+    planned_offers: list[dict[str, Any]],
     appointment_offers: list[dict[str, Any]],
     schedule_payload: Any,
     policy: dict[str, Any],
@@ -629,8 +692,21 @@ def build_stack_trace(
             for block in blocks.values()
         },
         "accepted_offers": accepted_offers,
+        "public_now_offers": [
+            offer for offer in accepted_offers
+            if clean_text(offer.get("candidate_state")) in {"", "public_now"}
+        ],
+        "planned_future_visibility_offers": planned_offers,
         "rejected_offers": trace_rejections,
         "rejection_histogram": dict(Counter(clean_text(item.get("reason_code")) or UNKNOWN for item in rejections).most_common()),
+        "candidate_state_counts": {
+            "public_now": len(accepted_offers),
+            "planned_future_visibility": len(planned_offers),
+            "rejected": len(rejections),
+        },
+        "planned_future_visibility_by_course": dict(Counter(clean_text(item.get("course_title")) or UNKNOWN for item in planned_offers).most_common()),
+        "planned_future_visibility_by_page": dict(Counter(clean_text(item.get("target_page") or item.get("hub_slug")) or UNKNOWN for item in planned_offers).most_common()),
+        "planned_future_visibility_reasons": dict(Counter(clean_text(item.get("not_public_reason")) or UNKNOWN for item in planned_offers).most_common()),
         "minimum_visible_offer_rejections": minimum_visible_rejections,
         "minimum_visible_rejection_groups": {
             key: {
@@ -715,7 +791,7 @@ def build_appointment_url_offers(
     hubs: dict[str, list[dict[str, str]]],
     visibility_policy: Any,
     policy: dict[str, Any],
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     offers: list[dict[str, Any]] = []
     rejections: list[dict[str, Any]] = []
     previews = seed_preview_payload.get("previews", []) if isinstance(seed_preview_payload, dict) else []
@@ -747,15 +823,25 @@ def build_appointment_url_offers(
             continue
         hub_slug, tab_ids = hub_and_tabs_for_course(course_id, course, course_map_record, hubs, policy)
         block_id = clean_text(preview.get("source_availability_window")) or clean_text(preview.get("source_offer_id")) or clean_text(preview.get("seed_id"))
-        offers.append({
+        course_key_value = course_key(course, course_map_record)
+        start_dt = parse_dt(preview.get("scheduler_consumption_start") or preview.get("appointment_display_start"))
+        first_public_at, first_public_lead_hours = first_public_at_for_candidate(
+            start_dt or datetime.now(),
+            course_family(course, course_map_record),
+            policy,
+        )
+        built_offer = {
             "public_offer_id": f"appointment-{clean_text(preview.get('seed_id')) or clean_text(preview.get('source_offer_id'))}",
             "offer_type": "appointment_url",
+            "candidate_state": "public_now",
+            "first_public_at": first_public_at.isoformat(),
+            "first_public_lead_hours": first_public_lead_hours,
             "cta_label": policy.get("default_appointment_cta_label", "Check this date/time"),
             "course_id": course_id,
-            "course_key": course_key(course, course_map_record),
+            "course_key": course_key_value,
             "course_title": clean_text(preview.get("course_title")) or course_title(course, course_map_record),
             "course_family": course_family(course, course_map_record),
-            "stacking_compatibility_group": compatibility_group_for_course_key(course_key(course, course_map_record), policy),
+            "stacking_compatibility_group": compatibility_group_for_course_key(course_key_value, policy),
             "hub_slug": hub_slug,
             "tab_ids": tab_ids,
             "date": preview.get("date"),
@@ -776,7 +862,26 @@ def build_appointment_url_offers(
             "display_note": "Available appointment-backed class option.",
             "public_schedule_row_created": False,
             "standalone_class_lander_created": False,
-        })
+        }
+        built_offer.update(optimizer_score_fields(
+            block_id=block_id,
+            course_id=course_id,
+            course_key_value=course_key_value,
+            family=course_family(course, course_map_record),
+            hub_slug=hub_slug,
+            tab_ids=tab_ids,
+            counted_items=[],
+            min_visible=0,
+            locks=[],
+            offer={
+                "start_time": preview.get("start_time"),
+                "offer_location": preview.get("location"),
+            },
+            policy=policy,
+            appointment_url_available=True,
+            request_only=False,
+        ))
+        offers.append(built_offer)
     return offers, rejections
 
 
@@ -817,6 +922,8 @@ def build_request_block_offers(
     max_start_times_per_block_per_page = int(policy.get("max_start_times_per_block_per_page", 3) or 3)
     preferred_minutes = [clean_text(item) for item in policy.get("preferred_start_minutes", []) if clean_text(item)]
     minimum_lead_hours = int(policy.get("minimum_lead_hours", 0) or 0)
+    enable_planned_visibility = bool(policy.get("enable_planned_visibility", False))
+    planned_visibility_audit_only = bool(policy.get("planned_visibility_audit_only", True))
     lookahead_raw = policy.get("minimum_visible_offer_lookahead_days")
     minimum_visible_lookahead_days = int(lookahead_raw) if clean_text(lookahead_raw) else None
     earliest_start = datetime.now() + timedelta(hours=minimum_lead_hours)
@@ -828,6 +935,7 @@ def build_request_block_offers(
     block_page_start_counts: Counter[tuple[str, str, str]] = Counter()
     locks = selected_seed_locks(appointment_offers)
     built: list[dict[str, Any]] = []
+    planned: list[dict[str, Any]] = []
     rejections: list[dict[str, Any]] = []
 
     sorted_offers = sorted(
@@ -860,9 +968,6 @@ def build_request_block_offers(
         start_dt = parse_dt(offer.get("scheduler_consumption_start") or offer.get("appointment_display_start") or offer.get("start_datetime"))
         if not start_dt:
             rejections.append({**context, "reason_code": "missing_start_datetime"})
-            continue
-        if start_dt < earliest_start:
-            rejections.append({**context, "reason_code": "inside_minimum_lead_time"})
             continue
         hub_slug, tab_ids = hub_and_tabs_for_course(course_id, course, course_map_record, hubs, policy)
         course_key_value = course_key(course, course_map_record)
@@ -921,9 +1026,80 @@ def build_request_block_offers(
             continue
 
         title = clean_text(offer.get("course_title")) or course_title(course, course_map_record)
+        first_public_at, first_public_lead_hours = first_public_at_for_candidate(start_dt, family, policy)
+        score = optimizer_score_fields(
+            block_id=block_id,
+            course_id=course_id,
+            course_key_value=course_key_value,
+            family=family,
+            hub_slug=hub_slug,
+            tab_ids=tab_ids,
+            counted_items=counted_items,
+            min_visible=min_visible,
+            locks=locks,
+            offer=offer,
+            policy=policy,
+            appointment_url_available=False,
+            request_only=True,
+        )
+        if start_dt < earliest_start:
+            lead_context = {
+                **context,
+                "reason_code": "inside_minimum_lead_time",
+                "minimum_lead_hours": minimum_lead_hours,
+                "candidate_start": start_dt.isoformat(),
+                "first_public_at": first_public_at.isoformat(),
+                "first_public_lead_hours": first_public_lead_hours,
+                "would_otherwise_fit": True,
+                "deterministic_appointment_url_available": False,
+                "request_only_fallback_available": True,
+                **score,
+            }
+            if enable_planned_visibility:
+                planned.append({
+                    "planned_offer_id": f"planned-{clean_text(offer.get('offer_id'))}",
+                    "candidate_state": "planned_future_visibility",
+                    "not_public_reason": "inside_minimum_lead_time",
+                    "planned_visibility_audit_only": planned_visibility_audit_only,
+                    "course_id": course_id,
+                    "course_key": course_key_value,
+                    "course_title": title,
+                    "course_family": family,
+                    "stacking_compatibility_group": compatibility_group_for_course_key(course_key_value, policy),
+                    "hub_slug": hub_slug,
+                    "target_page": hub_slug,
+                    "tab_ids": tab_ids,
+                    "delivery_bucket": delivery_bucket(tab_ids),
+                    "date": offer.get("date"),
+                    "start_time": offer.get("start_time"),
+                    "start_datetime": offer.get("appointment_display_start") or offer.get("start_datetime"),
+                    "end_datetime": offer.get("appointment_display_end") or offer.get("end_datetime"),
+                    "scheduler_consumption_start": offer.get("scheduler_consumption_start"),
+                    "scheduler_consumption_end": offer.get("scheduler_consumption_end"),
+                    "location_name": clean_text(offer.get("offer_location") or offer.get("location")),
+                    "instructor_display_name": clean_text(offer.get("instructor_display_name")),
+                    "source_offer_id": offer.get("offer_id"),
+                    "source_availability_window": offer.get("source_availability_window"),
+                    "stack_group_id": f"stack-{normalize_key(block_id)}",
+                    "stack_candidate_role": "planned_request_only_availability",
+                    "minimum_lead_hours": minimum_lead_hours,
+                    "candidate_start": start_dt.isoformat(),
+                    "first_public_at": first_public_at.isoformat(),
+                    "first_public_lead_hours": first_public_lead_hours,
+                    "would_otherwise_fit": True,
+                    "deterministic_appointment_url_available": False,
+                    "request_only_fallback_available": True,
+                    **score,
+                })
+            else:
+                rejections.append(lead_context)
+            continue
         built_offer = {
             "public_offer_id": f"request-{clean_text(offer.get('offer_id'))}",
             "offer_type": "request_only_block",
+            "candidate_state": "public_now",
+            "first_public_at": first_public_at.isoformat(),
+            "first_public_lead_hours": first_public_lead_hours,
             "cta_label": policy.get("default_request_cta_label", "Ask about this time"),
             "course_id": course_id,
             "course_key": course_key(course, course_map_record),
@@ -949,6 +1125,7 @@ def build_request_block_offers(
             "display_note": policy.get("request_offer_copy"),
             "public_schedule_row_created": False,
             "standalone_class_lander_created": False,
+            **score,
         }
         built.append(built_offer)
         visible_inventory.setdefault(visible_key, []).append(visible_item(
@@ -974,7 +1151,7 @@ def build_request_block_offers(
             "location": built_offer.get("location_name"),
             "instructor": built_offer.get("instructor_display_name"),
         })
-    return built, rejections
+    return built, rejections, planned
 
 
 def grouped_counts(offers: list[dict[str, Any]], key: str) -> dict[str, int]:
@@ -995,6 +1172,7 @@ def render_report(payload: dict[str, Any]) -> str:
         f"- Deterministic appointment URL offers generated: {summary['appointment_url_offers_generated']}",
         f"- Request-only block offers generated: {summary['request_only_block_offers_generated']}",
         f"- Total hub-only generated offers: {summary['total_generated_offers']}",
+        f"- Planned future visibility candidates: {summary.get('planned_future_visibility_count', 0)}",
         f"- Stack groups created: {summary.get('stack_groups_created', 0)}",
         "",
         "## Offers By Hub",
@@ -1029,6 +1207,18 @@ def render_report(payload: dict[str, Any]) -> str:
             )
     else:
         lines.append("- None")
+    lines.extend(["", "## Planned Future Visibility", ""])
+    planned = payload.get("planned_future_visibility", [])
+    if planned:
+        lines.extend(["| Course | Page | Date | Time | First Public At | Reason | Score |", "| --- | --- | --- | --- | --- | --- | ---: |"])
+        for offer in planned[:30]:
+            lines.append(
+                f"| {offer.get('course_title')} | {offer.get('target_page') or offer.get('hub_slug')} | "
+                f"{offer.get('date')} | {offer.get('start_time')} | {offer.get('first_public_at')} | "
+                f"{offer.get('not_public_reason')} | {offer.get('score', 0)} |"
+            )
+    else:
+        lines.append("- None")
     lines.append("")
     return "\n".join(lines)
 
@@ -1046,6 +1236,7 @@ def render_stack_trace_report(trace: dict[str, Any], summary: dict[str, Any]) ->
         f"- Appointment-backed offers generated: {summary.get('appointment_url_offers_generated', 0)}",
         f"- Request-only offers generated: {summary.get('request_only_block_offers_generated', 0)}",
         f"- Total generated hub-only offers: {summary.get('total_generated_offers', 0)}",
+        f"- Planned future visibility candidates: {summary.get('planned_future_visibility_count', 0)}",
         "",
         "## Rejection Histogram",
         "",
@@ -1053,6 +1244,26 @@ def render_stack_trace_report(trace: dict[str, Any], summary: dict[str, Any]) ->
     histogram = trace.get("rejection_histogram", {})
     if histogram:
         lines.extend(f"- `{reason}`: {count}" for reason, count in histogram.items())
+    else:
+        lines.append("- None")
+
+    lines.extend(["", "## Candidate States", ""])
+    state_counts = trace.get("candidate_state_counts", {})
+    if state_counts:
+        lines.extend(f"- `{state}`: {count}" for state, count in state_counts.items())
+    else:
+        lines.append("- None")
+
+    lines.extend(["", "## Planned Future Visibility", ""])
+    planned = trace.get("planned_future_visibility_offers", [])
+    if planned:
+        lines.extend(["| Course | Page | Delivery | Candidate Start | First Public At | Reason | Score |", "| --- | --- | --- | --- | --- | --- | ---: |"])
+        for offer in planned[:60]:
+            lines.append(
+                f"| {offer.get('course_title')} | {offer.get('target_page') or offer.get('hub_slug')} | "
+                f"{offer.get('delivery_bucket')} | {offer.get('candidate_start')} | {offer.get('first_public_at')} | "
+                f"{offer.get('not_public_reason')} | {offer.get('score', 0)} |"
+            )
     else:
         lines.append("- None")
 
@@ -1152,7 +1363,7 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
         hubs,
         policy,
     )
-    request_offers, request_rejections = build_request_block_offers(
+    request_offers, request_rejections, planned_request_offers = build_request_block_offers(
         loaded.get("dynamic_offers_preview"),
         real_starts,
         visible_inventory,
@@ -1169,6 +1380,7 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
         loaded.get("dynamic_offers_preview") or {},
         offers,
         rejections,
+        planned_request_offers,
         appointment_offers,
         loaded.get("schedule_future") or {},
         policy,
@@ -1195,6 +1407,8 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
         "appointment_url_offers_generated": len(appointment_offers),
         "request_only_block_offers_generated": len(request_offers),
         "total_generated_offers": len(offers),
+        "public_now_offer_count": len(offers),
+        "planned_future_visibility_count": len(planned_request_offers),
         "availability_blocks_considered": stack_trace.get("availability_block_count", 0),
         "stack_groups_created": len(stack_trace.get("stack_groups_created", [])),
         "offers_by_type": grouped_counts(offers, "offer_type"),
@@ -1213,6 +1427,7 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
         "policy_source": str(UNIVERSAL_OFFER_POLICY_PATH),
         "summary": summary,
         "offers": offers,
+        "planned_future_visibility": planned_request_offers[:1000],
         "rejections": rejections[:1000],
         "stack_trace": stack_trace,
     }
