@@ -90,6 +90,9 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                 "planned_visibility_audit_only": True,
                 "default_first_public_lead_hours": 24,
                 "course_family_first_public_lead_hours": {},
+                "optimized_offer_horizon_days": 60,
+                "future_request_horizon_days": 120,
+                "assume_cooldown_reset_after_horizon": True,
                 "max_request_block_offers_per_course": 3,
                 "max_block_offers_per_course": 3,
                 "max_request_block_offers_per_course_per_week": 2,
@@ -205,6 +208,28 @@ class UniversalOfferInventoryTests(unittest.TestCase):
         self.assertTrue(planned["would_otherwise_fit"])
         self.assertTrue(planned["request_only_fallback_available"])
         self.assertFalse(planned["deterministic_appointment_url_available"])
+
+    def test_far_horizon_candidate_creates_future_request_block(self) -> None:
+        loaded = self.base_loaded()
+        start = datetime.now() + timedelta(days=90)
+        loaded["dynamic_offers_preview"]["offers"][0].update({
+            "date": start.date().isoformat(),
+            "start_time": start.strftime("%H:%M"),
+            "appointment_display_start": start.isoformat(),
+            "appointment_display_end": (start + timedelta(minutes=45)).isoformat(),
+            "scheduler_consumption_start": start.isoformat(),
+            "scheduler_consumption_end": (start + timedelta(minutes=90)).isoformat(),
+        })
+
+        payload = engine.build_inventory(loaded)
+
+        future_blocks = [offer for offer in payload["offers"] if offer["offer_type"] == "future_request_block"]
+        self.assertEqual(1, len(future_blocks))
+        self.assertEqual("future_request_fallback", future_blocks[0]["candidate_state"])
+        self.assertEqual(start.strftime("%Y-%m"), future_blocks[0]["preferred_month"])
+        self.assertIn("request_type=future_block", future_blocks[0]["request_url"])
+        self.assertFalse(future_blocks[0]["public_schedule_row_created"])
+        self.assertFalse(future_blocks[0]["standalone_class_lander_created"])
 
 
 if __name__ == "__main__":

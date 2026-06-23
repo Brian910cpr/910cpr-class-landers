@@ -305,7 +305,7 @@ def normalize_universal_offer_for_hub(offer: dict[str, Any]) -> dict[str, Any] |
     course_id = normalize_space(offer.get("course_id"))
     title = normalize_space(offer.get("course_title"))
     start_datetime = normalize_space(offer.get("start_datetime"))
-    if offer_type not in {"appointment_url", "request_only_block"}:
+    if offer_type not in {"appointment_url", "request_only_block", "future_request_block"}:
         return None
     if not hub_slug or not course_id or not title or not start_datetime:
         return None
@@ -326,6 +326,10 @@ def normalize_universal_offer_for_hub(offer: dict[str, Any]) -> dict[str, Any] |
         "instructor_display_name": normalize_space(offer.get("instructor_display_name")),
         "display_note": normalize_space(offer.get("display_note")),
         "cta_label": normalize_space(offer.get("cta_label")),
+        "preferred_month": normalize_space(offer.get("preferred_month")),
+        "delivery_bucket": normalize_space(offer.get("delivery_bucket")),
+        "optimized_offer_horizon_days": offer.get("optimized_offer_horizon_days"),
+        "future_request_horizon_days": offer.get("future_request_horizon_days"),
         "public_schedule_row_created": False,
         "standalone_class_lander_created": False,
         "render_source": "universal_offer_inventory",
@@ -348,6 +352,16 @@ def normalize_universal_offer_for_hub(offer: dict[str, Any]) -> dict[str, Any] |
     request_url_value = normalize_space(offer.get("request_url"))
     if not request_url_value.startswith("/request_group_session.html?"):
         return None
+    if offer_type == "future_request_block":
+        return {
+            **base,
+            "public_display_item_type": "future_request_block",
+            "display_item_type": "future_request_block",
+            "request_url": request_url_value,
+            "public_ready": True,
+            "standalone_class_lander_allowed": False,
+            "class_lander_created": False,
+        }
     return {
         **base,
         "public_display_item_type": "request_only_availability_offer",
@@ -1955,6 +1969,20 @@ def request_only_offers_for_tab(tab: dict[str, Any], universal_offers: list[dict
     return sorted(selected, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
 
 
+def future_request_blocks_for_tab(tab: dict[str, Any], universal_offers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    tab_id = normalize_space(tab.get("id"))
+    selected: list[dict[str, Any]] = []
+    for offer in universal_offers:
+        if offer.get("display_item_type") != "future_request_block":
+            continue
+        tab_ids = set(offer.get("tab_ids", [])) if isinstance(offer.get("tab_ids"), list) else set()
+        if tab_id and tab_id in tab_ids:
+            row = dict(offer)
+            row["_future_request_block"] = True
+            selected.append(row)
+    return sorted(selected, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
+
+
 def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     start_dt = parse_dt(offer.get("start_datetime"))
     end_dt = parse_dt(offer.get("end_datetime"))
@@ -2032,6 +2060,42 @@ def render_universal_request_offer_card(offer: dict[str, Any]) -> str:
     <a class="button small secondary" href="{url}">{escape(label)}</a>
   </div>
 </article>
+""".strip()
+
+
+def render_future_request_block_panel(offer: dict[str, Any]) -> str:
+    title = normalize_space(offer.get("course_title")) or "this course"
+    location = clean_location(offer.get("location_name"))
+    url = escape(offer.get("request_url") or group_request_href(title), quote=True)
+    label = normalize_space(offer.get("cta_label")) or "Request a future block"
+    preferred_month = normalize_space(offer.get("preferred_month"))
+    month_copy = ""
+    if preferred_month:
+        try:
+            month_dt = datetime.strptime(preferred_month, "%Y-%m")
+            month_copy = f'<span class="slug-pill-chip">Planning window: {escape(month_dt.strftime("%B %Y"))}</span>'
+        except ValueError:
+            month_copy = f'<span class="slug-pill-chip">Planning window: {escape(preferred_month)}</span>'
+    location_copy = f'<span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>' if location else ""
+    return f"""
+<section class="slug-inventory-section slug-future-request-section" aria-label="Request a future training block">
+  <div class="slug-pill-list">
+    <article class="slug-pill slug-future-request-block">
+      <div class="slug-pill-main">
+        <div class="slug-pill-title">Need a later date?</div>
+        <div class="slug-pill-meta-row">
+          {month_copy}
+          {location_copy}
+        </div>
+        <div class="slug-pill-subtitle">We can often arrange {escape(title)} beyond the currently listed schedule.</div>
+        <p class="slug-flexible-note">Future requests are checked against instructor availability, course duration, setup time, cleanup time, and location constraints before confirmation.</p>
+      </div>
+      <div class="slug-pill-actions">
+        <a class="button small secondary" href="{url}">{escape(label)}</a>
+      </div>
+    </article>
+  </div>
+</section>
 """.strip()
 
 
@@ -2216,6 +2280,7 @@ def render_tab_panel(
 
     tab_appointment_seed_offers = appointment_offers_for_tab(tab, appointment_seed_offers or [])
     tab_request_only_offers = request_only_offers_for_tab(tab, universal_offers or [])
+    tab_future_request_blocks = future_request_blocks_for_tab(tab, universal_offers or [])
     tab_requestable_offers = requestable_offers_for_tab(page, tab, requestable_offers or [])
     upcoming_sessions = sorted([*sort_by_start(sessions), *tab_requestable_offers, *tab_appointment_seed_offers, *tab_request_only_offers], key=schedule_row_start)
     default_visible_count: int | None = None
@@ -2257,6 +2322,9 @@ def render_tab_panel(
         )
     else:
         section_html.append(render_empty_state(page, tab, group_mode=group_mode))
+
+    if tab_future_request_blocks:
+        section_html.append(render_future_request_block_panel(tab_future_request_blocks[0]))
 
     flexible_html = ""
     full_schedule_data = escape(
