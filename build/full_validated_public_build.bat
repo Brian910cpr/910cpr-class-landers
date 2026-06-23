@@ -45,6 +45,10 @@ echo === Build seed appointment URL preview ===
 python -m scripts.build_seed_appointment_url_preview || goto :fail
 
 echo.
+echo === Build universal offer inventory ===
+python -m scripts.build_universal_offer_inventory || goto :fail
+
+echo.
 echo === Build slug hubs ===
 python -m scripts.build_slug_hubs || goto :fail
 

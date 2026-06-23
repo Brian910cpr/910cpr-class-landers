@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "description": "Policy for the Universal Offer Engine. Real Enrollware iCal classes remain authoritative. Dynamic availability offers are hub-only display opportunities and must not be written into schedule_future.json.",
+  "minimum_visible_offers_per_course": 2,
+  "minimum_lead_hours": 24,
+  "max_request_block_offers_per_course": 3,
+  "max_request_block_offers_per_course_per_week": 2,
+  "max_total_request_block_offers_per_hub": 12,
+  "preferred_start_minutes": [
+    "00",
+    "30",
+    "15",
+    "45"
+  ],
+  "request_only_families": [
+    "BLS",
+    "ACLS",
+    "PALS",
+    "Heartsaver",
+    "ARC",
+    "HSI",
+    "USCG"
+  ],
+  "default_request_cta_label": "Ask about this time",
+  "default_appointment_cta_label": "Check this date/time",
+  "request_offer_copy": "This time is based on instructor availability and must be confirmed before a booking link is created.",
+  "course_key_tab_overrides": {
+    "aha_bls_initial": ["bls-provider"],
+    "aha_bls_renewal": ["bls-renewal"],
+    "aha_bls_heartcode_skills": ["bls-heartcode"],
+    "aha_acls_provider_initial": ["acls-provider"],
+    "aha_acls_provider_renewal": ["acls-renewal"],
+    "aha_acls_heartcode": ["acls-heartcode"],
+    "aha_pals_initial": ["pals-provider"],
+    "aha_pals_renewal": ["pals-renewal"],
+    "aha_pals_heartcode": ["pals-heartcode"],
+    "aha_heartsaver_first_aid_cpr_aed": ["hs-fa-cpr-aed-ip"],
+    "aha_heartsaver_first_aid_cpr_aed_blended": ["hs-fa-cpr-aed-bl"],
+    "aha_heartsaver_cpr_aed": ["hs-cpr-aed-ip"],
+    "aha_heartsaver_cpr_aed_online": ["hs-cpr-aed-bl"],
+    "aha_heartsaver_pediatric_first_aid_cpr_aed_in_person": ["hs-pediatric-ip"],
+    "aha_heartsaver_pediatric_first_aid_cpr_aed_online": ["hs-pediatric-bl"],
+    "hsi_bls_adult_first_aid_blended": ["hsi-bls-fa"],
+    "uscg_elementary_first_aid_cpr": ["uscg-efa"],
+    "uscg_elementary_first_aid_cpr_blended": ["uscg-efa"]
+  },
+  "course_id_tab_overrides": {
+    "253768": ["uscg-efa"],
+    "359827": ["uscg-efa"]
+  },
+  "notes": "The engine prefers real seated classes first, then deterministic appointment URL offers, then a capped number of request-only availability block offers when the course has low visible inventory."
+}
