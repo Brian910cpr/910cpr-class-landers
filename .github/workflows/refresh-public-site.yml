@@ -1,0 +1,136 @@
+name: Refresh public site from Enrollware iCal
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-public-site
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    name: Refresh public static output
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt openpyxl beautifulsoup4 tqdm pandas
+
+      - name: Compute Enrollware iCal hash
+        id: ical
+        shell: pwsh
+        run: |
+          $script = @'
+          import hashlib
+          import os
+          import urllib.request
+          from pathlib import Path
+
+          from scripts.build_sessions_current import DEFAULT_ENROLLWARE_ICAL_URL, ENROLLWARE_ICAL_USER_AGENT
+
+          hash_path = Path("data/state_public/enrollware_ical_hash.txt")
+          previous_hash = hash_path.read_text(encoding="utf-8").strip() if hash_path.exists() else ""
+          url = os.environ.get("LANDER_ENROLLWARE_ICAL_URL") or DEFAULT_ENROLLWARE_ICAL_URL
+          request = urllib.request.Request(url, headers={"User-Agent": ENROLLWARE_ICAL_USER_AGENT})
+          with urllib.request.urlopen(request, timeout=60) as response:
+              body = response.read()
+          text = body.decode("utf-8", errors="replace")
+          stable_lines = []
+          for line in text.replace("\r\n", "\n").replace("\r", "\n").split("\n"):
+              # Enrollware updates DTSTAMP on each feed response; it is not a class schedule change.
+              if line.startswith("DTSTAMP:"):
+                  continue
+              stable_lines.append(line)
+          stable_body = "\n".join(stable_lines).encode("utf-8")
+          current_hash = hashlib.sha256(stable_body).hexdigest()
+          changed = current_hash != previous_hash
+
+          output_path = Path(os.environ["GITHUB_OUTPUT"])
+          with output_path.open("a", encoding="utf-8") as out:
+              out.write(f"current_hash={current_hash}\n")
+              out.write(f"previous_hash={previous_hash}\n")
+              out.write(f"changed={'true' if changed else 'false'}\n")
+              out.write(f"bytes={len(body)}\n")
+
+          print(f"Fetched Enrollware iCal bytes: {len(body)}")
+          print(f"Previous iCal hash: {previous_hash or 'none'}")
+          print(f"Current iCal hash: {current_hash}")
+          print(f"iCal changed: {changed}")
+          '@
+          $script | python -
+
+      - name: Skip unchanged iCal feed
+        if: steps.ical.outputs.changed == 'false'
+        shell: pwsh
+        run: |
+          Write-Host "Enrollware iCal hash unchanged. Skipping public build and commit."
+
+      - name: Run full validated public build
+        if: steps.ical.outputs.changed == 'true'
+        shell: cmd
+        run: build\full_validated_public_build.bat
+
+      - name: Run link audit
+        if: steps.ical.outputs.changed == 'true'
+        shell: pwsh
+        run: python -m scripts.audit_sitewide_links
+
+      - name: Run unit tests
+        if: steps.ical.outputs.changed == 'true'
+        shell: pwsh
+        run: python -m unittest discover tests
+
+      - name: Update stored iCal hash
+        if: steps.ical.outputs.changed == 'true'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force data/state_public | Out-Null
+          Set-Content -Path data/state_public/enrollware_ical_hash.txt -Value "${{ steps.ical.outputs.current_hash }}" -NoNewline -Encoding utf8
+
+      - name: Commit approved public output
+        if: steps.ical.outputs.changed == 'true'
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -- docs data/state_public/enrollware_ical_hash.txt
+
+          $staged = @(git diff --cached --name-only)
+          if ($staged.Count -eq 0) {
+            Write-Host "No approved public output or iCal hash changes to commit."
+            exit 0
+          }
+
+          $blockedPattern = '^(data/audit|data/runtime|data/state/|debug/|scripts/__pycache__/|tests/__pycache__/|data/private/|data/raw/|private/raw/)'
+          $blocked = @($staged | Select-String -Pattern $blockedPattern)
+          if ($blocked.Count -gt 0) {
+            Write-Error "Blocked files were staged:`n$($blocked -join "`n")"
+            exit 1
+          }
+
+          Write-Host "Staged files:"
+          $staged | ForEach-Object { Write-Host " - $_" }
+
+          git commit -m "Refresh public schedule from Enrollware iCal"
+          git push origin main
+
