@@ -4,8 +4,13 @@
   "minimum_visible_offers_per_course": 2,
   "minimum_lead_hours": 24,
   "max_request_block_offers_per_course": 3,
+  "max_block_offers_per_course": 3,
   "max_request_block_offers_per_course_per_week": 2,
   "max_total_request_block_offers_per_hub": 12,
+  "max_start_times_per_block_per_page": 3,
+  "default_offer_again_cooldown_hours": 0,
+  "offer_again_cooldown_hours_by_family": {},
+  "offer_again_cooldown_hours_by_course_id": {},
   "preferred_start_minutes": [
     "00",
     "30",
@@ -24,6 +29,34 @@
   "default_request_cta_label": "Ask about this time",
   "default_appointment_cta_label": "Check this date/time",
   "request_offer_copy": "This time is based on instructor availability and must be confirmed before a booking link is created.",
+  "stacking_compatibility_groups": {
+    "bls_provider_stack": [
+      "aha_bls_initial",
+      "aha_bls_renewal",
+      "aha_bls_heartcode_skills"
+    ],
+    "advanced_provider_stack": [
+      "aha_acls_provider_initial",
+      "aha_acls_provider_renewal",
+      "aha_acls_heartcode",
+      "aha_pals_initial",
+      "aha_pals_renewal",
+      "aha_pals_heartcode"
+    ],
+    "heartsaver_workplace_stack": [
+      "aha_heartsaver_first_aid_cpr_aed",
+      "aha_heartsaver_first_aid_cpr_aed_blended",
+      "aha_heartsaver_cpr_aed",
+      "aha_heartsaver_cpr_aed_online",
+      "aha_heartsaver_pediatric_first_aid_cpr_aed_in_person",
+      "aha_heartsaver_pediatric_first_aid_cpr_aed_online"
+    ],
+    "cross_provider_skills_stack": [
+      "hsi_bls_adult_first_aid_blended",
+      "uscg_elementary_first_aid_cpr",
+      "uscg_elementary_first_aid_cpr_blended"
+    ]
+  },
   "course_key_tab_overrides": {
     "aha_bls_initial": ["bls-provider"],
     "aha_bls_renewal": ["bls-renewal"],

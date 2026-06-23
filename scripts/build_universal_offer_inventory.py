@@ -26,6 +26,8 @@ UNIVERSAL_OFFER_POLICY_PATH = CONFIG_DIR / "universal_offer_policy.json"
 
 OUTPUT_PATH = AUDIT_DIR / "universal_offer_inventory.json"
 REPORT_PATH = AUDIT_DIR / "universal_offer_inventory_report.md"
+STACK_TRACE_JSON_PATH = ROOT / "debug" / "stacking_seeding_trace.json"
+STACK_TRACE_MD_PATH = ROOT / "debug" / "stacking_seeding_trace.md"
 UNKNOWN = "UNKNOWN"
 
 
@@ -276,6 +278,252 @@ def offer_sort_key(offer: dict[str, Any], preferred_minutes: list[str]) -> tuple
     )
 
 
+def availability_block_id(offer: dict[str, Any]) -> str:
+    source = clean_text(offer.get("source_availability_window"))
+    if source:
+        return source
+    parts = [
+        offer.get("date"),
+        offer.get("instructor_person_id") or offer.get("instructor_display_name"),
+        offer.get("offer_location") or offer.get("location"),
+    ]
+    key = "|".join(clean_text(part) for part in parts)
+    return "derived-" + normalize_key(key or "unknown_block")
+
+
+def block_page_key(hub_slug: str, tab_ids: list[str], block_id: str) -> tuple[str, str, str]:
+    tab_key = ",".join(sorted(tab_ids)) if tab_ids else UNKNOWN
+    return hub_slug, tab_key, block_id
+
+
+def cooldown_hours_for_course(course: dict[str, Any], course_map_record: dict[str, Any] | None, policy: dict[str, Any]) -> int:
+    by_course_id = policy.get("offer_again_cooldown_hours_by_course_id", {}) if isinstance(policy, dict) else {}
+    course_id = clean_text(course.get("course_id") or (course_map_record or {}).get("course_id"))
+    if isinstance(by_course_id, dict) and clean_text(by_course_id.get(course_id)):
+        return int(by_course_id.get(course_id) or 0)
+    by_family = policy.get("offer_again_cooldown_hours_by_family", {}) if isinstance(policy, dict) else {}
+    family = course_family(course, course_map_record)
+    if isinstance(by_family, dict) and clean_text(by_family.get(family)):
+        return int(by_family.get(family) or 0)
+    return int(policy.get("default_offer_again_cooldown_hours", 0) or 0)
+
+
+def compatibility_group_for_course_key(course_key_value: str, policy: dict[str, Any]) -> str:
+    groups = policy.get("stacking_compatibility_groups", {}) if isinstance(policy, dict) else {}
+    if not isinstance(groups, dict):
+        return UNKNOWN
+    for group_name, course_keys in groups.items():
+        if isinstance(course_keys, list) and course_key_value in {clean_text(item) for item in course_keys}:
+            return clean_text(group_name) or UNKNOWN
+    return UNKNOWN
+
+
+def course_recently_visible(
+    course_id: str,
+    candidate_start: datetime,
+    real_sessions_by_course: dict[str, list[datetime]],
+    appointment_offers: list[dict[str, Any]],
+    cooldown_hours: int,
+) -> bool:
+    if cooldown_hours <= 0:
+        return False
+    window = timedelta(hours=cooldown_hours)
+    for start in real_sessions_by_course.get(course_id, []):
+        if abs(candidate_start - start) <= window:
+            return True
+    for offer in appointment_offers:
+        if clean_text(offer.get("course_id")) != course_id:
+            continue
+        start = parse_dt(offer.get("scheduler_consumption_start") or offer.get("start_datetime"))
+        if start and abs(candidate_start - start) <= window:
+            return True
+    return False
+
+
+def real_session_starts_by_course(schedule_payload: Any) -> dict[str, list[datetime]]:
+    sessions = schedule_payload.get("sessions", []) if isinstance(schedule_payload, dict) else []
+    starts: dict[str, list[datetime]] = defaultdict(list)
+    for session in sessions:
+        if not isinstance(session, dict):
+            continue
+        course_id = clean_text(session.get("course_id") or session.get("course_number"))
+        start = parse_dt(session.get("start_at") or session.get("start_datetime"))
+        if course_id and start:
+            starts[course_id].append(start)
+    return starts
+
+
+def build_stack_trace(
+    dynamic_payload: Any,
+    accepted_offers: list[dict[str, Any]],
+    rejections: list[dict[str, Any]],
+    appointment_offers: list[dict[str, Any]],
+    schedule_payload: Any,
+    policy: dict[str, Any],
+) -> dict[str, Any]:
+    dynamic_offers = [offer for offer in (dynamic_payload.get("offers", []) if isinstance(dynamic_payload, dict) else []) if isinstance(offer, dict)]
+    blocks: dict[str, dict[str, Any]] = {}
+    accepted_by_source = {clean_text(offer.get("source_offer_id")): offer for offer in accepted_offers if clean_text(offer.get("source_offer_id"))}
+    rejections_by_source: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for rejection in rejections:
+        rejections_by_source[clean_text(rejection.get("source_offer_id"))].append(rejection)
+
+    sessions = schedule_payload.get("sessions", []) if isinstance(schedule_payload, dict) else []
+    real_sessions: list[dict[str, Any]] = []
+    for session in sessions:
+        if not isinstance(session, dict):
+            continue
+        real_sessions.append({
+            "session_id": session.get("session_id"),
+            "course_id": session.get("course_id"),
+            "course_title": session.get("mapped_clean_title") or session.get("official_course_name") or session.get("course_name"),
+            "start": session.get("start_at"),
+            "end": session.get("end_at"),
+            "location": session.get("location_display") or session.get("location_name"),
+        })
+
+    for offer in dynamic_offers:
+        block_id = availability_block_id(offer)
+        block = blocks.setdefault(block_id, {
+            "block_id": block_id,
+            "source_availability_window": clean_text(offer.get("source_availability_window")),
+            "instructor": clean_text(offer.get("instructor_display_name")),
+            "location": clean_text(offer.get("offer_location") or offer.get("location")),
+            "block_start": None,
+            "block_end": None,
+            "candidate_count": 0,
+            "candidate_start_times": [],
+            "courses_evaluated": Counter(),
+            "accepted_offer_ids": [],
+            "rejection_reasons": Counter(),
+            "real_ical_classes_near_block": [],
+        })
+        start = parse_dt(offer.get("scheduler_consumption_start") or offer.get("start_datetime"))
+        end = parse_dt(offer.get("scheduler_consumption_end") or offer.get("end_datetime"))
+        if start and (not block["block_start"] or start.isoformat() < block["block_start"]):
+            block["block_start"] = start.isoformat()
+        if end and (not block["block_end"] or end.isoformat() > block["block_end"]):
+            block["block_end"] = end.isoformat()
+        block["candidate_count"] += 1
+        start_time = clean_text(offer.get("start_time"))
+        if start_time and start_time not in block["candidate_start_times"]:
+            block["candidate_start_times"].append(start_time)
+        block["courses_evaluated"][clean_text(offer.get("course_id")) or UNKNOWN] += 1
+        source_id = clean_text(offer.get("offer_id"))
+        if source_id in accepted_by_source:
+            block["accepted_offer_ids"].append(accepted_by_source[source_id].get("public_offer_id"))
+        for rejection in rejections_by_source.get(source_id, []):
+            block["rejection_reasons"][clean_text(rejection.get("reason_code")) or UNKNOWN] += 1
+
+    for block in blocks.values():
+        block_start = parse_dt(block.get("block_start"))
+        block_end = parse_dt(block.get("block_end"))
+        if block_start and block_end:
+            near_start = block_start - timedelta(hours=2)
+            near_end = block_end + timedelta(hours=2)
+            block["real_ical_classes_near_block"] = [
+                session for session in real_sessions
+                if (dt := parse_dt(session.get("start"))) and near_start <= dt <= near_end
+            ][:25]
+        block["candidate_start_times"] = sorted(block["candidate_start_times"])
+        block["courses_evaluated"] = dict(block["courses_evaluated"].most_common())
+        block["rejection_reasons"] = dict(block["rejection_reasons"].most_common())
+
+    stack_groups = []
+    for block in blocks.values():
+        accepted = [offer for offer in accepted_offers if offer.get("public_offer_id") in block["accepted_offer_ids"]]
+        if not accepted:
+            continue
+        stack_groups.append({
+            "stack_group_id": f"stack-{normalize_key(block['block_id'])}",
+            "block_id": block["block_id"],
+            "instructor": block.get("instructor"),
+            "location": block.get("location"),
+            "block_start": block.get("block_start"),
+            "block_end": block.get("block_end"),
+            "offer_count": len(accepted),
+            "proposed_course_offers": [
+                {
+                    "public_offer_id": offer.get("public_offer_id"),
+                    "offer_type": offer.get("offer_type"),
+                    "course_id": offer.get("course_id"),
+                    "course_title": offer.get("course_title"),
+                    "compatibility_group": compatibility_group_for_course_key(clean_text(offer.get("course_key")), policy),
+                    "hub_slug": offer.get("hub_slug"),
+                    "tab_ids": offer.get("tab_ids"),
+                    "display_start": offer.get("start_datetime"),
+                    "display_end": offer.get("end_datetime"),
+                    "scheduler_consumption_start": offer.get("scheduler_consumption_start"),
+                    "scheduler_consumption_end": offer.get("scheduler_consumption_end"),
+                    "deterministic_url_available": bool(offer.get("appointment_registration_url")),
+                }
+                for offer in accepted
+            ],
+        })
+
+    trace_rejections = [
+        {
+            "source_offer_id": rejection.get("source_offer_id"),
+            "course_id": rejection.get("course_id"),
+            "course_title": rejection.get("course_title"),
+            "offer_type": rejection.get("offer_type"),
+            "reason_code": rejection.get("reason_code"),
+            "detail": rejection.get("detail"),
+        }
+        for rejection in rejections[:5000]
+    ]
+    return {
+        "generated_at": datetime.now().astimezone().isoformat(),
+        "availability_blocks_considered": list(blocks.values()),
+        "availability_block_count": len(blocks),
+        "courses_evaluated_per_block": {
+            block["block_id"]: block["courses_evaluated"]
+            for block in blocks.values()
+        },
+        "candidate_start_times_by_block": {
+            block["block_id"]: block["candidate_start_times"]
+            for block in blocks.values()
+        },
+        "accepted_offers": accepted_offers,
+        "rejected_offers": trace_rejections,
+        "rejection_histogram": dict(Counter(clean_text(item.get("reason_code")) or UNKNOWN for item in rejections).most_common()),
+        "cooldown_decisions": [
+            rejection for rejection in trace_rejections
+            if clean_text(rejection.get("reason_code")).startswith("offer_again_cooldown")
+        ],
+        "deterministic_url_successes": [
+            {
+                "public_offer_id": offer.get("public_offer_id"),
+                "course_id": offer.get("course_id"),
+                "course_title": offer.get("course_title"),
+                "start_time": offer.get("start_time"),
+                "url_present": bool(offer.get("appointment_registration_url")),
+            }
+            for offer in appointment_offers
+        ],
+        "deterministic_url_failures": [
+            rejection for rejection in trace_rejections
+            if rejection.get("offer_type") == "appointment_url"
+        ],
+        "request_only_fallback_reasons": dict(Counter(
+            clean_text(offer.get("display_note")) or "request_only_fallback"
+            for offer in accepted_offers
+            if offer.get("offer_type") == "request_only_block"
+        )),
+        "stack_groups_created": stack_groups,
+        "public_offers_by_course_delivery_page": {
+            f"{offer.get('hub_slug')}|{','.join(offer.get('tab_ids', []) or [UNKNOWN])}|{offer.get('course_id')}": {
+                "hub_slug": offer.get("hub_slug"),
+                "tab_ids": offer.get("tab_ids"),
+                "course_id": offer.get("course_id"),
+                "course_title": offer.get("course_title"),
+                "offer_type": offer.get("offer_type"),
+            }
+            for offer in accepted_offers
+        },
+    }
+
+
 def intervals_overlap(a_start: Any, a_end: Any, b_start: Any, b_end: Any) -> bool:
     start_a = parse_dt(a_start)
     end_a = parse_dt(a_end)
@@ -324,6 +572,7 @@ def build_appointment_url_offers(
             rejections.append({**context, "reason_code": "missing_appointment_url"})
             continue
         hub_slug, tab_ids = hub_and_tabs_for_course(course_id, course, course_map_record, hubs, policy)
+        block_id = clean_text(preview.get("source_availability_window")) or clean_text(preview.get("source_offer_id")) or clean_text(preview.get("seed_id"))
         offers.append({
             "public_offer_id": f"appointment-{clean_text(preview.get('seed_id')) or clean_text(preview.get('source_offer_id'))}",
             "offer_type": "appointment_url",
@@ -332,6 +581,7 @@ def build_appointment_url_offers(
             "course_key": course_key(course, course_map_record),
             "course_title": clean_text(preview.get("course_title")) or course_title(course, course_map_record),
             "course_family": course_family(course, course_map_record),
+            "stacking_compatibility_group": compatibility_group_for_course_key(course_key(course, course_map_record), policy),
             "hub_slug": hub_slug,
             "tab_ids": tab_ids,
             "date": preview.get("date"),
@@ -346,6 +596,9 @@ def build_appointment_url_offers(
             "request_url": None,
             "source_offer_id": preview.get("source_offer_id"),
             "source_seed_id": preview.get("seed_id"),
+            "source_availability_window": block_id,
+            "stack_group_id": f"stack-{normalize_key(block_id)}",
+            "stack_candidate_role": "deterministic_appointment",
             "display_note": "Available appointment-backed class option.",
             "public_schedule_row_created": False,
             "standalone_class_lander_created": False,
@@ -370,6 +623,7 @@ def selected_seed_locks(appointment_offers: list[dict[str, Any]]) -> list[dict[s
 def build_request_block_offers(
     dynamic_payload: Any,
     real_counts: Counter[str],
+    real_session_starts: dict[str, list[datetime]],
     appointment_offers: list[dict[str, Any]],
     course_catalog: dict[str, dict[str, Any]],
     course_map: dict[str, dict[str, Any]],
@@ -383,8 +637,10 @@ def build_request_block_offers(
     request_families = {clean_text(item) for item in policy.get("request_only_families", []) if clean_text(item)}
     min_visible = int(policy.get("minimum_visible_offers_per_course", 2) or 2)
     max_per_course = int(policy.get("max_request_block_offers_per_course", 3) or 3)
+    max_block_offers_per_course = int(policy.get("max_block_offers_per_course", max_per_course) or max_per_course)
     max_per_week = int(policy.get("max_request_block_offers_per_course_per_week", 2) or 2)
     max_per_hub = int(policy.get("max_total_request_block_offers_per_hub", 12) or 12)
+    max_start_times_per_block_per_page = int(policy.get("max_start_times_per_block_per_page", 3) or 3)
     preferred_minutes = [clean_text(item) for item in policy.get("preferred_start_minutes", []) if clean_text(item)]
     minimum_lead_hours = int(policy.get("minimum_lead_hours", 0) or 0)
     earliest_start = datetime.now() + timedelta(hours=minimum_lead_hours)
@@ -392,8 +648,10 @@ def build_request_block_offers(
     visible_counts = Counter(real_counts)
     visible_counts.update(clean_text(offer.get("course_id")) for offer in appointment_offers if clean_text(offer.get("course_id")))
     course_request_counts: Counter[str] = Counter()
+    course_block_counts: Counter[tuple[str, str]] = Counter()
     course_week_counts: Counter[tuple[str, str]] = Counter()
     hub_counts: Counter[str] = Counter()
+    block_page_start_counts: Counter[tuple[str, str, str]] = Counter()
     locks = selected_seed_locks(appointment_offers)
     built: list[dict[str, Any]] = []
     rejections: list[dict[str, Any]] = []
@@ -438,11 +696,23 @@ def build_request_block_offers(
         if start_dt < earliest_start:
             rejections.append({**context, "reason_code": "inside_minimum_lead_time"})
             continue
+        cooldown_hours = cooldown_hours_for_course(course, course_map_record, policy)
+        if course_recently_visible(course_id, start_dt, real_session_starts, appointment_offers, cooldown_hours):
+            rejections.append({**context, "reason_code": "offer_again_cooldown_window", "detail": f"{cooldown_hours}_hours"})
+            continue
         week_key = f"{start_dt.isocalendar().year}-W{start_dt.isocalendar().week:02d}"
         if course_week_counts[(course_id, week_key)] >= max_per_week:
             rejections.append({**context, "reason_code": "max_request_block_offers_per_course_per_week"})
             continue
         hub_slug, tab_ids = hub_and_tabs_for_course(course_id, course, course_map_record, hubs, policy)
+        block_id = availability_block_id(offer)
+        if course_block_counts[(course_id, block_id)] >= max_block_offers_per_course:
+            rejections.append({**context, "reason_code": "max_block_offers_per_course"})
+            continue
+        page_key = block_page_key(hub_slug, tab_ids, block_id)
+        if block_page_start_counts[page_key] >= max_start_times_per_block_per_page:
+            rejections.append({**context, "reason_code": "max_start_times_per_block_per_page"})
+            continue
         if hub_counts[hub_slug] >= max_per_hub:
             rejections.append({**context, "reason_code": "max_total_request_block_offers_per_hub"})
             continue
@@ -470,6 +740,7 @@ def build_request_block_offers(
             "course_key": course_key(course, course_map_record),
             "course_title": title,
             "course_family": family,
+            "stacking_compatibility_group": compatibility_group_for_course_key(course_key(course, course_map_record), policy),
             "hub_slug": hub_slug,
             "tab_ids": tab_ids,
             "date": offer.get("date"),
@@ -483,6 +754,9 @@ def build_request_block_offers(
             "appointment_registration_url": None,
             "request_url": request_url(title, offer.get("date"), offer.get("start_time")),
             "source_offer_id": offer.get("offer_id"),
+            "source_availability_window": offer.get("source_availability_window"),
+            "stack_group_id": f"stack-{normalize_key(block_id)}",
+            "stack_candidate_role": "request_only_availability",
             "display_note": policy.get("request_offer_copy"),
             "public_schedule_row_created": False,
             "standalone_class_lander_created": False,
@@ -490,8 +764,10 @@ def build_request_block_offers(
         built.append(built_offer)
         visible_counts[course_id] += 1
         course_request_counts[course_id] += 1
+        course_block_counts[(course_id, block_id)] += 1
         course_week_counts[(course_id, week_key)] += 1
         hub_counts[hub_slug] += 1
+        block_page_start_counts[page_key] += 1
         locks.append({
             "course_id": course_id,
             "hub_slug": hub_slug,
@@ -521,6 +797,7 @@ def render_report(payload: dict[str, Any]) -> str:
         f"- Deterministic appointment URL offers generated: {summary['appointment_url_offers_generated']}",
         f"- Request-only block offers generated: {summary['request_only_block_offers_generated']}",
         f"- Total hub-only generated offers: {summary['total_generated_offers']}",
+        f"- Stack groups created: {summary.get('stack_groups_created', 0)}",
         "",
         "## Offers By Hub",
         "",
@@ -558,12 +835,91 @@ def render_report(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def render_stack_trace_report(trace: dict[str, Any], summary: dict[str, Any]) -> str:
+    lines = [
+        "# Stacking + Seeding Trace",
+        "",
+        "Read-only diagnostic for the universal offer engine. Real Enrollware iCal classes remain authoritative; generated offers are either deterministic appointment URLs or request-only availability offers.",
+        "",
+        "## Summary",
+        "",
+        f"- Availability blocks considered: {summary.get('availability_blocks_considered', 0)}",
+        f"- Stack groups created: {summary.get('stack_groups_created', 0)}",
+        f"- Appointment-backed offers generated: {summary.get('appointment_url_offers_generated', 0)}",
+        f"- Request-only offers generated: {summary.get('request_only_block_offers_generated', 0)}",
+        f"- Total generated hub-only offers: {summary.get('total_generated_offers', 0)}",
+        "",
+        "## Rejection Histogram",
+        "",
+    ]
+    histogram = trace.get("rejection_histogram", {})
+    if histogram:
+        lines.extend(f"- `{reason}`: {count}" for reason, count in histogram.items())
+    else:
+        lines.append("- None")
+
+    lines.extend(["", "## Stack Groups", ""])
+    groups = trace.get("stack_groups_created", [])
+    if groups:
+        for group in groups:
+            lines.extend([
+                f"### {group.get('stack_group_id')}",
+                "",
+                f"- Block: `{group.get('block_id')}`",
+                f"- Instructor: {group.get('instructor') or UNKNOWN}",
+                f"- Location: {group.get('location') or UNKNOWN}",
+                f"- Window: `{group.get('block_start')}` to `{group.get('block_end')}`",
+                f"- Offers: {group.get('offer_count', 0)}",
+                "",
+            ])
+            lines.extend(["| Type | Course | Display Start | Consumption Window | URL? |", "| --- | --- | --- | --- | --- |"])
+            for offer in group.get("proposed_course_offers", []):
+                lines.append(
+                    f"| {offer.get('offer_type')} | {offer.get('course_title')} | {offer.get('display_start')} | "
+                    f"{offer.get('scheduler_consumption_start')} to {offer.get('scheduler_consumption_end')} | "
+                    f"{'yes' if offer.get('deterministic_url_available') else 'no'} |"
+                )
+            lines.append("")
+    else:
+        lines.append("- No stack groups created.")
+
+    lines.extend(["", "## Availability Blocks Considered", ""])
+    blocks = trace.get("availability_blocks_considered", [])
+    if blocks:
+        lines.extend(["| Block | Instructor | Location | Window | Candidates | Accepted | Top rejection reasons |", "| --- | --- | --- | --- | ---: | ---: | --- |"])
+        for block in blocks[:100]:
+            reasons = ", ".join(f"{reason}: {count}" for reason, count in list((block.get("rejection_reasons") or {}).items())[:5])
+            lines.append(
+                f"| `{block.get('block_id')}` | {block.get('instructor') or UNKNOWN} | {block.get('location') or UNKNOWN} | "
+                f"{block.get('block_start')} to {block.get('block_end')} | {block.get('candidate_count', 0)} | "
+                f"{len(block.get('accepted_offer_ids') or [])} | {reasons or 'None'} |"
+            )
+    else:
+        lines.append("- None")
+
+    lines.extend(["", "## Public Offers By Course / Delivery Page", ""])
+    by_page = trace.get("public_offers_by_course_delivery_page", {})
+    if by_page:
+        lines.extend(["| Page key | Hub | Course | Type |", "| --- | --- | --- | --- |"])
+        for key, item in sorted(by_page.items()):
+            lines.append(f"| `{key}` | {item.get('hub_slug')} | {item.get('course_title')} | {item.get('offer_type')} |")
+    else:
+        lines.append("- None")
+
+    lines.extend(["", "## Notes", ""])
+    lines.append("- Deterministic appointment URLs are only generated by the existing seed URL preview pipeline.")
+    lines.append("- Request-only offers are not public seated classes and are not written into `docs/data/schedule_future.json`.")
+    lines.append("- Cooldown decisions appear as `offer_again_cooldown_window` when configured policy suppresses a candidate.")
+    return "\n".join(lines) + "\n"
+
+
 def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
     course_catalog = course_catalog_by_id(loaded.get("course_catalog"))
     course_map = course_map_by_id(loaded.get("course_map"))
     hubs = hub_tab_index(loaded.get("slug_hubs"), course_code_lookup(course_map))
     policy = loaded.get("universal_offer_policy") if isinstance(loaded.get("universal_offer_policy"), dict) else {}
     real_counts = session_counts_by_course(loaded.get("schedule_future"))
+    real_starts = real_session_starts_by_course(loaded.get("schedule_future"))
     appointment_offers, appointment_rejections = build_appointment_url_offers(
         loaded.get("seed_appointment_url_preview"),
         course_catalog,
@@ -575,6 +931,7 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
     request_offers, request_rejections = build_request_block_offers(
         loaded.get("dynamic_offers_preview"),
         real_counts,
+        real_starts,
         appointment_offers,
         course_catalog,
         course_map,
@@ -584,6 +941,14 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
     )
     offers = sorted([*appointment_offers, *request_offers], key=lambda offer: (offer.get("hub_slug", ""), offer.get("date", ""), offer.get("start_time", ""), offer.get("course_id", "")))
     rejections = [*appointment_rejections, *request_rejections]
+    stack_trace = build_stack_trace(
+        loaded.get("dynamic_offers_preview") or {},
+        offers,
+        rejections,
+        appointment_offers,
+        loaded.get("schedule_future") or {},
+        policy,
+    )
     course_page_counts: Counter[str] = Counter()
     for offer in offers:
         course_key_value = clean_text(offer.get("course_key"))
@@ -606,6 +971,8 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
         "appointment_url_offers_generated": len(appointment_offers),
         "request_only_block_offers_generated": len(request_offers),
         "total_generated_offers": len(offers),
+        "availability_blocks_considered": stack_trace.get("availability_block_count", 0),
+        "stack_groups_created": len(stack_trace.get("stack_groups_created", [])),
         "offers_by_type": grouped_counts(offers, "offer_type"),
         "offers_by_hub": grouped_counts(offers, "hub_slug"),
         "offers_by_course": grouped_counts(offers, "course_title"),
@@ -623,6 +990,7 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
         "summary": summary,
         "offers": offers,
         "rejections": rejections[:1000],
+        "stack_trace": stack_trace,
     }
 
 
@@ -651,10 +1019,13 @@ def run() -> dict[str, Any]:
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     REPORT_PATH.write_text(render_report(payload), encoding="utf-8")
+    STACK_TRACE_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
+    STACK_TRACE_JSON_PATH.write_text(json.dumps(payload["stack_trace"], indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    STACK_TRACE_MD_PATH.write_text(render_stack_trace_report(payload["stack_trace"], payload["summary"]), encoding="utf-8")
     return {
         "summary": payload["summary"],
         "missing": missing,
-        "output_paths": [OUTPUT_PATH, REPORT_PATH],
+        "output_paths": [OUTPUT_PATH, REPORT_PATH, STACK_TRACE_JSON_PATH, STACK_TRACE_MD_PATH],
     }
 
 

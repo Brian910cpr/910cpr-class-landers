@@ -26,6 +26,7 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                         "scheduler_consumption_end": future.replace(hour=19, minute=30, second=0, microsecond=0).isoformat(),
                         "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
                         "instructor_display_name": "Brian Ennis",
+                        "source_availability_window": "test-block",
                     }
                 ]
             },
@@ -69,10 +70,15 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                 "minimum_visible_offers_per_course": 2,
                 "minimum_lead_hours": 24,
                 "max_request_block_offers_per_course": 3,
+                "max_block_offers_per_course": 3,
                 "max_request_block_offers_per_course_per_week": 2,
                 "max_total_request_block_offers_per_hub": 12,
+                "max_start_times_per_block_per_page": 3,
                 "preferred_start_minutes": ["00", "30", "15", "45"],
                 "request_only_families": ["Heartsaver"],
+                "stacking_compatibility_groups": {
+                    "heartsaver_workplace_stack": ["aha_heartsaver_cpr_aed_online"]
+                },
                 "course_key_tab_overrides": {
                     "aha_heartsaver_cpr_aed_online": ["hs-cpr-aed-bl"]
                 },
@@ -86,8 +92,11 @@ class UniversalOfferInventoryTests(unittest.TestCase):
         self.assertEqual("heartsaver", request_offers[0]["hub_slug"])
         self.assertEqual(["hs-cpr-aed-bl"], request_offers[0]["tab_ids"])
         self.assertTrue(request_offers[0]["request_url"].startswith("/request_group_session.html?"))
+        self.assertEqual("stack-test_block", request_offers[0]["stack_group_id"])
+        self.assertEqual("heartsaver_workplace_stack", request_offers[0]["stacking_compatibility_group"])
         self.assertFalse(request_offers[0]["public_schedule_row_created"])
         self.assertFalse(request_offers[0]["standalone_class_lander_created"])
+        self.assertEqual(1, payload["summary"]["stack_groups_created"])
 
     def test_real_inventory_meeting_minimum_blocks_request_offer(self) -> None:
         loaded = self.base_loaded()
@@ -100,6 +109,34 @@ class UniversalOfferInventoryTests(unittest.TestCase):
         payload = engine.build_inventory(loaded)
         self.assertEqual(0, payload["summary"]["request_only_block_offers_generated"])
         self.assertIn("minimum_visible_offers_already_met", payload["summary"]["rejections_by_reason"])
+
+    def test_block_start_cap_limits_repeated_candidates(self) -> None:
+        loaded = self.base_loaded()
+        base = datetime.now() + timedelta(days=7)
+        offers = []
+        for index, (hour, minute) in enumerate([(18, 0), (20, 0), (22, 0), (23, 30)], start=1):
+            start = base.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            offers.append({
+                **loaded["dynamic_offers_preview"]["offers"][0],
+                "offer_id": f"offer-{index}",
+                "start_time": start.strftime("%H:%M"),
+                "appointment_display_start": start.isoformat(),
+                "appointment_display_end": (start + timedelta(minutes=45)).isoformat(),
+                "scheduler_consumption_start": start.isoformat(),
+                "scheduler_consumption_end": (start + timedelta(minutes=90)).isoformat(),
+            })
+        loaded["dynamic_offers_preview"]["offers"] = offers
+        loaded["universal_offer_policy"]["minimum_visible_offers_per_course"] = 10
+        loaded["universal_offer_policy"]["max_request_block_offers_per_course_per_week"] = 10
+        loaded["universal_offer_policy"]["max_request_block_offers_per_course"] = 10
+        loaded["universal_offer_policy"]["max_block_offers_per_course"] = 10
+        loaded["universal_offer_policy"]["max_start_times_per_block_per_page"] = 2
+
+        payload = engine.build_inventory(loaded)
+
+        self.assertEqual(2, payload["summary"]["request_only_block_offers_generated"])
+        self.assertIn("max_start_times_per_block_per_page", payload["summary"]["rejections_by_reason"])
+        self.assertEqual(1, payload["summary"]["stack_groups_created"])
 
 
 if __name__ == "__main__":
