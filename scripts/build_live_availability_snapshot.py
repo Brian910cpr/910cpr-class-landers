@@ -6,6 +6,7 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +26,7 @@ LOCAL_SNAPSHOT_CANDIDATES = [
 ]
 
 UNKNOWN = "UNKNOWN"
+LOCAL_TZ = ZoneInfo("America/New_York")
 DEFAULT_LOCATION_BY_KEY = {
     "shipyard": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
 }
@@ -61,9 +63,12 @@ def parse_dt(value: Any) -> datetime | None:
         return None
     text = clean_text(value)
     try:
-        return datetime.fromisoformat(text.replace("Z", "+00:00")).replace(tzinfo=None)
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
     except ValueError:
         return None
+    if parsed.tzinfo is None:
+        return parsed
+    return parsed.astimezone(LOCAL_TZ).replace(tzinfo=None)
 
 
 def has_explicit_time(value: Any) -> bool:

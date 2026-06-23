@@ -78,6 +78,42 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
         self.assertEqual("2026-06-22T08:30:00", blocks[0]["start_datetime"])
         self.assertEqual("2026-06-22T12:00:00", blocks[0]["end_datetime"])
 
+    def test_timezone_aware_utc_event_converts_to_local_time(self) -> None:
+        calendar_payload = {
+            "calendar_sources": [{
+                "calendar_source_key": "amy_availability",
+                "owner_instructor_key": "amy",
+                "mode": "explicit_availability",
+                "default_location_key": "shipyard",
+            }]
+        }
+        people_payload = {
+            "people": [{
+                "person_id": "amy",
+                "display_name": "Amy Arnold",
+                "email": "amy@example.com",
+            }]
+        }
+        local_snapshot = {
+            "events_by_source": {
+                "amy_availability": [{
+                    "id": "utc-event",
+                    "summary": "HARD",
+                    "start": "2026-06-26T18:00:00+00:00",
+                    "end": "2026-06-26T22:00:00+00:00",
+                }]
+            }
+        }
+
+        blocks, blocked, _ = snapshot.build_snapshot(calendar_payload, people_payload, {"courses": []}, local_snapshot)
+
+        self.assertEqual([], blocked)
+        self.assertEqual(1, len(blocks))
+        self.assertEqual("2026-06-26T14:00:00", blocks[0]["start_datetime"])
+        self.assertEqual("2026-06-26T18:00:00", blocks[0]["end_datetime"])
+        self.assertEqual("14:00", blocks[0]["start_time"])
+        self.assertEqual("18:00", blocks[0]["end_time"])
+
     def test_instructor_time_only_preserves_source_location_hint(self) -> None:
         calendar_payload = {
             "calendar_sources": [{
@@ -253,8 +289,8 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
         self.assertEqual(1, len(blocks))
         self.assertEqual("2026-07-04", blocks[0]["date"])
         self.assertEqual("2026-07-05", blocks[0]["end_date"])
-        self.assertEqual("2026-07-04T16:00:00", blocks[0]["start_datetime"])
-        self.assertEqual("2026-07-05T04:00:00", blocks[0]["end_datetime"])
+        self.assertEqual("2026-07-04T12:00:00", blocks[0]["start_datetime"])
+        self.assertEqual("2026-07-05T00:00:00", blocks[0]["end_datetime"])
         self.assertNotIn("overnight_not_allowed", stats["blocked_all_reason_counts"])
 
     def test_cross_midnight_non_standard_increment_is_still_blocked(self) -> None:
