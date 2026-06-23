@@ -2494,17 +2494,20 @@ def heartsaver_delivery_label(tab: dict[str, Any]) -> str:
     return "In-person"
 
 
-def render_heartsaver_delivery_choice(tab: dict[str, Any]) -> str:
+def render_heartsaver_delivery_choice(tab: dict[str, Any], *, active: bool = False) -> str:
     icon = escape(hub_asset_url(tab.get("tab_icon"), "images/tab_classroom.png"), quote=True)
     if icon and not icon.startswith("/"):
         icon = f"/{icon}"
     label = heartsaver_delivery_label(tab)
+    active_class = " active" if active else ""
+    tab_id = escape(tab["id"], quote=True)
+    program = escape(tab.get("program") or "", quote=True)
     return f"""
-        <a class="course-jump-card heartsaver-delivery-card" href="#{escape(tab['id'], quote=True)}">
+        <a class="course-jump-card heartsaver-delivery-card{active_class}" href="#{tab_id}" data-tab-target="#{tab_id}" data-program="{program}">
           <img src="{icon}" alt="" loading="lazy" onerror="this.style.display='none'">
           <strong>{escape(label)}</strong>
           <span>{escape(tab.get('description_short') or tab.get('description') or '')}</span>
-          <b>View {escape(label.lower())} options</b>
+          <b><span data-count-target>View {escape(label.lower())} options</span></b>
         </a>
 """.rstrip()
 
@@ -2601,18 +2604,18 @@ def render_heartsaver_course_flow(
 
         choices: list[str] = []
         panels: list[str] = []
-        for tab_id in group.get("tab_ids", []):
+        for tab_index, tab_id in enumerate(group.get("tab_ids", [])):
             tab_match = tab_lookup.get(tab_id)
             if not tab_match:
                 continue
             tab, matched = tab_match
-            choices.append(render_heartsaver_delivery_choice(tab))
+            choices.append(render_heartsaver_delivery_choice(tab, active=tab_index == 0))
             panels.append(
                 render_tab_panel(
                     page,
                     tab,
                     matched,
-                    active=True,
+                    active=tab_index == 0,
                     group_mode=group_mode,
                     requestable_offers=requestable_offers or [],
                     appointment_seed_offers=appointment_seed_offers or [],
@@ -2625,7 +2628,7 @@ def render_heartsaver_course_flow(
 
         rendered.append(
             f"""
-  <section class="section-box heartsaver-course-flow" id="{escape(group['id'], quote=True)}">
+  <section class="section-box heartsaver-course-flow" id="{escape(group['id'], quote=True)}" data-tabs>
     <div class="section-heading heartsaver-course-heading">
       <div>
         <div class="eyebrow">Course selected</div>

@@ -601,9 +601,9 @@
 
   function syncTriggerInventory(targetSelector, count) {
     getTriggersForTarget(targetSelector).forEach((trigger) => {
-      const strong = trigger.querySelector("strong");
-      if (strong) {
-        strong.textContent = `${count} date${count === 1 ? "" : "s"}`;
+      const countTarget = trigger.querySelector("[data-count-target]") || trigger.querySelector("strong");
+      if (countTarget) {
+        countTarget.textContent = `${count} date${count === 1 ? "" : "s"}`;
       }
       trigger.setAttribute("data-visible-count", String(count));
     });
@@ -645,7 +645,7 @@
 
   function firstVisibleTrigger(scope) {
     if (!scope) return null;
-    return Array.from(scope.querySelectorAll(".tab-btn, .slug-quick-pick")).find((trigger) => !trigger.hidden);
+    return Array.from(scope.querySelectorAll("[data-tab-target]")).find((trigger) => !trigger.hidden);
   }
 
   function extractTimeRowData(pill) {
@@ -898,7 +898,7 @@
     const panel = scope.querySelector(targetSelector);
     if (!panel || panel.hidden) return;
 
-    scope.querySelectorAll(".tab-btn, .slug-quick-pick").forEach((element) => {
+    scope.querySelectorAll("[data-tab-target]").forEach((element) => {
       const sameTarget = element.getAttribute("data-tab-target") === targetSelector;
       element.classList.toggle("active", sameTarget);
     });
@@ -1106,7 +1106,7 @@
 
   function initializeScopes() {
     document.querySelectorAll("[data-tabs]").forEach((scope) => {
-      const active = scope.querySelector(".tab-btn.active:not([hidden]), .slug-quick-pick.active:not([hidden]), .tab-panel.active:not([hidden])");
+      const active = scope.querySelector("[data-tab-target].active:not([hidden]), .tab-panel.active:not([hidden])");
       if (!active) {
         const fallback = firstVisibleTrigger(scope);
         if (fallback) activateTab(scope, fallback);
