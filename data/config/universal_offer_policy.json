@@ -2,6 +2,7 @@
   "schema_version": "0.1",
   "description": "Policy for the Universal Offer Engine. Real Enrollware iCal classes remain authoritative. Dynamic availability offers are hub-only display opportunities and must not be written into schedule_future.json.",
   "minimum_visible_offers_per_course": 2,
+  "minimum_visible_offer_lookahead_days": 60,
   "minimum_lead_hours": 24,
   "max_request_block_offers_per_course": 3,
   "max_block_offers_per_course": 3,

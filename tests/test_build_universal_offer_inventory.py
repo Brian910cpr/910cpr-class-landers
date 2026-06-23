@@ -39,6 +39,12 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                         "course_key": "aha_heartsaver_cpr_aed_online",
                         "official_title": "AHA Heartsaver CPR AED Online",
                         "family": "Heartsaver",
+                    },
+                    {
+                        "course_id": "329495",
+                        "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+                        "official_title": "AHA Heartsaver First Aid CPR AED - Blended",
+                        "family": "Heartsaver",
                     }
                 ]
             },
@@ -48,6 +54,11 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                         "course_id": "209808",
                         "course_key": "aha_heartsaver_cpr_aed_online",
                         "course_code": "AHA_HS_CPR_AED_BL",
+                    },
+                    "329495": {
+                        "course_id": "329495",
+                        "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+                        "course_code": "AHA_HS_FA_CPR_AED_BL",
                     }
                 }
             },
@@ -60,6 +71,11 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                                 "id": "hs-cpr-aed-bl",
                                 "label": "CPR + AED Only",
                                 "course_codes": ["AHA_HS_CPR_AED_BL"],
+                            },
+                            {
+                                "id": "hs-fa-cpr-aed-bl",
+                                "label": "First Aid CPR AED - Blended",
+                                "course_codes": ["AHA_HS_FA_CPR_AED_BL"],
                             }
                         ],
                     }
@@ -68,6 +84,7 @@ class UniversalOfferInventoryTests(unittest.TestCase):
             "course_visibility_policy": {"default_state": "active_public", "courses": {}},
             "universal_offer_policy": {
                 "minimum_visible_offers_per_course": 2,
+                "minimum_visible_offer_lookahead_days": 60,
                 "minimum_lead_hours": 24,
                 "max_request_block_offers_per_course": 3,
                 "max_block_offers_per_course": 3,
@@ -80,7 +97,8 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                     "heartsaver_workplace_stack": ["aha_heartsaver_cpr_aed_online"]
                 },
                 "course_key_tab_overrides": {
-                    "aha_heartsaver_cpr_aed_online": ["hs-cpr-aed-bl"]
+                    "aha_heartsaver_cpr_aed_online": ["hs-cpr-aed-bl"],
+                    "aha_heartsaver_first_aid_cpr_aed_blended": ["hs-fa-cpr-aed-bl"],
                 },
             },
         }
@@ -109,6 +127,28 @@ class UniversalOfferInventoryTests(unittest.TestCase):
         payload = engine.build_inventory(loaded)
         self.assertEqual(0, payload["summary"]["request_only_block_offers_generated"])
         self.assertIn("minimum_visible_offers_already_met", payload["summary"]["rejections_by_reason"])
+        min_rejection = next(
+            rejection for rejection in payload["stack_trace"]["minimum_visible_offer_rejections"]
+            if rejection["course_id"] == "209808"
+        )
+        self.assertEqual("aha_heartsaver_cpr_aed_online|heartsaver|hs-cpr-aed-bl", min_rejection["visible_inventory_key"])
+        self.assertEqual(["hs-cpr-aed-bl"], min_rejection["counted_visible_offer_delivery_buckets"])
+
+    def test_other_heartsaver_delivery_bucket_does_not_block_request_offer(self) -> None:
+        loaded = self.base_loaded()
+        loaded["schedule_future"] = {
+            "sessions": [
+                {"session_id": "real-1", "course_id": "329495", "start_at": (datetime.now() + timedelta(days=7)).isoformat()},
+                {"session_id": "real-2", "course_id": "329495", "start_at": (datetime.now() + timedelta(days=14)).isoformat()},
+            ]
+        }
+
+        payload = engine.build_inventory(loaded)
+
+        request_offers = [offer for offer in payload["offers"] if offer["offer_type"] == "request_only_block"]
+        self.assertEqual(1, len(request_offers))
+        self.assertEqual("209808", request_offers[0]["course_id"])
+        self.assertNotIn("minimum_visible_offers_already_met", payload["summary"]["rejections_by_reason"])
 
     def test_block_start_cap_limits_repeated_candidates(self) -> None:
         loaded = self.base_loaded()

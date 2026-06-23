@@ -264,6 +264,130 @@ def session_counts_by_course(schedule_payload: Any) -> Counter[str]:
     return counts
 
 
+def delivery_bucket(tab_ids: list[str]) -> str:
+    return ",".join(sorted(clean_text(tab_id) for tab_id in tab_ids if clean_text(tab_id))) or UNKNOWN
+
+
+def visible_inventory_key(course_key_value: str, hub_slug: str, tab_ids: list[str]) -> str:
+    return "|".join([
+        clean_text(course_key_value) or UNKNOWN,
+        clean_text(hub_slug) or UNKNOWN,
+        delivery_bucket(tab_ids),
+    ])
+
+
+def visible_item(
+    source_type: str,
+    source_id: Any,
+    course_id: Any,
+    course_key_value: Any,
+    course_title_value: Any,
+    hub_slug: Any,
+    tab_ids: list[str],
+    start_value: Any,
+) -> dict[str, Any]:
+    start = parse_dt(start_value)
+    return {
+        "source_type": clean_text(source_type) or UNKNOWN,
+        "source_id": clean_text(source_id) or UNKNOWN,
+        "course_id": clean_text(course_id),
+        "course_key": clean_text(course_key_value) or UNKNOWN,
+        "course_title": clean_text(course_title_value) or UNKNOWN,
+        "hub_slug": clean_text(hub_slug) or UNKNOWN,
+        "delivery_bucket": delivery_bucket(tab_ids),
+        "start": start.isoformat() if start else UNKNOWN,
+        "date": start.date().isoformat() if start else UNKNOWN,
+    }
+
+
+def visible_inventory_by_course_delivery_page(
+    schedule_payload: Any,
+    appointment_offers: list[dict[str, Any]],
+    course_catalog: dict[str, dict[str, Any]],
+    course_map: dict[str, dict[str, Any]],
+    hubs: dict[str, list[dict[str, str]]],
+    policy: dict[str, Any],
+) -> dict[str, list[dict[str, Any]]]:
+    inventory: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    sessions = schedule_payload.get("sessions", []) if isinstance(schedule_payload, dict) else []
+    for session in sessions:
+        if not isinstance(session, dict):
+            continue
+        course_id = clean_text(session.get("course_id") or session.get("course_number"))
+        course = course_catalog.get(course_id)
+        course_map_record = course_map.get(course_id)
+        if not course:
+            continue
+        course_key_value = course_key(course, course_map_record)
+        hub_slug, tab_ids = hub_and_tabs_for_course(course_id, course, course_map_record, hubs, policy)
+        key = visible_inventory_key(course_key_value, hub_slug, tab_ids)
+        inventory[key].append(visible_item(
+            "real_ical",
+            session.get("session_id") or session.get("id") or course_id,
+            course_id,
+            course_key_value,
+            session.get("mapped_clean_title") or session.get("official_course_name") or session.get("course_name") or course_title(course, course_map_record),
+            hub_slug,
+            tab_ids,
+            session.get("start_at") or session.get("start_datetime"),
+        ))
+    for offer in appointment_offers:
+        course_key_value = clean_text(offer.get("course_key")) or UNKNOWN
+        hub_slug = clean_text(offer.get("hub_slug")) or fallback_hub_for_course({}, {})
+        tab_ids = [clean_text(tab_id) for tab_id in offer.get("tab_ids", []) if clean_text(tab_id)] if isinstance(offer.get("tab_ids"), list) else []
+        key = visible_inventory_key(course_key_value, hub_slug, tab_ids)
+        inventory[key].append(visible_item(
+            "appointment_url",
+            offer.get("public_offer_id") or offer.get("source_seed_id") or offer.get("source_offer_id"),
+            offer.get("course_id"),
+            course_key_value,
+            offer.get("course_title"),
+            hub_slug,
+            tab_ids,
+            offer.get("scheduler_consumption_start") or offer.get("start_datetime"),
+        ))
+    return inventory
+
+
+def visible_items_in_scope(
+    items: list[dict[str, Any]],
+    candidate_start: datetime,
+    lookahead_days: int | None,
+) -> list[dict[str, Any]]:
+    if lookahead_days is None or lookahead_days <= 0:
+        return items
+    now = datetime.now(candidate_start.tzinfo) if candidate_start.tzinfo else datetime.now()
+    window_end = candidate_start + timedelta(days=lookahead_days)
+    scoped: list[dict[str, Any]] = []
+    for item in items:
+        start = parse_dt(item.get("start"))
+        if not start:
+            scoped.append(item)
+            continue
+        if now <= start <= window_end:
+            scoped.append(item)
+    return scoped
+
+
+def minimum_visible_rejection_context(
+    visible_key: str,
+    counted_items: list[dict[str, Any]],
+    threshold: int,
+    lookahead_days: int | None,
+) -> dict[str, Any]:
+    return {
+        "visible_inventory_key": visible_key,
+        "count_threshold_used": threshold,
+        "counted_visible_offer_count": len(counted_items),
+        "counted_visible_offer_keys": [clean_text(item.get("source_id")) for item in counted_items],
+        "counted_visible_offer_course_keys": sorted({clean_text(item.get("course_key")) for item in counted_items if clean_text(item.get("course_key"))}),
+        "counted_visible_offer_delivery_buckets": sorted({clean_text(item.get("delivery_bucket")) for item in counted_items if clean_text(item.get("delivery_bucket"))}),
+        "counted_visible_offer_dates": sorted({clean_text(item.get("date")) for item in counted_items if clean_text(item.get("date"))}),
+        "counted_visible_offer_sources": dict(sorted(Counter(clean_text(item.get("source_type")) or UNKNOWN for item in counted_items).items())),
+        "minimum_visible_lookahead_days": lookahead_days if lookahead_days is not None else "all",
+    }
+
+
 def offer_sort_key(offer: dict[str, Any], preferred_minutes: list[str]) -> tuple[str, int, str, str]:
     minute = clean_text(offer.get("start_time"))[-2:]
     try:
@@ -465,12 +589,32 @@ def build_stack_trace(
         {
             "source_offer_id": rejection.get("source_offer_id"),
             "course_id": rejection.get("course_id"),
+            "course_key": rejection.get("course_key"),
             "course_title": rejection.get("course_title"),
+            "delivery_bucket": rejection.get("delivery_bucket"),
+            "target_hub": rejection.get("target_hub"),
+            "target_page": rejection.get("target_page"),
+            "target_tab_ids": rejection.get("target_tab_ids"),
             "offer_type": rejection.get("offer_type"),
             "reason_code": rejection.get("reason_code"),
             "detail": rejection.get("detail"),
+            **({
+                "visible_inventory_key": rejection.get("visible_inventory_key"),
+                "count_threshold_used": rejection.get("count_threshold_used"),
+                "counted_visible_offer_count": rejection.get("counted_visible_offer_count"),
+                "counted_visible_offer_keys": rejection.get("counted_visible_offer_keys"),
+                "counted_visible_offer_course_keys": rejection.get("counted_visible_offer_course_keys"),
+                "counted_visible_offer_delivery_buckets": rejection.get("counted_visible_offer_delivery_buckets"),
+                "counted_visible_offer_dates": rejection.get("counted_visible_offer_dates"),
+                "counted_visible_offer_sources": rejection.get("counted_visible_offer_sources"),
+                "minimum_visible_lookahead_days": rejection.get("minimum_visible_lookahead_days"),
+            } if rejection.get("reason_code") == "minimum_visible_offers_already_met" else {}),
         }
         for rejection in rejections[:5000]
+    ]
+    minimum_visible_rejections = [
+        rejection for rejection in trace_rejections
+        if rejection.get("reason_code") == "minimum_visible_offers_already_met"
     ]
     return {
         "generated_at": datetime.now().astimezone().isoformat(),
@@ -487,6 +631,36 @@ def build_stack_trace(
         "accepted_offers": accepted_offers,
         "rejected_offers": trace_rejections,
         "rejection_histogram": dict(Counter(clean_text(item.get("reason_code")) or UNKNOWN for item in rejections).most_common()),
+        "minimum_visible_offer_rejections": minimum_visible_rejections,
+        "minimum_visible_rejection_groups": {
+            key: {
+                "count": len(items),
+                "course_keys": sorted({clean_text(item.get("course_key")) for item in items if clean_text(item.get("course_key"))}),
+                "delivery_buckets": sorted({clean_text(item.get("delivery_bucket")) for item in items if clean_text(item.get("delivery_bucket"))}),
+                "target_hubs": sorted({clean_text(item.get("target_hub")) for item in items if clean_text(item.get("target_hub"))}),
+                "counted_sources": dict(sorted(Counter(
+                    source
+                    for item in items
+                    for source, count in (item.get("counted_visible_offer_sources") or {}).items()
+                    for _ in range(int(count or 0))
+                ).items())),
+                "counted_dates": sorted({
+                    date
+                    for item in items
+                    for date in (item.get("counted_visible_offer_dates") or [])
+                    if clean_text(date)
+                }),
+            }
+            for key, items in sorted(
+                defaultdict(list, {
+                    group_key: [
+                        item for item in minimum_visible_rejections
+                        if clean_text(item.get("visible_inventory_key")) == group_key
+                    ]
+                    for group_key in sorted({clean_text(item.get("visible_inventory_key")) for item in minimum_visible_rejections})
+                }).items()
+            )
+        },
         "cooldown_decisions": [
             rejection for rejection in trace_rejections
             if clean_text(rejection.get("reason_code")).startswith("offer_again_cooldown")
@@ -622,8 +796,8 @@ def selected_seed_locks(appointment_offers: list[dict[str, Any]]) -> list[dict[s
 
 def build_request_block_offers(
     dynamic_payload: Any,
-    real_counts: Counter[str],
     real_session_starts: dict[str, list[datetime]],
+    visible_inventory: dict[str, list[dict[str, Any]]],
     appointment_offers: list[dict[str, Any]],
     course_catalog: dict[str, dict[str, Any]],
     course_map: dict[str, dict[str, Any]],
@@ -643,10 +817,10 @@ def build_request_block_offers(
     max_start_times_per_block_per_page = int(policy.get("max_start_times_per_block_per_page", 3) or 3)
     preferred_minutes = [clean_text(item) for item in policy.get("preferred_start_minutes", []) if clean_text(item)]
     minimum_lead_hours = int(policy.get("minimum_lead_hours", 0) or 0)
+    lookahead_raw = policy.get("minimum_visible_offer_lookahead_days")
+    minimum_visible_lookahead_days = int(lookahead_raw) if clean_text(lookahead_raw) else None
     earliest_start = datetime.now() + timedelta(hours=minimum_lead_hours)
     selected_source_ids = {clean_text(offer.get("source_offer_id")) for offer in appointment_offers}
-    visible_counts = Counter(real_counts)
-    visible_counts.update(clean_text(offer.get("course_id")) for offer in appointment_offers if clean_text(offer.get("course_id")))
     course_request_counts: Counter[str] = Counter()
     course_block_counts: Counter[tuple[str, str]] = Counter()
     course_week_counts: Counter[tuple[str, str]] = Counter()
@@ -683,18 +857,34 @@ def build_request_block_offers(
         if clean_text(offer.get("offer_id")) in selected_source_ids:
             rejections.append({**context, "reason_code": "already_exposed_as_appointment_url_offer"})
             continue
-        if visible_counts[course_id] >= min_visible:
-            rejections.append({**context, "reason_code": "minimum_visible_offers_already_met"})
-            continue
-        if course_request_counts[course_id] >= max_per_course:
-            rejections.append({**context, "reason_code": "max_request_block_offers_per_course"})
-            continue
         start_dt = parse_dt(offer.get("scheduler_consumption_start") or offer.get("appointment_display_start") or offer.get("start_datetime"))
         if not start_dt:
             rejections.append({**context, "reason_code": "missing_start_datetime"})
             continue
         if start_dt < earliest_start:
             rejections.append({**context, "reason_code": "inside_minimum_lead_time"})
+            continue
+        hub_slug, tab_ids = hub_and_tabs_for_course(course_id, course, course_map_record, hubs, policy)
+        course_key_value = course_key(course, course_map_record)
+        visible_key = visible_inventory_key(course_key_value, hub_slug, tab_ids)
+        counted_items = visible_items_in_scope(visible_inventory.get(visible_key, []), start_dt, minimum_visible_lookahead_days)
+        context = {
+            **context,
+            "course_key": course_key_value,
+            "delivery_bucket": delivery_bucket(tab_ids),
+            "target_hub": hub_slug,
+            "target_page": hub_slug,
+            "target_tab_ids": tab_ids,
+        }
+        if len(counted_items) >= min_visible:
+            rejections.append({
+                **context,
+                "reason_code": "minimum_visible_offers_already_met",
+                **minimum_visible_rejection_context(visible_key, counted_items, min_visible, minimum_visible_lookahead_days),
+            })
+            continue
+        if course_request_counts[course_id] >= max_per_course:
+            rejections.append({**context, "reason_code": "max_request_block_offers_per_course"})
             continue
         cooldown_hours = cooldown_hours_for_course(course, course_map_record, policy)
         if course_recently_visible(course_id, start_dt, real_session_starts, appointment_offers, cooldown_hours):
@@ -704,7 +894,6 @@ def build_request_block_offers(
         if course_week_counts[(course_id, week_key)] >= max_per_week:
             rejections.append({**context, "reason_code": "max_request_block_offers_per_course_per_week"})
             continue
-        hub_slug, tab_ids = hub_and_tabs_for_course(course_id, course, course_map_record, hubs, policy)
         block_id = availability_block_id(offer)
         if course_block_counts[(course_id, block_id)] >= max_block_offers_per_course:
             rejections.append({**context, "reason_code": "max_block_offers_per_course"})
@@ -762,7 +951,16 @@ def build_request_block_offers(
             "standalone_class_lander_created": False,
         }
         built.append(built_offer)
-        visible_counts[course_id] += 1
+        visible_inventory.setdefault(visible_key, []).append(visible_item(
+            "request_only",
+            built_offer.get("public_offer_id"),
+            course_id,
+            course_key_value,
+            title,
+            hub_slug,
+            tab_ids,
+            built_offer.get("scheduler_consumption_start") or built_offer.get("start_datetime"),
+        ))
         course_request_counts[course_id] += 1
         course_block_counts[(course_id, block_id)] += 1
         course_week_counts[(course_id, week_key)] += 1
@@ -858,6 +1056,24 @@ def render_stack_trace_report(trace: dict[str, Any], summary: dict[str, Any]) ->
     else:
         lines.append("- None")
 
+    lines.extend(["", "## Minimum Visible Offer Rejection Detail", ""])
+    min_groups = trace.get("minimum_visible_rejection_groups", {})
+    if min_groups:
+        lines.extend([
+            "Minimum-visible checks are scoped by `course_key | hub | delivery bucket` and the configured lookahead window.",
+            "",
+            "| Visible inventory key | Rejections | Counted sources | Counted dates |",
+            "| --- | ---: | --- | --- |",
+        ])
+        for key, item in sorted(min_groups.items()):
+            sources = ", ".join(f"{source}: {count}" for source, count in (item.get("counted_sources") or {}).items()) or UNKNOWN
+            dates = ", ".join((item.get("counted_dates") or [])[:8])
+            if len(item.get("counted_dates") or []) > 8:
+                dates += ", ..."
+            lines.append(f"| `{key}` | {item.get('count', 0)} | {sources} | {dates or UNKNOWN} |")
+    else:
+        lines.append("- None")
+
     lines.extend(["", "## Stack Groups", ""])
     groups = trace.get("stack_groups_created", [])
     if groups:
@@ -928,10 +1144,18 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
         loaded.get("course_visibility_policy") or {},
         policy,
     )
+    visible_inventory = visible_inventory_by_course_delivery_page(
+        loaded.get("schedule_future") or {},
+        appointment_offers,
+        course_catalog,
+        course_map,
+        hubs,
+        policy,
+    )
     request_offers, request_rejections = build_request_block_offers(
         loaded.get("dynamic_offers_preview"),
-        real_counts,
         real_starts,
+        visible_inventory,
         appointment_offers,
         course_catalog,
         course_map,
