@@ -1,18 +1,18 @@
 {
   "build": {
-    "generated_at": "2026-06-24T11:33:43.433177-04:00",
+    "generated_at": "2026-06-24T15:43:23.095694-04:00",
     "source_file": "data\\sessions_current.json",
     "counts": {
       "sessions_input": 587,
       "sessions_output": 204,
       "skipped_missing_start": 0,
-      "skipped_past": 381,
+      "skipped_past": 382,
       "skipped_orphan": 0,
       "skipped_non_public_location": 0,
       "skipped_tbd_location": 1,
       "included_by_legacy_mapping": 201,
       "included_by_course_identity_resolver": 3,
-      "skipped_unmapped_after_resolver": 1,
+      "skipped_unmapped_after_resolver": 0,
       "include_past": false,
       "enrollware_ical_authoritative": true
     },
