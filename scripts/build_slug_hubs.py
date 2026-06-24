@@ -7,7 +7,7 @@ import hmac
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from html import escape, unescape
 from pathlib import Path
 from typing import Any
@@ -59,6 +59,7 @@ CURATED_OFFER_LIMIT = 8
 CURATED_OFFER_MIN = 5
 EMPTY_FALLBACK_TITLE = "No selected times showing here, but you still have options."
 EMPTY_FALLBACK_BODY = "View the full schedule for additional dates, request a class time, or ask about on-site training for your team."
+DEBUG_SOURCE_TIMES_ENV = "LANDER_DEBUG_SOURCE_TIMES"
 EMERGENCY_REGISTRATION_EMAIL = "info@910cpr.com"
 EMERGENCY_ALERT_TITLE = "⚠️ Our Schedule Platform Vendor Is Experiencing Technical Difficulties"
 EMERGENCY_ALERT_LINES = (
@@ -1411,6 +1412,92 @@ def format_time_line(dt: datetime | None) -> str:
     return dt.strftime("%I:%M %p").lstrip("0") if dt else "Time TBA"
 
 
+def debug_source_times_enabled() -> bool:
+    return normalize_space(os.environ.get(DEBUG_SOURCE_TIMES_ENV)).lower() in {"1", "true", "yes", "on"}
+
+
+def appointment_day_id_from_url(url: str | None) -> str:
+    parsed = urlparse(normalize_space(url))
+    if not parsed.query:
+        return ""
+    return normalize_space((parse_qs(parsed.query).get("appointmentDayId") or [""])[0])
+
+
+def debug_source_profile(row: dict[str, Any], *, kind_hint: str = "") -> dict[str, Any]:
+    row_type = normalize_space(kind_hint)
+    render_source = normalize_space(row.get("render_source"))
+    display_type = normalize_space(row.get("display_item_type") or row.get("public_display_item_type"))
+    source = normalize_space(row.get("source"))
+
+    if row_type == "appointment_seed" or display_type == "appointment_seed_offer" or row.get("_appointment_seed_offer"):
+        source_type = "seed"
+        badge = "SEED"
+        offset_minutes = 1
+        source_file = "data/audit/seed_appointment_url_preview.json"
+    elif row_type in {"requestable", "universal_request"} or row.get("_requestable_offer") or row.get("_universal_request_offer"):
+        source_type = "dynamic"
+        badge = "DYNAMIC"
+        offset_minutes = 1
+        source_file = "data/audit/universal_offer_inventory.json" if row.get("_universal_request_offer") else "docs/data/customer_facing_offers.json"
+    elif source == "enrollware_ical" or (row_type == "real_session" and (row.get("session_id") or row.get("registration_url"))):
+        source_type = "ical"
+        badge = "ICAL"
+        offset_minutes = 0
+        source_file = "docs/data/schedule_future.json"
+    else:
+        source_type = "unknown"
+        badge = "UNKNOWN"
+        offset_minutes = 2
+        source_file = render_source or normalize_space(row.get("source_file")) or "unknown"
+
+    class_id = normalize_space(row.get("session_id") or row.get("class_id") or row.get("courseSchedId"))
+    appointment_day_id = normalize_space(row.get("appointmentDayId") or row.get("appointment_day_id"))
+    if not appointment_day_id:
+        appointment_day_id = appointment_day_id_from_url(row.get("appointment_registration_url") or row.get("registration_url"))
+
+    return {
+        "source_type": source_type,
+        "badge": badge,
+        "offset_minutes": offset_minutes,
+        "source_file": source_file,
+        "course_id": normalize_space(row.get("course_id") or row.get("course_number")),
+        "class_id": class_id,
+        "appointment_day_id": appointment_day_id,
+    }
+
+
+def debug_display_dt(dt: datetime | None, row: dict[str, Any], *, kind_hint: str = "") -> datetime | None:
+    if not debug_source_times_enabled() or dt is None:
+        return dt
+    profile = debug_source_profile(row, kind_hint=kind_hint)
+    return dt + timedelta(minutes=int(profile["offset_minutes"]))
+
+
+def debug_source_badge_html(row: dict[str, Any], *, kind_hint: str = "") -> str:
+    if not debug_source_times_enabled():
+        return ""
+    profile = debug_source_profile(row, kind_hint=kind_hint)
+    return f'<span class="slug-pill-chip slug-debug-source-badge">DEBUG {escape(profile["badge"])}</span>'
+
+
+def debug_source_data_attrs(row: dict[str, Any], *, kind_hint: str = "") -> str:
+    if not debug_source_times_enabled():
+        return ""
+    profile = debug_source_profile(row, kind_hint=kind_hint)
+    attrs = {
+        "data-source-type": profile["source_type"],
+        "data-source-file": profile["source_file"],
+        "data-course-id": profile["course_id"],
+        "data-class-id": profile["class_id"],
+        "data-appointment-day-id": profile["appointment_day_id"],
+    }
+    return "".join(
+        f' {name}="{escape(str(value), quote=True)}"'
+        for name, value in attrs.items()
+        if value not in (None, "")
+    )
+
+
 def certifying_body_key(session: dict[str, Any]) -> str:
     body = normalize_space(session.get("mapped_certifying_body") or session.get("certifying_body")).upper()
     haystack = normalize_space(
@@ -1471,6 +1558,8 @@ def render_emergency_mailto(session: dict[str, Any], *, page_slug: str) -> str:
 def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug: str) -> str:
     start_dt = parse_dt(session.get("start_at"))
     end_dt = parse_dt(session.get("end_at"))
+    display_start_dt = debug_display_dt(start_dt, session, kind_hint="real_session")
+    display_end_dt = debug_display_dt(end_dt, session, kind_hint="real_session")
     location = clean_location(session.get("location_display") or session.get("location_name"))
     title = normalize_space(session.get("course_name"))
     register_url = escape(session.get("registration_url") or "#", quote=True)
@@ -1497,6 +1586,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
         badge_html += f'<span class="slug-pill-chip slug-pill-chip-format">{escape(format_badge)}</span>'
     if family_badge:
         badge_html += f'<span class="slug-pill-chip slug-pill-chip-family">{escape(family_badge)}</span>'
+    badge_html += debug_source_badge_html(session, kind_hint="real_session")
     if enrolled_count >= 1 and not group_mode:
         badge_html += '<span class="slug-pill-chip slug-pill-chip-momentum">Already Enrolled</span>'
         badge_html += f'<span class="slug-pill-chip slug-pill-chip-momentum">{escape(momentum_label(enrolled_count))}</span>'
@@ -1509,16 +1599,16 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
     action_hint_html = f'    <div class="slug-pill-hint">{escape(action_hint)}</div>' if action_hint else ""
 
     return f"""
-<article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}" data-row-href="{action_url}"{cert_attrs}>
+<article class="slug-pill js-session-item" data-session-id="{session_id}" data-start="{session_start}" data-end="{session_end}" data-session-start="{session_start}" data-row-href="{action_url}"{cert_attrs}{debug_source_data_attrs(session, kind_hint="real_session")}>
   <div class="slug-pill-date">
-    <div class="slug-pill-month">{format_month(start_dt)}</div>
-    <div class="slug-pill-day">{format_day(start_dt)}</div>
-    <div class="slug-pill-weekday">{format_weekday(start_dt)}</div>
+    <div class="slug-pill-month">{format_month(display_start_dt)}</div>
+    <div class="slug-pill-day">{format_day(display_start_dt)}</div>
+    <div class="slug-pill-weekday">{format_weekday(display_start_dt)}</div>
   </div>
   <div class="slug-pill-main">
-    <div class="slug-pill-title">{escape(format_date_line(start_dt))}</div>
+    <div class="slug-pill-title">{escape(format_date_line(display_start_dt))}</div>
     <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">{escape(format_time_line(start_dt))}</span>
+      <span class="slug-pill-chip">{escape(format_time_line(display_start_dt))}</span>
       <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
 {badge_line}
     </div>
@@ -1868,6 +1958,8 @@ def summarize_requestable_offers(offers: list[dict[str, Any]]) -> dict[str, Any]
 def render_requestable_offer_card(offer: dict[str, Any], *, hub_slug: str = "bls") -> str:
     start_dt = parse_dt(offer.get("start_time"))
     end_dt = parse_dt(offer.get("end_time"))
+    display_start_dt = debug_display_dt(start_dt, offer, kind_hint="requestable")
+    display_end_dt = debug_display_dt(end_dt, offer, kind_hint="requestable")
     course_key = normalize_space(offer.get("course_key"))
     title = normalize_space(offer.get("course_display_name") or offer.get("course_title")) or "BLS requestable time"
     location = clean_location(offer.get("location_name") or offer.get("location_address"))
@@ -1894,25 +1986,27 @@ def render_requestable_offer_card(offer: dict[str, Any], *, hub_slug: str = "bls
         f'data-offer-token-signed="{token_signed}" '
         f'data-location-name="{escape(location, quote=True)}"'
     )
-    time_range = format_time_line(start_dt)
+    time_range = format_time_line(display_start_dt)
     notice_minutes = offer.get("minimum_customer_notice_minutes_used")
     notice_copy = ""
     if notice_minutes not in (None, ""):
         notice_copy = f'<span class="slug-pill-chip">Notice window: {escape(str(notice_minutes))} min</span>'
+    debug_badge = debug_source_badge_html(offer, kind_hint="requestable")
 
     return f"""
-<article class="slug-pill slug-requestable-offer" {data_attrs} data-requested-end="{requested_end}">
+<article class="slug-pill slug-requestable-offer" {data_attrs} data-requested-end="{requested_end}"{debug_source_data_attrs(offer, kind_hint="requestable")}>
   <div class="slug-pill-date">
-    <div class="slug-pill-month">{format_month(start_dt)}</div>
-    <div class="slug-pill-day">{format_day(start_dt)}</div>
-    <div class="slug-pill-weekday">{format_weekday(start_dt)}</div>
+    <div class="slug-pill-month">{format_month(display_start_dt)}</div>
+    <div class="slug-pill-day">{format_day(display_start_dt)}</div>
+    <div class="slug-pill-weekday">{format_weekday(display_start_dt)}</div>
   </div>
   <div class="slug-pill-main">
-    <div class="slug-pill-title">{escape(format_date_line(start_dt))}</div>
+    <div class="slug-pill-title">{escape(format_date_line(display_start_dt))}</div>
     <div class="slug-pill-meta-row">
       <span class="slug-pill-chip">{escape(time_range)}</span>
       <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
       {notice_copy}
+      {debug_badge}
     </div>
     <div class="slug-pill-subtitle">{escape(title)}</div>
   </div>
@@ -1986,32 +2080,35 @@ def future_request_blocks_for_tab(tab: dict[str, Any], universal_offers: list[di
 def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     start_dt = parse_dt(offer.get("start_datetime"))
     end_dt = parse_dt(offer.get("end_datetime"))
+    display_start_dt = debug_display_dt(start_dt, offer, kind_hint="appointment_seed")
+    display_end_dt = debug_display_dt(end_dt, offer, kind_hint="appointment_seed")
     title = normalize_space(offer.get("course_title")) or "Available class time"
     instructor = normalize_space(offer.get("instructor_display_name") or offer.get("instructor_key")).title()
     location = clean_location(offer.get("location_name") or offer.get("offer_location") or offer.get("location_key"))
     url = escape(offer.get("appointment_registration_url") or "#", quote=True)
     start_attr = escape(start_dt.isoformat() if start_dt else normalize_space(offer.get("start_datetime")), quote=True)
     end_attr = escape(end_dt.isoformat() if end_dt else normalize_space(offer.get("end_datetime")), quote=True)
-    time_range = format_time_line(start_dt)
-    if start_dt and end_dt:
-        time_range = f"{format_time_line(start_dt)} - {format_time_line(end_dt)}"
+    time_range = format_time_line(display_start_dt)
+    if display_start_dt and display_end_dt:
+        time_range = f"{format_time_line(display_start_dt)} - {format_time_line(display_end_dt)}"
     data_attrs = (
         f'data-start="{start_attr}" '
         f'data-end="{end_attr}"'
     )
     return f"""
-<article class="slug-pill slug-appointment-option" {data_attrs}>
+<article class="slug-pill slug-appointment-option" {data_attrs}{debug_source_data_attrs(offer, kind_hint="appointment_seed")}>
   <div class="slug-pill-date">
-    <div class="slug-pill-month">{format_month(start_dt)}</div>
-    <div class="slug-pill-day">{format_day(start_dt)}</div>
-    <div class="slug-pill-weekday">{format_weekday(start_dt)}</div>
+    <div class="slug-pill-month">{format_month(display_start_dt)}</div>
+    <div class="slug-pill-day">{format_day(display_start_dt)}</div>
+    <div class="slug-pill-weekday">{format_weekday(display_start_dt)}</div>
   </div>
   <div class="slug-pill-main">
-    <div class="slug-pill-title">{escape(format_date_line(start_dt))}</div>
+    <div class="slug-pill-title">{escape(format_date_line(display_start_dt))}</div>
     <div class="slug-pill-meta-row">
       <span class="slug-pill-chip">{escape(time_range)}</span>
       <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
       <span class="slug-pill-chip">Available class option</span>
+      {debug_source_badge_html(offer, kind_hint="appointment_seed")}
       {f'<span class="slug-pill-chip">Instructor: {escape(instructor)}</span>' if instructor else ''}
     </div>
     <div class="slug-pill-subtitle">{escape(title)}</div>
@@ -2027,30 +2124,34 @@ def render_universal_request_offer_card(offer: dict[str, Any]) -> str:
     start_dt = parse_dt(offer.get("start_datetime"))
     end_dt = parse_dt(offer.get("end_datetime"))
     lock_end_dt = parse_dt(offer.get("scheduler_consumption_end"))
+    display_start_dt = debug_display_dt(start_dt, offer, kind_hint="universal_request")
+    display_end_dt = debug_display_dt(end_dt, offer, kind_hint="universal_request")
+    display_lock_end_dt = debug_display_dt(lock_end_dt, offer, kind_hint="universal_request")
     title = normalize_space(offer.get("course_title")) or "Available training time"
     location = clean_location(offer.get("location_name"))
     url = escape(offer.get("request_url") or group_request_href(title), quote=True)
     label = normalize_space(offer.get("cta_label")) or "Ask about this time"
-    time_range = format_time_line(start_dt)
-    if start_dt and end_dt:
-        time_range = f"{format_time_line(start_dt)} - {format_time_line(end_dt)}"
+    time_range = format_time_line(display_start_dt)
+    if display_start_dt and display_end_dt:
+        time_range = f"{format_time_line(display_start_dt)} - {format_time_line(display_end_dt)}"
     note = normalize_space(offer.get("display_note")) or "This time is based on instructor availability and must be confirmed before a booking link is created."
     lock_note = ""
     if start_dt and lock_end_dt and lock_end_dt > (end_dt or start_dt):
-        lock_note = f'<span class="slug-pill-chip">Time held through {escape(format_time_line(lock_end_dt))}</span>'
+        lock_note = f'<span class="slug-pill-chip">Time held through {escape(format_time_line(display_lock_end_dt))}</span>'
     return f"""
-<article class="slug-pill slug-request-time-option">
+<article class="slug-pill slug-request-time-option"{debug_source_data_attrs(offer, kind_hint="universal_request")}>
   <div class="slug-pill-date">
-    <div class="slug-pill-month">{format_month(start_dt)}</div>
-    <div class="slug-pill-day">{format_day(start_dt)}</div>
-    <div class="slug-pill-weekday">{format_weekday(start_dt)}</div>
+    <div class="slug-pill-month">{format_month(display_start_dt)}</div>
+    <div class="slug-pill-day">{format_day(display_start_dt)}</div>
+    <div class="slug-pill-weekday">{format_weekday(display_start_dt)}</div>
   </div>
   <div class="slug-pill-main">
-    <div class="slug-pill-title">{escape(format_date_line(start_dt))}</div>
+    <div class="slug-pill-title">{escape(format_date_line(display_start_dt))}</div>
     <div class="slug-pill-meta-row">
       <span class="slug-pill-chip">{escape(time_range)}</span>
       <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
       <span class="slug-pill-chip">Confirm before booking</span>
+      {debug_source_badge_html(offer, kind_hint="universal_request")}
       {lock_note}
     </div>
     <div class="slug-pill-subtitle">{escape(title)}</div>
@@ -2583,17 +2684,21 @@ def render_heartsaver_delivery_choice(tab: dict[str, Any], *, active: bool = Fal
     icon = escape(hub_asset_url(tab.get("tab_icon"), "images/tab_classroom.png"), quote=True)
     if icon and not icon.startswith("/"):
         icon = f"/{icon}"
-    label = heartsaver_delivery_label(tab)
+    label = normalize_space(tab.get("label")) or heartsaver_delivery_label(tab)
+    badge = normalize_space(tab.get("tab_badge")) or heartsaver_delivery_label(tab)
     active_class = " active" if active else ""
     tab_id = escape(tab["id"], quote=True)
     program = escape(tab.get("program") or "", quote=True)
+    badge_html = f'<span class="hub-tab-tag">{escape(badge)}</span>' if badge else ""
     return f"""
-        <a class="course-jump-card heartsaver-delivery-card{active_class}" href="#{tab_id}" data-tab-target="#{tab_id}" data-program="{program}">
-          <img src="{icon}" alt="" loading="lazy" onerror="this.style.display='none'">
-          <strong>{escape(label)}</strong>
-          <span>{escape(tab.get('description_short') or tab.get('description') or '')}</span>
-          <b><span data-count-target>View {escape(label.lower())} options</span></b>
-        </a>
+        <button class="tab-btn heartsaver-delivery-tab{active_class}" data-tab-target="#{tab_id}" data-program="{program}" type="button">
+          <img class="hub-tab-icon" src="{icon}" alt="" loading="lazy" onerror="this.style.display='none'">
+          <span class="hub-tab-copy">
+            <span class="hub-tab-label">{escape(label)}</span>
+            {badge_html}
+            <span class="hub-tab-tag hub-tab-count" data-count-target>Checking dates</span>
+          </span>
+        </button>
 """.rstrip()
 
 
@@ -2721,7 +2826,7 @@ def render_heartsaver_course_flow(
       </div>
       <p class="section-copy">{escape(group['copy'])}</p>
     </div>
-    <div class="heartsaver-course-grid heartsaver-delivery-grid" aria-label="{escape(group['title'], quote=True)} delivery choices">
+    <div class="tabs hub-tabs heartsaver-delivery-tabs" aria-label="{escape(group['title'], quote=True)} delivery choices">
       {''.join(choices)}
     </div>
     <div class="heartsaver-delivery-panels">

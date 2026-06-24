@@ -26,12 +26,5 @@
       "eligible_for_classes_inventory": false
     }
   },
-  "courses": {
-    "351632": {
-      "state": "menu_only_suppressed",
-      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_in_person",
-      "title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
-      "reason": "Visible as a real Heartsaver course option, but suppressed from normal public scheduled inventory until Brian re-enables public in-person pediatric dates."
-    }
-  }
+  "courses": {}
 }
