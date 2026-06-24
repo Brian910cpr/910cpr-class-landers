@@ -114,7 +114,7 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
         self.assertEqual("14:00", blocks[0]["start_time"])
         self.assertEqual("18:00", blocks[0]["end_time"])
 
-    def test_instructor_time_only_preserves_source_location_hint(self) -> None:
+    def test_inverse_blocking_empty_time_becomes_availability_inside_container(self) -> None:
         calendar_payload = {
             "calendar_sources": [{
                 "calendar_source_key": "brian_inverse",
@@ -122,6 +122,10 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
                 "mode": "inverse_blocking",
                 "availability_location_mode": "instructor_time_only",
                 "default_location_key": "shipyard",
+                "inverse_expansion_start_datetime": "2026-07-01T00:00:00",
+                "inverse_expansion_horizon_days": 1,
+                "inverse_expansion_min_gap_minutes": 90,
+                "inverse_expansion_require_active_appointment_container": True,
             }]
         }
         people_payload = {
@@ -135,28 +139,100 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
             "courses": [{
                 "course_id": "209806",
                 "family": "BLS",
+                "duration_minutes": 120,
+                "appointment_allowed": True,
                 "required_instructor_certifications": ["AHA_BLS_INSTRUCTOR"],
+            }]
+        }
+        appointment_payload = {
+            "containers": [{
+                "container_id": "shipyard_brian",
+                "instructor_name": "Brian",
+                "first_valid_date": "2026-07-01",
+                "last_valid_date": "2026-07-01",
+                "status": "active",
+            }]
+        }
+        local_snapshot = {"events_by_source": {"brian_inverse": []}}
+
+        blocks, blocked, stats = snapshot.build_snapshot(calendar_payload, people_payload, course_payload, local_snapshot, appointment_payload)
+
+        self.assertEqual([], blocked)
+        available = [block for block in blocks if block["availability_status"] == "available"]
+        self.assertEqual(1, len(available))
+        self.assertTrue(available[0]["inverse_generated"])
+        self.assertEqual("2026-07-01T00:00:00", available[0]["start_datetime"])
+        self.assertEqual("2026-07-02T00:00:00", available[0]["end_datetime"])
+        self.assertEqual("instructor_time_only", available[0]["availability_location_mode"])
+        self.assertIn("inverse_blocking_gap_expansion", available[0]["reasons"])
+        self.assertEqual(1, stats["inverse_generated_availability_blocks"])
+
+    def test_inverse_blocking_events_subtract_from_default_open_windows(self) -> None:
+        calendar_payload = {
+            "calendar_sources": [{
+                "calendar_source_key": "brian_inverse",
+                "owner_instructor_key": "brian",
+                "mode": "inverse_blocking",
+                "default_location_key": "shipyard",
+                "inverse_expansion_start_datetime": "2026-07-01T00:00:00",
+                "inverse_expansion_horizon_days": 1,
+                "inverse_expansion_min_gap_minutes": 90,
+                "inverse_expansion_require_active_appointment_container": False,
             }]
         }
         local_snapshot = {
             "events_by_source": {
                 "brian_inverse": [{
-                    "id": "evt-test",
-                    "summary": "TEST",
-                    "location": "4018 Shipyard Blvd, Wilmington, NC 28403, USA",
-                    "start": "2026-07-04T08:00:00",
-                    "end": "2026-07-04T13:00:00",
+                    "id": "block1",
+                    "summary": "ADR F/R Shift",
+                    "start": "2026-07-01T10:00:00",
+                    "end": "2026-07-01T12:00:00",
                 }]
             }
         }
 
-        blocks, blocked, _ = snapshot.build_snapshot(calendar_payload, people_payload, course_payload, local_snapshot)
+        blocks, blocked, stats = snapshot.build_snapshot(calendar_payload, {}, {"courses": []}, local_snapshot)
 
         self.assertEqual([], blocked)
-        self.assertEqual(1, len(blocks))
-        self.assertEqual("instructor_time_only", blocks[0]["availability_location_mode"])
-        self.assertEqual("4018 Shipyard Blvd, Wilmington, NC 28403, USA", blocks[0]["source_location"])
-        self.assertEqual("4018 Shipyard Blvd, Wilmington, NC 28403, USA", blocks[0]["location_name"])
+        blocked_events = [block for block in blocks if block["availability_status"] == "blocked"]
+        available = [block for block in blocks if block["availability_status"] == "available"]
+        self.assertEqual(1, len(blocked_events))
+        self.assertEqual("block1", blocked_events[0]["source_event_id"])
+        self.assertEqual(["2026-07-01T00:00:00", "2026-07-01T12:00:00"], [block["start_datetime"] for block in available])
+        self.assertEqual(["2026-07-01T10:00:00", "2026-07-02T00:00:00"], [block["end_datetime"] for block in available])
+        self.assertEqual(2, stats["inverse_generated_availability_blocks"])
+        self.assertEqual(1, stats["inverse_blocking_event_blocks"])
+
+    def test_inverse_expansion_respects_appointment_container_coverage(self) -> None:
+        calendar_payload = {
+            "calendar_sources": [{
+                "calendar_source_key": "brian_inverse",
+                "owner_instructor_key": "brian",
+                "mode": "inverse_blocking",
+                "default_location_key": "shipyard",
+                "inverse_expansion_start_datetime": "2026-07-01T00:00:00",
+                "inverse_expansion_horizon_days": 5,
+                "inverse_expansion_min_gap_minutes": 90,
+                "inverse_expansion_require_active_appointment_container": True,
+            }]
+        }
+        people_payload = {"people": [{"person_id": "brian", "display_name": "Brian Ennis"}]}
+        appointment_payload = {
+            "containers": [{
+                "container_id": "shipyard_brian",
+                "instructor_name": "Brian",
+                "first_valid_date": "2026-07-03",
+                "last_valid_date": "2026-07-03",
+                "status": "active",
+            }]
+        }
+        local_snapshot = {"events_by_source": {"brian_inverse": []}}
+
+        blocks, blocked, _stats = snapshot.build_snapshot(calendar_payload, people_payload, {"courses": []}, local_snapshot, appointment_payload)
+
+        self.assertEqual([], blocked)
+        available_dates = sorted({block["date"] for block in blocks if block["availability_status"] == "available"})
+        self.assertEqual(["2026-07-03"], available_dates)
 
     def test_dns_marker_becomes_blocked_block(self) -> None:
         calendar_payload = {
@@ -164,6 +240,9 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
                 "calendar_source_key": "brian_dns",
                 "owner_instructor_key": "brian",
                 "mode": "inverse_blocking",
+                "inverse_expansion_start_datetime": "2026-06-22T00:00:00",
+                "inverse_expansion_horizon_days": 1,
+                "inverse_expansion_require_active_appointment_container": False,
             }]
         }
         local_snapshot = {
@@ -179,8 +258,9 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
 
         blocks, _blocked, stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
 
-        self.assertEqual(1, len(blocks))
-        self.assertEqual("blocked", blocks[0]["availability_status"])
+        blocked_blocks = [block for block in blocks if block["availability_status"] == "blocked"]
+        self.assertEqual(1, len(blocked_blocks))
+        self.assertEqual("dns1", blocked_blocks[0]["source_event_id"])
         self.assertEqual(1, stats["dns_markers_found"])
 
     def test_zero_length_event_is_invalid_time_range_not_offerable(self) -> None:
@@ -190,6 +270,9 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
                 "owner_instructor_key": "brian",
                 "mode": "inverse_blocking",
                 "default_location_key": "shipyard",
+                "inverse_expansion_start_datetime": "2026-07-04T00:00:00",
+                "inverse_expansion_horizon_days": 1,
+                "inverse_expansion_require_active_appointment_container": False,
             }]
         }
         local_snapshot = {
@@ -203,9 +286,8 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
             }
         }
 
-        blocks, blocked, stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
+        _blocks, blocked, stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
 
-        self.assertEqual([], blocks)
         self.assertEqual(1, len(blocked))
         self.assertEqual("invalid_time_range", blocked[0]["reason_code"])
         self.assertEqual(1, stats["blocked_reason_counts"]["invalid_time_range"])
@@ -217,6 +299,9 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
                 "owner_instructor_key": "brian",
                 "mode": "inverse_blocking",
                 "default_location_key": "shipyard",
+                "inverse_expansion_start_datetime": "2026-07-04T00:00:00",
+                "inverse_expansion_horizon_days": 1,
+                "inverse_expansion_require_active_appointment_container": False,
             }]
         }
         local_snapshot = {
@@ -230,9 +315,8 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
             }
         }
 
-        blocks, blocked, stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
+        _blocks, blocked, stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
 
-        self.assertEqual([], blocks)
         self.assertEqual(1, len(blocked))
         self.assertEqual("all_day_without_time", blocked[0]["reason_code"])
         self.assertEqual(1, stats["blocked_reason_counts"]["all_day_without_time"])
@@ -245,6 +329,9 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
                 "mode": "inverse_blocking",
                 "default_location_key": "shipyard",
                 "all_day_means_available": True,
+                "inverse_expansion_start_datetime": "2026-07-04T00:00:00",
+                "inverse_expansion_horizon_days": 1,
+                "inverse_expansion_require_active_appointment_container": False,
             }]
         }
         local_snapshot = {
@@ -258,23 +345,22 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
             }
         }
 
-        blocks, blocked, _stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
+        _blocks, blocked, _stats = snapshot.build_snapshot(calendar_payload, {}, {}, local_snapshot)
 
-        self.assertEqual([], blocks)
         self.assertEqual("invalid_time_range", blocked[0]["reason_code"])
 
-    def test_cross_midnight_timed_event_is_ingested(self) -> None:
+    def test_cross_midnight_timed_explicit_event_is_ingested(self) -> None:
         calendar_payload = {
             "calendar_sources": [{
-                "calendar_source_key": "brian_inverse",
-                "owner_instructor_key": "brian",
-                "mode": "inverse_blocking",
+                "calendar_source_key": "amy_availability",
+                "owner_instructor_key": "amy",
+                "mode": "explicit_availability",
                 "default_location_key": "shipyard",
             }]
         }
         local_snapshot = {
             "events_by_source": {
-                "brian_inverse": [{
+                "amy_availability": [{
                     "id": "overnight1",
                     "summary": "Available",
                     "start": "2026-07-04T16:00:00+00:00",
@@ -296,15 +382,15 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
     def test_cross_midnight_non_standard_increment_is_still_blocked(self) -> None:
         calendar_payload = {
             "calendar_sources": [{
-                "calendar_source_key": "brian_inverse",
-                "owner_instructor_key": "brian",
-                "mode": "inverse_blocking",
+                "calendar_source_key": "amy_availability",
+                "owner_instructor_key": "amy",
+                "mode": "explicit_availability",
                 "default_location_key": "shipyard",
             }]
         }
         local_snapshot = {
             "events_by_source": {
-                "brian_inverse": [{
+                "amy_availability": [{
                     "id": "overnight-odd",
                     "summary": "Available",
                     "start": "2026-07-04T16:01:00+00:00",

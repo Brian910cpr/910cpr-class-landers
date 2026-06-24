@@ -156,6 +156,234 @@ class PublicSellableOffersTest(unittest.TestCase):
         self.assertEqual({"location_mismatch": 1}, stats["offers_hidden_by_container_reason"])
         self.assertTrue(any("location_mismatch" in item["reason_codes"] for item in hidden))
 
+    def test_heartsaver_variants_are_not_specially_suppressed(self) -> None:
+        dynamic = {
+            "offers": [
+                {
+                    "offer_id": "pediatric-in-person",
+                    "date": "2026-07-10",
+                    "start_time": "09:00",
+                    "course_id": "351632",
+                    "course_family": "Heartsaver",
+                },
+                {
+                    "offer_id": "pediatric-blended",
+                    "date": "2026-07-10",
+                    "start_time": "10:00",
+                    "course_id": "251545",
+                    "course_family": "Heartsaver",
+                },
+                {
+                    "offer_id": "cpr-aed-only",
+                    "date": "2026-07-10",
+                    "start_time": "11:00",
+                    "course_id": "344085",
+                    "course_family": "Heartsaver",
+                },
+            ]
+        }
+        courses = {
+            "courses": [
+                {"course_id": "351632", "family": "Heartsaver", "online_only": False, "manual_only": False},
+                {"course_id": "251545", "family": "Heartsaver", "online_only": False, "manual_only": False},
+                {"course_id": "344085", "family": "Heartsaver", "online_only": False, "manual_only": False},
+            ]
+        }
+        policy = {
+            "enabled_course_ids": ["351632", "251545", "344085"],
+            "enabled_course_families": ["Heartsaver"],
+            "allowed_start_minutes": ["00", "15", "30", "45"],
+            "minimum_lead_hours": 24,
+            "maximum_days_out": 60,
+            "max_offers_per_course_per_day": 4,
+            "max_total_offers_per_day": 24,
+            "require_confirmed_appointment_container": False,
+        }
+
+        kept, hidden, _ = filter_public_sellable_offers.filter_offers(
+            dynamic,
+            courses,
+            policy,
+            now=datetime(2026, 7, 1, 12, 0),
+        )
+
+        self.assertEqual(
+            ["pediatric-in-person", "pediatric-blended", "cpr-aed-only"],
+            [offer["offer_id"] for offer in kept],
+        )
+        hidden_reasons = {reason for item in hidden for reason in item["reason_codes"]}
+        self.assertNotIn("course_visibility_menu_only_suppressed", hidden_reasons)
+        self.assertNotIn("course_id_not_enabled", hidden_reasons)
+
+    def test_dynamic_public_hours_rejects_starts_before_earliest(self) -> None:
+        dynamic = {
+            "offers": [{
+                "offer_id": "too-early",
+                "date": "2026-07-10",
+                "start_time": "07:45",
+                "course_id": "209806",
+                "course_family": "BLS",
+            }]
+        }
+        courses = {"courses": [{"course_id": "209806", "family": "BLS"}]}
+        policy = {
+            "enabled_course_families": ["BLS"],
+            "allowed_start_minutes": ["00", "15", "30", "45"],
+            "minimum_lead_hours": 24,
+            "maximum_days_out": 60,
+            "dynamic_public_start_time_window": {
+                "enabled": True,
+                "earliest_start": "08:00",
+                "latest_start": "19:00",
+                "timezone": "America/New_York",
+            },
+        }
+
+        kept, hidden, stats = filter_public_sellable_offers.filter_offers(
+            dynamic,
+            courses,
+            policy,
+            now=datetime(2026, 7, 1, 12, 0),
+        )
+
+        self.assertEqual([], kept)
+        self.assertTrue(any("outside_public_dynamic_hours" in item["reason_codes"] for item in hidden))
+        self.assertEqual(1, stats["hidden_offers_by_reason"]["outside_public_dynamic_hours"])
+
+    def test_dynamic_public_hours_rejects_starts_after_latest(self) -> None:
+        dynamic = {
+            "offers": [{
+                "offer_id": "too-late",
+                "date": "2026-07-10",
+                "start_time": "19:15",
+                "course_id": "209806",
+                "course_family": "BLS",
+            }]
+        }
+        courses = {"courses": [{"course_id": "209806", "family": "BLS"}]}
+        policy = {
+            "enabled_course_families": ["BLS"],
+            "allowed_start_minutes": ["00", "15", "30", "45"],
+            "minimum_lead_hours": 24,
+            "maximum_days_out": 60,
+            "dynamic_public_start_time_window": {
+                "enabled": True,
+                "earliest_start": "08:00",
+                "latest_start": "19:00",
+                "timezone": "America/New_York",
+            },
+        }
+
+        kept, hidden, _stats = filter_public_sellable_offers.filter_offers(
+            dynamic,
+            courses,
+            policy,
+            now=datetime(2026, 7, 1, 12, 0),
+        )
+
+        self.assertEqual([], kept)
+        self.assertTrue(any("outside_public_dynamic_hours" in item["reason_codes"] for item in hidden))
+
+    def test_dynamic_public_hours_allows_starts_inside_window(self) -> None:
+        dynamic = {
+            "offers": [{
+                "offer_id": "inside-window",
+                "date": "2026-07-10",
+                "start_time": "19:00",
+                "course_id": "209806",
+                "course_family": "BLS",
+            }]
+        }
+        courses = {"courses": [{"course_id": "209806", "family": "BLS"}]}
+        policy = {
+            "enabled_course_families": ["BLS"],
+            "allowed_start_minutes": ["00", "15", "30", "45"],
+            "minimum_lead_hours": 24,
+            "maximum_days_out": 60,
+            "dynamic_public_start_time_window": {
+                "enabled": True,
+                "earliest_start": "08:00",
+                "latest_start": "19:00",
+                "timezone": "America/New_York",
+            },
+        }
+
+        kept, hidden, _stats = filter_public_sellable_offers.filter_offers(
+            dynamic,
+            courses,
+            policy,
+            now=datetime(2026, 7, 1, 12, 0),
+        )
+
+        self.assertEqual(["inside-window"], [offer["offer_id"] for offer in kept])
+        hidden_reasons = {reason for item in hidden for reason in item["reason_codes"]}
+        self.assertNotIn("outside_public_dynamic_hours", hidden_reasons)
+
+    def test_dynamic_public_hours_can_be_disabled(self) -> None:
+        dynamic = {
+            "offers": [{
+                "offer_id": "overnight-allowed-when-disabled",
+                "date": "2026-07-10",
+                "start_time": "00:00",
+                "course_id": "209806",
+                "course_family": "BLS",
+            }]
+        }
+        courses = {"courses": [{"course_id": "209806", "family": "BLS"}]}
+        policy = {
+            "enabled_course_families": ["BLS"],
+            "allowed_start_minutes": ["00", "15", "30", "45"],
+            "minimum_lead_hours": 24,
+            "maximum_days_out": 60,
+            "dynamic_public_start_time_window": {
+                "enabled": False,
+                "earliest_start": "08:00",
+                "latest_start": "19:00",
+                "timezone": "America/New_York",
+            },
+        }
+
+        kept, hidden, _stats = filter_public_sellable_offers.filter_offers(
+            dynamic,
+            courses,
+            policy,
+            now=datetime(2026, 7, 1, 12, 0),
+        )
+
+        self.assertEqual(["overnight-allowed-when-disabled"], [offer["offer_id"] for offer in kept])
+        hidden_reasons = {reason for item in hidden for reason in item["reason_codes"]}
+        self.assertNotIn("outside_public_dynamic_hours", hidden_reasons)
+
+    def test_dynamic_public_hours_policy_does_not_filter_ical_schedule_rows(self) -> None:
+        schedule_row = {
+            "session_id": "real-ical-class",
+            "course_id": "209806",
+            "start_at": "2026-07-10T06:45:00-04:00",
+            "source": "enrollware_ical",
+        }
+        dynamic = {"offers": []}
+        policy = {
+            "enabled_course_families": ["BLS"],
+            "dynamic_public_start_time_window": {
+                "enabled": True,
+                "earliest_start": "08:00",
+                "latest_start": "19:00",
+                "timezone": "America/New_York",
+            },
+        }
+
+        kept, hidden, stats = filter_public_sellable_offers.filter_offers(
+            dynamic,
+            {"courses": []},
+            policy,
+            now=datetime(2026, 7, 1, 12, 0),
+        )
+
+        self.assertEqual([], kept)
+        self.assertEqual([], hidden)
+        self.assertEqual(0, stats["total_dynamic_offers_read"])
+        self.assertEqual("real-ical-class", schedule_row["session_id"])
+
     def test_run_outputs_are_scoped_to_audit_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

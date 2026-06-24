@@ -403,6 +403,37 @@ def has_conflict(start: datetime, end: datetime, occupancy: list[dict[str, Any]]
     return False, None
 
 
+def occupancy_by_date(occupancy: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    indexed: dict[str, list[dict[str, Any]]] = {}
+    for block in occupancy:
+        block_start = block.get("start")
+        block_end = block.get("end")
+        if not block_start or not block_end:
+            continue
+        cursor = block_start.date()
+        last = block_end.date()
+        while cursor <= last:
+            indexed.setdefault(cursor.isoformat(), []).append(block)
+            cursor += timedelta(days=1)
+    return indexed
+
+
+def occupancy_candidates(indexed: dict[str, list[dict[str, Any]]], start: datetime, end: datetime) -> list[dict[str, Any]]:
+    candidates: list[dict[str, Any]] = []
+    seen: set[int] = set()
+    cursor = start.date()
+    last = end.date()
+    while cursor <= last:
+        for block in indexed.get(cursor.isoformat(), []):
+            marker = id(block)
+            if marker in seen:
+                continue
+            seen.add(marker)
+            candidates.append(block)
+        cursor += timedelta(days=1)
+    return candidates
+
+
 def offer_id(course_id: str, person_id: str, start: datetime) -> str:
     return f"offer-{course_id}-{normalize_key(person_id)}-{start:%Y%m%d-%H%M}"
 
@@ -420,6 +451,7 @@ def generate_offers(loaded: dict[str, Any]) -> tuple[list[dict[str, Any]], list[
         *normalize_occupancy(loaded.get("sessions_current"), "data/sessions_current.json"),
         *normalize_occupancy(loaded.get("schedule_future"), "docs/data/schedule_future.json"),
     ]
+    occupancy_index = occupancy_by_date(occupancy)
     offers: list[dict[str, Any]] = []
     rejections: list[dict[str, Any]] = []
 
@@ -529,7 +561,7 @@ def generate_offers(loaded: dict[str, Any]) -> tuple[list[dict[str, Any]], list[
                 for start in candidate_starts(window_start, latest_start):
                     appointment_display_end = start + timedelta(minutes=duration_minutes)
                     lock_start, lock_end, lock_minutes = consumption_window(start, duration_minutes, setup_buffer_minutes, cleanup_buffer_minutes)
-                    conflict, reason = has_conflict(lock_start, lock_end, occupancy, location, person)
+                    conflict, reason = has_conflict(lock_start, lock_end, occupancy_candidates(occupancy_index, lock_start, lock_end), location, person)
                     if conflict:
                         reject(rejections, "conflicts_with_existing_occupancy", reason or "Conflicts with existing occupancy.", {
                             **course_context,

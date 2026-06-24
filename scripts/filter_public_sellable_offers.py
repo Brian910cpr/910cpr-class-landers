@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from collections import Counter, defaultdict
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -50,6 +50,13 @@ def parse_date(value: Any) -> date | None:
         return None
 
 
+def parse_hhmm(value: Any) -> time | None:
+    try:
+        return datetime.strptime(str(value), "%H:%M").time()
+    except (TypeError, ValueError):
+        return None
+
+
 def normalize_key(value: Any) -> str:
     import re
     return re.sub(r"[^a-z0-9]+", "_", str(value or "").strip().lower()).strip("_")
@@ -74,6 +81,20 @@ def as_set(policy: dict[str, Any], key: str) -> set[str]:
 
 def is_true(value: Any) -> bool:
     return value is True or str(value).strip().lower() == "true"
+
+
+def outside_public_dynamic_hours(start: datetime, policy: dict[str, Any]) -> bool:
+    window = policy.get("dynamic_public_start_time_window")
+    if not isinstance(window, dict) or window.get("enabled") is not True:
+        return False
+    earliest = parse_hhmm(window.get("earliest_start"))
+    latest = parse_hhmm(window.get("latest_start"))
+    if not earliest or not latest:
+        return False
+    start_time = start.time().replace(second=0, microsecond=0)
+    if earliest <= latest:
+        return not (earliest <= start_time <= latest)
+    return not (start_time >= earliest or start_time <= latest)
 
 
 def load_course_visibility_policy() -> dict[str, Any]:
@@ -223,6 +244,8 @@ def base_rejection_reasons(offer: dict[str, Any], course: dict[str, Any] | None,
             reasons.append("inside_minimum_lead_time")
         if maximum_days_out and start > now + timedelta(days=maximum_days_out):
             reasons.append("outside_maximum_days_out")
+        if outside_public_dynamic_hours(start, policy):
+            reasons.append("outside_public_dynamic_hours")
         preferred = policy.get("preferred_start_times_by_family")
         if isinstance(preferred, dict):
             family_times = preferred.get(family)

@@ -75,6 +75,12 @@
       "availability_location_mode": "instructor_time_only",
       "all_day_means_available": false,
       "allow_non_standard_time_increment": false,
+      "inverse_expansion_enabled": true,
+      "inverse_expansion_horizon_days": 45,
+      "inverse_expansion_day_start_time": "00:00",
+      "inverse_expansion_day_end_time": "24:00",
+      "inverse_expansion_min_gap_minutes": 90,
+      "inverse_expansion_require_active_appointment_container": true,
       "missing_access_policy": "warn_and_do_not_invent_availability",
       "recurring_business_hours_configured": false,
       "active": true

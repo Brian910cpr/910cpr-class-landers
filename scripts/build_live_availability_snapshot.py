@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import re
 from collections import Counter
-from datetime import datetime
+from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -14,6 +14,7 @@ AUDIT_DIR = ROOT / "data" / "audit"
 CALENDAR_SOURCES_PATH = ROOT / "data" / "config" / "calendar_sources.json"
 PEOPLE_CATALOG_PATH = ROOT / "data" / "config" / "people_catalog.json"
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
+APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 RECHECK_REQUIREMENTS_PATH = AUDIT_DIR / "live_availability_recheck_requirements.json"
 SNAPSHOT_PATH = AUDIT_DIR / "live_availability_snapshot_preview.json"
 REPORT_PATH = AUDIT_DIR / "live_availability_snapshot_report.md"
@@ -30,6 +31,11 @@ LOCAL_TZ = ZoneInfo("America/New_York")
 DEFAULT_LOCATION_BY_KEY = {
     "shipyard": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
 }
+DEFAULT_INVERSE_EXPANSION_HORIZON_DAYS = 60
+DEFAULT_INVERSE_EXPANSION_MIN_GAP_MINUTES = 90
+DEFAULT_SETUP_BUFFER_MINUTES = 15
+DEFAULT_CLEANUP_BUFFER_MINUTES = 30
+START_INCREMENT_MINUTES = 15
 
 MODE_TO_SOURCE_TYPE = {
     "explicit_availability": "google_calendar",
@@ -69,6 +75,41 @@ def parse_dt(value: Any) -> datetime | None:
     if parsed.tzinfo is None:
         return parsed
     return parsed.astimezone(LOCAL_TZ).replace(tzinfo=None)
+
+
+def parse_date(value: Any) -> date | None:
+    text = clean_text(value)
+    if not text:
+        return None
+    try:
+        return date.fromisoformat(text)
+    except ValueError:
+        return None
+
+
+def int_or_default(value: Any, default: int) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def parse_hhmm(value: Any, default: time) -> time:
+    text = clean_text(value)
+    if text == "24:00":
+        return time(23, 59, 59)
+    try:
+        return datetime.strptime(text, "%H:%M").time()
+    except ValueError:
+        return default
+
+
+def ceil_to_increment(value: datetime, minutes: int = START_INCREMENT_MINUTES) -> datetime:
+    discard = value.minute % minutes
+    if discard == 0 and value.second == 0 and value.microsecond == 0:
+        return value.replace(second=0, microsecond=0)
+    rounded = value + timedelta(minutes=(minutes - discard if discard else minutes))
+    return rounded.replace(second=0, microsecond=0)
 
 
 def has_explicit_time(value: Any) -> bool:
@@ -191,6 +232,258 @@ def allowed_families_for_person(person: dict[str, Any] | None, course_catalog: A
     return sorted(families)
 
 
+def shortest_course_consumption_minutes(person: dict[str, Any] | None, course_catalog: Any) -> int:
+    if not isinstance(course_catalog, dict):
+        return DEFAULT_INVERSE_EXPANSION_MIN_GAP_MINUTES
+    families = set(allowed_families_for_person(person, course_catalog))
+    shortest: int | None = None
+    for course in course_catalog.get("courses", []):
+        if not isinstance(course, dict):
+            continue
+        if course.get("appointment_allowed") is not True:
+            continue
+        if families and str(course.get("family") or "") not in families:
+            continue
+        duration = course.get("duration_minutes")
+        try:
+            duration_minutes = int(duration)
+        except (TypeError, ValueError):
+            continue
+        setup = int_or_default(course.get("setup_buffer_minutes"), DEFAULT_SETUP_BUFFER_MINUTES)
+        cleanup = int_or_default(course.get("cleanup_buffer_minutes"), DEFAULT_CLEANUP_BUFFER_MINUTES)
+        total = duration_minutes + setup + cleanup
+        if shortest is None or total < shortest:
+            shortest = total
+    return shortest or DEFAULT_INVERSE_EXPANSION_MIN_GAP_MINUTES
+
+
+def active_appointment_containers(payload: Any) -> list[dict[str, Any]]:
+    if not isinstance(payload, dict) or not isinstance(payload.get("containers"), list):
+        return []
+    return [
+        container for container in payload["containers"]
+        if isinstance(container, dict) and clean_text(container.get("status")).lower() == "active"
+    ]
+
+
+def container_matches_source(container: dict[str, Any], source: dict[str, Any], person: dict[str, Any] | None) -> bool:
+    container_name = normalize_key(container.get("instructor_name"))
+    source_keys = {
+        normalize_key(source.get("owner_instructor_key")),
+        normalize_key(source.get("instructor_key")),
+    }
+    if person:
+        display = clean_text(person.get("display_name"))
+        source_keys.add(normalize_key(display))
+        if display:
+            source_keys.add(normalize_key(display.split(" ")[0]))
+        source_keys.add(normalize_key(person.get("person_id")))
+    source_keys = {key for key in source_keys if key}
+    return bool(container_name and (container_name in source_keys or any(key and key in container_name for key in source_keys)))
+
+
+def appointment_container_date_ranges(source: dict[str, Any], person: dict[str, Any] | None, appointment_payload: Any) -> list[tuple[date, date, dict[str, Any]]]:
+    ranges: list[tuple[date, date, dict[str, Any]]] = []
+    for container in active_appointment_containers(appointment_payload):
+        if not container_matches_source(container, source, person):
+            continue
+        first = parse_date(container.get("first_valid_date"))
+        last = parse_date(container.get("last_valid_date"))
+        if first and last and last >= first:
+            ranges.append((first, last, container))
+    return ranges
+
+
+def date_in_container_ranges(value: date, ranges: list[tuple[date, date, dict[str, Any]]]) -> bool:
+    return any(first <= value <= last for first, last, _container in ranges)
+
+
+def source_snapshot_present(snapshot_payload: Any, source_key: str) -> bool:
+    if not isinstance(snapshot_payload, dict):
+        return False
+    events_by_source = snapshot_payload.get("events_by_source")
+    if isinstance(events_by_source, dict) and source_key in events_by_source:
+        return True
+    if source_key in snapshot_payload:
+        return True
+    if isinstance(snapshot_payload.get("events"), list):
+        return any(isinstance(event, dict) and event.get("calendar_source_key") == source_key for event in snapshot_payload["events"])
+    return False
+
+
+def subtract_intervals(open_intervals: list[tuple[datetime, datetime]], blockers: list[tuple[datetime, datetime]]) -> list[tuple[datetime, datetime]]:
+    remaining = open_intervals
+    for block_start, block_end in sorted(blockers):
+        next_remaining: list[tuple[datetime, datetime]] = []
+        for start, end in remaining:
+            if block_end <= start or block_start >= end:
+                next_remaining.append((start, end))
+                continue
+            if block_start > start:
+                next_remaining.append((start, min(block_start, end)))
+            if block_end < end:
+                next_remaining.append((max(block_end, start), end))
+        remaining = [(start, end) for start, end in next_remaining if end > start]
+    return remaining
+
+
+def make_blocking_event_block(source: dict[str, Any], event: dict[str, Any], person: dict[str, Any] | None, start: datetime, end: datetime) -> dict[str, Any]:
+    location_key = source.get("default_location_key")
+    source_location = clean_text(event.get("location"))
+    location_name = source_location or DEFAULT_LOCATION_BY_KEY.get(str(location_key), UNKNOWN)
+    return {
+        "instructor_name": person.get("display_name") if person else clean_text(source.get("owner_instructor_key") or source.get("instructor_key") or UNKNOWN).title(),
+        "person_id": person.get("person_id", UNKNOWN) if person else UNKNOWN,
+        "start_datetime": start.isoformat(),
+        "end_datetime": end.isoformat(),
+        "date": start.date().isoformat(),
+        "end_date": end.date().isoformat(),
+        "start_time": start.strftime("%H:%M"),
+        "end_time": end.strftime("%H:%M"),
+        "availability_status": "blocked",
+        "availability_location_mode": clean_text(source.get("availability_location_mode") or "instructor_time_only") or "instructor_time_only",
+        "source_location": source_location or UNKNOWN,
+        "location_name": location_name,
+        "allowed_course_families": [],
+        "source_calendar_id": source.get("calendar_source_key", UNKNOWN),
+        "source_event_id": event.get("id") or event.get("event_id") or UNKNOWN,
+        "source_type": source_type(source),
+        "reasons": [
+            "read_only_preview",
+            "local_calendar_snapshot",
+            "inverse_calendar_blocking_event",
+        ],
+    }
+
+
+def make_inverse_gap_block(source: dict[str, Any], person: dict[str, Any] | None, course_catalog: Any, start: datetime, end: datetime, index: int) -> dict[str, Any]:
+    location_key = source.get("default_location_key")
+    location_name = DEFAULT_LOCATION_BY_KEY.get(str(location_key), UNKNOWN)
+    return {
+        "instructor_name": person.get("display_name") if person else clean_text(source.get("owner_instructor_key") or source.get("instructor_key") or UNKNOWN).title(),
+        "person_id": person.get("person_id", UNKNOWN) if person else UNKNOWN,
+        "start_datetime": start.isoformat(),
+        "end_datetime": end.isoformat(),
+        "date": start.date().isoformat(),
+        "end_date": end.date().isoformat(),
+        "start_time": start.strftime("%H:%M"),
+        "end_time": end.strftime("%H:%M"),
+        "availability_status": "available",
+        "availability_location_mode": clean_text(source.get("availability_location_mode") or "instructor_time_only") or "instructor_time_only",
+        "source_location": UNKNOWN,
+        "location_name": location_name,
+        "allowed_course_families": allowed_families_for_person(person, course_catalog),
+        "source_calendar_id": source.get("calendar_source_key", UNKNOWN),
+        "source_event_id": f"{source.get('calendar_source_key', UNKNOWN)}:inverse_gap:{index}",
+        "source_type": source_type(source),
+        "inverse_generated": True,
+        "reasons": [
+            "read_only_preview",
+            "local_calendar_snapshot",
+            "inverse_blocking_gap_expansion",
+            "default_open_minus_blocking_events",
+        ],
+    }
+
+
+def inverse_expansion_horizon(source: dict[str, Any], container_ranges: list[tuple[date, date, dict[str, Any]]]) -> tuple[datetime, datetime]:
+    configured_start = parse_dt(source.get("inverse_expansion_start_datetime"))
+    start = configured_start or datetime.now(LOCAL_TZ).replace(tzinfo=None)
+    start = ceil_to_increment(start)
+    horizon_days = int_or_default(source.get("inverse_expansion_horizon_days"), DEFAULT_INVERSE_EXPANSION_HORIZON_DAYS)
+    end = start + timedelta(days=horizon_days)
+    if container_ranges:
+        latest_container_end = max(last for _first, last, _container in container_ranges)
+        container_end = datetime.combine(latest_container_end + timedelta(days=1), time.min)
+        end = min(end, container_end)
+    return start, end
+
+
+def expand_inverse_availability(
+    source: dict[str, Any],
+    events: list[dict[str, Any]],
+    person: dict[str, Any] | None,
+    course_catalog: Any,
+    appointment_payload: Any,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
+    source_key = str(source.get("calendar_source_key") or UNKNOWN)
+    blocks: list[dict[str, Any]] = []
+    blocked: list[dict[str, Any]] = []
+    container_ranges = appointment_container_date_ranges(source, person, appointment_payload)
+    require_container = bool(source.get("inverse_expansion_require_active_appointment_container", True))
+    if require_container and not container_ranges:
+        blocked.append({
+            "calendar_source_key": source_key,
+            "source_type": source_type(source),
+            "reason_code": "no_active_appointment_container_coverage",
+            "message": "Inverse availability expansion requires active appointment container coverage for this instructor.",
+        })
+        return blocks, blocked, 0
+
+    horizon_start, horizon_end = inverse_expansion_horizon(source, container_ranges)
+    day_start_time = parse_hhmm(source.get("inverse_expansion_day_start_time"), time.min)
+    day_end_text = clean_text(source.get("inverse_expansion_day_end_time") or "24:00")
+    day_end_time = time.max if day_end_text == "24:00" else parse_hhmm(day_end_text, time.max)
+    min_gap_minutes = int_or_default(
+        source.get("inverse_expansion_min_gap_minutes"),
+        shortest_course_consumption_minutes(person, course_catalog),
+    )
+
+    blocking_intervals: list[tuple[datetime, datetime]] = []
+    dns_markers = 0
+    for event in events:
+        start, end, invalid_reason, reason_codes = event_time_validation(source, event)
+        if invalid_reason or not start or not end:
+            reason_code = invalid_reason or "event_missing_parseable_start_or_end"
+            blocked.append({
+                "calendar_source_key": source_key,
+                "source_event_id": event.get("id") or event.get("event_id") or UNKNOWN,
+                "source_type": source_type(source),
+                "reason_code": reason_code,
+                "all_reason_codes": reason_codes or [reason_code],
+                "message": "Calendar event was not usable as an inverse blocking interval.",
+            })
+            continue
+        if "dns" in event_text(event) or "do not schedule" in event_text(event):
+            dns_markers += 1
+        blocking_intervals.append((start, end))
+        blocks.append(make_blocking_event_block(source, event, person, start, end))
+
+    open_intervals: list[tuple[datetime, datetime]] = []
+    cursor_day = horizon_start.date()
+    while datetime.combine(cursor_day, time.min) < horizon_end:
+        if not require_container or date_in_container_ranges(cursor_day, container_ranges):
+            open_start = max(horizon_start, datetime.combine(cursor_day, day_start_time))
+            open_end = min(horizon_end, datetime.combine(cursor_day, day_end_time))
+            if day_end_text == "24:00":
+                open_end = min(horizon_end, datetime.combine(cursor_day + timedelta(days=1), time.min))
+            if open_end > open_start:
+                open_intervals.append((open_start, open_end))
+        cursor_day += timedelta(days=1)
+
+    gaps = subtract_intervals(open_intervals, blocking_intervals)
+    gap_index = 0
+    for gap_start, gap_end in gaps:
+        gap_start = ceil_to_increment(gap_start)
+        gap_end = gap_end.replace(second=0, microsecond=0)
+        if gap_end <= gap_start:
+            continue
+        if int((gap_end - gap_start).total_seconds() // 60) < min_gap_minutes:
+            blocked.append({
+                "calendar_source_key": source_key,
+                "source_type": source_type(source),
+                "reason_code": "inverse_gap_shorter_than_minimum_consumption",
+                "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
+                "start_datetime": gap_start.isoformat(),
+                "end_datetime": gap_end.isoformat(),
+            })
+            continue
+        gap_index += 1
+        blocks.append(make_inverse_gap_block(source, person, course_catalog, gap_start, gap_end, gap_index))
+
+    return blocks, blocked, dns_markers
+
+
 def load_runtime_snapshots() -> tuple[Path | None, Any | None, dict[str, str]]:
     missing = {}
     if not RUNTIME_CALENDAR_SNAPSHOT_DIR.exists():
@@ -302,7 +595,13 @@ def normalize_event_block(source: dict[str, Any], event: dict[str, Any], person:
     }
 
 
-def build_snapshot(calendar_payload: Any, people_payload: Any, course_payload: Any, local_snapshot_payload: Any) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+def build_snapshot(
+    calendar_payload: Any,
+    people_payload: Any,
+    course_payload: Any,
+    local_snapshot_payload: Any,
+    appointment_payload: Any | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     sources = calendar_sources(calendar_payload)
     people = people_lookup(people_payload)
     blocks: list[dict[str, Any]] = []
@@ -320,13 +619,26 @@ def build_snapshot(calendar_payload: Any, people_payload: Any, course_payload: A
                 "display_name": person.get("display_name", UNKNOWN),
             })
         events = events_for_source(local_snapshot_payload, source_key)
-        if not events:
+        snapshot_present = source_snapshot_present(local_snapshot_payload, source_key)
+        if not events and not snapshot_present:
             blocked.append({
                 "calendar_source_key": source_key,
                 "source_type": source_type(source),
                 "reason_code": "local_calendar_snapshot_missing",
                 "message": "No local/mock calendar event snapshot found for this source; no availability blocks generated.",
             })
+            continue
+        if source_type(source) == "inverse_google_calendar" and source.get("inverse_expansion_enabled", True) is not False:
+            inverse_blocks, inverse_blocked, inverse_dns_markers = expand_inverse_availability(
+                source,
+                events,
+                person,
+                course_payload,
+                appointment_payload or {},
+            )
+            blocks.extend(inverse_blocks)
+            blocked.extend(inverse_blocked)
+            dns_markers += inverse_dns_markers
             continue
         for event in events:
             _start, _end, invalid_reason, reason_codes = event_time_validation(source, event)
@@ -361,6 +673,8 @@ def build_snapshot(calendar_payload: Any, people_payload: Any, course_payload: A
         "blocked_all_reason_counts": dict(Counter(reason for item in blocked for reason in item.get("all_reason_codes", [item["reason_code"]]))),
         "source_type_counts": dict(Counter(source_type(source) for source in sources)),
         "availability_status_counts": dict(Counter(block["availability_status"] for block in blocks)),
+        "inverse_generated_availability_blocks": sum(1 for block in blocks if block.get("inverse_generated") is True),
+        "inverse_blocking_event_blocks": sum(1 for block in blocks if "inverse_calendar_blocking_event" in block.get("reasons", [])),
     }
     return blocks, blocked, stats
 
@@ -378,6 +692,8 @@ def render_report(stats: dict[str, Any], blocked: list[dict[str, Any]], local_sn
         f"- Instructors mapped: {len(stats['instructors_mapped'])}",
         f"- Blocks generated: {stats['blocks_generated']}",
         f"- Blocks blocked/placeheld: {stats['blocks_blocked']}",
+        f"- Inverse-generated availability blocks: {stats.get('inverse_generated_availability_blocks', 0)}",
+        f"- Inverse blocking event blocks: {stats.get('inverse_blocking_event_blocks', 0)}",
         f"- DNS markers found: {stats['dns_markers_found']}",
         "",
         "## Blocked Reason Counts",
@@ -424,6 +740,7 @@ def run() -> dict[str, Any]:
     calendar_payload, calendar_error = read_json(CALENDAR_SOURCES_PATH)
     people_payload, people_error = read_json(PEOPLE_CATALOG_PATH)
     course_payload, course_error = read_json(COURSE_CATALOG_PATH)
+    appointment_payload, appointment_error = read_json(APPOINTMENT_CONTAINERS_PATH)
     _requirements, requirements_error = read_json(RECHECK_REQUIREMENTS_PATH)
     local_snapshot_path, local_snapshot_payload, local_snapshot_missing = find_local_snapshot()
     missing = {}
@@ -433,10 +750,18 @@ def run() -> dict[str, Any]:
         missing[str(PEOPLE_CATALOG_PATH)] = people_error
     if course_error:
         missing[str(COURSE_CATALOG_PATH)] = course_error
+    if appointment_error:
+        missing[str(APPOINTMENT_CONTAINERS_PATH)] = appointment_error
     if requirements_error:
         missing[str(RECHECK_REQUIREMENTS_PATH)] = requirements_error
     missing.update(local_snapshot_missing)
-    blocks, blocked, stats = build_snapshot(calendar_payload or {}, people_payload or {}, course_payload or {}, local_snapshot_payload or {})
+    blocks, blocked, stats = build_snapshot(
+        calendar_payload or {},
+        people_payload or {},
+        course_payload or {},
+        local_snapshot_payload or {},
+        appointment_payload or {},
+    )
     payload = {
         "generated_at": datetime.now().astimezone().isoformat(),
         "read_only": True,
@@ -465,6 +790,7 @@ def main() -> int:
     print(f"Configured calendar sources found: {result['stats']['configured_calendar_sources_found']}")
     print(f"Blocks generated: {result['stats']['blocks_generated']}")
     print(f"Blocks blocked/placeheld: {result['stats']['blocks_blocked']}")
+    print(f"Inverse-generated availability blocks: {result['stats'].get('inverse_generated_availability_blocks', 0)}")
     print(f"DNS markers found: {result['stats']['dns_markers_found']}")
     print("")
     print("Output files:")

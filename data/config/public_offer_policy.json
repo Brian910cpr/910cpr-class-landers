@@ -7,7 +7,8 @@
     "209808",
     "209809",
     "329495",
-    "351632"
+    "351632",
+    "251545"
   ],
   "disabled_course_ids": [],
   "enabled_course_families": [
@@ -27,6 +28,12 @@
     "30",
     "45"
   ],
+  "dynamic_public_start_time_window": {
+    "enabled": true,
+    "earliest_start": "08:00",
+    "latest_start": "19:00",
+    "timezone": "America/New_York"
+  },
   "minimum_lead_hours": 24,
   "maximum_days_out": 60,
   "preferred_start_times_by_family": {
