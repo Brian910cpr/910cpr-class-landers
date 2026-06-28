@@ -18,6 +18,12 @@ if __package__ in (None, ""):
 
 from scripts.build_metadata import apply_build_metadata, current_build_metadata
 from scripts.build_hub_offer_model_report import build_report as build_hub_offer_model_report
+from scripts.build_seed_appointment_url_preview import (
+    build_registration_url,
+    matching_container,
+    parse_date as parse_seed_date,
+    appointment_display_time,
+)
 from scripts.build_status import BuildStatusReporter
 from scripts.hybrid_inventory import (
     APPOINTMENT_ENDPOINT,
@@ -40,8 +46,11 @@ CUSTOMER_FACING_OFFERS_PATH = ROOT / "docs" / "data" / "customer_facing_offers.j
 FREE_TIME_SCHEDULER_CONFIG_PATH = ROOT / "docs" / "data" / "free_time_scheduler_config.json"
 SEED_APPOINTMENT_URL_PREVIEW_PATH = ROOT / "data" / "audit" / "seed_appointment_url_preview.json"
 PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH = ROOT / "data" / "audit" / "public_sellable_offers_preview.json"
+PRESENTATION_POLICY_PREVIEW_PATH = ROOT / "data" / "audit" / "dynamic_offer_presentation_policy_report.json"
 UNIVERSAL_OFFER_INVENTORY_PATH = ROOT / "data" / "audit" / "universal_offer_inventory.json"
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
+APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
+LOCATION_RESOURCE_MAP_PATH = ROOT / "data" / "config" / "location_resource_map.json"
 COURSE_VISIBILITY_POLICY_PATH = ROOT / "data" / "config" / "course_visibility_policy.json"
 COURSE_MAP_PATH = ROOT / "data" / "config" / "course_map.json"
 REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
@@ -99,6 +108,7 @@ APPOINTMENT_COURSE_TAB_IDS = {
     "aha_heartsaver_first_aid_cpr_aed_blended": {"hs-fa-cpr-aed-bl"},
     "aha_heartsaver_cpr_aed": {"hs-cpr-aed-ip", "hs-cpr-aed-bl"},
     "aha_heartsaver_cpr_aed_online": {"hs-cpr-aed-bl"},
+    "aha_heartsaver_pediatric_first_aid_cpr_aed_online": {"hs-pediatric-bl"},
     "hsi_bls_adult_first_aid_blended": {"hsi-bls-fa"},
 }
 APPOINTMENT_HUB_BY_FAMILY = {
@@ -227,7 +237,42 @@ def load_course_catalog_by_id() -> dict[str, dict[str, Any]]:
     return catalog
 
 
+def load_active_appointment_containers() -> list[dict[str, Any]]:
+    if not APPOINTMENT_CONTAINERS_PATH.exists():
+        return []
+    try:
+        payload = json.loads(APPOINTMENT_CONTAINERS_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return []
+    containers = payload.get("containers", []) if isinstance(payload, dict) else []
+    return [container for container in containers if isinstance(container, dict) and container.get("status") == "active"]
+
+
+def load_location_resource_map() -> dict[str, Any]:
+    if not LOCATION_RESOURCE_MAP_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(LOCATION_RESOURCE_MAP_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
 def load_public_sellable_offer_index() -> dict[str, dict[str, Any]]:
+    if PRESENTATION_POLICY_PREVIEW_PATH.exists():
+        try:
+            presentation_payload = json.loads(PRESENTATION_POLICY_PREVIEW_PATH.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            presentation_payload = {}
+        presentation_offers = presentation_payload.get("render_offers", []) if isinstance(presentation_payload, dict) else []
+        indexed: dict[str, dict[str, Any]] = {}
+        for offer in presentation_offers:
+            if isinstance(offer, dict):
+                offer_id = normalize_space(offer.get("offer_id"))
+                if offer_id:
+                    indexed[offer_id] = offer
+        if indexed:
+            return indexed
     if not PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH.exists():
         return {}
     try:
@@ -267,6 +312,59 @@ def load_public_seed_appointment_url_previews() -> dict[str, list[dict[str, Any]
         if hub_slug:
             grouped.setdefault(hub_slug, []).append(offer)
     return grouped
+
+
+def load_public_sellable_appointment_seed_offers() -> dict[str, list[dict[str, Any]]]:
+    """Return every public-sellable dynamic appointment offer as a renderable hub row."""
+    public_sellable_by_id = load_public_sellable_offer_index()
+    if not public_sellable_by_id:
+        return {}
+    course_catalog_by_id = load_course_catalog_by_id()
+    containers = load_active_appointment_containers()
+    location_resource_map = load_location_resource_map()
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for source_offer_id, public_offer in public_sellable_by_id.items():
+        offer = build_hub_seed_offer_from_public_sellable(
+            source_offer_id,
+            public_offer,
+            course_catalog_by_id,
+            containers,
+            location_resource_map,
+        )
+        if not offer:
+            continue
+        hub_slug = normalize_space(offer.get("hub_slug"))
+        if hub_slug:
+            grouped.setdefault(hub_slug, []).append(offer)
+    for hub_slug, offers in list(grouped.items()):
+        grouped[hub_slug] = sorted(offers, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
+    return grouped
+
+
+def merge_appointment_seed_offers(
+    *grouped_sources: dict[str, list[dict[str, Any]]],
+) -> dict[str, list[dict[str, Any]]]:
+    merged: dict[str, list[dict[str, Any]]] = {}
+    seen_by_hub: dict[str, set[str]] = {}
+    for grouped in grouped_sources:
+        for hub_slug, offers in grouped.items():
+            hub_key = normalize_space(hub_slug)
+            if not hub_key:
+                continue
+            seen = seen_by_hub.setdefault(hub_key, set())
+            for offer in offers:
+                href = normalize_space(offer.get("appointment_registration_url"))
+                dedupe_key = href or "|".join(
+                    normalize_space(offer.get(key))
+                    for key in ("course_id", "start_datetime", "location_name", "instructor_display_name")
+                )
+                if not dedupe_key or dedupe_key in seen:
+                    continue
+                seen.add(dedupe_key)
+                merged.setdefault(hub_key, []).append(offer)
+    for hub_slug, offers in list(merged.items()):
+        merged[hub_slug] = sorted(offers, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
+    return merged
 
 
 def load_universal_offer_inventory() -> dict[str, list[dict[str, Any]]]:
@@ -434,6 +532,88 @@ def build_hub_seed_offer_from_url_preview(
         "class_lander_created": False,
         "public_schedule_row_created": False,
         "render_source": "seed_appointment_url_preview",
+    }
+
+
+def build_hub_seed_offer_from_public_sellable(
+    source_offer_id: str,
+    public_offer: dict[str, Any],
+    course_catalog_by_id: dict[str, dict[str, Any]],
+    containers: list[dict[str, Any]],
+    location_resource_map: dict[str, Any],
+) -> dict[str, Any] | None:
+    course_id = normalize_space(public_offer.get("course_id"))
+    appointment_day_id = normalize_space(public_offer.get("appointmentDayId"))
+    if not source_offer_id or not course_id:
+        return None
+    catalog = course_catalog_by_id.get(course_id, {})
+    if catalog and catalog.get("appointment_allowed") is False:
+        return None
+    course_key = normalize_space(catalog.get("course_key"))
+    course_family = normalize_space(public_offer.get("course_family") or catalog.get("family"))
+    hub_slug = APPOINTMENT_HUB_BY_FAMILY.get(course_family)
+    if not hub_slug:
+        return None
+    target_date = parse_seed_date(public_offer.get("date"))
+    start_time = appointment_display_time(public_offer)
+    if not target_date or not start_time:
+        return None
+    if not appointment_day_id:
+        container, computed_day_id, _reason = matching_container(public_offer, containers, target_date, location_resource_map)
+        if not container or computed_day_id is None:
+            return None
+        appointment_day_id = normalize_space(computed_day_id)
+    url = build_registration_url(int(appointment_day_id), start_time, course_id)
+    flexible_start_choices = []
+    for choice in public_offer.get("flexible_start_choices", []) if isinstance(public_offer.get("flexible_start_choices"), list) else []:
+        if not isinstance(choice, dict):
+            continue
+        choice_day_id = normalize_space(choice.get("appointmentDayId") or appointment_day_id)
+        choice_start_time = appointment_display_time({
+            "appointment_display_start": choice.get("appointment_display_start"),
+            "start_time": choice.get("start_time"),
+        })
+        if not choice_day_id or not choice_start_time:
+            continue
+        flexible_start_choices.append({
+            **choice,
+            "appointment_registration_url": build_registration_url(int(choice_day_id), choice_start_time, course_id),
+        })
+    start_datetime = normalize_space(public_offer.get("appointment_display_start") or public_offer.get("start_datetime"))
+    end_datetime = normalize_space(public_offer.get("appointment_display_end") or public_offer.get("end_datetime"))
+    if not start_datetime:
+        return None
+    return {
+        "hub_slug": hub_slug,
+        "tab_ids": sorted(APPOINTMENT_COURSE_TAB_IDS.get(course_key, set())),
+        "course_id": course_id,
+        "course_key": course_key,
+        "course_title": normalize_space(public_offer.get("course_title") or catalog.get("official_title")),
+        "course_family": course_family,
+        "start_datetime": start_datetime,
+        "end_datetime": end_datetime,
+        "scheduler_consumption_start": normalize_space(public_offer.get("scheduler_consumption_start")),
+        "scheduler_consumption_end": normalize_space(public_offer.get("scheduler_consumption_end")),
+        "location_name": clean_location(public_offer.get("offer_location") or public_offer.get("location")),
+        "instructor_display_name": normalize_space(public_offer.get("instructor_display_name")),
+        "appointmentDayId": int(appointment_day_id),
+        "appointment_registration_url": url,
+        "source_offer_id": source_offer_id,
+        "presentation_mode": normalize_space(public_offer.get("presentation_mode")),
+        "public_render_decision": normalize_space(public_offer.get("public_render_decision")),
+        "flexible_start_button_text": normalize_space(public_offer.get("flexible_start_button_text")),
+        "flexible_start_choices": flexible_start_choices,
+        "nearest_anchor_class": public_offer.get("nearest_anchor_class") if isinstance(public_offer.get("nearest_anchor_class"), dict) else None,
+        "suppressed_adjacent_offer_ids": public_offer.get("suppressed_adjacent_offer_ids") if isinstance(public_offer.get("suppressed_adjacent_offer_ids"), list) else [],
+        "public_display_item_type": "appointment_seed_offer",
+        "display_item_type": "appointment_seed_offer",
+        "seed_publication_mode": "appointment_seed_offer",
+        "approval_status": "auto_approved_by_rules",
+        "public_ready": True,
+        "standalone_class_lander_allowed": False,
+        "class_lander_created": False,
+        "public_schedule_row_created": False,
+        "render_source": normalize_space(public_offer.get("render_source")) or "public_sellable_offers_preview",
     }
 
 
@@ -2086,6 +2266,9 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     instructor = normalize_space(offer.get("instructor_display_name") or offer.get("instructor_key")).title()
     location = clean_location(offer.get("location_name") or offer.get("offer_location") or offer.get("location_key"))
     url = escape(offer.get("appointment_registration_url") or "#", quote=True)
+    presentation_mode = normalize_space(offer.get("presentation_mode"))
+    source_offer_id = normalize_space(offer.get("source_offer_id"))
+    render_source = normalize_space(offer.get("render_source"))
     start_attr = escape(start_dt.isoformat() if start_dt else normalize_space(offer.get("start_datetime")), quote=True)
     end_attr = escape(end_dt.isoformat() if end_dt else normalize_space(offer.get("end_datetime")), quote=True)
     time_range = format_time_line(display_start_dt)
@@ -2093,8 +2276,41 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
         time_range = f"{format_time_line(display_start_dt)} - {format_time_line(display_end_dt)}"
     data_attrs = (
         f'data-start="{start_attr}" '
-        f'data-end="{end_attr}"'
+        f'data-end="{end_attr}" '
+        f'data-source-offer-id="{escape(source_offer_id, quote=True)}" '
+        f'data-render-source="{escape(render_source, quote=True)}" '
+        f'data-presentation-mode="{escape(presentation_mode, quote=True)}"'
     )
+    flexible_choices = offer.get("flexible_start_choices") if isinstance(offer.get("flexible_start_choices"), list) else []
+    flexible_html = ""
+    action_html = f'<a class="button small primary" href="{url}">Check this date/time</a>'
+    if presentation_mode == "flexible_start_window" and flexible_choices:
+        label = normalize_space(offer.get("flexible_start_button_text")) or "When would YOU like to start?"
+        choice_links = []
+        for choice in flexible_choices:
+            if not isinstance(choice, dict):
+                continue
+            choice_url = escape(choice.get("appointment_registration_url") or "#", quote=True)
+            choice_start_dt = parse_dt(choice.get("appointment_display_start"))
+            choice_end_dt = parse_dt(choice.get("appointment_display_end"))
+            choice_label = normalize_space(choice.get("start_time"))
+            if choice_start_dt:
+                choice_label = format_time_line(choice_start_dt)
+            if choice_start_dt and choice_end_dt:
+                choice_label = f"{format_time_line(choice_start_dt)} - {format_time_line(choice_end_dt)}"
+            choice_offer_id = escape(normalize_space(choice.get("offer_id")), quote=True)
+            choice_links.append(
+                f'<a class="button small secondary" href="{choice_url}" data-source-offer-id="{choice_offer_id}">{escape(choice_label)}</a>'
+            )
+        if choice_links:
+            flexible_html = f"""
+    <details class="slug-flexible-start-choices">
+      <summary>{escape(label)}</summary>
+      <div class="slug-flexible-start-choice-list">
+        {''.join(choice_links)}
+      </div>
+    </details>"""
+            action_html = f'<a class="button small primary" href="{url}">{escape(label)}</a>'
     return f"""
 <article class="slug-pill slug-appointment-option" {data_attrs}{debug_source_data_attrs(offer, kind_hint="appointment_seed")}>
   <div class="slug-pill-date">
@@ -2114,8 +2330,9 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     <div class="slug-pill-subtitle">{escape(title)}</div>
   </div>
   <div class="slug-pill-actions">
-    <a class="button small primary" href="{url}">Check this date/time</a>
+    {action_html}
   </div>
+  {flexible_html}
 </article>
 """.strip()
 
@@ -3412,15 +3629,18 @@ def build() -> None:
     sessions, schedule_source_path = load_authoritative_schedule()
     grouped_customer_offers = load_customer_facing_offers()
     universal_offers_by_page = load_universal_offer_inventory()
-    appointment_seed_offers_by_page = {
+    universal_appointment_seed_offers_by_page = {
         hub_slug: [
             offer for offer in offers
             if offer.get("display_item_type") == "appointment_seed_offer"
         ]
         for hub_slug, offers in universal_offers_by_page.items()
     }
-    if not any(appointment_seed_offers_by_page.values()):
-        appointment_seed_offers_by_page = load_hub_appointment_seed_offers()
+    appointment_seed_offers_by_page = merge_appointment_seed_offers(
+        universal_appointment_seed_offers_by_page,
+        load_hub_appointment_seed_offers(),
+        load_public_sellable_appointment_seed_offers(),
+    )
     now = datetime.now(TZ)
     build_meta = current_build_metadata("scripts/build_slug_hubs.py", f"slug hub rebuild from {schedule_source_label(schedule_source_path)}")
 

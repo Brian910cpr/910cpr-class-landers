@@ -6,6 +6,9 @@ from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.dynamic_offer_presentation_policy import build_report as build_presentation_report
+from scripts.dynamic_offer_presentation_policy import render_markdown as render_presentation_markdown
+
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
@@ -18,6 +21,9 @@ PUBLIC_OFFER_POLICY_PATH = ROOT / "data" / "config" / "public_offer_policy.json"
 COURSE_VISIBILITY_POLICY_PATH = ROOT / "data" / "config" / "course_visibility_policy.json"
 SELLABLE_OFFERS_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
 REPORT_PATH = AUDIT_DIR / "public_sellable_offers_report.md"
+PRESENTATION_POLICY_JSON_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.json"
+PRESENTATION_POLICY_REPORT_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.md"
+SCHEDULE_FUTURE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 UNKNOWN = "UNKNOWN"
 
 
@@ -405,11 +411,14 @@ def render_report(kept: list[dict[str, Any]], hidden: list[dict[str, Any]], stat
 
 
 def run() -> dict[str, Any]:
+    presentation_policy_json_path = AUDIT_DIR / "dynamic_offer_presentation_policy_report.json"
+    presentation_policy_report_path = AUDIT_DIR / "dynamic_offer_presentation_policy_report.md"
     dynamic_payload, dynamic_error = read_json(DYNAMIC_OFFERS_PATH)
     course_catalog, course_error = read_json(COURSE_CATALOG_PATH)
     appointment_containers, containers_error = read_json(APPOINTMENT_CONTAINERS_PATH)
     location_resource_map, location_map_error = read_json(LOCATION_RESOURCE_MAP_PATH)
     policy, policy_error = read_json(PUBLIC_OFFER_POLICY_PATH)
+    schedule_future, schedule_future_error = read_json(SCHEDULE_FUTURE_PATH)
     missing = {}
     if dynamic_error:
         missing["dynamic_offers_preview"] = dynamic_error
@@ -421,6 +430,8 @@ def run() -> dict[str, Any]:
         missing["appointment_containers"] = containers_error
     if location_map_error:
         missing["location_resource_map"] = location_map_error
+    if schedule_future_error:
+        missing["schedule_future"] = schedule_future_error
     if not isinstance(policy, dict):
         policy = {}
     kept, hidden, stats = filter_offers(dynamic_payload or {}, course_catalog or {}, policy, appointment_containers=appointment_containers or {}, location_resource_map=location_resource_map or {})
@@ -441,10 +452,21 @@ def run() -> dict[str, Any]:
     }
     SELLABLE_OFFERS_PATH.write_text(json.dumps(preview, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     REPORT_PATH.write_text(render_report(kept, hidden, stats, missing), encoding="utf-8")
+    presentation_report = build_presentation_report(preview, schedule_future or {})
+    presentation_policy_json_path.write_text(json.dumps(presentation_report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    presentation_policy_report_path.write_text(
+        render_presentation_markdown(
+            presentation_report["stats"],
+            presentation_report["audit_rows"],
+            presentation_report["render_offers"],
+        ),
+        encoding="utf-8",
+    )
     return {
         "stats": stats,
         "missing": missing,
-        "output_paths": [SELLABLE_OFFERS_PATH, REPORT_PATH],
+        "presentation_stats": presentation_report["stats"],
+        "output_paths": [SELLABLE_OFFERS_PATH, REPORT_PATH, presentation_policy_json_path, presentation_policy_report_path],
     }
 
 
