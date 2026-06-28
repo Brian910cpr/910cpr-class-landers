@@ -110,6 +110,8 @@ APPOINTMENT_COURSE_TAB_IDS = {
     "aha_heartsaver_cpr_aed_online": {"hs-cpr-aed-bl"},
     "aha_heartsaver_pediatric_first_aid_cpr_aed_online": {"hs-pediatric-bl"},
     "hsi_bls_adult_first_aid_blended": {"hsi-bls-fa"},
+    "hsi_bls_challenge": {"hsi-bls"},
+    "hsi_adult_first_aid_cpr_aed_blended": {"hsi-first-aid-cpr-aed"},
 }
 APPOINTMENT_HUB_BY_FAMILY = {
     "ACLS": "acls",

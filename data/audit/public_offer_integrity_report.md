@@ -11,32 +11,29 @@ Read-only audit. No Enrollware calls, appointments, public pages, Worker setting
 
 ## Counts
 
-- Existing Enrollware classes shown: 223
+- Existing Enrollware classes shown: 220
 - Dynamic appointment-seed offers generated: 690
-- Public sellable dynamic appointment-seed offers: 14
+- Public sellable dynamic appointment-seed offers: 23
 - Dynamic offers blocked by occupancy overlap: 166
 - Dynamic offers blocked by lead time: 644
 - Dynamic offers blocked by insufficient gap: 85
 - Dynamic offers blocked by missing IDs: 300
-- Public sellable total: 237
+- Public sellable total: 243
 
 ## Top Public Filter Rejection Reasons
 
 - `inside_minimum_lead_time`: 644
-- `course_id_not_enabled`: 387
 - `missing_container_for_instructor`: 300
-- `course_family_disabled`: 199
-- `course_family_not_enabled`: 199
+- `course_id_not_enabled`: 274
 - `outside_public_dynamic_hours`: 183
-- `max_offers_per_course_per_week_exceeded`: 8
+- `course_family_disabled`: 78
+- `course_family_not_enabled`: 78
+- `max_offers_per_course_per_week_exceeded`: 14
 
 ## Public-Facing Offers
 
 | Source | Offer | Course | Instructor | Location | Display | Lock | Overlap | Sellable | Reason |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| enrollware_existing_class | `12775784` | AHA Heartsaver First Aid CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-27T17:30:00 to 2026-06-27T18:15:00 | 2026-06-27T17:30:00 to 2026-06-27T18:15:00 | no_overlap | True | included_in_docs_data_schedule_future |
-| enrollware_existing_class | `12774582` | AHA BLS Provider | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-27T18:15:00 to 2026-06-27T20:15:00 | 2026-06-27T18:15:00 to 2026-06-27T20:15:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |
-| enrollware_existing_class | `12775306` | AHA BLS Provider Renewal | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-27T18:15:00 to 2026-06-27T20:15:00 | 2026-06-27T18:15:00 to 2026-06-27T20:15:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |
 | enrollware_existing_class | `12774032` | AHA ACLS HeartCode | Nicholas Tripp | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-29T08:30:00 to 2026-06-29T09:15:00 | 2026-06-29T08:30:00 to 2026-06-29T09:15:00 | no_overlap | True | included_in_docs_data_schedule_future |
 | enrollware_existing_class | `13652934` | AHA BLS Provider | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-29T09:15:00 to 2026-06-29T11:15:00 | 2026-06-29T09:15:00 to 2026-06-29T11:15:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |
 | enrollware_existing_class | `13652937` | AHA BLS Provider Renewal | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-29T09:15:00 to 2026-06-29T11:15:00 | 2026-06-29T09:15:00 to 2026-06-29T11:15:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |
@@ -257,9 +254,18 @@ Read-only audit. No Enrollware calls, appointments, public pages, Worker setting
 | enrollware_existing_class | `13601250` | AHA BLS Provider | Nicholas Tripp | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-08-14T12:45:00 to 2026-08-14T13:45:00 | 2026-08-14T12:45:00 to 2026-08-14T13:45:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |
 | enrollware_existing_class | `13601272` | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-08-14T12:45:00 to 2026-08-14T13:45:00 | 2026-08-14T12:45:00 to 2026-08-14T13:45:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |
 | enrollware_existing_class | `13613957` | AHA Family & Friends CPR | Brian Ennis | NC - Wilmington: Freya's Haus <br>55 Scotts Hill Loop Rd<br><br> Please, visit our hosts' social:<br> <a href="https://www.instagram.com/freyashaus" target="_blank"><img src="https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/freya.jpg" width="95" alt="Freya's Haus"></a> <a href="https://www.facebook.com/1tallmermaid/" target="_blank"><img src="https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/MMaid.jpg" width="95" alt="The Mobile Mermaid"></a> | 2026-08-16T14:00:00 to 2026-08-16T16:00:00 | 2026-08-16T14:00:00 to 2026-08-16T16:00:00 | no_overlap | True | included_in_docs_data_schedule_future |
+| dynamic_appointment_seed | `offer-371954-instructor_24057895173-20260704-1430` | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:30:00 to 2026-07-04T15:15:00 | 2026-07-04T14:30:00 to 2026-07-04T16:00:00 | no_overlap | True | passed_public_sellable_filter |
+| dynamic_appointment_seed | `offer-371954-instructor_24057895173-20260704-1445` | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:45:00 to 2026-07-04T15:30:00 | 2026-07-04T14:45:00 to 2026-07-04T16:15:00 | no_overlap | True | passed_public_sellable_filter |
+| dynamic_appointment_seed | `offer-371954-instructor_24057895173-20260704-1500` | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T15:00:00 to 2026-07-04T15:45:00 | 2026-07-04T15:00:00 to 2026-07-04T16:30:00 | no_overlap | True | passed_public_sellable_filter |
+| dynamic_appointment_seed | `offer-463743-instructor_24057895173-20260704-1430` | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:30:00 to 2026-07-04T15:15:00 | 2026-07-04T14:30:00 to 2026-07-04T16:00:00 | no_overlap | True | passed_public_sellable_filter |
+| dynamic_appointment_seed | `offer-463743-instructor_24057895173-20260704-1445` | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:45:00 to 2026-07-04T15:30:00 | 2026-07-04T14:45:00 to 2026-07-04T16:15:00 | no_overlap | True | passed_public_sellable_filter |
+| dynamic_appointment_seed | `offer-463743-instructor_24057895173-20260704-1500` | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T15:00:00 to 2026-07-04T15:45:00 | 2026-07-04T15:00:00 to 2026-07-04T16:30:00 | no_overlap | True | passed_public_sellable_filter |
 | dynamic_appointment_seed | `offer-445670-instructor_24057895173-20260704-1430` | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:30:00 to 2026-07-04T15:15:00 | 2026-07-04T14:30:00 to 2026-07-04T16:00:00 | no_overlap | True | passed_public_sellable_filter |
 | dynamic_appointment_seed | `offer-445670-instructor_24057895173-20260704-1445` | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:45:00 to 2026-07-04T15:30:00 | 2026-07-04T14:45:00 to 2026-07-04T16:15:00 | no_overlap | True | passed_public_sellable_filter |
 | dynamic_appointment_seed | `offer-445670-instructor_24057895173-20260704-1500` | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T15:00:00 to 2026-07-04T15:45:00 | 2026-07-04T15:00:00 to 2026-07-04T16:30:00 | no_overlap | True | passed_public_sellable_filter |
+| dynamic_appointment_seed | `offer-449422-instructor_24057895173-20260704-1430` | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:30:00 to 2026-07-04T15:15:00 | 2026-07-04T14:30:00 to 2026-07-04T16:00:00 | no_overlap | True | passed_public_sellable_filter |
+| dynamic_appointment_seed | `offer-449422-instructor_24057895173-20260704-1445` | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:45:00 to 2026-07-04T15:30:00 | 2026-07-04T14:45:00 to 2026-07-04T16:15:00 | no_overlap | True | passed_public_sellable_filter |
+| dynamic_appointment_seed | `offer-449422-instructor_24057895173-20260704-1500` | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T15:00:00 to 2026-07-04T15:45:00 | 2026-07-04T15:00:00 to 2026-07-04T16:30:00 | no_overlap | True | passed_public_sellable_filter |
 | dynamic_appointment_seed | `offer-344085-instructor_24057895173-20260704-1430` | AHA Heartsaver CPR AED | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:30:00 to 2026-07-04T16:00:00 | 2026-07-04T14:30:00 to 2026-07-04T16:45:00 | no_overlap | True | passed_public_sellable_filter |
 | dynamic_appointment_seed | `offer-344085-instructor_24057895173-20260704-1445` | AHA Heartsaver CPR AED | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:45:00 to 2026-07-04T16:15:00 | 2026-07-04T14:45:00 to 2026-07-04T17:00:00 | no_overlap | True | passed_public_sellable_filter |
 | dynamic_appointment_seed | `offer-209808-instructor_24057895173-20260704-1430` | AHA Heartsaver CPR AED Online | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | 2026-07-04T14:30:00 to 2026-07-04T15:15:00 | 2026-07-04T14:30:00 to 2026-07-04T16:00:00 | no_overlap | True | passed_public_sellable_filter |

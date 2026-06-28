@@ -1,11 +1,9 @@
 {
-  "generated_at": "2026-06-27T22:32:11.219519-04:00",
+  "generated_at": "2026-06-28T15:23:20.184573-04:00",
   "read_only": true,
   "public_site_affected": false,
   "deployed": false,
-  "files_missing_or_unreadable": {
-    "sessions_current": "missing"
-  },
+  "files_missing_or_unreadable": {},
   "validation_rules": {
     "dynamic_offers_inside_confirmed_inverse_availability": true,
     "dynamic_offers_do_not_overlap_existing_classes_or_buffers": true,
@@ -13,14 +11,14 @@
     "public_output_distinguishes_offer_source": true
   },
   "stats": {
-    "existing_enrollware_classes_shown": 223,
+    "existing_enrollware_classes_shown": 220,
     "dynamic_appointment_seed_offers_generated": 690,
-    "public_sellable_dynamic_appointment_seed_offers": 14,
+    "public_sellable_dynamic_appointment_seed_offers": 23,
     "dynamic_offers_blocked_by_occupancy_overlap": 166,
     "dynamic_offers_blocked_by_lead_time": 644,
     "dynamic_offers_blocked_by_insufficient_gap": 85,
     "dynamic_offers_blocked_by_missing_ids": 300,
-    "public_sellable_total": 237,
+    "public_sellable_total": 243,
     "availability_blocks_indexed": 27,
     "audit_failed": false,
     "public_sellable_dynamic_overlap_failures": 0,
@@ -28,111 +26,15 @@
     "public_sellable_dynamic_duplicate_existing_class_failures": 0,
     "top_public_filter_rejection_reasons": {
       "inside_minimum_lead_time": 644,
-      "course_id_not_enabled": 387,
       "missing_container_for_instructor": 300,
-      "course_family_disabled": 199,
-      "course_family_not_enabled": 199,
+      "course_id_not_enabled": 274,
       "outside_public_dynamic_hours": 183,
-      "max_offers_per_course_per_week_exceeded": 8
+      "course_family_disabled": 78,
+      "course_family_not_enabled": 78,
+      "max_offers_per_course_per_week_exceeded": 14
     }
   },
   "offers": [
-    {
-      "offer_id": "12775784",
-      "slug": "12775784",
-      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
-      "display_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
-      "offer_source": "enrollware_existing_class",
-      "instructor": "Brian Ennis",
-      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "public_display_start": "2026-06-27T17:30:00",
-      "public_display_end": "2026-06-27T18:15:00",
-      "scheduler_consumption_start": "2026-06-27T17:30:00",
-      "scheduler_consumption_end": "2026-06-27T18:15:00",
-      "source_availability_block_used": null,
-      "inside_confirmed_availability_block": null,
-      "matching_appointment_tuple": null,
-      "nearest_existing_enrollware_class_same_day_instructor_location": {
-        "session_id": "12774582",
-        "course_id": "209806",
-        "display_course_name": "AHA BLS Provider",
-        "instructor": "Brian Ennis",
-        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-        "start": "2026-06-27T18:15:00",
-        "end": "2026-06-27T20:15:00",
-        "source_file": "docs/data/schedule_future.json"
-      },
-      "overlap_status": "no_overlap",
-      "public_sellable": true,
-      "public_filter_result": "passed_existing_enrollware_class_filter",
-      "public_filter_reasons": [
-        "included_in_docs_data_schedule_future"
-      ]
-    },
-    {
-      "offer_id": "12774582",
-      "slug": "12774582",
-      "course_key": "aha_bls_provider",
-      "display_course_name": "AHA BLS Provider",
-      "offer_source": "enrollware_existing_class",
-      "instructor": "Brian Ennis",
-      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "public_display_start": "2026-06-27T18:15:00",
-      "public_display_end": "2026-06-27T20:15:00",
-      "scheduler_consumption_start": "2026-06-27T18:15:00",
-      "scheduler_consumption_end": "2026-06-27T20:15:00",
-      "source_availability_block_used": null,
-      "inside_confirmed_availability_block": null,
-      "matching_appointment_tuple": null,
-      "nearest_existing_enrollware_class_same_day_instructor_location": {
-        "session_id": "12775306",
-        "course_id": "359474",
-        "display_course_name": "AHA BLS Provider Renewal",
-        "instructor": "Brian Ennis",
-        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-        "start": "2026-06-27T18:15:00",
-        "end": "2026-06-27T20:15:00",
-        "source_file": "docs/data/schedule_future.json"
-      },
-      "overlap_status": "overlaps_existing_class",
-      "public_sellable": true,
-      "public_filter_result": "passed_existing_enrollware_class_filter",
-      "public_filter_reasons": [
-        "included_in_docs_data_schedule_future"
-      ]
-    },
-    {
-      "offer_id": "12775306",
-      "slug": "12775306",
-      "course_key": "aha_bls_provider_renewal",
-      "display_course_name": "AHA BLS Provider Renewal",
-      "offer_source": "enrollware_existing_class",
-      "instructor": "Brian Ennis",
-      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "public_display_start": "2026-06-27T18:15:00",
-      "public_display_end": "2026-06-27T20:15:00",
-      "scheduler_consumption_start": "2026-06-27T18:15:00",
-      "scheduler_consumption_end": "2026-06-27T20:15:00",
-      "source_availability_block_used": null,
-      "inside_confirmed_availability_block": null,
-      "matching_appointment_tuple": null,
-      "nearest_existing_enrollware_class_same_day_instructor_location": {
-        "session_id": "12774582",
-        "course_id": "209806",
-        "display_course_name": "AHA BLS Provider",
-        "instructor": "Brian Ennis",
-        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-        "start": "2026-06-27T18:15:00",
-        "end": "2026-06-27T20:15:00",
-        "source_file": "docs/data/schedule_future.json"
-      },
-      "overlap_status": "overlaps_existing_class",
-      "public_sellable": true,
-      "public_filter_result": "passed_existing_enrollware_class_filter",
-      "public_filter_reasons": [
-        "included_in_docs_data_schedule_future"
-      ]
-    },
     {
       "offer_id": "12774032",
       "slug": "12774032",
@@ -7156,6 +7058,222 @@
       ]
     },
     {
+      "offer_id": "offer-371954-instructor_24057895173-20260704-1430",
+      "slug": "offer-371954-instructor_24057895173-20260704-1430",
+      "course_key": "HSI",
+      "display_course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "offer_source": "dynamic_appointment_seed",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_start": "2026-07-04T14:30:00",
+      "public_display_end": "2026-07-04T15:15:00",
+      "scheduler_consumption_start": "2026-07-04T14:30:00",
+      "scheduler_consumption_end": "2026-07-04T16:00:00",
+      "source_availability_block_used": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "inside_confirmed_availability_block": true,
+      "matching_appointment_tuple": {
+        "appointmentDayId": 260683,
+        "startTime": "14:30",
+        "courseId": "371954"
+      },
+      "nearest_existing_enrollware_class_same_day_instructor_location": {
+        "session_id": "12775555",
+        "course_id": "359474",
+        "display_course_name": "AHA BLS Provider Renewal",
+        "instructor": "Brian Ennis",
+        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        "start": "2026-07-04T12:30:00",
+        "end": "2026-07-04T14:00:00",
+        "source_file": "docs/data/schedule_future.json"
+      },
+      "overlap_status": "no_overlap",
+      "public_sellable": true,
+      "public_filter_result": "passed_public_filter",
+      "public_filter_reasons": [
+        "passed_public_sellable_filter"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260704-1445",
+      "slug": "offer-371954-instructor_24057895173-20260704-1445",
+      "course_key": "HSI",
+      "display_course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "offer_source": "dynamic_appointment_seed",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_start": "2026-07-04T14:45:00",
+      "public_display_end": "2026-07-04T15:30:00",
+      "scheduler_consumption_start": "2026-07-04T14:45:00",
+      "scheduler_consumption_end": "2026-07-04T16:15:00",
+      "source_availability_block_used": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "inside_confirmed_availability_block": true,
+      "matching_appointment_tuple": {
+        "appointmentDayId": 260683,
+        "startTime": "14:45",
+        "courseId": "371954"
+      },
+      "nearest_existing_enrollware_class_same_day_instructor_location": {
+        "session_id": "12775555",
+        "course_id": "359474",
+        "display_course_name": "AHA BLS Provider Renewal",
+        "instructor": "Brian Ennis",
+        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        "start": "2026-07-04T12:30:00",
+        "end": "2026-07-04T14:00:00",
+        "source_file": "docs/data/schedule_future.json"
+      },
+      "overlap_status": "no_overlap",
+      "public_sellable": true,
+      "public_filter_result": "passed_public_filter",
+      "public_filter_reasons": [
+        "passed_public_sellable_filter"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260704-1500",
+      "slug": "offer-371954-instructor_24057895173-20260704-1500",
+      "course_key": "HSI",
+      "display_course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "offer_source": "dynamic_appointment_seed",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_start": "2026-07-04T15:00:00",
+      "public_display_end": "2026-07-04T15:45:00",
+      "scheduler_consumption_start": "2026-07-04T15:00:00",
+      "scheduler_consumption_end": "2026-07-04T16:30:00",
+      "source_availability_block_used": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "inside_confirmed_availability_block": true,
+      "matching_appointment_tuple": {
+        "appointmentDayId": 260683,
+        "startTime": "15:00",
+        "courseId": "371954"
+      },
+      "nearest_existing_enrollware_class_same_day_instructor_location": {
+        "session_id": "12775555",
+        "course_id": "359474",
+        "display_course_name": "AHA BLS Provider Renewal",
+        "instructor": "Brian Ennis",
+        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        "start": "2026-07-04T12:30:00",
+        "end": "2026-07-04T14:00:00",
+        "source_file": "docs/data/schedule_future.json"
+      },
+      "overlap_status": "no_overlap",
+      "public_sellable": true,
+      "public_filter_result": "passed_public_filter",
+      "public_filter_reasons": [
+        "passed_public_sellable_filter"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260704-1430",
+      "slug": "offer-463743-instructor_24057895173-20260704-1430",
+      "course_key": "HSI",
+      "display_course_name": "HSI BLS Challenge",
+      "offer_source": "dynamic_appointment_seed",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_start": "2026-07-04T14:30:00",
+      "public_display_end": "2026-07-04T15:15:00",
+      "scheduler_consumption_start": "2026-07-04T14:30:00",
+      "scheduler_consumption_end": "2026-07-04T16:00:00",
+      "source_availability_block_used": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "inside_confirmed_availability_block": true,
+      "matching_appointment_tuple": {
+        "appointmentDayId": 260683,
+        "startTime": "14:30",
+        "courseId": "463743"
+      },
+      "nearest_existing_enrollware_class_same_day_instructor_location": {
+        "session_id": "12775555",
+        "course_id": "359474",
+        "display_course_name": "AHA BLS Provider Renewal",
+        "instructor": "Brian Ennis",
+        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        "start": "2026-07-04T12:30:00",
+        "end": "2026-07-04T14:00:00",
+        "source_file": "docs/data/schedule_future.json"
+      },
+      "overlap_status": "no_overlap",
+      "public_sellable": true,
+      "public_filter_result": "passed_public_filter",
+      "public_filter_reasons": [
+        "passed_public_sellable_filter"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260704-1445",
+      "slug": "offer-463743-instructor_24057895173-20260704-1445",
+      "course_key": "HSI",
+      "display_course_name": "HSI BLS Challenge",
+      "offer_source": "dynamic_appointment_seed",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_start": "2026-07-04T14:45:00",
+      "public_display_end": "2026-07-04T15:30:00",
+      "scheduler_consumption_start": "2026-07-04T14:45:00",
+      "scheduler_consumption_end": "2026-07-04T16:15:00",
+      "source_availability_block_used": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "inside_confirmed_availability_block": true,
+      "matching_appointment_tuple": {
+        "appointmentDayId": 260683,
+        "startTime": "14:45",
+        "courseId": "463743"
+      },
+      "nearest_existing_enrollware_class_same_day_instructor_location": {
+        "session_id": "12775555",
+        "course_id": "359474",
+        "display_course_name": "AHA BLS Provider Renewal",
+        "instructor": "Brian Ennis",
+        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        "start": "2026-07-04T12:30:00",
+        "end": "2026-07-04T14:00:00",
+        "source_file": "docs/data/schedule_future.json"
+      },
+      "overlap_status": "no_overlap",
+      "public_sellable": true,
+      "public_filter_result": "passed_public_filter",
+      "public_filter_reasons": [
+        "passed_public_sellable_filter"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260704-1500",
+      "slug": "offer-463743-instructor_24057895173-20260704-1500",
+      "course_key": "HSI",
+      "display_course_name": "HSI BLS Challenge",
+      "offer_source": "dynamic_appointment_seed",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_start": "2026-07-04T15:00:00",
+      "public_display_end": "2026-07-04T15:45:00",
+      "scheduler_consumption_start": "2026-07-04T15:00:00",
+      "scheduler_consumption_end": "2026-07-04T16:30:00",
+      "source_availability_block_used": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "inside_confirmed_availability_block": true,
+      "matching_appointment_tuple": {
+        "appointmentDayId": 260683,
+        "startTime": "15:00",
+        "courseId": "463743"
+      },
+      "nearest_existing_enrollware_class_same_day_instructor_location": {
+        "session_id": "12775555",
+        "course_id": "359474",
+        "display_course_name": "AHA BLS Provider Renewal",
+        "instructor": "Brian Ennis",
+        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        "start": "2026-07-04T12:30:00",
+        "end": "2026-07-04T14:00:00",
+        "source_file": "docs/data/schedule_future.json"
+      },
+      "overlap_status": "no_overlap",
+      "public_sellable": true,
+      "public_filter_result": "passed_public_filter",
+      "public_filter_reasons": [
+        "passed_public_sellable_filter"
+      ]
+    },
+    {
       "offer_id": "offer-445670-instructor_24057895173-20260704-1430",
       "slug": "offer-445670-instructor_24057895173-20260704-1430",
       "course_key": "HSI",
@@ -7245,6 +7363,114 @@
         "appointmentDayId": 260683,
         "startTime": "15:00",
         "courseId": "445670"
+      },
+      "nearest_existing_enrollware_class_same_day_instructor_location": {
+        "session_id": "12775555",
+        "course_id": "359474",
+        "display_course_name": "AHA BLS Provider Renewal",
+        "instructor": "Brian Ennis",
+        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        "start": "2026-07-04T12:30:00",
+        "end": "2026-07-04T14:00:00",
+        "source_file": "docs/data/schedule_future.json"
+      },
+      "overlap_status": "no_overlap",
+      "public_sellable": true,
+      "public_filter_result": "passed_public_filter",
+      "public_filter_reasons": [
+        "passed_public_sellable_filter"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260704-1430",
+      "slug": "offer-449422-instructor_24057895173-20260704-1430",
+      "course_key": "HSI",
+      "display_course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "offer_source": "dynamic_appointment_seed",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_start": "2026-07-04T14:30:00",
+      "public_display_end": "2026-07-04T15:15:00",
+      "scheduler_consumption_start": "2026-07-04T14:30:00",
+      "scheduler_consumption_end": "2026-07-04T16:00:00",
+      "source_availability_block_used": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "inside_confirmed_availability_block": true,
+      "matching_appointment_tuple": {
+        "appointmentDayId": 260683,
+        "startTime": "14:30",
+        "courseId": "449422"
+      },
+      "nearest_existing_enrollware_class_same_day_instructor_location": {
+        "session_id": "12775555",
+        "course_id": "359474",
+        "display_course_name": "AHA BLS Provider Renewal",
+        "instructor": "Brian Ennis",
+        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        "start": "2026-07-04T12:30:00",
+        "end": "2026-07-04T14:00:00",
+        "source_file": "docs/data/schedule_future.json"
+      },
+      "overlap_status": "no_overlap",
+      "public_sellable": true,
+      "public_filter_result": "passed_public_filter",
+      "public_filter_reasons": [
+        "passed_public_sellable_filter"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260704-1445",
+      "slug": "offer-449422-instructor_24057895173-20260704-1445",
+      "course_key": "HSI",
+      "display_course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "offer_source": "dynamic_appointment_seed",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_start": "2026-07-04T14:45:00",
+      "public_display_end": "2026-07-04T15:30:00",
+      "scheduler_consumption_start": "2026-07-04T14:45:00",
+      "scheduler_consumption_end": "2026-07-04T16:15:00",
+      "source_availability_block_used": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "inside_confirmed_availability_block": true,
+      "matching_appointment_tuple": {
+        "appointmentDayId": 260683,
+        "startTime": "14:45",
+        "courseId": "449422"
+      },
+      "nearest_existing_enrollware_class_same_day_instructor_location": {
+        "session_id": "12775555",
+        "course_id": "359474",
+        "display_course_name": "AHA BLS Provider Renewal",
+        "instructor": "Brian Ennis",
+        "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+        "start": "2026-07-04T12:30:00",
+        "end": "2026-07-04T14:00:00",
+        "source_file": "docs/data/schedule_future.json"
+      },
+      "overlap_status": "no_overlap",
+      "public_sellable": true,
+      "public_filter_result": "passed_public_filter",
+      "public_filter_reasons": [
+        "passed_public_sellable_filter"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260704-1500",
+      "slug": "offer-449422-instructor_24057895173-20260704-1500",
+      "course_key": "HSI",
+      "display_course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "offer_source": "dynamic_appointment_seed",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "public_display_start": "2026-07-04T15:00:00",
+      "public_display_end": "2026-07-04T15:45:00",
+      "scheduler_consumption_start": "2026-07-04T15:00:00",
+      "scheduler_consumption_end": "2026-07-04T16:30:00",
+      "source_availability_block_used": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "inside_confirmed_availability_block": true,
+      "matching_appointment_tuple": {
+        "appointmentDayId": 260683,
+        "startTime": "15:00",
+        "courseId": "449422"
       },
       "nearest_existing_enrollware_class_same_day_instructor_location": {
         "session_id": "12775555",
