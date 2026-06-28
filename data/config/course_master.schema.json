@@ -1,0 +1,365 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "910CPR Course Master",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "authoritative",
+    "courses"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "authoritative": {
+      "type": "boolean"
+    },
+    "source_files": {
+      "type": "array"
+    },
+    "courses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "course_key",
+          "enrollware_course_id",
+          "enrollware_name",
+          "internal_title",
+          "public_short_title",
+          "public_long_title",
+          "course_family",
+          "course_family_type",
+          "provider",
+          "discipline",
+          "format",
+          "audience",
+          "status",
+          "public_visibility",
+          "slug_page",
+          "hub_tab",
+          "sort_priority",
+          "cta_text",
+          "description_short",
+          "description_long",
+          "prerequisites",
+          "what_is_included",
+          "what_to_bring",
+          "classroom_duration_minutes",
+          "skills_duration_minutes",
+          "online_component_required",
+          "scheduler_display_duration_minutes",
+          "setup_buffer_minutes",
+          "cleanup_buffer_minutes",
+          "scheduler_consumption_minutes",
+          "minimum_lead_time_hours",
+          "maximum_lookahead_days",
+          "allowed_days_of_week",
+          "allowed_start_time_min",
+          "allowed_start_time_max",
+          "dynamic_offer_allowed",
+          "appointment_seed_allowed",
+          "requires_instructor_availability",
+          "requires_existing_enrollware_class",
+          "can_stack_with_same_course",
+          "minimum_gap_minutes",
+          "max_students_default",
+          "min_students_default",
+          "registration_backend",
+          "enrollware_course_url",
+          "appointment_course_id",
+          "appointment_allowed",
+          "appointment_day_id_strategy",
+          "appointment_location_strategy",
+          "allows_unscheduled_students",
+          "base_price",
+          "shipping_price",
+          "add_ons",
+          "add_on_policy",
+          "manual_required",
+          "manual_included",
+          "discount_eligible",
+          "certification_type",
+          "certification_validity_months",
+          "card_type",
+          "secondary_card_type",
+          "ecard_code",
+          "keycode_bank",
+          "allowed_instructor_ids",
+          "allowed_location_ids",
+          "required_equipment",
+          "room_requirements",
+          "notes_internal",
+          "source_files",
+          "data_quality_status",
+          "missing_required_fields"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "course_key": {
+            "type": "string"
+          },
+          "enrollware_course_id": {
+            "type": "string"
+          },
+          "enrollware_name": {
+            "type": "string"
+          },
+          "internal_title": {
+            "type": "string"
+          },
+          "public_short_title": {
+            "type": "string"
+          },
+          "public_long_title": {
+            "type": "string"
+          },
+          "course_family": {
+            "type": "string"
+          },
+          "course_family_type": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "discipline": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          },
+          "audience": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "public_visibility": {
+            "type": "string"
+          },
+          "slug_page": {
+            "type": "string"
+          },
+          "hub_tab": {
+            "type": "array"
+          },
+          "sort_priority": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "cta_text": {
+            "type": "string"
+          },
+          "description_short": {
+            "type": "string"
+          },
+          "description_long": {
+            "type": "string"
+          },
+          "prerequisites": {
+            "type": "array"
+          },
+          "what_is_included": {
+            "type": "array"
+          },
+          "what_to_bring": {
+            "type": "array"
+          },
+          "classroom_duration_minutes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "skills_duration_minutes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "online_component_required": {
+            "type": "boolean"
+          },
+          "scheduler_display_duration_minutes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "setup_buffer_minutes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "cleanup_buffer_minutes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "scheduler_consumption_minutes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "minimum_lead_time_hours": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "maximum_lookahead_days": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "allowed_days_of_week": {
+            "type": "array"
+          },
+          "allowed_start_time_min": {
+            "type": "string"
+          },
+          "allowed_start_time_max": {
+            "type": "string"
+          },
+          "dynamic_offer_allowed": {
+            "type": "boolean"
+          },
+          "appointment_seed_allowed": {
+            "type": "boolean"
+          },
+          "requires_instructor_availability": {
+            "type": "boolean"
+          },
+          "requires_existing_enrollware_class": {
+            "type": "boolean"
+          },
+          "can_stack_with_same_course": {
+            "type": "boolean"
+          },
+          "minimum_gap_minutes": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "max_students_default": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "min_students_default": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "registration_backend": {
+            "type": "string"
+          },
+          "enrollware_course_url": {
+            "type": "string"
+          },
+          "appointment_course_id": {
+            "type": "string"
+          },
+          "appointment_allowed": {
+            "type": "boolean"
+          },
+          "appointment_day_id_strategy": {
+            "type": "string"
+          },
+          "appointment_location_strategy": {
+            "type": "string"
+          },
+          "allows_unscheduled_students": {
+            "type": "boolean"
+          },
+          "base_price": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "shipping_price": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "add_ons": {
+            "type": "array"
+          },
+          "add_on_policy": {
+            "type": "string"
+          },
+          "manual_required": {
+            "type": "boolean"
+          },
+          "manual_included": {
+            "type": "boolean"
+          },
+          "discount_eligible": {
+            "type": "boolean"
+          },
+          "certification_type": {
+            "type": "string"
+          },
+          "certification_validity_months": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "card_type": {
+            "type": "string"
+          },
+          "secondary_card_type": {
+            "type": "string"
+          },
+          "ecard_code": {
+            "type": "string"
+          },
+          "keycode_bank": {
+            "type": "string"
+          },
+          "allowed_instructor_ids": {
+            "type": "array"
+          },
+          "allowed_location_ids": {
+            "type": "array"
+          },
+          "required_equipment": {
+            "type": "array"
+          },
+          "room_requirements": {
+            "type": "array"
+          },
+          "notes_internal": {
+            "type": "string"
+          },
+          "source_files": {
+            "type": "array"
+          },
+          "data_quality_status": {
+            "type": "string"
+          },
+          "missing_required_fields": {
+            "type": "array"
+          }
+        }
+      }
+    }
+  }
+}
