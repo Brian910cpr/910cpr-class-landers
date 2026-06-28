@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-06-21T03:01:36.308355-04:00",
+  "generated_at": "2026-06-27T22:32:10.214856-04:00",
   "read_only": true,
   "public_site_affected": false,
-  "offers_with_scheduler_consumption_windows": 856,
-  "display_shorter_than_consumption_warnings": 856,
+  "offers_with_scheduler_consumption_windows": 690,
+  "display_shorter_than_consumption_warnings": 690,
   "default_setup_buffer_minutes": 15,
   "default_cleanup_buffer_minutes": 30,
   "warning_codes": {
-    "appointment_display_shorter_than_scheduler_consumption": 856
+    "appointment_display_shorter_than_scheduler_consumption": 690
   },
   "warnings": [
     {

@@ -12,11 +12,10 @@ This is a read-only V0 dynamic offer generator. It did not modify public pages, 
 - `people_catalog`
 - `schedule_future`
 - `seed_strategy_policy`
-- `sessions_current`
 
 ## Files Missing Or Unreadable
 
-- None
+- `sessions_current`: missing
 
 ## Summary
 
@@ -27,11 +26,12 @@ This is a read-only V0 dynamic offer generator. It did not modify public pages, 
 - Availability windows read: 11
 - Scheduler-enabled instructors considered: 2
 - Courses considered: 30
-- Local occupancy blocks read: 442
-- Offers generated: 856
+- Local occupancy blocks read: 223
+- Offers generated: 690
 
 ## Offers Rejected By Reason
 
+- `conflicts_with_existing_occupancy`: 166
 - `course_family_not_allowed_by_window`: 127
 - `course_does_not_fit_window`: 85
 
@@ -62,6 +62,7 @@ This is a read-only V0 dynamic offer generator. It did not modify public pages, 
 
 ## Blockers Preventing More Offers
 
+- `conflicts_with_existing_occupancy`: 166
 - `course_family_not_allowed_by_window`: 127
 - `course_does_not_fit_window`: 85
 

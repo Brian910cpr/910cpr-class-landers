@@ -1,0 +1,249 @@
+{
+  "generated_at": "2026-06-27T22:32:17.423100-04:00",
+  "read_only": true,
+  "deployed": false,
+  "static_site_render_command_used": "python -m scripts.build_slug_hubs",
+  "audited_offer_source": "dynamic_offer_presentation_policy_report",
+  "rendered_dynamic_offer_status": "PASS",
+  "verdict_reason": "All public sellable dynamic appointment-seed offers are visible in rendered customer-facing HTML with correct links.",
+  "files_missing_or_unreadable": {},
+  "stats": {
+    "public_sellable_dynamic_offers": 5,
+    "rendered_dynamic_offers": 5,
+    "missing_from_rendered_html": 0,
+    "rendered_with_book_enroll_register_link": 5,
+    "rendered_with_exact_href_match": 5,
+    "reachable_from_course_hub_or_catalog": 5,
+    "distinguishable_dynamic_in_html": 5,
+    "duplicate_existing_enrollware_class_rendered_same_tuple": 0,
+    "overlap_failures": 0,
+    "enrollware_urls_sample_checked": 3,
+    "enrollware_urls_sample_valid": 3
+  },
+  "offers": [
+    {
+      "offer_id": "offer-209808-instructor_24057895173-20260704-1445",
+      "course_key": "Heartsaver",
+      "display_course_name": "AHA Heartsaver CPR AED Online",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "date": "2026-07-04",
+      "public_display_start": "2026-07-04T14:45:00",
+      "public_display_end": "2026-07-04T15:30:00",
+      "scheduler_consumption_start": "2026-07-04T14:45:00",
+      "scheduler_consumption_end": "2026-07-04T16:15:00",
+      "source_availability_block": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "appointmentDayId": 260683,
+      "courseId": "209808",
+      "startTime": "2:45 PM",
+      "final_enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=209808",
+      "rendered_page_paths": [
+        "docs/courses/heartsaver-cpr-aed.html"
+      ],
+      "rendered": true,
+      "link_or_button_text": [
+        "Check this date/time"
+      ],
+      "href_in_html_exactly_matches_audited_href": true,
+      "page_reachable_from_course_hub_or_catalog": true,
+      "dynamic_offer_distinguishable_in_html": true,
+      "duplicate_existing_enrollware_class_rendered_same_tuple": false,
+      "overlap_status": "unknown",
+      "nearest_existing_enrollware_class": null,
+      "enrollware_url_sample_checked": true,
+      "enrollware_url_validates": true,
+      "enrollware_validation": {
+        "checked": true,
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=209808",
+        "contains_continue_with_registration": true,
+        "contains_expected_course": true,
+        "contains_expected_date": true,
+        "contains_expected_time": true,
+        "contains_expected_location": false,
+        "matched_location_by_core_tokens": true,
+        "error": null
+      },
+      "rendered_context_text": [
+        "JUL 4 Sat Saturday, July 4 2:45 PM - 3:30 PM NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office Available class option Instructor: Brian Ennis AHA Heartsaver CPR AED Online"
+      ]
+    },
+    {
+      "offer_id": "offer-251545-instructor_24057895173-20260704-1445",
+      "course_key": "Heartsaver",
+      "display_course_name": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "date": "2026-07-04",
+      "public_display_start": "2026-07-04T14:45:00",
+      "public_display_end": "2026-07-04T15:30:00",
+      "scheduler_consumption_start": "2026-07-04T14:45:00",
+      "scheduler_consumption_end": "2026-07-04T16:15:00",
+      "source_availability_block": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "appointmentDayId": 260683,
+      "courseId": "251545",
+      "startTime": "2:45 PM",
+      "final_enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=251545",
+      "rendered_page_paths": [
+        "docs/courses/heartsaver-pediatric-first-aid-cpr-aed.html"
+      ],
+      "rendered": true,
+      "link_or_button_text": [
+        "Check this date/time"
+      ],
+      "href_in_html_exactly_matches_audited_href": true,
+      "page_reachable_from_course_hub_or_catalog": true,
+      "dynamic_offer_distinguishable_in_html": true,
+      "duplicate_existing_enrollware_class_rendered_same_tuple": false,
+      "overlap_status": "unknown",
+      "nearest_existing_enrollware_class": null,
+      "enrollware_url_sample_checked": true,
+      "enrollware_url_validates": true,
+      "enrollware_validation": {
+        "checked": true,
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=251545",
+        "contains_continue_with_registration": true,
+        "contains_expected_course": true,
+        "contains_expected_date": true,
+        "contains_expected_time": true,
+        "contains_expected_location": false,
+        "matched_location_by_core_tokens": true,
+        "error": null
+      },
+      "rendered_context_text": [
+        "JUL 4 Sat Saturday, July 4 2:45 PM - 3:30 PM NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office Available class option Instructor: Brian Ennis AHA Heartsaver Pediatric First Aid CPR AED Online"
+      ]
+    },
+    {
+      "offer_id": "offer-329495-instructor_24057895173-20260704-1445",
+      "course_key": "Heartsaver",
+      "display_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "date": "2026-07-04",
+      "public_display_start": "2026-07-04T14:45:00",
+      "public_display_end": "2026-07-04T15:30:00",
+      "scheduler_consumption_start": "2026-07-04T14:45:00",
+      "scheduler_consumption_end": "2026-07-04T16:15:00",
+      "source_availability_block": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "appointmentDayId": 260683,
+      "courseId": "329495",
+      "startTime": "2:45 PM",
+      "final_enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=329495",
+      "rendered_page_paths": [
+        "docs/courses/heartsaver-first-aid-cpr-aed.html"
+      ],
+      "rendered": true,
+      "link_or_button_text": [
+        "Check this date/time"
+      ],
+      "href_in_html_exactly_matches_audited_href": true,
+      "page_reachable_from_course_hub_or_catalog": true,
+      "dynamic_offer_distinguishable_in_html": true,
+      "duplicate_existing_enrollware_class_rendered_same_tuple": false,
+      "overlap_status": "unknown",
+      "nearest_existing_enrollware_class": null,
+      "enrollware_url_sample_checked": true,
+      "enrollware_url_validates": true,
+      "enrollware_validation": {
+        "checked": true,
+        "ok": true,
+        "status_code": 200,
+        "final_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=329495",
+        "contains_continue_with_registration": true,
+        "contains_expected_course": true,
+        "contains_expected_date": true,
+        "contains_expected_time": true,
+        "contains_expected_location": false,
+        "matched_location_by_core_tokens": true,
+        "error": null
+      },
+      "rendered_context_text": [
+        "JUL 4 Sat Saturday, July 4 2:45 PM - 3:30 PM NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office Available class option Instructor: Brian Ennis AHA Heartsaver First Aid CPR AED - Blended"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260704-1445",
+      "course_key": "Heartsaver",
+      "display_course_name": "AHA Heartsaver CPR AED",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "date": "2026-07-04",
+      "public_display_start": "2026-07-04T14:45:00",
+      "public_display_end": "2026-07-04T16:15:00",
+      "scheduler_consumption_start": "2026-07-04T14:45:00",
+      "scheduler_consumption_end": "2026-07-04T17:00:00",
+      "source_availability_block": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "appointmentDayId": 260683,
+      "courseId": "344085",
+      "startTime": "2:45 PM",
+      "final_enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=344085",
+      "rendered_page_paths": [
+        "docs/courses/heartsaver-cpr-aed.html"
+      ],
+      "rendered": true,
+      "link_or_button_text": [
+        "Check this date/time"
+      ],
+      "href_in_html_exactly_matches_audited_href": true,
+      "page_reachable_from_course_hub_or_catalog": true,
+      "dynamic_offer_distinguishable_in_html": true,
+      "duplicate_existing_enrollware_class_rendered_same_tuple": false,
+      "overlap_status": "unknown",
+      "nearest_existing_enrollware_class": null,
+      "enrollware_url_sample_checked": false,
+      "enrollware_url_validates": false,
+      "enrollware_validation": {
+        "checked": false,
+        "ok": false,
+        "error": "not_sampled"
+      },
+      "rendered_context_text": [
+        "JUL 4 Sat Saturday, July 4 2:45 PM - 4:15 PM NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office Available class option Instructor: Brian Ennis AHA Heartsaver CPR AED"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260704-1445",
+      "course_key": "HSI",
+      "display_course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "date": "2026-07-04",
+      "public_display_start": "2026-07-04T14:45:00",
+      "public_display_end": "2026-07-04T15:30:00",
+      "scheduler_consumption_start": "2026-07-04T14:45:00",
+      "scheduler_consumption_end": "2026-07-04T16:15:00",
+      "source_availability_block": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "appointmentDayId": 260683,
+      "courseId": "445670",
+      "startTime": "2:45 PM",
+      "final_enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=445670",
+      "rendered_page_paths": [
+        "docs/hsi.html"
+      ],
+      "rendered": true,
+      "link_or_button_text": [
+        "Check this date/time"
+      ],
+      "href_in_html_exactly_matches_audited_href": true,
+      "page_reachable_from_course_hub_or_catalog": true,
+      "dynamic_offer_distinguishable_in_html": true,
+      "duplicate_existing_enrollware_class_rendered_same_tuple": false,
+      "overlap_status": "unknown",
+      "nearest_existing_enrollware_class": null,
+      "enrollware_url_sample_checked": false,
+      "enrollware_url_validates": false,
+      "enrollware_validation": {
+        "checked": false,
+        "ok": false,
+        "error": "not_sampled"
+      },
+      "rendered_context_text": [
+        "JUL 4 Sat Saturday, July 4 2:45 PM - 3:30 PM NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office Available class option Instructor: Brian Ennis HSI BLS and Adult First Aid | Blended Learning"
+      ]
+    }
+  ]
+}

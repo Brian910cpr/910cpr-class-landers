@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T22:26:54.681719-04:00",
+  "generated_at": "2026-06-27T22:32:19.087463-04:00",
   "recommendation": {
     "course_catalog_should_be_promoted_or_renamed": false,
     "course_master_should_be_generated_from_course_catalog_plus_enrollware_export": true,

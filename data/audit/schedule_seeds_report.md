@@ -4,16 +4,16 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 ## Summary
 
-- Input offers read: 11
+- Input offers read: 14
 - Appointment-container filter enabled: True
-- Appointment-container-backed offers kept: 11
-- Seeds selected: 3
+- Appointment-container-backed offers kept: 14
+- Seeds selected: 1
 - Amy advanced-course violations removed: 0
 - Amy mode: protected_pilot
 - Amy stack-fill candidates found: 48
-- Seeds by date: {'2026-06-22': 1, '2026-06-23': 1, '2026-07-04': 1}
-- Seeds by family: {'HSI': 3}
-- Seeds by start minute: {'00': 3}
+- Seeds by date: {'2026-07-04': 1}
+- Seeds by family: {'Heartsaver': 1}
+- Seeds by start minute: {'30': 1}
 - Quarter-hour seeds selected: 0
 
 ## Missing Inputs
@@ -22,9 +22,11 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 ## Offers Hidden By Strategy Reason
 
-- `family_mix_target_already_met`: 8
-- `required_mix_not_available`: 6
-- `optional_mix_not_available`: 6
+- `family_mix_target_already_met`: 10
+- `optional_mix_not_available`: 2
+- `scheduler_consumption_window_overlap`: 2
+- `required_mix_not_available`: 1
+- `same_start_time_already_seeded`: 1
 
 ## Amy Protected Pilot Hidden By Reason
 
@@ -36,56 +38,24 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 ## Mix Goal Status By Date
 
-### 2026-06-22
-
-| Family | Target | Selected | Required | Met | Available After Hard Rules |
-| --- | ---: | ---: | --- | --- | ---: |
-| ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
-| HSI | 1 | 1 | False | True | 4 |
-| Heartsaver | 1 | 0 | True | False | 0 |
-| PALS | 1 | 0 | False | True | 0 |
-
-### 2026-06-23
-
-| Family | Target | Selected | Required | Met | Available After Hard Rules |
-| --- | ---: | ---: | --- | --- | ---: |
-| ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
-| HSI | 1 | 1 | False | True | 3 |
-| Heartsaver | 1 | 0 | True | False | 0 |
-| PALS | 1 | 0 | False | True | 0 |
-
 ### 2026-07-04
 
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
 | BLS | 1 | 0 | True | False | 0 |
-| HSI | 1 | 1 | False | True | 4 |
-| Heartsaver | 1 | 0 | True | False | 0 |
+| HSI | 1 | 0 | False | False | 3 |
+| Heartsaver | 1 | 1 | True | True | 11 |
 | PALS | 1 | 0 | False | True | 0 |
 
 
 ## Examples By Date
 
-### 2026-06-22
-
-| Time | Course | Family | Instructor | Source Offer |
-| --- | --- | --- | --- | --- |
-| 06:00-06:45 | HSI BLS and Adult First Aid | Blended Learning | HSI | Brian Ennis | `offer-445670-instructor_24057895173-20260622-0600` |
-
-### 2026-06-23
-
-| Time | Course | Family | Instructor | Source Offer |
-| --- | --- | --- | --- | --- |
-| 08:00-08:45 | HSI BLS and Adult First Aid | Blended Learning | HSI | Brian Ennis | `offer-445670-instructor_24057895173-20260623-0800` |
-
 ### 2026-07-04
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 12:00-12:45 | HSI BLS and Adult First Aid | Blended Learning | HSI | Brian Ennis | `offer-445670-instructor_24057895173-20260704-1200` |
+| 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260704-1430` |
 
 
 ## Quarter-Hour Stack Fit Notes

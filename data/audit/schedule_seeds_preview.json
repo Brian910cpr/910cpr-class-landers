@@ -1,25 +1,27 @@
 {
-  "generated_at": "2026-06-21T03:01:36.777400-04:00",
+  "generated_at": "2026-06-27T22:32:10.717248-04:00",
   "read_only": true,
   "public_site_affected": false,
   "enrollware_called": false,
   "appointments_created": false,
   "appointment_urls_changed": false,
-  "source_public_sellable_offers": "E:\\GitHub\\910cpr-class-landers\\data\\audit\\public_sellable_offers_preview.json",
-  "source_policy": "E:\\GitHub\\910cpr-class-landers\\data\\config\\seed_strategy_policy.json",
-  "source_course_catalog": "E:\\GitHub\\910cpr-class-landers\\data\\config\\course_catalog.json",
-  "source_appointment_containers": "E:\\GitHub\\910cpr-class-landers\\data\\inventory\\appointment_containers.json",
-  "source_location_resource_map": "E:\\GitHub\\910cpr-class-landers\\data\\config\\location_resource_map.json",
+  "source_public_sellable_offers": "E:\\GitHub\\910cpr-class-landers-deploy-worktree\\data\\audit\\public_sellable_offers_preview.json",
+  "source_policy": "E:\\GitHub\\910cpr-class-landers-deploy-worktree\\data\\config\\seed_strategy_policy.json",
+  "source_course_catalog": "E:\\GitHub\\910cpr-class-landers-deploy-worktree\\data\\config\\course_catalog.json",
+  "source_appointment_containers": "E:\\GitHub\\910cpr-class-landers-deploy-worktree\\data\\inventory\\appointment_containers.json",
+  "source_location_resource_map": "E:\\GitHub\\910cpr-class-landers-deploy-worktree\\data\\config\\location_resource_map.json",
   "stats": {
-    "input_offers_read": 11,
+    "input_offers_read": 14,
     "appointment_container_filter_enabled": true,
-    "appointment_container_backed_offers_kept": 11,
+    "appointment_container_backed_offers_kept": 14,
     "offers_hidden_by_container_reason": {},
-    "seeds_selected": 3,
+    "seeds_selected": 1,
     "offers_hidden_by_strategy_reason": {
-      "family_mix_target_already_met": 8,
-      "required_mix_not_available": 6,
-      "optional_mix_not_available": 6
+      "family_mix_target_already_met": 10,
+      "optional_mix_not_available": 2,
+      "scheduler_consumption_window_overlap": 2,
+      "required_mix_not_available": 1,
+      "same_start_time_already_seeded": 1
     },
     "amy_advanced_course_violations_removed": 0,
     "amy_mode": "protected_pilot",
@@ -700,102 +702,16 @@
       }
     ],
     "seeds_by_date": {
-      "2026-06-22": 1,
-      "2026-06-23": 1,
       "2026-07-04": 1
     },
     "seeds_by_family": {
-      "HSI": 3
+      "Heartsaver": 1
     },
     "quarter_hour_seeds_selected": 0,
     "seeds_by_start_minute": {
-      "00": 3
+      "30": 1
     },
     "mix_goal_status_by_date": {
-      "2026-06-22": {
-        "BLS": {
-          "target": 1,
-          "required": true,
-          "selected": 0,
-          "met": false,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "Heartsaver": {
-          "target": 1,
-          "required": true,
-          "selected": 0,
-          "met": false,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "ACLS": {
-          "target": 1,
-          "required": false,
-          "selected": 0,
-          "met": true,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "PALS": {
-          "target": 1,
-          "required": false,
-          "selected": 0,
-          "met": true,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "HSI": {
-          "target": 1,
-          "required": false,
-          "selected": 1,
-          "met": true,
-          "available_after_hard_rules": 4,
-          "blocked_reasons": {}
-        }
-      },
-      "2026-06-23": {
-        "BLS": {
-          "target": 1,
-          "required": true,
-          "selected": 0,
-          "met": false,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "Heartsaver": {
-          "target": 1,
-          "required": true,
-          "selected": 0,
-          "met": false,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "ACLS": {
-          "target": 1,
-          "required": false,
-          "selected": 0,
-          "met": true,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "PALS": {
-          "target": 1,
-          "required": false,
-          "selected": 0,
-          "met": true,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "HSI": {
-          "target": 1,
-          "required": false,
-          "selected": 1,
-          "met": true,
-          "available_after_hard_rules": 3,
-          "blocked_reasons": {}
-        }
-      },
       "2026-07-04": {
         "BLS": {
           "target": 1,
@@ -808,9 +724,9 @@
         "Heartsaver": {
           "target": 1,
           "required": true,
-          "selected": 0,
-          "met": false,
-          "available_after_hard_rules": 0,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 11,
           "blocked_reasons": {}
         },
         "ACLS": {
@@ -832,120 +748,43 @@
         "HSI": {
           "target": 1,
           "required": false,
-          "selected": 1,
-          "met": true,
-          "available_after_hard_rules": 4,
-          "blocked_reasons": {}
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 3,
+          "blocked_reasons": {
+            "same_start_time_already_seeded": 1,
+            "scheduler_consumption_window_overlap": 2
+          }
         }
       }
     }
   },
   "seeds": [
     {
-      "seed_id": "seed-offer-445670-instructor_24057895173-20260622-0600",
-      "source_offer_id": "offer-445670-instructor_24057895173-20260622-0600",
-      "date": "2026-06-22",
-      "start_time": "06:00",
-      "start_minute": "00",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "06:45",
-      "appointment_display_start": "2026-06-22T06:00:00",
-      "appointment_display_end": "2026-06-22T06:45:00",
-      "scheduler_consumption_start": "2026-06-22T06:00:00",
-      "scheduler_consumption_end": "2026-06-22T07:30:00",
-      "scheduler_consumption_minutes": 90,
-      "setup_buffer_minutes": 15,
-      "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-06-22T06:00:00",
-      "instructor_lock_end": "2026-06-22T07:30:00",
-      "resource_lock_start": "2026-06-22T06:00:00",
-      "resource_lock_end": "2026-06-22T07:30:00",
-      "course_id": "445670",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "course_family": "HSI",
-      "duration_minutes": 45,
-      "capacity": 12,
-      "instructor_person_id": "instructor_24057895173",
-      "instructor_display_name": "Brian Ennis",
-      "instructor_assignment_mode": "PRIMARY",
-      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "resource": "Shipyard Office",
-      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "source_availability_window": "5898hq9hprslca7itssau3tq3j@google.com",
-      "confidence": "high",
-      "reasons": [
-        "public_sellable_offer",
-        "selected_as_stack_seed",
-        "read_only_seed_preview_not_public_menu"
-      ]
-    },
-    {
-      "seed_id": "seed-offer-445670-instructor_24057895173-20260623-0800",
-      "source_offer_id": "offer-445670-instructor_24057895173-20260623-0800",
-      "date": "2026-06-23",
-      "start_time": "08:00",
-      "start_minute": "00",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "08:45",
-      "appointment_display_start": "2026-06-23T08:00:00",
-      "appointment_display_end": "2026-06-23T08:45:00",
-      "scheduler_consumption_start": "2026-06-23T08:00:00",
-      "scheduler_consumption_end": "2026-06-23T09:30:00",
-      "scheduler_consumption_minutes": 90,
-      "setup_buffer_minutes": 15,
-      "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-06-23T08:00:00",
-      "instructor_lock_end": "2026-06-23T09:30:00",
-      "resource_lock_start": "2026-06-23T08:00:00",
-      "resource_lock_end": "2026-06-23T09:30:00",
-      "course_id": "445670",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "course_family": "HSI",
-      "duration_minutes": 45,
-      "capacity": 12,
-      "instructor_person_id": "instructor_24057895173",
-      "instructor_display_name": "Brian Ennis",
-      "instructor_assignment_mode": "PRIMARY",
-      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "resource": "Shipyard Office",
-      "source_location": "Wilmington International Airport\\, 1740 Airport Blvd\\, Wilmington\\, NC 28405\\, USA",
-      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "source_availability_window": "6nrdhqtuo4tmialep0dcfpqd7h@google.com",
-      "confidence": "high",
-      "reasons": [
-        "public_sellable_offer",
-        "selected_as_stack_seed",
-        "read_only_seed_preview_not_public_menu"
-      ]
-    },
-    {
-      "seed_id": "seed-offer-445670-instructor_24057895173-20260704-1200",
-      "source_offer_id": "offer-445670-instructor_24057895173-20260704-1200",
+      "seed_id": "seed-offer-329495-instructor_24057895173-20260704-1430",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260704-1430",
       "date": "2026-07-04",
-      "start_time": "12:00",
-      "start_minute": "00",
+      "start_time": "14:30",
+      "start_minute": "30",
       "quarter_hour_start": false,
       "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "12:45",
-      "appointment_display_start": "2026-07-04T12:00:00",
-      "appointment_display_end": "2026-07-04T12:45:00",
-      "scheduler_consumption_start": "2026-07-04T12:00:00",
-      "scheduler_consumption_end": "2026-07-04T13:30:00",
+      "end_time": "15:15",
+      "appointment_display_start": "2026-07-04T14:30:00",
+      "appointment_display_end": "2026-07-04T15:15:00",
+      "scheduler_consumption_start": "2026-07-04T14:30:00",
+      "scheduler_consumption_end": "2026-07-04T16:00:00",
       "scheduler_consumption_minutes": 90,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-07-04T12:00:00",
-      "instructor_lock_end": "2026-07-04T13:30:00",
-      "resource_lock_start": "2026-07-04T12:00:00",
-      "resource_lock_end": "2026-07-04T13:30:00",
-      "course_id": "445670",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "course_family": "HSI",
+      "instructor_lock_start": "2026-07-04T14:30:00",
+      "instructor_lock_end": "2026-07-04T16:00:00",
+      "resource_lock_start": "2026-07-04T14:30:00",
+      "resource_lock_end": "2026-07-04T16:00:00",
+      "course_id": "329495",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
       "duration_minutes": 45,
-      "capacity": 12,
+      "capacity": 2,
       "instructor_person_id": "instructor_24057895173",
       "instructor_display_name": "Brian Ennis",
       "instructor_assignment_mode": "PRIMARY",
@@ -964,149 +803,6 @@
   ],
   "hidden_offers": [
     {
-      "source_offer_id": "2026-06-22-BLS-mix-placeholder",
-      "date": "2026-06-22",
-      "start_time": "UNKNOWN",
-      "course_title": "BLS seed",
-      "course_family": "BLS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "required_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "2026-06-22-Heartsaver-mix-placeholder",
-      "date": "2026-06-22",
-      "start_time": "UNKNOWN",
-      "course_title": "Heartsaver seed",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "required_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "2026-06-22-ACLS-mix-placeholder",
-      "date": "2026-06-22",
-      "start_time": "UNKNOWN",
-      "course_title": "ACLS seed",
-      "course_family": "ACLS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "optional_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "2026-06-22-PALS-mix-placeholder",
-      "date": "2026-06-22",
-      "start_time": "UNKNOWN",
-      "course_title": "PALS seed",
-      "course_family": "PALS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "optional_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260622-0615",
-      "date": "2026-06-22",
-      "start_time": "06:15",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "course_family": "HSI",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "5898hq9hprslca7itssau3tq3j@google.com",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260622-0630",
-      "date": "2026-06-22",
-      "start_time": "06:30",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "course_family": "HSI",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "5898hq9hprslca7itssau3tq3j@google.com",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260622-0645",
-      "date": "2026-06-22",
-      "start_time": "06:45",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "course_family": "HSI",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "5898hq9hprslca7itssau3tq3j@google.com",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "2026-06-23-BLS-mix-placeholder",
-      "date": "2026-06-23",
-      "start_time": "UNKNOWN",
-      "course_title": "BLS seed",
-      "course_family": "BLS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "required_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "2026-06-23-Heartsaver-mix-placeholder",
-      "date": "2026-06-23",
-      "start_time": "UNKNOWN",
-      "course_title": "Heartsaver seed",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "required_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "2026-06-23-ACLS-mix-placeholder",
-      "date": "2026-06-23",
-      "start_time": "UNKNOWN",
-      "course_title": "ACLS seed",
-      "course_family": "ACLS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "optional_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "2026-06-23-PALS-mix-placeholder",
-      "date": "2026-06-23",
-      "start_time": "UNKNOWN",
-      "course_title": "PALS seed",
-      "course_family": "PALS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "optional_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260623-0815",
-      "date": "2026-06-23",
-      "start_time": "08:15",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "course_family": "HSI",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "6nrdhqtuo4tmialep0dcfpqd7h@google.com",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260623-0830",
-      "date": "2026-06-23",
-      "start_time": "08:30",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "course_family": "HSI",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "6nrdhqtuo4tmialep0dcfpqd7h@google.com",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
       "source_offer_id": "2026-07-04-BLS-mix-placeholder",
       "date": "2026-07-04",
       "start_time": "UNKNOWN",
@@ -1118,15 +814,114 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "2026-07-04-Heartsaver-mix-placeholder",
+      "source_offer_id": "offer-344085-instructor_24057895173-20260704-1430",
       "date": "2026-07-04",
-      "start_time": "UNKNOWN",
-      "course_title": "Heartsaver seed",
+      "start_time": "14:30",
+      "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "required_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-209808-instructor_24057895173-20260704-1430",
+      "date": "2026-07-04",
+      "start_time": "14:30",
+      "course_title": "AHA Heartsaver CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260704-1430",
+      "date": "2026-07-04",
+      "start_time": "14:30",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-329495-instructor_24057895173-20260704-1445",
+      "date": "2026-07-04",
+      "start_time": "14:45",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-344085-instructor_24057895173-20260704-1445",
+      "date": "2026-07-04",
+      "start_time": "14:45",
+      "course_title": "AHA Heartsaver CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-209808-instructor_24057895173-20260704-1445",
+      "date": "2026-07-04",
+      "start_time": "14:45",
+      "course_title": "AHA Heartsaver CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260704-1445",
+      "date": "2026-07-04",
+      "start_time": "14:45",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-329495-instructor_24057895173-20260704-1500",
+      "date": "2026-07-04",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-209808-instructor_24057895173-20260704-1500",
+      "date": "2026-07-04",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260704-1500",
+      "date": "2026-07-04",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "2026-07-04-ACLS-mix-placeholder",
@@ -1151,37 +946,37 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260704-1215",
+      "source_offer_id": "offer-445670-instructor_24057895173-20260704-1430",
       "date": "2026-07-04",
-      "start_time": "12:15",
+      "start_time": "14:30",
       "course_title": "HSI BLS and Adult First Aid | Blended Learning",
       "course_family": "HSI",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
+      "reason_code": "same_start_time_already_seeded",
+      "message": "Avoiding multiple seeds at the same start time on the same date."
     },
     {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260704-1230",
+      "source_offer_id": "offer-445670-instructor_24057895173-20260704-1445",
       "date": "2026-07-04",
-      "start_time": "12:30",
+      "start_time": "14:45",
       "course_title": "HSI BLS and Adult First Aid | Blended Learning",
       "course_family": "HSI",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260704-1245",
+      "source_offer_id": "offer-445670-instructor_24057895173-20260704-1500",
       "date": "2026-07-04",
-      "start_time": "12:45",
+      "start_time": "15:00",
       "course_title": "HSI BLS and Adult First Aid | Blended Learning",
       "course_family": "HSI",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "37d9u0mq0lh09sngouh6alou82@google.com",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     }
   ]
 }
