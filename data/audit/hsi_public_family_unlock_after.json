@@ -1,0 +1,1860 @@
+{
+  "generated_at": "2026-06-28T14:11:51",
+  "policy_after": {
+    "schema_version": "0.1",
+    "description": "Read-only public sellability policy for filtering dynamic offer previews. This config does not publish offers, create appointments, or change Enrollware behavior.",
+    "enabled_course_ids": [
+      "445670",
+      "344085",
+      "209808",
+      "209809",
+      "329495",
+      "351632",
+      "251545"
+    ],
+    "disabled_course_ids": [],
+    "enabled_course_families": [
+      "BLS",
+      "Heartsaver",
+      "ACLS",
+      "PALS",
+      "HSI"
+    ],
+    "disabled_course_families": [
+      "ARC",
+      "USCG"
+    ],
+    "allowed_start_minutes": [
+      "00",
+      "15",
+      "30",
+      "45"
+    ],
+    "dynamic_public_start_time_window": {
+      "enabled": true,
+      "earliest_start": "08:00",
+      "latest_start": "19:00",
+      "timezone": "America/New_York"
+    },
+    "minimum_lead_hours": 24,
+    "maximum_days_out": 60,
+    "preferred_start_times_by_family": {
+      "BLS": [],
+      "Heartsaver": [],
+      "ACLS": [],
+      "PALS": []
+    },
+    "max_offers_per_course_per_day": 4,
+    "max_offers_per_course_per_week": 3,
+    "max_total_offers_per_day": 24,
+    "hide_online_only": true,
+    "hide_manual_only": true,
+    "hide_low_capacity_offers": false,
+    "require_confirmed_appointment_container": true,
+    "notes": "Initial conservative public-sellability policy. HSI is enabled only through confirmed appointment-container filtering. ARC and USCG remain hidden until Brian explicitly approves public dynamic offers for those families."
+  },
+  "before_totals": {
+    "hsi_generated_before": 176,
+    "hsi_public_sellable_before": 5,
+    "hsi_rendered_before": 2,
+    "disabled_course_families": [
+      "ARC",
+      "HSI",
+      "USCG"
+    ],
+    "enabled_course_families": [
+      "BLS",
+      "Heartsaver",
+      "ACLS",
+      "PALS"
+    ]
+  },
+  "after_totals": {
+    "hsi_generated_after": 176,
+    "hsi_public_sellable_after": 5,
+    "hsi_rendered_after": 2
+  },
+  "by_hsi_course": {
+    "HSI BLS": {
+      "generated_after": 35,
+      "public_sellable_after": 0,
+      "rendered_after": 0,
+      "earliest_generated_after": "2026-06-21T17:00:00",
+      "earliest_public_after": null,
+      "earliest_rendered_after": null,
+      "rejected_reason_counts_after": {
+        "course_id_not_enabled": 35,
+        "inside_minimum_lead_time": 30,
+        "outside_public_dynamic_hours": 7
+      }
+    },
+    "HSI BLS + Adult First Aid": {
+      "generated_after": 35,
+      "public_sellable_after": 3,
+      "rendered_after": 1,
+      "earliest_generated_after": "2026-06-21T17:00:00",
+      "earliest_public_after": "2026-07-04T14:30:00",
+      "earliest_rendered_after": "2026-07-04T14:45:00",
+      "rejected_reason_counts_after": {
+        "inside_minimum_lead_time": 30,
+        "outside_public_dynamic_hours": 7,
+        "max_offers_per_course_per_week_exceeded": 2
+      }
+    },
+    "HSI First Aid CPR AED": {
+      "generated_after": 78,
+      "public_sellable_after": 0,
+      "rendered_after": 0,
+      "earliest_generated_after": "2026-06-21T17:00:00",
+      "earliest_public_after": null,
+      "earliest_rendered_after": null,
+      "rejected_reason_counts_after": {
+        "course_id_not_enabled": 78,
+        "inside_minimum_lead_time": 68,
+        "outside_public_dynamic_hours": 14
+      }
+    },
+    "HSI CPR AED": {
+      "generated_after": 20,
+      "public_sellable_after": 2,
+      "rendered_after": 1,
+      "earliest_generated_after": "2026-06-21T17:00:00",
+      "earliest_public_after": "2026-07-04T14:30:00",
+      "earliest_rendered_after": "2026-07-04T14:45:00",
+      "rejected_reason_counts_after": {
+        "inside_minimum_lead_time": 18,
+        "outside_public_dynamic_hours": 2
+      }
+    }
+  },
+  "exact_hsi_offers_now_rendered": [
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260704-1445",
+      "page_or_tab": "see rendered proof page match",
+      "enrollware_href": null,
+      "appointmentDayId": 260683,
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office"
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260704-1445",
+      "page_or_tab": "see rendered proof page match",
+      "enrollware_href": null,
+      "appointmentDayId": 260683,
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office"
+    }
+  ],
+  "rejected_hsi_candidates_and_reasons": [
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-0600",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T06:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-0615",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T06:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-0630",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T06:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-0645",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T06:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-0700",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T07:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-0600",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T06:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-0615",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T06:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-0630",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T06:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-0645",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T06:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-0700",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T07:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-0600",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T06:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-0615",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T06:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-0630",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T06:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-0645",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T06:45:00",
+      "reason_codes": [
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-0700",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T07:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-0600",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T06:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-0615",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T06:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-0630",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T06:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-0645",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T06:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-0700",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T07:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-0600",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T06:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-0615",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T06:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260704-1430",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-07-04T14:30:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260704-1445",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-07-04T14:45:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260704-1500",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-07-04T15:00:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260704-1515",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-07-04T15:15:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260704-1530",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-07-04T15:30:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260704-1430",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-07-04T14:30:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260704-1445",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-07-04T14:45:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260704-1500",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-07-04T15:00:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260704-1515",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-07-04T15:15:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260704-1530",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-07-04T15:30:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260704-1430",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-07-04T14:30:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260704-1445",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-07-04T14:45:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260704-1500",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-07-04T15:00:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260704-1515",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-07-04T15:15:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260704-1530",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-07-04T15:30:00",
+      "reason_codes": [
+        "course_id_not_enabled"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260623-0800",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-23T08:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260623-0815",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-23T08:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260623-0830",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-23T08:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260623-0800",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-23T08:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260623-0815",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-23T08:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260623-0830",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-23T08:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260623-0800",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-23T08:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260623-0815",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-23T08:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260623-0830",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-23T08:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260623-0800",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-23T08:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260623-0815",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-23T08:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260623-0830",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-23T08:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-374378-instructor_24057895173-20260622-1200",
+      "courseId": "374378",
+      "course_name": "HSI Adult First Aid | CPR AED",
+      "start_time": "2026-06-22T12:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-374378-instructor_24057895173-20260622-1215",
+      "courseId": "374378",
+      "course_name": "HSI Adult First Aid | CPR AED",
+      "start_time": "2026-06-22T12:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-422270-instructor_24057895173-20260622-1200",
+      "courseId": "422270",
+      "course_name": "HSI Adult First Aid | CPR AED",
+      "start_time": "2026-06-22T12:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-422270-instructor_24057895173-20260622-1215",
+      "courseId": "422270",
+      "course_name": "HSI Adult First Aid | CPR AED",
+      "start_time": "2026-06-22T12:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1200",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T12:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1215",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T12:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1230",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T12:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1245",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T12:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1300",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T13:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1315",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T13:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1330",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T13:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1345",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T13:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1400",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T14:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1415",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T14:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260622-1430",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-22T14:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1200",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T12:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1215",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T12:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1230",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T12:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1245",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T12:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1300",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T13:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1315",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T13:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1330",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T13:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1345",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T13:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1400",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T14:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1415",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T14:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260622-1430",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-22T14:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1200",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T12:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1215",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T12:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1230",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T12:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1245",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T12:45:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1300",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T13:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1315",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T13:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1330",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T13:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1345",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T13:45:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1400",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T14:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1415",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T14:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260622-1430",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-22T14:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-448630-instructor_24057895173-20260622-1200",
+      "courseId": "448630",
+      "course_name": "HSI Basic Life Support",
+      "start_time": "2026-06-22T12:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-448630-instructor_24057895173-20260622-1215",
+      "courseId": "448630",
+      "course_name": "HSI Basic Life Support",
+      "start_time": "2026-06-22T12:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-448630-instructor_24057895173-20260622-1230",
+      "courseId": "448630",
+      "course_name": "HSI Basic Life Support",
+      "start_time": "2026-06-22T12:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-448630-instructor_24057895173-20260622-1245",
+      "courseId": "448630",
+      "course_name": "HSI Basic Life Support",
+      "start_time": "2026-06-22T12:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1200",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T12:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1215",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T12:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1230",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T12:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1245",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T12:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1300",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T13:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1315",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T13:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1330",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T13:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1345",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T13:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1400",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T14:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1415",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T14:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260622-1430",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-22T14:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-1200",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T12:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-1215",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T12:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-1230",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T12:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-1245",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T12:45:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-1300",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T13:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-1315",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T13:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-1330",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T13:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260622-1345",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-22T13:45:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-374378-instructor_24057895173-20260621-1700",
+      "courseId": "374378",
+      "course_name": "HSI Adult First Aid | CPR AED",
+      "start_time": "2026-06-21T17:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-374378-instructor_24057895173-20260621-1715",
+      "courseId": "374378",
+      "course_name": "HSI Adult First Aid | CPR AED",
+      "start_time": "2026-06-21T17:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-422270-instructor_24057895173-20260621-1700",
+      "courseId": "422270",
+      "course_name": "HSI Adult First Aid | CPR AED",
+      "start_time": "2026-06-21T17:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-422270-instructor_24057895173-20260621-1715",
+      "courseId": "422270",
+      "course_name": "HSI Adult First Aid | CPR AED",
+      "start_time": "2026-06-21T17:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1700",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T17:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1715",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T17:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1730",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T17:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1745",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T17:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1800",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T18:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1815",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T18:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1830",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T18:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1845",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T18:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1900",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T19:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1915",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T19:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260621-1930",
+      "courseId": "371954",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "start_time": "2026-06-21T19:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1700",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T17:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1715",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T17:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1730",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T17:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1745",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T17:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1800",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T18:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1815",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T18:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1830",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T18:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1845",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T18:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1900",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T19:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1915",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T19:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260621-1930",
+      "courseId": "463743",
+      "course_name": "HSI BLS Challenge",
+      "start_time": "2026-06-21T19:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1700",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T17:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1715",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T17:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1730",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T17:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1745",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T17:45:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1800",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T18:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1815",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T18:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1830",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T18:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1845",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T18:45:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1900",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T19:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1915",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T19:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260621-1930",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-06-21T19:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-448630-instructor_24057895173-20260621-1700",
+      "courseId": "448630",
+      "course_name": "HSI Basic Life Support",
+      "start_time": "2026-06-21T17:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-448630-instructor_24057895173-20260621-1715",
+      "courseId": "448630",
+      "course_name": "HSI Basic Life Support",
+      "start_time": "2026-06-21T17:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-448630-instructor_24057895173-20260621-1730",
+      "courseId": "448630",
+      "course_name": "HSI Basic Life Support",
+      "start_time": "2026-06-21T17:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-448630-instructor_24057895173-20260621-1745",
+      "courseId": "448630",
+      "course_name": "HSI Basic Life Support",
+      "start_time": "2026-06-21T17:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1700",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T17:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1715",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T17:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1730",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T17:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1745",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T17:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1800",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T18:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1815",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T18:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1830",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T18:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1845",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T18:45:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1900",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T19:00:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1915",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T19:15:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260621-1930",
+      "courseId": "449422",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "start_time": "2026-06-21T19:30:00",
+      "reason_codes": [
+        "course_id_not_enabled",
+        "inside_minimum_lead_time",
+        "outside_public_dynamic_hours"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260621-1700",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-21T17:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260621-1715",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-21T17:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260621-1730",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-21T17:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260621-1745",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-21T17:45:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260621-1800",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-21T18:00:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260621-1815",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-21T18:15:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260621-1830",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-21T18:30:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260621-1845",
+      "courseId": "344085",
+      "course_name": "AHA Heartsaver CPR AED",
+      "start_time": "2026-06-21T18:45:00",
+      "reason_codes": [
+        "inside_minimum_lead_time"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260704-1515",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-07-04T15:15:00",
+      "reason_codes": [
+        "max_offers_per_course_per_week_exceeded"
+      ]
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260704-1530",
+      "courseId": "445670",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "2026-07-04T15:30:00",
+      "reason_codes": [
+        "max_offers_per_course_per_week_exceeded"
+      ]
+    }
+  ],
+  "proof": {
+    "rendered_dynamic_offer_proof_status": "PASS",
+    "rendered_dynamic_offer_verdict_reason": "All public sellable dynamic appointment-seed offers are visible in rendered customer-facing HTML with correct links.",
+    "public_offer_integrity_audit_failed": false,
+    "public_offer_integrity_stats": {
+      "existing_enrollware_classes_shown": 220,
+      "dynamic_appointment_seed_offers_generated": 690,
+      "public_sellable_dynamic_appointment_seed_offers": 14,
+      "dynamic_offers_blocked_by_occupancy_overlap": 166,
+      "dynamic_offers_blocked_by_lead_time": 644,
+      "dynamic_offers_blocked_by_insufficient_gap": 85,
+      "dynamic_offers_blocked_by_missing_ids": 300,
+      "public_sellable_total": 234,
+      "availability_blocks_indexed": 27,
+      "audit_failed": false,
+      "public_sellable_dynamic_overlap_failures": 0,
+      "public_sellable_dynamic_outside_availability_failures": 0,
+      "public_sellable_dynamic_duplicate_existing_class_failures": 0,
+      "top_public_filter_rejection_reasons": {
+        "inside_minimum_lead_time": 644,
+        "course_id_not_enabled": 387,
+        "missing_container_for_instructor": 300,
+        "outside_public_dynamic_hours": 183,
+        "course_family_disabled": 78,
+        "course_family_not_enabled": 78,
+        "max_offers_per_course_per_week_exceeded": 8
+      }
+    },
+    "tests": "Ran 137 tests; OK"
+  },
+  "interpretation": "Enabling the HSI family alone did not increase public sellable/rendered HSI inventory. The remaining blockers are course ID enablement/container/course mapping and other existing gates, while confirmed appointment-container filtering stayed enabled."
+}

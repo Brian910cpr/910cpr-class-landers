@@ -1,0 +1,243 @@
+{
+  "generated_at": "2026-06-28T14:10:41",
+  "branch": "codex/hsi-public-family-unlock",
+  "head": "0a2e0dcebe6cfd90d3c02fddf4c5666a70c6805d",
+  "policy_before": {
+    "schema_version": "0.1",
+    "description": "Read-only public sellability policy for filtering dynamic offer previews. This config does not publish offers, create appointments, or change Enrollware behavior.",
+    "enabled_course_ids": [
+      "445670",
+      "344085",
+      "209808",
+      "209809",
+      "329495",
+      "351632",
+      "251545"
+    ],
+    "disabled_course_ids": [],
+    "enabled_course_families": [
+      "BLS",
+      "Heartsaver",
+      "ACLS",
+      "PALS"
+    ],
+    "disabled_course_families": [
+      "ARC",
+      "HSI",
+      "USCG"
+    ],
+    "allowed_start_minutes": [
+      "00",
+      "15",
+      "30",
+      "45"
+    ],
+    "dynamic_public_start_time_window": {
+      "enabled": true,
+      "earliest_start": "08:00",
+      "latest_start": "19:00",
+      "timezone": "America/New_York"
+    },
+    "minimum_lead_hours": 24,
+    "maximum_days_out": 60,
+    "preferred_start_times_by_family": {
+      "BLS": [],
+      "Heartsaver": [],
+      "ACLS": [],
+      "PALS": []
+    },
+    "max_offers_per_course_per_day": 4,
+    "max_offers_per_course_per_week": 3,
+    "max_total_offers_per_day": 24,
+    "hide_online_only": true,
+    "hide_manual_only": true,
+    "hide_low_capacity_offers": false,
+    "require_confirmed_appointment_container": true,
+    "notes": "Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families."
+  },
+  "hsi_matrix": [
+    {
+      "label": "HSI BLS",
+      "course_family": "HSI",
+      "course_names": [
+        "HSI BLS Challenge"
+      ],
+      "course_keys": [
+        "463743"
+      ],
+      "enrollware_course_ids": [
+        "463743"
+      ],
+      "generated_candidate_count": 35,
+      "earliest_generated_candidate": "2026-06-21T17:00:00",
+      "public_sellable_count_before": 0,
+      "rendered_count_before": 0,
+      "blocked_reason_counts": {
+        "course_family_disabled": 35,
+        "course_id_not_enabled": 35,
+        "course_family_not_enabled": 35,
+        "inside_minimum_lead_time": 30,
+        "outside_public_dynamic_hours": 7
+      },
+      "blocked_by_course_family_disabled": true,
+      "blocked_by_course_family_not_enabled": true,
+      "blocked_by_course_id_not_enabled": true,
+      "brian_has_confirmed_appointment_container": true,
+      "appointment_container_keys": [
+        null,
+        "shipyard_brian_continuous_20260621_20270430"
+      ],
+      "appointmentDayId_coverage_range": "see appointment_containers records in JSON; generated public candidates use appointmentDayId 260683 for July 4 when container-supported",
+      "location_mapping_status": "present",
+      "page_slug_tab_mapping_status": "present_or_inferred",
+      "course_master_status": "non_authoritative_present",
+      "expected_public_sellable_count_if_hsi_family_enabled_conservative": 0,
+      "expected_public_sellable_count_if_only_family_block_removed_upper_bound": 35,
+      "risk_level": "high",
+      "recommended_action": "Do not enable this course until course ID is enabled/mapped"
+    },
+    {
+      "label": "HSI BLS + Adult First Aid",
+      "course_family": "HSI",
+      "course_names": [
+        "HSI BLS and Adult First Aid | Blended Learning"
+      ],
+      "course_keys": [
+        "445670"
+      ],
+      "enrollware_course_ids": [
+        "445670"
+      ],
+      "generated_candidate_count": 35,
+      "earliest_generated_candidate": "2026-06-21T17:00:00",
+      "public_sellable_count_before": 3,
+      "rendered_count_before": 1,
+      "blocked_reason_counts": {
+        "inside_minimum_lead_time": 30,
+        "outside_public_dynamic_hours": 7,
+        "max_offers_per_course_per_week_exceeded": 2
+      },
+      "blocked_by_course_family_disabled": false,
+      "blocked_by_course_family_not_enabled": false,
+      "blocked_by_course_id_not_enabled": false,
+      "brian_has_confirmed_appointment_container": true,
+      "appointment_container_keys": [
+        null,
+        "shipyard_brian_continuous_20260621_20270430"
+      ],
+      "appointmentDayId_coverage_range": "see appointment_containers records in JSON; generated public candidates use appointmentDayId 260683 for July 4 when container-supported",
+      "location_mapping_status": "present",
+      "page_slug_tab_mapping_status": "present_or_inferred",
+      "course_master_status": "non_authoritative_present",
+      "expected_public_sellable_count_if_hsi_family_enabled_conservative": 0,
+      "expected_public_sellable_count_if_only_family_block_removed_upper_bound": 0,
+      "risk_level": "low",
+      "recommended_action": "Enable HSI family only; do not add course IDs yet"
+    },
+    {
+      "label": "HSI First Aid CPR AED",
+      "course_family": "HSI",
+      "course_names": [
+        "HSI Adult First Aid | CPR AED",
+        "HSI Adult First Aid | CPR AED - Blended Learning",
+        "HSI Pediatric First Aid | CPR AED - Blended"
+      ],
+      "course_keys": [
+        "371954",
+        "374378",
+        "422270",
+        "449422"
+      ],
+      "enrollware_course_ids": [
+        "371954",
+        "374378",
+        "422270",
+        "449422"
+      ],
+      "generated_candidate_count": 78,
+      "earliest_generated_candidate": "2026-06-21T17:00:00",
+      "public_sellable_count_before": 0,
+      "rendered_count_before": 0,
+      "blocked_reason_counts": {
+        "course_family_disabled": 78,
+        "course_id_not_enabled": 78,
+        "course_family_not_enabled": 78,
+        "inside_minimum_lead_time": 68,
+        "outside_public_dynamic_hours": 14
+      },
+      "blocked_by_course_family_disabled": true,
+      "blocked_by_course_family_not_enabled": true,
+      "blocked_by_course_id_not_enabled": true,
+      "brian_has_confirmed_appointment_container": true,
+      "appointment_container_keys": [
+        null,
+        "shipyard_brian_continuous_20260621_20270430"
+      ],
+      "appointmentDayId_coverage_range": "see appointment_containers records in JSON; generated public candidates use appointmentDayId 260683 for July 4 when container-supported",
+      "location_mapping_status": "present",
+      "page_slug_tab_mapping_status": "present_or_inferred",
+      "course_master_status": "non_authoritative_present",
+      "expected_public_sellable_count_if_hsi_family_enabled_conservative": 0,
+      "expected_public_sellable_count_if_only_family_block_removed_upper_bound": 78,
+      "risk_level": "high",
+      "recommended_action": "Do not enable this course until course ID is enabled/mapped"
+    },
+    {
+      "label": "HSI CPR AED",
+      "course_family": "HSI",
+      "course_names": [
+        "AHA Heartsaver CPR AED"
+      ],
+      "course_keys": [
+        "344085"
+      ],
+      "enrollware_course_ids": [
+        "344085"
+      ],
+      "generated_candidate_count": 20,
+      "earliest_generated_candidate": "2026-06-21T17:00:00",
+      "public_sellable_count_before": 2,
+      "rendered_count_before": 1,
+      "blocked_reason_counts": {
+        "inside_minimum_lead_time": 18,
+        "outside_public_dynamic_hours": 2
+      },
+      "blocked_by_course_family_disabled": false,
+      "blocked_by_course_family_not_enabled": false,
+      "blocked_by_course_id_not_enabled": false,
+      "brian_has_confirmed_appointment_container": true,
+      "appointment_container_keys": [
+        null,
+        "shipyard_brian_continuous_20260621_20270430"
+      ],
+      "appointmentDayId_coverage_range": "see appointment_containers records in JSON; generated public candidates use appointmentDayId 260683 for July 4 when container-supported",
+      "location_mapping_status": "present",
+      "page_slug_tab_mapping_status": "present_or_inferred",
+      "course_master_status": "non_authoritative_present",
+      "expected_public_sellable_count_if_hsi_family_enabled_conservative": 0,
+      "expected_public_sellable_count_if_only_family_block_removed_upper_bound": 0,
+      "risk_level": "low",
+      "recommended_action": "Enable HSI family only; do not add course IDs yet"
+    }
+  ],
+  "totals": {
+    "hsi_generated_before": 176,
+    "hsi_public_sellable_before": 5,
+    "hsi_rendered_before": 2,
+    "disabled_course_families": [
+      "ARC",
+      "HSI",
+      "USCG"
+    ],
+    "enabled_course_families": [
+      "BLS",
+      "Heartsaver",
+      "ACLS",
+      "PALS"
+    ]
+  },
+  "safety_verdict": {
+    "safe_to_edit_policy": true,
+    "reason": "HSI candidates are still protected by require_confirmed_appointment_container=true, existing enabled_course_ids already include observed public HSI course 445670, and the requested edit does not loosen lead time, containers, ARC/USCG, Amy, or presentation compaction. Matrix flags any HSI variants whose course IDs remain disabled."
+  }
+}

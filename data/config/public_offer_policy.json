@@ -15,11 +15,11 @@
     "BLS",
     "Heartsaver",
     "ACLS",
-    "PALS"
+    "PALS",
+    "HSI"
   ],
   "disabled_course_families": [
     "ARC",
-    "HSI",
     "USCG"
   ],
   "allowed_start_minutes": [
@@ -49,5 +49,5 @@
   "hide_manual_only": true,
   "hide_low_capacity_offers": false,
   "require_confirmed_appointment_container": true,
-  "notes": "Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families."
+  "notes": "Initial conservative public-sellability policy. HSI is enabled only through confirmed appointment-container filtering. ARC and USCG remain hidden until Brian explicitly approves public dynamic offers for those families."
 }
