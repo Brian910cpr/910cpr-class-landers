@@ -28,6 +28,7 @@ def offer(course_id: str, start: datetime, minutes: int = 45, consumption: int =
         "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
         "source_availability_window": "window-1",
         "appointmentDayId": 260683,
+        "tab_ids": [f"tab-{course_id}"],
     }
 
 
@@ -129,6 +130,19 @@ class DynamicOfferPresentationPolicyTest(unittest.TestCase):
         self.assertIn("2%3A30%20PM", html)
         self.assertIn("2%3A45%20PM", html)
         self.assertIn('data-presentation-mode="flexible_start_window"', html)
+
+    def test_unmapped_course_key_is_suppressed_before_render_selection(self) -> None:
+        row = offer("449422", datetime(2026, 7, 4, 14, 45))
+        row["course_key"] = "hsi_pediatric_first_aid_cpr_aed_blended"
+        row["tab_ids"] = []
+
+        render_offers, audit_rows, stats = apply_presentation_policy([row], [])
+
+        self.assertEqual([], render_offers)
+        self.assertEqual(1, stats["suppressed_unmapped_course_keys"])
+        self.assertEqual("suppressed_unmapped_course_key", audit_rows[0]["presentation_mode"])
+        self.assertEqual("suppress_unmapped_course_key", audit_rows[0]["public_render_decision"])
+        self.assertIn("no reviewed appointment tab/card mapping", audit_rows[0]["reason"])
 
 
 if __name__ == "__main__":

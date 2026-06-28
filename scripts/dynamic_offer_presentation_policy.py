@@ -16,6 +16,31 @@ PRESENTATION_JSON_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.j
 PRESENTATION_MD_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.md"
 UNKNOWN = "UNKNOWN"
 DEFAULT_FLEXIBLE_START_BUTTON_TEXT = "When would YOU like to start?"
+REVIEWED_APPOINTMENT_COURSE_TAB_IDS = {
+    "aha_bls_initial": {"bls-provider"},
+    "aha_bls_renewal": {"bls-renewal"},
+    "aha_bls_heartcode_skills": {"bls-heartcode"},
+    "aha_acls_heartcode_skills": {"acls-heartcode"},
+    "aha_pals_heartcode_skills": {"pals-heartcode"},
+    "aha_heartsaver_fa_cpr_aed": {"hs-fa-cpr-aed-ip", "hs-fa-cpr-aed-bl"},
+    "aha_heartsaver_first_aid_cpr_aed": {"hs-fa-cpr-aed-ip"},
+    "aha_heartsaver_first_aid_cpr_aed_blended": {"hs-fa-cpr-aed-bl"},
+    "aha_heartsaver_cpr_aed": {"hs-cpr-aed-ip", "hs-cpr-aed-bl"},
+    "aha_heartsaver_cpr_aed_online": {"hs-cpr-aed-bl"},
+    "aha_heartsaver_pediatric_first_aid_cpr_aed_online": {"hs-pediatric-bl"},
+    "hsi_bls_adult_first_aid_blended": {"hsi-bls-fa"},
+    "hsi_bls_challenge": {"hsi-bls"},
+    "hsi_adult_first_aid_cpr_aed_blended": {"hsi-first-aid-cpr-aed"},
+}
+REVIEWED_APPOINTMENT_COURSE_ID_TAB_IDS = {
+    "209808": {"hs-cpr-aed-bl"},
+    "251545": {"hs-pediatric-bl"},
+    "329495": {"hs-fa-cpr-aed-bl"},
+    "344085": {"hs-cpr-aed-ip", "hs-cpr-aed-bl"},
+    "371954": {"hsi-first-aid-cpr-aed"},
+    "445670": {"hsi-bls-fa"},
+    "463743": {"hsi-bls"},
+}
 
 
 def clean_text(value: Any) -> str:
@@ -80,6 +105,20 @@ def availability_group_key(offer: dict[str, Any]) -> tuple[str, str, str, str]:
 
 def course_window_key(offer: dict[str, Any]) -> tuple[str, str, str, str, str]:
     return (*availability_group_key(offer), clean_text(offer.get("course_id") or UNKNOWN))
+
+
+def reviewed_tab_ids_for_offer(offer: dict[str, Any]) -> set[str]:
+    explicit_tab_ids = offer.get("tab_ids", [])
+    if isinstance(explicit_tab_ids, list) and any(clean_text(item) for item in explicit_tab_ids):
+        return {clean_text(item) for item in explicit_tab_ids if clean_text(item)}
+    course_key_tab_ids = set(REVIEWED_APPOINTMENT_COURSE_TAB_IDS.get(clean_text(offer.get("course_key")), set()))
+    if course_key_tab_ids:
+        return course_key_tab_ids
+    return set(REVIEWED_APPOINTMENT_COURSE_ID_TAB_IDS.get(clean_text(offer.get("course_id") or offer.get("courseId")), set()))
+
+
+def has_reviewed_render_target(offer: dict[str, Any]) -> bool:
+    return bool(reviewed_tab_ids_for_offer(offer))
 
 
 def normalize_location(value: Any) -> str:
@@ -219,16 +258,42 @@ def audit_row(
 
 def apply_presentation_policy(public_offers: list[dict[str, Any]], anchors: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     offers = [offer for offer in public_offers if isinstance(offer, dict)]
-    by_window: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    renderable_offers: list[dict[str, Any]] = []
+    unmapped_offers: list[dict[str, Any]] = []
     for offer in offers:
+        if has_reviewed_render_target(offer):
+            renderable_offers.append(offer)
+        else:
+            unmapped_offers.append(offer)
+
+    by_window: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    for offer in renderable_offers:
         by_window[availability_group_key(offer)].append(offer)
 
     window_anchors = {key: matching_anchors(group, anchors) for key, group in by_window.items()}
     by_course_window: dict[tuple[str, str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
-    for offer in offers:
+    for offer in renderable_offers:
         by_course_window[course_window_key(offer)].append(offer)
 
     audit_rows: list[dict[str, Any]] = []
+    for offer in sorted(unmapped_offers, key=lambda item: (offer_start(item) or datetime.max, clean_text(item.get("offer_id")))):
+        start = offer_consumption_start(offer)
+        end = offer_consumption_end(offer)
+        audit_rows.append(audit_row(
+            offer,
+            group_start=start,
+            group_end=end,
+            anchor_exists=False,
+            nearest_anchor=None,
+            presentation_mode="suppressed_unmapped_course_key",
+            public_render_decision="suppress_unmapped_course_key",
+            reason=(
+                f"Suppressed because course_key `{clean_text(offer.get('course_key')) or UNKNOWN}` "
+                f"and courseId `{clean_text(offer.get('course_id') or offer.get('courseId')) or UNKNOWN}` "
+                "have no reviewed appointment tab/card mapping."
+            ),
+        ))
+
     render_offers: list[dict[str, Any]] = []
     for key, group in sorted(by_course_window.items()):
         sorted_group = sorted(group, key=lambda item: (offer_start(item) or datetime.max, clean_text(item.get("offer_id"))))
@@ -352,6 +417,8 @@ def apply_presentation_policy(public_offers: list[dict[str, Any]], anchors: list
 
     stats = {
         "public_sellable_dynamic_candidates": len(offers),
+        "render_target_eligible_candidates": len(renderable_offers),
+        "suppressed_unmapped_course_keys": sum(1 for row in audit_rows if row.get("presentation_mode") == "suppressed_unmapped_course_key"),
         "rendered_anchor_stack_offers": sum(1 for offer in render_offers if str(offer.get("presentation_mode", "")).startswith("anchor_stack")),
         "rendered_flexible_start_windows": sum(1 for offer in render_offers if offer.get("presentation_mode") == "flexible_start_window"),
         "suppressed_adjacent_duplicates": sum(1 for row in audit_rows if row.get("presentation_mode") == "suppressed_adjacent_candidate"),
@@ -371,9 +438,11 @@ def render_markdown(stats: dict[str, Any], audit_rows: list[dict[str, Any]], ren
         "## Summary",
         "",
         f"- Public sellable dynamic candidates: {stats['public_sellable_dynamic_candidates']}",
+        f"- Render-target eligible candidates: {stats['render_target_eligible_candidates']}",
         f"- Rendered anchor-stack offers: {stats['rendered_anchor_stack_offers']}",
         f"- Rendered flexible-start windows: {stats['rendered_flexible_start_windows']}",
         f"- Suppressed adjacent duplicates: {stats['suppressed_adjacent_duplicates']}",
+        f"- Suppressed unmapped course keys: {stats['suppressed_unmapped_course_keys']}",
         f"- Suppressed invalid: {stats['suppressed_invalid']}",
         "",
         "## Presentation Modes",

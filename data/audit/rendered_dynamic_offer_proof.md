@@ -4,7 +4,7 @@ Read-only rendered public-page proof. No deployment, redesign, filtering logic c
 
 ## RENDERED PUBLIC DYNAMIC OFFER STATUS
 
-- PARTIAL: 7 of 8 public sellable dynamic appointment-seed offers render; 1 are absent from HTML.
+- PASS: All public sellable dynamic appointment-seed offers are visible in rendered customer-facing HTML with correct links.
 
 ## Render Command
 
@@ -12,9 +12,9 @@ Read-only rendered public-page proof. No deployment, redesign, filtering logic c
 
 ## Counts
 
-- Public sellable dynamic appointment-seed offers: `8`
+- Public sellable dynamic appointment-seed offers: `7`
 - Rendered dynamic offers: `7`
-- Missing from rendered HTML: `1`
+- Missing from rendered HTML: `0`
 - Rendered with Book/Enroll/Register link text: `7`
 - Rendered with exact audited href match: `7`
 - Reachable from course hub or catalog: `7`
@@ -148,27 +148,6 @@ Read-only rendered public-page proof. No deployment, redesign, filtering logic c
 - HTML href exactly matches audited href: `True`
 - Reachable from course hub/catalog: `True`
 - Dynamic distinguishable internally: `True`
-- Duplicate existing Enrollware class rendered same tuple: `False`
-- Overlap status: `unknown`
-- Enrollware URL sample checked/valid: `False` / `False`
-
-### offer-449422-instructor_24057895173-20260704-1445
-
-- Course key: `HSI`
-- Display course name: `HSI Pediatric First Aid | CPR AED - Blended`
-- Instructor: `Brian Ennis`
-- Location: `NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office`
-- Date: `2026-07-04`
-- Public display start/end: `2026-07-04T14:45:00` / `2026-07-04T15:30:00`
-- Scheduler consumption start/end: `2026-07-04T14:45:00` / `2026-07-04T16:15:00`
-- Source availability block: `37d9u0mq0lh09sngouh6alou82@google.com`
-- appointmentDayId/courseId/startTime: `260683` / `449422` / `2:45 PM`
-- Final Enrollware href: `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=449422`
-- Rendered page path(s): `NONE`
-- Link/button text: `NONE`
-- HTML href exactly matches audited href: `False`
-- Reachable from course hub/catalog: `False`
-- Dynamic distinguishable internally: `False`
 - Duplicate existing Enrollware class rendered same tuple: `False`
 - Overlap status: `unknown`
 - Enrollware URL sample checked/valid: `False` / `False`
