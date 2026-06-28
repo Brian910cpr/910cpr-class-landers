@@ -1,0 +1,256 @@
+{
+  "generated_at": "2026-06-28T14:59:21",
+  "branch": "codex/hsi-rendering-gap-trace",
+  "head": "6a7f0b25721630a35e3a1307f92cbbb5a0a92911",
+  "summary": {
+    "presentation_selected_count": 8,
+    "rendered_count": 5,
+    "missing_count": 3,
+    "missing_offer_ids": [
+      "offer-371954-instructor_24057895173-20260704-1445",
+      "offer-449422-instructor_24057895173-20260704-1445",
+      "offer-463743-instructor_24057895173-20260704-1445"
+    ]
+  },
+  "selected_offer_trace": [
+    {
+      "offer_id": "offer-209808-instructor_24057895173-20260704-1445",
+      "courseId": "209808",
+      "course_key": "aha_heartsaver_cpr_aed_online",
+      "course_name": "AHA Heartsaver CPR AED Online",
+      "course_family": "Heartsaver",
+      "date": "2026-07-04",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "appointmentDayId": 260683,
+      "enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=209808",
+      "presentation_mode": "anchor_stack_after",
+      "expected_slug_page": "docs/courses/heartsaver-cpr-aed.html",
+      "expected_card_tab_section": [
+        "NO_TAB_MAPPING"
+      ],
+      "appears_in_public_sellable_offers_preview": true,
+      "appears_in_dynamic_offer_presentation_policy_output": true,
+      "appears_in_slug_hub_json_data_model": "not_hsi_page",
+      "appears_in_built_html": true,
+      "rendered_proof_status": true,
+      "rendered_page_paths": [
+        "docs/courses/heartsaver-cpr-aed.html"
+      ],
+      "missing_reason": "rendered_ok",
+      "course_master_or_slug_mapping_note": "mapped"
+    },
+    {
+      "offer_id": "offer-251545-instructor_24057895173-20260704-1445",
+      "courseId": "251545",
+      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
+      "course_name": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "date": "2026-07-04",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "appointmentDayId": 260683,
+      "enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=251545",
+      "presentation_mode": "anchor_stack_after",
+      "expected_slug_page": "docs/courses/heartsaver-cpr-aed.html",
+      "expected_card_tab_section": [
+        "NO_TAB_MAPPING"
+      ],
+      "appears_in_public_sellable_offers_preview": true,
+      "appears_in_dynamic_offer_presentation_policy_output": true,
+      "appears_in_slug_hub_json_data_model": "not_hsi_page",
+      "appears_in_built_html": true,
+      "rendered_proof_status": true,
+      "rendered_page_paths": [
+        "docs/courses/heartsaver-pediatric-first-aid-cpr-aed.html"
+      ],
+      "missing_reason": "rendered_ok",
+      "course_master_or_slug_mapping_note": "mapped"
+    },
+    {
+      "offer_id": "offer-329495-instructor_24057895173-20260704-1445",
+      "courseId": "329495",
+      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+      "course_name": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "date": "2026-07-04",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "appointmentDayId": 260683,
+      "enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=329495",
+      "presentation_mode": "anchor_stack_after",
+      "expected_slug_page": "docs/courses/heartsaver-cpr-aed.html",
+      "expected_card_tab_section": [
+        "NO_TAB_MAPPING"
+      ],
+      "appears_in_public_sellable_offers_preview": true,
+      "appears_in_dynamic_offer_presentation_policy_output": true,
+      "appears_in_slug_hub_json_data_model": "not_hsi_page",
+      "appears_in_built_html": true,
+      "rendered_proof_status": true,
+      "rendered_page_paths": [
+        "docs/courses/heartsaver-first-aid-cpr-aed.html"
+      ],
+      "missing_reason": "rendered_ok",
+      "course_master_or_slug_mapping_note": "mapped"
+    },
+    {
+      "offer_id": "offer-344085-instructor_24057895173-20260704-1445",
+      "courseId": "344085",
+      "course_key": "aha_heartsaver_cpr_aed",
+      "course_name": "AHA Heartsaver CPR AED",
+      "course_family": "Heartsaver",
+      "date": "2026-07-04",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "appointmentDayId": 260683,
+      "enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=344085",
+      "presentation_mode": "anchor_stack_after",
+      "expected_slug_page": "docs/courses/heartsaver-cpr-aed.html",
+      "expected_card_tab_section": [
+        "NO_TAB_MAPPING"
+      ],
+      "appears_in_public_sellable_offers_preview": true,
+      "appears_in_dynamic_offer_presentation_policy_output": true,
+      "appears_in_slug_hub_json_data_model": "not_hsi_page",
+      "appears_in_built_html": true,
+      "rendered_proof_status": true,
+      "rendered_page_paths": [
+        "docs/courses/heartsaver-cpr-aed.html"
+      ],
+      "missing_reason": "rendered_ok",
+      "course_master_or_slug_mapping_note": "344085 is AHA Heartsaver, not HSI"
+    },
+    {
+      "offer_id": "offer-371954-instructor_24057895173-20260704-1445",
+      "courseId": "371954",
+      "course_key": "hsi_adult_first_aid_cpr_aed_blended",
+      "course_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "course_family": "HSI",
+      "date": "2026-07-04",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "appointmentDayId": 260683,
+      "enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=371954",
+      "presentation_mode": "anchor_stack_after",
+      "expected_slug_page": "docs/hsi.html",
+      "expected_card_tab_section": [
+        "NO_TAB_MAPPING"
+      ],
+      "appears_in_public_sellable_offers_preview": true,
+      "appears_in_dynamic_offer_presentation_policy_output": true,
+      "appears_in_slug_hub_json_data_model": false,
+      "appears_in_built_html": false,
+      "rendered_proof_status": false,
+      "rendered_page_paths": [],
+      "missing_reason": "dropped_by_build_slug_hubs_no_APPOINTMENT_COURSE_TAB_IDS_mapping_for_course_key",
+      "course_master_or_slug_mapping_note": "HSI course key lacks APPOINTMENT_COURSE_TAB_IDS mapping"
+    },
+    {
+      "offer_id": "offer-445670-instructor_24057895173-20260704-1445",
+      "courseId": "445670",
+      "course_key": "hsi_bls_adult_first_aid_blended",
+      "course_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "course_family": "HSI",
+      "date": "2026-07-04",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "appointmentDayId": 260683,
+      "enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=445670",
+      "presentation_mode": "anchor_stack_after",
+      "expected_slug_page": "docs/hsi.html",
+      "expected_card_tab_section": [
+        "hsi-bls-fa"
+      ],
+      "appears_in_public_sellable_offers_preview": true,
+      "appears_in_dynamic_offer_presentation_policy_output": true,
+      "appears_in_slug_hub_json_data_model": false,
+      "appears_in_built_html": true,
+      "rendered_proof_status": true,
+      "rendered_page_paths": [
+        "docs/hsi.html"
+      ],
+      "missing_reason": "rendered_ok",
+      "course_master_or_slug_mapping_note": "mapped"
+    },
+    {
+      "offer_id": "offer-449422-instructor_24057895173-20260704-1445",
+      "courseId": "449422",
+      "course_key": "hsi_pediatric_first_aid_cpr_aed_blended",
+      "course_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "course_family": "HSI",
+      "date": "2026-07-04",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "appointmentDayId": 260683,
+      "enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=449422",
+      "presentation_mode": "anchor_stack_after",
+      "expected_slug_page": "docs/hsi.html",
+      "expected_card_tab_section": [
+        "NO_TAB_MAPPING"
+      ],
+      "appears_in_public_sellable_offers_preview": true,
+      "appears_in_dynamic_offer_presentation_policy_output": true,
+      "appears_in_slug_hub_json_data_model": false,
+      "appears_in_built_html": false,
+      "rendered_proof_status": false,
+      "rendered_page_paths": [],
+      "missing_reason": "dropped_by_build_slug_hubs_no_APPOINTMENT_COURSE_TAB_IDS_mapping_for_course_key",
+      "course_master_or_slug_mapping_note": "HSI course key lacks APPOINTMENT_COURSE_TAB_IDS mapping"
+    },
+    {
+      "offer_id": "offer-463743-instructor_24057895173-20260704-1445",
+      "courseId": "463743",
+      "course_key": "hsi_bls_challenge",
+      "course_name": "HSI BLS Challenge",
+      "course_family": "HSI",
+      "date": "2026-07-04",
+      "start_time": "2026-07-04T14:45:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "appointmentDayId": 260683,
+      "enrollware_href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=463743",
+      "presentation_mode": "anchor_stack_after",
+      "expected_slug_page": "docs/hsi.html",
+      "expected_card_tab_section": [
+        "NO_TAB_MAPPING"
+      ],
+      "appears_in_public_sellable_offers_preview": true,
+      "appears_in_dynamic_offer_presentation_policy_output": true,
+      "appears_in_slug_hub_json_data_model": true,
+      "appears_in_built_html": false,
+      "rendered_proof_status": false,
+      "rendered_page_paths": [],
+      "missing_reason": "dropped_by_build_slug_hubs_no_APPOINTMENT_COURSE_TAB_IDS_mapping_for_course_key",
+      "course_master_or_slug_mapping_note": "HSI course key lacks APPOINTMENT_COURSE_TAB_IDS mapping"
+    }
+  ],
+  "stage_answers": {
+    "are_missing_assigned_to_page_card_that_does_not_render_dynamic_offers": "They are assigned to the HSI hub by family, but their course keys have no appointment tab mapping, so no HSI card/tab selects them for rendering.",
+    "course_key_tab_exists_but_suppressed": "No. The missing course keys do not have APPOINTMENT_COURSE_TAB_IDS entries; this is not normal suppression after tab match.",
+    "duplicate_course_card_dedupe": "No evidence. Presentation compaction selected these offers; duplicate-adjacent suppression already happened earlier.",
+    "hsi_page_only_one_dynamic_offer_per_card": "No. The page can render dynamic offers per mapped tab; only the mapped HSI BLS + Adult First Aid key renders.",
+    "card_course_key_mismatch": "Yes for missing HSI keys: selected course IDs are enabled, but build_slug_hubs lacks tab mappings for their course_key values.",
+    "course_master_vs_slug_hub_disagreement": "Course Master is non-authoritative. The operative disagreement is course_catalog course_key versus hard-coded APPOINTMENT_COURSE_TAB_IDS in scripts/build_slug_hubs.py.",
+    "344085_aheartsaver_on_hsi": "344085 renders on Heartsaver page as AHA Heartsaver CPR AED. It should not be used as HSI CPR AED without explicit approval; treat as blocked fallback/mapping bug for HSI CPR AED.",
+    "dropped_by_build_slug_hubs": "Yes. build_slug_hubs.py builds offers but appointment_offers_for_tab only selects offers whose course_key maps to a tab in APPOINTMENT_COURSE_TAB_IDS."
+  },
+  "safe_deployment_blockers": [
+    "Do not deploy HSI course ID enable-review branch while rendered proof is PARTIAL.",
+    "Add/review HSI appointment tab mappings before enabling rendered public output for 371954, 449422, and 463743.",
+    "Block or explicitly approve the 344085 AHA Heartsaver fallback before any HSI CPR AED card routes to it.",
+    "Rerun rendered_dynamic_offer_proof and require PASS after any mapping fix."
+  ],
+  "recommended_next_fix": {
+    "file": "scripts/build_slug_hubs.py",
+    "function_or_constant": "APPOINTMENT_COURSE_TAB_IDS / appointment_offers_for_tab",
+    "recommendation": "Add explicit HSI course_key to HSI tab mappings, then rerun pipeline. Likely mappings: hsi_adult_first_aid_cpr_aed_blended -> hsi-fa-cpr-aed or appropriate HSI first aid tab; hsi_pediatric_first_aid_cpr_aed_blended -> a pediatric HSI tab if present or create one deliberately; hsi_bls_challenge -> hsi-bls if Brian wants BLS Challenge on HSI BLS card. Do not map 344085 to HSI CPR AED without approval."
+  }
+}
