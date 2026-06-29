@@ -267,6 +267,36 @@ class DynamicOffersTest(unittest.TestCase):
         self.assertEqual("4018 Shipyard Blvd, Wilmington, NC 28403, USA", offers[0]["source_location"])
         self.assertIn("instructor_time_only_confirmed_container_target", offers[0]["reasons"])
 
+    def test_august_live_snapshot_block_generates_august_bls_offer(self) -> None:
+        loaded = self.base_loaded()
+        loaded["appointment_containers"] = self.brian_shipyard_container()
+        loaded["live_availability_snapshot"] = {
+            "availability_blocks": [{
+                "instructor_name": "Brian Ennis",
+                "person_id": "person_brian",
+                "start_datetime": "2026-08-04T13:00:00",
+                "end_datetime": "2026-08-04T16:00:00",
+                "date": "2026-08-04",
+                "end_date": "2026-08-04",
+                "start_time": "13:00",
+                "end_time": "16:00",
+                "availability_status": "available",
+                "availability_location_mode": "instructor_time_only",
+                "source_location": "report_only_august_alignment_fixture",
+                "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+                "allowed_course_families": ["BLS"],
+                "source_event_id": "august-brian-bls-live-fixture",
+            }]
+        }
+
+        offers, _rejections, stats = generate_dynamic_offers.generate_offers(loaded)
+
+        august_offers = [offer for offer in offers if offer["date"].startswith("2026-08")]
+        self.assertEqual("live_availability_snapshot", stats["availability_source_used"])
+        self.assertGreaterEqual(len(august_offers), 1)
+        self.assertEqual("2026-08-04", august_offers[0]["date"])
+        self.assertEqual("209806", august_offers[0]["course_id"])
+
     def test_bls_provider_consumption_window_includes_default_buffers(self) -> None:
         loaded = self.base_loaded()
         loaded["course_catalog"]["courses"][0].pop("setup_buffer_minutes")
