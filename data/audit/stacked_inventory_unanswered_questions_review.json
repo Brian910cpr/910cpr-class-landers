@@ -1,0 +1,772 @@
+{
+  "generated_at": "2026-06-29T00:36:48",
+  "source_files": [
+    "data/audit/visible_row_source_audit.json",
+    "data/audit/august_seed_visibility_trace.json",
+    "data/audit/course_master_review_sheet.csv",
+    "docs/data/schedule_future.json"
+  ],
+  "visible_row_counts_by_family": {
+    "BLS": {
+      "existing_enrollware_class": 115,
+      "total": 120,
+      "appointment_seed": 5
+    },
+    "Heartsaver First Aid CPR AED": {
+      "existing_enrollware_class": 42,
+      "total": 44,
+      "appointment_seed": 2
+    },
+    "Heartsaver CPR AED": {
+      "appointment_seed": 3,
+      "total": 3
+    },
+    "Heartsaver Pediatric First Aid CPR AED": {
+      "existing_enrollware_class": 5,
+      "total": 6,
+      "appointment_seed": 1
+    },
+    "ACLS": {
+      "existing_enrollware_class": 30,
+      "total": 30
+    },
+    "PALS": {
+      "existing_enrollware_class": 22,
+      "total": 22
+    },
+    "HSI": {
+      "existing_enrollware_class": 1,
+      "total": 2,
+      "appointment_seed": 1
+    }
+  },
+  "requested_time_checks": {
+    "BLS requested times": {
+      "09:15": {
+        "existing_enrollware_class": 20,
+        "total": 20
+      },
+      "12:30": {
+        "existing_enrollware_class": 31,
+        "total": 31
+      },
+      "18:15": {
+        "existing_enrollware_class": 24,
+        "total": 24
+      },
+      "18:45": {
+        "existing_enrollware_class": 10,
+        "total": 10
+      }
+    },
+    "Heartsaver First Aid CPR AED requested times": {
+      "09:15": {
+        "existing_enrollware_class": 8,
+        "total": 8
+      },
+      "18:15": {
+        "existing_enrollware_class": 7,
+        "total": 7
+      }
+    },
+    "ACLS requested 2 PM": {
+      "14:00": {
+        "existing_enrollware_class": 20,
+        "total": 20
+      }
+    },
+    "PALS requested 2 PM": {
+      "14:00": {
+        "existing_enrollware_class": 21,
+        "total": 21
+      }
+    }
+  },
+  "august_visible_rows_by_course": {
+    "aha_acls": {
+      "existing_enrollware_class": 1,
+      "total": 1
+    },
+    "aha_bls": {
+      "existing_enrollware_class": 2,
+      "total": 7,
+      "appointment_seed": 5
+    },
+    "aha_pals": {
+      "existing_enrollware_class": 1,
+      "total": 1
+    },
+    "hsi": {
+      "existing_enrollware_class": 1,
+      "total": 1
+    }
+  },
+  "july4_check_rows": [
+    {
+      "page": "/courses/heartsaver-first-aid-cpr-aed.html",
+      "course": "AHA Heartsaver First Aid CPR AED - Blended",
+      "time": "2:30 PM - 3:15 PM",
+      "courseId": "329495",
+      "appointmentDayId": "260683",
+      "offer_id": "",
+      "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A30%20PM&courseId=329495"
+    },
+    {
+      "page": "/courses/heartsaver-first-aid-cpr-aed.html",
+      "course": "AHA Heartsaver First Aid CPR AED - Blended",
+      "time": "2:45 PM - 3:30 PM",
+      "courseId": "329495",
+      "appointmentDayId": "260683",
+      "offer_id": "offer-329495-instructor_24057895173-20260704-1445",
+      "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=329495"
+    },
+    {
+      "page": "/courses/heartsaver-cpr-aed.html",
+      "course": "AHA Heartsaver CPR AED",
+      "time": "2:45 PM - 4:15 PM",
+      "courseId": "344085",
+      "appointmentDayId": "260683",
+      "offer_id": "offer-344085-instructor_24057895173-20260704-1445",
+      "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=344085"
+    },
+    {
+      "page": "/courses/heartsaver-cpr-aed.html",
+      "course": "AHA Heartsaver CPR AED Online",
+      "time": "2:45 PM - 3:30 PM",
+      "courseId": "209808",
+      "appointmentDayId": "260683",
+      "offer_id": "offer-209808-instructor_24057895173-20260704-1445",
+      "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=209808"
+    },
+    {
+      "page": "/courses/heartsaver-cpr-aed.html",
+      "course": "AHA Heartsaver CPR AED",
+      "time": "2:45 PM - 4:15 PM",
+      "courseId": "344085",
+      "appointmentDayId": "260683",
+      "offer_id": "offer-344085-instructor_24057895173-20260704-1445",
+      "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=344085"
+    },
+    {
+      "page": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html",
+      "course": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "time": "2:45 PM - 3:30 PM",
+      "courseId": "251545",
+      "appointmentDayId": "260683",
+      "offer_id": "offer-251545-instructor_24057895173-20260704-1445",
+      "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=251545"
+    },
+    {
+      "page": "/hsi.html",
+      "course": "HSI BLS and Adult First Aid | Blended Learning",
+      "time": "2:45 PM - 3:30 PM",
+      "courseId": "445670",
+      "appointmentDayId": "260683",
+      "offer_id": "offer-445670-instructor_24057895173-20260704-1445",
+      "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=445670"
+    }
+  ],
+  "course_master_gate_matrix": [
+    {
+      "course_key": "aha_acls_heartcode",
+      "course_id": "209811",
+      "name": "AHA ACLS HeartCode",
+      "slug_page": "docs/acls.html",
+      "hub_tab": "acls-heartcode; group-acls",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_acls_provider_initial",
+      "course_id": "241108",
+      "name": "AHA ACLS Provider (Initial)",
+      "slug_page": "docs/acls.html",
+      "hub_tab": "acls-provider; group-acls",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_acls_provider_renewal",
+      "course_id": "209818",
+      "name": "AHA ACLS Provider (Renewal)",
+      "slug_page": "docs/acls.html",
+      "hub_tab": "acls-renewal; group-acls",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_bls_provider",
+      "course_id": "209806",
+      "name": "BLS Provider (NHCSO)",
+      "slug_page": "docs/bls.html",
+      "hub_tab": "bls-provider; group-bls",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_bls_provider_renewal",
+      "course_id": "359474",
+      "name": "AHA BLS Provider Renewal",
+      "slug_page": "docs/bls.html",
+      "hub_tab": "bls-renewal; group-bls",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_heartcode_bls",
+      "course_id": "210549",
+      "name": "AHA HeartCode BLS",
+      "slug_page": "docs/bls.html",
+      "hub_tab": "bls-heartcode; group-bls",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_bls_provider_blended_group_skills",
+      "course_id": "440431",
+      "name": "BLS Provider Blended Learning (Online Course; Group; In-person Skills Testing)",
+      "slug_page": "unknown",
+      "hub_tab": "",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "true",
+      "missing_required_fields": "slug_page; hub_tab; setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "hsi_adult_first_aid_cpr_aed",
+      "course_id": "374378",
+      "name": "HSI Adult First Aid | CPR AED",
+      "slug_page": "unknown",
+      "hub_tab": "",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "true",
+      "missing_required_fields": "slug_page; hub_tab; setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "hsi_adult_first_aid_cpr_aed_alt",
+      "course_id": "422270",
+      "name": "HSI Adult First Aid | CPR AED",
+      "slug_page": "unknown",
+      "hub_tab": "",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "true",
+      "missing_required_fields": "slug_page; hub_tab; setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "hsi_adult_first_aid_cpr_aed_blended",
+      "course_id": "371954",
+      "name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "slug_page": "unknown",
+      "hub_tab": "",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "true",
+      "missing_required_fields": "slug_page; hub_tab; setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "hsi_bls_adult_first_aid_blended",
+      "course_id": "445670",
+      "name": "HSI BLS and Adult First Aid | Blended Learning",
+      "slug_page": "docs/hsi.html",
+      "hub_tab": "hsi-bls-fa",
+      "dynamic_offer_allowed": "true",
+      "appointment_seed_allowed": "true",
+      "review_needed_for_scheduling": "false",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "true",
+      "public_sellable_offer_ids": "offer-445670-instructor_24057895173-20260704-1430; offer-445670-instructor_24057895173-20260704-1445; offer-445670-instructor_24057895173-20260704-1500",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "hsi_bls_challenge",
+      "course_id": "463743",
+      "name": "HSI BLS Challenge",
+      "slug_page": "unknown",
+      "hub_tab": "",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "true",
+      "missing_required_fields": "slug_page; hub_tab; setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "hsi_basic_life_support",
+      "course_id": "448630",
+      "name": "HSI Basic Life Support",
+      "slug_page": "unknown",
+      "hub_tab": "",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "true",
+      "missing_required_fields": "slug_page; hub_tab; setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "hsi_pediatric_first_aid_cpr_aed_blended",
+      "course_id": "449422",
+      "name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "slug_page": "unknown",
+      "hub_tab": "",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "true",
+      "missing_required_fields": "slug_page; hub_tab; setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_heartsaver_cpr_aed",
+      "course_id": "344085",
+      "name": "AHA - Heartsaver\u00ae CPR AED - In-person",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "hs-cpr-aed-bl; hs-cpr-aed-ip",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes",
+      "used_by_public_sellable_dynamic_offer": "true",
+      "public_sellable_offer_ids": "offer-344085-instructor_24057895173-20260704-1430; offer-344085-instructor_24057895173-20260704-1445",
+      "contradiction": "true"
+    },
+    {
+      "course_key": "aha_heartsaver_cpr_aed_online",
+      "course_id": "209808",
+      "name": "AHA Heartsaver CPR AED Online",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "hs-cpr-aed-bl",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "true",
+      "public_sellable_offer_ids": "offer-209808-instructor_24057895173-20260704-1430; offer-209808-instructor_24057895173-20260704-1445; offer-209808-instructor_24057895173-20260704-1500",
+      "contradiction": "true"
+    },
+    {
+      "course_key": "aha_heartsaver_first_aid_cpr_aed",
+      "course_id": "209809",
+      "name": "AHA Heartsaver First Aid CPR AED",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "group-heartsaver; hs-fa-cpr-aed-ip",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+      "course_id": "329495",
+      "name": "AHA Heartsaver First Aid CPR AED - Blended",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "group-heartsaver; hs-fa-cpr-aed-bl",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "true",
+      "public_sellable_offer_ids": "offer-329495-instructor_24057895173-20260704-1430; offer-329495-instructor_24057895173-20260704-1445; offer-329495-instructor_24057895173-20260704-1500",
+      "contradiction": "true"
+    },
+    {
+      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_in_person",
+      "course_id": "351632",
+      "name": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "hs-pediatric-ip",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
+      "course_id": "251545",
+      "name": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "hs-pediatric-bl",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "true",
+      "public_sellable_offer_ids": "offer-251545-instructor_24057895173-20260704-1430; offer-251545-instructor_24057895173-20260704-1445; offer-251545-instructor_24057895173-20260704-1500",
+      "contradiction": "true"
+    },
+    {
+      "course_key": "aha_pals_heartcode",
+      "course_id": "209812",
+      "name": "AHA PALS HeartCode",
+      "slug_page": "docs/pals.html",
+      "hub_tab": "group-pals; pals-heartcode",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_pals_provider",
+      "course_id": "209805",
+      "name": "AHA PALS Provider",
+      "slug_page": "docs/pals.html",
+      "hub_tab": "group-pals; pals-provider",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    },
+    {
+      "course_key": "aha_pals_renewal",
+      "course_id": "251496",
+      "name": "AHA PALS Renewal",
+      "slug_page": "docs/pals.html",
+      "hub_tab": "group-pals; pals-renewal",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "false",
+      "public_sellable_offer_ids": "",
+      "contradiction": "false"
+    }
+  ],
+  "course_master_public_dynamic_contradictions": [
+    {
+      "course_key": "aha_heartsaver_cpr_aed",
+      "course_id": "344085",
+      "name": "AHA - Heartsaver\u00ae CPR AED - In-person",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "hs-cpr-aed-bl; hs-cpr-aed-ip",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes",
+      "used_by_public_sellable_dynamic_offer": "true",
+      "public_sellable_offer_ids": "offer-344085-instructor_24057895173-20260704-1430; offer-344085-instructor_24057895173-20260704-1445",
+      "contradiction": "true"
+    },
+    {
+      "course_key": "aha_heartsaver_cpr_aed_online",
+      "course_id": "209808",
+      "name": "AHA Heartsaver CPR AED Online",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "hs-cpr-aed-bl",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "true",
+      "public_sellable_offer_ids": "offer-209808-instructor_24057895173-20260704-1430; offer-209808-instructor_24057895173-20260704-1445; offer-209808-instructor_24057895173-20260704-1500",
+      "contradiction": "true"
+    },
+    {
+      "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+      "course_id": "329495",
+      "name": "AHA Heartsaver First Aid CPR AED - Blended",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "group-heartsaver; hs-fa-cpr-aed-bl",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "true",
+      "public_sellable_offer_ids": "offer-329495-instructor_24057895173-20260704-1430; offer-329495-instructor_24057895173-20260704-1445; offer-329495-instructor_24057895173-20260704-1500",
+      "contradiction": "true"
+    },
+    {
+      "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
+      "course_id": "251545",
+      "name": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "slug_page": "docs/heartsaver.html",
+      "hub_tab": "hs-pediatric-bl",
+      "dynamic_offer_allowed": "false",
+      "appointment_seed_allowed": "false",
+      "review_needed_for_scheduling": "true",
+      "review_needed_for_rendering": "false",
+      "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+      "used_by_public_sellable_dynamic_offer": "true",
+      "public_sellable_offer_ids": "offer-251545-instructor_24057895173-20260704-1430; offer-251545-instructor_24057895173-20260704-1445; offer-251545-instructor_24057895173-20260704-1500",
+      "contradiction": "true"
+    }
+  ],
+  "answers": [
+    {
+      "question": "Are visible BLS rows mostly real Class Report rows?",
+      "answer": "Yes. 115 of 120 visible BLS rows are current Class Report/enroll?id rows; 5 are appointment-seed rows.",
+      "evidence": {
+        "existing_enrollware_class": 115,
+        "total": 120,
+        "appointment_seed": 5
+      }
+    },
+    {
+      "question": "Are visible Heartsaver rows mostly real Class Report rows?",
+      "answer": "Mixed. First Aid CPR AED is mostly Class Report, CPR AED is entirely appointment-seed in this snapshot, and Pediatric is mostly Class Report with one seed.",
+      "evidence": {
+        "first_aid_cpr_aed": {
+          "existing_enrollware_class": 42,
+          "total": 44,
+          "appointment_seed": 2
+        },
+        "cpr_aed": {
+          "appointment_seed": 3,
+          "total": 3
+        },
+        "pediatric": {
+          "existing_enrollware_class": 5,
+          "total": 6,
+          "appointment_seed": 1
+        }
+      }
+    },
+    {
+      "question": "What are the July 4 Check-this-date/time rows?",
+      "answer": "They are appointment-seed rows, not Class Report enroll?id classes. They come from the dynamic presentation/build output and use appointmentDayId URLs.",
+      "evidence": [
+        {
+          "page": "/courses/heartsaver-first-aid-cpr-aed.html",
+          "course": "AHA Heartsaver First Aid CPR AED - Blended",
+          "time": "2:30 PM - 3:15 PM",
+          "courseId": "329495",
+          "appointmentDayId": "260683",
+          "offer_id": "",
+          "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A30%20PM&courseId=329495"
+        },
+        {
+          "page": "/courses/heartsaver-first-aid-cpr-aed.html",
+          "course": "AHA Heartsaver First Aid CPR AED - Blended",
+          "time": "2:45 PM - 3:30 PM",
+          "courseId": "329495",
+          "appointmentDayId": "260683",
+          "offer_id": "offer-329495-instructor_24057895173-20260704-1445",
+          "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=329495"
+        },
+        {
+          "page": "/courses/heartsaver-cpr-aed.html",
+          "course": "AHA Heartsaver CPR AED",
+          "time": "2:45 PM - 4:15 PM",
+          "courseId": "344085",
+          "appointmentDayId": "260683",
+          "offer_id": "offer-344085-instructor_24057895173-20260704-1445",
+          "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=344085"
+        },
+        {
+          "page": "/courses/heartsaver-cpr-aed.html",
+          "course": "AHA Heartsaver CPR AED Online",
+          "time": "2:45 PM - 3:30 PM",
+          "courseId": "209808",
+          "appointmentDayId": "260683",
+          "offer_id": "offer-209808-instructor_24057895173-20260704-1445",
+          "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=209808"
+        },
+        {
+          "page": "/courses/heartsaver-cpr-aed.html",
+          "course": "AHA Heartsaver CPR AED",
+          "time": "2:45 PM - 4:15 PM",
+          "courseId": "344085",
+          "appointmentDayId": "260683",
+          "offer_id": "offer-344085-instructor_24057895173-20260704-1445",
+          "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=344085"
+        },
+        {
+          "page": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html",
+          "course": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+          "time": "2:45 PM - 3:30 PM",
+          "courseId": "251545",
+          "appointmentDayId": "260683",
+          "offer_id": "offer-251545-instructor_24057895173-20260704-1445",
+          "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=251545"
+        },
+        {
+          "page": "/hsi.html",
+          "course": "HSI BLS and Adult First Aid | Blended Learning",
+          "time": "2:45 PM - 3:30 PM",
+          "courseId": "445670",
+          "appointmentDayId": "260683",
+          "offer_id": "offer-445670-instructor_24057895173-20260704-1445",
+          "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=445670"
+        }
+      ]
+    },
+    {
+      "question": "Does August have enough visible public inventory?",
+      "answer": "No. August public visibility is thin and inconsistent. The snapshot has only a small set of visible August rows, and the dynamic pipeline reports no August BLS or Heartsaver public-sellable offers.",
+      "evidence": {
+        "aha_acls": {
+          "existing_enrollware_class": 1,
+          "total": 1
+        },
+        "aha_bls": {
+          "existing_enrollware_class": 2,
+          "total": 7,
+          "appointment_seed": 5
+        },
+        "aha_pals": {
+          "existing_enrollware_class": 1,
+          "total": 1
+        },
+        "hsi": {
+          "existing_enrollware_class": 1,
+          "total": 1
+        }
+      }
+    },
+    {
+      "question": "Can Course Master currently be treated as authoritative for scheduling?",
+      "answer": "No. The review sheet still marks many public/dynamic-used courses as dynamic_offer_allowed=false, appointment_seed_allowed=false, or review_needed_for_scheduling=true.",
+      "evidence": [
+        {
+          "course_key": "aha_heartsaver_cpr_aed",
+          "course_id": "344085",
+          "name": "AHA - Heartsaver\u00ae CPR AED - In-person",
+          "slug_page": "docs/heartsaver.html",
+          "hub_tab": "hs-cpr-aed-bl; hs-cpr-aed-ip",
+          "dynamic_offer_allowed": "false",
+          "appointment_seed_allowed": "false",
+          "review_needed_for_scheduling": "true",
+          "review_needed_for_rendering": "false",
+          "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes",
+          "used_by_public_sellable_dynamic_offer": "true",
+          "public_sellable_offer_ids": "offer-344085-instructor_24057895173-20260704-1430; offer-344085-instructor_24057895173-20260704-1445",
+          "contradiction": "true"
+        },
+        {
+          "course_key": "aha_heartsaver_cpr_aed_online",
+          "course_id": "209808",
+          "name": "AHA Heartsaver CPR AED Online",
+          "slug_page": "docs/heartsaver.html",
+          "hub_tab": "hs-cpr-aed-bl",
+          "dynamic_offer_allowed": "false",
+          "appointment_seed_allowed": "false",
+          "review_needed_for_scheduling": "true",
+          "review_needed_for_rendering": "false",
+          "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+          "used_by_public_sellable_dynamic_offer": "true",
+          "public_sellable_offer_ids": "offer-209808-instructor_24057895173-20260704-1430; offer-209808-instructor_24057895173-20260704-1445; offer-209808-instructor_24057895173-20260704-1500",
+          "contradiction": "true"
+        },
+        {
+          "course_key": "aha_heartsaver_first_aid_cpr_aed_blended",
+          "course_id": "329495",
+          "name": "AHA Heartsaver First Aid CPR AED - Blended",
+          "slug_page": "docs/heartsaver.html",
+          "hub_tab": "group-heartsaver; hs-fa-cpr-aed-bl",
+          "dynamic_offer_allowed": "false",
+          "appointment_seed_allowed": "false",
+          "review_needed_for_scheduling": "true",
+          "review_needed_for_rendering": "false",
+          "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+          "used_by_public_sellable_dynamic_offer": "true",
+          "public_sellable_offer_ids": "offer-329495-instructor_24057895173-20260704-1430; offer-329495-instructor_24057895173-20260704-1445; offer-329495-instructor_24057895173-20260704-1500",
+          "contradiction": "true"
+        },
+        {
+          "course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online",
+          "course_id": "251545",
+          "name": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+          "slug_page": "docs/heartsaver.html",
+          "hub_tab": "hs-pediatric-bl",
+          "dynamic_offer_allowed": "false",
+          "appointment_seed_allowed": "false",
+          "review_needed_for_scheduling": "true",
+          "review_needed_for_rendering": "false",
+          "missing_required_fields": "setup_buffer_minutes; cleanup_buffer_minutes; scheduler_consumption_minutes; base_price; card_type",
+          "used_by_public_sellable_dynamic_offer": "true",
+          "public_sellable_offer_ids": "offer-251545-instructor_24057895173-20260704-1430; offer-251545-instructor_24057895173-20260704-1445; offer-251545-instructor_24057895173-20260704-1500",
+          "contradiction": "true"
+        }
+      ]
+    },
+    {
+      "question": "Minimum safe business action for August?",
+      "answer": "Do not wait for the smart layer alone. Create/verify real Enrollware August BLS and Heartsaver rows first, then use dynamic appointment seeds only where course/container/page/CTA mapping is proven and Course Master contradictions are resolved.",
+      "evidence": "Course Master contradictions plus sparse August visible inventory."
+    }
+  ]
+}
