@@ -1,0 +1,213 @@
+{
+  "summary": {
+    "generated_at": "2026-06-29T18:07:30",
+    "read_only": true,
+    "deployed": false,
+    "august_bls_public_sellable_offers": 24,
+    "selected_august_bls_seeds": 4,
+    "selected_by_date": {
+      "2026-08-03": 1,
+      "2026-08-04": 1,
+      "2026-08-10": 1,
+      "2026-08-11": 1
+    },
+    "selected_by_course": {
+      "209806 AHA BLS Provider": 2,
+      "359474 AHA BLS Provider Renewal": 2
+    },
+    "selected_by_start_time": {
+      "08:30": 2,
+      "08:00": 2
+    },
+    "public_sellable_by_start_time": {
+      "08:30": 4,
+      "08:00": 12,
+      "08:15": 8
+    },
+    "common_public_time_presence": {
+      "09:15": {
+        "dynamic_candidate_count": 78,
+        "public_sellable_count": 0,
+        "dynamic_public_sellable_available": false,
+        "selected_count": 0,
+        "public_filter_hidden_reasons": {
+          "max_offers_per_course_per_week_exceeded": 44,
+          "course_id_not_enabled": 26,
+          "course_family_disabled": 13,
+          "course_family_not_enabled": 13,
+          "max_total_offers_per_day_exceeded": 8
+        }
+      },
+      "12:30": {
+        "dynamic_candidate_count": 78,
+        "public_sellable_count": 0,
+        "dynamic_public_sellable_available": false,
+        "selected_count": 0,
+        "public_filter_hidden_reasons": {
+          "max_offers_per_course_per_week_exceeded": 44,
+          "course_id_not_enabled": 26,
+          "course_family_disabled": 13,
+          "course_family_not_enabled": 13,
+          "max_total_offers_per_day_exceeded": 8
+        }
+      },
+      "18:15": {
+        "dynamic_candidate_count": 72,
+        "public_sellable_count": 0,
+        "dynamic_public_sellable_available": false,
+        "selected_count": 0,
+        "public_filter_hidden_reasons": {
+          "max_offers_per_course_per_week_exceeded": 40,
+          "course_id_not_enabled": 24,
+          "course_family_disabled": 12,
+          "course_family_not_enabled": 12,
+          "max_total_offers_per_day_exceeded": 8
+        }
+      },
+      "18:45": {
+        "dynamic_candidate_count": 72,
+        "public_sellable_count": 0,
+        "dynamic_public_sellable_available": false,
+        "selected_count": 0,
+        "public_filter_hidden_reasons": {
+          "max_offers_per_course_per_week_exceeded": 40,
+          "course_id_not_enabled": 24,
+          "course_family_disabled": 12,
+          "course_family_not_enabled": 12,
+          "max_total_offers_per_day_exceeded": 8
+        }
+      }
+    },
+    "common_public_time_dynamic_candidates_total": 300,
+    "common_public_time_hidden_reasons_total": {
+      "max_offers_per_course_per_week_exceeded": 168,
+      "course_id_not_enabled": 100,
+      "course_family_disabled": 50,
+      "course_family_not_enabled": 50,
+      "max_total_offers_per_day_exceeded": 32
+    },
+    "preferred_bls_start_times_policy": [
+      "08:30",
+      "09:00"
+    ],
+    "morning_friendly_families": [
+      "BLS",
+      "Heartsaver",
+      "HSI"
+    ],
+    "real_august_bls_rows_schedule_future": 3,
+    "real_august_bls_rows_public_schedule": 2,
+    "selected_seed_rows_rendered_on_bls_html": 0,
+    "recommendation": "B",
+    "recommendation_text": "Adjust selector to prefer known public-friendly time bands through config, but do not hardcode new times in code. The current 08:00/08:30 choices are policy-driven and safe. The common public times exist dynamically, but current public-sellable caps/policy hide them before seed selection.",
+    "large_public_sellable_preview_size_mb": 96.43
+  },
+  "render_rows": [
+    {
+      "page_card_destination": "docs/bls.html#bls-provider",
+      "visible_date": "",
+      "visible_time": "",
+      "visible_course_label": "",
+      "visible_button_text": "",
+      "url_type": "appointment_seed",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=8%3A30%20AM&courseId=209806",
+      "renders_on_current_bls_html": false,
+      "rendered_seed_row_in_schedule_future": false,
+      "appears_alongside_real_enrollware_rows": false,
+      "proof_note": "No current rendered seed row found; this branch generated URL proof only."
+    },
+    {
+      "page_card_destination": "docs/bls.html#bls-renewal",
+      "visible_date": "",
+      "visible_time": "",
+      "visible_course_label": "",
+      "visible_button_text": "",
+      "url_type": "appointment_seed",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=8%3A00%20AM&courseId=359474",
+      "renders_on_current_bls_html": false,
+      "rendered_seed_row_in_schedule_future": false,
+      "appears_alongside_real_enrollware_rows": false,
+      "proof_note": "No current rendered seed row found; this branch generated URL proof only."
+    },
+    {
+      "page_card_destination": "docs/bls.html#bls-provider",
+      "visible_date": "",
+      "visible_time": "",
+      "visible_course_label": "",
+      "visible_button_text": "",
+      "url_type": "appointment_seed",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=8%3A30%20AM&courseId=209806",
+      "renders_on_current_bls_html": false,
+      "rendered_seed_row_in_schedule_future": false,
+      "appears_alongside_real_enrollware_rows": false,
+      "proof_note": "No current rendered seed row found; this branch generated URL proof only."
+    },
+    {
+      "page_card_destination": "docs/bls.html#bls-renewal",
+      "visible_date": "",
+      "visible_time": "",
+      "visible_course_label": "",
+      "visible_button_text": "",
+      "url_type": "appointment_seed",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=8%3A00%20AM&courseId=359474",
+      "renders_on_current_bls_html": false,
+      "rendered_seed_row_in_schedule_future": false,
+      "appears_alongside_real_enrollware_rows": false,
+      "proof_note": "No current rendered seed row found; this branch generated URL proof only."
+    }
+  ],
+  "url_sanity": [
+    {
+      "date": "2026-08-03",
+      "start_time": "08:30",
+      "courseId": "209806",
+      "course_key": "aha_bls_provider",
+      "appointmentDayId": 260713,
+      "expected_appointmentDayId": 260713,
+      "appointmentDayId_matches_date": "True",
+      "startTime_param": "8:30 AM",
+      "courseId_param": "209806",
+      "courseId_matches_row": "True",
+      "initial_renewal_mapping_ok": "True"
+    },
+    {
+      "date": "2026-08-04",
+      "start_time": "08:00",
+      "courseId": "359474",
+      "course_key": "aha_bls_provider_renewal",
+      "appointmentDayId": 260714,
+      "expected_appointmentDayId": 260714,
+      "appointmentDayId_matches_date": "True",
+      "startTime_param": "8:00 AM",
+      "courseId_param": "359474",
+      "courseId_matches_row": "True",
+      "initial_renewal_mapping_ok": "True"
+    },
+    {
+      "date": "2026-08-10",
+      "start_time": "08:30",
+      "courseId": "209806",
+      "course_key": "aha_bls_provider",
+      "appointmentDayId": 260720,
+      "expected_appointmentDayId": 260720,
+      "appointmentDayId_matches_date": "True",
+      "startTime_param": "8:30 AM",
+      "courseId_param": "209806",
+      "courseId_matches_row": "True",
+      "initial_renewal_mapping_ok": "True"
+    },
+    {
+      "date": "2026-08-11",
+      "start_time": "08:00",
+      "courseId": "359474",
+      "course_key": "aha_bls_provider_renewal",
+      "appointmentDayId": 260721,
+      "expected_appointmentDayId": 260721,
+      "appointmentDayId_matches_date": "True",
+      "startTime_param": "8:00 AM",
+      "courseId_param": "359474",
+      "courseId_matches_row": "True",
+      "initial_renewal_mapping_ok": "True"
+    }
+  ]
+}
