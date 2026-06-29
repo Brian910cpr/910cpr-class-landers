@@ -15,7 +15,7 @@ Status: implemented and regenerated locally. No deploy was performed.
 - August dynamic BLS offers before: 0
 - August dynamic BLS offers after: 6666
 - August selected seeds before: 0
-- August selected seeds after: 2
+- August selected seeds after: 4
 
 ## Safety Gates
 

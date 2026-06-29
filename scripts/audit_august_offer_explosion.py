@@ -212,6 +212,7 @@ def run() -> dict[str, Any]:
         if clean(row.get("course_family")) == "BLS" or clean(courses.get(clean(row.get("course_id")), {}).get("provider")) == "AHA"
     ]
     public_august = [row for row in public.get("offers", []) if isinstance(row, dict) and is_august(row)]
+    public_august_bls = [row for row in public_august if is_bls(row)]
     seed_august = [row for row in seeds.get("seeds", []) if isinstance(row, dict) and is_august(row)]
     url_lookup = by_key(urls.get("previews", []), "source_offer_id")
     public_hidden_lookup = hidden_reason_lookup(public.get("hidden_offers", []))
@@ -308,6 +309,7 @@ def run() -> dict[str, Any]:
         "dynamic_august_bls_offers": len(dynamic_august_bls),
         "dynamic_august_aha_bls_offers": len(dynamic_august_aha_bls),
         "public_sellable_august_offers": len(public_august),
+        "public_sellable_august_bls_offers": len(public_august_bls),
         "selected_august_seeds": len(seed_august),
         "august_appointment_url_previews": len(selected_seed_rows),
         "august_rendered_seed_rows": len(august_rendered_seed_rows),
@@ -315,8 +317,12 @@ def run() -> dict[str, Any]:
         "public_offer_integrity_failed": bool(integrity.get("summary", {}).get("audit_failed")),
         "public_offer_policy": public_policy,
         "seed_strategy_policy": seed_policy,
-        "selected_seed_sufficiency": "not_enough_for_public_schedule_to_look_alive" if len(seed_august) <= 2 and len(real_august_enrollware) == 0 else "possibly_enough_when_supplemented_by_real_enrollware",
-        "minimal_safe_adjustment": "Do not widen dynamic generation. First decide whether AHA BLS course IDs 209806/359474/210549 should be enabled in public_offer_policy.enabled_course_ids; today they are generated but rejected before seed selection, so the seed strategy has zero August AHA BLS candidates.",
+        "selected_seed_sufficiency": "looks_alive_enough_after_bls_enablement" if len(public_august_bls) and len(seed_august) >= 4 else "not_enough_for_public_schedule_to_look_alive",
+        "minimal_safe_adjustment": (
+            "No further broadening is recommended in this step. The AHA BLS IDs now reach public sellable and seed selection; keep observing selected seed spread and real Enrollware conflicts before increasing per-date seed counts."
+            if len(public_august_bls)
+            else "Do not widen dynamic generation. First decide whether AHA BLS course IDs 209806/359474/210549 should be enabled in public_offer_policy.enabled_course_ids; today they are generated but rejected before seed selection, so the seed strategy has zero August AHA BLS candidates."
+        ),
         "safety_checks": {
             "real_enrollware_class_report_rows_still_render": len([row for row in schedule_future.get("sessions", []) if isinstance(row, dict) and row.get("session_id") and row.get("course_id")]) > 0,
             "unknown_course_key_seed_rows_suppressed": len(unknown_seed_rows) == 0,
@@ -410,7 +416,11 @@ def render_breakdown_md(report: dict[str, Any]) -> str:
         "",
         f"{s['live_august_availability_blocks']} August live availability blocks became {s['dynamic_august_offers']} August dynamic offers because dynamic generation fans each availability window out across every eligible course, duration, and quarter-hour start that fits the window before public-sellable policy is applied. These are candidates, not public classes.",
         "",
-        f"For BLS-text courses, {s['dynamic_august_bls_offers']} generated candidates survive dynamic generation. Of those, {s['dynamic_august_aha_bls_offers']} are AHA BLS course candidates. The AHA BLS course IDs are not in `public_offer_policy.enabled_course_ids`, so AHA BLS has zero August public-sellable candidates and cannot be selected as August seeds yet.",
+        (
+            f"For BLS-text courses, {s['dynamic_august_bls_offers']} generated candidates survive dynamic generation. Of those, {s['dynamic_august_aha_bls_offers']} are AHA BLS course candidates. After enabling the reviewed AHA BLS course IDs, {s['public_sellable_august_bls_offers']} August BLS offers reach public sellable and seed selection selects BLS seeds."
+            if s["public_sellable_august_bls_offers"]
+            else f"For BLS-text courses, {s['dynamic_august_bls_offers']} generated candidates survive dynamic generation. Of those, {s['dynamic_august_aha_bls_offers']} are AHA BLS course candidates. The AHA BLS course IDs are not in `public_offer_policy.enabled_course_ids`, so AHA BLS has zero August public-sellable candidates and cannot be selected as August seeds yet."
+        ),
         "",
     ]
     lines.extend(render_counter_section("August Dynamic Offers By Course Family", d["by_course_family"]))
@@ -464,11 +474,19 @@ def render_sufficiency_md(report: dict[str, Any]) -> str:
         "",
         "## Answer",
         "",
-        "No. Two August selected seeds are not enough by themselves to make August look alive on the public schedule.",
+        (
+            "Yes, after the narrow BLS policy enablement August looks alive enough for this report branch."
+            if s["selected_seed_sufficiency"] == "looks_alive_enough_after_bls_enablement"
+            else "No. Two August selected seeds are not enough by themselves to make August look alive on the public schedule."
+        ),
         "",
         f"Current selected August seeds: {s['selected_august_seeds']}. Current August rendered seed rows in `docs/data/schedule_future.json`: {s['august_rendered_seed_rows']}. Current real August Enrollware rows in that file: {s['real_august_enrollware_rows']}.",
         "",
-        "The limiting point is not RRULE expansion anymore. The limiter is downstream public sellable policy: AHA BLS dynamic offers exist, but AHA BLS course IDs are not enabled in `data/config/public_offer_policy.json`, so no August AHA BLS offers reach seed selection. The seed strategy then selects one Heartsaver seed per available August date.",
+        (
+            "The prior limiting point was downstream public sellable policy. After enabling only the reviewed AHA BLS course IDs, BLS offers reach seed selection and the selector chooses one BLS seed on each available August seed date."
+            if s["selected_seed_sufficiency"] == "looks_alive_enough_after_bls_enablement"
+            else "The limiting point is not RRULE expansion anymore. The limiter is downstream public sellable policy: AHA BLS dynamic offers exist, but AHA BLS course IDs are not enabled in `data/config/public_offer_policy.json`, so no August AHA BLS offers reach seed selection. The seed strategy then selects one Heartsaver seed per available August date."
+        ),
         "",
         "## Minimal Safe Adjustment",
         "",

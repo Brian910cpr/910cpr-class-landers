@@ -4,17 +4,17 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 ## Summary
 
-- Input offers read: 147
+- Input offers read: 210
 - Appointment-container filter enabled: True
-- Appointment-container-backed offers kept: 147
-- Seeds selected: 12
+- Appointment-container-backed offers kept: 210
+- Seeds selected: 16
 - Amy advanced-course violations removed: 0
 - Amy mode: protected_pilot
 - Amy stack-fill candidates found: 0
-- Seeds by date: {'2026-06-30': 1, '2026-07-02': 1, '2026-07-06': 1, '2026-07-07': 1, '2026-07-13': 1, '2026-07-14': 1, '2026-07-20': 1, '2026-07-22': 1, '2026-07-27': 1, '2026-07-28': 1, '2026-08-03': 1, '2026-08-10': 1}
-- Seeds by family: {'Heartsaver': 12}
-- Seeds by start minute: {'00': 6, '30': 5, '45': 1}
-- Quarter-hour seeds selected: 1
+- Seeds by date: {'2026-06-30': 1, '2026-07-02': 1, '2026-07-03': 1, '2026-07-05': 1, '2026-07-06': 1, '2026-07-07': 1, '2026-07-13': 1, '2026-07-14': 1, '2026-07-20': 1, '2026-07-22': 1, '2026-07-27': 1, '2026-07-28': 1, '2026-08-03': 1, '2026-08-04': 1, '2026-08-10': 1, '2026-08-11': 1}
+- Seeds by family: {'BLS': 13, 'Heartsaver': 3}
+- Seeds by start minute: {'00': 3, '30': 13}
+- Quarter-hour seeds selected: 0
 
 ## Missing Inputs
 
@@ -22,11 +22,11 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 ## Offers Hidden By Strategy Reason
 
-- `family_mix_target_already_met`: 114
-- `optional_mix_not_available`: 29
-- `scheduler_consumption_window_overlap`: 14
-- `required_mix_not_available`: 12
-- `same_start_time_already_seeded`: 7
+- `scheduler_consumption_window_overlap`: 89
+- `family_mix_target_already_met`: 57
+- `same_start_time_already_seeded`: 48
+- `optional_mix_not_available`: 38
+- `required_mix_not_available`: 4
 
 ## Amy Protected Pilot Hidden By Reason
 
@@ -44,8 +44,8 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
 | BLS | 1 | 0 | True | False | 0 |
-| HSI | 1 | 0 | False | False | 3 |
-| Heartsaver | 1 | 1 | True | True | 10 |
+| HSI | 1 | 0 | False | False | 1 |
+| Heartsaver | 1 | 1 | True | True | 3 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-07-02
@@ -53,9 +53,29 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
+| BLS | 1 | 1 | True | True | 8 |
+| HSI | 1 | 0 | False | False | 2 |
+| Heartsaver | 1 | 0 | True | False | 14 |
+| PALS | 1 | 0 | False | True | 0 |
+
+### 2026-07-03
+
+| Family | Target | Selected | Required | Met | Available After Hard Rules |
+| --- | ---: | ---: | --- | --- | ---: |
+| ACLS | 1 | 0 | False | True | 0 |
+| BLS | 1 | 1 | True | True | 1 |
+| HSI | 1 | 0 | False | True | 0 |
+| Heartsaver | 1 | 0 | True | False | 0 |
+| PALS | 1 | 0 | False | True | 0 |
+
+### 2026-07-05
+
+| Family | Target | Selected | Required | Met | Available After Hard Rules |
+| --- | ---: | ---: | --- | --- | ---: |
+| ACLS | 1 | 0 | False | True | 0 |
 | BLS | 1 | 0 | True | False | 0 |
 | HSI | 1 | 0 | False | True | 0 |
-| Heartsaver | 1 | 1 | True | True | 8 |
+| Heartsaver | 1 | 1 | True | True | 1 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-07-06
@@ -63,9 +83,9 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
+| BLS | 1 | 1 | True | True | 7 |
 | HSI | 1 | 0 | False | False | 3 |
-| Heartsaver | 1 | 1 | True | True | 12 |
+| Heartsaver | 1 | 0 | True | False | 12 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-07-07
@@ -73,9 +93,9 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
+| BLS | 1 | 1 | True | True | 2 |
 | HSI | 1 | 0 | False | True | 0 |
-| Heartsaver | 1 | 1 | True | True | 6 |
+| Heartsaver | 1 | 0 | True | False | 6 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-07-13
@@ -83,9 +103,9 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
+| BLS | 1 | 1 | True | True | 7 |
 | HSI | 1 | 0 | False | False | 3 |
-| Heartsaver | 1 | 1 | True | True | 12 |
+| Heartsaver | 1 | 0 | True | False | 12 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-07-14
@@ -93,9 +113,9 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
+| BLS | 1 | 1 | True | True | 2 |
 | HSI | 1 | 0 | False | True | 0 |
-| Heartsaver | 1 | 1 | True | True | 6 |
+| Heartsaver | 1 | 0 | True | False | 6 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-07-20
@@ -103,9 +123,9 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
+| BLS | 1 | 1 | True | True | 9 |
 | HSI | 1 | 0 | False | False | 3 |
-| Heartsaver | 1 | 1 | True | True | 12 |
+| Heartsaver | 1 | 0 | True | False | 12 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-07-22
@@ -123,9 +143,9 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
+| BLS | 1 | 1 | True | True | 7 |
 | HSI | 1 | 0 | False | False | 3 |
-| Heartsaver | 1 | 1 | True | True | 12 |
+| Heartsaver | 1 | 0 | True | False | 12 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-07-28
@@ -133,9 +153,9 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
+| BLS | 1 | 1 | True | True | 2 |
 | HSI | 1 | 0 | False | True | 0 |
-| Heartsaver | 1 | 1 | True | True | 6 |
+| Heartsaver | 1 | 0 | True | False | 6 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-08-03
@@ -143,9 +163,19 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
-| HSI | 1 | 0 | False | False | 3 |
-| Heartsaver | 1 | 1 | True | True | 18 |
+| BLS | 1 | 1 | True | True | 8 |
+| HSI | 1 | 0 | False | False | 2 |
+| Heartsaver | 1 | 0 | True | False | 14 |
+| PALS | 1 | 0 | False | True | 0 |
+
+### 2026-08-04
+
+| Family | Target | Selected | Required | Met | Available After Hard Rules |
+| --- | ---: | ---: | --- | --- | ---: |
+| ACLS | 1 | 0 | False | True | 0 |
+| BLS | 1 | 1 | True | True | 1 |
+| HSI | 1 | 0 | False | False | 1 |
+| Heartsaver | 1 | 0 | True | False | 4 |
 | PALS | 1 | 0 | False | True | 0 |
 
 ### 2026-08-10
@@ -153,9 +183,19 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | Family | Target | Selected | Required | Met | Available After Hard Rules |
 | --- | ---: | ---: | --- | --- | ---: |
 | ACLS | 1 | 0 | False | True | 0 |
-| BLS | 1 | 0 | True | False | 0 |
-| HSI | 1 | 0 | False | False | 3 |
-| Heartsaver | 1 | 1 | True | True | 18 |
+| BLS | 1 | 1 | True | True | 8 |
+| HSI | 1 | 0 | False | False | 2 |
+| Heartsaver | 1 | 0 | True | False | 14 |
+| PALS | 1 | 0 | False | True | 0 |
+
+### 2026-08-11
+
+| Family | Target | Selected | Required | Met | Available After Hard Rules |
+| --- | ---: | ---: | --- | --- | ---: |
+| ACLS | 1 | 0 | False | True | 0 |
+| BLS | 1 | 1 | True | True | 1 |
+| HSI | 1 | 0 | False | False | 1 |
+| Heartsaver | 1 | 0 | True | False | 4 |
 | PALS | 1 | 0 | False | True | 0 |
 
 
@@ -165,43 +205,55 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 15:45-16:30 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260630-1545` |
+| 16:30-17:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260630-1630` |
 
 ### 2026-07-02
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 13:00-16:00 | AHA Heartsaver First Aid CPR AED | Heartsaver | Brian Ennis | `offer-209809-instructor_24057895173-20260702-1300` |
+| 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260702-1230` |
+
+### 2026-07-03
+
+| Time | Course | Family | Instructor | Source Offer |
+| --- | --- | --- | --- | --- |
+| 14:30-16:30 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260703-1430` |
+
+### 2026-07-05
+
+| Time | Course | Family | Instructor | Source Offer |
+| --- | --- | --- | --- | --- |
+| 08:00-11:00 | AHA Heartsaver Pediatric First Aid / CPR / AED | Heartsaver | Brian Ennis | `offer-351632-instructor_24057895173-20260705-0800` |
 
 ### 2026-07-06
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260706-1430` |
+| 14:30-16:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260706-1430` |
 
 ### 2026-07-07
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 13:00-16:00 | AHA Heartsaver First Aid CPR AED | Heartsaver | Brian Ennis | `offer-209809-instructor_24057895173-20260707-1300` |
+| 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260707-1230` |
 
 ### 2026-07-13
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260713-1430` |
+| 14:30-16:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260713-1430` |
 
 ### 2026-07-14
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 13:00-16:00 | AHA Heartsaver First Aid CPR AED | Heartsaver | Brian Ennis | `offer-209809-instructor_24057895173-20260714-1300` |
+| 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260714-1230` |
 
 ### 2026-07-20
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260720-1430` |
+| 14:30-16:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260720-1430` |
 
 ### 2026-07-22
 
@@ -213,32 +265,42 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260727-1430` |
+| 14:30-16:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260727-1430` |
 
 ### 2026-07-28
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 13:00-16:00 | AHA Heartsaver First Aid CPR AED | Heartsaver | Brian Ennis | `offer-209809-instructor_24057895173-20260728-1300` |
+| 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260728-1230` |
 
 ### 2026-08-03
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 08:00-11:00 | AHA Heartsaver First Aid CPR AED | Heartsaver | Brian Ennis | `offer-209809-instructor_24057895173-20260803-0800` |
+| 08:30-10:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260803-0830` |
+
+### 2026-08-04
+
+| Time | Course | Family | Instructor | Source Offer |
+| --- | --- | --- | --- | --- |
+| 08:00-10:00 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260804-0800` |
 
 ### 2026-08-10
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 08:00-11:00 | AHA Heartsaver First Aid CPR AED | Heartsaver | Brian Ennis | `offer-209809-instructor_24057895173-20260810-0800` |
+| 08:30-10:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260810-0830` |
+
+### 2026-08-11
+
+| Time | Course | Family | Instructor | Source Offer |
+| --- | --- | --- | --- | --- |
+| 08:00-10:00 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260811-0800` |
 
 
 ## Quarter-Hour Stack Fit Notes
 
-| Date | Time | Course | Note |
-| --- | --- | --- | --- |
-| 2026-06-30 | 15:45 | AHA Heartsaver First Aid CPR AED - Blended | quarter_hour_start_allowed_for_stack_fit |
+- No `:15` or `:45` seeds were selected in this run. They remain allowed and can win when they create a better stack.
 ## Next Step
 
 - Build a deterministic appointment URL preview from these seeds without creating appointments or changing public pages.

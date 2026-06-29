@@ -6,7 +6,7 @@ Status: read-only audit. No deploy was performed.
 
 29 August live availability blocks became 20901 August dynamic offers because dynamic generation fans each availability window out across every eligible course, duration, and quarter-hour start that fits the window before public-sellable policy is applied. These are candidates, not public classes.
 
-For BLS-text courses, 6666 generated candidates survive dynamic generation. Of those, 4366 are AHA BLS course candidates. The AHA BLS course IDs are not in `public_offer_policy.enabled_course_ids`, so AHA BLS has zero August public-sellable candidates and cannot be selected as August seeds yet.
+For BLS-text courses, 6666 generated candidates survive dynamic generation. Of those, 4366 are AHA BLS course candidates. After enabling the reviewed AHA BLS course IDs, 24 August BLS offers reach public sellable and seed selection selects BLS seeds.
 
 ## August Dynamic Offers By Course Family
 
@@ -88,11 +88,12 @@ For BLS-text courses, 6666 generated candidates survive dynamic generation. Of t
 
 ## August Dynamic Offers Hidden Before Public Sellable - Top Reasons
 
-- `course_id_not_enabled`: 13124
 - `outside_public_dynamic_hours`: 10220
+- `course_id_not_enabled`: 9817
 - `course_family_disabled`: 8758
 - `course_family_not_enabled`: 8758
-- `max_offers_per_course_per_week_exceeded`: 3899
+- `max_offers_per_course_per_week_exceeded`: 4716
+- `max_total_offers_per_day_exceeded`: 852
 
 ## August BLS By Date
 
@@ -172,11 +173,11 @@ For BLS-text courses, 6666 generated candidates survive dynamic generation. Of t
 | Stage | In | Out | Hidden | Expected? |
 | --- | ---: | ---: | ---: | --- |
 | live_dynamic_generation | 20901 | 20901 | 0 | Expected high fan-out: every eligible course/start combination is still a candidate. |
-| public_sellable_filter | 20901 | 42 | 20859 | Expected: policy hides disabled families/course IDs, off-hours starts, and caps per course/week. |
-| seed_strategy | 42 | 2 | 40 | Expected: stack strategy intentionally selects a small number of daily seeds. |
-| appointment_url_preview | 2 | 2 | 0 | Expected: selected seeds have container-backed appointmentDayId/courseId URL previews. |
-| rendered_seed_rows_schedule_future | 2 | 0 | 2 | Expected in this branch: reports only; selected seed rows were not written into schedule_future. |
-| rendered_seed_rows_public_schedule | 2 | 0 | 2 | Expected in this branch: no deploy and no public page rewrite. |
+| public_sellable_filter | 20901 | 60 | 20841 | Expected: policy hides disabled families/course IDs, off-hours starts, and caps per course/week. |
+| seed_strategy | 60 | 4 | 56 | Expected: stack strategy intentionally selects a small number of daily seeds. |
+| appointment_url_preview | 4 | 4 | 0 | Expected: selected seeds have container-backed appointmentDayId/courseId URL previews. |
+| rendered_seed_rows_schedule_future | 4 | 0 | 4 | Expected in this branch: reports only; selected seed rows were not written into schedule_future. |
+| rendered_seed_rows_public_schedule | 4 | 0 | 4 | Expected in this branch: no deploy and no public page rewrite. |
 | existing_august_enrollware_schedule_future | 0 | 6 | 0 | Supplemental context only: existing real August inventory already present in schedule_future. |
 | existing_august_enrollware_public_schedule | 0 | 2 | 0 | Supplemental context only: existing real August inventory already present in public_schedule. |
 
