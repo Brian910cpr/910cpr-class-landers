@@ -1,0 +1,238 @@
+{
+  "bls": [
+    {
+      "stage": "raw_class_report",
+      "input_files": "data/raw/classes_raw_live.csv",
+      "output_files": "",
+      "total_count": 545,
+      "august_count": 3,
+      "notes": "Existing Enrollware class safety-net rows."
+    },
+    {
+      "stage": "visible_rendered_pages",
+      "input_files": "docs/bls.html; docs/acls.html; docs/pals.html; docs/courses/heartsaver-first-aid-cpr-aed.html; docs/courses/heartsaver-cpr-aed.html; docs/courses/heartsaver-pediatric-first-aid-cpr-aed.html; docs/heartsaver.html; docs/hsi.html; docs/arc.html",
+      "output_files": "docs/*.html",
+      "total_count": 227,
+      "august_count": 8,
+      "notes": "Rows parsed from customer-facing stacked pages."
+    },
+    {
+      "stage": "dynamic_offers",
+      "input_files": "data/audit/dynamic_offers_preview.json",
+      "output_files": "data/audit/dynamic_offers_preview.json",
+      "total_count": 690,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "public_sellable",
+      "input_files": "data/audit/public_sellable_offers_preview.json",
+      "output_files": "data/audit/public_sellable_offers_preview.json",
+      "total_count": 14,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "schedule_seeds",
+      "input_files": "data/audit/schedule_seeds_preview.json",
+      "output_files": "data/audit/schedule_seeds_preview.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "seed_url_preview",
+      "input_files": "data/audit/seed_appointment_url_preview.json",
+      "output_files": "data/audit/seed_appointment_url_preview.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "internal_dynamic_seed_preview",
+      "input_files": "data/audit/internal_dynamic_seed_preview.json",
+      "output_files": "data/audit/internal_dynamic_seed_preview.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "presentation_policy",
+      "input_files": "data/audit/dynamic_offer_presentation_policy_report.json",
+      "output_files": "data/audit/dynamic_offer_presentation_policy_report.json",
+      "total_count": 5,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "rendered_proof",
+      "input_files": "data/audit/rendered_dynamic_offer_proof.json",
+      "output_files": "data/audit/rendered_dynamic_offer_proof.json",
+      "total_count": 5,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "schedule_future",
+      "input_files": "docs/data/schedule_future.json",
+      "output_files": "docs/data/schedule_future.json",
+      "total_count": 220,
+      "august_count": 3,
+      "notes": ""
+    },
+    {
+      "stage": "sessions_current",
+      "input_files": "data/sessions_current.json",
+      "output_files": "data/sessions_current.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": "File missing or non-row output."
+    },
+    {
+      "stage": "slug_hubs",
+      "input_files": "data/config/slug_hubs.json",
+      "output_files": "data/config/slug_hubs.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "course_catalog",
+      "input_files": "data/config/course_catalog.json",
+      "output_files": "data/config/course_catalog.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "course_map",
+      "input_files": "data/config/course_map.json",
+      "output_files": "data/config/course_map.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    }
+  ],
+  "heartsaver": [
+    {
+      "stage": "raw_class_report",
+      "input_files": "data/raw/classes_raw_live.csv",
+      "output_files": "",
+      "total_count": 545,
+      "august_count": 0,
+      "notes": "Existing Enrollware class safety-net rows."
+    },
+    {
+      "stage": "visible_rendered_pages",
+      "input_files": "docs/bls.html; docs/acls.html; docs/pals.html; docs/courses/heartsaver-first-aid-cpr-aed.html; docs/courses/heartsaver-cpr-aed.html; docs/courses/heartsaver-pediatric-first-aid-cpr-aed.html; docs/heartsaver.html; docs/hsi.html; docs/arc.html",
+      "output_files": "docs/*.html",
+      "total_count": 227,
+      "august_count": 0,
+      "notes": "Rows parsed from customer-facing stacked pages."
+    },
+    {
+      "stage": "dynamic_offers",
+      "input_files": "data/audit/dynamic_offers_preview.json",
+      "output_files": "data/audit/dynamic_offers_preview.json",
+      "total_count": 690,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "public_sellable",
+      "input_files": "data/audit/public_sellable_offers_preview.json",
+      "output_files": "data/audit/public_sellable_offers_preview.json",
+      "total_count": 14,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "schedule_seeds",
+      "input_files": "data/audit/schedule_seeds_preview.json",
+      "output_files": "data/audit/schedule_seeds_preview.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "seed_url_preview",
+      "input_files": "data/audit/seed_appointment_url_preview.json",
+      "output_files": "data/audit/seed_appointment_url_preview.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "internal_dynamic_seed_preview",
+      "input_files": "data/audit/internal_dynamic_seed_preview.json",
+      "output_files": "data/audit/internal_dynamic_seed_preview.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "presentation_policy",
+      "input_files": "data/audit/dynamic_offer_presentation_policy_report.json",
+      "output_files": "data/audit/dynamic_offer_presentation_policy_report.json",
+      "total_count": 5,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "rendered_proof",
+      "input_files": "data/audit/rendered_dynamic_offer_proof.json",
+      "output_files": "data/audit/rendered_dynamic_offer_proof.json",
+      "total_count": 5,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "schedule_future",
+      "input_files": "docs/data/schedule_future.json",
+      "output_files": "docs/data/schedule_future.json",
+      "total_count": 220,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "sessions_current",
+      "input_files": "data/sessions_current.json",
+      "output_files": "data/sessions_current.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": "File missing or non-row output."
+    },
+    {
+      "stage": "slug_hubs",
+      "input_files": "data/config/slug_hubs.json",
+      "output_files": "data/config/slug_hubs.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "course_catalog",
+      "input_files": "data/config/course_catalog.json",
+      "output_files": "data/config/course_catalog.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    },
+    {
+      "stage": "course_map",
+      "input_files": "data/config/course_map.json",
+      "output_files": "data/config/course_map.json",
+      "total_count": 0,
+      "august_count": 0,
+      "notes": ""
+    }
+  ],
+  "filtering_causes_to_review": [
+    "date window too short",
+    "seed output not consumed by pages",
+    "missing appointmentDayId",
+    "course_key mismatch",
+    "stale generated output",
+    "inside_minimum_lead_time"
+  ]
+}

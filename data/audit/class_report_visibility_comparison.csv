@@ -1,0 +1,8 @@
+course_key,total_visible_rows,unknown_rows,visible_rows_matching_class_report,visible_rows_not_found_in_class_report,visible_rows_with_appointmentDayId_links,visible_rows_with_check_request_cta,visible_rows_with_enroll_id_links
+aha_acls,30,0,30,0,0,0,30
+aha_bls,120,0,115,5,5,5,115
+aha_heartsaver_cpr_aed,3,0,0,3,3,3,0
+aha_heartsaver_first_aid_cpr_aed,44,0,42,2,2,2,42
+aha_heartsaver_pediatric_first_aid_cpr_aed,6,0,5,1,1,1,5
+aha_pals,22,0,22,0,0,0,22
+hsi,2,0,1,1,1,1,1

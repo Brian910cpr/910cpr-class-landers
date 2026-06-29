@@ -1,0 +1,15 @@
+august_count,input_files,notes,output_files,stage,total_count
+0,data/raw/classes_raw_live.csv,Existing Enrollware class safety-net rows.,,raw_class_report,545
+0,docs/bls.html; docs/acls.html; docs/pals.html; docs/courses/heartsaver-first-aid-cpr-aed.html; docs/courses/heartsaver-cpr-aed.html; docs/courses/heartsaver-pediatric-first-aid-cpr-aed.html; docs/heartsaver.html; docs/hsi.html; docs/arc.html,Rows parsed from customer-facing stacked pages.,docs/*.html,visible_rendered_pages,227
+0,data/audit/dynamic_offers_preview.json,,data/audit/dynamic_offers_preview.json,dynamic_offers,690
+0,data/audit/public_sellable_offers_preview.json,,data/audit/public_sellable_offers_preview.json,public_sellable,14
+0,data/audit/schedule_seeds_preview.json,,data/audit/schedule_seeds_preview.json,schedule_seeds,0
+0,data/audit/seed_appointment_url_preview.json,,data/audit/seed_appointment_url_preview.json,seed_url_preview,0
+0,data/audit/internal_dynamic_seed_preview.json,,data/audit/internal_dynamic_seed_preview.json,internal_dynamic_seed_preview,0
+0,data/audit/dynamic_offer_presentation_policy_report.json,,data/audit/dynamic_offer_presentation_policy_report.json,presentation_policy,5
+0,data/audit/rendered_dynamic_offer_proof.json,,data/audit/rendered_dynamic_offer_proof.json,rendered_proof,5
+0,docs/data/schedule_future.json,,docs/data/schedule_future.json,schedule_future,220
+0,data/sessions_current.json,File missing or non-row output.,data/sessions_current.json,sessions_current,0
+0,data/config/slug_hubs.json,,data/config/slug_hubs.json,slug_hubs,0
+0,data/config/course_catalog.json,,data/config/course_catalog.json,course_catalog,0
+0,data/config/course_map.json,,data/config/course_map.json,course_map,0
