@@ -1,0 +1,112 @@
+{
+  "generated_at": "2026-06-29T00:50:39",
+  "course_master_authoritative": false,
+  "rule_categories": {
+    "existing_enrollware_class": "Allowed when it matches Class Report and has /enroll?id= URL; dynamic flags do not control real scheduled classes.",
+    "appointment_seed": "Requires appointment_seed_allowed=true or explicit exception, reviewed mapping, appointmentDayId, startTime, page/card, and no scheduling review flag.",
+    "dynamic_offer": "Requires dynamic_offer_allowed=true, reviewed mapping, public sellable filtering, and no scheduling review flag.",
+    "request_only": "Generated request-only rows require dynamic gate review and must not create checkout/class rows."
+  },
+  "stats": {
+    "total_rows": 216,
+    "allowed_rows": 216,
+    "blocked_rows": 0,
+    "by_source": {
+      "existing_enrollware_class": 215,
+      "appointment_seed": 1
+    },
+    "blocked_reasons": {}
+  },
+  "violations": [],
+  "visible_despite_dynamic_offer_allowed_false": [],
+  "visible_despite_appointment_seed_allowed_false": [],
+  "visible_despite_review_needed_for_scheduling_true": [],
+  "appointment_seed_violations": [],
+  "august": {
+    "bls_wilmington_visible_rows": [
+      {
+        "course_key": "aha_bls",
+        "courseId": "",
+        "course_display_name": "AHA BLS Provider (Initial)",
+        "date": "2026-08-14",
+        "time": "12:45 PM",
+        "row_source": "existing_enrollware_class",
+        "visible_page": "/bls.html",
+        "visible_card_or_tabs": "",
+        "dynamic_offer_allowed": "",
+        "appointment_seed_allowed": "",
+        "review_needed_for_scheduling": "",
+        "allowed_by_rule": "yes",
+        "reason": "existing_enrollware_class_allowed",
+        "appointmentDayId": "",
+        "source_offer_id": "",
+        "url": "https://coastalcprtraining.enrollware.com/enroll?id=13601250"
+      },
+      {
+        "course_key": "aha_bls",
+        "courseId": "",
+        "course_display_name": "AHA BLS Provider (Renewal)",
+        "date": "2026-08-10",
+        "time": "9:00 AM",
+        "row_source": "existing_enrollware_class",
+        "visible_page": "/bls.html",
+        "visible_card_or_tabs": "",
+        "dynamic_offer_allowed": "",
+        "appointment_seed_allowed": "",
+        "review_needed_for_scheduling": "",
+        "allowed_by_rule": "yes",
+        "reason": "existing_enrollware_class_allowed",
+        "appointmentDayId": "",
+        "source_offer_id": "",
+        "url": "https://coastalcprtraining.enrollware.com/enroll?id=12946259"
+      },
+      {
+        "course_key": "hsi_bls_challenge",
+        "courseId": "463743",
+        "course_display_name": "HSI BLS Challenge",
+        "date": "2026-08-14",
+        "time": "12:45 PM",
+        "row_source": "existing_enrollware_class",
+        "visible_page": "/hsi.html",
+        "visible_card_or_tabs": "",
+        "dynamic_offer_allowed": "false",
+        "appointment_seed_allowed": "false",
+        "review_needed_for_scheduling": "",
+        "allowed_by_rule": "yes",
+        "reason": "existing_enrollware_class_allowed",
+        "appointmentDayId": "",
+        "source_offer_id": "",
+        "url": "https://coastalcprtraining.enrollware.com/enroll?id=13601272"
+      }
+    ],
+    "heartsaver_wilmington_visible_rows": [],
+    "hidden_august_bls_or_heartsaver_dynamic_rows": []
+  },
+  "july_4_appointment_seed_rows": [
+    {
+      "course_key": "hsi_bls_adult_first_aid_blended",
+      "courseId": "445670",
+      "course_display_name": "HSI BLS and Adult First Aid | Blended Learning",
+      "date": "2026-07-04",
+      "time": "2:45 PM - 3:30 PM",
+      "row_source": "appointment_seed",
+      "visible_page": "/hsi.html",
+      "visible_card_or_tabs": "['hsi-bls-fa']",
+      "dynamic_offer_allowed": "true",
+      "appointment_seed_allowed": "true",
+      "review_needed_for_scheduling": "",
+      "allowed_by_rule": "yes",
+      "reason": "appointment_seed_allowed_by_course_master_gate",
+      "appointmentDayId": "260683",
+      "source_offer_id": "offer-445670-instructor_24057895173-20260704-1445",
+      "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A45%20PM&courseId=445670"
+    }
+  ],
+  "minimum_safe_fix": [
+    "Keep existing Class Report rows rendering even when dynamic flags are false.",
+    "Suppress appointment seeds whose Course Master record is not appointment_seed_allowed or still needs scheduling review.",
+    "Suppress generated dynamic offers whose Course Master record is not dynamic_offer_allowed or still needs scheduling review.",
+    "Preserve only reviewed appointment seeds with appointmentDayId, startTime, courseId, page/card, and location traceability.",
+    "Make August visibility explicit with real Enrollware rows before relying on seed generation."
+  ]
+}

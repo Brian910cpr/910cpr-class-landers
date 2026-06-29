@@ -11,14 +11,14 @@ Read-only audit. No Enrollware calls, appointments, public pages, Worker setting
 
 ## Counts
 
-- Existing Enrollware classes shown: 223
+- Existing Enrollware classes shown: 220
 - Dynamic appointment-seed offers generated: 690
 - Public sellable dynamic appointment-seed offers: 14
 - Dynamic offers blocked by occupancy overlap: 166
 - Dynamic offers blocked by lead time: 644
 - Dynamic offers blocked by insufficient gap: 85
 - Dynamic offers blocked by missing IDs: 300
-- Public sellable total: 237
+- Public sellable total: 234
 
 ## Top Public Filter Rejection Reasons
 
@@ -34,9 +34,6 @@ Read-only audit. No Enrollware calls, appointments, public pages, Worker setting
 
 | Source | Offer | Course | Instructor | Location | Display | Lock | Overlap | Sellable | Reason |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| enrollware_existing_class | `12775784` | AHA Heartsaver First Aid CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-27T17:30:00 to 2026-06-27T18:15:00 | 2026-06-27T17:30:00 to 2026-06-27T18:15:00 | no_overlap | True | included_in_docs_data_schedule_future |
-| enrollware_existing_class | `12774582` | AHA BLS Provider | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-27T18:15:00 to 2026-06-27T20:15:00 | 2026-06-27T18:15:00 to 2026-06-27T20:15:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |
-| enrollware_existing_class | `12775306` | AHA BLS Provider Renewal | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-27T18:15:00 to 2026-06-27T20:15:00 | 2026-06-27T18:15:00 to 2026-06-27T20:15:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |
 | enrollware_existing_class | `12774032` | AHA ACLS HeartCode | Nicholas Tripp | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-29T08:30:00 to 2026-06-29T09:15:00 | 2026-06-29T08:30:00 to 2026-06-29T09:15:00 | no_overlap | True | included_in_docs_data_schedule_future |
 | enrollware_existing_class | `13652934` | AHA BLS Provider | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-29T09:15:00 to 2026-06-29T11:15:00 | 2026-06-29T09:15:00 to 2026-06-29T11:15:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |
 | enrollware_existing_class | `13652937` | AHA BLS Provider Renewal | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office | 2026-06-29T09:15:00 to 2026-06-29T11:15:00 | 2026-06-29T09:15:00 to 2026-06-29T11:15:00 | overlaps_existing_class | True | included_in_docs_data_schedule_future |

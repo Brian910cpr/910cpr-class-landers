@@ -7,6 +7,16 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.build_slug_hubs import (
+    APPOINTMENT_COURSE_TAB_IDS,
+    APPOINTMENT_HUB_BY_FAMILY,
+    appointment_display_time,
+    build_registration_url,
+    course_master_public_row_gate,
+    load_course_catalog_by_id,
+    load_course_master_by_id,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
@@ -185,6 +195,34 @@ def choice_from_offer(offer: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def public_sellable_appointment_gate(offer: dict[str, Any]) -> dict[str, Any]:
+    course_id = clean_text(offer.get("course_id"))
+    catalog = load_course_catalog_by_id().get(course_id, {})
+    course_key = clean_text(offer.get("course_key") or catalog.get("course_key"))
+    course_family = clean_text(offer.get("course_family") or catalog.get("family"))
+    hub_slug = APPOINTMENT_HUB_BY_FAMILY.get(course_family, "")
+    tab_ids = sorted(APPOINTMENT_COURSE_TAB_IDS.get(course_key, set()))
+    appointment_day_id = clean_text(offer.get("appointmentDayId"))
+    start_time = clean_text(appointment_display_time(offer) or offer.get("start_time") or compact_time(offer_start(offer)))
+    registration_url = ""
+    if appointment_day_id and start_time and course_id:
+        try:
+            registration_url = build_registration_url(int(appointment_day_id), appointment_display_time(offer), course_id)
+        except (AttributeError, TypeError, ValueError):
+            registration_url = ""
+    return course_master_public_row_gate(
+        row_source="appointment_seed",
+        course_id=course_id,
+        course_key=course_key,
+        hub_slug=hub_slug,
+        tab_ids=tab_ids,
+        appointment_day_id=appointment_day_id,
+        start_time=start_time,
+        registration_url=registration_url,
+        course_master_by_id=load_course_master_by_id(),
+    )
+
+
 def audit_row(
     offer: dict[str, Any],
     *,
@@ -218,7 +256,24 @@ def audit_row(
 
 
 def apply_presentation_policy(public_offers: list[dict[str, Any]], anchors: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
-    offers = [offer for offer in public_offers if isinstance(offer, dict)]
+    source_offers = [offer for offer in public_offers if isinstance(offer, dict)]
+    offers: list[dict[str, Any]] = []
+    gate_suppressed_rows: list[dict[str, Any]] = []
+    for offer in source_offers:
+        gate = public_sellable_appointment_gate(offer)
+        if gate["allowed"]:
+            offers.append(offer)
+            continue
+        gate_suppressed_rows.append(audit_row(
+            offer,
+            group_start=offer_consumption_start(offer),
+            group_end=offer_consumption_end(offer),
+            anchor_exists=False,
+            nearest_anchor=None,
+            presentation_mode="suppressed_course_master_gate",
+            public_render_decision="suppress_course_master_gate",
+            reason="; ".join(gate["reasons"]),
+        ))
     by_window: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for offer in offers:
         by_window[availability_group_key(offer)].append(offer)
@@ -228,7 +283,7 @@ def apply_presentation_policy(public_offers: list[dict[str, Any]], anchors: list
     for offer in offers:
         by_course_window[course_window_key(offer)].append(offer)
 
-    audit_rows: list[dict[str, Any]] = []
+    audit_rows: list[dict[str, Any]] = list(gate_suppressed_rows)
     render_offers: list[dict[str, Any]] = []
     for key, group in sorted(by_course_window.items()):
         sorted_group = sorted(group, key=lambda item: (offer_start(item) or datetime.max, clean_text(item.get("offer_id"))))
@@ -351,7 +406,9 @@ def apply_presentation_policy(public_offers: list[dict[str, Any]], anchors: list
                 ))
 
     stats = {
-        "public_sellable_dynamic_candidates": len(offers),
+        "public_sellable_dynamic_candidates": len(source_offers),
+        "course_master_gate_eligible_candidates": len(offers),
+        "suppressed_course_master_gate": len(gate_suppressed_rows),
         "rendered_anchor_stack_offers": sum(1 for offer in render_offers if str(offer.get("presentation_mode", "")).startswith("anchor_stack")),
         "rendered_flexible_start_windows": sum(1 for offer in render_offers if offer.get("presentation_mode") == "flexible_start_window"),
         "suppressed_adjacent_duplicates": sum(1 for row in audit_rows if row.get("presentation_mode") == "suppressed_adjacent_candidate"),
@@ -371,6 +428,8 @@ def render_markdown(stats: dict[str, Any], audit_rows: list[dict[str, Any]], ren
         "## Summary",
         "",
         f"- Public sellable dynamic candidates: {stats['public_sellable_dynamic_candidates']}",
+        f"- Course Master gate eligible candidates: {stats['course_master_gate_eligible_candidates']}",
+        f"- Suppressed by Course Master gate: {stats['suppressed_course_master_gate']}",
         f"- Rendered anchor-stack offers: {stats['rendered_anchor_stack_offers']}",
         f"- Rendered flexible-start windows: {stats['rendered_flexible_start_windows']}",
         f"- Suppressed adjacent duplicates: {stats['suppressed_adjacent_duplicates']}",

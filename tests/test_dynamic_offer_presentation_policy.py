@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import unittest
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from scripts import build_slug_hubs
+from scripts import dynamic_offer_presentation_policy as presentation
 from scripts.dynamic_offer_presentation_policy import apply_presentation_policy
 
 
@@ -46,7 +48,8 @@ class DynamicOfferPresentationPolicyTest(unittest.TestCase):
             "source": "test",
         }]
 
-        render_offers, audit_rows, stats = apply_presentation_policy(offers, anchors)
+        with patch.object(presentation, "public_sellable_appointment_gate", return_value={"allowed": True, "reasons": ["test_allowed"]}):
+            render_offers, audit_rows, stats = apply_presentation_policy(offers, anchors)
 
         self.assertEqual(1, len(render_offers))
         self.assertEqual("09:00", render_offers[0]["start_time"])
@@ -70,7 +73,8 @@ class DynamicOfferPresentationPolicyTest(unittest.TestCase):
             "source": "test",
         }]
 
-        render_offers, audit_rows, _stats = apply_presentation_policy(offers, anchors)
+        with patch.object(presentation, "public_sellable_appointment_gate", return_value={"allowed": True, "reasons": ["test_allowed"]}):
+            render_offers, audit_rows, _stats = apply_presentation_policy(offers, anchors)
 
         self.assertEqual("07:00", render_offers[0]["start_time"])
         self.assertEqual("anchor_stack_before", render_offers[0]["presentation_mode"])
@@ -83,7 +87,11 @@ class DynamicOfferPresentationPolicyTest(unittest.TestCase):
             for index in range(3)
         ]
 
-        render_offers, audit_rows, stats = apply_presentation_policy(offers, [])
+        with patch.object(presentation, "public_sellable_appointment_gate", return_value={"allowed": True, "reasons": ["test_allowed"]}):
+            render_offers, audit_rows, stats = apply_presentation_policy(offers, [])
+
+        self.assertEqual(3, stats["course_master_gate_eligible_candidates"])
+        self.assertEqual(0, stats["suppressed_course_master_gate"])
 
         self.assertEqual(1, len(render_offers))
         self.assertEqual("flexible_start_window", render_offers[0]["presentation_mode"])
@@ -93,6 +101,17 @@ class DynamicOfferPresentationPolicyTest(unittest.TestCase):
         self.assertEqual(1, stats["rendered_flexible_start_windows"])
         self.assertEqual(2, stats["suppressed_adjacent_duplicates"])
         self.assertTrue(any(row["public_render_decision"] == "suppress_as_duplicate_adjacent_start" for row in audit_rows))
+
+    def test_course_master_gate_suppresses_unreviewed_candidate_before_presentation(self) -> None:
+        offers = [offer("329495", datetime(2026, 7, 4, 14, 30), consumption=90)]
+
+        with patch.object(presentation, "public_sellable_appointment_gate", return_value={"allowed": False, "reasons": ["appointment_seed_not_allowed"]}):
+            render_offers, audit_rows, stats = apply_presentation_policy(offers, [])
+
+        self.assertEqual([], render_offers)
+        self.assertEqual(1, stats["suppressed_course_master_gate"])
+        self.assertEqual("suppressed_course_master_gate", audit_rows[0]["presentation_mode"])
+        self.assertEqual("suppress_course_master_gate", audit_rows[0]["public_render_decision"])
 
     def test_flexible_start_card_renders_choice_links_without_repeated_cards(self) -> None:
         row = {

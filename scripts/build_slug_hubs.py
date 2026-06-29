@@ -49,6 +49,7 @@ PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH = ROOT / "data" / "audit" / "public_sellable
 PRESENTATION_POLICY_PREVIEW_PATH = ROOT / "data" / "audit" / "dynamic_offer_presentation_policy_report.json"
 UNIVERSAL_OFFER_INVENTORY_PATH = ROOT / "data" / "audit" / "universal_offer_inventory.json"
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
+COURSE_MASTER_PATH = ROOT / "data" / "config" / "course_master.json"
 APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 LOCATION_RESOURCE_MAP_PATH = ROOT / "data" / "config" / "location_resource_map.json"
 COURSE_VISIBILITY_POLICY_PATH = ROOT / "data" / "config" / "course_visibility_policy.json"
@@ -237,6 +238,107 @@ def load_course_catalog_by_id() -> dict[str, dict[str, Any]]:
     return catalog
 
 
+def load_course_master_by_id() -> dict[str, dict[str, Any]]:
+    if not COURSE_MASTER_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(COURSE_MASTER_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    courses = payload.get("courses", []) if isinstance(payload, dict) else []
+    by_id: dict[str, dict[str, Any]] = {}
+    for course in courses:
+        if not isinstance(course, dict):
+            continue
+        course_id = normalize_space(course.get("enrollware_course_id") or course.get("course_id"))
+        if course_id:
+            by_id[course_id] = course
+    return by_id
+
+
+def course_master_public_row_gate(
+    *,
+    row_source: str,
+    course_id: str | None,
+    course_key: str | None,
+    hub_slug: str | None,
+    tab_ids: list[str] | set[str] | tuple[str, ...] | None,
+    appointment_day_id: str | int | None = None,
+    start_time: str | None = None,
+    registration_url: str | None = None,
+    course_master_by_id: dict[str, dict[str, Any]] | None = None,
+    explicit_exception: bool = False,
+) -> dict[str, Any]:
+    """Return the public-row Course Master gate decision.
+
+    Real Enrollware classes are scheduled inventory and are not controlled by
+    dynamic/seed eligibility flags. Generated appointment and dynamic rows must
+    pass the reviewed scheduling gates before they are allowed to render.
+    """
+    source = normalize_space(row_source)
+    normalized_course_id = normalize_space(course_id)
+    normalized_course_key = normalize_space(course_key)
+    normalized_hub = normalize_space(hub_slug)
+    normalized_tabs = sorted({normalize_space(tab_id) for tab_id in (tab_ids or []) if normalize_space(tab_id)})
+    normalized_start = normalize_space(start_time)
+    normalized_url = normalize_space(registration_url)
+    master = course_master_by_id if isinstance(course_master_by_id, dict) else load_course_master_by_id()
+    course = master.get(normalized_course_id, {})
+    reasons: list[str] = []
+
+    if source == "existing_enrollware_class":
+        if not normalized_course_key or normalized_course_key.upper() == "UNKNOWN":
+            reasons.append("unknown_course_key")
+        if not normalized_hub:
+            reasons.append("missing_reviewed_public_page_or_card")
+        if normalized_url and "/enroll?id=" not in normalized_url:
+            reasons.append("existing_class_requires_enroll_id_url")
+        return {
+            "allowed": not reasons,
+            "row_source": source,
+            "reasons": reasons or ["existing_enrollware_class_allowed"],
+            "course_master_status": "not_required_for_dynamic_flags",
+        }
+
+    if source not in {"appointment_seed", "dynamic_offer", "request_only"}:
+        reasons.append("unsupported_row_source")
+
+    if not normalized_course_id:
+        reasons.append("missing_course_id")
+    if not normalized_course_key or normalized_course_key.upper() == "UNKNOWN":
+        reasons.append("unknown_course_key")
+    if not normalized_hub or not normalized_tabs:
+        reasons.append("missing_reviewed_public_page_or_card")
+    if not course:
+        reasons.append("missing_course_master_record")
+    if course.get("review_needed_for_scheduling") is True:
+        reasons.append("review_needed_for_scheduling")
+
+    if source == "appointment_seed":
+        if not appointment_day_id:
+            reasons.append("missing_appointmentDayId")
+        if not normalized_start:
+            reasons.append("missing_startTime")
+        if "appointmentDayId=" not in normalized_url:
+            reasons.append("missing_appointment_url")
+        if course and course.get("appointment_seed_allowed") is not True and not explicit_exception:
+            reasons.append("appointment_seed_not_allowed")
+
+    if source == "dynamic_offer":
+        if course and course.get("dynamic_offer_allowed") is not True and not explicit_exception:
+            reasons.append("dynamic_offer_not_allowed")
+
+    if source == "request_only" and course and course.get("dynamic_offer_allowed") is not True and not explicit_exception:
+        reasons.append("request_only_dynamic_offer_not_allowed")
+
+    return {
+        "allowed": not reasons,
+        "row_source": source,
+        "reasons": reasons or [f"{source}_allowed_by_course_master_gate"],
+        "course_master_status": "checked",
+    }
+
+
 def load_active_appointment_containers() -> list[dict[str, Any]]:
     if not APPOINTMENT_CONTAINERS_PATH.exists():
         return []
@@ -271,8 +373,7 @@ def load_public_sellable_offer_index() -> dict[str, dict[str, Any]]:
                 offer_id = normalize_space(offer.get("offer_id"))
                 if offer_id:
                     indexed[offer_id] = offer
-        if indexed:
-            return indexed
+        return indexed
     if not PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH.exists():
         return {}
     try:
@@ -512,6 +613,18 @@ def build_hub_seed_offer_from_url_preview(
     end_datetime = normalize_space(preview.get("appointment_display_end") or public_offer.get("appointment_display_end") or public_offer.get("end_datetime"))
     if not start_datetime:
         return None
+    gate = course_master_public_row_gate(
+        row_source="appointment_seed",
+        course_id=course_id,
+        course_key=course_key,
+        hub_slug=hub_slug,
+        tab_ids=sorted(APPOINTMENT_COURSE_TAB_IDS.get(course_key, set())),
+        appointment_day_id=appointment_day_id,
+        start_time=start_time_query,
+        registration_url=url,
+    )
+    if not gate["allowed"]:
+        return None
 
     return {
         "hub_slug": hub_slug,
@@ -564,6 +677,19 @@ def build_hub_seed_offer_from_public_sellable(
             return None
         appointment_day_id = normalize_space(computed_day_id)
     url = build_registration_url(int(appointment_day_id), start_time, course_id)
+    tab_ids = sorted(APPOINTMENT_COURSE_TAB_IDS.get(course_key, set()))
+    gate = course_master_public_row_gate(
+        row_source="appointment_seed",
+        course_id=course_id,
+        course_key=course_key,
+        hub_slug=hub_slug,
+        tab_ids=tab_ids,
+        appointment_day_id=appointment_day_id,
+        start_time=start_time,
+        registration_url=url,
+    )
+    if not gate["allowed"]:
+        return None
     flexible_start_choices = []
     for choice in public_offer.get("flexible_start_choices", []) if isinstance(public_offer.get("flexible_start_choices"), list) else []:
         if not isinstance(choice, dict):
@@ -585,7 +711,7 @@ def build_hub_seed_offer_from_public_sellable(
         return None
     return {
         "hub_slug": hub_slug,
-        "tab_ids": sorted(APPOINTMENT_COURSE_TAB_IDS.get(course_key, set())),
+        "tab_ids": tab_ids,
         "course_id": course_id,
         "course_key": course_key,
         "course_title": normalize_space(public_offer.get("course_title") or catalog.get("official_title")),
@@ -617,8 +743,49 @@ def build_hub_seed_offer_from_public_sellable(
     }
 
 
+def appointment_seed_offer_gate_decision(offer: dict[str, Any]) -> dict[str, Any]:
+    url = normalize_space(offer.get("appointment_registration_url"))
+    parsed_query = parse_qs(urlparse(url).query) if url else {}
+    course_id = normalize_space(
+        offer.get("course_id")
+        or offer.get("courseId")
+        or (parsed_query.get("courseId") or [""])[0]
+    )
+    appointment_day_id = normalize_space(
+        offer.get("appointmentDayId")
+        or offer.get("appointment_day_id")
+        or (parsed_query.get("appointmentDayId") or [""])[0]
+    )
+    start_time = normalize_space((parsed_query.get("startTime") or [""])[0])
+    if not start_time:
+        display_start = parse_dt(offer.get("appointment_display_start") or offer.get("start_datetime"))
+        start_time = appointment_display_time({"appointment_display_start": display_start.isoformat()}) if display_start else ""
+    course_key = normalize_space(offer.get("course_key"))
+    hub_slug = normalize_space(offer.get("hub_slug"))
+    course_master = load_course_master_by_id()
+    if course_id and not course_key:
+        course_key = normalize_space(course_master.get(course_id, {}).get("course_key"))
+    if course_id and not hub_slug:
+        family = normalize_space(course_master.get(course_id, {}).get("course_family"))
+        hub_slug = APPOINTMENT_HUB_BY_FAMILY.get(family, "")
+    tab_ids = offer.get("tab_ids") if isinstance(offer.get("tab_ids"), list) else []
+    if not tab_ids and course_key:
+        tab_ids = sorted(APPOINTMENT_COURSE_TAB_IDS.get(course_key, set()))
+    return course_master_public_row_gate(
+        row_source="appointment_seed",
+        course_id=course_id,
+        course_key=course_key,
+        hub_slug=hub_slug,
+        tab_ids=tab_ids,
+        appointment_day_id=appointment_day_id,
+        start_time=start_time,
+        registration_url=url,
+        course_master_by_id=course_master,
+    )
+
+
 def is_renderable_appointment_seed_offer(offer: dict[str, Any]) -> bool:
-    return (
+    base_allowed = (
         offer.get("public_display_item_type") == "appointment_seed_offer"
         and offer.get("display_item_type") == "appointment_seed_offer"
         and offer.get("seed_publication_mode") == "appointment_seed_offer"
@@ -630,6 +797,9 @@ def is_renderable_appointment_seed_offer(offer: dict[str, Any]) -> bool:
         and offer.get("public_schedule_row_created") is False
         and offer.get("render_source") == "auto_public_appointment_seed"
     )
+    if not base_allowed:
+        return False
+    return bool(appointment_seed_offer_gate_decision(offer)["allowed"])
 
 
 def parse_dt(value: str | None) -> datetime | None:
