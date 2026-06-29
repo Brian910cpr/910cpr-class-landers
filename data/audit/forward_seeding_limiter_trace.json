@@ -1,0 +1,1288 @@
+{
+  "summary": {
+    "generated_at": "2026-06-29T15:26:53",
+    "read_only": true,
+    "deployed": false,
+    "plain_answer": "The live snapshot stops at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events records RRULE text but does not expand recurring VEVENT instances; the runtime Brian snapshot requested a 60-day window through 2026-08-18, but only explicit VEVENT master DTSTART rows through 2026-07-04 were exported, and scripts/build_live_availability_snapshot.py then built availability only from those exported runtime events.",
+    "limiter": {
+      "file": "scripts/export_calendar_snapshots.py",
+      "function": "parse_ics_events",
+      "function_line": 195,
+      "specific_behavior": "VEVENT is appended only when DTSTART is inside window; RRULE/RDATE/EXDATE are stored in recurrence but no future occurrences are materialized.",
+      "export_days_constant": 60,
+      "export_days_line": 24,
+      "not_caused_by": [
+        "14-day seed selection window",
+        "appointmentDayId range",
+        "Course Master",
+        "public sellable maximum_days_out",
+        "dynamic generation occupancy filters"
+      ]
+    },
+    "path_a_seed_simulation": {
+      "entry_script": "scripts/build_seed_simulation_report.py",
+      "candidate_source_script": "scripts/build_candidate_slot_report.py",
+      "candidate_horizon_file": "data/config/candidate_horizons.json",
+      "horizon_start_date": "2026-08-01",
+      "lookahead_days": 45,
+      "seed_selection_window_days": 14,
+      "date_range": {
+        "start": "2026-08-03",
+        "end": "2026-09-14"
+      },
+      "august_rows": 92
+    },
+    "path_b_live_snapshot": {
+      "runtime_export_script": "scripts/export_calendar_snapshots.py",
+      "runtime_export_function": "export_calendar_snapshots",
+      "runtime_parse_function": "parse_ics_events",
+      "runtime_snapshot_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+      "runtime_snapshot_declared_start": "2026-06-19T17:21:21.208861-04:00",
+      "runtime_snapshot_declared_end": "2026-08-18T17:21:21.208861-04:00",
+      "runtime_snapshot_declared_days": 60,
+      "runtime_event_date_range": {
+        "start": "2026-06-19",
+        "end": "2026-07-04"
+      },
+      "runtime_rrule_event_count": 1,
+      "live_snapshot_script": "scripts/build_live_availability_snapshot.py",
+      "live_snapshot_function": "build_snapshot",
+      "live_inverse_horizon_function": "inverse_expansion_horizon",
+      "live_inverse_horizon_line": 389,
+      "calendar_source_inverse_expansion_horizon_days": 45,
+      "date_range": {
+        "start": "2026-06-21",
+        "end": "2026-07-04"
+      },
+      "august_rows": 0,
+      "dynamic_offer_date_range": {
+        "start": "2026-06-21",
+        "end": "2026-07-04"
+      },
+      "dynamic_august_offers": 0
+    },
+    "first_divergence": {
+      "file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+      "producer": "scripts/export_calendar_snapshots.py::parse_ics_events",
+      "reason": "The runtime snapshot contains an RRULE with UNTIL=20260801 but no expanded July/August occurrences for that recurring event."
+    },
+    "counts": {
+      "runtime_events_by_source": {
+        "amy_availability": 6,
+        "brian_do_not_schedule": 13
+      },
+      "runtime_rrule_events": 1,
+      "live_snapshot_blocks": 12,
+      "dynamic_offers": 690
+    },
+    "rrule_rows": [
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com",
+        "date": "2026-06-22",
+        "start": "2026-06-22T06:00:00",
+        "end": "2026-06-22T08:30:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+      }
+    ]
+  },
+  "horizon_config_candidates": [
+    {
+      "file": "data/config/candidate_horizons.json",
+      "line": 3,
+      "term_matches": "horizon",
+      "text": "\"description\": \"Report-only base candidate horizons for inverse-blocking instructors. These are search windows, not permanent business hours, and do not seed public classes.\",",
+      "relevance": "context"
+    },
+    {
+      "file": "data/config/candidate_horizons.json",
+      "line": 4,
+      "term_matches": "horizon",
+      "text": "\"candidate_horizons\": [",
+      "relevance": "context"
+    },
+    {
+      "file": "data/config/candidate_horizons.json",
+      "line": 6,
+      "term_matches": "horizon",
+      "text": "\"horizon_key\": \"brian_report_only_45_day_shipyard\",",
+      "relevance": "context"
+    },
+    {
+      "file": "data/config/candidate_horizons.json",
+      "line": 12,
+      "term_matches": "horizon;start_date",
+      "text": "\"horizon_start_date\": \"2026-08-01\",",
+      "relevance": "context"
+    },
+    {
+      "file": "data/config/candidate_horizons.json",
+      "line": 13,
+      "term_matches": "lookahead",
+      "text": "\"lookahead_days\": 45,",
+      "relevance": "seed_simulation_report_only_base_horizon"
+    },
+    {
+      "file": "data/config/seed_selection_rules.json",
+      "line": 13,
+      "term_matches": "14",
+      "text": "\"window_days\": 14,",
+      "relevance": "seed_selection_thinning_window_not_snapshot_limiter"
+    },
+    {
+      "file": "data/config/seed_selection_rules.json",
+      "line": 39,
+      "term_matches": "14",
+      "text": "\"window_days\": 14,",
+      "relevance": "seed_selection_thinning_window_not_snapshot_limiter"
+    },
+    {
+      "file": "data/config/seed_selection_rules.json",
+      "line": 64,
+      "term_matches": "14",
+      "text": "\"window_days\": 14,",
+      "relevance": "seed_selection_thinning_window_not_snapshot_limiter"
+    },
+    {
+      "file": "data/config/calendar_sources.json",
+      "line": 23,
+      "term_matches": "60",
+      "text": "\"calendar_id\": \"c_94724071aa31a0063fbc48be80fdc73d76e604cad5043ff088156eb97e50be97@group.calendar.google.com\",",
+      "relevance": "context"
+    },
+    {
+      "file": "data/config/calendar_sources.json",
+      "line": 69,
+      "term_matches": "60",
+      "text": "\"calendar_id\": \"c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com\",",
+      "relevance": "context"
+    },
+    {
+      "file": "data/config/calendar_sources.json",
+      "line": 79,
+      "term_matches": "horizon",
+      "text": "\"inverse_expansion_horizon_days\": 45,",
+      "relevance": "live_snapshot_inverse_gap_horizon_after_runtime_events_loaded"
+    },
+    {
+      "file": "data/config/calendar_sources.json",
+      "line": 82,
+      "term_matches": "90",
+      "text": "\"inverse_expansion_min_gap_minutes\": 90,",
+      "relevance": "context"
+    },
+    {
+      "file": "data/config/public_offer_policy.json",
+      "line": 3,
+      "term_matches": "preview",
+      "text": "\"description\": \"Read-only public sellability policy for filtering dynamic offer previews. This config does not publish offers, create appointments, or change Enrollware behavior.\",",
+      "relevance": "context"
+    },
+    {
+      "file": "data/config/public_offer_policy.json",
+      "line": 28,
+      "term_matches": "30",
+      "text": "\"30\",",
+      "relevance": "context"
+    },
+    {
+      "file": "data/config/public_offer_policy.json",
+      "line": 38,
+      "term_matches": "days_out;60",
+      "text": "\"maximum_days_out\": 60,",
+      "relevance": "public_filter_downstream_not_snapshot_limiter"
+    },
+    {
+      "file": "data/config/public_offer_policy.json",
+      "line": 52,
+      "term_matches": "until",
+      "text": "\"notes\": \"Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families.\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 19,
+      "term_matches": "snapshot",
+      "text": "RUNTIME_SNAPSHOT_DIR = ROOT / \"data\" / \"runtime\" / \"calendar_snapshots\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 21,
+      "term_matches": "snapshot",
+      "text": "SUMMARY_PATH = AUDIT_DIR / \"calendar_snapshot_export_summary.json\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 22,
+      "term_matches": "snapshot",
+      "text": "REPORT_PATH = AUDIT_DIR / \"calendar_snapshot_export_report.md\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 24,
+      "term_matches": "60",
+      "text": "EXPORT_DAYS = 60",
+      "relevance": "active_runtime_snapshot_export_window"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 142,
+      "term_matches": "30",
+      "text": "def fetch_ics(url: str, timeout: int = 30) -> str:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 143,
+      "term_matches": "snapshot",
+      "text": "request = urllib.request.Request(url, headers={\"User-Agent\": \"LANDERware-scheduler-read-only-snapshot/0.1\"})",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 257,
+      "term_matches": "snapshot",
+      "text": "current[\"read_only_snapshot\"] = True",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 275,
+      "term_matches": "snapshot",
+      "text": "def write_source_snapshot(",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 286,
+      "term_matches": "snapshot",
+      "text": "RUNTIME_SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 287,
+      "term_matches": "snapshot",
+      "text": "path = RUNTIME_SNAPSHOT_DIR / f\"{source_id}.json\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 291,
+      "term_matches": "snapshot",
+      "text": "\"read_only_snapshot\": True,",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 319,
+      "term_matches": "snapshot",
+      "text": "\"# Calendar Snapshot Export Report\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 323,
+      "term_matches": "snapshot",
+      "text": "\"Private event descriptions are stored only inside the local runtime snapshot JSON files and are not printed in this report.\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 328,
+      "term_matches": "snapshot",
+      "text": "f\"- Snapshots written: {summary['snapshots_written']}\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 335,
+      "term_matches": "snapshot",
+      "text": "\"| Source | Calendar ID Present | ICS URL Attempted | URL Source | Type | Status | Failure Reason | Events | Snapshot | Warning Count |\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 342,
+      "term_matches": "snapshot",
+      "text": "f\"`{item['snapshot_path']}` | {len(item.get('warnings', []))} |\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 353,
+      "term_matches": "snapshot",
+      "text": "def export_calendar_snapshots(fetcher: Callable[[str], str] = fetch_ics) -> dict[str, Any]:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 383,
+      "term_matches": "snapshot",
+      "text": "snapshot_path = write_source_snapshot(source, events, window_start, window_end, export_status, url_source, warnings, skipped)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 394,
+      "term_matches": "snapshot",
+      "text": "\"snapshot_path\": str(snapshot_path),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 401,
+      "term_matches": "snapshot",
+      "text": "\"read_only_snapshot_export\": True,",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 407,
+      "term_matches": "snapshot",
+      "text": "\"snapshots_written\": len(source_summaries),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 435,
+      "term_matches": "snapshot",
+      "text": "summary = export_calendar_snapshots()",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 436,
+      "term_matches": "snapshot",
+      "text": "print(\"Calendar snapshot export complete (READ ONLY).\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 440,
+      "term_matches": "snapshot",
+      "text": "print(f\"Snapshots written: {summary['snapshots_written']}\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 452,
+      "term_matches": "snapshot",
+      "text": "print(f\"- {item['snapshot_path']}\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 19,
+      "term_matches": "preview;snapshot;availability_snapshot",
+      "text": "SNAPSHOT_PATH = AUDIT_DIR / \"live_availability_snapshot_preview.json\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 20,
+      "term_matches": "snapshot;availability_snapshot",
+      "text": "REPORT_PATH = AUDIT_DIR / \"live_availability_snapshot_report.md\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 21,
+      "term_matches": "snapshot",
+      "text": "RUNTIME_CALENDAR_SNAPSHOT_DIR = ROOT / \"data\" / \"runtime\" / \"calendar_snapshots\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 23,
+      "term_matches": "snapshot",
+      "text": "LOCAL_SNAPSHOT_CANDIDATES = [",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 24,
+      "term_matches": "snapshot",
+      "text": "ROOT / \"data\" / \"calendar\" / \"live_calendar_events_snapshot.json\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 25,
+      "term_matches": "snapshot",
+      "text": "AUDIT_DIR / \"live_calendar_events_snapshot.json\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 26,
+      "term_matches": "snapshot",
+      "text": "ROOT / \"data\" / \"inventory\" / \"live_calendar_events_snapshot.json\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 34,
+      "term_matches": "horizon;60",
+      "text": "DEFAULT_INVERSE_EXPANSION_HORIZON_DAYS = 60",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 35,
+      "term_matches": "90",
+      "text": "DEFAULT_INVERSE_EXPANSION_MIN_GAP_MINUTES = 90",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 37,
+      "term_matches": "30",
+      "text": "DEFAULT_CLEANUP_BUFFER_MINUTES = 30",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 155,
+      "term_matches": "start_date",
+      "text": "raw_start = event.get(\"start\") or event.get(\"start_at\") or event.get(\"start_datetime\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 156,
+      "term_matches": "end_date",
+      "text": "raw_end = event.get(\"end\") or event.get(\"end_at\") or event.get(\"end_datetime\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 175,
+      "term_matches": "start_date",
+      "text": "raw_start = event.get(\"start\") or event.get(\"start_at\") or event.get(\"start_datetime\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 176,
+      "term_matches": "end_date",
+      "text": "raw_end = event.get(\"end\") or event.get(\"end_at\") or event.get(\"end_datetime\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 301,
+      "term_matches": "snapshot",
+      "text": "def source_snapshot_present(snapshot_payload: Any, source_key: str) -> bool:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 302,
+      "term_matches": "snapshot",
+      "text": "if not isinstance(snapshot_payload, dict):",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 304,
+      "term_matches": "snapshot",
+      "text": "events_by_source = snapshot_payload.get(\"events_by_source\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 307,
+      "term_matches": "snapshot",
+      "text": "if source_key in snapshot_payload:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 309,
+      "term_matches": "snapshot",
+      "text": "if isinstance(snapshot_payload.get(\"events\"), list):",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 310,
+      "term_matches": "snapshot",
+      "text": "return any(isinstance(event, dict) and event.get(\"calendar_source_key\") == source_key for event in snapshot_payload[\"events\"])",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 337,
+      "term_matches": "start_date",
+      "text": "\"start_datetime\": start.isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 338,
+      "term_matches": "end_date",
+      "text": "\"end_datetime\": end.isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 340,
+      "term_matches": "end_date",
+      "text": "\"end_date\": end.date().isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 352,
+      "term_matches": "preview",
+      "text": "\"read_only_preview\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 353,
+      "term_matches": "snapshot",
+      "text": "\"local_calendar_snapshot\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 365,
+      "term_matches": "start_date",
+      "text": "\"start_datetime\": start.isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 366,
+      "term_matches": "end_date",
+      "text": "\"end_datetime\": end.isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 368,
+      "term_matches": "end_date",
+      "text": "\"end_date\": end.date().isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 381,
+      "term_matches": "preview",
+      "text": "\"read_only_preview\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 382,
+      "term_matches": "snapshot",
+      "text": "\"local_calendar_snapshot\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 389,
+      "term_matches": "horizon",
+      "text": "def inverse_expansion_horizon(source: dict[str, Any], container_ranges: list[tuple[date, date, dict[str, Any]]]) -> tuple[datetime, datetime]:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 390,
+      "term_matches": "start_date",
+      "text": "configured_start = parse_dt(source.get(\"inverse_expansion_start_datetime\"))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 393,
+      "term_matches": "horizon",
+      "text": "horizon_days = int_or_default(source.get(\"inverse_expansion_horizon_days\"), DEFAULT_INVERSE_EXPANSION_HORIZON_DAYS)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 394,
+      "term_matches": "horizon",
+      "text": "end = start + timedelta(days=horizon_days)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 423,
+      "term_matches": "horizon",
+      "text": "horizon_start, horizon_end = inverse_expansion_horizon(source, container_ranges)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 453,
+      "term_matches": "horizon",
+      "text": "cursor_day = horizon_start.date()",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 454,
+      "term_matches": "horizon",
+      "text": "while datetime.combine(cursor_day, time.min) < horizon_end:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 456,
+      "term_matches": "horizon",
+      "text": "open_start = max(horizon_start, datetime.combine(cursor_day, day_start_time))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 457,
+      "term_matches": "horizon",
+      "text": "open_end = min(horizon_end, datetime.combine(cursor_day, day_end_time))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 459,
+      "term_matches": "horizon",
+      "text": "open_end = min(horizon_end, datetime.combine(cursor_day + timedelta(days=1), time.min))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 471,
+      "term_matches": "60",
+      "text": "if int((gap_end - gap_start).total_seconds() // 60) < min_gap_minutes:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 477,
+      "term_matches": "start_date",
+      "text": "\"start_datetime\": gap_start.isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 478,
+      "term_matches": "end_date",
+      "text": "\"end_datetime\": gap_end.isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 487,
+      "term_matches": "snapshot",
+      "text": "def load_runtime_snapshots() -> tuple[Path | None, Any | None, dict[str, str]]:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 489,
+      "term_matches": "snapshot",
+      "text": "if not RUNTIME_CALENDAR_SNAPSHOT_DIR.exists():",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 490,
+      "term_matches": "snapshot",
+      "text": "missing[str(RUNTIME_CALENDAR_SNAPSHOT_DIR)] = \"missing\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 492,
+      "term_matches": "snapshot",
+      "text": "snapshot_files = sorted(RUNTIME_CALENDAR_SNAPSHOT_DIR.glob(\"*.json\"))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 493,
+      "term_matches": "snapshot",
+      "text": "if not snapshot_files:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 494,
+      "term_matches": "snapshot",
+      "text": "missing[str(RUNTIME_CALENDAR_SNAPSHOT_DIR)] = \"no_snapshot_files\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 499,
+      "term_matches": "snapshot",
+      "text": "for path in snapshot_files:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 505,
+      "term_matches": "snapshot",
+      "text": "missing[str(path)] = \"invalid_snapshot_shape\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 514,
+      "term_matches": "snapshot",
+      "text": "return RUNTIME_CALENDAR_SNAPSHOT_DIR, {",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 515,
+      "term_matches": "snapshot",
+      "text": "\"snapshot_source\": \"runtime_calendar_snapshots\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 516,
+      "term_matches": "snapshot",
+      "text": "\"snapshot_files\": loaded_files,",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 521,
+      "term_matches": "snapshot",
+      "text": "def find_local_snapshot() -> tuple[Path | None, Any | None, dict[str, str]]:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 523,
+      "term_matches": "snapshot",
+      "text": "runtime_path, runtime_payload, runtime_missing = load_runtime_snapshots()",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 528,
+      "term_matches": "snapshot",
+      "text": "for path in LOCAL_SNAPSHOT_CANDIDATES:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 551,
+      "term_matches": "snapshot",
+      "text": "def events_for_source(snapshot_payload: Any, source_key: str) -> list[dict[str, Any]]:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 552,
+      "term_matches": "snapshot",
+      "text": "if not isinstance(snapshot_payload, dict):",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 554,
+      "term_matches": "snapshot",
+      "text": "raw = snapshot_payload.get(\"events_by_source\", {}).get(source_key)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 556,
+      "term_matches": "snapshot",
+      "text": "raw = snapshot_payload.get(source_key)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 557,
+      "term_matches": "snapshot",
+      "text": "if raw is None and isinstance(snapshot_payload.get(\"events\"), list):",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 558,
+      "term_matches": "snapshot",
+      "text": "raw = [event for event in snapshot_payload[\"events\"] if isinstance(event, dict) and event.get(\"calendar_source_key\") == source_key]",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 576,
+      "term_matches": "start_date",
+      "text": "\"start_datetime\": start.isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 577,
+      "term_matches": "end_date",
+      "text": "\"end_datetime\": end.isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 579,
+      "term_matches": "end_date",
+      "text": "\"end_date\": end.date().isoformat(),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 591,
+      "term_matches": "preview",
+      "text": "\"read_only_preview\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 592,
+      "term_matches": "snapshot",
+      "text": "\"local_calendar_snapshot\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 598,
+      "term_matches": "snapshot",
+      "text": "def build_snapshot(",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 602,
+      "term_matches": "snapshot",
+      "text": "local_snapshot_payload: Any,",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 621,
+      "term_matches": "snapshot",
+      "text": "events = events_for_source(local_snapshot_payload, source_key)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 622,
+      "term_matches": "snapshot",
+      "text": "snapshot_present = source_snapshot_present(local_snapshot_payload, source_key)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 623,
+      "term_matches": "snapshot",
+      "text": "if not events and not snapshot_present:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 627,
+      "term_matches": "snapshot",
+      "text": "\"reason_code\": \"local_calendar_snapshot_missing\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 628,
+      "term_matches": "snapshot",
+      "text": "\"message\": \"No local/mock calendar event snapshot found for this source; no availability blocks generated.\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 682,
+      "term_matches": "snapshot",
+      "text": "def render_report(stats: dict[str, Any], blocked: list[dict[str, Any]], local_snapshot_path: Path | None, missing: dict[str, str]) -> str:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 684,
+      "term_matches": "preview;snapshot",
+      "text": "\"# Live Availability Snapshot Preview Report\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 691,
+      "term_matches": "snapshot",
+      "text": "f\"- Local snapshot found: {local_snapshot_path if local_snapshot_path else 'None'}\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 708,
+      "term_matches": "snapshot",
+      "text": "\"## Missing Calendar Source Config / Snapshots\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 733,
+      "term_matches": "snapshot",
+      "text": "\"- Add a local/mock calendar event snapshot fixture and verify normalization before any live Google Calendar integration.\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 745,
+      "term_matches": "snapshot",
+      "text": "local_snapshot_path, local_snapshot_payload, local_snapshot_missing = find_local_snapshot()",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 757,
+      "term_matches": "snapshot",
+      "text": "missing.update(local_snapshot_missing)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 758,
+      "term_matches": "snapshot",
+      "text": "blocks, blocked, stats = build_snapshot(",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 762,
+      "term_matches": "snapshot",
+      "text": "local_snapshot_payload or {},",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 774,
+      "term_matches": "snapshot",
+      "text": "\"local_snapshot_path\": str(local_snapshot_path) if local_snapshot_path else None,",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 780,
+      "term_matches": "snapshot",
+      "text": "SNAPSHOT_PATH.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 781,
+      "term_matches": "snapshot",
+      "text": "REPORT_PATH.write_text(render_report(stats, blocked, local_snapshot_path, missing), encoding=\"utf-8\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 782,
+      "term_matches": "snapshot",
+      "text": "return {\"stats\": stats, \"missing\": missing, \"output_paths\": [SNAPSHOT_PATH, REPORT_PATH]}",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_live_availability_snapshot.py",
+      "line": 787,
+      "term_matches": "snapshot",
+      "text": "print(\"Live availability snapshot scaffold complete (READ ONLY).\")",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 24,
+      "term_matches": "horizon",
+      "text": "CANDIDATE_HORIZONS_PATH = CONFIG_DIR / \"candidate_horizons.json\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 30,
+      "term_matches": "60",
+      "text": "\"aha_acls_initial\": {\"course_key\": \"aha_acls_initial\", \"course_group\": \"ACLS\", \"duration_minutes\": 360},",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 32,
+      "term_matches": "60",
+      "text": "\"aha_pals_initial\": {\"course_key\": \"aha_pals_initial\", \"course_group\": \"PALS\", \"duration_minutes\": 360},",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 33,
+      "term_matches": "60",
+      "text": "\"aha_acls_heartcode_skills\": {\"course_key\": \"aha_acls_heartcode_skills\", \"course_group\": \"ACLS\", \"duration_minutes\": 60},",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 34,
+      "term_matches": "60",
+      "text": "\"aha_pals_heartcode_skills\": {\"course_key\": \"aha_pals_heartcode_skills\", \"course_group\": \"PALS\", \"duration_minutes\": 60},",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 35,
+      "term_matches": "90",
+      "text": "\"aha_bls_renewal\": {\"course_key\": \"aha_bls_renewal\", \"course_group\": \"BLS\", \"duration_minutes\": 90},",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 36,
+      "term_matches": "120",
+      "text": "\"aha_bls_initial\": {\"course_key\": \"aha_bls_initial\", \"course_group\": \"BLS\", \"duration_minutes\": 120},",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 39,
+      "term_matches": "120",
+      "text": "\"aha_heartsaver_cpr_aed\": {\"course_key\": \"aha_heartsaver_cpr_aed\", \"course_group\": \"Heartsaver\", \"duration_minutes\": 120},",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 42,
+      "term_matches": "120",
+      "text": "\"arc_bls\": {\"course_key\": \"arc_bls\", \"course_group\": \"ARC\", \"duration_minutes\": 120},",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 51,
+      "term_matches": "60",
+      "text": "return int((end - start).total_seconds() // 60)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 144,
+      "term_matches": "horizon",
+      "text": "def load_candidate_horizons() -> list[dict[str, Any]]:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 145,
+      "term_matches": "horizon",
+      "text": "if not CANDIDATE_HORIZONS_PATH.exists():",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 147,
+      "term_matches": "horizon",
+      "text": "payload = load_json(CANDIDATE_HORIZONS_PATH)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 148,
+      "term_matches": "horizon",
+      "text": "return [item for item in payload.get(\"candidate_horizons\", []) if isinstance(item, dict)]",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 230,
+      "term_matches": "horizon",
+      "text": "def expand_candidate_horizon(horizon: dict[str, Any]) -> tuple[list[dict[str, Any]], list[str]]:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 232,
+      "term_matches": "horizon;start_date",
+      "text": "start_date = parse_date(horizon.get(\"horizon_start_date\"))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 233,
+      "term_matches": "horizon;lookahead",
+      "text": "lookahead_days = int(horizon.get(\"lookahead_days\") or 0)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 234,
+      "term_matches": "lookahead;start_date",
+      "text": "if not start_date or lookahead_days <= 0:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 235,
+      "term_matches": "horizon;lookahead;start_date",
+      "text": "return [], [\"Candidate horizon is missing horizon_start_date or positive lookahead_days.\"]",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 238,
+      "term_matches": "horizon",
+      "text": "for day in horizon.get(\"candidate_day_rules\", {}).get(\"allowed_weekdays\", [])",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 241,
+      "term_matches": "horizon",
+      "text": "time_windows = [item for item in horizon.get(\"candidate_time_windows\", []) if isinstance(item, dict)]",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 243,
+      "term_matches": "lookahead",
+      "text": "for offset in range(lookahead_days):",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 244,
+      "term_matches": "start_date",
+      "text": "day = start_date + timedelta(days=offset)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 262,
+      "term_matches": "horizon",
+      "text": "\"location_key\": horizon.get(\"location_key\"),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 263,
+      "term_matches": "horizon",
+      "text": "\"horizon_key\": horizon.get(\"horizon_key\"),",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 265,
+      "term_matches": "horizon",
+      "text": "\"source_window_type\": \"BASE-HORIZON\",",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 276,
+      "term_matches": "horizon",
+      "text": "horizons: list[dict[str, Any]],",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 279,
+      "term_matches": "horizon",
+      "text": "horizon = next(",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 282,
+      "term_matches": "horizon",
+      "text": "for item in horizons",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 288,
+      "term_matches": "horizon",
+      "text": "if not horizon:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 289,
+      "term_matches": "horizon",
+      "text": "return [], [], [*availability_warnings, \"No active report-only candidate horizon configured for inverse-blocking instructor.\"], [], [], []",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 290,
+      "term_matches": "horizon",
+      "text": "base_windows, warnings = expand_candidate_horizon(horizon)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 310,
+      "term_matches": "horizon",
+      "text": "skipped.append(candidate_record(instructor_key, course, window, \"BASE-HORIZON\", f\"{rule_key} priority order\", \"course group not allowed for instructor\"))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 314,
+      "term_matches": "horizon",
+      "text": "skipped.append(candidate_record(instructor_key, course, window, \"BASE-HORIZON\", f\"{rule_key} priority order\", \"missing course duration\"))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 317,
+      "term_matches": "horizon",
+      "text": "skipped.append(candidate_record(instructor_key, course, window, \"BASE-HORIZON\", f\"{rule_key} priority order\", f\"duration {duration} exceeds open candidate window {window_minutes}\"))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 319,
+      "term_matches": "horizon",
+      "text": "candidates.append(candidate_record(instructor_key, course, window, \"BASE-HORIZON\", f\"{rule_key}: fits report-only inverse-blocking candidate horizon\"))",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 322,
+      "term_matches": "horizon",
+      "text": "\"Brian candidate horizon is report-only search scaffolding, not hard-coded recurring availability and not public class generation.\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 333,
+      "term_matches": "horizon",
+      "text": "horizons = load_candidate_horizons()",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_candidate_slot_report.py",
+      "line": 352,
+      "term_matches": "horizon",
+      "text": "horizons,",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/build_seed_simulation_report.py",
+      "line": 137,
+      "term_matches": "horizon",
+      "text": "\"Brian seed simulation requires future configured search horizon/base candidate windows.\"",
+      "relevance": "context"
+    }
+  ]
+}

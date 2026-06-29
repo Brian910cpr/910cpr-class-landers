@@ -1,0 +1,171 @@
+file,line,term_matches,text,relevance
+data/config/candidate_horizons.json,3,horizon,"""description"": ""Report-only base candidate horizons for inverse-blocking instructors. These are search windows, not permanent business hours, and do not seed public classes."",",context
+data/config/candidate_horizons.json,4,horizon,"""candidate_horizons"": [",context
+data/config/candidate_horizons.json,6,horizon,"""horizon_key"": ""brian_report_only_45_day_shipyard"",",context
+data/config/candidate_horizons.json,12,horizon;start_date,"""horizon_start_date"": ""2026-08-01"",",context
+data/config/candidate_horizons.json,13,lookahead,"""lookahead_days"": 45,",seed_simulation_report_only_base_horizon
+data/config/seed_selection_rules.json,13,14,"""window_days"": 14,",seed_selection_thinning_window_not_snapshot_limiter
+data/config/seed_selection_rules.json,39,14,"""window_days"": 14,",seed_selection_thinning_window_not_snapshot_limiter
+data/config/seed_selection_rules.json,64,14,"""window_days"": 14,",seed_selection_thinning_window_not_snapshot_limiter
+data/config/calendar_sources.json,23,60,"""calendar_id"": ""c_94724071aa31a0063fbc48be80fdc73d76e604cad5043ff088156eb97e50be97@group.calendar.google.com"",",context
+data/config/calendar_sources.json,69,60,"""calendar_id"": ""c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com"",",context
+data/config/calendar_sources.json,79,horizon,"""inverse_expansion_horizon_days"": 45,",live_snapshot_inverse_gap_horizon_after_runtime_events_loaded
+data/config/calendar_sources.json,82,90,"""inverse_expansion_min_gap_minutes"": 90,",context
+data/config/public_offer_policy.json,3,preview,"""description"": ""Read-only public sellability policy for filtering dynamic offer previews. This config does not publish offers, create appointments, or change Enrollware behavior."",",context
+data/config/public_offer_policy.json,28,30,"""30"",",context
+data/config/public_offer_policy.json,38,days_out;60,"""maximum_days_out"": 60,",public_filter_downstream_not_snapshot_limiter
+data/config/public_offer_policy.json,52,until,"""notes"": ""Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families.""",context
+scripts/export_calendar_snapshots.py,19,snapshot,"RUNTIME_SNAPSHOT_DIR = ROOT / ""data"" / ""runtime"" / ""calendar_snapshots""",context
+scripts/export_calendar_snapshots.py,21,snapshot,"SUMMARY_PATH = AUDIT_DIR / ""calendar_snapshot_export_summary.json""",context
+scripts/export_calendar_snapshots.py,22,snapshot,"REPORT_PATH = AUDIT_DIR / ""calendar_snapshot_export_report.md""",context
+scripts/export_calendar_snapshots.py,24,60,EXPORT_DAYS = 60,active_runtime_snapshot_export_window
+scripts/export_calendar_snapshots.py,142,30,"def fetch_ics(url: str, timeout: int = 30) -> str:",context
+scripts/export_calendar_snapshots.py,143,snapshot,"request = urllib.request.Request(url, headers={""User-Agent"": ""LANDERware-scheduler-read-only-snapshot/0.1""})",context
+scripts/export_calendar_snapshots.py,257,snapshot,"current[""read_only_snapshot""] = True",context
+scripts/export_calendar_snapshots.py,275,snapshot,def write_source_snapshot(,context
+scripts/export_calendar_snapshots.py,286,snapshot,"RUNTIME_SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)",context
+scripts/export_calendar_snapshots.py,287,snapshot,"path = RUNTIME_SNAPSHOT_DIR / f""{source_id}.json""",context
+scripts/export_calendar_snapshots.py,291,snapshot,"""read_only_snapshot"": True,",context
+scripts/export_calendar_snapshots.py,319,snapshot,"""# Calendar Snapshot Export Report"",",context
+scripts/export_calendar_snapshots.py,323,snapshot,"""Private event descriptions are stored only inside the local runtime snapshot JSON files and are not printed in this report."",",context
+scripts/export_calendar_snapshots.py,328,snapshot,"f""- Snapshots written: {summary['snapshots_written']}"",",context
+scripts/export_calendar_snapshots.py,335,snapshot,"""| Source | Calendar ID Present | ICS URL Attempted | URL Source | Type | Status | Failure Reason | Events | Snapshot | Warning Count |"",",context
+scripts/export_calendar_snapshots.py,342,snapshot,"f""`{item['snapshot_path']}` | {len(item.get('warnings', []))} |""",context
+scripts/export_calendar_snapshots.py,353,snapshot,"def export_calendar_snapshots(fetcher: Callable[[str], str] = fetch_ics) -> dict[str, Any]:",context
+scripts/export_calendar_snapshots.py,383,snapshot,"snapshot_path = write_source_snapshot(source, events, window_start, window_end, export_status, url_source, warnings, skipped)",context
+scripts/export_calendar_snapshots.py,394,snapshot,"""snapshot_path"": str(snapshot_path),",context
+scripts/export_calendar_snapshots.py,401,snapshot,"""read_only_snapshot_export"": True,",context
+scripts/export_calendar_snapshots.py,407,snapshot,"""snapshots_written"": len(source_summaries),",context
+scripts/export_calendar_snapshots.py,435,snapshot,summary = export_calendar_snapshots(),context
+scripts/export_calendar_snapshots.py,436,snapshot,"print(""Calendar snapshot export complete (READ ONLY)."")",context
+scripts/export_calendar_snapshots.py,440,snapshot,"print(f""Snapshots written: {summary['snapshots_written']}"")",context
+scripts/export_calendar_snapshots.py,452,snapshot,"print(f""- {item['snapshot_path']}"")",context
+scripts/build_live_availability_snapshot.py,19,preview;snapshot;availability_snapshot,"SNAPSHOT_PATH = AUDIT_DIR / ""live_availability_snapshot_preview.json""",context
+scripts/build_live_availability_snapshot.py,20,snapshot;availability_snapshot,"REPORT_PATH = AUDIT_DIR / ""live_availability_snapshot_report.md""",context
+scripts/build_live_availability_snapshot.py,21,snapshot,"RUNTIME_CALENDAR_SNAPSHOT_DIR = ROOT / ""data"" / ""runtime"" / ""calendar_snapshots""",context
+scripts/build_live_availability_snapshot.py,23,snapshot,LOCAL_SNAPSHOT_CANDIDATES = [,context
+scripts/build_live_availability_snapshot.py,24,snapshot,"ROOT / ""data"" / ""calendar"" / ""live_calendar_events_snapshot.json"",",context
+scripts/build_live_availability_snapshot.py,25,snapshot,"AUDIT_DIR / ""live_calendar_events_snapshot.json"",",context
+scripts/build_live_availability_snapshot.py,26,snapshot,"ROOT / ""data"" / ""inventory"" / ""live_calendar_events_snapshot.json"",",context
+scripts/build_live_availability_snapshot.py,34,horizon;60,DEFAULT_INVERSE_EXPANSION_HORIZON_DAYS = 60,context
+scripts/build_live_availability_snapshot.py,35,90,DEFAULT_INVERSE_EXPANSION_MIN_GAP_MINUTES = 90,context
+scripts/build_live_availability_snapshot.py,37,30,DEFAULT_CLEANUP_BUFFER_MINUTES = 30,context
+scripts/build_live_availability_snapshot.py,155,start_date,"raw_start = event.get(""start"") or event.get(""start_at"") or event.get(""start_datetime"")",context
+scripts/build_live_availability_snapshot.py,156,end_date,"raw_end = event.get(""end"") or event.get(""end_at"") or event.get(""end_datetime"")",context
+scripts/build_live_availability_snapshot.py,175,start_date,"raw_start = event.get(""start"") or event.get(""start_at"") or event.get(""start_datetime"")",context
+scripts/build_live_availability_snapshot.py,176,end_date,"raw_end = event.get(""end"") or event.get(""end_at"") or event.get(""end_datetime"")",context
+scripts/build_live_availability_snapshot.py,301,snapshot,"def source_snapshot_present(snapshot_payload: Any, source_key: str) -> bool:",context
+scripts/build_live_availability_snapshot.py,302,snapshot,"if not isinstance(snapshot_payload, dict):",context
+scripts/build_live_availability_snapshot.py,304,snapshot,"events_by_source = snapshot_payload.get(""events_by_source"")",context
+scripts/build_live_availability_snapshot.py,307,snapshot,if source_key in snapshot_payload:,context
+scripts/build_live_availability_snapshot.py,309,snapshot,"if isinstance(snapshot_payload.get(""events""), list):",context
+scripts/build_live_availability_snapshot.py,310,snapshot,"return any(isinstance(event, dict) and event.get(""calendar_source_key"") == source_key for event in snapshot_payload[""events""])",context
+scripts/build_live_availability_snapshot.py,337,start_date,"""start_datetime"": start.isoformat(),",context
+scripts/build_live_availability_snapshot.py,338,end_date,"""end_datetime"": end.isoformat(),",context
+scripts/build_live_availability_snapshot.py,340,end_date,"""end_date"": end.date().isoformat(),",context
+scripts/build_live_availability_snapshot.py,352,preview,"""read_only_preview"",",context
+scripts/build_live_availability_snapshot.py,353,snapshot,"""local_calendar_snapshot"",",context
+scripts/build_live_availability_snapshot.py,365,start_date,"""start_datetime"": start.isoformat(),",context
+scripts/build_live_availability_snapshot.py,366,end_date,"""end_datetime"": end.isoformat(),",context
+scripts/build_live_availability_snapshot.py,368,end_date,"""end_date"": end.date().isoformat(),",context
+scripts/build_live_availability_snapshot.py,381,preview,"""read_only_preview"",",context
+scripts/build_live_availability_snapshot.py,382,snapshot,"""local_calendar_snapshot"",",context
+scripts/build_live_availability_snapshot.py,389,horizon,"def inverse_expansion_horizon(source: dict[str, Any], container_ranges: list[tuple[date, date, dict[str, Any]]]) -> tuple[datetime, datetime]:",context
+scripts/build_live_availability_snapshot.py,390,start_date,"configured_start = parse_dt(source.get(""inverse_expansion_start_datetime""))",context
+scripts/build_live_availability_snapshot.py,393,horizon,"horizon_days = int_or_default(source.get(""inverse_expansion_horizon_days""), DEFAULT_INVERSE_EXPANSION_HORIZON_DAYS)",context
+scripts/build_live_availability_snapshot.py,394,horizon,end = start + timedelta(days=horizon_days),context
+scripts/build_live_availability_snapshot.py,423,horizon,"horizon_start, horizon_end = inverse_expansion_horizon(source, container_ranges)",context
+scripts/build_live_availability_snapshot.py,453,horizon,cursor_day = horizon_start.date(),context
+scripts/build_live_availability_snapshot.py,454,horizon,"while datetime.combine(cursor_day, time.min) < horizon_end:",context
+scripts/build_live_availability_snapshot.py,456,horizon,"open_start = max(horizon_start, datetime.combine(cursor_day, day_start_time))",context
+scripts/build_live_availability_snapshot.py,457,horizon,"open_end = min(horizon_end, datetime.combine(cursor_day, day_end_time))",context
+scripts/build_live_availability_snapshot.py,459,horizon,"open_end = min(horizon_end, datetime.combine(cursor_day + timedelta(days=1), time.min))",context
+scripts/build_live_availability_snapshot.py,471,60,if int((gap_end - gap_start).total_seconds() // 60) < min_gap_minutes:,context
+scripts/build_live_availability_snapshot.py,477,start_date,"""start_datetime"": gap_start.isoformat(),",context
+scripts/build_live_availability_snapshot.py,478,end_date,"""end_datetime"": gap_end.isoformat(),",context
+scripts/build_live_availability_snapshot.py,487,snapshot,"def load_runtime_snapshots() -> tuple[Path | None, Any | None, dict[str, str]]:",context
+scripts/build_live_availability_snapshot.py,489,snapshot,if not RUNTIME_CALENDAR_SNAPSHOT_DIR.exists():,context
+scripts/build_live_availability_snapshot.py,490,snapshot,"missing[str(RUNTIME_CALENDAR_SNAPSHOT_DIR)] = ""missing""",context
+scripts/build_live_availability_snapshot.py,492,snapshot,"snapshot_files = sorted(RUNTIME_CALENDAR_SNAPSHOT_DIR.glob(""*.json""))",context
+scripts/build_live_availability_snapshot.py,493,snapshot,if not snapshot_files:,context
+scripts/build_live_availability_snapshot.py,494,snapshot,"missing[str(RUNTIME_CALENDAR_SNAPSHOT_DIR)] = ""no_snapshot_files""",context
+scripts/build_live_availability_snapshot.py,499,snapshot,for path in snapshot_files:,context
+scripts/build_live_availability_snapshot.py,505,snapshot,"missing[str(path)] = ""invalid_snapshot_shape""",context
+scripts/build_live_availability_snapshot.py,514,snapshot,"return RUNTIME_CALENDAR_SNAPSHOT_DIR, {",context
+scripts/build_live_availability_snapshot.py,515,snapshot,"""snapshot_source"": ""runtime_calendar_snapshots"",",context
+scripts/build_live_availability_snapshot.py,516,snapshot,"""snapshot_files"": loaded_files,",context
+scripts/build_live_availability_snapshot.py,521,snapshot,"def find_local_snapshot() -> tuple[Path | None, Any | None, dict[str, str]]:",context
+scripts/build_live_availability_snapshot.py,523,snapshot,"runtime_path, runtime_payload, runtime_missing = load_runtime_snapshots()",context
+scripts/build_live_availability_snapshot.py,528,snapshot,for path in LOCAL_SNAPSHOT_CANDIDATES:,context
+scripts/build_live_availability_snapshot.py,551,snapshot,"def events_for_source(snapshot_payload: Any, source_key: str) -> list[dict[str, Any]]:",context
+scripts/build_live_availability_snapshot.py,552,snapshot,"if not isinstance(snapshot_payload, dict):",context
+scripts/build_live_availability_snapshot.py,554,snapshot,"raw = snapshot_payload.get(""events_by_source"", {}).get(source_key)",context
+scripts/build_live_availability_snapshot.py,556,snapshot,raw = snapshot_payload.get(source_key),context
+scripts/build_live_availability_snapshot.py,557,snapshot,"if raw is None and isinstance(snapshot_payload.get(""events""), list):",context
+scripts/build_live_availability_snapshot.py,558,snapshot,"raw = [event for event in snapshot_payload[""events""] if isinstance(event, dict) and event.get(""calendar_source_key"") == source_key]",context
+scripts/build_live_availability_snapshot.py,576,start_date,"""start_datetime"": start.isoformat(),",context
+scripts/build_live_availability_snapshot.py,577,end_date,"""end_datetime"": end.isoformat(),",context
+scripts/build_live_availability_snapshot.py,579,end_date,"""end_date"": end.date().isoformat(),",context
+scripts/build_live_availability_snapshot.py,591,preview,"""read_only_preview"",",context
+scripts/build_live_availability_snapshot.py,592,snapshot,"""local_calendar_snapshot"",",context
+scripts/build_live_availability_snapshot.py,598,snapshot,def build_snapshot(,context
+scripts/build_live_availability_snapshot.py,602,snapshot,"local_snapshot_payload: Any,",context
+scripts/build_live_availability_snapshot.py,621,snapshot,"events = events_for_source(local_snapshot_payload, source_key)",context
+scripts/build_live_availability_snapshot.py,622,snapshot,"snapshot_present = source_snapshot_present(local_snapshot_payload, source_key)",context
+scripts/build_live_availability_snapshot.py,623,snapshot,if not events and not snapshot_present:,context
+scripts/build_live_availability_snapshot.py,627,snapshot,"""reason_code"": ""local_calendar_snapshot_missing"",",context
+scripts/build_live_availability_snapshot.py,628,snapshot,"""message"": ""No local/mock calendar event snapshot found for this source; no availability blocks generated."",",context
+scripts/build_live_availability_snapshot.py,682,snapshot,"def render_report(stats: dict[str, Any], blocked: list[dict[str, Any]], local_snapshot_path: Path | None, missing: dict[str, str]) -> str:",context
+scripts/build_live_availability_snapshot.py,684,preview;snapshot,"""# Live Availability Snapshot Preview Report"",",context
+scripts/build_live_availability_snapshot.py,691,snapshot,"f""- Local snapshot found: {local_snapshot_path if local_snapshot_path else 'None'}"",",context
+scripts/build_live_availability_snapshot.py,708,snapshot,"""## Missing Calendar Source Config / Snapshots"",",context
+scripts/build_live_availability_snapshot.py,733,snapshot,"""- Add a local/mock calendar event snapshot fixture and verify normalization before any live Google Calendar integration."",",context
+scripts/build_live_availability_snapshot.py,745,snapshot,"local_snapshot_path, local_snapshot_payload, local_snapshot_missing = find_local_snapshot()",context
+scripts/build_live_availability_snapshot.py,757,snapshot,missing.update(local_snapshot_missing),context
+scripts/build_live_availability_snapshot.py,758,snapshot,"blocks, blocked, stats = build_snapshot(",context
+scripts/build_live_availability_snapshot.py,762,snapshot,"local_snapshot_payload or {},",context
+scripts/build_live_availability_snapshot.py,774,snapshot,"""local_snapshot_path"": str(local_snapshot_path) if local_snapshot_path else None,",context
+scripts/build_live_availability_snapshot.py,780,snapshot,"SNAPSHOT_PATH.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + ""\n"", encoding=""utf-8"")",context
+scripts/build_live_availability_snapshot.py,781,snapshot,"REPORT_PATH.write_text(render_report(stats, blocked, local_snapshot_path, missing), encoding=""utf-8"")",context
+scripts/build_live_availability_snapshot.py,782,snapshot,"return {""stats"": stats, ""missing"": missing, ""output_paths"": [SNAPSHOT_PATH, REPORT_PATH]}",context
+scripts/build_live_availability_snapshot.py,787,snapshot,"print(""Live availability snapshot scaffold complete (READ ONLY)."")",context
+scripts/build_candidate_slot_report.py,24,horizon,"CANDIDATE_HORIZONS_PATH = CONFIG_DIR / ""candidate_horizons.json""",context
+scripts/build_candidate_slot_report.py,30,60,"""aha_acls_initial"": {""course_key"": ""aha_acls_initial"", ""course_group"": ""ACLS"", ""duration_minutes"": 360},",context
+scripts/build_candidate_slot_report.py,32,60,"""aha_pals_initial"": {""course_key"": ""aha_pals_initial"", ""course_group"": ""PALS"", ""duration_minutes"": 360},",context
+scripts/build_candidate_slot_report.py,33,60,"""aha_acls_heartcode_skills"": {""course_key"": ""aha_acls_heartcode_skills"", ""course_group"": ""ACLS"", ""duration_minutes"": 60},",context
+scripts/build_candidate_slot_report.py,34,60,"""aha_pals_heartcode_skills"": {""course_key"": ""aha_pals_heartcode_skills"", ""course_group"": ""PALS"", ""duration_minutes"": 60},",context
+scripts/build_candidate_slot_report.py,35,90,"""aha_bls_renewal"": {""course_key"": ""aha_bls_renewal"", ""course_group"": ""BLS"", ""duration_minutes"": 90},",context
+scripts/build_candidate_slot_report.py,36,120,"""aha_bls_initial"": {""course_key"": ""aha_bls_initial"", ""course_group"": ""BLS"", ""duration_minutes"": 120},",context
+scripts/build_candidate_slot_report.py,39,120,"""aha_heartsaver_cpr_aed"": {""course_key"": ""aha_heartsaver_cpr_aed"", ""course_group"": ""Heartsaver"", ""duration_minutes"": 120},",context
+scripts/build_candidate_slot_report.py,42,120,"""arc_bls"": {""course_key"": ""arc_bls"", ""course_group"": ""ARC"", ""duration_minutes"": 120},",context
+scripts/build_candidate_slot_report.py,51,60,return int((end - start).total_seconds() // 60),context
+scripts/build_candidate_slot_report.py,144,horizon,"def load_candidate_horizons() -> list[dict[str, Any]]:",context
+scripts/build_candidate_slot_report.py,145,horizon,if not CANDIDATE_HORIZONS_PATH.exists():,context
+scripts/build_candidate_slot_report.py,147,horizon,payload = load_json(CANDIDATE_HORIZONS_PATH),context
+scripts/build_candidate_slot_report.py,148,horizon,"return [item for item in payload.get(""candidate_horizons"", []) if isinstance(item, dict)]",context
+scripts/build_candidate_slot_report.py,230,horizon,"def expand_candidate_horizon(horizon: dict[str, Any]) -> tuple[list[dict[str, Any]], list[str]]:",context
+scripts/build_candidate_slot_report.py,232,horizon;start_date,"start_date = parse_date(horizon.get(""horizon_start_date""))",context
+scripts/build_candidate_slot_report.py,233,horizon;lookahead,"lookahead_days = int(horizon.get(""lookahead_days"") or 0)",context
+scripts/build_candidate_slot_report.py,234,lookahead;start_date,if not start_date or lookahead_days <= 0:,context
+scripts/build_candidate_slot_report.py,235,horizon;lookahead;start_date,"return [], [""Candidate horizon is missing horizon_start_date or positive lookahead_days.""]",context
+scripts/build_candidate_slot_report.py,238,horizon,"for day in horizon.get(""candidate_day_rules"", {}).get(""allowed_weekdays"", [])",context
+scripts/build_candidate_slot_report.py,241,horizon,"time_windows = [item for item in horizon.get(""candidate_time_windows"", []) if isinstance(item, dict)]",context
+scripts/build_candidate_slot_report.py,243,lookahead,for offset in range(lookahead_days):,context
+scripts/build_candidate_slot_report.py,244,start_date,day = start_date + timedelta(days=offset),context
+scripts/build_candidate_slot_report.py,262,horizon,"""location_key"": horizon.get(""location_key""),",context
+scripts/build_candidate_slot_report.py,263,horizon,"""horizon_key"": horizon.get(""horizon_key""),",context
+scripts/build_candidate_slot_report.py,265,horizon,"""source_window_type"": ""BASE-HORIZON"",",context
+scripts/build_candidate_slot_report.py,276,horizon,"horizons: list[dict[str, Any]],",context
+scripts/build_candidate_slot_report.py,279,horizon,horizon = next(,context
+scripts/build_candidate_slot_report.py,282,horizon,for item in horizons,context
+scripts/build_candidate_slot_report.py,288,horizon,if not horizon:,context
+scripts/build_candidate_slot_report.py,289,horizon,"return [], [], [*availability_warnings, ""No active report-only candidate horizon configured for inverse-blocking instructor.""], [], [], []",context
+scripts/build_candidate_slot_report.py,290,horizon,"base_windows, warnings = expand_candidate_horizon(horizon)",context
+scripts/build_candidate_slot_report.py,310,horizon,"skipped.append(candidate_record(instructor_key, course, window, ""BASE-HORIZON"", f""{rule_key} priority order"", ""course group not allowed for instructor""))",context
+scripts/build_candidate_slot_report.py,314,horizon,"skipped.append(candidate_record(instructor_key, course, window, ""BASE-HORIZON"", f""{rule_key} priority order"", ""missing course duration""))",context
+scripts/build_candidate_slot_report.py,317,horizon,"skipped.append(candidate_record(instructor_key, course, window, ""BASE-HORIZON"", f""{rule_key} priority order"", f""duration {duration} exceeds open candidate window {window_minutes}""))",context
+scripts/build_candidate_slot_report.py,319,horizon,"candidates.append(candidate_record(instructor_key, course, window, ""BASE-HORIZON"", f""{rule_key}: fits report-only inverse-blocking candidate horizon""))",context
+scripts/build_candidate_slot_report.py,322,horizon,"""Brian candidate horizon is report-only search scaffolding, not hard-coded recurring availability and not public class generation.""",context
+scripts/build_candidate_slot_report.py,333,horizon,horizons = load_candidate_horizons(),context
+scripts/build_candidate_slot_report.py,352,horizon,"horizons,",context
+scripts/build_seed_simulation_report.py,137,horizon,"""Brian seed simulation requires future configured search horizon/base candidate windows.""",context

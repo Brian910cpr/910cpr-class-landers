@@ -81,6 +81,33 @@ END:VCALENDAR
         self.assertEqual("2026-06-22T08:30:00", events[0]["start"])
         self.assertEqual(1, skipped["outside_export_window"])
 
+    def test_parse_ics_events_records_rrule_but_does_not_expand_future_occurrences(self) -> None:
+        window_start = datetime(2026, 6, 19, 0, 0, 0)
+        window_end = window_start + timedelta(days=60)
+        source = {
+            "calendar_source_key": "brian_do_not_schedule",
+            "mode": "inverse_blocking",
+        }
+        ics_text = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:recurring-master
+SUMMARY:Jonah to LaCrosse
+DTSTART:20260622T060000
+DTEND:20260622T083000
+RRULE:FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE
+LOCATION:Wilmington
+END:VEVENT
+END:VCALENDAR
+"""
+
+        events, skipped = exporter.parse_ics_events(ics_text, source, window_start, window_end)
+
+        self.assertEqual(1, len(events))
+        self.assertEqual("2026-06-22T06:00:00", events[0]["start"])
+        self.assertEqual([{"rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"}], events[0]["recurrence"])
+        self.assertFalse(any(str(event.get("start", "")).startswith("2026-08") for event in events))
+        self.assertEqual({}, skipped)
+
 
 if __name__ == "__main__":
     unittest.main()
