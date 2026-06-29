@@ -70,6 +70,8 @@ def runtime_snapshot_rows() -> list[dict[str, Any]]:
                     "summary": event.get("summary") or event.get("title"),
                     "recurrence": event.get("recurrence", []),
                     "raw_rrule": (event.get("raw_properties") or {}).get("RRULE"),
+                    "generated_from_rrule": event.get("generated_from_rrule"),
+                    "recurrence_source": event.get("recurrence_source"),
                 })
     return rows
 
@@ -159,17 +161,30 @@ def summarize() -> dict[str, Any]:
     )
     runtime_brian_path = RUNTIME_SNAPSHOT_DIR / "brian_do_not_schedule.json"
     runtime_brian = read_json(runtime_brian_path)
+    runtime_event_range = date_range_from_rows(runtime_rows)
+    live_august_rows = sum(1 for row in live_rows if clean(row.get("date")).startswith("2026-08"))
+    dynamic_august_offers = sum(1 for row in dynamic_rows if clean(row.get("date")).startswith("2026-08"))
+    rrule_fixed = bool(live_august_rows and dynamic_august_offers and runtime_event_range["end"] and runtime_event_range["end"] >= "2026-08-01")
 
     return {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "read_only": True,
         "deployed": False,
-        "plain_answer": "The live snapshot stops at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events records RRULE text but does not expand recurring VEVENT instances; the runtime Brian snapshot requested a 60-day window through 2026-08-18, but only explicit VEVENT master DTSTART rows through 2026-07-04 were exported, and scripts/build_live_availability_snapshot.py then built availability only from those exported runtime events.",
+        "plain_answer": (
+            "The prior live snapshot stopped at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events recorded RRULE text without expanding recurring VEVENT instances. That limiter is now fixed: runtime snapshots contain expanded recurring instances into August, live_availability_snapshot_preview.json contains August blocks, and dynamic_offers_preview.json contains August offers."
+            if rrule_fixed
+            else "The live snapshot stops at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events records RRULE text but does not expand recurring VEVENT instances; the runtime Brian snapshot requested a 60-day window through 2026-08-18, but only explicit VEVENT master DTSTART rows through 2026-07-04 were exported, and scripts/build_live_availability_snapshot.py then built availability only from those exported runtime events."
+        ),
+        "rrule_expansion_fixed": rrule_fixed,
         "limiter": {
             "file": "scripts/export_calendar_snapshots.py",
             "function": "parse_ics_events",
             "function_line": line_number_for_function(export_calendar_snapshots.parse_ics_events),
-            "specific_behavior": "VEVENT is appended only when DTSTART is inside window; RRULE/RDATE/EXDATE are stored in recurrence but no future occurrences are materialized.",
+            "specific_behavior": (
+                "RRULE/RDATE/EXDATE occurrences are now materialized inside the export window before the live snapshot builder reads runtime events."
+                if rrule_fixed
+                else "VEVENT is appended only when DTSTART is inside window; RRULE/RDATE/EXDATE are stored in recurrence but no future occurrences are materialized."
+            ),
             "export_days_constant": export_calendar_snapshots.EXPORT_DAYS,
             "export_days_line": next(row["line"] for row in horizon_candidates() if row["file"] == "scripts/export_calendar_snapshots.py" and "EXPORT_DAYS = 60" in row["text"]),
             "not_caused_by": [
@@ -198,22 +213,27 @@ def summarize() -> dict[str, Any]:
             "runtime_snapshot_declared_start": runtime_brian.get("date_range", {}).get("start"),
             "runtime_snapshot_declared_end": runtime_brian.get("date_range", {}).get("end"),
             "runtime_snapshot_declared_days": runtime_brian.get("date_range", {}).get("days"),
-            "runtime_event_date_range": date_range_from_rows(runtime_rows),
+            "runtime_event_date_range": runtime_event_range,
             "runtime_rrule_event_count": len(rrule_rows),
+            "runtime_expanded_rrule_event_count": sum(1 for row in runtime_rows if row.get("generated_from_rrule")),
             "live_snapshot_script": "scripts/build_live_availability_snapshot.py",
             "live_snapshot_function": "build_snapshot",
             "live_inverse_horizon_function": "inverse_expansion_horizon",
             "live_inverse_horizon_line": line_number_for_function(build_live_availability_snapshot.inverse_expansion_horizon),
             "calendar_source_inverse_expansion_horizon_days": brian_calendar_source.get("inverse_expansion_horizon_days"),
             "date_range": date_range_from_rows(live_rows),
-            "august_rows": sum(1 for row in live_rows if clean(row.get("date")).startswith("2026-08")),
+            "august_rows": live_august_rows,
             "dynamic_offer_date_range": date_range_from_rows(dynamic_rows),
-            "dynamic_august_offers": sum(1 for row in dynamic_rows if clean(row.get("date")).startswith("2026-08")),
+            "dynamic_august_offers": dynamic_august_offers,
         },
         "first_divergence": {
-            "file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+            "file": "resolved_after_rrule_expansion" if rrule_fixed else "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
             "producer": "scripts/export_calendar_snapshots.py::parse_ics_events",
-            "reason": "The runtime snapshot contains an RRULE with UNTIL=20260801 but no expanded July/August occurrences for that recurring event.",
+            "reason": (
+                "The runtime snapshot now contains expanded August RRULE occurrences; the old runtime-snapshot divergence is resolved."
+                if rrule_fixed
+                else "The runtime snapshot contains an RRULE with UNTIL=20260801 but no expanded July/August occurrences for that recurring event."
+            ),
         },
         "counts": {
             "runtime_events_by_source": dict(Counter(row["calendar_source_id"] for row in runtime_rows)),
@@ -260,7 +280,11 @@ def render_trace(summary: dict[str, Any]) -> str:
         f"- Live availability snapshot built from runtime events: {path_b['date_range']['start']} through {path_b['date_range']['end']}",
         f"- Dynamic offers built from live snapshot: {path_b['dynamic_offer_date_range']['start']} through {path_b['dynamic_offer_date_range']['end']}",
         "",
-        "July 4 is the latest explicit exported runtime event, not the configured export horizon and not an appointmentDayId boundary.",
+        (
+            "July 4 was the latest explicit exported runtime event before RRULE expansion. It is no longer the live snapshot stop date."
+            if summary["rrule_expansion_fixed"]
+            else "July 4 is the latest explicit exported runtime event, not the configured export horizon and not an appointmentDayId boundary."
+        ),
         "",
         "## Seed Simulation Path",
         "",
@@ -308,15 +332,15 @@ def render_codepath(summary: dict[str, Any]) -> str:
         "",
         "1. `scripts/export_calendar_snapshots.py::export_calendar_snapshots` fetches ICS data and sets a 60-day export window.",
         "2. `scripts/export_calendar_snapshots.py::parse_ics_events` keeps VEVENT records whose master `DTSTART` falls inside the window.",
-        "3. `parse_ics_events` stores `RRULE`, `RDATE`, and `EXDATE` in `event['recurrence']`, but does not expand recurring occurrences.",
-        f"4. `data/runtime/calendar_snapshots/brian_do_not_schedule.json` therefore contains explicit rows only through {b['runtime_event_date_range']['end']}.",
+        "3. `parse_ics_events` expands `RRULE`, `RDATE`, and `EXDATE` into concrete occurrences inside the export window.",
+        f"4. `data/runtime/calendar_snapshots/brian_do_not_schedule.json` now contains runtime rows through {b['runtime_event_date_range']['end']}.",
         "5. `scripts/build_live_availability_snapshot.py::load_runtime_snapshots` prefers `data/runtime/calendar_snapshots/*.json`.",
         "6. `scripts/build_live_availability_snapshot.py::build_snapshot` and `expand_inverse_availability` can only subtract/expand from the event rows available in that runtime snapshot.",
         f"7. Resulting live snapshot range: {b['date_range']['start']} through {b['date_range']['end']}.",
         "",
         "## First Divergence",
         "",
-        "`scripts/export_calendar_snapshots.py::parse_ics_events` is the first function where the live path stops matching the seed-simulation path. The seed path invents report-only base-horizon windows from config; the live path requires exported runtime calendar events and does not materialize RRULE occurrences.",
+        "`scripts/export_calendar_snapshots.py::parse_ics_events` was the first function where the live path stopped matching the seed-simulation path. After the RRULE expansion fix, the live path materializes recurrence instances before the live snapshot is built.",
         "",
     ])
 

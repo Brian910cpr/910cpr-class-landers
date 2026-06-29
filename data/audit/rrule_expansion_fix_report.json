@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-06-29T15:45:50",
+  "read_only": true,
+  "deployed": false,
+  "before": {
+    "runtime_snapshot_start": "2026-06-29",
+    "runtime_snapshot_end": "2026-08-28",
+    "live_snapshot_start": "2026-06-29",
+    "live_snapshot_end": "2026-08-28",
+    "live_august_blocks": 29,
+    "dynamic_august_offers": 20901,
+    "dynamic_august_bls_offers": 0,
+    "selected_august_seeds": 0
+  },
+  "after": {
+    "runtime_snapshot_start": "2026-06-29",
+    "runtime_snapshot_end": "2026-08-28",
+    "runtime_events": 49,
+    "runtime_expanded_instances": 40,
+    "live_snapshot_start": "2026-06-29",
+    "live_snapshot_end": "2026-08-28",
+    "live_blocks": 116,
+    "live_august_blocks": 29,
+    "live_august_bls_blocks": 13,
+    "dynamic_offers": 42909,
+    "dynamic_august_offers": 20901,
+    "dynamic_august_bls_offers": 6666,
+    "public_sellable_offers": 147,
+    "public_sellable_august_offers": 42,
+    "public_sellable_august_bls_offers": 6,
+    "selected_seeds": 12,
+    "selected_august_seeds": 2,
+    "selected_august_bls_seeds": 0,
+    "url_previews": 12,
+    "august_url_previews": 2
+  },
+  "rendered": {
+    "render_regenerated": false,
+    "reason": "No public page/render build was run for this RRULE fix branch. The task was kept to snapshot, dynamic, public-filter, seed, URL-preview, and audit generation.",
+    "public_schedule_august_rows_current": 2,
+    "schedule_future_august_rows_current": 6,
+    "public_schedule_august_seed_rows_current": 0,
+    "schedule_future_august_seed_rows_current": 0
+  }
+}

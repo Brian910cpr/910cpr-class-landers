@@ -15,31 +15,37 @@ data/config/public_offer_policy.json,3,preview,"""description"": ""Read-only pub
 data/config/public_offer_policy.json,28,30,"""30"",",context
 data/config/public_offer_policy.json,38,days_out;60,"""maximum_days_out"": 60,",public_filter_downstream_not_snapshot_limiter
 data/config/public_offer_policy.json,52,until,"""notes"": ""Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families.""",context
-scripts/export_calendar_snapshots.py,19,snapshot,"RUNTIME_SNAPSHOT_DIR = ROOT / ""data"" / ""runtime"" / ""calendar_snapshots""",context
-scripts/export_calendar_snapshots.py,21,snapshot,"SUMMARY_PATH = AUDIT_DIR / ""calendar_snapshot_export_summary.json""",context
-scripts/export_calendar_snapshots.py,22,snapshot,"REPORT_PATH = AUDIT_DIR / ""calendar_snapshot_export_report.md""",context
-scripts/export_calendar_snapshots.py,24,60,EXPORT_DAYS = 60,active_runtime_snapshot_export_window
-scripts/export_calendar_snapshots.py,142,30,"def fetch_ics(url: str, timeout: int = 30) -> str:",context
-scripts/export_calendar_snapshots.py,143,snapshot,"request = urllib.request.Request(url, headers={""User-Agent"": ""LANDERware-scheduler-read-only-snapshot/0.1""})",context
-scripts/export_calendar_snapshots.py,257,snapshot,"current[""read_only_snapshot""] = True",context
-scripts/export_calendar_snapshots.py,275,snapshot,def write_source_snapshot(,context
-scripts/export_calendar_snapshots.py,286,snapshot,"RUNTIME_SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)",context
-scripts/export_calendar_snapshots.py,287,snapshot,"path = RUNTIME_SNAPSHOT_DIR / f""{source_id}.json""",context
-scripts/export_calendar_snapshots.py,291,snapshot,"""read_only_snapshot"": True,",context
-scripts/export_calendar_snapshots.py,319,snapshot,"""# Calendar Snapshot Export Report"",",context
-scripts/export_calendar_snapshots.py,323,snapshot,"""Private event descriptions are stored only inside the local runtime snapshot JSON files and are not printed in this report."",",context
-scripts/export_calendar_snapshots.py,328,snapshot,"f""- Snapshots written: {summary['snapshots_written']}"",",context
-scripts/export_calendar_snapshots.py,335,snapshot,"""| Source | Calendar ID Present | ICS URL Attempted | URL Source | Type | Status | Failure Reason | Events | Snapshot | Warning Count |"",",context
-scripts/export_calendar_snapshots.py,342,snapshot,"f""`{item['snapshot_path']}` | {len(item.get('warnings', []))} |""",context
-scripts/export_calendar_snapshots.py,353,snapshot,"def export_calendar_snapshots(fetcher: Callable[[str], str] = fetch_ics) -> dict[str, Any]:",context
-scripts/export_calendar_snapshots.py,383,snapshot,"snapshot_path = write_source_snapshot(source, events, window_start, window_end, export_status, url_source, warnings, skipped)",context
-scripts/export_calendar_snapshots.py,394,snapshot,"""snapshot_path"": str(snapshot_path),",context
-scripts/export_calendar_snapshots.py,401,snapshot,"""read_only_snapshot_export"": True,",context
-scripts/export_calendar_snapshots.py,407,snapshot,"""snapshots_written"": len(source_summaries),",context
-scripts/export_calendar_snapshots.py,435,snapshot,summary = export_calendar_snapshots(),context
-scripts/export_calendar_snapshots.py,436,snapshot,"print(""Calendar snapshot export complete (READ ONLY)."")",context
-scripts/export_calendar_snapshots.py,440,snapshot,"print(f""Snapshots written: {summary['snapshots_written']}"")",context
-scripts/export_calendar_snapshots.py,452,snapshot,"print(f""- {item['snapshot_path']}"")",context
+scripts/export_calendar_snapshots.py,22,snapshot,"RUNTIME_SNAPSHOT_DIR = ROOT / ""data"" / ""runtime"" / ""calendar_snapshots""",context
+scripts/export_calendar_snapshots.py,24,snapshot,"SUMMARY_PATH = AUDIT_DIR / ""calendar_snapshot_export_summary.json""",context
+scripts/export_calendar_snapshots.py,25,snapshot,"REPORT_PATH = AUDIT_DIR / ""calendar_snapshot_export_report.md""",context
+scripts/export_calendar_snapshots.py,27,60,EXPORT_DAYS = 60,active_runtime_snapshot_export_window
+scripts/export_calendar_snapshots.py,146,30,"def fetch_ics(url: str, timeout: int = 30) -> str:",context
+scripts/export_calendar_snapshots.py,147,snapshot,"request = urllib.request.Request(url, headers={""User-Agent"": ""LANDERware-scheduler-read-only-snapshot/0.1""})",context
+scripts/export_calendar_snapshots.py,259,until,def replace_until(match: re.Match[str]) -> str:,context
+scripts/export_calendar_snapshots.py,260,until,raw_until = match.group(1),context
+scripts/export_calendar_snapshots.py,261,until,parsed = parse_ics_datetime(raw_until),context
+scripts/export_calendar_snapshots.py,264,until,local_until = parsed.astimezone(LOCAL_TZ).replace(tzinfo=None) if parsed.tzinfo else parsed,context
+scripts/export_calendar_snapshots.py,265,until,"return f""UNTIL={local_until.strftime('%Y%m%dT%H%M%S')}""",context
+scripts/export_calendar_snapshots.py,267,until,"return re.sub(r""UNTIL=([0-9]{8}T[0-9]{4,6}Z)"", replace_until, rule)",context
+scripts/export_calendar_snapshots.py,414,snapshot,"current[""read_only_snapshot""] = True",context
+scripts/export_calendar_snapshots.py,459,snapshot,def write_source_snapshot(,context
+scripts/export_calendar_snapshots.py,470,snapshot,"RUNTIME_SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)",context
+scripts/export_calendar_snapshots.py,471,snapshot,"path = RUNTIME_SNAPSHOT_DIR / f""{source_id}.json""",context
+scripts/export_calendar_snapshots.py,475,snapshot,"""read_only_snapshot"": True,",context
+scripts/export_calendar_snapshots.py,503,snapshot,"""# Calendar Snapshot Export Report"",",context
+scripts/export_calendar_snapshots.py,507,snapshot,"""Private event descriptions are stored only inside the local runtime snapshot JSON files and are not printed in this report."",",context
+scripts/export_calendar_snapshots.py,512,snapshot,"f""- Snapshots written: {summary['snapshots_written']}"",",context
+scripts/export_calendar_snapshots.py,519,snapshot,"""| Source | Calendar ID Present | ICS URL Attempted | URL Source | Type | Status | Failure Reason | Events | Snapshot | Warning Count |"",",context
+scripts/export_calendar_snapshots.py,526,snapshot,"f""`{item['snapshot_path']}` | {len(item.get('warnings', []))} |""",context
+scripts/export_calendar_snapshots.py,537,snapshot,"def export_calendar_snapshots(fetcher: Callable[[str], str] = fetch_ics) -> dict[str, Any]:",context
+scripts/export_calendar_snapshots.py,567,snapshot,"snapshot_path = write_source_snapshot(source, events, window_start, window_end, export_status, url_source, warnings, skipped)",context
+scripts/export_calendar_snapshots.py,578,snapshot,"""snapshot_path"": str(snapshot_path),",context
+scripts/export_calendar_snapshots.py,585,snapshot,"""read_only_snapshot_export"": True,",context
+scripts/export_calendar_snapshots.py,591,snapshot,"""snapshots_written"": len(source_summaries),",context
+scripts/export_calendar_snapshots.py,619,snapshot,summary = export_calendar_snapshots(),context
+scripts/export_calendar_snapshots.py,620,snapshot,"print(""Calendar snapshot export complete (READ ONLY)."")",context
+scripts/export_calendar_snapshots.py,624,snapshot,"print(f""Snapshots written: {summary['snapshots_written']}"")",context
+scripts/export_calendar_snapshots.py,636,snapshot,"print(f""- {item['snapshot_path']}"")",context
 scripts/build_live_availability_snapshot.py,19,preview;snapshot;availability_snapshot,"SNAPSHOT_PATH = AUDIT_DIR / ""live_availability_snapshot_preview.json""",context
 scripts/build_live_availability_snapshot.py,20,snapshot;availability_snapshot,"REPORT_PATH = AUDIT_DIR / ""live_availability_snapshot_report.md""",context
 scripts/build_live_availability_snapshot.py,21,snapshot,"RUNTIME_CALENDAR_SNAPSHOT_DIR = ROOT / ""data"" / ""runtime"" / ""calendar_snapshots""",context

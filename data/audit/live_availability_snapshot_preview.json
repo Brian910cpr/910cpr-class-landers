@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21T02:56:40.374531-04:00",
+  "generated_at": "2026-06-29T15:37:44.094132-04:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -7,7 +7,7 @@
   "appointments_created": false,
   "appointment_urls_changed": false,
   "worker_creation_enabled": false,
-  "local_snapshot_path": "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\calendar_snapshots",
+  "local_snapshot_path": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\runtime\\calendar_snapshots",
   "stats": {
     "configured_calendar_sources_found": 3,
     "instructors_mapped": [
@@ -22,353 +22,1144 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 12,
-    "blocks_blocked": 8,
+    "blocks_generated": 116,
+    "blocks_blocked": 1,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "local_calendar_snapshot_missing": 1,
-      "overnight_not_allowed": 5,
-      "event_missing_parseable_start_or_end": 1,
-      "non_standard_time_increment": 1
+      "event_missing_parseable_start_or_end": 1
     },
     "blocked_all_reason_counts": {
-      "local_calendar_snapshot_missing": 1,
-      "overnight_not_allowed": 5,
-      "event_missing_parseable_start_or_end": 1,
-      "non_standard_time_increment": 1
+      "event_missing_parseable_start_or_end": 1
     },
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "available": 11,
-      "blocked": 1
-    }
+      "blocked": 48,
+      "available": 68
+    },
+    "inverse_generated_availability_blocks": 68,
+    "inverse_blocking_event_blocks": 48
   },
   "availability_blocks": [
     {
-      "instructor_name": "Amy Arnold",
-      "person_id": "instructor_4180671442",
-      "start_datetime": "2026-06-23T18:00:00",
-      "end_datetime": "2026-06-23T22:00:00",
-      "date": "2026-06-23",
-      "end_date": "2026-06-23",
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-06-29T18:00:00",
+      "end_datetime": "2026-06-30T06:00:00",
+      "date": "2026-06-29",
+      "end_date": "2026-06-30",
       "start_time": "18:00",
-      "end_time": "22:00",
-      "availability_status": "available",
-      "availability_location_mode": "location_specific",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "ACLS",
-        "BLS",
-        "Heartsaver",
-        "PALS",
-        "USCG"
-      ],
-      "source_calendar_id": "amy_availability",
-      "source_event_id": "26hucabntrqk2qhdnngaq2defb@google.com",
-      "source_type": "google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "offerable_calendar_window"
-      ]
-    },
-    {
-      "instructor_name": "Amy Arnold",
-      "person_id": "instructor_4180671442",
-      "start_datetime": "2026-06-23T17:00:00",
-      "end_datetime": "2026-06-23T18:00:00",
-      "date": "2026-06-23",
-      "end_date": "2026-06-23",
-      "start_time": "17:00",
-      "end_time": "18:00",
-      "availability_status": "available",
-      "availability_location_mode": "location_specific",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "ACLS",
-        "BLS",
-        "Heartsaver",
-        "PALS",
-        "USCG"
-      ],
-      "source_calendar_id": "amy_availability",
-      "source_event_id": "2nnr8jg3pka88l9ge2om43aa49@google.com",
-      "source_type": "google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "offerable_calendar_window"
-      ]
-    },
-    {
-      "instructor_name": "Amy Arnold",
-      "person_id": "instructor_4180671442",
-      "start_datetime": "2026-06-22T18:00:00",
-      "end_datetime": "2026-06-22T22:00:00",
-      "date": "2026-06-22",
-      "end_date": "2026-06-22",
-      "start_time": "18:00",
-      "end_time": "22:00",
-      "availability_status": "available",
-      "availability_location_mode": "location_specific",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "ACLS",
-        "BLS",
-        "Heartsaver",
-        "PALS",
-        "USCG"
-      ],
-      "source_calendar_id": "amy_availability",
-      "source_event_id": "7ocuqjieb677urrtttnnhrgbu1@google.com",
-      "source_type": "google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "offerable_calendar_window"
-      ]
-    },
-    {
-      "instructor_name": "Amy Arnold",
-      "person_id": "instructor_4180671442",
-      "start_datetime": "2026-06-22T17:00:00",
-      "end_datetime": "2026-06-22T18:00:00",
-      "date": "2026-06-22",
-      "end_date": "2026-06-22",
-      "start_time": "17:00",
-      "end_time": "18:00",
-      "availability_status": "available",
-      "availability_location_mode": "location_specific",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "ACLS",
-        "BLS",
-        "Heartsaver",
-        "PALS",
-        "USCG"
-      ],
-      "source_calendar_id": "amy_availability",
-      "source_event_id": "23rccrjmrdj4p77iko7r2manhn@google.com",
-      "source_type": "google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "offerable_calendar_window"
-      ]
-    },
-    {
-      "instructor_name": "Amy Arnold",
-      "person_id": "instructor_4180671442",
-      "start_datetime": "2026-06-26T17:00:00",
-      "end_datetime": "2026-06-26T18:00:00",
-      "date": "2026-06-26",
-      "end_date": "2026-06-26",
-      "start_time": "17:00",
-      "end_time": "18:00",
-      "availability_status": "available",
-      "availability_location_mode": "location_specific",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "ACLS",
-        "BLS",
-        "Heartsaver",
-        "PALS",
-        "USCG"
-      ],
-      "source_calendar_id": "amy_availability",
-      "source_event_id": "50158s5pctungp0irmfpod7spk@google.com",
-      "source_type": "google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "offerable_calendar_window"
-      ]
-    },
-    {
-      "instructor_name": "Amy Arnold",
-      "person_id": "instructor_4180671442",
-      "start_datetime": "2026-06-26T18:00:00",
-      "end_datetime": "2026-06-26T22:00:00",
-      "date": "2026-06-26",
-      "end_date": "2026-06-26",
-      "start_time": "18:00",
-      "end_time": "22:00",
-      "availability_status": "available",
-      "availability_location_mode": "location_specific",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "ACLS",
-        "BLS",
-        "Heartsaver",
-        "PALS",
-        "USCG"
-      ],
-      "source_calendar_id": "amy_availability",
-      "source_event_id": "5rqq5vfpia8up7mejs56nc4p9g@google.com",
-      "source_type": "google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "offerable_calendar_window"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-22T06:00:00",
-      "end_datetime": "2026-06-22T08:30:00",
-      "date": "2026-06-22",
-      "end_date": "2026-06-22",
-      "start_time": "06:00",
-      "end_time": "08:30",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "offerable_calendar_window"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-04T12:00:00",
-      "end_datetime": "2026-07-04T17:00:00",
-      "date": "2026-07-04",
-      "end_date": "2026-07-04",
-      "start_time": "12:00",
-      "end_time": "17:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "CVS\\, 4600 Oleander Dr\\, Wilmington\\, NC 28403\\, USA",
-      "location_name": "CVS\\, 4600 Oleander Dr\\, Wilmington\\, NC 28403\\, USA",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "37d9u0mq0lh09sngouh6alou82@google.com",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "offerable_calendar_window"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-23T08:00:00",
-      "end_datetime": "2026-06-23T10:00:00",
-      "date": "2026-06-23",
-      "end_date": "2026-06-23",
-      "start_time": "08:00",
-      "end_time": "10:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Wilmington International Airport\\, 1740 Airport Blvd\\, Wilmington\\, NC 28405\\, USA",
-      "location_name": "Wilmington International Airport\\, 1740 Airport Blvd\\, Wilmington\\, NC 28405\\, USA",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6nrdhqtuo4tmialep0dcfpqd7h@google.com",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "offerable_calendar_window"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-24T10:00:00",
-      "end_datetime": "2026-06-24T22:00:00",
-      "date": "2026-06-24",
-      "end_date": "2026-06-24",
-      "start_time": "10:00",
-      "end_time": "22:00",
+      "end_time": "06:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
       "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "dfr280lgcf6jnf7e4s6jubis0s@google.com",
+      "source_event_id": "tfa0iue3bqvd9qprfqfmuk20ho@google.com",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
         "local_calendar_snapshot",
-        "blocking_marker_detected"
+        "inverse_calendar_blocking_event"
       ]
     },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-22T12:00:00",
-      "end_datetime": "2026-06-22T16:00:00",
-      "date": "2026-06-22",
-      "end_date": "2026-06-22",
-      "start_time": "12:00",
-      "end_time": "16:00",
-      "availability_status": "available",
+      "start_datetime": "2026-06-30T06:00:00",
+      "end_datetime": "2026-06-30T08:30:00",
+      "date": "2026-06-30",
+      "end_date": "2026-06-30",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
-      "source_location": "4902 Merlot Crt\\nWilmington\\nNC\\n28409\\nUSA",
-      "location_name": "4902 Merlot Crt\\nWilmington\\nNC\\n28409\\nUSA",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "cgojcopnc8s38b9hc4pmab9kc5hm6bb1cli6cb9i60q30dpm6thjgc31co@google.com",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260630T0600000400",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
         "local_calendar_snapshot",
-        "offerable_calendar_window"
+        "inverse_calendar_blocking_event"
       ]
     },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-21T17:00:00",
-      "end_datetime": "2026-06-21T21:00:00",
-      "date": "2026-06-21",
-      "end_date": "2026-06-21",
-      "start_time": "17:00",
-      "end_time": "21:00",
-      "availability_status": "available",
+      "start_datetime": "2026-06-30T18:00:00",
+      "end_datetime": "2026-07-01T06:00:00",
+      "date": "2026-06-30",
+      "end_date": "2026-07-01",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "d7ivg6fscs60vqj8l9m24r9ja0@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-01T06:00:00",
+      "end_datetime": "2026-07-01T08:30:00",
+      "date": "2026-07-01",
+      "end_date": "2026-07-01",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260701T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-01T06:00:00",
+      "end_datetime": "2026-07-01T18:00:00",
+      "date": "2026-07-01",
+      "end_date": "2026-07-01",
+      "start_time": "06:00",
+      "end_time": "18:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "1r302f1rhorat32q6ojm03uqdk@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-02T06:00:00",
+      "end_datetime": "2026-07-02T08:30:00",
+      "date": "2026-07-02",
+      "end_date": "2026-07-02",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260702T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-02T18:00:00",
+      "end_datetime": "2026-07-03T06:00:00",
+      "date": "2026-07-02",
+      "end_date": "2026-07-03",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "bpgnf8evrnn7k5qnsgak6jmrjg@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-03T06:00:00",
+      "end_datetime": "2026-07-03T08:30:00",
+      "date": "2026-07-03",
+      "end_date": "2026-07-03",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260703T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-04T11:45:00",
+      "end_datetime": "2026-07-04T17:00:00",
+      "date": "2026-07-04",
+      "end_date": "2026-07-04",
+      "start_time": "11:45",
+      "end_time": "17:00",
+      "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
       "source_location": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
       "location_name": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-05T18:00:00",
+      "end_datetime": "2026-07-06T06:00:00",
+      "date": "2026-07-05",
+      "end_date": "2026-07-06",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "ihsdri9u0e2k2000hh1i4tfqdo@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-06T06:00:00",
+      "end_datetime": "2026-07-06T08:30:00",
+      "date": "2026-07-06",
+      "end_date": "2026-07-06",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260706T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-07T06:00:00",
+      "end_datetime": "2026-07-07T08:30:00",
+      "date": "2026-07-07",
+      "end_date": "2026-07-07",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260707T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-08T06:00:00",
+      "end_datetime": "2026-07-08T08:30:00",
+      "date": "2026-07-08",
+      "end_date": "2026-07-08",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260708T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-08T06:00:00",
+      "end_datetime": "2026-07-08T18:00:00",
+      "date": "2026-07-08",
+      "end_date": "2026-07-08",
+      "start_time": "06:00",
+      "end_time": "18:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "m0rgl3apldd2lqtkm7u917q57k@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-09T06:00:00",
+      "end_datetime": "2026-07-09T08:30:00",
+      "date": "2026-07-09",
+      "end_date": "2026-07-09",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260709T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-10T06:00:00",
+      "end_datetime": "2026-07-10T08:30:00",
+      "date": "2026-07-10",
+      "end_date": "2026-07-10",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260710T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-13T06:00:00",
+      "end_datetime": "2026-07-13T08:30:00",
+      "date": "2026-07-13",
+      "end_date": "2026-07-13",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260713T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-14T06:00:00",
+      "end_datetime": "2026-07-14T08:30:00",
+      "date": "2026-07-14",
+      "end_date": "2026-07-14",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260714T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-15T06:00:00",
+      "end_datetime": "2026-07-15T08:30:00",
+      "date": "2026-07-15",
+      "end_date": "2026-07-15",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260715T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-16T06:00:00",
+      "end_datetime": "2026-07-16T08:30:00",
+      "date": "2026-07-16",
+      "end_date": "2026-07-16",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260716T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-17T06:00:00",
+      "end_datetime": "2026-07-17T08:30:00",
+      "date": "2026-07-17",
+      "end_date": "2026-07-17",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260717T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-17T14:30:00",
+      "end_datetime": "2026-07-17T15:15:00",
+      "date": "2026-07-17",
+      "end_date": "2026-07-17",
+      "start_time": "14:30",
+      "end_time": "15:15",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Browning Orthodontics\\, 604 Junction Creek Dr\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Browning Orthodontics\\, 604 Junction Creek Dr\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "651ai0vvnfl7kvvvd9k4kl23dv@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-20T06:00:00",
+      "end_datetime": "2026-07-20T08:30:00",
+      "date": "2026-07-20",
+      "end_date": "2026-07-20",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260720T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-21T06:00:00",
+      "end_datetime": "2026-07-21T08:30:00",
+      "date": "2026-07-21",
+      "end_date": "2026-07-21",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260721T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-22T06:00:00",
+      "end_datetime": "2026-07-22T08:30:00",
+      "date": "2026-07-22",
+      "end_date": "2026-07-22",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260722T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-23T06:00:00",
+      "end_datetime": "2026-07-23T08:30:00",
+      "date": "2026-07-23",
+      "end_date": "2026-07-23",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260723T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-24T06:00:00",
+      "end_datetime": "2026-07-24T08:30:00",
+      "date": "2026-07-24",
+      "end_date": "2026-07-24",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260724T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-27T06:00:00",
+      "end_datetime": "2026-07-27T08:30:00",
+      "date": "2026-07-27",
+      "end_date": "2026-07-27",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260727T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-28T06:00:00",
+      "end_datetime": "2026-07-28T08:30:00",
+      "date": "2026-07-28",
+      "end_date": "2026-07-28",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260728T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-29T06:00:00",
+      "end_datetime": "2026-07-29T08:30:00",
+      "date": "2026-07-29",
+      "end_date": "2026-07-29",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260729T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-30T06:00:00",
+      "end_datetime": "2026-07-30T08:30:00",
+      "date": "2026-07-30",
+      "end_date": "2026-07-30",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260730T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-31T06:00:00",
+      "end_datetime": "2026-07-31T08:30:00",
+      "date": "2026-07-31",
+      "end_date": "2026-07-31",
+      "start_time": "06:00",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260731T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-19T06:30:00",
+      "end_datetime": "2026-08-19T08:30:00",
+      "date": "2026-08-19",
+      "end_date": "2026-08-19",
+      "start_time": "06:30",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260819T0630000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-19T15:00:00",
+      "end_datetime": "2026-08-19T17:30:00",
+      "date": "2026-08-19",
+      "end_date": "2026-08-19",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260819T1500000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-20T06:30:00",
+      "end_datetime": "2026-08-20T08:30:00",
+      "date": "2026-08-20",
+      "end_date": "2026-08-20",
+      "start_time": "06:30",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260820T0630000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-20T15:00:00",
+      "end_datetime": "2026-08-20T17:30:00",
+      "date": "2026-08-20",
+      "end_date": "2026-08-20",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260820T1500000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-21T06:30:00",
+      "end_datetime": "2026-08-21T08:30:00",
+      "date": "2026-08-21",
+      "end_date": "2026-08-21",
+      "start_time": "06:30",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260821T0630000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-21T15:00:00",
+      "end_datetime": "2026-08-21T17:30:00",
+      "date": "2026-08-21",
+      "end_date": "2026-08-21",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260821T1500000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-24T06:30:00",
+      "end_datetime": "2026-08-24T08:30:00",
+      "date": "2026-08-24",
+      "end_date": "2026-08-24",
+      "start_time": "06:30",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260824T0630000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-24T15:00:00",
+      "end_datetime": "2026-08-24T17:30:00",
+      "date": "2026-08-24",
+      "end_date": "2026-08-24",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260824T1500000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-25T06:30:00",
+      "end_datetime": "2026-08-25T08:30:00",
+      "date": "2026-08-25",
+      "end_date": "2026-08-25",
+      "start_time": "06:30",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260825T0630000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-25T15:00:00",
+      "end_datetime": "2026-08-25T17:30:00",
+      "date": "2026-08-25",
+      "end_date": "2026-08-25",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260825T1500000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-26T06:30:00",
+      "end_datetime": "2026-08-26T08:30:00",
+      "date": "2026-08-26",
+      "end_date": "2026-08-26",
+      "start_time": "06:30",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260826T0630000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-26T15:00:00",
+      "end_datetime": "2026-08-26T17:30:00",
+      "date": "2026-08-26",
+      "end_date": "2026-08-26",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260826T1500000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-27T06:30:00",
+      "end_datetime": "2026-08-27T08:30:00",
+      "date": "2026-08-27",
+      "end_date": "2026-08-27",
+      "start_time": "06:30",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260827T0630000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-27T15:00:00",
+      "end_datetime": "2026-08-27T17:30:00",
+      "date": "2026-08-27",
+      "end_date": "2026-08-27",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260827T1500000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-28T06:30:00",
+      "end_datetime": "2026-08-28T08:30:00",
+      "date": "2026-08-28",
+      "end_date": "2026-08-28",
+      "start_time": "06:30",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260828T0630000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-28T15:00:00",
+      "end_datetime": "2026-08-28T17:30:00",
+      "date": "2026-08-28",
+      "end_date": "2026-08-28",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260828T1500000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-06-29T15:45:00",
+      "end_datetime": "2026-06-29T18:00:00",
+      "date": "2026-06-29",
+      "end_date": "2026-06-29",
+      "start_time": "15:45",
+      "end_time": "18:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "allowed_course_families": [
         "BLS",
         "HSI",
@@ -376,42 +1167,2028 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "0anh74c8rov075p9j08875rjjn@google.com",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:1",
       "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
       "reasons": [
         "read_only_preview",
         "local_calendar_snapshot",
-        "offerable_calendar_window"
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-06-30T08:30:00",
+      "end_datetime": "2026-06-30T18:00:00",
+      "date": "2026-06-30",
+      "end_date": "2026-06-30",
+      "start_time": "08:30",
+      "end_time": "18:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:2",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-01T18:00:00",
+      "end_datetime": "2026-07-02T00:00:00",
+      "date": "2026-07-01",
+      "end_date": "2026-07-02",
+      "start_time": "18:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:3",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-02T00:00:00",
+      "end_datetime": "2026-07-02T06:00:00",
+      "date": "2026-07-02",
+      "end_date": "2026-07-02",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:4",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-02T08:30:00",
+      "end_datetime": "2026-07-02T18:00:00",
+      "date": "2026-07-02",
+      "end_date": "2026-07-02",
+      "start_time": "08:30",
+      "end_time": "18:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:5",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-03T08:30:00",
+      "end_datetime": "2026-07-04T00:00:00",
+      "date": "2026-07-03",
+      "end_date": "2026-07-04",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:6",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-04T00:00:00",
+      "end_datetime": "2026-07-04T11:45:00",
+      "date": "2026-07-04",
+      "end_date": "2026-07-04",
+      "start_time": "00:00",
+      "end_time": "11:45",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:7",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-04T17:00:00",
+      "end_datetime": "2026-07-05T00:00:00",
+      "date": "2026-07-04",
+      "end_date": "2026-07-05",
+      "start_time": "17:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:8",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-05T00:00:00",
+      "end_datetime": "2026-07-05T18:00:00",
+      "date": "2026-07-05",
+      "end_date": "2026-07-05",
+      "start_time": "00:00",
+      "end_time": "18:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:9",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-06T08:30:00",
+      "end_datetime": "2026-07-07T00:00:00",
+      "date": "2026-07-06",
+      "end_date": "2026-07-07",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:10",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-07T00:00:00",
+      "end_datetime": "2026-07-07T06:00:00",
+      "date": "2026-07-07",
+      "end_date": "2026-07-07",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:11",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-07T08:30:00",
+      "end_datetime": "2026-07-08T00:00:00",
+      "date": "2026-07-07",
+      "end_date": "2026-07-08",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:12",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-08T00:00:00",
+      "end_datetime": "2026-07-08T06:00:00",
+      "date": "2026-07-08",
+      "end_date": "2026-07-08",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:13",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-08T18:00:00",
+      "end_datetime": "2026-07-09T00:00:00",
+      "date": "2026-07-08",
+      "end_date": "2026-07-09",
+      "start_time": "18:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:14",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-09T00:00:00",
+      "end_datetime": "2026-07-09T06:00:00",
+      "date": "2026-07-09",
+      "end_date": "2026-07-09",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:15",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-09T08:30:00",
+      "end_datetime": "2026-07-10T00:00:00",
+      "date": "2026-07-09",
+      "end_date": "2026-07-10",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:16",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-10T00:00:00",
+      "end_datetime": "2026-07-10T06:00:00",
+      "date": "2026-07-10",
+      "end_date": "2026-07-10",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:17",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-10T08:30:00",
+      "end_datetime": "2026-07-11T00:00:00",
+      "date": "2026-07-10",
+      "end_date": "2026-07-11",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:18",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-11T00:00:00",
+      "end_datetime": "2026-07-12T00:00:00",
+      "date": "2026-07-11",
+      "end_date": "2026-07-12",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:19",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-12T00:00:00",
+      "end_datetime": "2026-07-13T00:00:00",
+      "date": "2026-07-12",
+      "end_date": "2026-07-13",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:20",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-13T00:00:00",
+      "end_datetime": "2026-07-13T06:00:00",
+      "date": "2026-07-13",
+      "end_date": "2026-07-13",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:21",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-13T08:30:00",
+      "end_datetime": "2026-07-14T00:00:00",
+      "date": "2026-07-13",
+      "end_date": "2026-07-14",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:22",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-14T00:00:00",
+      "end_datetime": "2026-07-14T06:00:00",
+      "date": "2026-07-14",
+      "end_date": "2026-07-14",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:23",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-14T08:30:00",
+      "end_datetime": "2026-07-15T00:00:00",
+      "date": "2026-07-14",
+      "end_date": "2026-07-15",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:24",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-15T00:00:00",
+      "end_datetime": "2026-07-15T06:00:00",
+      "date": "2026-07-15",
+      "end_date": "2026-07-15",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:25",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-15T08:30:00",
+      "end_datetime": "2026-07-16T00:00:00",
+      "date": "2026-07-15",
+      "end_date": "2026-07-16",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:26",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-16T00:00:00",
+      "end_datetime": "2026-07-16T06:00:00",
+      "date": "2026-07-16",
+      "end_date": "2026-07-16",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:27",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-16T08:30:00",
+      "end_datetime": "2026-07-17T00:00:00",
+      "date": "2026-07-16",
+      "end_date": "2026-07-17",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:28",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-17T00:00:00",
+      "end_datetime": "2026-07-17T06:00:00",
+      "date": "2026-07-17",
+      "end_date": "2026-07-17",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:29",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-17T08:30:00",
+      "end_datetime": "2026-07-17T14:30:00",
+      "date": "2026-07-17",
+      "end_date": "2026-07-17",
+      "start_time": "08:30",
+      "end_time": "14:30",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:30",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-17T15:15:00",
+      "end_datetime": "2026-07-18T00:00:00",
+      "date": "2026-07-17",
+      "end_date": "2026-07-18",
+      "start_time": "15:15",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:31",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-18T00:00:00",
+      "end_datetime": "2026-07-19T00:00:00",
+      "date": "2026-07-18",
+      "end_date": "2026-07-19",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:32",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-19T00:00:00",
+      "end_datetime": "2026-07-20T00:00:00",
+      "date": "2026-07-19",
+      "end_date": "2026-07-20",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:33",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-20T00:00:00",
+      "end_datetime": "2026-07-20T06:00:00",
+      "date": "2026-07-20",
+      "end_date": "2026-07-20",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:34",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-20T08:30:00",
+      "end_datetime": "2026-07-21T00:00:00",
+      "date": "2026-07-20",
+      "end_date": "2026-07-21",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:35",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-21T00:00:00",
+      "end_datetime": "2026-07-21T06:00:00",
+      "date": "2026-07-21",
+      "end_date": "2026-07-21",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:36",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-21T08:30:00",
+      "end_datetime": "2026-07-22T00:00:00",
+      "date": "2026-07-21",
+      "end_date": "2026-07-22",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:37",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-22T00:00:00",
+      "end_datetime": "2026-07-22T06:00:00",
+      "date": "2026-07-22",
+      "end_date": "2026-07-22",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:38",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-22T08:30:00",
+      "end_datetime": "2026-07-23T00:00:00",
+      "date": "2026-07-22",
+      "end_date": "2026-07-23",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:39",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-23T00:00:00",
+      "end_datetime": "2026-07-23T06:00:00",
+      "date": "2026-07-23",
+      "end_date": "2026-07-23",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:40",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-23T08:30:00",
+      "end_datetime": "2026-07-24T00:00:00",
+      "date": "2026-07-23",
+      "end_date": "2026-07-24",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:41",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-24T00:00:00",
+      "end_datetime": "2026-07-24T06:00:00",
+      "date": "2026-07-24",
+      "end_date": "2026-07-24",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:42",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-24T08:30:00",
+      "end_datetime": "2026-07-25T00:00:00",
+      "date": "2026-07-24",
+      "end_date": "2026-07-25",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:43",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-25T00:00:00",
+      "end_datetime": "2026-07-26T00:00:00",
+      "date": "2026-07-25",
+      "end_date": "2026-07-26",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:44",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-26T00:00:00",
+      "end_datetime": "2026-07-27T00:00:00",
+      "date": "2026-07-26",
+      "end_date": "2026-07-27",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:45",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-27T00:00:00",
+      "end_datetime": "2026-07-27T06:00:00",
+      "date": "2026-07-27",
+      "end_date": "2026-07-27",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:46",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-27T08:30:00",
+      "end_datetime": "2026-07-28T00:00:00",
+      "date": "2026-07-27",
+      "end_date": "2026-07-28",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:47",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-28T00:00:00",
+      "end_datetime": "2026-07-28T06:00:00",
+      "date": "2026-07-28",
+      "end_date": "2026-07-28",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:48",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-28T08:30:00",
+      "end_datetime": "2026-07-29T00:00:00",
+      "date": "2026-07-28",
+      "end_date": "2026-07-29",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:49",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-29T00:00:00",
+      "end_datetime": "2026-07-29T06:00:00",
+      "date": "2026-07-29",
+      "end_date": "2026-07-29",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:50",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-29T08:30:00",
+      "end_datetime": "2026-07-30T00:00:00",
+      "date": "2026-07-29",
+      "end_date": "2026-07-30",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:51",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-30T00:00:00",
+      "end_datetime": "2026-07-30T06:00:00",
+      "date": "2026-07-30",
+      "end_date": "2026-07-30",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:52",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-30T08:30:00",
+      "end_datetime": "2026-07-31T00:00:00",
+      "date": "2026-07-30",
+      "end_date": "2026-07-31",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:53",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-31T00:00:00",
+      "end_datetime": "2026-07-31T06:00:00",
+      "date": "2026-07-31",
+      "end_date": "2026-07-31",
+      "start_time": "00:00",
+      "end_time": "06:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:54",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-31T08:30:00",
+      "end_datetime": "2026-08-01T00:00:00",
+      "date": "2026-07-31",
+      "end_date": "2026-08-01",
+      "start_time": "08:30",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:55",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-01T00:00:00",
+      "end_datetime": "2026-08-02T00:00:00",
+      "date": "2026-08-01",
+      "end_date": "2026-08-02",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:56",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-02T00:00:00",
+      "end_datetime": "2026-08-03T00:00:00",
+      "date": "2026-08-02",
+      "end_date": "2026-08-03",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:57",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-03T00:00:00",
+      "end_datetime": "2026-08-04T00:00:00",
+      "date": "2026-08-03",
+      "end_date": "2026-08-04",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:58",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-04T00:00:00",
+      "end_datetime": "2026-08-05T00:00:00",
+      "date": "2026-08-04",
+      "end_date": "2026-08-05",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:59",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-05T00:00:00",
+      "end_datetime": "2026-08-06T00:00:00",
+      "date": "2026-08-05",
+      "end_date": "2026-08-06",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:60",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-06T00:00:00",
+      "end_datetime": "2026-08-07T00:00:00",
+      "date": "2026-08-06",
+      "end_date": "2026-08-07",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:61",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-07T00:00:00",
+      "end_datetime": "2026-08-08T00:00:00",
+      "date": "2026-08-07",
+      "end_date": "2026-08-08",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:62",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-08T00:00:00",
+      "end_datetime": "2026-08-09T00:00:00",
+      "date": "2026-08-08",
+      "end_date": "2026-08-09",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:63",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-09T00:00:00",
+      "end_datetime": "2026-08-10T00:00:00",
+      "date": "2026-08-09",
+      "end_date": "2026-08-10",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:64",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-10T00:00:00",
+      "end_datetime": "2026-08-11T00:00:00",
+      "date": "2026-08-10",
+      "end_date": "2026-08-11",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:65",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-11T00:00:00",
+      "end_datetime": "2026-08-12T00:00:00",
+      "date": "2026-08-11",
+      "end_date": "2026-08-12",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:66",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-12T00:00:00",
+      "end_datetime": "2026-08-13T00:00:00",
+      "date": "2026-08-12",
+      "end_date": "2026-08-13",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:67",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-13T00:00:00",
+      "end_datetime": "2026-08-13T15:45:00",
+      "date": "2026-08-13",
+      "end_date": "2026-08-13",
+      "start_time": "00:00",
+      "end_time": "15:45",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:68",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
       ]
     }
   ],
   "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "nick_availability",
-      "source_type": "google_calendar",
-      "reason_code": "local_calendar_snapshot_missing",
-      "message": "No local/mock calendar event snapshot found for this source; no availability blocks generated."
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_event_id": "d7ivg6fscs60vqj8l9m24r9ja0@google.com",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "overnight_not_allowed",
-      "all_reason_codes": [
-        "overnight_not_allowed"
-      ],
-      "message": "Calendar event crosses midnight and allow_overnight_availability is false; no offerable availability was generated."
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_event_id": "1kc1pam65tvbjhakodoliftsh4@google.com",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "overnight_not_allowed",
-      "all_reason_codes": [
-        "overnight_not_allowed"
-      ],
-      "message": "Calendar event crosses midnight and allow_overnight_availability is false; no offerable availability was generated."
-    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
@@ -420,47 +3197,7 @@
       "all_reason_codes": [
         "event_missing_parseable_start_or_end"
       ],
-      "message": "Calendar event did not include parseable start/end datetimes."
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_event_id": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "non_standard_time_increment",
-      "all_reason_codes": [
-        "non_standard_time_increment"
-      ],
-      "message": "Calendar event start/end is not on a standard 15-minute increment and allow_non_standard_time_increment is false; no offerable availability was generated."
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_event_id": "15pt2htulen4qt3cosom965d82@google.com",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "overnight_not_allowed",
-      "all_reason_codes": [
-        "overnight_not_allowed"
-      ],
-      "message": "Calendar event crosses midnight and allow_overnight_availability is false; no offerable availability was generated."
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_event_id": "tfa0iue3bqvd9qprfqfmuk20ho@google.com",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "overnight_not_allowed",
-      "all_reason_codes": [
-        "overnight_not_allowed"
-      ],
-      "message": "Calendar event crosses midnight and allow_overnight_availability is false; no offerable availability was generated."
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_event_id": "t89s00b1e8vc7ckc8l72201pto@google.com",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "overnight_not_allowed",
-      "all_reason_codes": [
-        "overnight_not_allowed"
-      ],
-      "message": "Calendar event crosses midnight and allow_overnight_availability is false; no offerable availability was generated."
+      "message": "Calendar event was not usable as an inverse blocking interval."
     }
   ]
 }

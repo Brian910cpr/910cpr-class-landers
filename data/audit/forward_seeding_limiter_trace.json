@@ -1,16 +1,17 @@
 {
   "summary": {
-    "generated_at": "2026-06-29T15:26:53",
+    "generated_at": "2026-06-29T15:46:02",
     "read_only": true,
     "deployed": false,
-    "plain_answer": "The live snapshot stops at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events records RRULE text but does not expand recurring VEVENT instances; the runtime Brian snapshot requested a 60-day window through 2026-08-18, but only explicit VEVENT master DTSTART rows through 2026-07-04 were exported, and scripts/build_live_availability_snapshot.py then built availability only from those exported runtime events.",
+    "plain_answer": "The prior live snapshot stopped at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events recorded RRULE text without expanding recurring VEVENT instances. That limiter is now fixed: runtime snapshots contain expanded recurring instances into August, live_availability_snapshot_preview.json contains August blocks, and dynamic_offers_preview.json contains August offers.",
+    "rrule_expansion_fixed": true,
     "limiter": {
       "file": "scripts/export_calendar_snapshots.py",
       "function": "parse_ics_events",
-      "function_line": 195,
-      "specific_behavior": "VEVENT is appended only when DTSTART is inside window; RRULE/RDATE/EXDATE are stored in recurrence but no future occurrences are materialized.",
+      "function_line": 347,
+      "specific_behavior": "RRULE/RDATE/EXDATE occurrences are now materialized inside the export window before the live snapshot builder reads runtime events.",
       "export_days_constant": 60,
-      "export_days_line": 24,
+      "export_days_line": 27,
       "not_caused_by": [
         "14-day seed selection window",
         "appointmentDayId range",
@@ -37,59 +38,796 @@
       "runtime_export_function": "export_calendar_snapshots",
       "runtime_parse_function": "parse_ics_events",
       "runtime_snapshot_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-      "runtime_snapshot_declared_start": "2026-06-19T17:21:21.208861-04:00",
-      "runtime_snapshot_declared_end": "2026-08-18T17:21:21.208861-04:00",
+      "runtime_snapshot_declared_start": "2026-06-29T15:37:34.470018-04:00",
+      "runtime_snapshot_declared_end": "2026-08-28T15:37:34.470018-04:00",
       "runtime_snapshot_declared_days": 60,
       "runtime_event_date_range": {
-        "start": "2026-06-19",
-        "end": "2026-07-04"
+        "start": "2026-06-29",
+        "end": "2026-08-28"
       },
-      "runtime_rrule_event_count": 1,
+      "runtime_rrule_event_count": 40,
+      "runtime_expanded_rrule_event_count": 40,
       "live_snapshot_script": "scripts/build_live_availability_snapshot.py",
       "live_snapshot_function": "build_snapshot",
       "live_inverse_horizon_function": "inverse_expansion_horizon",
       "live_inverse_horizon_line": 389,
       "calendar_source_inverse_expansion_horizon_days": 45,
       "date_range": {
-        "start": "2026-06-21",
-        "end": "2026-07-04"
+        "start": "2026-06-29",
+        "end": "2026-08-28"
       },
-      "august_rows": 0,
+      "august_rows": 29,
       "dynamic_offer_date_range": {
-        "start": "2026-06-21",
-        "end": "2026-07-04"
+        "start": "2026-06-29",
+        "end": "2026-08-13"
       },
-      "dynamic_august_offers": 0
+      "dynamic_august_offers": 20901
     },
     "first_divergence": {
-      "file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+      "file": "resolved_after_rrule_expansion",
       "producer": "scripts/export_calendar_snapshots.py::parse_ics_events",
-      "reason": "The runtime snapshot contains an RRULE with UNTIL=20260801 but no expanded July/August occurrences for that recurring event."
+      "reason": "The runtime snapshot now contains expanded August RRULE occurrences; the old runtime-snapshot divergence is resolved."
     },
     "counts": {
       "runtime_events_by_source": {
-        "amy_availability": 6,
-        "brian_do_not_schedule": 13
+        "brian_do_not_schedule": 49
       },
-      "runtime_rrule_events": 1,
-      "live_snapshot_blocks": 12,
-      "dynamic_offers": 690
+      "runtime_rrule_events": 40,
+      "live_snapshot_blocks": 116,
+      "dynamic_offers": 42909
     },
     "rrule_rows": [
       {
         "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
         "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com",
-        "date": "2026-06-22",
-        "start": "2026-06-22T06:00:00",
-        "end": "2026-06-22T08:30:00",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260630T0600000400",
+        "date": "2026-06-30",
+        "start": "2026-06-30T06:00:00-04:00",
+        "end": "2026-06-30T08:30:00-04:00",
         "summary": "Jonah to LaCrosse",
         "recurrence": [
           {
             "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
           }
         ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260701T0600000400",
+        "date": "2026-07-01",
+        "start": "2026-07-01T06:00:00-04:00",
+        "end": "2026-07-01T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260702T0600000400",
+        "date": "2026-07-02",
+        "start": "2026-07-02T06:00:00-04:00",
+        "end": "2026-07-02T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260703T0600000400",
+        "date": "2026-07-03",
+        "start": "2026-07-03T06:00:00-04:00",
+        "end": "2026-07-03T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260706T0600000400",
+        "date": "2026-07-06",
+        "start": "2026-07-06T06:00:00-04:00",
+        "end": "2026-07-06T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260707T0600000400",
+        "date": "2026-07-07",
+        "start": "2026-07-07T06:00:00-04:00",
+        "end": "2026-07-07T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260708T0600000400",
+        "date": "2026-07-08",
+        "start": "2026-07-08T06:00:00-04:00",
+        "end": "2026-07-08T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260709T0600000400",
+        "date": "2026-07-09",
+        "start": "2026-07-09T06:00:00-04:00",
+        "end": "2026-07-09T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260710T0600000400",
+        "date": "2026-07-10",
+        "start": "2026-07-10T06:00:00-04:00",
+        "end": "2026-07-10T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260713T0600000400",
+        "date": "2026-07-13",
+        "start": "2026-07-13T06:00:00-04:00",
+        "end": "2026-07-13T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260714T0600000400",
+        "date": "2026-07-14",
+        "start": "2026-07-14T06:00:00-04:00",
+        "end": "2026-07-14T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260715T0600000400",
+        "date": "2026-07-15",
+        "start": "2026-07-15T06:00:00-04:00",
+        "end": "2026-07-15T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260716T0600000400",
+        "date": "2026-07-16",
+        "start": "2026-07-16T06:00:00-04:00",
+        "end": "2026-07-16T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260717T0600000400",
+        "date": "2026-07-17",
+        "start": "2026-07-17T06:00:00-04:00",
+        "end": "2026-07-17T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260720T0600000400",
+        "date": "2026-07-20",
+        "start": "2026-07-20T06:00:00-04:00",
+        "end": "2026-07-20T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260721T0600000400",
+        "date": "2026-07-21",
+        "start": "2026-07-21T06:00:00-04:00",
+        "end": "2026-07-21T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260722T0600000400",
+        "date": "2026-07-22",
+        "start": "2026-07-22T06:00:00-04:00",
+        "end": "2026-07-22T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260723T0600000400",
+        "date": "2026-07-23",
+        "start": "2026-07-23T06:00:00-04:00",
+        "end": "2026-07-23T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260724T0600000400",
+        "date": "2026-07-24",
+        "start": "2026-07-24T06:00:00-04:00",
+        "end": "2026-07-24T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260727T0600000400",
+        "date": "2026-07-27",
+        "start": "2026-07-27T06:00:00-04:00",
+        "end": "2026-07-27T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260728T0600000400",
+        "date": "2026-07-28",
+        "start": "2026-07-28T06:00:00-04:00",
+        "end": "2026-07-28T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260729T0600000400",
+        "date": "2026-07-29",
+        "start": "2026-07-29T06:00:00-04:00",
+        "end": "2026-07-29T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260730T0600000400",
+        "date": "2026-07-30",
+        "start": "2026-07-30T06:00:00-04:00",
+        "end": "2026-07-30T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260731T0600000400",
+        "date": "2026-07-31",
+        "start": "2026-07-31T06:00:00-04:00",
+        "end": "2026-07-31T08:30:00-04:00",
+        "summary": "Jonah to LaCrosse",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          },
+          {
+            "exdate": "20260622T060000"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260819T0630000400",
+        "date": "2026-08-19",
+        "start": "2026-08-19T06:30:00-04:00",
+        "end": "2026-08-19T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260819T1500000400",
+        "date": "2026-08-19",
+        "start": "2026-08-19T15:00:00-04:00",
+        "end": "2026-08-19T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260820T0630000400",
+        "date": "2026-08-20",
+        "start": "2026-08-20T06:30:00-04:00",
+        "end": "2026-08-20T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260820T1500000400",
+        "date": "2026-08-20",
+        "start": "2026-08-20T15:00:00-04:00",
+        "end": "2026-08-20T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260821T0630000400",
+        "date": "2026-08-21",
+        "start": "2026-08-21T06:30:00-04:00",
+        "end": "2026-08-21T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260821T1500000400",
+        "date": "2026-08-21",
+        "start": "2026-08-21T15:00:00-04:00",
+        "end": "2026-08-21T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260824T0630000400",
+        "date": "2026-08-24",
+        "start": "2026-08-24T06:30:00-04:00",
+        "end": "2026-08-24T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260824T1500000400",
+        "date": "2026-08-24",
+        "start": "2026-08-24T15:00:00-04:00",
+        "end": "2026-08-24T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260825T0630000400",
+        "date": "2026-08-25",
+        "start": "2026-08-25T06:30:00-04:00",
+        "end": "2026-08-25T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260825T1500000400",
+        "date": "2026-08-25",
+        "start": "2026-08-25T15:00:00-04:00",
+        "end": "2026-08-25T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260826T0630000400",
+        "date": "2026-08-26",
+        "start": "2026-08-26T06:30:00-04:00",
+        "end": "2026-08-26T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260826T1500000400",
+        "date": "2026-08-26",
+        "start": "2026-08-26T15:00:00-04:00",
+        "end": "2026-08-26T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260827T0630000400",
+        "date": "2026-08-27",
+        "start": "2026-08-27T06:30:00-04:00",
+        "end": "2026-08-27T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260827T1500000400",
+        "date": "2026-08-27",
+        "start": "2026-08-27T15:00:00-04:00",
+        "end": "2026-08-27T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260828T0630000400",
+        "date": "2026-08-28",
+        "start": "2026-08-28T06:30:00-04:00",
+        "end": "2026-08-28T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260828T1500000400",
+        "date": "2026-08-28",
+        "start": "2026-08-28T15:00:00-04:00",
+        "end": "2026-08-28T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
       }
     ]
   },
@@ -208,175 +946,217 @@
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 19,
+      "line": 22,
       "term_matches": "snapshot",
       "text": "RUNTIME_SNAPSHOT_DIR = ROOT / \"data\" / \"runtime\" / \"calendar_snapshots\"",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 21,
+      "line": 24,
       "term_matches": "snapshot",
       "text": "SUMMARY_PATH = AUDIT_DIR / \"calendar_snapshot_export_summary.json\"",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 22,
+      "line": 25,
       "term_matches": "snapshot",
       "text": "REPORT_PATH = AUDIT_DIR / \"calendar_snapshot_export_report.md\"",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 24,
+      "line": 27,
       "term_matches": "60",
       "text": "EXPORT_DAYS = 60",
       "relevance": "active_runtime_snapshot_export_window"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 142,
+      "line": 146,
       "term_matches": "30",
       "text": "def fetch_ics(url: str, timeout: int = 30) -> str:",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 143,
+      "line": 147,
       "term_matches": "snapshot",
       "text": "request = urllib.request.Request(url, headers={\"User-Agent\": \"LANDERware-scheduler-read-only-snapshot/0.1\"})",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 257,
+      "line": 259,
+      "term_matches": "until",
+      "text": "def replace_until(match: re.Match[str]) -> str:",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 260,
+      "term_matches": "until",
+      "text": "raw_until = match.group(1)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 261,
+      "term_matches": "until",
+      "text": "parsed = parse_ics_datetime(raw_until)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 264,
+      "term_matches": "until",
+      "text": "local_until = parsed.astimezone(LOCAL_TZ).replace(tzinfo=None) if parsed.tzinfo else parsed",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 265,
+      "term_matches": "until",
+      "text": "return f\"UNTIL={local_until.strftime('%Y%m%dT%H%M%S')}\"",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 267,
+      "term_matches": "until",
+      "text": "return re.sub(r\"UNTIL=([0-9]{8}T[0-9]{4,6}Z)\", replace_until, rule)",
+      "relevance": "context"
+    },
+    {
+      "file": "scripts/export_calendar_snapshots.py",
+      "line": 414,
       "term_matches": "snapshot",
       "text": "current[\"read_only_snapshot\"] = True",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 275,
+      "line": 459,
       "term_matches": "snapshot",
       "text": "def write_source_snapshot(",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 286,
+      "line": 470,
       "term_matches": "snapshot",
       "text": "RUNTIME_SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 287,
+      "line": 471,
       "term_matches": "snapshot",
       "text": "path = RUNTIME_SNAPSHOT_DIR / f\"{source_id}.json\"",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 291,
+      "line": 475,
       "term_matches": "snapshot",
       "text": "\"read_only_snapshot\": True,",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 319,
+      "line": 503,
       "term_matches": "snapshot",
       "text": "\"# Calendar Snapshot Export Report\",",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 323,
+      "line": 507,
       "term_matches": "snapshot",
       "text": "\"Private event descriptions are stored only inside the local runtime snapshot JSON files and are not printed in this report.\",",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 328,
+      "line": 512,
       "term_matches": "snapshot",
       "text": "f\"- Snapshots written: {summary['snapshots_written']}\",",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 335,
+      "line": 519,
       "term_matches": "snapshot",
       "text": "\"| Source | Calendar ID Present | ICS URL Attempted | URL Source | Type | Status | Failure Reason | Events | Snapshot | Warning Count |\",",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 342,
+      "line": 526,
       "term_matches": "snapshot",
       "text": "f\"`{item['snapshot_path']}` | {len(item.get('warnings', []))} |\"",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 353,
+      "line": 537,
       "term_matches": "snapshot",
       "text": "def export_calendar_snapshots(fetcher: Callable[[str], str] = fetch_ics) -> dict[str, Any]:",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 383,
+      "line": 567,
       "term_matches": "snapshot",
       "text": "snapshot_path = write_source_snapshot(source, events, window_start, window_end, export_status, url_source, warnings, skipped)",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 394,
+      "line": 578,
       "term_matches": "snapshot",
       "text": "\"snapshot_path\": str(snapshot_path),",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 401,
+      "line": 585,
       "term_matches": "snapshot",
       "text": "\"read_only_snapshot_export\": True,",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 407,
+      "line": 591,
       "term_matches": "snapshot",
       "text": "\"snapshots_written\": len(source_summaries),",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 435,
+      "line": 619,
       "term_matches": "snapshot",
       "text": "summary = export_calendar_snapshots()",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 436,
+      "line": 620,
       "term_matches": "snapshot",
       "text": "print(\"Calendar snapshot export complete (READ ONLY).\")",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 440,
+      "line": 624,
       "term_matches": "snapshot",
       "text": "print(f\"Snapshots written: {summary['snapshots_written']}\")",
       "relevance": "context"
     },
     {
       "file": "scripts/export_calendar_snapshots.py",
-      "line": 452,
+      "line": 636,
       "term_matches": "snapshot",
       "text": "print(f\"- {item['snapshot_path']}\")",
       "relevance": "context"

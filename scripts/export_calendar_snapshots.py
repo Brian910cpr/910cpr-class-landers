@@ -11,6 +11,9 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable
 
+from dateutil.rrule import rrulestr
+from zoneinfo import ZoneInfo
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CALENDAR_SOURCES_PATH = ROOT / "data" / "config" / "calendar_sources.json"
@@ -23,6 +26,7 @@ REPORT_PATH = AUDIT_DIR / "calendar_snapshot_export_report.md"
 
 EXPORT_DAYS = 60
 UNKNOWN = "UNKNOWN"
+LOCAL_TZ = ZoneInfo("America/New_York")
 
 MODE_TO_SOURCE_TYPE = {
     "explicit_availability": "google_calendar",
@@ -167,10 +171,11 @@ def split_ical_property(line: str) -> tuple[str, dict[str, str], str]:
     return name, params, value
 
 
-def parse_ics_datetime(value: str) -> datetime | None:
+def parse_ics_datetime(value: str, params: dict[str, str] | None = None) -> datetime | None:
     text = clean_text(value)
     if not text:
         return None
+    params = params or {}
     formats = [
         ("%Y%m%dT%H%M%SZ", True),
         ("%Y%m%dT%H%M%S", False),
@@ -181,20 +186,167 @@ def parse_ics_datetime(value: str) -> datetime | None:
     for fmt, is_utc in formats:
         try:
             parsed = datetime.strptime(text, fmt)
-            return parsed.replace(tzinfo=timezone.utc) if is_utc else parsed
+            if is_utc:
+                return parsed.replace(tzinfo=timezone.utc)
+            tzid = clean_text(params.get("TZID"))
+            if tzid:
+                try:
+                    return parsed.replace(tzinfo=ZoneInfo(tzid))
+                except Exception:
+                    return parsed.replace(tzinfo=LOCAL_TZ)
+            return parsed
         except ValueError:
             continue
     return None
 
 
-def ics_datetime_to_iso(value: str) -> str | None:
-    parsed = parse_ics_datetime(value)
+def ics_datetime_to_iso(value: str, params: dict[str, str] | None = None) -> str | None:
+    parsed = parse_ics_datetime(value, params)
     return parsed.isoformat() if parsed else None
+
+
+def comparable_dt(value: datetime) -> datetime:
+    if value.tzinfo is None:
+        return value
+    return value.astimezone(timezone.utc).replace(tzinfo=None)
+
+
+def rrule_window_bounds(dtstart: datetime, window_start: datetime, window_end: datetime) -> tuple[datetime, datetime]:
+    if dtstart.tzinfo is None:
+        return comparable_dt(window_start), comparable_dt(window_end)
+    return (
+        window_start.astimezone(dtstart.tzinfo) if window_start.tzinfo else window_start.replace(tzinfo=dtstart.tzinfo),
+        window_end.astimezone(dtstart.tzinfo) if window_end.tzinfo else window_end.replace(tzinfo=dtstart.tzinfo),
+    )
+
+
+def in_export_window(start: datetime, window_start: datetime, window_end: datetime) -> bool:
+    return comparable_dt(window_start) <= comparable_dt(start) <= comparable_dt(window_end)
+
+
+def recurrence_key(uid: Any, start: datetime | None) -> tuple[str, str]:
+    return clean_text(uid), start.isoformat() if start else ""
+
+
+def parse_recurrence_values(event: dict[str, Any], name: str) -> list[datetime]:
+    values: list[datetime] = []
+    raw_items = event.get("recurrence", [])
+    if not isinstance(raw_items, list):
+        return values
+    for item in raw_items:
+        if not isinstance(item, dict) or name.lower() not in item:
+            continue
+        raw_value = clean_text(item.get(name.lower()))
+        for part in raw_value.split(","):
+            parsed = parse_ics_datetime(part)
+            if parsed:
+                values.append(parsed)
+    return values
+
+
+def recurrence_rules(event: dict[str, Any]) -> list[str]:
+    rules: list[str] = []
+    for item in event.get("recurrence", []):
+        if isinstance(item, dict) and item.get("rrule"):
+            rules.append(clean_text(item["rrule"]))
+    return [rule for rule in rules if rule]
+
+
+def normalize_rrule_for_dtstart(rule: str, dtstart: datetime) -> str:
+    if dtstart.tzinfo is not None:
+        return rule
+
+    def replace_until(match: re.Match[str]) -> str:
+        raw_until = match.group(1)
+        parsed = parse_ics_datetime(raw_until)
+        if not parsed:
+            return match.group(0)
+        local_until = parsed.astimezone(LOCAL_TZ).replace(tzinfo=None) if parsed.tzinfo else parsed
+        return f"UNTIL={local_until.strftime('%Y%m%dT%H%M%S')}"
+
+    return re.sub(r"UNTIL=([0-9]{8}T[0-9]{4,6}Z)", replace_until, rule)
+
+
+def clone_event_for_occurrence(event: dict[str, Any], occurrence_start: datetime, occurrence_end: datetime, source: str) -> dict[str, Any]:
+    cloned = json.loads(json.dumps(event, ensure_ascii=False))
+    master_uid = clean_text(event.get("event_id") or event.get("raw_properties", {}).get("UID"))
+    cloned["recurrence_source"] = source
+    cloned["generated_from_rrule"] = source == "recurring_expanded_instance"
+    cloned["recurrence_source_uid"] = master_uid or UNKNOWN
+    cloned["original_uid"] = master_uid or UNKNOWN
+    cloned["occurrence_start"] = occurrence_start.isoformat()
+    cloned["occurrence_end"] = occurrence_end.isoformat()
+    cloned["start"] = occurrence_start.isoformat()
+    cloned["end"] = occurrence_end.isoformat()
+    if source == "recurring_expanded_instance":
+        occurrence_suffix = re.sub(r"[^0-9A-Za-z]+", "", occurrence_start.isoformat())
+        cloned["event_id"] = f"{master_uid}:{occurrence_suffix}" if master_uid else f"recurring:{occurrence_suffix}"
+        cloned["recurring_master_event_id"] = master_uid or UNKNOWN
+    return cloned
+
+
+def expand_recurring_event(
+    event: dict[str, Any],
+    window_start: datetime,
+    window_end: datetime,
+    duplicate_keys: set[tuple[str, str]],
+    override_keys: set[tuple[str, str]],
+) -> tuple[list[dict[str, Any]], Counter]:
+    skipped = Counter()
+    start_raw = clean_text(event.get("start_raw"))
+    end_raw = clean_text(event.get("end_raw"))
+    start_params = event.get("start_params") if isinstance(event.get("start_params"), dict) else {}
+    end_params = event.get("end_params") if isinstance(event.get("end_params"), dict) else {}
+    start_dt = parse_ics_datetime(start_raw, start_params) if start_raw else None
+    end_dt = parse_ics_datetime(end_raw, end_params) if end_raw else None
+    if not start_dt or not end_dt:
+        skipped["recurring_missing_parseable_start_or_end"] += 1
+        return [], skipped
+    duration = end_dt - start_dt
+    if duration.total_seconds() <= 0:
+        skipped["recurring_invalid_duration"] += 1
+        return [], skipped
+
+    exclusions = {comparable_dt(value) for value in parse_recurrence_values(event, "EXDATE")}
+    rdates = parse_recurrence_values(event, "RDATE")
+    occurrence_starts: list[datetime] = []
+    bounded_start, bounded_end = rrule_window_bounds(start_dt, window_start, window_end)
+    for rule in recurrence_rules(event):
+        try:
+            rule_set = rrulestr(normalize_rrule_for_dtstart(rule, start_dt), dtstart=start_dt)
+            occurrence_starts.extend(rule_set.between(bounded_start, bounded_end, inc=True))
+        except (ValueError, TypeError) as exc:
+            skipped[f"rrule_parse_error:{type(exc).__name__}"] += 1
+    occurrence_starts.extend(value for value in rdates if in_export_window(value, window_start, window_end))
+
+    expanded: list[dict[str, Any]] = []
+    seen_occurrences: set[str] = set()
+    uid = event.get("event_id") or event.get("raw_properties", {}).get("UID")
+    for occurrence_start in sorted(occurrence_starts, key=comparable_dt):
+        comparable_start = comparable_dt(occurrence_start)
+        occurrence_key = comparable_start.isoformat()
+        if occurrence_key in seen_occurrences:
+            skipped["duplicate_generated_occurrence"] += 1
+            continue
+        seen_occurrences.add(occurrence_key)
+        key = recurrence_key(uid, occurrence_start)
+        if comparable_start in exclusions:
+            skipped["excluded_by_exdate"] += 1
+            continue
+        if key in override_keys:
+            skipped["suppressed_by_recurrence_override"] += 1
+            continue
+        if key in duplicate_keys:
+            skipped["duplicate_explicit_event_same_uid_start"] += 1
+            continue
+        occurrence_end = occurrence_start + duration
+        expanded.append(clone_event_for_occurrence(event, occurrence_start, occurrence_end, "recurring_expanded_instance"))
+    return expanded, skipped
 
 
 def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: datetime, window_end: datetime) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     lines = unfold_ics_lines(ics_text)
-    events: list[dict[str, Any]] = []
+    parsed_events: list[dict[str, Any]] = []
     current: dict[str, Any] | None = None
     skipped = Counter()
     source_id = source_key(source)
@@ -209,13 +361,12 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
             if current is None:
                 continue
             start_raw = current.get("start_raw")
-            start_dt = parse_ics_datetime(start_raw) if start_raw else None
+            start_dt = parse_ics_datetime(start_raw, current.get("start_params")) if start_raw else None
             if not start_dt:
                 skipped["missing_parseable_start"] += 1
             else:
-                comparable_start = start_dt.replace(tzinfo=None)
-                if window_start.replace(tzinfo=None) <= comparable_start <= window_end.replace(tzinfo=None):
-                    events.append(current)
+                if in_export_window(start_dt, window_start, window_end) or recurrence_rules(current):
+                    parsed_events.append(current)
                 else:
                     skipped["outside_export_window"] += 1
             current = None
@@ -223,7 +374,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         if current is None:
             continue
 
-        name, _params, value = split_ical_property(line)
+        name, params, value = split_ical_property(line)
         current["raw_properties"][name] = value
         if name == "UID":
             current["event_id"] = value
@@ -234,10 +385,16 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
             current["description"] = value
         elif name == "DTSTART":
             current["start_raw"] = value
-            current["start"] = ics_datetime_to_iso(value)
+            current["start_params"] = params
+            current["start"] = ics_datetime_to_iso(value, params)
         elif name == "DTEND":
             current["end_raw"] = value
-            current["end"] = ics_datetime_to_iso(value)
+            current["end_params"] = params
+            current["end"] = ics_datetime_to_iso(value, params)
+        elif name == "RECURRENCE-ID":
+            current["recurrence_id_raw"] = value
+            current["recurrence_id_params"] = params
+            current["recurrence_id"] = ics_datetime_to_iso(value, params)
         elif name == "LOCATION":
             current["location"] = value
         elif name == "STATUS":
@@ -256,8 +413,29 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         current["source_type"] = stype
         current["read_only_snapshot"] = True
 
+    duplicate_keys: set[tuple[str, str]] = set()
+    override_keys: set[tuple[str, str]] = set()
+    for event in parsed_events:
+        event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
+        uid = event.get("event_id") or event.get("raw_properties", {}).get("UID")
+        if event_start and not recurrence_rules(event):
+            duplicate_keys.add(recurrence_key(uid, event_start))
+        recurrence_id = parse_ics_datetime(event.get("recurrence_id_raw", ""), event.get("recurrence_id_params"))
+        if recurrence_id:
+            override_keys.add(recurrence_key(uid, recurrence_id))
+
     normalized_events = []
-    for index, event in enumerate(events, start=1):
+    for index, event in enumerate(parsed_events, start=1):
+        event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
+        has_rrule = bool(recurrence_rules(event))
+        has_override = bool(event.get("recurrence_id"))
+        if not has_rrule and event_start and not in_export_window(event_start, window_start, window_end):
+            skipped["outside_export_window"] += 1
+            continue
+        event["recurrence_source"] = "overridden_instance" if has_override else ("recurring_master" if has_rrule else "explicit_event")
+        event["generated_from_rrule"] = False
+        event["original_uid"] = event.get("event_id") or event.get("raw_properties", {}).get("UID") or UNKNOWN
+        event["recurrence_source_uid"] = event["original_uid"]
         event.setdefault("event_id", f"{source_id}_event_{index}")
         event.setdefault("title", "")
         event.setdefault("summary", event.get("title", ""))
@@ -267,8 +445,14 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         event.setdefault("updated", UNKNOWN)
         event.setdefault("creator", UNKNOWN)
         event.setdefault("organizer", event.get("organizer", UNKNOWN))
-        normalized_events.append(event)
+        if has_rrule:
+            expanded, recurring_skipped = expand_recurring_event(event, window_start, window_end, duplicate_keys, override_keys)
+            skipped.update(recurring_skipped)
+            normalized_events.extend(expanded)
+        else:
+            normalized_events.append(event)
 
+    normalized_events.sort(key=lambda item: (clean_text(item.get("start")), clean_text(item.get("event_id"))))
     return normalized_events, dict(skipped)
 
 

@@ -21,50 +21,50 @@ This is a read-only V0 dynamic offer generator. It did not modify public pages, 
 
 - Availability source used: live_availability_snapshot
 - Availability fallback used: False
-- Available blocks read from selected source: 11
+- Available blocks read from selected source: 68
 - Availability source reason: valid_live_available_blocks_found
-- Availability windows read: 11
+- Availability windows read: 68
 - Scheduler-enabled instructors considered: 2
 - Courses considered: 30
-- Local occupancy blocks read: 223
-- Offers generated: 690
+- Local occupancy blocks read: 220
+- Offers generated: 42909
 
 ## Offers Rejected By Reason
 
-- `conflicts_with_existing_occupancy`: 166
-- `course_family_not_allowed_by_window`: 127
-- `course_does_not_fit_window`: 85
+- `conflicts_with_existing_occupancy`: 17672
+- `course_family_not_allowed_by_window`: 748
+- `course_does_not_fit_window`: 9
 
 ## Top 20 Example Offers
 
 | Date | Time | Course | Instructor | Location |
 | --- | --- | --- | --- | --- |
-| 2026-06-23 | 18:00-19:30 | AHA ACLS HeartCode | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:15-19:45 | AHA ACLS HeartCode | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:30-20:00 | AHA ACLS HeartCode | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:45-20:15 | AHA ACLS HeartCode | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 19:00-20:30 | AHA ACLS HeartCode | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 19:15-20:45 | AHA ACLS HeartCode | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 19:30-21:00 | AHA ACLS HeartCode | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 19:45-21:15 | AHA ACLS HeartCode | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:00-20:00 | AHA BLS Provider | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:15-20:15 | AHA BLS Provider | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:30-20:30 | AHA BLS Provider | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:45-20:45 | AHA BLS Provider | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 19:00-21:00 | AHA BLS Provider | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 19:15-21:15 | AHA BLS Provider | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:00-20:00 | AHA BLS Provider Renewal | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:15-20:15 | AHA BLS Provider Renewal | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:30-20:30 | AHA BLS Provider Renewal | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 18:45-20:45 | AHA BLS Provider Renewal | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 19:00-21:00 | AHA BLS Provider Renewal | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-23 | 19:15-21:15 | AHA BLS Provider Renewal | Amy Arnold | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 15:45-16:45 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:00-17:00 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:15-17:15 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 15:45-16:30 | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:00-16:45 | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:15-17:00 | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:30-17:15 | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 15:45-16:30 | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:00-16:45 | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:15-17:00 | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:30-17:15 | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 15:45-16:30 | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:00-16:45 | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:15-17:00 | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:30-17:15 | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 15:45-16:30 | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:00-16:45 | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:15-17:00 | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 16:30-17:15 | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-06-29 | 15:45-17:15 | AHA Heartsaver CPR AED | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
 
 ## Blockers Preventing More Offers
 
-- `conflicts_with_existing_occupancy`: 166
-- `course_family_not_allowed_by_window`: 127
-- `course_does_not_fit_window`: 85
+- `conflicts_with_existing_occupancy`: 17672
+- `course_family_not_allowed_by_window`: 748
+- `course_does_not_fit_window`: 9
 
 ## Next Safest Step
 

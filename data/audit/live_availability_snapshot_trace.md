@@ -13,24 +13,24 @@ Status: read-only trace. No deploy was performed.
 ## Date Ranges
 
 - Seed simulation: 2026-08-03 to 2026-09-14
-- Runtime calendar snapshots: 2026-06-19 to 2026-07-04
-- Live availability snapshot: 2026-06-21 to 2026-07-04
-- Dynamic offers: 2026-06-21 to 2026-07-04
+- Runtime calendar snapshots: 2026-06-29 to 2026-08-28
+- Live availability snapshot: 2026-06-29 to 2026-08-28
+- Dynamic offers: 2026-06-29 to 2026-08-13
 
 ## August Counts
 
 - Seed simulation August BLS blocks/proposals: 8
-- Runtime August events: 0
-- Runtime events with August RRULE not expanded: 1
-- Live snapshot August blocks: 0
-- Dynamic August offers: 0
+- Runtime August events: 16
+- Runtime events with August RRULE not expanded: 0
+- Live snapshot August blocks: 29
+- Dynamic August offers: 20901
 
 ## First Divergence
 
-`data/audit/live_availability_snapshot_preview.json` is the first file where August availability is absent. Seed simulation has August report-only base-horizon BLS windows; the live snapshot consumed by dynamic generation does not.
+The prior divergence is resolved after RRULE expansion. Seed simulation, runtime calendar snapshots, the live availability snapshot, and dynamic offers now all carry August rows.
 
 ## Why This Happens
 
-live snapshot/runtime calendar snapshots contain no expanded August availability blocks; dynamic generation correctly uses the nonempty live snapshot and therefore never evaluates seed-simulation August base-horizon windows
+resolved: runtime calendar snapshots now contain expanded August recurrence instances, the live snapshot contains August availability blocks, and dynamic generation evaluates August offers before Course Master/public gates
 
 See `seed_sim_vs_active_generation_diff.csv` for the row-level comparison.

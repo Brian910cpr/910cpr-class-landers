@@ -123,6 +123,8 @@ def runtime_snapshot_rows() -> list[dict[str, Any]]:
                     "availability_status": "runtime_event",
                     "summary": event.get("summary") or event.get("title"),
                     "recurrence": event.get("recurrence"),
+                    "generated_from_rrule": event.get("generated_from_rrule"),
+                    "recurrence_source": event.get("recurrence_source"),
                 })
     return rows
 
@@ -183,10 +185,20 @@ def summarize(payloads: dict[str, Any], diff_rows: list[dict[str, Any]]) -> dict
     august_live = [row for row in live_blocks if is_august(row)]
     august_dynamic = [row for row in dynamic_offers if is_august(row)]
     recurrence_august_sources = []
+    expanded_august_recurrence_rows = []
     for row in runtime_rows:
         recurrence_text = json.dumps(row.get("recurrence", []))
-        if "202608" in recurrence_text:
+        if "202608" in recurrence_text and not row.get("generated_from_rrule"):
             recurrence_august_sources.append(normalize_window("runtime_calendar_event_with_august_rrule", row, row.get("_source_file", ""), recurrence_text))
+        if is_august(row) and row.get("generated_from_rrule"):
+            expanded_august_recurrence_rows.append(normalize_window("runtime_calendar_expanded_rrule_instance", row, row.get("_source_file", ""), recurrence_text))
+    source_mismatch_resolved = bool(august_seed_bls and august_live and august_dynamic)
+    first_divergence = "resolved_after_rrule_expansion" if source_mismatch_resolved else "data/audit/live_availability_snapshot_preview.json"
+    zero_reason = (
+        "resolved: runtime calendar snapshots now contain expanded August recurrence instances, the live snapshot contains August availability blocks, and dynamic generation evaluates August offers before Course Master/public gates"
+        if source_mismatch_resolved
+        else "live snapshot/runtime calendar snapshots contain no expanded August availability blocks; dynamic generation correctly uses the nonempty live snapshot and therefore never evaluates seed-simulation August base-horizon windows"
+    )
     return {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "read_only": True,
@@ -195,8 +207,9 @@ def summarize(payloads: dict[str, Any], diff_rows: list[dict[str, Any]]) -> dict
         "active_dynamic_generator": "scripts/generate_dynamic_offers.py",
         "active_dynamic_input_path": "data/audit/live_availability_snapshot_preview.json",
         "active_dynamic_output_path": "data/audit/dynamic_offers_preview.json",
-        "first_divergence_file": "data/audit/live_availability_snapshot_preview.json",
-        "zero_reason": "live snapshot/runtime calendar snapshots contain no expanded August availability blocks; dynamic generation correctly uses the nonempty live snapshot and therefore never evaluates seed-simulation August base-horizon windows",
+        "source_mismatch_resolved": source_mismatch_resolved,
+        "first_divergence_file": first_divergence,
+        "zero_reason": zero_reason,
         "seed_simulation_date_range": date_range(seed_rows),
         "live_snapshot_date_range": date_range(live_blocks),
         "runtime_snapshot_date_range": date_range(runtime_rows),
@@ -211,12 +224,14 @@ def summarize(payloads: dict[str, Any], diff_rows: list[dict[str, Any]]) -> dict
         "selected_availability_source_stats": selected_stats,
         "runtime_events_total": len(runtime_rows),
         "runtime_events_with_august_rrule_not_expanded": len(recurrence_august_sources),
+        "runtime_august_events_generated_from_rrule": len(expanded_august_recurrence_rows),
         "runtime_august_events": sum(1 for row in runtime_rows if is_august(row)),
         "live_snapshot_stats": payloads["live_snapshot"].get("stats", {}),
         "dynamic_offer_stats": payloads["dynamic"].get("stats", {}),
         "diff_counts_by_stage": dict(Counter(row["stage"] for row in diff_rows)),
         "diff_counts_by_source_file": dict(Counter(row["source_file"] for row in diff_rows)),
         "runtime_august_rrule_rows": recurrence_august_sources,
+        "runtime_august_expanded_rrule_rows": expanded_august_recurrence_rows,
     }
 
 
@@ -267,7 +282,11 @@ def render_trace(report: dict[str, Any]) -> str:
         "",
         "## First Divergence",
         "",
-        f"`{s['first_divergence_file']}` is the first file where August availability is absent. Seed simulation has August report-only base-horizon BLS windows; the live snapshot consumed by dynamic generation does not.",
+        (
+            "The prior divergence is resolved after RRULE expansion. Seed simulation, runtime calendar snapshots, the live availability snapshot, and dynamic offers now all carry August rows."
+            if s["source_mismatch_resolved"]
+            else f"`{s['first_divergence_file']}` is the first file where August availability is absent. Seed simulation has August report-only base-horizon BLS windows; the live snapshot consumed by dynamic generation does not."
+        ),
         "",
         "## Why This Happens",
         "",
@@ -284,7 +303,11 @@ def render_zero_reason(report: dict[str, Any]) -> str:
     return "\n".join([
         "# August Dynamic Generation Zero Reason",
         "",
-        "Active dynamic generation produces zero August offers because its selected availability source is a nonempty live snapshot that has no August availability blocks.",
+        (
+            "Active dynamic generation no longer produces zero August offers. RRULE expansion now gives the live snapshot August availability blocks, and dynamic generation evaluates August offers from that source."
+            if s["source_mismatch_resolved"]
+            else "Active dynamic generation produces zero August offers because its selected availability source is a nonempty live snapshot that has no August availability blocks."
+        ),
         "",
         f"- Dynamic availability source: `{s['dynamic_generation_availability_source']}`",
         f"- Dynamic availability reason: `{s['dynamic_generation_availability_reason']}`",
@@ -293,13 +316,13 @@ def render_zero_reason(report: dict[str, Any]) -> str:
         "",
         "Checked causes:",
         "",
-        "- Live snapshot stale or not refreshed: likely. Runtime snapshots stop at July 4.",
-        "- Live snapshot horizon too short: yes for August visibility.",
+        f"- Live snapshot stale or not refreshed: {'no after RRULE expansion' if s['source_mismatch_resolved'] else 'likely. Runtime snapshots stop at July 4.'}",
+        f"- Live snapshot horizon too short: {'no for current August audit range' if s['source_mismatch_resolved'] else 'yes for August visibility.'}",
         "- Current date/window cutoff: not the dynamic offer date filter; the upstream snapshot lacks August rows.",
         "- Timezone conversion: not the first break.",
-        "- Source file mismatch: yes. Seed simulation uses report-only base-horizon windows; active generation uses live snapshot blocks.",
-        "- Occupancy/course duration/location/course/instructor filters: downstream, not reached for August.",
-        "- Course Master gates: downstream, not reached for August.",
+        f"- Source file mismatch: {'resolved. Both paths now expose August rows before downstream gates.' if s['source_mismatch_resolved'] else 'yes. Seed simulation uses report-only base-horizon windows; active generation uses live snapshot blocks.'}",
+        "- Occupancy/course duration/location/course/instructor filters: downstream.",
+        "- Course Master gates: downstream.",
         "",
     ])
 
@@ -312,7 +335,7 @@ def render_minimum_fix(report: dict[str, Any]) -> str:
         "",
         "## Safest Minimal Fix",
         "",
-        "Refresh or regenerate `data/runtime/calendar_snapshots/*.json` so the live snapshot builder has calendar data through August, including expanded recurring events where applicable, then rerun `scripts/build_live_availability_snapshot.py` and `scripts/generate_dynamic_offers.py`.",
+        "Keep `scripts/export_calendar_snapshots.py` expanding recurring calendar events into concrete instances before `scripts/build_live_availability_snapshot.py` runs, then rerun dynamic generation and downstream public filters from the regenerated live snapshot.",
         "",
         "If live calendar access cannot produce August rows quickly, add an explicit reviewed August availability merge into the live snapshot builder from the same base-horizon source used by seed simulation. That merge should be opt-in, report-only/audited, limited to Brian/Wilmington BLS, and still flow through existing dynamic generation, public sellable filtering, seed selection, appointmentDayId mapping, and public integrity checks.",
         "",
@@ -329,7 +352,7 @@ def render_test_plan(report: dict[str, Any]) -> str:
         "",
         "Implemented checks:",
         "",
-        "- `tests.test_live_availability_snapshot_trace` verifies seed simulation sees August BLS availability while the active live snapshot does not, and records the divergence before Course Master gates.",
+        "- `tests.test_live_availability_snapshot_trace` verifies seed simulation sees August BLS availability, runtime RRULE expansion creates August events, the active live snapshot contains August blocks, and dynamic generation no longer silently produces zero August offers.",
         "- `tests.test_generate_dynamic_offers.DynamicOffersTest.test_august_live_snapshot_block_generates_august_bls_offer` verifies that when a valid August BLS live snapshot block exists, dynamic generation produces an August offer.",
         "- Existing `tests.test_audit_august_seed_breakpoint` verifies August cannot silently disappear without the breakpoint report naming the upstream source mismatch.",
         "",

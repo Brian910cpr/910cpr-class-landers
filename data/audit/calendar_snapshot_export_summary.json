@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-06-19T17:21:21.958229-04:00",
+  "generated_at": "2026-06-29T15:37:35.283712-04:00",
   "read_only_snapshot_export": true,
-  "calendar_sources_path": "E:\\GitHub\\910cpr-class-landers\\data\\config\\calendar_sources.json",
-  "people_catalog_path": "E:\\GitHub\\910cpr-class-landers\\data\\config\\people_catalog.json",
-  "private_calendar_secrets_path": "E:\\GitHub\\910cpr-class-landers\\data\\private\\calendar_secrets.local.json",
+  "calendar_sources_path": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\config\\calendar_sources.json",
+  "people_catalog_path": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\config\\people_catalog.json",
+  "private_calendar_secrets_path": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\private\\calendar_secrets.local.json",
   "private_calendar_secrets_loaded": false,
   "calendar_sources_found": 3,
   "snapshots_written": 3,
-  "total_events_exported": 19,
+  "total_events_exported": 49,
   "events_exported_per_source": {
-    "amy_availability": 6,
+    "amy_availability": 0,
     "nick_availability": 0,
-    "brian_do_not_schedule": 13
+    "brian_do_not_schedule": 49
   },
   "date_range": {
-    "start": "2026-06-19T17:21:21.208861-04:00",
-    "end": "2026-08-18T17:21:21.208861-04:00",
+    "start": "2026-06-29T15:37:34.470018-04:00",
+    "end": "2026-08-28T15:37:34.470018-04:00",
     "days": 60
   },
   "sources": [
@@ -28,11 +28,11 @@
       "failure_reason": null,
       "url_source": "derived_public_ics_from_calendar_id",
       "attempted_ics_url_redacted": "https://calendar.google.com/...m/public/basic.ics",
-      "events_exported": 6,
-      "snapshot_path": "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\calendar_snapshots\\amy_availability.json",
+      "events_exported": 0,
+      "snapshot_path": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\runtime\\calendar_snapshots\\amy_availability.json",
       "warnings": [],
       "skipped": {
-        "outside_export_window": 6
+        "outside_export_window": 12
       }
     },
     {
@@ -45,7 +45,7 @@
       "url_source": "derived_public_ics_from_calendar_id",
       "attempted_ics_url_redacted": "https://calendar.google.com/...m/public/basic.ics",
       "events_exported": 0,
-      "snapshot_path": "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\calendar_snapshots\\nick_availability.json",
+      "snapshot_path": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\runtime\\calendar_snapshots\\nick_availability.json",
       "warnings": [],
       "skipped": {}
     },
@@ -58,11 +58,11 @@
       "failure_reason": null,
       "url_source": "derived_public_ics_from_calendar_id",
       "attempted_ics_url_redacted": "https://calendar.google.com/...m/public/basic.ics",
-      "events_exported": 13,
-      "snapshot_path": "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\calendar_snapshots\\brian_do_not_schedule.json",
+      "events_exported": 49,
+      "snapshot_path": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\runtime\\calendar_snapshots\\brian_do_not_schedule.json",
       "warnings": [],
       "skipped": {
-        "outside_export_window": 10
+        "outside_export_window": 18
       }
     }
   ],

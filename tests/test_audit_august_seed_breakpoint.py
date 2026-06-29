@@ -8,22 +8,22 @@ class AugustSeedBreakpointAuditTest(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.report = audit.run()
 
-    def test_august_breakpoint_is_before_public_filtering(self) -> None:
+    def test_august_reaches_active_generation_after_rrule_expansion(self) -> None:
         summary = self.report["summary"]
-        self.assertEqual("data/audit/dynamic_offers_preview.json", summary["first_breakpoint"])
-        self.assertEqual(0, summary["dynamic_offers_generated_august_total"])
-        self.assertEqual(0, summary["selected_august_seeds_total"])
-        self.assertEqual(0, summary["appointment_url_previews_august_total"])
+        self.assertEqual("resolved_at_dynamic_offers_preview", summary["first_breakpoint"])
+        self.assertTrue(summary["upstream_source_mismatch_resolved"])
+        self.assertGreater(summary["dynamic_offers_generated_august_total"], 0)
+        self.assertGreater(summary["selected_august_seeds_total"], 0)
+        self.assertGreater(summary["appointment_url_previews_august_total"], 0)
         self.assertGreater(summary["august_bls_seed_simulation_selected_proposals"], 0)
 
-    def test_july_four_seed_source_is_understood(self) -> None:
+    def test_selected_seed_urls_are_appointment_backed(self) -> None:
         previews = audit.read_json(audit.AUDIT_DIR / "seed_appointment_url_preview.json")["previews"]
-        july_four = [row for row in previews if row["date"] == "2026-07-04"]
-        self.assertTrue(july_four)
-        self.assertTrue(all(row["confidence"] == "high" for row in july_four))
-        self.assertTrue(all(row["appointmentDayId"] for row in july_four))
-        self.assertTrue(all(row["appointment_url_preview"] for row in july_four))
-        self.assertGreaterEqual(self.report["summary"]["url_preview_stats"]["urls_previewed"], len(july_four))
+        self.assertTrue(previews)
+        self.assertTrue(all(row["confidence"] == "high" for row in previews))
+        self.assertTrue(all(row["appointmentDayId"] for row in previews))
+        self.assertTrue(all(row["appointment_url_preview"] for row in previews))
+        self.assertGreaterEqual(self.report["summary"]["url_preview_stats"]["urls_previewed"], len(previews))
 
     def test_existing_enrollware_rows_still_exist_and_unknown_seed_rows_do_not_render(self) -> None:
         schedule = audit.read_json(audit.ROOT / "docs" / "data" / "schedule_future.json")

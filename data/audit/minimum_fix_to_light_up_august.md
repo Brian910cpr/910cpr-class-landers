@@ -4,9 +4,9 @@ Do not deploy from this audit branch.
 
 ## Smallest Change
 
-Feed reviewed August Wilmington base-horizon availability into the active availability source used by `data/audit/dynamic_offers_preview.json`, or extend `live_availability_snapshot` so it contains those August blocks. Then rerun the existing pipeline without bypassing public filters.
+Keep reviewed recurring availability expanding into the active availability source used by `data/audit/dynamic_offers_preview.json`. Then rerun the existing pipeline without bypassing public filters.
 
-The current first break is not page rendering and not Course Master gating. August BLS proposals exist before the active dynamic-offer source, then vanish because active dynamic offers have zero August rows.
+The prior first break was not page rendering and not Course Master gating. After RRULE expansion, August no longer vanishes before active dynamic offers.
 
 ## Rows Expected After Fix
 

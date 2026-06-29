@@ -6,6 +6,7 @@ from pathlib import Path
 import unittest
 
 from scripts import build_live_availability_snapshot as snapshot
+from scripts import export_calendar_snapshots as exporter
 
 
 class LiveAvailabilitySnapshotTest(unittest.TestCase):
@@ -77,6 +78,54 @@ class LiveAvailabilitySnapshotTest(unittest.TestCase):
         self.assertEqual(["BLS"], blocks[0]["allowed_course_families"])
         self.assertEqual("2026-06-22T08:30:00", blocks[0]["start_datetime"])
         self.assertEqual("2026-06-22T12:00:00", blocks[0]["end_datetime"])
+
+    def test_snapshot_from_expanded_recurring_event_contains_august_blocks(self) -> None:
+        calendar_payload = {
+            "calendar_sources": [{
+                "calendar_source_key": "amy_availability",
+                "owner_instructor_key": "amy",
+                "mode": "explicit_availability",
+                "default_location_key": "shipyard",
+            }]
+        }
+        people_payload = {
+            "people": [{
+                "person_id": "amy",
+                "display_name": "Amy Arnold",
+                "email": "amy@example.com",
+                "certifications": [{"certification_code": "AHA_BLS_INSTRUCTOR"}],
+            }]
+        }
+        course_payload = {
+            "courses": [{
+                "course_id": "209806",
+                "family": "BLS",
+                "required_instructor_certifications": ["AHA_BLS_INSTRUCTOR"],
+            }]
+        }
+        ics_text = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:august-recurring
+SUMMARY:HARD
+DTSTART:20260727T090000
+DTEND:20260727T120000
+RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+LOCATION:Shipyard
+END:VEVENT
+END:VCALENDAR
+"""
+        events, _skipped = exporter.parse_ics_events(
+            ics_text,
+            {"calendar_source_key": "amy_availability", "mode": "explicit_availability"},
+            snapshot.datetime(2026, 7, 1, 0, 0, 0),
+            snapshot.datetime(2026, 8, 31, 0, 0, 0),
+        )
+        local_snapshot = {"events_by_source": {"amy_availability": events}}
+
+        blocks, blocked, _stats = snapshot.build_snapshot(calendar_payload, people_payload, course_payload, local_snapshot)
+
+        self.assertEqual([], blocked)
+        self.assertTrue(any(block["date"].startswith("2026-08") for block in blocks))
 
     def test_timezone_aware_utc_event_converts_to_local_time(self) -> None:
         calendar_payload = {

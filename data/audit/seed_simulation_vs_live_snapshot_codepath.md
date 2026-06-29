@@ -12,12 +12,12 @@
 
 1. `scripts/export_calendar_snapshots.py::export_calendar_snapshots` fetches ICS data and sets a 60-day export window.
 2. `scripts/export_calendar_snapshots.py::parse_ics_events` keeps VEVENT records whose master `DTSTART` falls inside the window.
-3. `parse_ics_events` stores `RRULE`, `RDATE`, and `EXDATE` in `event['recurrence']`, but does not expand recurring occurrences.
-4. `data/runtime/calendar_snapshots/brian_do_not_schedule.json` therefore contains explicit rows only through 2026-07-04.
+3. `parse_ics_events` expands `RRULE`, `RDATE`, and `EXDATE` into concrete occurrences inside the export window.
+4. `data/runtime/calendar_snapshots/brian_do_not_schedule.json` now contains runtime rows through 2026-08-28.
 5. `scripts/build_live_availability_snapshot.py::load_runtime_snapshots` prefers `data/runtime/calendar_snapshots/*.json`.
 6. `scripts/build_live_availability_snapshot.py::build_snapshot` and `expand_inverse_availability` can only subtract/expand from the event rows available in that runtime snapshot.
-7. Resulting live snapshot range: 2026-06-21 through 2026-07-04.
+7. Resulting live snapshot range: 2026-06-29 through 2026-08-28.
 
 ## First Divergence
 
-`scripts/export_calendar_snapshots.py::parse_ics_events` is the first function where the live path stops matching the seed-simulation path. The seed path invents report-only base-horizon windows from config; the live path requires exported runtime calendar events and does not materialize RRULE occurrences.
+`scripts/export_calendar_snapshots.py::parse_ics_events` was the first function where the live path stopped matching the seed-simulation path. After the RRULE expansion fix, the live path materializes recurrence instances before the live snapshot is built.

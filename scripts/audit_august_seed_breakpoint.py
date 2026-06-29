@@ -304,14 +304,23 @@ def run() -> dict[str, Any]:
         row for row in [*bls_rows, *heartsaver_rows]
         if row["stage"] in {"docs_public_schedule", "docs_data_schedule_future"} and row.get("seed_id")
     ]
+    upstream_resolved = dynamic_august_total > 0
+    august_seed_urls = [row for row in urls.get("previews", []) if isinstance(row, dict) and is_august(row)]
+    first_breakpoint = "resolved_at_dynamic_offers_preview" if upstream_resolved else "data/audit/dynamic_offers_preview.json"
+    first_breakpoint_reason = (
+        "RRULE expansion now feeds August availability into live_availability_snapshot_preview.json; active dynamic generation contains August offers. Any remaining August thinning is downstream public sellable/seed/render policy, not the original availability-source break."
+        if upstream_resolved
+        else "August report-only base-horizon availability exists in debug/seed_simulation_report.json, but dynamic_offers_preview uses live_availability_snapshot and contains zero August offers."
+    )
 
     summary = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "read_only": True,
         "deployed": False,
-        "first_breakpoint": "data/audit/dynamic_offers_preview.json",
-        "first_breakpoint_reason": "August report-only base-horizon availability exists in debug/seed_simulation_report.json, but dynamic_offers_preview uses live_availability_snapshot and contains zero August offers.",
-        "cause_category": "availability_source_horizon",
+        "first_breakpoint": first_breakpoint,
+        "first_breakpoint_reason": first_breakpoint_reason,
+        "cause_category": "rrule_expansion_resolved_upstream_source_mismatch" if upstream_resolved else "availability_source_horizon",
+        "upstream_source_mismatch_resolved": upstream_resolved,
         "dynamic_offers_generated_total": len(dynamic.get("offers", [])),
         "dynamic_offers_generated_august_total": dynamic_august_total,
         "public_sellable_offers_total": len(public_sellable.get("offers", [])),
@@ -320,6 +329,7 @@ def run() -> dict[str, Any]:
         "selected_august_seeds_total": sum(1 for row in seeds.get("seeds", []) if isinstance(row, dict) and is_august(row)),
         "appointment_url_previews_total": len(urls.get("previews", [])),
         "appointment_url_previews_august_total": url_august_total,
+        "august_appointment_url_rows": len(august_seed_urls),
         "august_bls_seed_simulation_selected_proposals": len(seed_sim_august_bls),
         "august_heartsaver_seed_simulation_selected_proposals": len(seed_sim_august_heartsaver),
         "august_public_seed_rows_rendered": len(public_august_seed_rows),
@@ -332,7 +342,7 @@ def run() -> dict[str, Any]:
         "course_master_gate_blockers": dict(Counter(row["blockers"] for row in gate_rows)),
         "would_appear_after_minimum_fix": seed_sim_august_bls[:8] + seed_sim_august_heartsaver[:8],
         "risks": [
-            "Base-horizon August availability is report-only and must be promoted or regenerated into the active live availability source before public use.",
+            "Generated August availability must still pass public sellable policy, appointment container/date bounds, conflict checks, and rendered-page verification before customer use.",
             "Only courses with reviewed Course Master rows, valid appointment containers, valid course IDs, and public sellable policy support should render.",
             "Existing Enrollware sessions and occupied scheduler windows must remain conflict blockers.",
         ],
@@ -365,14 +375,14 @@ def render_report(report: dict[str, Any]) -> str:
     lines = [
         "# August Seed Breakpoint Report",
         "",
-        "Status: blocked before public rendering. No deploy was performed.",
+        "Status: upstream source mismatch resolved; downstream rendering was not deployed. No deploy was performed.",
         "",
         "## Plain Answers",
         "",
-        f"A. First disappearance: `{s['first_breakpoint']}`. August exists in `debug/seed_simulation_report.json`, but active dynamic offers contain `{s['dynamic_offers_generated_august_total']}` August rows.",
-        "B. Cause: availability source/horizon. The active dynamic generator is reading live availability blocks that stop at July 4, not the August report-only base-horizon availability. Course Master gates are not the first blocker.",
-        "C. Smallest fix: promote/regenerate reviewed August Wilmington availability into the active availability source consumed by dynamic offer generation, then rerun the existing public filter, seed selection, URL preview, public inventory, and hub rendering steps.",
-        "D. Rows after fix: BLS Wilmington rows should come from the August Brian selected proposals listed in `august_bls_seed_pipeline.csv`; no Heartsaver August Wilmington selected proposals currently exist in the seed simulation.",
+        f"A. First disappearance: `{s['first_breakpoint']}`. August now reaches active dynamic offers with `{s['dynamic_offers_generated_august_total']}` August rows.",
+        "B. Cause: the original availability source/horizon break was RRULE expansion in the live calendar snapshot export. Course Master gates remain downstream.",
+        "C. Smallest fix: keep RRULE expansion in `scripts/export_calendar_snapshots.py`, regenerate live availability, then rerun the existing dynamic/public/seed URL pipeline without bypassing filters.",
+        "D. Rows after fix: current artifacts include August dynamic offers and August appointment URL previews; exact rows are listed in `august_bls_seed_pipeline.csv` and `august_heartsaver_seed_pipeline.csv`.",
         "E. Risks: report-only availability must not bypass conflict checks, appointment container/date bounds, Course Master review gates, UNKNOWN course suppression, public sellable limits, or rendered-page verification.",
         "",
         "## Stage Counts",
@@ -391,7 +401,7 @@ def render_report(report: dict[str, Any]) -> str:
         "",
         "## Filter Reasons",
         "",
-        "No August dynamic offers reach public filtering, so there are no August public-filter rejection reasons yet. Current overall public filter reasons are:",
+        "August dynamic offers now reach public filtering. Current overall public filter reasons are:",
     ]
     hidden = s["public_filter_stats"].get("hidden_offers_by_reason", {})
     lines.extend(f"- `{reason}`: {count}" for reason, count in hidden.items()) if hidden else lines.append("- None")
@@ -399,7 +409,7 @@ def render_report(report: dict[str, Any]) -> str:
         "",
         "## Course Master Gate Finding",
         "",
-        "Course Master has conservative gates, but those gates are downstream of the first August break. They must stay in place for UNKNOWN/unreviewed rows. If Course Master is promoted into this path, the AHA BLS/Heartsaver appointment-seed flags are currently too conservative/stale for rows already proven elsewhere in the seed pipeline. See `course_master_gate_blockers_for_august.csv` for exact rows.",
+        "Course Master has conservative gates, but those gates are downstream of the RRULE/live-snapshot fix. They must stay in place for UNKNOWN/unreviewed rows. If Course Master is promoted into this path, the AHA BLS/Heartsaver appointment-seed flags are currently too conservative/stale for rows already proven elsewhere in the seed pipeline. See `course_master_gate_blockers_for_august.csv` for exact rows.",
         "",
         "## Emergency manual fallback",
         "",
@@ -418,9 +428,9 @@ def render_minimum_fix(report: dict[str, Any]) -> str:
         "",
         "## Smallest Change",
         "",
-        "Feed reviewed August Wilmington base-horizon availability into the active availability source used by `data/audit/dynamic_offers_preview.json`, or extend `live_availability_snapshot` so it contains those August blocks. Then rerun the existing pipeline without bypassing public filters.",
+        "Keep reviewed recurring availability expanding into the active availability source used by `data/audit/dynamic_offers_preview.json`. Then rerun the existing pipeline without bypassing public filters.",
         "",
-        "The current first break is not page rendering and not Course Master gating. August BLS proposals exist before the active dynamic-offer source, then vanish because active dynamic offers have zero August rows.",
+        "The prior first break was not page rendering and not Course Master gating. After RRULE expansion, August no longer vanishes before active dynamic offers.",
         "",
         "## Rows Expected After Fix",
         "",

@@ -9,18 +9,20 @@ class ForwardSeedingLimiterTraceTest(unittest.TestCase):
         cls.report = limiter.run()
         cls.summary = cls.report["summary"]
 
-    def test_exact_limiter_is_rrule_not_expanded_in_runtime_export(self) -> None:
+    def test_exact_limiter_is_resolved_by_rrule_expansion_in_runtime_export(self) -> None:
         self.assertEqual("scripts/export_calendar_snapshots.py", self.summary["limiter"]["file"])
         self.assertEqual("parse_ics_events", self.summary["limiter"]["function"])
-        self.assertIn("no future occurrences are materialized", self.summary["limiter"]["specific_behavior"])
-        self.assertEqual("data/runtime/calendar_snapshots/brian_do_not_schedule.json", self.summary["first_divergence"]["file"])
+        self.assertTrue(self.summary["rrule_expansion_fixed"])
+        self.assertIn("materialized", self.summary["limiter"]["specific_behavior"])
+        self.assertEqual("resolved_after_rrule_expansion", self.summary["first_divergence"]["file"])
 
-    def test_sixty_day_export_reaches_august_but_rows_stop_july_four(self) -> None:
+    def test_sixty_day_export_reaches_august_and_rows_now_reach_august(self) -> None:
         path_b = self.summary["path_b_live_snapshot"]
         self.assertEqual(60, path_b["runtime_snapshot_declared_days"])
         self.assertIn("2026-08", path_b["runtime_snapshot_declared_end"])
-        self.assertEqual("2026-07-04", path_b["runtime_event_date_range"]["end"])
-        self.assertEqual(0, path_b["august_rows"])
+        self.assertGreaterEqual(path_b["runtime_event_date_range"]["end"], "2026-08-01")
+        self.assertGreater(path_b["runtime_expanded_rrule_event_count"], 0)
+        self.assertGreater(path_b["august_rows"], 0)
 
     def test_seed_simulation_uses_report_only_august_horizon(self) -> None:
         path_a = self.summary["path_a_seed_simulation"]
