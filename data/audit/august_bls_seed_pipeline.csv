@@ -1,0 +1,13 @@
+stage,status,date,start_time,course_family,course_title,location,instructor,offer_id,seed_id,appointmentDayId,course_id,appointment_url,filter_reasons,source_window
+seed_simulation_selected_proposal,present,2026-08-03,09:00,aha_bls_renewal,,shipyard,brian,,,,,,brian_conservative_report_only: selected by configured thinning controls,brian:2026-08-03:1
+seed_simulation_selected_proposal,present,2026-08-03,13:00,aha_bls_initial,,shipyard,brian,,,,,,brian_conservative_report_only: selected by configured thinning controls,brian:2026-08-03:4
+seed_simulation_selected_proposal,present,2026-08-04,09:00,aha_bls_renewal,,shipyard,brian,,,,,,brian_conservative_report_only: selected by configured thinning controls,brian:2026-08-04:2
+seed_simulation_selected_proposal,present,2026-08-04,13:00,aha_bls_initial,,shipyard,brian,,,,,,brian_conservative_report_only: selected by configured thinning controls,brian:2026-08-04:4
+seed_simulation_selected_proposal,present,2026-08-05,09:00,aha_bls_renewal,,shipyard,brian,,,,,,brian_conservative_report_only: selected by configured thinning controls,brian:2026-08-05:3
+seed_simulation_selected_proposal,present,2026-08-05,13:00,aha_bls_initial,,shipyard,brian,,,,,,brian_conservative_report_only: selected by configured thinning controls,brian:2026-08-05:4
+seed_simulation_selected_proposal,present,2026-08-06,09:00,aha_bls_heartcode_skills,,shipyard,brian,,,,,,brian_conservative_report_only: selected by configured thinning controls,brian:2026-08-06:4
+seed_simulation_selected_proposal,present,2026-08-07,09:00,aha_bls_heartcode_skills,,shipyard,brian,,,,,,brian_conservative_report_only: selected by configured thinning controls,brian:2026-08-07:5
+docs_data_schedule_future,render_inventory_row,2026-08-14,12:45,aha_bls_provider,AHA BLS Provider (Initial),NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office,Nicholas Tripp,13601250,,,209806,https://coastalcprtraining.enrollware.com/enroll?id=13601250,real_enrollware_or_rendered_inventory,
+docs_data_schedule_future,render_inventory_row,2026-08-14,12:45,hsi_bls_challenge,HSI BLS Challenge,NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office,Brian Ennis,13601272,,,463743,https://coastalcprtraining.enrollware.com/enroll?id=13601272,real_enrollware_or_rendered_inventory,
+docs_public_schedule,render_inventory_row,2026-08-14,12:45,,AHA BLS Provider (Initial),:: Wilmington; Shipyard Blvd,,209806,,,209806,https://coastalcprtraining.enrollware.com/enroll?id=13601250,real_enrollware_or_rendered_inventory,
+docs_public_schedule,render_inventory_row,2026-08-14,12:45,,HSI BLS Challenge,:: Wilmington; Shipyard Blvd,,463743,,,463743,https://coastalcprtraining.enrollware.com/enroll?id=13601272,real_enrollware_or_rendered_inventory,

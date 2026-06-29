@@ -1,0 +1,16 @@
+course_key,enrollware_course_id,public_short_title,appointment_seed_allowed,review_needed_for_scheduling,dynamic_offer_allowed,appointment_course_id,appointment_day_id_strategy,blockers
+arc_bls_challenge,444919,American Red Cross BLS Challenge,,,,444919,unknown,appointment_seed_allowed_false;dynamic_offer_allowed_false;appointment_day_id_strategy_unknown
+arc_bls,248288,American Red Cross Basic Life Support,,,,248288,owned_container,appointment_seed_allowed_false;dynamic_offer_allowed_false
+arc_bls_blended,248287,American Red Cross Basic Life Support - Blended Learning,,,,248287,owned_container,appointment_seed_allowed_false;dynamic_offer_allowed_false
+aha_bls_provider,209806,AHA BLS Provider,,,,209806,owned_container,appointment_seed_allowed_false;dynamic_offer_allowed_false
+aha_bls_provider_renewal,359474,AHA BLS Provider Renewal,,,,359474,owned_container,appointment_seed_allowed_false;dynamic_offer_allowed_false
+aha_heartcode_bls,210549,AHA HeartCode BLS,,,,210549,owned_container,appointment_seed_allowed_false;dynamic_offer_allowed_false
+aha_bls_provider_blended_group_skills,440431,BLS Provider Blended Learning (Online Course; Group; In-person Skills Testing),,,,440431,unknown,appointment_seed_allowed_false;dynamic_offer_allowed_false;appointment_day_id_strategy_unknown
+hsi_bls_adult_first_aid_blended,445670,HSI BLS + Adult First Aid,True,,True,445670,owned_container,none
+hsi_bls_challenge,463743,HSI BLS Challenge,,,,463743,owned_container,appointment_seed_allowed_false;dynamic_offer_allowed_false
+aha_heartsaver_cpr_aed,344085,AHA Heartsaver CPR AED,,,,344085,owned_container,appointment_seed_allowed_false;dynamic_offer_allowed_false
+aha_heartsaver_cpr_aed_online,209808,AHA Heartsaver CPR AED Online,,,,209808,unknown,appointment_seed_allowed_false;dynamic_offer_allowed_false;appointment_day_id_strategy_unknown
+aha_heartsaver_first_aid_cpr_aed,209809,AHA Heartsaver First Aid CPR AED,,,,209809,owned_container,appointment_seed_allowed_false;dynamic_offer_allowed_false
+aha_heartsaver_first_aid_cpr_aed_blended,329495,AHA Heartsaver First Aid CPR AED - Blended,,,,329495,unknown,appointment_seed_allowed_false;dynamic_offer_allowed_false;appointment_day_id_strategy_unknown
+aha_heartsaver_pediatric_first_aid_cpr_aed_in_person,351632,AHA Heartsaver Pediatric First Aid / CPR / AED,,,,351632,unknown,appointment_seed_allowed_false;dynamic_offer_allowed_false;appointment_day_id_strategy_unknown
+aha_heartsaver_pediatric_first_aid_cpr_aed_online,251545,AHA Heartsaver Pediatric First Aid CPR AED Online,,,,251545,owned_container,appointment_seed_allowed_false;dynamic_offer_allowed_false
