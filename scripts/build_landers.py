@@ -1877,7 +1877,7 @@ def course_description_paragraphs(session: dict) -> list[str]:
 
     return [
         f"This is a mapped {certifying_body_label(body)} {family} session from the 910CPR schedule.",
-        "The page uses structured course metadata for certifying body, course family, delivery type, and registration routing.",
+        "Please review the class details, date, location, and registration path before continuing.",
     ]
 
 
@@ -2598,8 +2598,8 @@ def main() -> None:
         session_intro_html = render_session_intro_block(session, course_display, dt, city, location)
         local_reference_html = render_local_reference_block(city, state, location)
         faq_block_html = render_faq_block(session, course_display)
-        trust_badge_title = "Mapped course details" if is_mapped(session) else "Mapping review needed"
-        trust_badge_copy = same_day_note(session) or "Structured course metadata is shown before schedule alternatives."
+        trust_badge_title = "Important class details" if is_mapped(session) else "Class details under review"
+        trust_badge_copy = same_day_note(session) or "Please review the class details before continuing to registration."
 
         html_doc = TEMPLATE.format(
             page_title=escape(page_title),

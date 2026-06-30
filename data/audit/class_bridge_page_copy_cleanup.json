@@ -1,0 +1,2399 @@
+{
+  "generated_at": "2026-06-30T17:04:34",
+  "source_fixed": "scripts/build_landers.py",
+  "rendered_pages_updated_count": 205,
+  "replacements": [
+    {
+      "before": "Mapped course details",
+      "after": "Important class details"
+    },
+    {
+      "before": "Structured course metadata is shown before schedule alternatives.",
+      "after": "Please review the class details before continuing to registration."
+    },
+    {
+      "before": "The page uses structured course metadata for certifying body, course family, delivery type, and registration routing.",
+      "after": "Please review the class details, date, location, and registration path before continuing."
+    }
+  ],
+  "bridge_pages_scanned": [
+    {
+      "bridge_page": "docs/classes/10009265.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=10009277",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/10009276.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=10009277",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/10009277.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=10009277",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "mapped; metadata; ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774032.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774085",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774033.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774085",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774034.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774085",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774037.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774085",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774040.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774085",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774085.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774085",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774086.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774086",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774087.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774087",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774088.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774088",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774094.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774094",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774095.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774095",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774096.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774096",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774097.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774097",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774325.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776774",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774326.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776774",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774327.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776774",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774328.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776774",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774335.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774335",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774336.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774336",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774337.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774337",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774338.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774338",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774344.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774344",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774345.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774345",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774346.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774346",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774347.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774347",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774348.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774348",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774548.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774548",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774572.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774592",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774575.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774592",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774577.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774592",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774579.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774592",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774582.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774592",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774584.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774584",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774585.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774585",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774586.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774586",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774587.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774587",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774588.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774588",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774589.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774589",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774590.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774590",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774591.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774591",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774592.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774592",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774593.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774593",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774594.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774594",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774595.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774595",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774596.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774596",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774597.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774597",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774598.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774598",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12774599.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774599",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775294.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775296.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775297.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775298.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775300.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775301.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775302.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775306.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775308.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775308",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775309.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775309",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775311.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775311",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775312.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775313.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775313",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775314.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775314",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775315.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775315",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775316.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775316",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775317.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775317",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775318.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775318",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775319.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775319",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775320.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775320",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775321.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775321",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775322.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775322",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775323.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775323",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775324.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775324",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775325.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775325",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775527.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775550",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775528.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775550",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775529.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775530.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775533.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652942",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775534.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775550",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775536.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775550",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775539.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775550",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775540.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652942",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775541.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775541",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775542.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775542",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775543.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775543",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775544.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775544",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775550.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775550",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775551.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775551",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775552.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775552",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775553.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775553",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775554.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775554",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775555.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775555",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775556.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775556",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775557.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775557",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775558.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775558",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775779.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775796",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775781.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776161",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775784.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775796",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775786.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775786",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775787.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775787",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775788.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775788",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "mapped; metadata; ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775789.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775789",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775795.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775795",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775796.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775796",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775797.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775797",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775798.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775798",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775799.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775799",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775800.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775800",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775801.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775801",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775802.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775802",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775803.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775803",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775975.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775975",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775976.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775976",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775977.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775977",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775978.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775978",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775984.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775984",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775985.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775985",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775987.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775987",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775990.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775975",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775992.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775975",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12775997.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776783",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776000.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776783",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776143.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776161",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776144.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776700",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776145.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776700",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776148.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776161",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776149.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776700",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776151.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776161",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776152.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776152",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776153.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776153",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776154.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776154",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776155.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776155",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776161.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776161",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776162.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776162",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776163.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776163",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776164.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776164",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776165.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776165",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776266.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776266",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776267.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776267",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776269.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776269",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776270.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776273.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776274.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776336.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776337.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776339.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776340.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776340",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776341.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776341",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776342.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776342",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776343.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776343",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776344.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776344",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776416.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776419.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776420.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776421.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776422.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776424.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776425.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776428.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776429.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776429",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776430.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776430",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776432.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776432",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776433.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776433",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776434.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776434",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776435.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776435",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776436.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776436",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776437.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776437",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776438.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776438",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776439.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776439",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776440.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776440",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776441.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776441",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776554.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776557.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776420",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776559.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776433",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776563.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776563",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776564.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776564",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776567.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776567",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776568.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776568",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776569.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776569",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776570.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776570",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776571.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776571",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776632.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776774",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776635.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776774",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776666.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776666",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776667.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776667",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776668.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776668",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776669.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776669",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776696.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776700",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776697.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776700",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776699.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776700",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776700.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776700",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776701.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776701",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776702.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776702",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776703.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776703",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776704.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776704",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776770.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776783",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776773.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776783",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776774.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776774",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776775.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775788",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776776.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776783",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776778.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776783",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776779.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776779",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776780.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776780",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776783.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776783",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776784.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776784",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776785.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776785",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776786.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776786",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776787.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776787",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12776866.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13601272",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12783382.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783382",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12783383.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783383",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12783384.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783384",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12783385.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783385",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12783386.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783386",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12783387.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775312",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12783389.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783382",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12783390.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783382",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12946259.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12946259",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12946261.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12946261",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/12946272.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12946272",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13460876.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673157",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13472467.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673157",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13472469.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673157",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13472474.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673167",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13472475.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673167",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13472477.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673187",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13601250.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13601250",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13601272.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13601272",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "Structured course metadata; mapped; metadata; ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13613957.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13613957",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "mapped; metadata; ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13623240.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13623240",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13623263.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13623263",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13623366.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13623366",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652911.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776783",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652925.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652925",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652926.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652926",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652927.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652927",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652928.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652928",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652929.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652929",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652930.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652930",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652931.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652931",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652932.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652932",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652933.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652933",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652934.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652925",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652937.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652942",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652938.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652938",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652939.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652939",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652940.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652940",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652941.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652941",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652942.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652942",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652943.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652943",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652944.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652944",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652945.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652945",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13652946.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652946",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13653161.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775550",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13662704.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12783382",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673157.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673157",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673158.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673158",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673159.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673159",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673160.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673160",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673161.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673161",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673162.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673162",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673163.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673163",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673164.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673164",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673165.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673165",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673167.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673167",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673168.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673168",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673169.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673169",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673170.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673170",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673171.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673171",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673172.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673172",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673173.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673173",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673174.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673174",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673175.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673175",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673177.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673177",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673178.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673178",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673179.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673179",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673180.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673180",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673181.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673181",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673182.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673182",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673183.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673183",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673184.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673184",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673185.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673185",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673187.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673187",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673188.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673188",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673189.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673189",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673190.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673190",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673191.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673191",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673192.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673192",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673193.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673193",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673194.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673194",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13673195.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673195",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/13676931.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=13676931",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "ForwardToEnrollware",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "False"
+    },
+    {
+      "bridge_page": "docs/classes/index.html",
+      "final_enrollware_url": "https://coastalcprtraining.enrollware.com/enroll?id=12946261",
+      "final_registration_url_valid_looking": "True",
+      "search_terms_found_markup": "",
+      "search_terms_found_visible_text": "",
+      "contains_hsi_challenge_warning": "True"
+    }
+  ],
+  "visible_hits_after": {},
+  "markup_hits_after": {
+    "mapped": 4,
+    "metadata": 4,
+    "ForwardToEnrollware": 208,
+    "Structured course metadata": 1
+  },
+  "hsi_challenge_warning_preserved": "not_removed_by_this_change",
+  "additional_fallback_copy_cleanup": "Removed structured course metadata wording from mapped-session fallback narrative.",
+  "hsi_challenge_warning_note": "The current rendered docs/classes/13601272.html contains the HSI BLS Challenge label, but the expanded assessment-only/no-remediation/no-refund warning set is not present in the current page content. This cleanup did not remove warning copy; adding fuller challenge warnings should be handled as a separate content task."
+}
