@@ -11,8 +11,8 @@ Enabled only these reviewed AHA BLS course IDs in `data/config/public_offer_poli
 - Before August BLS public sellable offers: 0
 - After August BLS public sellable offers: 24
 - Before August BLS selected seeds: 0
-- After August BLS selected seeds: 4
-- After August total selected seeds: 4
+- After August BLS selected seeds: 6
+- After August total selected seeds: 6
 - After real August BLS Enrollware rows: 3
 
 ## Course ID Decisions

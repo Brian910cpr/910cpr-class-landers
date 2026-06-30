@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T05:02:06.036244",
+  "generated_at": "2026-06-30T05:25:14.820284",
   "policy": {
     "preferred_start_times_by_family_BLS": [
       "09:15",
@@ -26,12 +26,12 @@
     {
       "start_time": "09:15",
       "generated_candidate_count": 78,
-      "public_sellable_count": 0,
-      "seed_eligible_count": 0,
-      "selected_seed_count": 0,
-      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:8",
-      "top_seed_rejection_reasons": "",
-      "blocked_by": "public_sellable_filters"
+      "public_sellable_count": 18,
+      "seed_eligible_count": 18,
+      "selected_seed_count": 6,
+      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:32; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:2",
+      "top_seed_rejection_reasons": "family_mix_target_already_met:12",
+      "blocked_by": ""
     },
     {
       "start_time": "12:30",
@@ -39,7 +39,7 @@
       "public_sellable_count": 0,
       "seed_eligible_count": 0,
       "selected_seed_count": 0,
-      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:8",
+      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:50; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:2",
       "top_seed_rejection_reasons": "",
       "blocked_by": "public_sellable_filters"
     },
@@ -49,7 +49,7 @@
       "public_sellable_count": 0,
       "seed_eligible_count": 0,
       "selected_seed_count": 0,
-      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:40; course_id_not_enabled:24; course_family_disabled:12; course_family_not_enabled:12; max_total_offers_per_day_exceeded:8",
+      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:46; course_id_not_enabled:24; course_family_disabled:12; course_family_not_enabled:12; max_total_offers_per_day_exceeded:2",
       "top_seed_rejection_reasons": "",
       "blocked_by": "public_sellable_filters"
     },
@@ -59,19 +59,19 @@
       "public_sellable_count": 0,
       "seed_eligible_count": 0,
       "selected_seed_count": 0,
-      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:40; course_id_not_enabled:24; course_family_disabled:12; course_family_not_enabled:12; max_total_offers_per_day_exceeded:8",
+      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:46; course_id_not_enabled:24; course_family_disabled:12; course_family_not_enabled:12; max_total_offers_per_day_exceeded:2",
       "top_seed_rejection_reasons": "",
       "blocked_by": "public_sellable_filters"
     },
     {
       "start_time": "08:30",
       "generated_candidate_count": 78,
-      "public_sellable_count": 4,
-      "seed_eligible_count": 4,
-      "selected_seed_count": 2,
-      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:4",
-      "top_seed_rejection_reasons": "family_mix_target_already_met:2",
-      "blocked_by": ""
+      "public_sellable_count": 2,
+      "seed_eligible_count": 0,
+      "selected_seed_count": 0,
+      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:50; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13",
+      "top_seed_rejection_reasons": "scheduler_consumption_window_overlap:2",
+      "blocked_by": "seed_preference_or_caps"
     },
     {
       "start_time": "09:00",
@@ -79,28 +79,28 @@
       "public_sellable_count": 0,
       "seed_eligible_count": 0,
       "selected_seed_count": 0,
-      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:8",
+      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:50; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:2",
       "top_seed_rejection_reasons": "",
       "blocked_by": ""
     },
     {
       "start_time": "08:00",
       "generated_candidate_count": 78,
-      "public_sellable_count": 12,
-      "seed_eligible_count": 8,
-      "selected_seed_count": 2,
-      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:40; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13",
-      "top_seed_rejection_reasons": "family_mix_target_already_met:6; scheduler_consumption_window_overlap:2; same_start_time_already_seeded:2",
-      "blocked_by": ""
+      "public_sellable_count": 2,
+      "seed_eligible_count": 0,
+      "selected_seed_count": 0,
+      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:50; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13",
+      "top_seed_rejection_reasons": "scheduler_consumption_window_overlap:2",
+      "blocked_by": "seed_preference_or_caps"
     },
     {
       "start_time": "08:15",
       "generated_candidate_count": 78,
-      "public_sellable_count": 8,
-      "seed_eligible_count": 6,
+      "public_sellable_count": 2,
+      "seed_eligible_count": 0,
       "selected_seed_count": 0,
-      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13",
-      "top_seed_rejection_reasons": "family_mix_target_already_met:6; scheduler_consumption_window_overlap:2",
+      "top_public_filter_reasons": "max_offers_per_course_per_week_exceeded:50; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13",
+      "top_seed_rejection_reasons": "scheduler_consumption_window_overlap:2",
       "blocked_by": "seed_preference_or_caps"
     }
   ],
@@ -133,95 +133,137 @@
   "after_selected_august_bls": [
     {
       "date": "2026-08-03",
-      "start_time": "08:30",
+      "start_time": "09:15",
       "course_id": "209806",
       "course_title": "AHA BLS Provider"
     },
     {
       "date": "2026-08-04",
-      "start_time": "08:00",
-      "course_id": "359474",
-      "course_title": "AHA BLS Provider Renewal"
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider"
+    },
+    {
+      "date": "2026-08-05",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider"
     },
     {
       "date": "2026-08-10",
-      "start_time": "08:30",
+      "start_time": "09:15",
       "course_id": "209806",
       "course_title": "AHA BLS Provider"
     },
     {
       "date": "2026-08-11",
-      "start_time": "08:00",
-      "course_id": "359474",
-      "course_title": "AHA BLS Provider Renewal"
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider"
+    },
+    {
+      "date": "2026-08-12",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider"
     }
   ],
   "rendered_seed_proof": [
     {
       "date": "2026-08-03",
-      "start_time": "08:30",
+      "start_time": "09:15",
       "course_id": "209806",
       "course_title": "AHA BLS Provider",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=8%3A30%20AM&courseId=209806",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=209806",
       "rendered": true,
       "visible_date": "Monday, August 3",
-      "visible_time": "8:30 AM - 10:30 AM",
+      "visible_time": "9:15 AM - 11:15 AM",
       "visible_course_label": "AHA BLS Provider",
       "button_text": "Book This Class",
       "row_source": "seed_appointment_url_preview",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0830",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0915",
       "selected_seed_url_occurrences": 1
     },
     {
       "date": "2026-08-04",
-      "start_time": "08:00",
-      "course_id": "359474",
-      "course_title": "AHA BLS Provider Renewal",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=8%3A00%20AM&courseId=359474",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
       "rendered": true,
       "visible_date": "Tuesday, August 4",
-      "visible_time": "8:00 AM - 10:00 AM",
-      "visible_course_label": "AHA BLS Provider Renewal",
+      "visible_time": "9:15 AM - 11:15 AM",
+      "visible_course_label": "AHA BLS Provider",
       "button_text": "Book This Class",
       "row_source": "seed_appointment_url_preview",
-      "source_offer_id": "offer-359474-instructor_24057895173-20260804-0800",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260804-0915",
+      "selected_seed_url_occurrences": 1
+    },
+    {
+      "date": "2026-08-05",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=209806",
+      "rendered": true,
+      "visible_date": "Wednesday, August 5",
+      "visible_time": "9:15 AM - 11:15 AM",
+      "visible_course_label": "AHA BLS Provider",
+      "button_text": "Book This Class",
+      "row_source": "seed_appointment_url_preview",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260805-0915",
       "selected_seed_url_occurrences": 1
     },
     {
       "date": "2026-08-10",
-      "start_time": "08:30",
+      "start_time": "09:15",
       "course_id": "209806",
       "course_title": "AHA BLS Provider",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=8%3A30%20AM&courseId=209806",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
       "rendered": true,
       "visible_date": "Monday, August 10",
-      "visible_time": "8:30 AM - 10:30 AM",
+      "visible_time": "9:15 AM - 11:15 AM",
       "visible_course_label": "AHA BLS Provider",
       "button_text": "Book This Class",
       "row_source": "seed_appointment_url_preview",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260810-0830",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260810-0915",
       "selected_seed_url_occurrences": 1
     },
     {
       "date": "2026-08-11",
-      "start_time": "08:00",
-      "course_id": "359474",
-      "course_title": "AHA BLS Provider Renewal",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=8%3A00%20AM&courseId=359474",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=209806",
       "rendered": true,
       "visible_date": "Tuesday, August 11",
-      "visible_time": "8:00 AM - 10:00 AM",
-      "visible_course_label": "AHA BLS Provider Renewal",
+      "visible_time": "9:15 AM - 11:15 AM",
+      "visible_course_label": "AHA BLS Provider",
       "button_text": "Book This Class",
       "row_source": "seed_appointment_url_preview",
-      "source_offer_id": "offer-359474-instructor_24057895173-20260811-0800",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260811-0915",
+      "selected_seed_url_occurrences": 1
+    },
+    {
+      "date": "2026-08-12",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+      "rendered": true,
+      "visible_date": "Wednesday, August 12",
+      "visible_time": "9:15 AM - 11:15 AM",
+      "visible_course_label": "AHA BLS Provider",
+      "button_text": "Book This Class",
+      "row_source": "seed_appointment_url_preview",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260812-0915",
       "selected_seed_url_occurrences": 1
     }
   ],
   "safety": {
     "existing_real_bls_enrollware_rows_still_render": true,
     "real_august_bls_enrollware_rows_still_render": true,
-    "selected_bls_appointment_seeds_render": 4,
+    "selected_bls_appointment_seeds_render": 6,
     "duplicate_selected_seed_rows": 0,
     "unknown_rows_suppressed": true,
     "hsi_pediatric_449422_suppressed": true,
@@ -230,15 +272,17 @@
   },
   "recommendation": "Keep the policy preference change. It is safe and future-proofs selection when 09:15, 12:30, 18:15, or 18:45 survive public-sellable gates, but it does not force unsafe August rows through current caps/filters.",
   "sufficiency": {
-    "august_bls_looks_alive_enough": true,
+    "august_bls_looks_alive_enough": false,
     "spread": [
       "2026-08-03",
       "2026-08-04",
+      "2026-08-05",
       "2026-08-10",
-      "2026-08-11"
+      "2026-08-11",
+      "2026-08-12"
     ],
-    "initial_count": 2,
-    "renewal_count": 2,
+    "initial_count": 6,
+    "renewal_count": 0,
     "evening_or_midday_possible_without_loosening": false,
     "reason_evening_or_midday_not_selected": "Generated, but zero public-sellable candidates at 12:30/18:15/18:45 under current public offer caps and course/family filters."
   }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29T16:22:56.478940-04:00",
+  "generated_at": "2026-06-30T05:21:44.493163-04:00",
   "read_only": true,
   "public_site_affected": false,
   "enrollware_called": false,
@@ -15,13 +15,13 @@
     "appointment_container_filter_enabled": true,
     "appointment_container_backed_offers_kept": 210,
     "offers_hidden_by_container_reason": {},
-    "seeds_selected": 16,
+    "seeds_selected": 27,
     "offers_hidden_by_strategy_reason": {
-      "scheduler_consumption_window_overlap": 89,
-      "family_mix_target_already_met": 57,
-      "same_start_time_already_seeded": 48,
-      "optional_mix_not_available": 38,
-      "required_mix_not_available": 4
+      "family_mix_target_already_met": 84,
+      "scheduler_consumption_window_overlap": 82,
+      "optional_mix_not_available": 74,
+      "required_mix_not_available": 20,
+      "same_start_time_already_seeded": 17
     },
     "amy_advanced_course_violations_removed": 0,
     "amy_mode": "protected_pilot",
@@ -29,43 +29,46 @@
     "amy_stack_fill_candidates_found": 0,
     "amy_stack_fill_candidates": [],
     "seeds_by_date": {
-      "2026-06-30": 1,
       "2026-07-02": 1,
       "2026-07-03": 1,
       "2026-07-05": 1,
       "2026-07-06": 1,
       "2026-07-07": 1,
+      "2026-07-09": 1,
+      "2026-07-10": 1,
+      "2026-07-12": 1,
       "2026-07-13": 1,
       "2026-07-14": 1,
+      "2026-07-15": 1,
+      "2026-07-17": 1,
+      "2026-07-19": 1,
       "2026-07-20": 1,
       "2026-07-22": 1,
+      "2026-07-24": 1,
+      "2026-07-26": 1,
       "2026-07-27": 1,
       "2026-07-28": 1,
+      "2026-07-29": 1,
+      "2026-07-31": 1,
       "2026-08-03": 1,
       "2026-08-04": 1,
+      "2026-08-05": 1,
       "2026-08-10": 1,
-      "2026-08-11": 1
+      "2026-08-11": 1,
+      "2026-08-12": 1
     },
     "seeds_by_family": {
-      "BLS": 13,
-      "Heartsaver": 3
+      "BLS": 23,
+      "Heartsaver": 4
     },
-    "quarter_hour_seeds_selected": 0,
+    "quarter_hour_seeds_selected": 18,
     "seeds_by_start_minute": {
-      "00": 3,
-      "30": 13
+      "15": 18,
+      "30": 9
     },
     "mix_goal_status_by_date": {
-      "2026-06-30": {
+      "2026-07-02": {
         "BLS": {
-          "target": 1,
-          "required": true,
-          "selected": 0,
-          "met": false,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "Heartsaver": {
           "target": 1,
           "required": true,
           "selected": 1,
@@ -73,50 +76,14 @@
           "available_after_hard_rules": 3,
           "blocked_reasons": {}
         },
-        "ACLS": {
-          "target": 1,
-          "required": false,
-          "selected": 0,
-          "met": true,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "PALS": {
-          "target": 1,
-          "required": false,
-          "selected": 0,
-          "met": true,
-          "available_after_hard_rules": 0,
-          "blocked_reasons": {}
-        },
-        "HSI": {
-          "target": 1,
-          "required": false,
-          "selected": 0,
-          "met": false,
-          "available_after_hard_rules": 1,
-          "blocked_reasons": {
-            "same_start_time_already_seeded": 1
-          }
-        }
-      },
-      "2026-07-02": {
-        "BLS": {
-          "target": 1,
-          "required": true,
-          "selected": 1,
-          "met": true,
-          "available_after_hard_rules": 8,
-          "blocked_reasons": {}
-        },
         "Heartsaver": {
           "target": 1,
           "required": true,
           "selected": 0,
           "met": false,
-          "available_after_hard_rules": 14,
+          "available_after_hard_rules": 18,
           "blocked_reasons": {
-            "scheduler_consumption_window_overlap": 8,
+            "scheduler_consumption_window_overlap": 12,
             "same_start_time_already_seeded": 6
           }
         },
@@ -141,10 +108,10 @@
           "required": false,
           "selected": 0,
           "met": false,
-          "available_after_hard_rules": 2,
+          "available_after_hard_rules": 3,
           "blocked_reasons": {
-            "same_start_time_already_seeded": 1,
-            "scheduler_consumption_window_overlap": 1
+            "scheduler_consumption_window_overlap": 2,
+            "same_start_time_already_seeded": 1
           }
         }
       },
@@ -194,17 +161,17 @@
         "BLS": {
           "target": 1,
           "required": true,
-          "selected": 0,
-          "met": false,
-          "available_after_hard_rules": 0,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 5,
           "blocked_reasons": {}
         },
         "Heartsaver": {
           "target": 1,
           "required": true,
-          "selected": 1,
-          "met": true,
-          "available_after_hard_rules": 1,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
           "blocked_reasons": {}
         },
         "ACLS": {
@@ -236,21 +203,18 @@
         "BLS": {
           "target": 1,
           "required": true,
-          "selected": 1,
-          "met": true,
-          "available_after_hard_rules": 7,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
           "blocked_reasons": {}
         },
         "Heartsaver": {
           "target": 1,
           "required": true,
-          "selected": 0,
-          "met": false,
+          "selected": 1,
+          "met": true,
           "available_after_hard_rules": 12,
-          "blocked_reasons": {
-            "same_start_time_already_seeded": 4,
-            "scheduler_consumption_window_overlap": 8
-          }
+          "blocked_reasons": {}
         },
         "ACLS": {
           "target": 1,
@@ -286,7 +250,7 @@
           "required": true,
           "selected": 1,
           "met": true,
-          "available_after_hard_rules": 2,
+          "available_after_hard_rules": 3,
           "blocked_reasons": {}
         },
         "Heartsaver": {
@@ -325,13 +289,13 @@
           "blocked_reasons": {}
         }
       },
-      "2026-07-13": {
+      "2026-07-09": {
         "BLS": {
           "target": 1,
           "required": true,
           "selected": 1,
           "met": true,
-          "available_after_hard_rules": 7,
+          "available_after_hard_rules": 2,
           "blocked_reasons": {}
         },
         "Heartsaver": {
@@ -339,11 +303,134 @@
           "required": true,
           "selected": 0,
           "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-07-10": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 1,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-07-12": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 3,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-07-13": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
           "available_after_hard_rules": 12,
-          "blocked_reasons": {
-            "same_start_time_already_seeded": 4,
-            "scheduler_consumption_window_overlap": 8
-          }
+          "blocked_reasons": {}
         },
         "ACLS": {
           "target": 1,
@@ -418,13 +505,13 @@
           "blocked_reasons": {}
         }
       },
-      "2026-07-20": {
+      "2026-07-15": {
         "BLS": {
           "target": 1,
           "required": true,
           "selected": 1,
           "met": true,
-          "available_after_hard_rules": 9,
+          "available_after_hard_rules": 3,
           "blocked_reasons": {}
         },
         "Heartsaver": {
@@ -432,11 +519,134 @@
           "required": true,
           "selected": 0,
           "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-07-17": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 1,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-07-19": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 3,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-07-20": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
           "available_after_hard_rules": 12,
-          "blocked_reasons": {
-            "same_start_time_already_seeded": 4,
-            "scheduler_consumption_window_overlap": 8
-          }
+          "blocked_reasons": {}
         },
         "ACLS": {
           "target": 1,
@@ -470,17 +680,103 @@
         "BLS": {
           "target": 1,
           "required": true,
-          "selected": 0,
-          "met": false,
-          "available_after_hard_rules": 0,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 5,
           "blocked_reasons": {}
         },
         "Heartsaver": {
           "target": 1,
           "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 6,
+          "blocked_reasons": {
+            "scheduler_consumption_window_overlap": 6
+          }
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-07-24": {
+        "BLS": {
+          "target": 1,
+          "required": true,
           "selected": 1,
           "met": true,
-          "available_after_hard_rules": 6,
+          "available_after_hard_rules": 1,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-07-26": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 3,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
           "blocked_reasons": {}
         },
         "ACLS": {
@@ -512,21 +808,18 @@
         "BLS": {
           "target": 1,
           "required": true,
-          "selected": 1,
-          "met": true,
-          "available_after_hard_rules": 7,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
           "blocked_reasons": {}
         },
         "Heartsaver": {
           "target": 1,
           "required": true,
-          "selected": 0,
-          "met": false,
+          "selected": 1,
+          "met": true,
           "available_after_hard_rules": 12,
-          "blocked_reasons": {
-            "same_start_time_already_seeded": 4,
-            "scheduler_consumption_window_overlap": 8
-          }
+          "blocked_reasons": {}
         },
         "ACLS": {
           "target": 1,
@@ -562,7 +855,7 @@
           "required": true,
           "selected": 1,
           "met": true,
-          "available_after_hard_rules": 2,
+          "available_after_hard_rules": 3,
           "blocked_reasons": {}
         },
         "Heartsaver": {
@@ -601,13 +894,13 @@
           "blocked_reasons": {}
         }
       },
-      "2026-08-03": {
+      "2026-07-29": {
         "BLS": {
           "target": 1,
           "required": true,
           "selected": 1,
           "met": true,
-          "available_after_hard_rules": 8,
+          "available_after_hard_rules": 5,
           "blocked_reasons": {}
         },
         "Heartsaver": {
@@ -615,10 +908,93 @@
           "required": true,
           "selected": 0,
           "met": false,
-          "available_after_hard_rules": 14,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-07-31": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 1,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-08-03": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 3,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
+          "met": false,
+          "available_after_hard_rules": 18,
           "blocked_reasons": {
-            "scheduler_consumption_window_overlap": 12,
-            "same_start_time_already_seeded": 2
+            "scheduler_consumption_window_overlap": 18
           }
         },
         "ACLS": {
@@ -642,9 +1018,9 @@
           "required": false,
           "selected": 0,
           "met": false,
-          "available_after_hard_rules": 2,
+          "available_after_hard_rules": 3,
           "blocked_reasons": {
-            "scheduler_consumption_window_overlap": 2
+            "scheduler_consumption_window_overlap": 3
           }
         }
       },
@@ -654,7 +1030,7 @@
           "required": true,
           "selected": 1,
           "met": true,
-          "available_after_hard_rules": 1,
+          "available_after_hard_rules": 3,
           "blocked_reasons": {}
         },
         "Heartsaver": {
@@ -662,10 +1038,8 @@
           "required": true,
           "selected": 0,
           "met": false,
-          "available_after_hard_rules": 4,
-          "blocked_reasons": {
-            "same_start_time_already_seeded": 4
-          }
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
         },
         "ACLS": {
           "target": 1,
@@ -687,11 +1061,51 @@
           "target": 1,
           "required": false,
           "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-08-05": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 3,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
           "met": false,
-          "available_after_hard_rules": 1,
-          "blocked_reasons": {
-            "same_start_time_already_seeded": 1
-          }
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
         }
       },
       "2026-08-10": {
@@ -700,7 +1114,7 @@
           "required": true,
           "selected": 1,
           "met": true,
-          "available_after_hard_rules": 8,
+          "available_after_hard_rules": 3,
           "blocked_reasons": {}
         },
         "Heartsaver": {
@@ -708,10 +1122,9 @@
           "required": true,
           "selected": 0,
           "met": false,
-          "available_after_hard_rules": 14,
+          "available_after_hard_rules": 18,
           "blocked_reasons": {
-            "scheduler_consumption_window_overlap": 12,
-            "same_start_time_already_seeded": 2
+            "scheduler_consumption_window_overlap": 18
           }
         },
         "ACLS": {
@@ -735,9 +1148,9 @@
           "required": false,
           "selected": 0,
           "met": false,
-          "available_after_hard_rules": 2,
+          "available_after_hard_rules": 3,
           "blocked_reasons": {
-            "scheduler_consumption_window_overlap": 2
+            "scheduler_consumption_window_overlap": 3
           }
         }
       },
@@ -747,7 +1160,7 @@
           "required": true,
           "selected": 1,
           "met": true,
-          "available_after_hard_rules": 1,
+          "available_after_hard_rules": 3,
           "blocked_reasons": {}
         },
         "Heartsaver": {
@@ -755,10 +1168,8 @@
           "required": true,
           "selected": 0,
           "met": false,
-          "available_after_hard_rules": 4,
-          "blocked_reasons": {
-            "same_start_time_already_seeded": 4
-          }
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
         },
         "ACLS": {
           "target": 1,
@@ -780,56 +1191,56 @@
           "target": 1,
           "required": false,
           "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        }
+      },
+      "2026-08-12": {
+        "BLS": {
+          "target": 1,
+          "required": true,
+          "selected": 1,
+          "met": true,
+          "available_after_hard_rules": 3,
+          "blocked_reasons": {}
+        },
+        "Heartsaver": {
+          "target": 1,
+          "required": true,
+          "selected": 0,
           "met": false,
-          "available_after_hard_rules": 1,
-          "blocked_reasons": {
-            "same_start_time_already_seeded": 1
-          }
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "ACLS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "PALS": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
+        },
+        "HSI": {
+          "target": 1,
+          "required": false,
+          "selected": 0,
+          "met": true,
+          "available_after_hard_rules": 0,
+          "blocked_reasons": {}
         }
       }
     }
   },
   "seeds": [
-    {
-      "seed_id": "seed-offer-329495-instructor_24057895173-20260630-1630",
-      "source_offer_id": "offer-329495-instructor_24057895173-20260630-1630",
-      "date": "2026-06-30",
-      "start_time": "16:30",
-      "start_minute": "30",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "17:15",
-      "appointment_display_start": "2026-06-30T16:30:00",
-      "appointment_display_end": "2026-06-30T17:15:00",
-      "scheduler_consumption_start": "2026-06-30T16:30:00",
-      "scheduler_consumption_end": "2026-06-30T18:00:00",
-      "scheduler_consumption_minutes": 90,
-      "setup_buffer_minutes": 15,
-      "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-06-30T16:30:00",
-      "instructor_lock_end": "2026-06-30T18:00:00",
-      "resource_lock_start": "2026-06-30T16:30:00",
-      "resource_lock_end": "2026-06-30T18:00:00",
-      "course_id": "329495",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_family": "Heartsaver",
-      "duration_minutes": 45,
-      "capacity": 2,
-      "instructor_person_id": "instructor_24057895173",
-      "instructor_display_name": "Brian Ennis",
-      "instructor_assignment_mode": "PRIMARY",
-      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "resource": "Shipyard Office",
-      "source_location": "UNKNOWN",
-      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:2",
-      "confidence": "high",
-      "reasons": [
-        "public_sellable_offer",
-        "selected_as_stack_seed",
-        "read_only_seed_preview_not_public_menu"
-      ]
-    },
     {
       "seed_id": "seed-offer-209806-instructor_24057895173-20260702-1230",
       "source_offer_id": "offer-209806-instructor_24057895173-20260702-1230",
@@ -871,30 +1282,30 @@
       ]
     },
     {
-      "seed_id": "seed-offer-359474-instructor_24057895173-20260703-1430",
-      "source_offer_id": "offer-359474-instructor_24057895173-20260703-1430",
+      "seed_id": "seed-offer-210549-instructor_24057895173-20260703-0915",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260703-0915",
       "date": "2026-07-03",
-      "start_time": "14:30",
-      "start_minute": "30",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "16:30",
-      "appointment_display_start": "2026-07-03T14:30:00",
-      "appointment_display_end": "2026-07-03T16:30:00",
-      "scheduler_consumption_start": "2026-07-03T14:30:00",
-      "scheduler_consumption_end": "2026-07-03T17:15:00",
-      "scheduler_consumption_minutes": 165,
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "10:15",
+      "appointment_display_start": "2026-07-03T09:15:00",
+      "appointment_display_end": "2026-07-03T10:15:00",
+      "scheduler_consumption_start": "2026-07-03T09:15:00",
+      "scheduler_consumption_end": "2026-07-03T11:00:00",
+      "scheduler_consumption_minutes": 105,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-07-03T14:30:00",
-      "instructor_lock_end": "2026-07-03T17:15:00",
-      "resource_lock_start": "2026-07-03T14:30:00",
-      "resource_lock_end": "2026-07-03T17:15:00",
-      "course_id": "359474",
-      "course_title": "AHA BLS Provider Renewal",
+      "instructor_lock_start": "2026-07-03T09:15:00",
+      "instructor_lock_end": "2026-07-03T11:00:00",
+      "resource_lock_start": "2026-07-03T09:15:00",
+      "resource_lock_end": "2026-07-03T11:00:00",
+      "course_id": "210549",
+      "course_title": "AHA HeartCode BLS",
       "course_family": "BLS",
-      "duration_minutes": 120,
-      "capacity": 6,
+      "duration_minutes": 60,
+      "capacity": 1,
       "instructor_person_id": "instructor_24057895173",
       "instructor_display_name": "Brian Ennis",
       "instructor_assignment_mode": "PRIMARY",
@@ -911,30 +1322,30 @@
       ]
     },
     {
-      "seed_id": "seed-offer-351632-instructor_24057895173-20260705-0800",
-      "source_offer_id": "offer-351632-instructor_24057895173-20260705-0800",
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260705-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260705-0915",
       "date": "2026-07-05",
-      "start_time": "08:00",
-      "start_minute": "00",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "11:00",
-      "appointment_display_start": "2026-07-05T08:00:00",
-      "appointment_display_end": "2026-07-05T11:00:00",
-      "scheduler_consumption_start": "2026-07-05T08:00:00",
-      "scheduler_consumption_end": "2026-07-05T11:45:00",
-      "scheduler_consumption_minutes": 225,
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-07-05T09:15:00",
+      "appointment_display_end": "2026-07-05T11:15:00",
+      "scheduler_consumption_start": "2026-07-05T09:15:00",
+      "scheduler_consumption_end": "2026-07-05T12:00:00",
+      "scheduler_consumption_minutes": 165,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-07-05T08:00:00",
-      "instructor_lock_end": "2026-07-05T11:45:00",
-      "resource_lock_start": "2026-07-05T08:00:00",
-      "resource_lock_end": "2026-07-05T11:45:00",
-      "course_id": "351632",
-      "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
-      "course_family": "Heartsaver",
-      "duration_minutes": 180,
-      "capacity": 12,
+      "instructor_lock_start": "2026-07-05T09:15:00",
+      "instructor_lock_end": "2026-07-05T12:00:00",
+      "resource_lock_start": "2026-07-05T09:15:00",
+      "resource_lock_end": "2026-07-05T12:00:00",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "course_family": "BLS",
+      "duration_minutes": 120,
+      "capacity": 6,
       "instructor_person_id": "instructor_24057895173",
       "instructor_display_name": "Brian Ennis",
       "instructor_assignment_mode": "PRIMARY",
@@ -951,30 +1362,30 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260706-1430",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260706-1430",
+      "seed_id": "seed-offer-329495-instructor_24057895173-20260706-1430",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260706-1430",
       "date": "2026-07-06",
       "start_time": "14:30",
       "start_minute": "30",
       "quarter_hour_start": false,
       "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "16:30",
+      "end_time": "15:15",
       "appointment_display_start": "2026-07-06T14:30:00",
-      "appointment_display_end": "2026-07-06T16:30:00",
+      "appointment_display_end": "2026-07-06T15:15:00",
       "scheduler_consumption_start": "2026-07-06T14:30:00",
-      "scheduler_consumption_end": "2026-07-06T17:15:00",
-      "scheduler_consumption_minutes": 165,
+      "scheduler_consumption_end": "2026-07-06T16:00:00",
+      "scheduler_consumption_minutes": 90,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
       "instructor_lock_start": "2026-07-06T14:30:00",
-      "instructor_lock_end": "2026-07-06T17:15:00",
+      "instructor_lock_end": "2026-07-06T16:00:00",
       "resource_lock_start": "2026-07-06T14:30:00",
-      "resource_lock_end": "2026-07-06T17:15:00",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "duration_minutes": 120,
-      "capacity": 6,
+      "resource_lock_end": "2026-07-06T16:00:00",
+      "course_id": "329495",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "duration_minutes": 45,
+      "capacity": 2,
       "instructor_person_id": "instructor_24057895173",
       "instructor_display_name": "Brian Ennis",
       "instructor_assignment_mode": "PRIMARY",
@@ -1031,30 +1442,150 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260713-1430",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260713-1430",
-      "date": "2026-07-13",
-      "start_time": "14:30",
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260709-1230",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260709-1230",
+      "date": "2026-07-09",
+      "start_time": "12:30",
       "start_minute": "30",
       "quarter_hour_start": false,
       "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "16:30",
-      "appointment_display_start": "2026-07-13T14:30:00",
-      "appointment_display_end": "2026-07-13T16:30:00",
-      "scheduler_consumption_start": "2026-07-13T14:30:00",
-      "scheduler_consumption_end": "2026-07-13T17:15:00",
+      "end_time": "14:30",
+      "appointment_display_start": "2026-07-09T12:30:00",
+      "appointment_display_end": "2026-07-09T14:30:00",
+      "scheduler_consumption_start": "2026-07-09T12:30:00",
+      "scheduler_consumption_end": "2026-07-09T15:15:00",
       "scheduler_consumption_minutes": 165,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-07-13T14:30:00",
-      "instructor_lock_end": "2026-07-13T17:15:00",
-      "resource_lock_start": "2026-07-13T14:30:00",
-      "resource_lock_end": "2026-07-13T17:15:00",
+      "instructor_lock_start": "2026-07-09T12:30:00",
+      "instructor_lock_end": "2026-07-09T15:15:00",
+      "resource_lock_start": "2026-07-09T12:30:00",
+      "resource_lock_end": "2026-07-09T15:15:00",
       "course_id": "209806",
       "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:16",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-210549-instructor_24057895173-20260710-0915",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260710-0915",
+      "date": "2026-07-10",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "10:15",
+      "appointment_display_start": "2026-07-10T09:15:00",
+      "appointment_display_end": "2026-07-10T10:15:00",
+      "scheduler_consumption_start": "2026-07-10T09:15:00",
+      "scheduler_consumption_end": "2026-07-10T11:00:00",
+      "scheduler_consumption_minutes": 105,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-07-10T09:15:00",
+      "instructor_lock_end": "2026-07-10T11:00:00",
+      "resource_lock_start": "2026-07-10T09:15:00",
+      "resource_lock_end": "2026-07-10T11:00:00",
+      "course_id": "210549",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "duration_minutes": 60,
+      "capacity": 1,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:18",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260712-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260712-0915",
+      "date": "2026-07-12",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-07-12T09:15:00",
+      "appointment_display_end": "2026-07-12T11:15:00",
+      "scheduler_consumption_start": "2026-07-12T09:15:00",
+      "scheduler_consumption_end": "2026-07-12T12:00:00",
+      "scheduler_consumption_minutes": 165,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-07-12T09:15:00",
+      "instructor_lock_end": "2026-07-12T12:00:00",
+      "resource_lock_start": "2026-07-12T09:15:00",
+      "resource_lock_end": "2026-07-12T12:00:00",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "course_family": "BLS",
+      "duration_minutes": 120,
+      "capacity": 6,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:20",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-329495-instructor_24057895173-20260713-1430",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260713-1430",
+      "date": "2026-07-13",
+      "start_time": "14:30",
+      "start_minute": "30",
+      "quarter_hour_start": false,
+      "selection_timing_note": "standard_hour_or_half_hour_start",
+      "end_time": "15:15",
+      "appointment_display_start": "2026-07-13T14:30:00",
+      "appointment_display_end": "2026-07-13T15:15:00",
+      "scheduler_consumption_start": "2026-07-13T14:30:00",
+      "scheduler_consumption_end": "2026-07-13T16:00:00",
+      "scheduler_consumption_minutes": 90,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-07-13T14:30:00",
+      "instructor_lock_end": "2026-07-13T16:00:00",
+      "resource_lock_start": "2026-07-13T14:30:00",
+      "resource_lock_end": "2026-07-13T16:00:00",
+      "course_id": "329495",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "duration_minutes": 45,
+      "capacity": 2,
       "instructor_person_id": "instructor_24057895173",
       "instructor_display_name": "Brian Ennis",
       "instructor_assignment_mode": "PRIMARY",
@@ -1111,30 +1642,150 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260720-1430",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260720-1430",
-      "date": "2026-07-20",
-      "start_time": "14:30",
-      "start_minute": "30",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "16:30",
-      "appointment_display_start": "2026-07-20T14:30:00",
-      "appointment_display_end": "2026-07-20T16:30:00",
-      "scheduler_consumption_start": "2026-07-20T14:30:00",
-      "scheduler_consumption_end": "2026-07-20T17:15:00",
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260715-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260715-0915",
+      "date": "2026-07-15",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-07-15T09:15:00",
+      "appointment_display_end": "2026-07-15T11:15:00",
+      "scheduler_consumption_start": "2026-07-15T09:15:00",
+      "scheduler_consumption_end": "2026-07-15T12:00:00",
       "scheduler_consumption_minutes": 165,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-07-20T14:30:00",
-      "instructor_lock_end": "2026-07-20T17:15:00",
-      "resource_lock_start": "2026-07-20T14:30:00",
-      "resource_lock_end": "2026-07-20T17:15:00",
+      "instructor_lock_start": "2026-07-15T09:15:00",
+      "instructor_lock_end": "2026-07-15T12:00:00",
+      "resource_lock_start": "2026-07-15T09:15:00",
+      "resource_lock_end": "2026-07-15T12:00:00",
       "course_id": "209806",
       "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:26",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-210549-instructor_24057895173-20260717-0915",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260717-0915",
+      "date": "2026-07-17",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "10:15",
+      "appointment_display_start": "2026-07-17T09:15:00",
+      "appointment_display_end": "2026-07-17T10:15:00",
+      "scheduler_consumption_start": "2026-07-17T09:15:00",
+      "scheduler_consumption_end": "2026-07-17T11:00:00",
+      "scheduler_consumption_minutes": 105,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-07-17T09:15:00",
+      "instructor_lock_end": "2026-07-17T11:00:00",
+      "resource_lock_start": "2026-07-17T09:15:00",
+      "resource_lock_end": "2026-07-17T11:00:00",
+      "course_id": "210549",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "duration_minutes": 60,
+      "capacity": 1,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:30",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260719-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260719-0915",
+      "date": "2026-07-19",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-07-19T09:15:00",
+      "appointment_display_end": "2026-07-19T11:15:00",
+      "scheduler_consumption_start": "2026-07-19T09:15:00",
+      "scheduler_consumption_end": "2026-07-19T12:00:00",
+      "scheduler_consumption_minutes": 165,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-07-19T09:15:00",
+      "instructor_lock_end": "2026-07-19T12:00:00",
+      "resource_lock_start": "2026-07-19T09:15:00",
+      "resource_lock_end": "2026-07-19T12:00:00",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "course_family": "BLS",
+      "duration_minutes": 120,
+      "capacity": 6,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:33",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-329495-instructor_24057895173-20260720-1430",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260720-1430",
+      "date": "2026-07-20",
+      "start_time": "14:30",
+      "start_minute": "30",
+      "quarter_hour_start": false,
+      "selection_timing_note": "standard_hour_or_half_hour_start",
+      "end_time": "15:15",
+      "appointment_display_start": "2026-07-20T14:30:00",
+      "appointment_display_end": "2026-07-20T15:15:00",
+      "scheduler_consumption_start": "2026-07-20T14:30:00",
+      "scheduler_consumption_end": "2026-07-20T16:00:00",
+      "scheduler_consumption_minutes": 90,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-07-20T14:30:00",
+      "instructor_lock_end": "2026-07-20T16:00:00",
+      "resource_lock_start": "2026-07-20T14:30:00",
+      "resource_lock_end": "2026-07-20T16:00:00",
+      "course_id": "329495",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "duration_minutes": 45,
+      "capacity": 2,
       "instructor_person_id": "instructor_24057895173",
       "instructor_display_name": "Brian Ennis",
       "instructor_assignment_mode": "PRIMARY",
@@ -1151,30 +1802,30 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209809-instructor_24057895173-20260722-0830",
-      "source_offer_id": "offer-209809-instructor_24057895173-20260722-0830",
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260722-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260722-0915",
       "date": "2026-07-22",
-      "start_time": "08:30",
-      "start_minute": "30",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "11:30",
-      "appointment_display_start": "2026-07-22T08:30:00",
-      "appointment_display_end": "2026-07-22T11:30:00",
-      "scheduler_consumption_start": "2026-07-22T08:30:00",
-      "scheduler_consumption_end": "2026-07-22T12:15:00",
-      "scheduler_consumption_minutes": 225,
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-07-22T09:15:00",
+      "appointment_display_end": "2026-07-22T11:15:00",
+      "scheduler_consumption_start": "2026-07-22T09:15:00",
+      "scheduler_consumption_end": "2026-07-22T12:00:00",
+      "scheduler_consumption_minutes": 165,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-07-22T08:30:00",
-      "instructor_lock_end": "2026-07-22T12:15:00",
-      "resource_lock_start": "2026-07-22T08:30:00",
-      "resource_lock_end": "2026-07-22T12:15:00",
-      "course_id": "209809",
-      "course_title": "AHA Heartsaver First Aid CPR AED",
-      "course_family": "Heartsaver",
-      "duration_minutes": 180,
-      "capacity": 12,
+      "instructor_lock_start": "2026-07-22T09:15:00",
+      "instructor_lock_end": "2026-07-22T12:00:00",
+      "resource_lock_start": "2026-07-22T09:15:00",
+      "resource_lock_end": "2026-07-22T12:00:00",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "course_family": "BLS",
+      "duration_minutes": 120,
+      "capacity": 6,
       "instructor_person_id": "instructor_24057895173",
       "instructor_display_name": "Brian Ennis",
       "instructor_assignment_mode": "PRIMARY",
@@ -1191,30 +1842,110 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260727-1430",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260727-1430",
-      "date": "2026-07-27",
-      "start_time": "14:30",
-      "start_minute": "30",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "16:30",
-      "appointment_display_start": "2026-07-27T14:30:00",
-      "appointment_display_end": "2026-07-27T16:30:00",
-      "scheduler_consumption_start": "2026-07-27T14:30:00",
-      "scheduler_consumption_end": "2026-07-27T17:15:00",
+      "seed_id": "seed-offer-210549-instructor_24057895173-20260724-0915",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260724-0915",
+      "date": "2026-07-24",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "10:15",
+      "appointment_display_start": "2026-07-24T09:15:00",
+      "appointment_display_end": "2026-07-24T10:15:00",
+      "scheduler_consumption_start": "2026-07-24T09:15:00",
+      "scheduler_consumption_end": "2026-07-24T11:00:00",
+      "scheduler_consumption_minutes": 105,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-07-24T09:15:00",
+      "instructor_lock_end": "2026-07-24T11:00:00",
+      "resource_lock_start": "2026-07-24T09:15:00",
+      "resource_lock_end": "2026-07-24T11:00:00",
+      "course_id": "210549",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "duration_minutes": 60,
+      "capacity": 1,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:43",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260726-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260726-0915",
+      "date": "2026-07-26",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-07-26T09:15:00",
+      "appointment_display_end": "2026-07-26T11:15:00",
+      "scheduler_consumption_start": "2026-07-26T09:15:00",
+      "scheduler_consumption_end": "2026-07-26T12:00:00",
       "scheduler_consumption_minutes": 165,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-07-27T14:30:00",
-      "instructor_lock_end": "2026-07-27T17:15:00",
-      "resource_lock_start": "2026-07-27T14:30:00",
-      "resource_lock_end": "2026-07-27T17:15:00",
+      "instructor_lock_start": "2026-07-26T09:15:00",
+      "instructor_lock_end": "2026-07-26T12:00:00",
+      "resource_lock_start": "2026-07-26T09:15:00",
+      "resource_lock_end": "2026-07-26T12:00:00",
       "course_id": "209806",
       "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:45",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-329495-instructor_24057895173-20260727-1430",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260727-1430",
+      "date": "2026-07-27",
+      "start_time": "14:30",
+      "start_minute": "30",
+      "quarter_hour_start": false,
+      "selection_timing_note": "standard_hour_or_half_hour_start",
+      "end_time": "15:15",
+      "appointment_display_start": "2026-07-27T14:30:00",
+      "appointment_display_end": "2026-07-27T15:15:00",
+      "scheduler_consumption_start": "2026-07-27T14:30:00",
+      "scheduler_consumption_end": "2026-07-27T16:00:00",
+      "scheduler_consumption_minutes": 90,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-07-27T14:30:00",
+      "instructor_lock_end": "2026-07-27T16:00:00",
+      "resource_lock_start": "2026-07-27T14:30:00",
+      "resource_lock_end": "2026-07-27T16:00:00",
+      "course_id": "329495",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "duration_minutes": 45,
+      "capacity": 2,
       "instructor_person_id": "instructor_24057895173",
       "instructor_display_name": "Brian Ennis",
       "instructor_assignment_mode": "PRIMARY",
@@ -1271,25 +2002,105 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260803-0830",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0830",
-      "date": "2026-08-03",
-      "start_time": "08:30",
-      "start_minute": "30",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "10:30",
-      "appointment_display_start": "2026-08-03T08:30:00",
-      "appointment_display_end": "2026-08-03T10:30:00",
-      "scheduler_consumption_start": "2026-08-03T08:30:00",
-      "scheduler_consumption_end": "2026-08-03T11:15:00",
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260729-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260729-0915",
+      "date": "2026-07-29",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-07-29T09:15:00",
+      "appointment_display_end": "2026-07-29T11:15:00",
+      "scheduler_consumption_start": "2026-07-29T09:15:00",
+      "scheduler_consumption_end": "2026-07-29T12:00:00",
       "scheduler_consumption_minutes": 165,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-08-03T08:30:00",
-      "instructor_lock_end": "2026-08-03T11:15:00",
-      "resource_lock_start": "2026-08-03T08:30:00",
-      "resource_lock_end": "2026-08-03T11:15:00",
+      "instructor_lock_start": "2026-07-29T09:15:00",
+      "instructor_lock_end": "2026-07-29T12:00:00",
+      "resource_lock_start": "2026-07-29T09:15:00",
+      "resource_lock_end": "2026-07-29T12:00:00",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "course_family": "BLS",
+      "duration_minutes": 120,
+      "capacity": 6,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:51",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-210549-instructor_24057895173-20260731-0915",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260731-0915",
+      "date": "2026-07-31",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "10:15",
+      "appointment_display_start": "2026-07-31T09:15:00",
+      "appointment_display_end": "2026-07-31T10:15:00",
+      "scheduler_consumption_start": "2026-07-31T09:15:00",
+      "scheduler_consumption_end": "2026-07-31T11:00:00",
+      "scheduler_consumption_minutes": 105,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-07-31T09:15:00",
+      "instructor_lock_end": "2026-07-31T11:00:00",
+      "resource_lock_start": "2026-07-31T09:15:00",
+      "resource_lock_end": "2026-07-31T11:00:00",
+      "course_id": "210549",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "duration_minutes": 60,
+      "capacity": 1,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:55",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260803-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0915",
+      "date": "2026-08-03",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-08-03T09:15:00",
+      "appointment_display_end": "2026-08-03T11:15:00",
+      "scheduler_consumption_start": "2026-08-03T09:15:00",
+      "scheduler_consumption_end": "2026-08-03T12:00:00",
+      "scheduler_consumption_minutes": 165,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-08-03T09:15:00",
+      "instructor_lock_end": "2026-08-03T12:00:00",
+      "resource_lock_start": "2026-08-03T09:15:00",
+      "resource_lock_end": "2026-08-03T12:00:00",
       "course_id": "209806",
       "course_title": "AHA BLS Provider",
       "course_family": "BLS",
@@ -1311,27 +2122,27 @@
       ]
     },
     {
-      "seed_id": "seed-offer-359474-instructor_24057895173-20260804-0800",
-      "source_offer_id": "offer-359474-instructor_24057895173-20260804-0800",
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260804-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260804-0915",
       "date": "2026-08-04",
-      "start_time": "08:00",
-      "start_minute": "00",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "10:00",
-      "appointment_display_start": "2026-08-04T08:00:00",
-      "appointment_display_end": "2026-08-04T10:00:00",
-      "scheduler_consumption_start": "2026-08-04T08:00:00",
-      "scheduler_consumption_end": "2026-08-04T10:45:00",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-08-04T09:15:00",
+      "appointment_display_end": "2026-08-04T11:15:00",
+      "scheduler_consumption_start": "2026-08-04T09:15:00",
+      "scheduler_consumption_end": "2026-08-04T12:00:00",
       "scheduler_consumption_minutes": 165,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-08-04T08:00:00",
-      "instructor_lock_end": "2026-08-04T10:45:00",
-      "resource_lock_start": "2026-08-04T08:00:00",
-      "resource_lock_end": "2026-08-04T10:45:00",
-      "course_id": "359474",
-      "course_title": "AHA BLS Provider Renewal",
+      "instructor_lock_start": "2026-08-04T09:15:00",
+      "instructor_lock_end": "2026-08-04T12:00:00",
+      "resource_lock_start": "2026-08-04T09:15:00",
+      "resource_lock_end": "2026-08-04T12:00:00",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -1351,25 +2162,65 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260810-0830",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260810-0830",
-      "date": "2026-08-10",
-      "start_time": "08:30",
-      "start_minute": "30",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "10:30",
-      "appointment_display_start": "2026-08-10T08:30:00",
-      "appointment_display_end": "2026-08-10T10:30:00",
-      "scheduler_consumption_start": "2026-08-10T08:30:00",
-      "scheduler_consumption_end": "2026-08-10T11:15:00",
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260805-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260805-0915",
+      "date": "2026-08-05",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-08-05T09:15:00",
+      "appointment_display_end": "2026-08-05T11:15:00",
+      "scheduler_consumption_start": "2026-08-05T09:15:00",
+      "scheduler_consumption_end": "2026-08-05T12:00:00",
       "scheduler_consumption_minutes": 165,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-08-10T08:30:00",
-      "instructor_lock_end": "2026-08-10T11:15:00",
-      "resource_lock_start": "2026-08-10T08:30:00",
-      "resource_lock_end": "2026-08-10T11:15:00",
+      "instructor_lock_start": "2026-08-05T09:15:00",
+      "instructor_lock_end": "2026-08-05T12:00:00",
+      "resource_lock_start": "2026-08-05T09:15:00",
+      "resource_lock_end": "2026-08-05T12:00:00",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "course_family": "BLS",
+      "duration_minutes": 120,
+      "capacity": 6,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:60",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
+    },
+    {
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260810-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260810-0915",
+      "date": "2026-08-10",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-08-10T09:15:00",
+      "appointment_display_end": "2026-08-10T11:15:00",
+      "scheduler_consumption_start": "2026-08-10T09:15:00",
+      "scheduler_consumption_end": "2026-08-10T12:00:00",
+      "scheduler_consumption_minutes": 165,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-08-10T09:15:00",
+      "instructor_lock_end": "2026-08-10T12:00:00",
+      "resource_lock_start": "2026-08-10T09:15:00",
+      "resource_lock_end": "2026-08-10T12:00:00",
       "course_id": "209806",
       "course_title": "AHA BLS Provider",
       "course_family": "BLS",
@@ -1391,27 +2242,27 @@
       ]
     },
     {
-      "seed_id": "seed-offer-359474-instructor_24057895173-20260811-0800",
-      "source_offer_id": "offer-359474-instructor_24057895173-20260811-0800",
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260811-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260811-0915",
       "date": "2026-08-11",
-      "start_time": "08:00",
-      "start_minute": "00",
-      "quarter_hour_start": false,
-      "selection_timing_note": "standard_hour_or_half_hour_start",
-      "end_time": "10:00",
-      "appointment_display_start": "2026-08-11T08:00:00",
-      "appointment_display_end": "2026-08-11T10:00:00",
-      "scheduler_consumption_start": "2026-08-11T08:00:00",
-      "scheduler_consumption_end": "2026-08-11T10:45:00",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-08-11T09:15:00",
+      "appointment_display_end": "2026-08-11T11:15:00",
+      "scheduler_consumption_start": "2026-08-11T09:15:00",
+      "scheduler_consumption_end": "2026-08-11T12:00:00",
       "scheduler_consumption_minutes": 165,
       "setup_buffer_minutes": 15,
       "cleanup_buffer_minutes": 30,
-      "instructor_lock_start": "2026-08-11T08:00:00",
-      "instructor_lock_end": "2026-08-11T10:45:00",
-      "resource_lock_start": "2026-08-11T08:00:00",
-      "resource_lock_end": "2026-08-11T10:45:00",
-      "course_id": "359474",
-      "course_title": "AHA BLS Provider Renewal",
+      "instructor_lock_start": "2026-08-11T09:15:00",
+      "instructor_lock_end": "2026-08-11T12:00:00",
+      "resource_lock_start": "2026-08-11T09:15:00",
+      "resource_lock_end": "2026-08-11T12:00:00",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -1429,75 +2280,49 @@
         "selected_as_stack_seed",
         "read_only_seed_preview_not_public_menu"
       ]
+    },
+    {
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260812-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260812-0915",
+      "date": "2026-08-12",
+      "start_time": "09:15",
+      "start_minute": "15",
+      "quarter_hour_start": true,
+      "selection_timing_note": "quarter_hour_start_allowed_for_stack_fit",
+      "end_time": "11:15",
+      "appointment_display_start": "2026-08-12T09:15:00",
+      "appointment_display_end": "2026-08-12T11:15:00",
+      "scheduler_consumption_start": "2026-08-12T09:15:00",
+      "scheduler_consumption_end": "2026-08-12T12:00:00",
+      "scheduler_consumption_minutes": 165,
+      "setup_buffer_minutes": 15,
+      "cleanup_buffer_minutes": 30,
+      "instructor_lock_start": "2026-08-12T09:15:00",
+      "instructor_lock_end": "2026-08-12T12:00:00",
+      "resource_lock_start": "2026-08-12T09:15:00",
+      "resource_lock_end": "2026-08-12T12:00:00",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "course_family": "BLS",
+      "duration_minutes": 120,
+      "capacity": 6,
+      "instructor_person_id": "instructor_24057895173",
+      "instructor_display_name": "Brian Ennis",
+      "instructor_assignment_mode": "PRIMARY",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "resource": "Shipyard Office",
+      "source_location": "UNKNOWN",
+      "offer_location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:67",
+      "confidence": "high",
+      "reasons": [
+        "public_sellable_offer",
+        "selected_as_stack_seed",
+        "read_only_seed_preview_not_public_menu"
+      ]
     }
   ],
   "hidden_offers": [
-    {
-      "source_offer_id": "2026-06-30-BLS-mix-placeholder",
-      "date": "2026-06-30",
-      "start_time": "UNKNOWN",
-      "course_title": "BLS seed",
-      "course_family": "BLS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "required_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260630-1630",
-      "date": "2026-06-30",
-      "start_time": "16:30",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:2",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260630-1630",
-      "date": "2026-06-30",
-      "start_time": "16:30",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:2",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "2026-06-30-ACLS-mix-placeholder",
-      "date": "2026-06-30",
-      "start_time": "UNKNOWN",
-      "course_title": "ACLS seed",
-      "course_family": "ACLS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "optional_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "2026-06-30-PALS-mix-placeholder",
-      "date": "2026-06-30",
-      "start_time": "UNKNOWN",
-      "course_title": "PALS seed",
-      "course_family": "PALS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "optional_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
-    },
-    {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260630-1630",
-      "date": "2026-06-30",
-      "start_time": "16:30",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
-      "course_family": "HSI",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:2",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
-    },
     {
       "source_offer_id": "offer-359474-instructor_24057895173-20260702-1230",
       "date": "2026-07-02",
@@ -1521,61 +2346,6 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260702-1245",
-      "date": "2026-07-02",
-      "start_time": "12:45",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260702-1245",
-      "date": "2026-07-02",
-      "start_time": "12:45",
-      "course_title": "AHA BLS Provider Renewal",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260702-1245",
-      "date": "2026-07-02",
-      "start_time": "12:45",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260702-1300",
-      "date": "2026-07-02",
-      "start_time": "13:00",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260702-1300",
-      "date": "2026-07-02",
-      "start_time": "13:00",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
       "source_offer_id": "offer-209809-instructor_24057895173-20260702-1300",
       "date": "2026-07-02",
       "start_time": "13:00",
@@ -1587,10 +2357,54 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
+      "source_offer_id": "offer-329495-instructor_24057895173-20260702-1300",
+      "date": "2026-07-02",
+      "start_time": "13:00",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
       "source_offer_id": "offer-344085-instructor_24057895173-20260702-1300",
       "date": "2026-07-02",
       "start_time": "13:00",
       "course_title": "AHA Heartsaver CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-209808-instructor_24057895173-20260702-1300",
+      "date": "2026-07-02",
+      "start_time": "13:00",
+      "course_title": "AHA Heartsaver CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-351632-instructor_24057895173-20260702-1300",
+      "date": "2026-07-02",
+      "start_time": "13:00",
+      "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260702-1300",
+      "date": "2026-07-02",
+      "start_time": "13:00",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
@@ -1752,6 +2566,17 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
+      "source_offer_id": "offer-445670-instructor_24057895173-20260702-1300",
+      "date": "2026-07-02",
+      "start_time": "13:00",
+      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
+      "course_family": "HSI",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
       "source_offer_id": "offer-445670-instructor_24057895173-20260702-1230",
       "date": "2026-07-02",
       "start_time": "12:30",
@@ -1818,11 +2643,55 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "2026-07-05-BLS-mix-placeholder",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260705-0915",
+      "date": "2026-07-05",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:9",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260705-0915",
+      "date": "2026-07-05",
+      "start_time": "09:15",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:9",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-209806-instructor_24057895173-20260705-1230",
+      "date": "2026-07-05",
+      "start_time": "12:30",
+      "course_title": "AHA BLS Provider",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:9",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-359474-instructor_24057895173-20260705-1230",
+      "date": "2026-07-05",
+      "start_time": "12:30",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:9",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "2026-07-05-Heartsaver-mix-placeholder",
       "date": "2026-07-05",
       "start_time": "UNKNOWN",
-      "course_title": "BLS seed",
-      "course_family": "BLS",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
       "instructor_display_name": "UNKNOWN",
       "source_availability_window": "UNKNOWN",
       "reason_code": "required_mix_not_available",
@@ -1862,81 +2731,15 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260706-1430",
+      "source_offer_id": "2026-07-06-BLS-mix-placeholder",
       "date": "2026-07-06",
-      "start_time": "14:30",
-      "course_title": "AHA BLS Provider Renewal",
+      "start_time": "UNKNOWN",
+      "course_title": "BLS seed",
       "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260706-1430",
-      "date": "2026-07-06",
-      "start_time": "14:30",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260706-1445",
-      "date": "2026-07-06",
-      "start_time": "14:45",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260706-1445",
-      "date": "2026-07-06",
-      "start_time": "14:45",
-      "course_title": "AHA BLS Provider Renewal",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260706-1445",
-      "date": "2026-07-06",
-      "start_time": "14:45",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260706-1500",
-      "date": "2026-07-06",
-      "start_time": "15:00",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260706-1430",
-      "date": "2026-07-06",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260706-1430",
@@ -1946,8 +2749,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260706-1430",
@@ -1957,8 +2760,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260706-1430",
@@ -1968,8 +2771,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-329495-instructor_24057895173-20260706-1445",
@@ -1979,8 +2782,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260706-1445",
@@ -1990,8 +2793,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260706-1445",
@@ -2001,8 +2804,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260706-1445",
@@ -2012,8 +2815,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-329495-instructor_24057895173-20260706-1500",
@@ -2023,8 +2826,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260706-1500",
@@ -2034,8 +2837,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260706-1500",
@@ -2045,8 +2848,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260706-1500",
@@ -2056,8 +2859,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "2026-07-06-ACLS-mix-placeholder",
@@ -2119,6 +2922,17 @@
       "date": "2026-07-07",
       "start_time": "12:30",
       "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:12",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260707-1230",
+      "date": "2026-07-07",
+      "start_time": "12:30",
+      "course_title": "AHA HeartCode BLS",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:12",
@@ -2225,81 +3039,180 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260713-1430",
-      "date": "2026-07-13",
-      "start_time": "14:30",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260709-1230",
+      "date": "2026-07-09",
+      "start_time": "12:30",
       "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:16",
       "reason_code": "family_mix_target_already_met",
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260713-1430",
-      "date": "2026-07-13",
-      "start_time": "14:30",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260713-1445",
-      "date": "2026-07-13",
-      "start_time": "14:45",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260713-1445",
-      "date": "2026-07-13",
-      "start_time": "14:45",
-      "course_title": "AHA BLS Provider Renewal",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260713-1445",
-      "date": "2026-07-13",
-      "start_time": "14:45",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260713-1500",
-      "date": "2026-07-13",
-      "start_time": "15:00",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260713-1430",
-      "date": "2026-07-13",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "source_offer_id": "2026-07-09-Heartsaver-mix-placeholder",
+      "date": "2026-07-09",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
       "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-09-ACLS-mix-placeholder",
+      "date": "2026-07-09",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-09-PALS-mix-placeholder",
+      "date": "2026-07-09",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-09-HSI-mix-placeholder",
+      "date": "2026-07-09",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-10-Heartsaver-mix-placeholder",
+      "date": "2026-07-10",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-10-ACLS-mix-placeholder",
+      "date": "2026-07-10",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-10-PALS-mix-placeholder",
+      "date": "2026-07-10",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-10-HSI-mix-placeholder",
+      "date": "2026-07-10",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "offer-359474-instructor_24057895173-20260712-0915",
+      "date": "2026-07-12",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:20",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260712-0915",
+      "date": "2026-07-12",
+      "start_time": "09:15",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:20",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "2026-07-12-Heartsaver-mix-placeholder",
+      "date": "2026-07-12",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-12-ACLS-mix-placeholder",
+      "date": "2026-07-12",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-12-PALS-mix-placeholder",
+      "date": "2026-07-12",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-12-HSI-mix-placeholder",
+      "date": "2026-07-12",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-13-BLS-mix-placeholder",
+      "date": "2026-07-13",
+      "start_time": "UNKNOWN",
+      "course_title": "BLS seed",
+      "course_family": "BLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260713-1430",
@@ -2309,8 +3222,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260713-1430",
@@ -2320,8 +3233,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260713-1430",
@@ -2331,8 +3244,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-329495-instructor_24057895173-20260713-1445",
@@ -2342,8 +3255,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260713-1445",
@@ -2353,8 +3266,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260713-1445",
@@ -2364,8 +3277,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260713-1445",
@@ -2375,8 +3288,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-329495-instructor_24057895173-20260713-1500",
@@ -2386,8 +3299,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260713-1500",
@@ -2397,8 +3310,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260713-1500",
@@ -2408,8 +3321,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260713-1500",
@@ -2419,8 +3332,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "2026-07-13-ACLS-mix-placeholder",
@@ -2588,103 +3501,191 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260720-1430",
-      "date": "2026-07-20",
-      "start_time": "14:30",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260715-0915",
+      "date": "2026-07-15",
+      "start_time": "09:15",
       "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:26",
       "reason_code": "family_mix_target_already_met",
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260720-1430",
-      "date": "2026-07-20",
-      "start_time": "14:30",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260715-0915",
+      "date": "2026-07-15",
+      "start_time": "09:15",
       "course_title": "AHA HeartCode BLS",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:26",
       "reason_code": "family_mix_target_already_met",
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260720-1445",
-      "date": "2026-07-20",
-      "start_time": "14:45",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260720-1445",
-      "date": "2026-07-20",
-      "start_time": "14:45",
-      "course_title": "AHA BLS Provider Renewal",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260720-1445",
-      "date": "2026-07-20",
-      "start_time": "14:45",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260720-1500",
-      "date": "2026-07-20",
-      "start_time": "15:00",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260720-1500",
-      "date": "2026-07-20",
-      "start_time": "15:00",
-      "course_title": "AHA BLS Provider Renewal",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260720-1500",
-      "date": "2026-07-20",
-      "start_time": "15:00",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260720-1430",
-      "date": "2026-07-20",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "source_offer_id": "2026-07-15-Heartsaver-mix-placeholder",
+      "date": "2026-07-15",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
       "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-15-ACLS-mix-placeholder",
+      "date": "2026-07-15",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-15-PALS-mix-placeholder",
+      "date": "2026-07-15",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-15-HSI-mix-placeholder",
+      "date": "2026-07-15",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-17-Heartsaver-mix-placeholder",
+      "date": "2026-07-17",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-17-ACLS-mix-placeholder",
+      "date": "2026-07-17",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-17-PALS-mix-placeholder",
+      "date": "2026-07-17",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-17-HSI-mix-placeholder",
+      "date": "2026-07-17",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "offer-359474-instructor_24057895173-20260719-0915",
+      "date": "2026-07-19",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:33",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260719-0915",
+      "date": "2026-07-19",
+      "start_time": "09:15",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:33",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "2026-07-19-Heartsaver-mix-placeholder",
+      "date": "2026-07-19",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-19-ACLS-mix-placeholder",
+      "date": "2026-07-19",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-19-PALS-mix-placeholder",
+      "date": "2026-07-19",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-19-HSI-mix-placeholder",
+      "date": "2026-07-19",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-20-BLS-mix-placeholder",
+      "date": "2026-07-20",
+      "start_time": "UNKNOWN",
+      "course_title": "BLS seed",
+      "course_family": "BLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260720-1430",
@@ -2694,8 +3695,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260720-1430",
@@ -2705,8 +3706,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260720-1430",
@@ -2716,8 +3717,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-329495-instructor_24057895173-20260720-1445",
@@ -2727,8 +3728,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260720-1445",
@@ -2738,8 +3739,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260720-1445",
@@ -2749,8 +3750,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260720-1445",
@@ -2760,8 +3761,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-329495-instructor_24057895173-20260720-1500",
@@ -2771,8 +3772,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260720-1500",
@@ -2782,8 +3783,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260720-1500",
@@ -2793,8 +3794,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260720-1500",
@@ -2804,8 +3805,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "2026-07-20-ACLS-mix-placeholder",
@@ -2863,15 +3864,59 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "2026-07-22-BLS-mix-placeholder",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260722-0915",
       "date": "2026-07-22",
-      "start_time": "UNKNOWN",
-      "course_title": "BLS seed",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
-      "instructor_display_name": "UNKNOWN",
-      "source_availability_window": "UNKNOWN",
-      "reason_code": "required_mix_not_available",
-      "message": "No source offer satisfied this family mix goal."
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260722-0915",
+      "date": "2026-07-22",
+      "start_time": "09:15",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-209806-instructor_24057895173-20260722-1230",
+      "date": "2026-07-22",
+      "start_time": "12:30",
+      "course_title": "AHA BLS Provider",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-359474-instructor_24057895173-20260722-1230",
+      "date": "2026-07-22",
+      "start_time": "12:30",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-209809-instructor_24057895173-20260722-0830",
+      "date": "2026-07-22",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "offer-351632-instructor_24057895173-20260722-0830",
@@ -2881,8 +3926,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "offer-209809-instructor_24057895173-20260722-0845",
@@ -2892,8 +3937,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "offer-351632-instructor_24057895173-20260722-0845",
@@ -2903,8 +3948,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "offer-209809-instructor_24057895173-20260722-0900",
@@ -2914,8 +3959,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "offer-351632-instructor_24057895173-20260722-0900",
@@ -2925,8 +3970,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "2026-07-22-ACLS-mix-placeholder",
@@ -2962,81 +4007,125 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260727-1430",
-      "date": "2026-07-27",
-      "start_time": "14:30",
-      "course_title": "AHA BLS Provider Renewal",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260727-1430",
-      "date": "2026-07-27",
-      "start_time": "14:30",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260727-1445",
-      "date": "2026-07-27",
-      "start_time": "14:45",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260727-1445",
-      "date": "2026-07-27",
-      "start_time": "14:45",
-      "course_title": "AHA BLS Provider Renewal",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260727-1445",
-      "date": "2026-07-27",
-      "start_time": "14:45",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260727-1500",
-      "date": "2026-07-27",
-      "start_time": "15:00",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260727-1430",
-      "date": "2026-07-27",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "source_offer_id": "2026-07-24-Heartsaver-mix-placeholder",
+      "date": "2026-07-24",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
       "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-24-ACLS-mix-placeholder",
+      "date": "2026-07-24",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-24-PALS-mix-placeholder",
+      "date": "2026-07-24",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-24-HSI-mix-placeholder",
+      "date": "2026-07-24",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "offer-359474-instructor_24057895173-20260726-0915",
+      "date": "2026-07-26",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:45",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260726-0915",
+      "date": "2026-07-26",
+      "start_time": "09:15",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:45",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "2026-07-26-Heartsaver-mix-placeholder",
+      "date": "2026-07-26",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-26-ACLS-mix-placeholder",
+      "date": "2026-07-26",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-26-PALS-mix-placeholder",
+      "date": "2026-07-26",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-26-HSI-mix-placeholder",
+      "date": "2026-07-26",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-27-BLS-mix-placeholder",
+      "date": "2026-07-27",
+      "start_time": "UNKNOWN",
+      "course_title": "BLS seed",
+      "course_family": "BLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260727-1430",
@@ -3046,8 +4135,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260727-1430",
@@ -3057,8 +4146,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260727-1430",
@@ -3068,8 +4157,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-329495-instructor_24057895173-20260727-1445",
@@ -3079,8 +4168,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260727-1445",
@@ -3090,8 +4179,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260727-1445",
@@ -3101,8 +4190,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260727-1445",
@@ -3112,8 +4201,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-329495-instructor_24057895173-20260727-1500",
@@ -3123,8 +4212,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-344085-instructor_24057895173-20260727-1500",
@@ -3134,8 +4223,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260727-1500",
@@ -3145,8 +4234,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "offer-251545-instructor_24057895173-20260727-1500",
@@ -3156,8 +4245,8 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
       "source_offer_id": "2026-07-27-ACLS-mix-placeholder",
@@ -3219,6 +4308,17 @@
       "date": "2026-07-28",
       "start_time": "12:30",
       "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:49",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260728-1230",
+      "date": "2026-07-28",
+      "start_time": "12:30",
+      "course_title": "AHA HeartCode BLS",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:49",
@@ -3325,31 +4425,141 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260803-0830",
-      "date": "2026-08-03",
-      "start_time": "08:30",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260729-0915",
+      "date": "2026-07-29",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:51",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260729-0915",
+      "date": "2026-07-29",
+      "start_time": "09:15",
       "course_title": "AHA HeartCode BLS",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:51",
       "reason_code": "family_mix_target_already_met",
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0800",
-      "date": "2026-08-03",
-      "start_time": "08:00",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260729-1230",
+      "date": "2026-07-29",
+      "start_time": "12:30",
       "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:51",
       "reason_code": "family_mix_target_already_met",
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260803-0800",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260729-1230",
+      "date": "2026-07-29",
+      "start_time": "12:30",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:51",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "2026-07-29-Heartsaver-mix-placeholder",
+      "date": "2026-07-29",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-29-ACLS-mix-placeholder",
+      "date": "2026-07-29",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-29-PALS-mix-placeholder",
+      "date": "2026-07-29",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-29-HSI-mix-placeholder",
+      "date": "2026-07-29",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-31-Heartsaver-mix-placeholder",
+      "date": "2026-07-31",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-31-ACLS-mix-placeholder",
+      "date": "2026-07-31",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-31-PALS-mix-placeholder",
+      "date": "2026-07-31",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-07-31-HSI-mix-placeholder",
+      "date": "2026-07-31",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "offer-359474-instructor_24057895173-20260803-0915",
       "date": "2026-08-03",
-      "start_time": "08:00",
+      "start_time": "09:15",
       "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
@@ -3358,42 +4568,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260803-0800",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260803-0915",
       "date": "2026-08-03",
-      "start_time": "08:00",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0815",
-      "date": "2026-08-03",
-      "start_time": "08:15",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260803-0815",
-      "date": "2026-08-03",
-      "start_time": "08:15",
-      "course_title": "AHA BLS Provider Renewal",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260803-0815",
-      "date": "2026-08-03",
-      "start_time": "08:15",
+      "start_time": "09:15",
       "course_title": "AHA HeartCode BLS",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
@@ -3541,8 +4718,30 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-329495-instructor_24057895173-20260803-0830",
+      "date": "2026-08-03",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-344085-instructor_24057895173-20260803-0830",
+      "date": "2026-08-03",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260803-0830",
@@ -3552,8 +4751,30 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-351632-instructor_24057895173-20260803-0830",
+      "date": "2026-08-03",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260803-0830",
+      "date": "2026-08-03",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "2026-08-03-ACLS-mix-placeholder",
@@ -3600,48 +4821,48 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260804-0800",
-      "date": "2026-08-04",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_family": "Heartsaver",
+      "source_offer_id": "offer-445670-instructor_24057895173-20260803-0830",
+      "date": "2026-08-03",
+      "start_time": "08:30",
+      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
+      "course_family": "HSI",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:59",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260804-0800",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260804-0915",
       "date": "2026-08-04",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver CPR AED",
-      "course_family": "Heartsaver",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:59",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-351632-instructor_24057895173-20260804-0800",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260804-0915",
       "date": "2026-08-04",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
-      "course_family": "Heartsaver",
+      "start_time": "09:15",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:59",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260804-0800",
+      "source_offer_id": "2026-08-04-Heartsaver-mix-placeholder",
       "date": "2026-08-04",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
       "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:59",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
     },
     {
       "source_offer_id": "2026-08-04-ACLS-mix-placeholder",
@@ -3666,42 +4887,86 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260804-0800",
+      "source_offer_id": "2026-08-04-HSI-mix-placeholder",
       "date": "2026-08-04",
-      "start_time": "08:00",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
       "course_family": "HSI",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:59",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260810-0830",
-      "date": "2026-08-10",
-      "start_time": "08:30",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260805-0915",
+      "date": "2026-08-05",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:60",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260805-0915",
+      "date": "2026-08-05",
+      "start_time": "09:15",
       "course_title": "AHA HeartCode BLS",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:60",
       "reason_code": "family_mix_target_already_met",
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260810-0800",
-      "date": "2026-08-10",
-      "start_time": "08:00",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
+      "source_offer_id": "2026-08-05-Heartsaver-mix-placeholder",
+      "date": "2026-08-05",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260810-0800",
+      "source_offer_id": "2026-08-05-ACLS-mix-placeholder",
+      "date": "2026-08-05",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-08-05-PALS-mix-placeholder",
+      "date": "2026-08-05",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-08-05-HSI-mix-placeholder",
+      "date": "2026-08-05",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "offer-359474-instructor_24057895173-20260810-0915",
       "date": "2026-08-10",
-      "start_time": "08:00",
+      "start_time": "09:15",
       "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
@@ -3710,42 +4975,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260810-0800",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260810-0915",
       "date": "2026-08-10",
-      "start_time": "08:00",
-      "course_title": "AHA HeartCode BLS",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260810-0815",
-      "date": "2026-08-10",
-      "start_time": "08:15",
-      "course_title": "AHA BLS Provider",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260810-0815",
-      "date": "2026-08-10",
-      "start_time": "08:15",
-      "course_title": "AHA BLS Provider Renewal",
-      "course_family": "BLS",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-210549-instructor_24057895173-20260810-0815",
-      "date": "2026-08-10",
-      "start_time": "08:15",
+      "start_time": "09:15",
       "course_title": "AHA HeartCode BLS",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
@@ -3893,8 +5125,30 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-329495-instructor_24057895173-20260810-0830",
+      "date": "2026-08-10",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-344085-instructor_24057895173-20260810-0830",
+      "date": "2026-08-10",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "offer-209808-instructor_24057895173-20260810-0830",
@@ -3904,8 +5158,30 @@
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-351632-instructor_24057895173-20260810-0830",
+      "date": "2026-08-10",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260810-0830",
+      "date": "2026-08-10",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "2026-08-10-ACLS-mix-placeholder",
@@ -3952,48 +5228,48 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260811-0800",
-      "date": "2026-08-11",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
-      "course_family": "Heartsaver",
+      "source_offer_id": "offer-445670-instructor_24057895173-20260810-0830",
+      "date": "2026-08-10",
+      "start_time": "08:30",
+      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
+      "course_family": "HSI",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:66",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260811-0800",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260811-0915",
       "date": "2026-08-11",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver CPR AED",
-      "course_family": "Heartsaver",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:66",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-351632-instructor_24057895173-20260811-0800",
+      "source_offer_id": "offer-210549-instructor_24057895173-20260811-0915",
       "date": "2026-08-11",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
-      "course_family": "Heartsaver",
+      "start_time": "09:15",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:66",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260811-0800",
+      "source_offer_id": "2026-08-11-Heartsaver-mix-placeholder",
       "date": "2026-08-11",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
       "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:66",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
     },
     {
       "source_offer_id": "2026-08-11-ACLS-mix-placeholder",
@@ -4018,15 +5294,81 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-445670-instructor_24057895173-20260811-0800",
+      "source_offer_id": "2026-08-11-HSI-mix-placeholder",
       "date": "2026-08-11",
-      "start_time": "08:00",
-      "course_title": "HSI BLS and Adult First Aid | Blended Learning",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
       "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "offer-359474-instructor_24057895173-20260812-0915",
+      "date": "2026-08-12",
+      "start_time": "09:15",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:66",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:67",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-210549-instructor_24057895173-20260812-0915",
+      "date": "2026-08-12",
+      "start_time": "09:15",
+      "course_title": "AHA HeartCode BLS",
+      "course_family": "BLS",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:67",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "2026-08-12-Heartsaver-mix-placeholder",
+      "date": "2026-08-12",
+      "start_time": "UNKNOWN",
+      "course_title": "Heartsaver seed",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "required_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-08-12-ACLS-mix-placeholder",
+      "date": "2026-08-12",
+      "start_time": "UNKNOWN",
+      "course_title": "ACLS seed",
+      "course_family": "ACLS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-08-12-PALS-mix-placeholder",
+      "date": "2026-08-12",
+      "start_time": "UNKNOWN",
+      "course_title": "PALS seed",
+      "course_family": "PALS",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
+    },
+    {
+      "source_offer_id": "2026-08-12-HSI-mix-placeholder",
+      "date": "2026-08-12",
+      "start_time": "UNKNOWN",
+      "course_title": "HSI seed",
+      "course_family": "HSI",
+      "instructor_display_name": "UNKNOWN",
+      "source_availability_window": "UNKNOWN",
+      "reason_code": "optional_mix_not_available",
+      "message": "No source offer satisfied this family mix goal."
     }
   ]
 }

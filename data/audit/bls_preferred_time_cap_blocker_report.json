@@ -1,0 +1,173 @@
+{
+  "generated_at": "2026-06-30T05:23:27.270157",
+  "preferred_times": [
+    "09:15",
+    "12:30",
+    "18:15",
+    "18:45"
+  ],
+  "aha_bls_course_ids": [
+    "209806",
+    "210549",
+    "359474"
+  ],
+  "summary_by_time": {
+    "09:15": {
+      "generated_candidate_count": 78,
+      "aha_bls_course_id_count": 39,
+      "non_aha_bls_like_disabled_course_id_count": 39,
+      "public_sellable_count": 18,
+      "rejection_reasons": {
+        "max_offers_per_course_per_week_exceeded": 32,
+        "course_id_not_enabled": 26,
+        "public_sellable": 18,
+        "course_family_disabled": 13,
+        "course_family_not_enabled": 13,
+        "max_total_offers_per_day_exceeded": 2
+      },
+      "first_rejection_stage_counts": {
+        "public_sellable_cap_limit": 34,
+        "public_sellable_course_policy": 26,
+        "public_sellable": 18
+      },
+      "rejection_bucket_counts": {
+        "weekly_cap": 32,
+        "course_or_family_disabled": 26,
+        "kept": 18,
+        "day_cap": 2
+      }
+    },
+    "12:30": {
+      "generated_candidate_count": 78,
+      "aha_bls_course_id_count": 39,
+      "non_aha_bls_like_disabled_course_id_count": 39,
+      "public_sellable_count": 0,
+      "rejection_reasons": {
+        "max_offers_per_course_per_week_exceeded": 50,
+        "course_id_not_enabled": 26,
+        "course_family_disabled": 13,
+        "course_family_not_enabled": 13,
+        "max_total_offers_per_day_exceeded": 2
+      },
+      "first_rejection_stage_counts": {
+        "public_sellable_cap_limit": 52,
+        "public_sellable_course_policy": 26
+      },
+      "rejection_bucket_counts": {
+        "weekly_cap": 50,
+        "course_or_family_disabled": 26,
+        "day_cap": 2
+      }
+    },
+    "18:15": {
+      "generated_candidate_count": 72,
+      "aha_bls_course_id_count": 36,
+      "non_aha_bls_like_disabled_course_id_count": 36,
+      "public_sellable_count": 0,
+      "rejection_reasons": {
+        "max_offers_per_course_per_week_exceeded": 46,
+        "course_id_not_enabled": 24,
+        "course_family_disabled": 12,
+        "course_family_not_enabled": 12,
+        "max_total_offers_per_day_exceeded": 2
+      },
+      "first_rejection_stage_counts": {
+        "public_sellable_cap_limit": 48,
+        "public_sellable_course_policy": 24
+      },
+      "rejection_bucket_counts": {
+        "weekly_cap": 46,
+        "course_or_family_disabled": 24,
+        "day_cap": 2
+      }
+    },
+    "18:45": {
+      "generated_candidate_count": 72,
+      "aha_bls_course_id_count": 36,
+      "non_aha_bls_like_disabled_course_id_count": 36,
+      "public_sellable_count": 0,
+      "rejection_reasons": {
+        "max_offers_per_course_per_week_exceeded": 46,
+        "course_id_not_enabled": 24,
+        "course_family_disabled": 12,
+        "course_family_not_enabled": 12,
+        "max_total_offers_per_day_exceeded": 2
+      },
+      "first_rejection_stage_counts": {
+        "public_sellable_cap_limit": 48,
+        "public_sellable_course_policy": 24
+      },
+      "rejection_bucket_counts": {
+        "weekly_cap": 46,
+        "course_or_family_disabled": 24,
+        "day_cap": 2
+      }
+    }
+  },
+  "selected_august_aha_bls_after_cap_order_fix": [
+    {
+      "date": "2026-08-03",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0915"
+    },
+    {
+      "date": "2026-08-04",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260804-0915"
+    },
+    {
+      "date": "2026-08-05",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260805-0915"
+    },
+    {
+      "date": "2026-08-10",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260810-0915"
+    },
+    {
+      "date": "2026-08-11",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260811-0915"
+    },
+    {
+      "date": "2026-08-12",
+      "start_time": "09:15",
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260812-0915"
+    }
+  ],
+  "cap_ordering": {
+    "script": "scripts/filter_public_sellable_offers.py",
+    "function": "apply_offer_limits",
+    "previous_sort_order": "(date, start_time, course_id)",
+    "new_sort_order_for_aha_bls": "(month, seed_strategy_policy BLS preferred time rank, date, start_time, course_id)",
+    "caps_applied_after_base_safety_gates": true,
+    "cap_counts_changed": false,
+    "course_ids_enabled_changed": false,
+    "source_preference_policy": "data/config/seed_strategy_policy.json",
+    "bls_preferred_order": [
+      "09:15",
+      "12:30",
+      "18:15",
+      "18:45",
+      "08:30",
+      "09:00",
+      "08:00",
+      "08:15"
+    ]
+  },
+  "plain_answer": "Yes. Before this fix, earlier 08:00/08:30 rows could consume public-sellable caps before 09:15/12:30/evening rows. The cap limiter lived in scripts/filter_public_sellable_offers.py::apply_offer_limits and sorted by date, start_time, course_id before applying weekly/day/course caps.",
+  "recommendation": "C. Keep the AHA-BLS-only cap preference layer. It preserves all safety gates and cap counts, moves AHA BLS public-sellable/selected seeds toward preferred 09:15 starts, and does not enable any additional course IDs. A separate seed-selector variant balance rule would be needed if Brian wants Initial/Renewal balance after the cap-order fix."
+}

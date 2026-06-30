@@ -92,8 +92,8 @@ For BLS-text courses, 6666 generated candidates survive dynamic generation. Of t
 - `course_id_not_enabled`: 9817
 - `course_family_disabled`: 8758
 - `course_family_not_enabled`: 8758
-- `max_offers_per_course_per_week_exceeded`: 4716
-- `max_total_offers_per_day_exceeded`: 852
+- `max_offers_per_course_per_week_exceeded`: 4980
+- `max_total_offers_per_day_exceeded`: 588
 
 ## August BLS By Date
 
@@ -174,10 +174,10 @@ For BLS-text courses, 6666 generated candidates survive dynamic generation. Of t
 | --- | ---: | ---: | ---: | --- |
 | live_dynamic_generation | 20901 | 20901 | 0 | Expected high fan-out: every eligible course/start combination is still a candidate. |
 | public_sellable_filter | 20901 | 60 | 20841 | Expected: policy hides disabled families/course IDs, off-hours starts, and caps per course/week. |
-| seed_strategy | 60 | 4 | 56 | Expected: stack strategy intentionally selects a small number of daily seeds. |
-| appointment_url_preview | 4 | 4 | 0 | Expected: selected seeds have container-backed appointmentDayId/courseId URL previews. |
-| rendered_seed_rows_schedule_future | 4 | 0 | 4 | Expected in this branch: reports only; selected seed rows were not written into schedule_future. |
-| rendered_seed_rows_public_schedule | 4 | 0 | 4 | Expected in this branch: no deploy and no public page rewrite. |
+| seed_strategy | 60 | 6 | 54 | Expected: stack strategy intentionally selects a small number of daily seeds. |
+| appointment_url_preview | 6 | 6 | 0 | Expected: selected seeds have container-backed appointmentDayId/courseId URL previews. |
+| rendered_seed_rows_schedule_future | 6 | 0 | 6 | Expected in this branch: reports only; selected seed rows were not written into schedule_future. |
+| rendered_seed_rows_public_schedule | 6 | 0 | 6 | Expected in this branch: no deploy and no public page rewrite. |
 | existing_august_enrollware_schedule_future | 0 | 6 | 0 | Supplemental context only: existing real August inventory already present in schedule_future. |
 | existing_august_enrollware_public_schedule | 0 | 2 | 0 | Supplemental context only: existing real August inventory already present in public_schedule. |
 

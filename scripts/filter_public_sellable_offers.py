@@ -18,6 +18,7 @@ COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
 APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 LOCATION_RESOURCE_MAP_PATH = ROOT / "data" / "config" / "location_resource_map.json"
 PUBLIC_OFFER_POLICY_PATH = ROOT / "data" / "config" / "public_offer_policy.json"
+SEED_STRATEGY_POLICY_PATH = ROOT / "data" / "config" / "seed_strategy_policy.json"
 COURSE_VISIBILITY_POLICY_PATH = ROOT / "data" / "config" / "course_visibility_policy.json"
 SELLABLE_OFFERS_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
 REPORT_PATH = AUDIT_DIR / "public_sellable_offers_report.md"
@@ -25,6 +26,7 @@ PRESENTATION_POLICY_JSON_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_r
 PRESENTATION_POLICY_REPORT_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.md"
 SCHEDULE_FUTURE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 UNKNOWN = "UNKNOWN"
+AHA_BLS_COURSE_IDS = {"209806", "359474", "210549"}
 
 
 def read_json(path: Path) -> tuple[Any | None, str | None]:
@@ -275,7 +277,28 @@ def base_rejection_reasons(offer: dict[str, Any], course: dict[str, Any] | None,
     return reasons
 
 
-def apply_offer_limits(offers: list[dict[str, Any]], policy: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def cap_sort_key(offer: dict[str, Any], cap_preference_policy: dict[str, Any] | None = None) -> tuple[Any, ...]:
+    date_value = offer.get("date", "")
+    course_id = str(offer.get("course_id") or "")
+    start_time = str(offer.get("start_time") or "")
+    if course_id in AHA_BLS_COURSE_IDS and isinstance(cap_preference_policy, dict):
+        preferred = cap_preference_policy.get("preferred_start_times_by_family", {})
+        family_times = preferred.get("BLS", []) if isinstance(preferred, dict) else []
+        if isinstance(family_times, list) and family_times:
+            try:
+                preferred_rank = [str(item) for item in family_times].index(start_time)
+            except ValueError:
+                preferred_rank = 999
+            month_key = str(date_value)[:7]
+            return (month_key, preferred_rank, date_value, start_time, course_id)
+    return (date_value, 999, start_time, course_id)
+
+
+def apply_offer_limits(
+    offers: list[dict[str, Any]],
+    policy: dict[str, Any],
+    cap_preference_policy: dict[str, Any] | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     kept: list[dict[str, Any]] = []
     hidden: list[dict[str, Any]] = []
     per_course_day: Counter[tuple[str, str]] = Counter()
@@ -285,7 +308,7 @@ def apply_offer_limits(offers: list[dict[str, Any]], policy: dict[str, Any]) -> 
     max_per_course_week = int(policy.get("max_offers_per_course_per_week", 0) or 0)
     max_total_day = int(policy.get("max_total_offers_per_day", 0) or 0)
 
-    for offer in sorted(offers, key=lambda item: (item.get("date", ""), item.get("start_time", ""), item.get("course_id", ""))):
+    for offer in sorted(offers, key=lambda item: cap_sort_key(item, cap_preference_policy)):
         date = str(offer.get("date") or UNKNOWN)
         course_id = str(offer.get("course_id") or UNKNOWN)
         parsed_date = parse_date(date)
@@ -306,7 +329,15 @@ def apply_offer_limits(offers: list[dict[str, Any]], policy: dict[str, Any]) -> 
     return kept, hidden
 
 
-def filter_offers(dynamic_payload: Any, course_catalog: Any, policy: dict[str, Any], now: datetime | None = None, appointment_containers: Any = None, location_resource_map: Any = None) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+def filter_offers(
+    dynamic_payload: Any,
+    course_catalog: Any,
+    policy: dict[str, Any],
+    now: datetime | None = None,
+    appointment_containers: Any = None,
+    location_resource_map: Any = None,
+    cap_preference_policy: dict[str, Any] | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     now = now or datetime.now()
     offers = dynamic_payload.get("offers", []) if isinstance(dynamic_payload, dict) else []
     if not isinstance(offers, list):
@@ -327,7 +358,7 @@ def filter_offers(dynamic_payload: Any, course_catalog: Any, policy: dict[str, A
             hidden.append({"offer": offer, "reason_codes": reasons})
         else:
             prelim_kept.append(offer)
-    limited_kept, limit_hidden = apply_offer_limits(prelim_kept, policy)
+    limited_kept, limit_hidden = apply_offer_limits(prelim_kept, policy, cap_preference_policy)
     hidden.extend(limit_hidden)
     stats = {
         "total_dynamic_offers_read": len(offers),
@@ -418,6 +449,7 @@ def run() -> dict[str, Any]:
     appointment_containers, containers_error = read_json(APPOINTMENT_CONTAINERS_PATH)
     location_resource_map, location_map_error = read_json(LOCATION_RESOURCE_MAP_PATH)
     policy, policy_error = read_json(PUBLIC_OFFER_POLICY_PATH)
+    cap_preference_policy, cap_preference_policy_error = read_json(SEED_STRATEGY_POLICY_PATH)
     schedule_future, schedule_future_error = read_json(SCHEDULE_FUTURE_PATH)
     missing = {}
     if dynamic_error:
@@ -426,6 +458,8 @@ def run() -> dict[str, Any]:
         missing["course_catalog"] = course_error
     if policy_error:
         missing["public_offer_policy"] = policy_error
+    if cap_preference_policy_error:
+        missing["seed_strategy_policy"] = cap_preference_policy_error
     if containers_error:
         missing["appointment_containers"] = containers_error
     if location_map_error:
@@ -434,7 +468,14 @@ def run() -> dict[str, Any]:
         missing["schedule_future"] = schedule_future_error
     if not isinstance(policy, dict):
         policy = {}
-    kept, hidden, stats = filter_offers(dynamic_payload or {}, course_catalog or {}, policy, appointment_containers=appointment_containers or {}, location_resource_map=location_resource_map or {})
+    kept, hidden, stats = filter_offers(
+        dynamic_payload or {},
+        course_catalog or {},
+        policy,
+        appointment_containers=appointment_containers or {},
+        location_resource_map=location_resource_map or {},
+        cap_preference_policy=cap_preference_policy if isinstance(cap_preference_policy, dict) else {},
+    )
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)
     preview = {
         "generated_at": datetime.now().astimezone().isoformat(),
@@ -444,6 +485,7 @@ def run() -> dict[str, Any]:
         "google_calendar_called": False,
         "source_dynamic_offers": str(DYNAMIC_OFFERS_PATH),
         "source_policy": str(PUBLIC_OFFER_POLICY_PATH),
+        "source_cap_preference_policy": str(SEED_STRATEGY_POLICY_PATH),
         "source_appointment_containers": str(APPOINTMENT_CONTAINERS_PATH),
         "source_location_resource_map": str(LOCATION_RESOURCE_MAP_PATH),
         "stats": stats,

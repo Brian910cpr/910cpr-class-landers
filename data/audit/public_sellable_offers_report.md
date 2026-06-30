@@ -23,28 +23,39 @@ This is a read-only sellability filter for dynamic offers. It did not modify pub
 - `course_id_not_enabled`: 19765
 - `course_family_disabled`: 17807
 - `course_family_not_enabled`: 17807
-- `max_offers_per_course_per_week_exceeded`: 8821
-- `max_total_offers_per_day_exceeded`: 977
-- `inside_minimum_lead_time`: 145
+- `max_offers_per_course_per_week_exceeded`: 9143
+- `max_total_offers_per_day_exceeded`: 651
+- `inside_minimum_lead_time`: 153
 
 ## Offers By Date
 
-- `2026-06-30`: 4
 - `2026-07-02`: 24
 - `2026-07-03`: 1
-- `2026-07-05`: 1
-- `2026-07-06`: 22
-- `2026-07-07`: 8
-- `2026-07-13`: 22
+- `2026-07-05`: 5
+- `2026-07-06`: 15
+- `2026-07-07`: 9
+- `2026-07-09`: 2
+- `2026-07-10`: 1
+- `2026-07-12`: 3
+- `2026-07-13`: 15
 - `2026-07-14`: 8
-- `2026-07-20`: 24
-- `2026-07-22`: 6
-- `2026-07-27`: 22
-- `2026-07-28`: 8
+- `2026-07-15`: 3
+- `2026-07-17`: 1
+- `2026-07-19`: 3
+- `2026-07-20`: 15
+- `2026-07-22`: 11
+- `2026-07-24`: 1
+- `2026-07-26`: 3
+- `2026-07-27`: 15
+- `2026-07-28`: 9
+- `2026-07-29`: 5
+- `2026-07-31`: 1
 - `2026-08-03`: 24
-- `2026-08-04`: 6
+- `2026-08-04`: 3
+- `2026-08-05`: 3
 - `2026-08-10`: 24
-- `2026-08-11`: 6
+- `2026-08-11`: 3
+- `2026-08-12`: 3
 
 ## Offers By Course Family
 
@@ -56,56 +67,56 @@ This is a read-only sellability filter for dynamic offers. It did not modify pub
 
 | Date | Time | Course | Family | Instructor |
 | --- | --- | --- | --- | --- |
-| 2026-06-30 | 16:30-17:15 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-06-30 | 16:30-17:15 | AHA Heartsaver Pediatric First Aid CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-06-30 | 16:30-17:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis |
-| 2026-06-30 | 16:30-17:15 | HSI BLS and Adult First Aid | Blended Learning | HSI | Brian Ennis |
+| 2026-07-03 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-05 | 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-05 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-05 | 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-10 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-12 | 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-12 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-12 | 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-15 | 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-15 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-15 | 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-17 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-19 | 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-19 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-19 | 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-22 | 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-22 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-22 | 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-24 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-26 | 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-26 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-26 | 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-29 | 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-29 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-29 | 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-31 | 09:15-10:15 | AHA HeartCode BLS | BLS | Brian Ennis |
 | 2026-07-02 | 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-02 | 12:30-13:30 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-02 | 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-05 | 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-05 | 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-07 | 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-07 | 12:30-13:30 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-07 | 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-09 | 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-09 | 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-14 | 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-14 | 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-22 | 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-22 | 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-28 | 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-28 | 12:30-13:30 | AHA HeartCode BLS | BLS | Brian Ennis |
+| 2026-07-28 | 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
+| 2026-07-29 | 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis |
+| 2026-07-29 | 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
 | 2026-07-02 | 12:30-13:15 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis |
 | 2026-07-02 | 12:30-15:30 | AHA Heartsaver First Aid CPR AED | Heartsaver | Brian Ennis |
-| 2026-07-02 | 12:30-13:30 | AHA HeartCode BLS | BLS | Brian Ennis |
 | 2026-07-02 | 12:30-13:15 | AHA Heartsaver Pediatric First Aid CPR AED Online | Heartsaver | Brian Ennis |
 | 2026-07-02 | 12:30-13:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis |
 | 2026-07-02 | 12:30-14:00 | AHA Heartsaver CPR AED | Heartsaver | Brian Ennis |
-| 2026-07-02 | 12:30-15:30 | AHA Heartsaver Pediatric First Aid / CPR / AED | Heartsaver | Brian Ennis |
-| 2026-07-02 | 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
-| 2026-07-02 | 12:30-13:15 | HSI BLS and Adult First Aid | Blended Learning | HSI | Brian Ennis |
-| 2026-07-02 | 12:45-14:45 | AHA BLS Provider | BLS | Brian Ennis |
-| 2026-07-02 | 12:45-13:30 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-07-02 | 12:45-15:45 | AHA Heartsaver First Aid CPR AED | Heartsaver | Brian Ennis |
-| 2026-07-02 | 12:45-13:45 | AHA HeartCode BLS | BLS | Brian Ennis |
-| 2026-07-02 | 12:45-13:30 | AHA Heartsaver Pediatric First Aid CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-07-02 | 12:45-13:30 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis |
-| 2026-07-02 | 12:45-14:15 | AHA Heartsaver CPR AED | Heartsaver | Brian Ennis |
-| 2026-07-02 | 12:45-15:45 | AHA Heartsaver Pediatric First Aid / CPR / AED | Heartsaver | Brian Ennis |
-| 2026-07-02 | 12:45-14:45 | AHA BLS Provider Renewal | BLS | Brian Ennis |
-| 2026-07-02 | 12:45-13:30 | HSI BLS and Adult First Aid | Blended Learning | HSI | Brian Ennis |
-| 2026-07-02 | 13:00-15:00 | AHA BLS Provider | BLS | Brian Ennis |
-| 2026-07-02 | 13:00-16:00 | AHA Heartsaver First Aid CPR AED | Heartsaver | Brian Ennis |
-| 2026-07-02 | 13:00-14:00 | AHA HeartCode BLS | BLS | Brian Ennis |
-| 2026-07-02 | 13:00-14:30 | AHA Heartsaver CPR AED | Heartsaver | Brian Ennis |
-| 2026-07-03 | 14:30-16:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
-| 2026-07-05 | 08:00-11:00 | AHA Heartsaver Pediatric First Aid / CPR / AED | Heartsaver | Brian Ennis |
-| 2026-07-06 | 14:30-16:30 | AHA BLS Provider | BLS | Brian Ennis |
-| 2026-07-06 | 14:30-15:15 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-07-06 | 14:30-15:30 | AHA HeartCode BLS | BLS | Brian Ennis |
-| 2026-07-06 | 14:30-15:15 | AHA Heartsaver Pediatric First Aid CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-07-06 | 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis |
-| 2026-07-06 | 14:30-16:00 | AHA Heartsaver CPR AED | Heartsaver | Brian Ennis |
-| 2026-07-06 | 14:30-16:30 | AHA BLS Provider Renewal | BLS | Brian Ennis |
-| 2026-07-06 | 14:30-15:15 | HSI BLS and Adult First Aid | Blended Learning | HSI | Brian Ennis |
-| 2026-07-06 | 14:45-16:45 | AHA BLS Provider | BLS | Brian Ennis |
-| 2026-07-06 | 14:45-15:30 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-07-06 | 14:45-15:45 | AHA HeartCode BLS | BLS | Brian Ennis |
-| 2026-07-06 | 14:45-15:30 | AHA Heartsaver Pediatric First Aid CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-07-06 | 14:45-15:30 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis |
-| 2026-07-06 | 14:45-16:15 | AHA Heartsaver CPR AED | Heartsaver | Brian Ennis |
-| 2026-07-06 | 14:45-16:45 | AHA BLS Provider Renewal | BLS | Brian Ennis |
-| 2026-07-06 | 14:45-15:30 | HSI BLS and Adult First Aid | Blended Learning | HSI | Brian Ennis |
-| 2026-07-06 | 15:00-15:45 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-07-06 | 15:00-16:00 | AHA HeartCode BLS | BLS | Brian Ennis |
-| 2026-07-06 | 15:00-15:45 | AHA Heartsaver Pediatric First Aid CPR AED Online | Heartsaver | Brian Ennis |
-| 2026-07-06 | 15:00-15:45 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis |
 
 ## Next Safest Step
 

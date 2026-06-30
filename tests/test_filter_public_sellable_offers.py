@@ -96,6 +96,49 @@ class PublicSellableOffersTest(unittest.TestCase):
         self.assertEqual(2, len(kept))
         self.assertTrue(any("max_offers_per_course_per_day_exceeded" in item["reason_codes"] for item in hidden))
 
+    def test_aha_bls_caps_prefer_seed_strategy_times_before_early_starts(self) -> None:
+        offers = [
+            {
+                "offer_id": "early",
+                "date": "2026-08-03",
+                "start_time": "08:00",
+                "course_id": "209806",
+                "course_family": "BLS",
+            },
+            {
+                "offer_id": "preferred",
+                "date": "2026-08-03",
+                "start_time": "09:15",
+                "course_id": "209806",
+                "course_family": "BLS",
+            },
+        ]
+        dynamic = {"offers": offers}
+        courses = {"courses": [{"course_id": "209806", "family": "BLS"}]}
+        policy = {
+            "enabled_course_families": ["BLS"],
+            "allowed_start_minutes": ["00", "15"],
+            "minimum_lead_hours": 24,
+            "maximum_days_out": 60,
+            "max_offers_per_course_per_day": 1,
+        }
+        cap_preference_policy = {
+            "preferred_start_times_by_family": {
+                "BLS": ["09:15", "08:00"],
+            }
+        }
+
+        kept, hidden, _ = filter_public_sellable_offers.filter_offers(
+            dynamic,
+            courses,
+            policy,
+            now=datetime(2026, 7, 30, 12, 0),
+            cap_preference_policy=cap_preference_policy,
+        )
+
+        self.assertEqual(["preferred"], [offer["offer_id"] for offer in kept])
+        self.assertTrue(any(item["offer"]["offer_id"] == "early" and "max_offers_per_course_per_day_exceeded" in item["reason_codes"] for item in hidden))
+
     def test_confirmed_container_policy_keeps_only_container_backed_offers(self) -> None:
         dynamic = {
             "offers": [

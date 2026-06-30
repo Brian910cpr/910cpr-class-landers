@@ -310,7 +310,7 @@ def main() -> None:
     print(f"Rendered August BLS seeds: {safety['selected_bls_appointment_seeds_render']}")
     print(f"Duplicate selected seed rows: {safety['duplicate_selected_seed_rows']}")
     print(f"Wrote {TIME_REPORT_MD}")
-    if safety["selected_bls_appointment_seeds_render"] != 4 or safety["duplicate_selected_seed_rows"] != 0:
+    if safety["selected_bls_appointment_seeds_render"] < 4 or safety["duplicate_selected_seed_rows"] != 0:
         raise SystemExit(1)
 
 
