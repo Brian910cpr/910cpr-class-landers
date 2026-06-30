@@ -437,7 +437,7 @@ def normalize_universal_offer_for_hub(offer: dict[str, Any]) -> dict[str, Any] |
     }
     if offer_type == "appointment_url":
         url = normalize_space(offer.get("appointment_registration_url"))
-        if not url.startswith("https://coastalcprtraining.enrollware.com/enroll?"):
+        if not is_valid_appointment_seed_registration_url(url):
             return None
         return {
             **base,
@@ -640,7 +640,7 @@ def is_renderable_appointment_seed_offer(offer: dict[str, Any]) -> bool:
         and offer.get("seed_publication_mode") == "appointment_seed_offer"
         and offer.get("approval_status") == "auto_approved_by_rules"
         and offer.get("public_ready") is True
-        and bool(normalize_space(offer.get("appointment_registration_url")))
+        and is_valid_appointment_seed_registration_url(offer.get("appointment_registration_url"))
         and offer.get("standalone_class_lander_allowed") is False
         and offer.get("class_lander_created") is False
         and offer.get("public_schedule_row_created") is False
@@ -1619,6 +1619,14 @@ def appointment_day_id_from_url(url: str | None) -> str:
     return normalize_space((parse_qs(parsed.query).get("appointmentDayId") or [""])[0])
 
 
+def is_valid_appointment_seed_registration_url(url: str | None) -> bool:
+    parsed = urlparse(normalize_space(url))
+    if parsed.netloc != "coastalcprtraining.enrollware.com" or not parsed.path.startswith("/enroll"):
+        return False
+    query = parse_qs(parsed.query)
+    return all(normalize_space((query.get(key) or [""])[0]) for key in ("appointmentDayId", "startTime", "courseId"))
+
+
 def debug_source_profile(row: dict[str, Any], *, kind_hint: str = "") -> dict[str, Any]:
     row_type = normalize_space(kind_hint)
     render_source = normalize_space(row.get("render_source"))
@@ -2281,6 +2289,8 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     title = normalize_space(offer.get("course_title")) or "Available class time"
     instructor = normalize_space(offer.get("instructor_display_name") or offer.get("instructor_key")).title()
     location = clean_location(offer.get("location_name") or offer.get("offer_location") or offer.get("location_key"))
+    if not is_valid_appointment_seed_registration_url(offer.get("appointment_registration_url")):
+        return ""
     url = escape(offer.get("appointment_registration_url") or "#", quote=True)
     presentation_mode = normalize_space(offer.get("presentation_mode"))
     source_offer_id = normalize_space(offer.get("source_offer_id"))
@@ -2305,6 +2315,8 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
         choice_links = []
         for choice in flexible_choices:
             if not isinstance(choice, dict):
+                continue
+            if not is_valid_appointment_seed_registration_url(choice.get("appointment_registration_url")):
                 continue
             choice_url = escape(choice.get("appointment_registration_url") or "#", quote=True)
             choice_start_dt = parse_dt(choice.get("appointment_display_start"))

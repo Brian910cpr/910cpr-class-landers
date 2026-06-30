@@ -1,0 +1,214 @@
+{
+  "generated_at": "2026-06-30T16:26:50",
+  "branch": "codex/emergency-invalid-appointment-row-hotfix",
+  "deploy_performed": false,
+  "source_trace": {
+    "first_bad_source": "scripts/build_appointment_offer_inventory.py::appointment_mapping_for",
+    "acceptance_stage": "scripts/build_hub_offer_model_report.py::seed_display_classification",
+    "public_render_stage": "scripts/build_slug_hubs.py::is_renderable_appointment_seed_offer / render_appointment_seed_offer_card",
+    "why_allowed_before": "Public render eligibility required a non-empty appointment_registration_url but did not require startTime and courseId query parameters."
+  },
+  "fix": {
+    "central_guard": "scripts/build_slug_hubs.py::is_valid_appointment_seed_registration_url",
+    "suppresses": "appointmentDayId-only or incomplete appointment tuple URLs before public rendering",
+    "preserves": "real /enroll?id rows and reviewed selected seed rows with appointmentDayId/startTime/courseId"
+  },
+  "before": {
+    "broken_rows": [
+      {
+        "phase": "before",
+        "file": "docs/bls.html",
+        "date": "2026-08-03",
+        "visible_time": "9:00 AM - 12:00 PM",
+        "course_label": "AHA BLS Renewal",
+        "location": "shipyard",
+        "appointmentDayId": "260713",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713",
+        "row_source": "auto_public_appointment_seed",
+        "source_file": "scripts/build_appointment_offer_inventory.py -> scripts/build_hub_offer_model_report.py -> scripts/build_slug_hubs.py",
+        "source_function": "appointment_mapping_for / seed_display_classification / is_renderable_appointment_seed_offer",
+        "reason": "appointmentDayId-only URL was treated as renderable because render eligibility only checked for any appointment_registration_url."
+      },
+      {
+        "phase": "before",
+        "file": "docs/bls.html",
+        "date": "2026-08-04",
+        "visible_time": "9:00 AM - 12:00 PM",
+        "course_label": "AHA BLS Renewal",
+        "location": "shipyard",
+        "appointmentDayId": "260714",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714",
+        "row_source": "auto_public_appointment_seed",
+        "source_file": "scripts/build_appointment_offer_inventory.py -> scripts/build_hub_offer_model_report.py -> scripts/build_slug_hubs.py",
+        "source_function": "appointment_mapping_for / seed_display_classification / is_renderable_appointment_seed_offer",
+        "reason": "appointmentDayId-only URL was treated as renderable because render eligibility only checked for any appointment_registration_url."
+      },
+      {
+        "phase": "before",
+        "file": "docs/bls.html",
+        "date": "2026-08-05",
+        "visible_time": "9:00 AM - 12:00 PM",
+        "course_label": "AHA BLS Renewal",
+        "location": "shipyard",
+        "appointmentDayId": "260715",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715",
+        "row_source": "auto_public_appointment_seed",
+        "source_file": "scripts/build_appointment_offer_inventory.py -> scripts/build_hub_offer_model_report.py -> scripts/build_slug_hubs.py",
+        "source_function": "appointment_mapping_for / seed_display_classification / is_renderable_appointment_seed_offer",
+        "reason": "appointmentDayId-only URL was treated as renderable because render eligibility only checked for any appointment_registration_url."
+      },
+      {
+        "phase": "before",
+        "file": "docs/bls.html",
+        "date": "2026-08-06",
+        "visible_time": "9:00 AM - 10:00 AM",
+        "course_label": "AHA BLS HeartCode Skills",
+        "location": "shipyard",
+        "appointmentDayId": "260716",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260716",
+        "row_source": "auto_public_appointment_seed",
+        "source_file": "scripts/build_appointment_offer_inventory.py -> scripts/build_hub_offer_model_report.py -> scripts/build_slug_hubs.py",
+        "source_function": "appointment_mapping_for / seed_display_classification / is_renderable_appointment_seed_offer",
+        "reason": "appointmentDayId-only URL was treated as renderable because render eligibility only checked for any appointment_registration_url."
+      },
+      {
+        "phase": "before",
+        "file": "docs/bls.html",
+        "date": "2026-08-07",
+        "visible_time": "9:00 AM - 12:00 PM",
+        "course_label": "AHA BLS HeartCode Skills",
+        "location": "shipyard",
+        "appointmentDayId": "260717",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260717",
+        "row_source": "auto_public_appointment_seed",
+        "source_file": "scripts/build_appointment_offer_inventory.py -> scripts/build_hub_offer_model_report.py -> scripts/build_slug_hubs.py",
+        "source_function": "appointment_mapping_for / seed_display_classification / is_renderable_appointment_seed_offer",
+        "reason": "appointmentDayId-only URL was treated as renderable because render eligibility only checked for any appointment_registration_url."
+      }
+    ],
+    "broken_count": 5
+  },
+  "after": {
+    "invalid_appointment_rows": [],
+    "invalid_appointment_row_count": 0,
+    "appointmentDayId_only_public_rows_after": 0,
+    "shipyard_only_bls_rows_after": 0,
+    "selected_seed_rows_after": 6,
+    "real_enrollware_rows_after": 108,
+    "duplicate_href_rows_after": 0,
+    "invalid_book_this_class_url_remains": false,
+    "selected_seed_rows": [
+      {
+        "date_text": "AUG | 4 | Tue | Tuesday, August 4 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider | Book This Class",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
+        "courseId": "209806",
+        "startTime": "9:15 AM",
+        "appointmentDayId": "260714"
+      },
+      {
+        "date_text": "AUG | 10 | Mon | Monday, August 10 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider | Book This Class",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
+        "courseId": "209806",
+        "startTime": "9:15 AM",
+        "appointmentDayId": "260720"
+      },
+      {
+        "date_text": "AUG | 12 | Wed | Wednesday, August 12 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider | Book This Class",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+        "courseId": "209806",
+        "startTime": "9:15 AM",
+        "appointmentDayId": "260722"
+      },
+      {
+        "date_text": "AUG | 3 | Mon | Monday, August 3 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider Renewal | Book This Class",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
+        "courseId": "359474",
+        "startTime": "9:15 AM",
+        "appointmentDayId": "260713"
+      },
+      {
+        "date_text": "AUG | 5 | Wed | Wednesday, August 5 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider Renewal | Book This Class",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
+        "courseId": "359474",
+        "startTime": "9:15 AM",
+        "appointmentDayId": "260715"
+      },
+      {
+        "date_text": "AUG | 11 | Tue | Tuesday, August 11 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider Renewal | Book This Class",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
+        "courseId": "359474",
+        "startTime": "9:15 AM",
+        "appointmentDayId": "260721"
+      }
+    ]
+  },
+  "duration_display": {
+    "status": "consistent_for_selected_bls_seeds",
+    "rows": [
+      {
+        "courseId": "209806",
+        "appointmentDayId": "260714",
+        "startTime": "9:15 AM",
+        "visible_time_range": "9:15 AM - 11:15 AM",
+        "configured_display_duration_minutes": null,
+        "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+        "duration_consistent_with_policy": true
+      },
+      {
+        "courseId": "209806",
+        "appointmentDayId": "260720",
+        "startTime": "9:15 AM",
+        "visible_time_range": "9:15 AM - 11:15 AM",
+        "configured_display_duration_minutes": null,
+        "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+        "duration_consistent_with_policy": true
+      },
+      {
+        "courseId": "209806",
+        "appointmentDayId": "260722",
+        "startTime": "9:15 AM",
+        "visible_time_range": "9:15 AM - 11:15 AM",
+        "configured_display_duration_minutes": null,
+        "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+        "duration_consistent_with_policy": true
+      },
+      {
+        "courseId": "359474",
+        "appointmentDayId": "260713",
+        "startTime": "9:15 AM",
+        "visible_time_range": "9:15 AM - 11:15 AM",
+        "configured_display_duration_minutes": null,
+        "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+        "duration_consistent_with_policy": true
+      },
+      {
+        "courseId": "359474",
+        "appointmentDayId": "260715",
+        "startTime": "9:15 AM",
+        "visible_time_range": "9:15 AM - 11:15 AM",
+        "configured_display_duration_minutes": null,
+        "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+        "duration_consistent_with_policy": true
+      },
+      {
+        "courseId": "359474",
+        "appointmentDayId": "260721",
+        "startTime": "9:15 AM",
+        "visible_time_range": "9:15 AM - 11:15 AM",
+        "configured_display_duration_minutes": null,
+        "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+        "duration_consistent_with_policy": true
+      }
+    ],
+    "finding": "Selected August BLS Initial/Renewal seed rows render 9:15 AM - 11:15 AM, matching the reviewed 120-minute Course Master display duration for courseIds 209806 and 359474. No duration-policy change was needed."
+  },
+  "validation": {
+    "public_offer_integrity_audit": "PASS Audit failed: False",
+    "audit_august_bls_seed_quality": "PASS selected/rendered 6",
+    "audit_bls_seed_time_preference": "PASS rendered 6 duplicate 0",
+    "audit_bls_public_offer_policy_enablement": "PASS selected 6",
+    "unittest_discover": "PASS 165 tests OK",
+    "rendered_html_scan": "PASS no incomplete appointmentDayId hrefs; no shipyard-only BLS rows"
+  },
+  "ready_for_emergency_deploy": true
+}

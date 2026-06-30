@@ -1,0 +1,54 @@
+{
+  "invalid_appointment_rows": [],
+  "invalid_appointment_row_count": 0,
+  "appointmentDayId_only_public_rows_after": 0,
+  "shipyard_only_bls_rows_after": 0,
+  "selected_seed_rows_after": 6,
+  "real_enrollware_rows_after": 108,
+  "duplicate_href_rows_after": 0,
+  "invalid_book_this_class_url_remains": false,
+  "selected_seed_rows": [
+    {
+      "date_text": "AUG | 4 | Tue | Tuesday, August 4 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider | Book This Class",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
+      "courseId": "209806",
+      "startTime": "9:15 AM",
+      "appointmentDayId": "260714"
+    },
+    {
+      "date_text": "AUG | 10 | Mon | Monday, August 10 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider | Book This Class",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
+      "courseId": "209806",
+      "startTime": "9:15 AM",
+      "appointmentDayId": "260720"
+    },
+    {
+      "date_text": "AUG | 12 | Wed | Wednesday, August 12 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider | Book This Class",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+      "courseId": "209806",
+      "startTime": "9:15 AM",
+      "appointmentDayId": "260722"
+    },
+    {
+      "date_text": "AUG | 3 | Mon | Monday, August 3 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider Renewal | Book This Class",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
+      "courseId": "359474",
+      "startTime": "9:15 AM",
+      "appointmentDayId": "260713"
+    },
+    {
+      "date_text": "AUG | 5 | Wed | Wednesday, August 5 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider Renewal | Book This Class",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
+      "courseId": "359474",
+      "startTime": "9:15 AM",
+      "appointmentDayId": "260715"
+    },
+    {
+      "date_text": "AUG | 11 | Tue | Tuesday, August 11 | 9:15 AM - 11:15 AM | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office | Available class option | Instructor: Brian Ennis | AHA BLS Provider Renewal | Book This Class",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
+      "courseId": "359474",
+      "startTime": "9:15 AM",
+      "appointmentDayId": "260721"
+    }
+  ]
+}

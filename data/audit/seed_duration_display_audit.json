@@ -1,0 +1,60 @@
+{
+  "status": "consistent_for_selected_bls_seeds",
+  "rows": [
+    {
+      "courseId": "209806",
+      "appointmentDayId": "260714",
+      "startTime": "9:15 AM",
+      "visible_time_range": "9:15 AM - 11:15 AM",
+      "configured_display_duration_minutes": null,
+      "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+      "duration_consistent_with_policy": true
+    },
+    {
+      "courseId": "209806",
+      "appointmentDayId": "260720",
+      "startTime": "9:15 AM",
+      "visible_time_range": "9:15 AM - 11:15 AM",
+      "configured_display_duration_minutes": null,
+      "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+      "duration_consistent_with_policy": true
+    },
+    {
+      "courseId": "209806",
+      "appointmentDayId": "260722",
+      "startTime": "9:15 AM",
+      "visible_time_range": "9:15 AM - 11:15 AM",
+      "configured_display_duration_minutes": null,
+      "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+      "duration_consistent_with_policy": true
+    },
+    {
+      "courseId": "359474",
+      "appointmentDayId": "260713",
+      "startTime": "9:15 AM",
+      "visible_time_range": "9:15 AM - 11:15 AM",
+      "configured_display_duration_minutes": null,
+      "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+      "duration_consistent_with_policy": true
+    },
+    {
+      "courseId": "359474",
+      "appointmentDayId": "260715",
+      "startTime": "9:15 AM",
+      "visible_time_range": "9:15 AM - 11:15 AM",
+      "configured_display_duration_minutes": null,
+      "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+      "duration_consistent_with_policy": true
+    },
+    {
+      "courseId": "359474",
+      "appointmentDayId": "260721",
+      "startTime": "9:15 AM",
+      "visible_time_range": "9:15 AM - 11:15 AM",
+      "configured_display_duration_minutes": null,
+      "duration_policy_source": "data/config/course_master.json scheduler_display_duration_minutes/classroom_duration_minutes",
+      "duration_consistent_with_policy": true
+    }
+  ],
+  "finding": "Selected August BLS Initial/Renewal seed rows render 9:15 AM - 11:15 AM, matching the reviewed 120-minute Course Master display duration for courseIds 209806 and 359474. No duration-policy change was needed."
+}
