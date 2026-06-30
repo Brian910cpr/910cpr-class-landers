@@ -1,0 +1,16 @@
+file,exists,rendered_class_rows_count,appointment_seed_rows_count,real_enrollware_rows_count,duplicate_visible_rows_count,broken_or_empty_href_count,customer_facing_internal_jargon_count,primary_cta_button_text_examples,course_family,belongs_to_correct_course_family
+docs/bls.html,True,136,28,0,0,0,0,Book This Class (136),BLS,True
+docs/acls.html,True,27,0,0,0,0,0,Book This Class (27),ACLS,True
+docs/pals.html,True,20,0,0,0,0,0,Book This Class (20),PALS,True
+docs/hsi.html,True,4,3,0,0,0,0,Book This Class (4),HSI,True
+docs/courses/heartsaver-first-aid-cpr-aed.html,True,54,14,0,0,0,0,Book This Class (50) | When would YOU like to start? (4) | 8:00 AM - 11:00 AM (2) | 8:15 AM - 11:15 AM (2) | 8:30 AM - 11:30 AM (2),Heartsaver,True
+docs/courses/heartsaver-cpr-aed.html,True,25,25,0,7,0,0,Book This Class (19) | When would YOU like to start? (6) | 8:00 AM - 9:30 AM (4) | 8:15 AM - 9:45 AM (4) | 8:30 AM - 10:00 AM (4),Heartsaver,True
+docs/courses/heartsaver-pediatric-first-aid-cpr-aed.html,True,12,7,0,0,0,0,Book This Class (10) | When would YOU like to start? (2) | 8:00 AM - 8:45 AM (2) | 8:15 AM - 9:00 AM (2) | 8:30 AM - 9:15 AM (2),Heartsaver,True
+docs/courses/heartsaver-first-aid.html,True,0,0,0,0,0,0,,Heartsaver,True
+docs/courses/aha-heartsaver-cpr-aed.html,True,0,0,0,0,0,0,,Heartsaver,True
+docs/courses/bloodborne-pathogens.html,True,0,0,0,0,0,0,,Other,True
+docs/heartsaver.html,True,0,0,0,0,0,0,,Heartsaver,True
+docs/arc.html,True,0,0,0,0,0,0,,Other,True
+docs/uscg-elementary-first-aid-cpr.html,True,1,0,0,0,0,0,Book This Class (1),Other,True
+docs/group-training.html,True,5,0,0,0,0,0,Request This Training (5),Other,True
+docs/index.html,True,0,0,0,0,0,0,,Other,True

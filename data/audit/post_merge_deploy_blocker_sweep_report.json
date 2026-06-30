@@ -1,0 +1,452 @@
+{
+  "generated_at": "2026-06-30T14:45:25",
+  "branch": "codex/post-merge-deploy-blocker-sweep",
+  "base_main_commit": "f08e705221de82407d5a1e3ccaca3aacb924a22e",
+  "deployed": false,
+  "ready_for_deploy_after_brian_approval": true,
+  "remaining_blockers": [],
+  "copy_fixes": [
+    {
+      "file": "scripts/build_slug_hubs.py",
+      "change": "Heartsaver inventory body now uses customer-facing private/group class request copy."
+    },
+    {
+      "file": "scripts/build_universal_offer_inventory.py",
+      "change": "Appointment-backed display note/report label replaced with customer-neutral wording."
+    }
+  ],
+  "customer_copy_scan": {
+    "pages_scanned": 15,
+    "visible_internal_jargon_hits": [],
+    "public_copy_source_exact_hits": [],
+    "appointment_backed_remains_in_rendered_public_docs": false
+  },
+  "rendered_public_page_sweep": [
+    {
+      "file": "docs/bls.html",
+      "exists": true,
+      "rendered_class_rows_count": 136,
+      "appointment_seed_rows_count": 28,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "Book This Class (136)",
+      "course_family": "BLS",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/acls.html",
+      "exists": true,
+      "rendered_class_rows_count": 27,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "Book This Class (27)",
+      "course_family": "ACLS",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/pals.html",
+      "exists": true,
+      "rendered_class_rows_count": 20,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "Book This Class (20)",
+      "course_family": "PALS",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/hsi.html",
+      "exists": true,
+      "rendered_class_rows_count": 4,
+      "appointment_seed_rows_count": 3,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "Book This Class (4)",
+      "course_family": "HSI",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/courses/heartsaver-first-aid-cpr-aed.html",
+      "exists": true,
+      "rendered_class_rows_count": 54,
+      "appointment_seed_rows_count": 14,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "Book This Class (50) | When would YOU like to start? (4) | 8:00 AM - 11:00 AM (2) | 8:15 AM - 11:15 AM (2) | 8:30 AM - 11:30 AM (2)",
+      "course_family": "Heartsaver",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/courses/heartsaver-cpr-aed.html",
+      "exists": true,
+      "rendered_class_rows_count": 25,
+      "appointment_seed_rows_count": 25,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 7,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "Book This Class (19) | When would YOU like to start? (6) | 8:00 AM - 9:30 AM (4) | 8:15 AM - 9:45 AM (4) | 8:30 AM - 10:00 AM (4)",
+      "course_family": "Heartsaver",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/courses/heartsaver-pediatric-first-aid-cpr-aed.html",
+      "exists": true,
+      "rendered_class_rows_count": 12,
+      "appointment_seed_rows_count": 7,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "Book This Class (10) | When would YOU like to start? (2) | 8:00 AM - 8:45 AM (2) | 8:15 AM - 9:00 AM (2) | 8:30 AM - 9:15 AM (2)",
+      "course_family": "Heartsaver",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/courses/heartsaver-first-aid.html",
+      "exists": true,
+      "rendered_class_rows_count": 0,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "",
+      "course_family": "Heartsaver",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/courses/aha-heartsaver-cpr-aed.html",
+      "exists": true,
+      "rendered_class_rows_count": 0,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "",
+      "course_family": "Heartsaver",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/courses/bloodborne-pathogens.html",
+      "exists": true,
+      "rendered_class_rows_count": 0,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "",
+      "course_family": "Other",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/heartsaver.html",
+      "exists": true,
+      "rendered_class_rows_count": 0,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "",
+      "course_family": "Heartsaver",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/arc.html",
+      "exists": true,
+      "rendered_class_rows_count": 0,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "",
+      "course_family": "Other",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/uscg-elementary-first-aid-cpr.html",
+      "exists": true,
+      "rendered_class_rows_count": 1,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "Book This Class (1)",
+      "course_family": "Other",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/group-training.html",
+      "exists": true,
+      "rendered_class_rows_count": 5,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "Request This Training (5)",
+      "course_family": "Other",
+      "belongs_to_correct_course_family": true
+    },
+    {
+      "file": "docs/index.html",
+      "exists": true,
+      "rendered_class_rows_count": 0,
+      "appointment_seed_rows_count": 0,
+      "real_enrollware_rows_count": 0,
+      "duplicate_visible_rows_count": 0,
+      "broken_or_empty_href_count": 0,
+      "customer_facing_internal_jargon_count": 0,
+      "primary_cta_button_text_examples": "",
+      "course_family": "Other",
+      "belongs_to_correct_course_family": true
+    }
+  ],
+  "bls_rendered_proof": {
+    "august_aha_bls_seed_rows": 6,
+    "initial": 3,
+    "renewal": 3,
+    "heartcode": 0,
+    "preferred_0915": true,
+    "duplicate_selected_seed_rows": 0,
+    "rows": [
+      {
+        "date": "2026-08-03",
+        "start_time": "09:15",
+        "course_id": "359474",
+        "course_title": "AHA BLS Provider Renewal",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
+        "rendered": true,
+        "visible_date": "Monday, August 3",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider Renewal",
+        "button_text": "Book This Class",
+        "row_source": "seed_appointment_url_preview",
+        "source_offer_id": "offer-359474-instructor_24057895173-20260803-0915",
+        "selected_seed_url_occurrences": 1
+      },
+      {
+        "date": "2026-08-04",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "course_title": "AHA BLS Provider",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
+        "rendered": true,
+        "visible_date": "Tuesday, August 4",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider",
+        "button_text": "Book This Class",
+        "row_source": "seed_appointment_url_preview",
+        "source_offer_id": "offer-209806-instructor_24057895173-20260804-0915",
+        "selected_seed_url_occurrences": 1
+      },
+      {
+        "date": "2026-08-05",
+        "start_time": "09:15",
+        "course_id": "359474",
+        "course_title": "AHA BLS Provider Renewal",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
+        "rendered": true,
+        "visible_date": "Wednesday, August 5",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider Renewal",
+        "button_text": "Book This Class",
+        "row_source": "seed_appointment_url_preview",
+        "source_offer_id": "offer-359474-instructor_24057895173-20260805-0915",
+        "selected_seed_url_occurrences": 1
+      },
+      {
+        "date": "2026-08-10",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "course_title": "AHA BLS Provider",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
+        "rendered": true,
+        "visible_date": "Monday, August 10",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider",
+        "button_text": "Book This Class",
+        "row_source": "seed_appointment_url_preview",
+        "source_offer_id": "offer-209806-instructor_24057895173-20260810-0915",
+        "selected_seed_url_occurrences": 1
+      },
+      {
+        "date": "2026-08-11",
+        "start_time": "09:15",
+        "course_id": "359474",
+        "course_title": "AHA BLS Provider Renewal",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
+        "rendered": true,
+        "visible_date": "Tuesday, August 11",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider Renewal",
+        "button_text": "Book This Class",
+        "row_source": "seed_appointment_url_preview",
+        "source_offer_id": "offer-359474-instructor_24057895173-20260811-0915",
+        "selected_seed_url_occurrences": 1
+      },
+      {
+        "date": "2026-08-12",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "course_title": "AHA BLS Provider",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+        "rendered": true,
+        "visible_date": "Wednesday, August 12",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider",
+        "button_text": "Book This Class",
+        "row_source": "seed_appointment_url_preview",
+        "source_offer_id": "offer-209806-instructor_24057895173-20260812-0915",
+        "selected_seed_url_occurrences": 1
+      }
+    ]
+  },
+  "booking_url_sanity": {
+    "all_selected_bls_urls_ok": true,
+    "checks": [
+      {
+        "date": "2026-08-03",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_label": "AHA BLS Provider Renewal",
+        "course_id": "359474",
+        "appointmentDayId": "260713",
+        "startTime": "9:15 AM",
+        "courseId_param": "359474",
+        "ok": true,
+        "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474"
+      },
+      {
+        "date": "2026-08-04",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_label": "AHA BLS Provider",
+        "course_id": "209806",
+        "appointmentDayId": "260714",
+        "startTime": "9:15 AM",
+        "courseId_param": "209806",
+        "ok": true,
+        "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806"
+      },
+      {
+        "date": "2026-08-05",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_label": "AHA BLS Provider Renewal",
+        "course_id": "359474",
+        "appointmentDayId": "260715",
+        "startTime": "9:15 AM",
+        "courseId_param": "359474",
+        "ok": true,
+        "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474"
+      },
+      {
+        "date": "2026-08-10",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_label": "AHA BLS Provider",
+        "course_id": "209806",
+        "appointmentDayId": "260720",
+        "startTime": "9:15 AM",
+        "courseId_param": "209806",
+        "ok": true,
+        "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806"
+      },
+      {
+        "date": "2026-08-11",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_label": "AHA BLS Provider Renewal",
+        "course_id": "359474",
+        "appointmentDayId": "260721",
+        "startTime": "9:15 AM",
+        "courseId_param": "359474",
+        "ok": true,
+        "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474"
+      },
+      {
+        "date": "2026-08-12",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_label": "AHA BLS Provider",
+        "course_id": "209806",
+        "appointmentDayId": "260722",
+        "startTime": "9:15 AM",
+        "courseId_param": "209806",
+        "ok": true,
+        "url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806"
+      }
+    ],
+    "unknown_rows_suppressed": true,
+    "hsi_pediatric_449422_suppressed": true,
+    "course_344085_not_hsi": true
+  },
+  "large_preview_cleanup": {
+    "tracked_large_preview_json_files": [],
+    "giant_preview_json_absent_from_tracked_head": true,
+    "compact_summaries_tracked": [
+      "data/audit/dynamic_offers_preview_summary.json",
+      "data/audit/dynamic_offers_preview_summary.md",
+      "data/audit/public_sellable_offers_preview_summary.json",
+      "data/audit/public_sellable_offers_preview_summary.md"
+    ],
+    "runtime_full_previews_ignored": true,
+    "ignore_details": [
+      ".gitignore:16:data/runtime/audit_previews/\tdata/runtime/audit_previews/dynamic_offers_preview.json",
+      ".gitignore:16:data/runtime/audit_previews/\tdata/runtime/audit_previews/public_sellable_offers_preview.json"
+    ]
+  },
+  "validation_results": [
+    {
+      "command": "python -m scripts.audit_august_bls_seed_quality",
+      "status": "PASS",
+      "result": "24 August BLS public sellable offers; 6 selected seeds; 6 rendered"
+    },
+    {
+      "command": "python -m scripts.audit_bls_seed_time_preference",
+      "status": "PASS",
+      "result": "6 rendered August BLS seeds; duplicate selected seed rows 0"
+    },
+    {
+      "command": "python -m scripts.audit_bls_public_offer_policy_enablement",
+      "status": "PASS",
+      "result": "24 August BLS public sellable offers; 6 selected seeds; 6 total selected seeds"
+    },
+    {
+      "command": "python -m scripts.audit_august_offer_explosion",
+      "status": "PASS",
+      "result": "20,901 August dynamic offers; 6,666 August BLS dynamic offers; 60 August public sellable offers; 6 selected seeds"
+    },
+    {
+      "command": "python -m scripts.audit_live_availability_snapshot_trace",
+      "status": "PASS",
+      "result": "First divergence resolved_after_rrule_expansion; 29 August live blocks; 20,901 August dynamic offers"
+    },
+    {
+      "command": "python -m scripts.audit_august_seed_breakpoint",
+      "status": "PASS",
+      "result": "First breakpoint resolved_at_dynamic_offers_preview"
+    },
+    {
+      "command": "python -m scripts.public_offer_integrity_audit",
+      "status": "PASS",
+      "result": "Audit failed: False; public sellable total 418"
+    },
+    {
+      "command": "python -m unittest discover -s tests",
+      "status": "PASS",
+      "result": "Ran 163 tests; OK"
+    }
+  ]
+}

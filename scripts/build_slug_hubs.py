@@ -2639,7 +2639,7 @@ def render_tab_panel(
         if str(page.get("slug") or "") == "heartsaver":
             inventory_title = "Next scheduled class" if len(upcoming_sessions) == 1 else "Upcoming dates"
             inventory_body = (
-                "Real scheduled or appointment-backed Heartsaver options show first. Additional Heartsaver training times may be available through instructor availability, group training, or request-based scheduling."
+                "Don't see a time that works? Request a private or group class."
             )
         section_html.append(
             render_inventory_section(
