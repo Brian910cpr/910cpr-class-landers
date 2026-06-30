@@ -1,0 +1,7 @@
+course_family,availability_windows,generated_candidate_offers,unique_generated_date_start_pairs,candidate_starts_at_15_min_intervals,reviewed_course_id_candidates,public_sellable_candidates,selected_seeds,rendered_august_seed_rows_scanned,top_hidden_reasons,top_course_ids
+BLS,13,4366,1137,1137,3307,18,6,6,"{'outside_public_dynamic_hours': 2120, 'max_offers_per_course_per_week_exceeded': 1669, 'course_id_not_enabled': 1059}","{'210549': 1137, '209806': 1085, '359474': 1085, '440431': 1059}"
+ACLS,0,0,0,0,0,0,0,0,{},{}
+PALS,0,0,0,0,0,0,0,0,{},{}
+Heartsaver First Aid CPR AED,13,4366,1150,1150,4366,24,0,0,"{'outside_public_dynamic_hours': 2120, 'max_offers_per_course_per_week_exceeded': 1886, 'max_total_offers_per_day_exceeded': 336}","{'329495': 1150, '251545': 1150, '209809': 1033, '351632': 1033}"
+Heartsaver CPR AED,13,2261,1150,1150,2261,12,0,0,"{'outside_public_dynamic_hours': 1132, 'max_offers_per_course_per_week_exceeded': 949, 'max_total_offers_per_day_exceeded': 168}","{'209808': 1150, '344085': 1111}"
+HSI,13,7725,1150,1150,1150,6,0,0,"{'course_family_disabled': 6575, 'course_id_not_enabled': 6575, 'course_family_not_enabled': 6575, 'outside_public_dynamic_hours': 3788, 'max_offers_per_course_per_week_exceeded': 476, 'max_total_offers_per_day_exceeded': 84}","{'371954': 1150, '463743': 1150, '445670': 1150, '449422': 1150, '448630': 1059, '374378': 1033, '422270': 1033}"
