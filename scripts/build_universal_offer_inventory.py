@@ -875,7 +875,7 @@ def build_appointment_url_offers(
             "source_availability_window": block_id,
             "stack_group_id": f"stack-{normalize_key(block_id)}",
             "stack_candidate_role": "deterministic_appointment",
-            "display_note": "Available appointment-backed class option.",
+            "display_note": "Request this class time.",
             "public_schedule_row_created": False,
             "standalone_class_lander_created": False,
         }
@@ -1361,7 +1361,7 @@ def render_stack_trace_report(trace: dict[str, Any], summary: dict[str, Any]) ->
         "",
         f"- Availability blocks considered: {summary.get('availability_blocks_considered', 0)}",
         f"- Stack groups created: {summary.get('stack_groups_created', 0)}",
-        f"- Appointment-backed offers generated: {summary.get('appointment_url_offers_generated', 0)}",
+        f"- Appointment URL offers generated: {summary.get('appointment_url_offers_generated', 0)}",
         f"- Request-only offers generated: {summary.get('request_only_block_offers_generated', 0)}",
         f"- Future request block offers generated: {summary.get('future_request_block_offers_generated', 0)}",
         f"- Total generated hub-only offers: {summary.get('total_generated_offers', 0)}",
