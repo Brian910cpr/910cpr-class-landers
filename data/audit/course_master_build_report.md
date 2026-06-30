@@ -27,7 +27,7 @@ Generated inventory/schema report. Course Master is not authoritative for produc
 ## Audit Answers
 
 - Every public sellable dynamic offer resolves to Course Master: `True`
-- Courses used by public sellable offers: `209808, 251545, 329495, 344085, 445670`
+- Courses used by public sellable offers: `209806, 209808, 209809, 210549, 251545, 329495, 344085, 351632, 359474, 445670`
 - Public sellable dynamic offers missing Course Master data: `none`
 - Courses lacking duration/scheduler consumption: `209811, 241108, 209818, 369209, 410694, 444919, 248288, 248287, 209806, 359474, 210549, 440431, 374378, 422270, 371954, 463743, 448630, 449422, 344085, 209808, 209809, 329495, 351632, 251545, 209812, 209805, 251496, 253768, 359827`
 - Courses lacking public page/tab mapping: `369209, 410694, 444919, 248288, 248287, 440431, 374378, 422270, 371954, 463743, 448630, 449422, 253768, 359827`

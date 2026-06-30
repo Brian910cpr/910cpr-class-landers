@@ -1,6 +1,6 @@
 {
   "summary": {
-    "generated_at": "2026-06-29T15:46:02",
+    "generated_at": "2026-06-30T13:52:02",
     "read_only": true,
     "deployed": false,
     "plain_answer": "The prior live snapshot stopped at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events recorded RRULE text without expanding recurring VEVENT instances. That limiter is now fixed: runtime snapshots contain expanded recurring instances into August, live_availability_snapshot_preview.json contains August blocks, and dynamic_offers_preview.json contains August offers.",
@@ -74,7 +74,7 @@
       },
       "runtime_rrule_events": 40,
       "live_snapshot_blocks": 116,
-      "dynamic_offers": 42909
+      "dynamic_offers": 42993
     },
     "rrule_rows": [
       {
@@ -925,21 +925,21 @@
     },
     {
       "file": "data/config/public_offer_policy.json",
-      "line": 28,
+      "line": 31,
       "term_matches": "30",
       "text": "\"30\",",
       "relevance": "context"
     },
     {
       "file": "data/config/public_offer_policy.json",
-      "line": 38,
+      "line": 41,
       "term_matches": "days_out;60",
       "text": "\"maximum_days_out\": 60,",
       "relevance": "public_filter_downstream_not_snapshot_limiter"
     },
     {
       "file": "data/config/public_offer_policy.json",
-      "line": 52,
+      "line": 55,
       "term_matches": "until",
       "text": "\"notes\": \"Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families.\"",
       "relevance": "context"

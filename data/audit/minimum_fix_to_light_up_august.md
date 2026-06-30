@@ -4,7 +4,7 @@ Do not deploy from this audit branch.
 
 ## Smallest Change
 
-Keep reviewed recurring availability expanding into the active availability source used by `data/audit/dynamic_offers_preview.json`. Then rerun the existing pipeline without bypassing public filters.
+Keep reviewed recurring availability expanding into the active availability source used by `data/runtime/audit_previews/dynamic_offers_preview.json`. Then rerun the existing pipeline without bypassing public filters.
 
 The prior first break was not page rendering and not Course Master gating. After RRULE expansion, August no longer vanishes before active dynamic offers.
 

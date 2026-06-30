@@ -1,6 +1,6 @@
 {
   "summary": {
-    "generated_at": "2026-06-30T06:36:54",
+    "generated_at": "2026-06-30T13:50:53",
     "read_only": true,
     "deployed": false,
     "enabled_course_ids_added": [
@@ -52,11 +52,11 @@
       "no_raw_enrollware_mirror_behavior_introduced": true
     },
     "large_generated_files": {
-      "data/audit/dynamic_offers_preview.json": {
-        "size_mb": 98.57
+      "data/runtime/audit_previews/dynamic_offers_preview.json": {
+        "size_mb": 98.69
       },
-      "data/audit/public_sellable_offers_preview.json": {
-        "size_mb": 96.43
+      "data/runtime/audit_previews/public_sellable_offers_preview.json": {
+        "size_mb": 96.62
       }
     }
   },

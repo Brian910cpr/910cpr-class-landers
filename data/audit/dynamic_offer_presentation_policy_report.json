@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-30T05:21:34.135296-04:00",
+  "generated_at": "2026-06-30T13:49:52.865674-04:00",
   "read_only": true,
   "public_site_affected": false,
   "enrollware_called": false,
   "appointments_created": false,
-  "source_public_sellable_offers": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\audit\\public_sellable_offers_preview.json",
+  "source_public_sellable_offers": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\runtime\\audit_previews\\public_sellable_offers_preview.json",
   "source_schedule_future": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\docs\\data\\schedule_future.json",
   "button_text_default": "When would YOU like to start?",
   "stats": {

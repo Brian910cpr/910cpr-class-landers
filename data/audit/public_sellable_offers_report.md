@@ -4,7 +4,7 @@ This is a read-only sellability filter for dynamic offers. It did not modify pub
 
 ## Summary
 
-- Total dynamic offers read: 42909
+- Total dynamic offers read: 42993
 - Confirmed-container policy enabled: True
 - Offers kept due to container support: 210
 - Public sellable offers kept: 210
@@ -20,12 +20,12 @@ This is a read-only sellability filter for dynamic offers. It did not modify pub
 ## Hidden Offers By Reason
 
 - `outside_public_dynamic_hours`: 24024
-- `course_id_not_enabled`: 19765
-- `course_family_disabled`: 17807
-- `course_family_not_enabled`: 17807
+- `course_id_not_enabled`: 19799
+- `course_family_disabled`: 17840
+- `course_family_not_enabled`: 17840
 - `max_offers_per_course_per_week_exceeded`: 9143
 - `max_total_offers_per_day_exceeded`: 651
-- `inside_minimum_lead_time`: 153
+- `inside_minimum_lead_time`: 237
 
 ## Offers By Date
 

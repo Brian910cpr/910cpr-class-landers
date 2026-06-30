@@ -12,9 +12,9 @@ data/config/calendar_sources.json,69,60,"""calendar_id"": ""c_d2f947481181f46098
 data/config/calendar_sources.json,79,horizon,"""inverse_expansion_horizon_days"": 45,",live_snapshot_inverse_gap_horizon_after_runtime_events_loaded
 data/config/calendar_sources.json,82,90,"""inverse_expansion_min_gap_minutes"": 90,",context
 data/config/public_offer_policy.json,3,preview,"""description"": ""Read-only public sellability policy for filtering dynamic offer previews. This config does not publish offers, create appointments, or change Enrollware behavior."",",context
-data/config/public_offer_policy.json,28,30,"""30"",",context
-data/config/public_offer_policy.json,38,days_out;60,"""maximum_days_out"": 60,",public_filter_downstream_not_snapshot_limiter
-data/config/public_offer_policy.json,52,until,"""notes"": ""Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families.""",context
+data/config/public_offer_policy.json,31,30,"""30"",",context
+data/config/public_offer_policy.json,41,days_out;60,"""maximum_days_out"": 60,",public_filter_downstream_not_snapshot_limiter
+data/config/public_offer_policy.json,55,until,"""notes"": ""Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families.""",context
 scripts/export_calendar_snapshots.py,22,snapshot,"RUNTIME_SNAPSHOT_DIR = ROOT / ""data"" / ""runtime"" / ""calendar_snapshots""",context
 scripts/export_calendar_snapshots.py,24,snapshot,"SUMMARY_PATH = AUDIT_DIR / ""calendar_snapshot_export_summary.json""",context
 scripts/export_calendar_snapshots.py,25,snapshot,"REPORT_PATH = AUDIT_DIR / ""calendar_snapshot_export_report.md""",context

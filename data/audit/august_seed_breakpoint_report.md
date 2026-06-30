@@ -12,14 +12,14 @@ E. Risks: report-only availability must not bypass conflict checks, appointment 
 
 ## Stage Counts
 
-- Dynamic offers total: 42909
+- Dynamic offers total: 42993
 - Dynamic offers in August: 20901
 - Public sellable offers total: 210
 - Public sellable offers in August: 60
-- Selected seeds total: 16
-- Selected August seeds: 4
-- Appointment URL previews total: 16
-- Appointment URL previews in August: 4
+- Selected seeds total: 27
+- Selected August seeds: 6
+- Appointment URL previews total: 27
+- Appointment URL previews in August: 6
 - August BLS selected proposals in seed simulation: 8
 - August Heartsaver selected proposals in seed simulation: 0
 - August public seed rows rendered: 0
@@ -28,12 +28,12 @@ E. Risks: report-only availability must not bypass conflict checks, appointment 
 
 August dynamic offers now reach public filtering. Current overall public filter reasons are:
 - `outside_public_dynamic_hours`: 24024
-- `course_id_not_enabled`: 19765
-- `course_family_disabled`: 17807
-- `course_family_not_enabled`: 17807
-- `max_offers_per_course_per_week_exceeded`: 8821
-- `max_total_offers_per_day_exceeded`: 977
-- `inside_minimum_lead_time`: 145
+- `course_id_not_enabled`: 19799
+- `course_family_disabled`: 17840
+- `course_family_not_enabled`: 17840
+- `max_offers_per_course_per_week_exceeded`: 9143
+- `max_total_offers_per_day_exceeded`: 651
+- `inside_minimum_lead_time`: 237
 
 ## Course Master Gate Finding
 

@@ -8,7 +8,7 @@ Status: read-only trace. No deploy was performed.
 - Snapshot inputs: `data/config/calendar_sources.json`, `data/config/people_catalog.json`, `data/config/course_catalog.json`, `data/inventory/appointment_containers.json`, `data/runtime/calendar_snapshots/*.json`
 - Active dynamic input: `data/audit/live_availability_snapshot_preview.json`
 - Active dynamic generator: `scripts/generate_dynamic_offers.py`
-- Active dynamic output: `data/audit/dynamic_offers_preview.json`
+- Active dynamic output: `data/runtime/audit_previews/dynamic_offers_preview.json`
 
 ## Date Ranges
 

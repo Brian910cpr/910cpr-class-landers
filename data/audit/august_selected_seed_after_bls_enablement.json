@@ -3,54 +3,70 @@
     "august_bls_dynamic_candidates": 6666,
     "august_bls_public_sellable_offers": 24,
     "august_bls_seed_candidates": 24,
-    "august_bls_selected_seeds": 4,
+    "august_bls_selected_seeds": 6,
     "august_bls_rendered_rows": 3,
     "august_bls_rendered_seed_rows": 0,
     "real_august_bls_enrollware_rows": 3,
-    "august_total_selected_seeds": 4,
+    "august_total_selected_seeds": 6,
     "august_selected_seeds_by_course": {
-      "209806": 2,
-      "359474": 2
+      "209806": 3,
+      "359474": 3
     },
     "august_bls_selected_seeds_by_date": {
       "2026-08-03": 1,
       "2026-08-04": 1,
+      "2026-08-05": 1,
       "2026-08-10": 1,
-      "2026-08-11": 1
+      "2026-08-11": 1,
+      "2026-08-12": 1
     }
   },
   "selected_august_bls_seeds": [
     {
       "date": "2026-08-03",
-      "start_time": "08:30",
-      "course_name": "AHA BLS Provider",
-      "course_key": "aha_bls_provider",
-      "courseId": "209806",
+      "start_time": "09:15",
+      "course_name": "AHA BLS Provider Renewal",
+      "course_key": "aha_bls_provider_renewal",
+      "courseId": "359474",
       "appointmentDayId": 260713,
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "instructor": "Brian Ennis",
       "source_availability_block": "brian_do_not_schedule:inverse_gap:58",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=8%3A30%20AM&courseId=209806",
-      "page_card": "docs/bls.html#bls-provider",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
+      "page_card": "docs/bls.html#bls-renewal",
       "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu"
     },
     {
       "date": "2026-08-04",
-      "start_time": "08:00",
-      "course_name": "AHA BLS Provider Renewal",
-      "course_key": "aha_bls_provider_renewal",
-      "courseId": "359474",
+      "start_time": "09:15",
+      "course_name": "AHA BLS Provider",
+      "course_key": "aha_bls_provider",
+      "courseId": "209806",
       "appointmentDayId": 260714,
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "instructor": "Brian Ennis",
       "source_availability_block": "brian_do_not_schedule:inverse_gap:59",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=8%3A00%20AM&courseId=359474",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
+      "page_card": "docs/bls.html#bls-provider",
+      "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu"
+    },
+    {
+      "date": "2026-08-05",
+      "start_time": "09:15",
+      "course_name": "AHA BLS Provider Renewal",
+      "course_key": "aha_bls_provider_renewal",
+      "courseId": "359474",
+      "appointmentDayId": 260715,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "source_availability_block": "brian_do_not_schedule:inverse_gap:60",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
       "page_card": "docs/bls.html#bls-renewal",
       "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu"
     },
     {
       "date": "2026-08-10",
-      "start_time": "08:30",
+      "start_time": "09:15",
       "course_name": "AHA BLS Provider",
       "course_key": "aha_bls_provider",
       "courseId": "209806",
@@ -58,13 +74,13 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "instructor": "Brian Ennis",
       "source_availability_block": "brian_do_not_schedule:inverse_gap:65",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=8%3A30%20AM&courseId=209806",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
       "page_card": "docs/bls.html#bls-provider",
       "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu"
     },
     {
       "date": "2026-08-11",
-      "start_time": "08:00",
+      "start_time": "09:15",
       "course_name": "AHA BLS Provider Renewal",
       "course_key": "aha_bls_provider_renewal",
       "courseId": "359474",
@@ -72,8 +88,22 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "instructor": "Brian Ennis",
       "source_availability_block": "brian_do_not_schedule:inverse_gap:66",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=8%3A00%20AM&courseId=359474",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
       "page_card": "docs/bls.html#bls-renewal",
+      "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu"
+    },
+    {
+      "date": "2026-08-12",
+      "start_time": "09:15",
+      "course_name": "AHA BLS Provider",
+      "course_key": "aha_bls_provider",
+      "courseId": "209806",
+      "appointmentDayId": 260722,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "source_availability_block": "brian_do_not_schedule:inverse_gap:67",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+      "page_card": "docs/bls.html#bls-provider",
       "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu"
     }
   ]

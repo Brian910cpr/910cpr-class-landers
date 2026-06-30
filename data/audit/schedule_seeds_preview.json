@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-06-30T06:35:18.526932-04:00",
+  "generated_at": "2026-06-30T13:49:53.963762-04:00",
   "read_only": true,
   "public_site_affected": false,
   "enrollware_called": false,
   "appointments_created": false,
   "appointment_urls_changed": false,
-  "source_public_sellable_offers": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\audit\\public_sellable_offers_preview.json",
+  "source_public_sellable_offers": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\runtime\\audit_previews\\public_sellable_offers_preview.json",
   "source_policy": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\config\\seed_strategy_policy.json",
   "source_course_catalog": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\config\\course_catalog.json",
   "source_appointment_containers": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\inventory\\appointment_containers.json",

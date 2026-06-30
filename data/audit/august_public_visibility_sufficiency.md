@@ -4,7 +4,7 @@
 
 Yes, after the narrow BLS policy enablement August looks alive enough for this report branch.
 
-Current selected August seeds: 4. Current August rendered seed rows in `docs/data/schedule_future.json`: 0. Current real August Enrollware rows in that file: 6.
+Current selected August seeds: 6. Current August rendered seed rows in `docs/data/schedule_future.json`: 0. Current real August Enrollware rows in that file: 6.
 
 The prior limiting point was downstream public sellable policy. After enabling only the reviewed AHA BLS course IDs, BLS offers reach seed selection and the selector chooses one BLS seed on each available August seed date.
 

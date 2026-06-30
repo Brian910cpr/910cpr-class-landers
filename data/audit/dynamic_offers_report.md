@@ -26,12 +26,12 @@ This is a read-only V0 dynamic offer generator. It did not modify public pages, 
 - Availability windows read: 68
 - Scheduler-enabled instructors considered: 2
 - Courses considered: 30
-- Local occupancy blocks read: 220
-- Offers generated: 42909
+- Local occupancy blocks read: 208
+- Offers generated: 42993
 
 ## Offers Rejected By Reason
 
-- `conflicts_with_existing_occupancy`: 17672
+- `conflicts_with_existing_occupancy`: 17588
 - `course_family_not_allowed_by_window`: 748
 - `course_does_not_fit_window`: 9
 
@@ -62,7 +62,7 @@ This is a read-only V0 dynamic offer generator. It did not modify public pages, 
 
 ## Blockers Preventing More Offers
 
-- `conflicts_with_existing_occupancy`: 17672
+- `conflicts_with_existing_occupancy`: 17588
 - `course_family_not_allowed_by_window`: 748
 - `course_does_not_fit_window`: 9
 

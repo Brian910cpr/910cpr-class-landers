@@ -15,7 +15,7 @@ Status: report only. No files were deleted, moved, deployed, or published.
 
 ## Large Generated Files
 
-- `data/audit/dynamic_offers_preview.json`: 98.57 MB
-- `data/audit/public_sellable_offers_preview.json`: 96.43 MB
+- `data/runtime/audit_previews/dynamic_offers_preview.json`: 98.69 MB
+- `data/runtime/audit_previews/public_sellable_offers_preview.json`: 96.62 MB
 
 Recommendation: keep these full generated previews only for short-lived review branches. Long-term, commit compact summaries and regenerate full previews locally or store them as CI/artifact outputs.
