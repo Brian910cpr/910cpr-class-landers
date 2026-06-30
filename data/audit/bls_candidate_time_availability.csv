@@ -1,0 +1,9 @@
+start_time,generated_candidate_count,public_sellable_count,seed_eligible_count,selected_seed_count,top_public_filter_reasons,top_seed_rejection_reasons,blocked_by
+09:15,78,0,0,0,max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:8,,public_sellable_filters
+12:30,78,0,0,0,max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:8,,public_sellable_filters
+18:15,72,0,0,0,max_offers_per_course_per_week_exceeded:40; course_id_not_enabled:24; course_family_disabled:12; course_family_not_enabled:12; max_total_offers_per_day_exceeded:8,,public_sellable_filters
+18:45,72,0,0,0,max_offers_per_course_per_week_exceeded:40; course_id_not_enabled:24; course_family_disabled:12; course_family_not_enabled:12; max_total_offers_per_day_exceeded:8,,public_sellable_filters
+08:30,78,4,4,2,max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:4,family_mix_target_already_met:2,
+09:00,78,0,0,0,max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13; max_total_offers_per_day_exceeded:8,,
+08:00,78,12,8,2,max_offers_per_course_per_week_exceeded:40; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13,family_mix_target_already_met:6; scheduler_consumption_window_overlap:2; same_start_time_already_seeded:2,
+08:15,78,8,6,0,max_offers_per_course_per_week_exceeded:44; course_id_not_enabled:26; course_family_disabled:13; course_family_not_enabled:13,family_mix_target_already_met:6; scheduler_consumption_window_overlap:2,seed_preference_or_caps
