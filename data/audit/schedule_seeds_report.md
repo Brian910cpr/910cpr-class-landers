@@ -333,13 +333,13 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260706-1430` |
+| 14:30-15:15 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis | `offer-209808-instructor_24057895173-20260706-1430` |
 
 ### 2026-07-07
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260707-1230` |
+| 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260707-1230` |
 
 ### 2026-07-09
 
@@ -363,13 +363,13 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260713-1430` |
+| 14:30-15:15 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis | `offer-209808-instructor_24057895173-20260713-1430` |
 
 ### 2026-07-14
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 12:30-14:30 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260714-1230` |
+| 12:30-14:30 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260714-1230` |
 
 ### 2026-07-15
 
@@ -393,13 +393,13 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260720-1430` |
+| 14:30-15:15 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis | `offer-209808-instructor_24057895173-20260720-1430` |
 
 ### 2026-07-22
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260722-0915` |
+| 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260722-0915` |
 
 ### 2026-07-24
 
@@ -411,13 +411,13 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260726-0915` |
+| 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260726-0915` |
 
 ### 2026-07-27
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 14:30-15:15 | AHA Heartsaver First Aid CPR AED - Blended | Heartsaver | Brian Ennis | `offer-329495-instructor_24057895173-20260727-1430` |
+| 14:30-15:15 | AHA Heartsaver CPR AED Online | Heartsaver | Brian Ennis | `offer-209808-instructor_24057895173-20260727-1430` |
 
 ### 2026-07-28
 
@@ -429,7 +429,7 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260729-0915` |
+| 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260729-0915` |
 
 ### 2026-07-31
 
@@ -441,7 +441,7 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260803-0915` |
+| 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260803-0915` |
 
 ### 2026-08-04
 
@@ -453,7 +453,7 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260805-0915` |
+| 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260805-0915` |
 
 ### 2026-08-10
 
@@ -465,7 +465,7 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 
 | Time | Course | Family | Instructor | Source Offer |
 | --- | --- | --- | --- | --- |
-| 09:15-11:15 | AHA BLS Provider | BLS | Brian Ennis | `offer-209806-instructor_24057895173-20260811-0915` |
+| 09:15-11:15 | AHA BLS Provider Renewal | BLS | Brian Ennis | `offer-359474-instructor_24057895173-20260811-0915` |
 
 ### 2026-08-12
 
@@ -485,16 +485,16 @@ This is a read-only seed strategy preview. Seeds are stack seeds, not a final pu
 | 2026-07-15 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
 | 2026-07-17 | 09:15 | AHA HeartCode BLS | quarter_hour_start_allowed_for_stack_fit |
 | 2026-07-19 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
-| 2026-07-22 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
+| 2026-07-22 | 09:15 | AHA BLS Provider Renewal | quarter_hour_start_allowed_for_stack_fit |
 | 2026-07-24 | 09:15 | AHA HeartCode BLS | quarter_hour_start_allowed_for_stack_fit |
-| 2026-07-26 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
-| 2026-07-29 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
+| 2026-07-26 | 09:15 | AHA BLS Provider Renewal | quarter_hour_start_allowed_for_stack_fit |
+| 2026-07-29 | 09:15 | AHA BLS Provider Renewal | quarter_hour_start_allowed_for_stack_fit |
 | 2026-07-31 | 09:15 | AHA HeartCode BLS | quarter_hour_start_allowed_for_stack_fit |
-| 2026-08-03 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
+| 2026-08-03 | 09:15 | AHA BLS Provider Renewal | quarter_hour_start_allowed_for_stack_fit |
 | 2026-08-04 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
-| 2026-08-05 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
+| 2026-08-05 | 09:15 | AHA BLS Provider Renewal | quarter_hour_start_allowed_for_stack_fit |
 | 2026-08-10 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
-| 2026-08-11 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
+| 2026-08-11 | 09:15 | AHA BLS Provider Renewal | quarter_hour_start_allowed_for_stack_fit |
 | 2026-08-12 | 09:15 | AHA BLS Provider | quarter_hour_start_allowed_for_stack_fit |
 ## Next Step
 

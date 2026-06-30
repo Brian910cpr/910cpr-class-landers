@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T05:25:14.820284",
+  "generated_at": "2026-06-30T06:36:43.724817",
   "policy": {
     "preferred_start_times_by_family_BLS": [
       "09:15",
@@ -134,8 +134,8 @@
     {
       "date": "2026-08-03",
       "start_time": "09:15",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider"
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal"
     },
     {
       "date": "2026-08-04",
@@ -146,8 +146,8 @@
     {
       "date": "2026-08-05",
       "start_time": "09:15",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider"
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal"
     },
     {
       "date": "2026-08-10",
@@ -158,8 +158,8 @@
     {
       "date": "2026-08-11",
       "start_time": "09:15",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider"
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal"
     },
     {
       "date": "2026-08-12",
@@ -172,16 +172,16 @@
     {
       "date": "2026-08-03",
       "start_time": "09:15",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=209806",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
       "rendered": true,
       "visible_date": "Monday, August 3",
       "visible_time": "9:15 AM - 11:15 AM",
-      "visible_course_label": "AHA BLS Provider",
+      "visible_course_label": "AHA BLS Provider Renewal",
       "button_text": "Book This Class",
       "row_source": "seed_appointment_url_preview",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260803-0915",
       "selected_seed_url_occurrences": 1
     },
     {
@@ -202,16 +202,16 @@
     {
       "date": "2026-08-05",
       "start_time": "09:15",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=209806",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
       "rendered": true,
       "visible_date": "Wednesday, August 5",
       "visible_time": "9:15 AM - 11:15 AM",
-      "visible_course_label": "AHA BLS Provider",
+      "visible_course_label": "AHA BLS Provider Renewal",
       "button_text": "Book This Class",
       "row_source": "seed_appointment_url_preview",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260805-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260805-0915",
       "selected_seed_url_occurrences": 1
     },
     {
@@ -232,16 +232,16 @@
     {
       "date": "2026-08-11",
       "start_time": "09:15",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
-      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=209806",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
       "rendered": true,
       "visible_date": "Tuesday, August 11",
       "visible_time": "9:15 AM - 11:15 AM",
-      "visible_course_label": "AHA BLS Provider",
+      "visible_course_label": "AHA BLS Provider Renewal",
       "button_text": "Book This Class",
       "row_source": "seed_appointment_url_preview",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260811-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260811-0915",
       "selected_seed_url_occurrences": 1
     },
     {
@@ -281,8 +281,8 @@
       "2026-08-11",
       "2026-08-12"
     ],
-    "initial_count": 6,
-    "renewal_count": 0,
+    "initial_count": 3,
+    "renewal_count": 3,
     "evening_or_midday_possible_without_loosening": false,
     "reason_evening_or_midday_not_selected": "Generated, but zero public-sellable candidates at 12:30/18:15/18:45 under current public offer caps and course/family filters."
   }

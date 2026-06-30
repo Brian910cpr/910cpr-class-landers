@@ -19,6 +19,9 @@ REPORT_PATH = AUDIT_DIR / "schedule_seeds_report.md"
 AMY_STACK_FILL_PATH = AUDIT_DIR / "amy_stack_fill_candidates.json"
 AMY_STRATEGY_REPORT_PATH = AUDIT_DIR / "amy_protected_pilot_strategy_report.md"
 UNKNOWN = "UNKNOWN"
+AHA_BLS_INITIAL_COURSE_ID = "209806"
+AHA_BLS_RENEWAL_COURSE_ID = "359474"
+AHA_BLS_HEARTCODE_COURSE_ID = "210549"
 
 
 def read_json(path: Path) -> tuple[Any | None, str | None]:
@@ -91,6 +94,27 @@ def preferred_start_rank(offer: dict[str, Any], policy: dict[str, Any]) -> tuple
         except ValueError:
             return 999, start
     return 0, start
+
+
+def bls_variant_balance_rank(offer: dict[str, Any], policy: dict[str, Any], date_index: int) -> tuple[int, str]:
+    balance = policy.get("bls_seed_variant_balance", {})
+    if not isinstance(balance, dict) or balance.get("enabled") is not True:
+        return (0, str(offer.get("course_id") or UNKNOWN))
+    if str(offer.get("course_family") or "") != "BLS":
+        return (0, str(offer.get("course_id") or UNKNOWN))
+    course_id = str(offer.get("course_id") or UNKNOWN)
+    if balance.get("mode") == "alternate_initial_renewal_by_bls_date":
+        order = balance.get("course_id_order", [AHA_BLS_INITIAL_COURSE_ID, AHA_BLS_RENEWAL_COURSE_ID])
+        if not isinstance(order, list) or not order:
+            order = [AHA_BLS_INITIAL_COURSE_ID, AHA_BLS_RENEWAL_COURSE_ID]
+        preferred_course_id = str(order[date_index % len(order)])
+        if course_id == preferred_course_id:
+            return (0, course_id)
+        if course_id in {str(item) for item in order}:
+            return (1, course_id)
+        if course_id == AHA_BLS_HEARTCODE_COURSE_ID:
+            return (2, course_id)
+    return (3, course_id)
 
 
 def family_goal(policy: dict[str, Any], family: str) -> tuple[int, bool, str | None]:
@@ -455,6 +479,10 @@ def select_seeds(public_preview: Any, policy: dict[str, Any], course_catalog: An
     mix_status: dict[str, dict[str, Any]] = {}
 
     dates = sorted({date for date, _family in by_date_family})
+    bls_seed_date_index = {
+        date: index
+        for index, date in enumerate(sorted(date for date, family in by_date_family if family == "BLS"))
+    }
     goal_families = list((policy.get("required_seed_mix_by_date") or {}).keys())
     for date in dates:
         mix_status[date] = {}
@@ -473,6 +501,7 @@ def select_seeds(public_preview: Any, policy: dict[str, Any], course_catalog: An
                 group,
                 key=lambda offer: (
                     preferred_start_rank(offer, policy),
+                    bls_variant_balance_rank(offer, policy, bls_seed_date_index.get(date, 0)),
                     course_priority(offer, policy),
                     offer.get("start_time", ""),
                     offer.get("offer_id", ""),

@@ -110,6 +110,15 @@
     ]
   },
   "allow_multiple_course_variants_same_time": false,
+  "bls_seed_variant_balance": {
+    "enabled": true,
+    "mode": "alternate_initial_renewal_by_bls_date",
+    "course_id_order": [
+      "209806",
+      "359474"
+    ],
+    "notes": "Keep one BLS seed per date, but alternate AHA BLS Initial and Renewal across eligible BLS seed dates when both are available."
+  },
   "default_setup_buffer_minutes": 15,
   "default_cleanup_buffer_minutes": 30,
   "course_title_priority_terms": [

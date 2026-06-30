@@ -9,7 +9,7 @@ The selected BLS seeds are safe URL-backed candidates, but the current times are
 - August BLS-text public sellable offers: 24
 - Selected August BLS seeds: 6
 - Selected by date: {'2026-08-03': 1, '2026-08-04': 1, '2026-08-05': 1, '2026-08-10': 1, '2026-08-11': 1, '2026-08-12': 1}
-- Selected by course: {'209806 AHA BLS Provider': 6}
+- Selected by course: {'359474 AHA BLS Provider Renewal': 3, '209806 AHA BLS Provider': 3}
 - Public sellable by start time: {'09:15': 18, '08:00': 2, '08:15': 2, '08:30': 2}
 
 ## Common Public Time Bands
@@ -23,11 +23,11 @@ The selected BLS seeds are safe URL-backed candidates, but the current times are
 
 | Date | Time | Course | courseId | appointmentDayId | Reason |
 | --- | --- | --- | --- | --- | --- |
-| 2026-08-03 | 09:15 | AHA BLS Provider | 209806 | 260713 | public_sellable_offer;selected_as_stack_seed;read_only_seed_preview_not_public_menu |
+| 2026-08-03 | 09:15 | AHA BLS Provider Renewal | 359474 | 260713 | public_sellable_offer;selected_as_stack_seed;read_only_seed_preview_not_public_menu |
 | 2026-08-04 | 09:15 | AHA BLS Provider | 209806 | 260714 | public_sellable_offer;selected_as_stack_seed;read_only_seed_preview_not_public_menu |
-| 2026-08-05 | 09:15 | AHA BLS Provider | 209806 | 260715 | public_sellable_offer;selected_as_stack_seed;read_only_seed_preview_not_public_menu |
+| 2026-08-05 | 09:15 | AHA BLS Provider Renewal | 359474 | 260715 | public_sellable_offer;selected_as_stack_seed;read_only_seed_preview_not_public_menu |
 | 2026-08-10 | 09:15 | AHA BLS Provider | 209806 | 260720 | public_sellable_offer;selected_as_stack_seed;read_only_seed_preview_not_public_menu |
-| 2026-08-11 | 09:15 | AHA BLS Provider | 209806 | 260721 | public_sellable_offer;selected_as_stack_seed;read_only_seed_preview_not_public_menu |
+| 2026-08-11 | 09:15 | AHA BLS Provider Renewal | 359474 | 260721 | public_sellable_offer;selected_as_stack_seed;read_only_seed_preview_not_public_menu |
 | 2026-08-12 | 09:15 | AHA BLS Provider | 209806 | 260722 | public_sellable_offer;selected_as_stack_seed;read_only_seed_preview_not_public_menu |
 
 See `august_bls_public_sellable_24.csv` for all 24 public-sellable BLS-text offers and rejection reasons.

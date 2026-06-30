@@ -30,17 +30,17 @@ The selected August BLS seeds did not move because the preferred public-friendly
 | Before | 2026-08-04 | 08:00 | 359474 | AHA BLS Provider Renewal |
 | Before | 2026-08-10 | 08:30 | 209806 | AHA BLS Provider |
 | Before | 2026-08-11 | 08:00 | 359474 | AHA BLS Provider Renewal |
-| After | 2026-08-03 | 09:15 | 209806 | AHA BLS Provider |
+| After | 2026-08-03 | 09:15 | 359474 | AHA BLS Provider Renewal |
 | After | 2026-08-04 | 09:15 | 209806 | AHA BLS Provider |
-| After | 2026-08-05 | 09:15 | 209806 | AHA BLS Provider |
+| After | 2026-08-05 | 09:15 | 359474 | AHA BLS Provider Renewal |
 | After | 2026-08-10 | 09:15 | 209806 | AHA BLS Provider |
-| After | 2026-08-11 | 09:15 | 209806 | AHA BLS Provider |
+| After | 2026-08-11 | 09:15 | 359474 | AHA BLS Provider Renewal |
 | After | 2026-08-12 | 09:15 | 209806 | AHA BLS Provider |
 
 ## Schedule sufficiency
 - August BLS rendered seed rows: 6
 - Duplicate selected seed rows: 0
-- Initial/Renewal balance: 6 Initial, 0 Renewal
+- Initial/Renewal balance: 3 Initial, 3 Renewal
 - Evening or midday seeds are not possible without changing upstream public-sellable caps/filters.
 
 ## Safety

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T05:21:44.493163-04:00",
+  "generated_at": "2026-06-30T06:35:18.526932-04:00",
   "read_only": true,
   "public_site_affected": false,
   "enrollware_called": false,
@@ -1362,8 +1362,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-329495-instructor_24057895173-20260706-1430",
-      "source_offer_id": "offer-329495-instructor_24057895173-20260706-1430",
+      "seed_id": "seed-offer-209808-instructor_24057895173-20260706-1430",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260706-1430",
       "date": "2026-07-06",
       "start_time": "14:30",
       "start_minute": "30",
@@ -1381,8 +1381,8 @@
       "instructor_lock_end": "2026-07-06T16:00:00",
       "resource_lock_start": "2026-07-06T14:30:00",
       "resource_lock_end": "2026-07-06T16:00:00",
-      "course_id": "329495",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_id": "209808",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "duration_minutes": 45,
       "capacity": 2,
@@ -1402,8 +1402,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260707-1230",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260707-1230",
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260707-1230",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260707-1230",
       "date": "2026-07-07",
       "start_time": "12:30",
       "start_minute": "30",
@@ -1421,8 +1421,8 @@
       "instructor_lock_end": "2026-07-07T15:15:00",
       "resource_lock_start": "2026-07-07T12:30:00",
       "resource_lock_end": "2026-07-07T15:15:00",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -1562,8 +1562,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-329495-instructor_24057895173-20260713-1430",
-      "source_offer_id": "offer-329495-instructor_24057895173-20260713-1430",
+      "seed_id": "seed-offer-209808-instructor_24057895173-20260713-1430",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260713-1430",
       "date": "2026-07-13",
       "start_time": "14:30",
       "start_minute": "30",
@@ -1581,8 +1581,8 @@
       "instructor_lock_end": "2026-07-13T16:00:00",
       "resource_lock_start": "2026-07-13T14:30:00",
       "resource_lock_end": "2026-07-13T16:00:00",
-      "course_id": "329495",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_id": "209808",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "duration_minutes": 45,
       "capacity": 2,
@@ -1602,8 +1602,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260714-1230",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260714-1230",
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260714-1230",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260714-1230",
       "date": "2026-07-14",
       "start_time": "12:30",
       "start_minute": "30",
@@ -1621,8 +1621,8 @@
       "instructor_lock_end": "2026-07-14T15:15:00",
       "resource_lock_start": "2026-07-14T12:30:00",
       "resource_lock_end": "2026-07-14T15:15:00",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -1762,8 +1762,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-329495-instructor_24057895173-20260720-1430",
-      "source_offer_id": "offer-329495-instructor_24057895173-20260720-1430",
+      "seed_id": "seed-offer-209808-instructor_24057895173-20260720-1430",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260720-1430",
       "date": "2026-07-20",
       "start_time": "14:30",
       "start_minute": "30",
@@ -1781,8 +1781,8 @@
       "instructor_lock_end": "2026-07-20T16:00:00",
       "resource_lock_start": "2026-07-20T14:30:00",
       "resource_lock_end": "2026-07-20T16:00:00",
-      "course_id": "329495",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_id": "209808",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "duration_minutes": 45,
       "capacity": 2,
@@ -1802,8 +1802,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260722-0915",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260722-0915",
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260722-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260722-0915",
       "date": "2026-07-22",
       "start_time": "09:15",
       "start_minute": "15",
@@ -1821,8 +1821,8 @@
       "instructor_lock_end": "2026-07-22T12:00:00",
       "resource_lock_start": "2026-07-22T09:15:00",
       "resource_lock_end": "2026-07-22T12:00:00",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -1882,8 +1882,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260726-0915",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260726-0915",
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260726-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260726-0915",
       "date": "2026-07-26",
       "start_time": "09:15",
       "start_minute": "15",
@@ -1901,8 +1901,8 @@
       "instructor_lock_end": "2026-07-26T12:00:00",
       "resource_lock_start": "2026-07-26T09:15:00",
       "resource_lock_end": "2026-07-26T12:00:00",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -1922,8 +1922,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-329495-instructor_24057895173-20260727-1430",
-      "source_offer_id": "offer-329495-instructor_24057895173-20260727-1430",
+      "seed_id": "seed-offer-209808-instructor_24057895173-20260727-1430",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260727-1430",
       "date": "2026-07-27",
       "start_time": "14:30",
       "start_minute": "30",
@@ -1941,8 +1941,8 @@
       "instructor_lock_end": "2026-07-27T16:00:00",
       "resource_lock_start": "2026-07-27T14:30:00",
       "resource_lock_end": "2026-07-27T16:00:00",
-      "course_id": "329495",
-      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_id": "209808",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "duration_minutes": 45,
       "capacity": 2,
@@ -2002,8 +2002,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260729-0915",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260729-0915",
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260729-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260729-0915",
       "date": "2026-07-29",
       "start_time": "09:15",
       "start_minute": "15",
@@ -2021,8 +2021,8 @@
       "instructor_lock_end": "2026-07-29T12:00:00",
       "resource_lock_start": "2026-07-29T09:15:00",
       "resource_lock_end": "2026-07-29T12:00:00",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -2082,8 +2082,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260803-0915",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0915",
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260803-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260803-0915",
       "date": "2026-08-03",
       "start_time": "09:15",
       "start_minute": "15",
@@ -2101,8 +2101,8 @@
       "instructor_lock_end": "2026-08-03T12:00:00",
       "resource_lock_start": "2026-08-03T09:15:00",
       "resource_lock_end": "2026-08-03T12:00:00",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -2162,8 +2162,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260805-0915",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260805-0915",
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260805-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260805-0915",
       "date": "2026-08-05",
       "start_time": "09:15",
       "start_minute": "15",
@@ -2181,8 +2181,8 @@
       "instructor_lock_end": "2026-08-05T12:00:00",
       "resource_lock_start": "2026-08-05T09:15:00",
       "resource_lock_end": "2026-08-05T12:00:00",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -2242,8 +2242,8 @@
       ]
     },
     {
-      "seed_id": "seed-offer-209806-instructor_24057895173-20260811-0915",
-      "source_offer_id": "offer-209806-instructor_24057895173-20260811-0915",
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260811-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260811-0915",
       "date": "2026-08-11",
       "start_time": "09:15",
       "start_minute": "15",
@@ -2261,8 +2261,8 @@
       "instructor_lock_end": "2026-08-11T12:00:00",
       "resource_lock_start": "2026-08-11T09:15:00",
       "resource_lock_end": "2026-08-11T12:00:00",
-      "course_id": "209806",
-      "course_title": "AHA BLS Provider",
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "duration_minutes": 120,
       "capacity": 6,
@@ -2346,10 +2346,32 @@
       "message": "Family mix target already met for this date."
     },
     {
+      "source_offer_id": "offer-209808-instructor_24057895173-20260702-1300",
+      "date": "2026-07-02",
+      "start_time": "13:00",
+      "course_title": "AHA Heartsaver CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
       "source_offer_id": "offer-209809-instructor_24057895173-20260702-1300",
       "date": "2026-07-02",
       "start_time": "13:00",
       "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260702-1300",
+      "date": "2026-07-02",
+      "start_time": "13:00",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
@@ -2379,17 +2401,6 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260702-1300",
-      "date": "2026-07-02",
-      "start_time": "13:00",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
       "source_offer_id": "offer-351632-instructor_24057895173-20260702-1300",
       "date": "2026-07-02",
       "start_time": "13:00",
@@ -2401,21 +2412,32 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260702-1300",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260702-1230",
       "date": "2026-07-02",
-      "start_time": "13:00",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "start_time": "12:30",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+      "reason_code": "same_start_time_already_seeded",
+      "message": "Avoiding multiple seeds at the same start time on the same date."
     },
     {
       "source_offer_id": "offer-209809-instructor_24057895173-20260702-1230",
       "date": "2026-07-02",
       "start_time": "12:30",
       "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
+      "reason_code": "same_start_time_already_seeded",
+      "message": "Avoiding multiple seeds at the same start time on the same date."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260702-1230",
+      "date": "2026-07-02",
+      "start_time": "12:30",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
@@ -2445,17 +2467,6 @@
       "message": "Avoiding multiple seeds at the same start time on the same date."
     },
     {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260702-1230",
-      "date": "2026-07-02",
-      "start_time": "12:30",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
-    },
-    {
       "source_offer_id": "offer-351632-instructor_24057895173-20260702-1230",
       "date": "2026-07-02",
       "start_time": "12:30",
@@ -2467,21 +2478,32 @@
       "message": "Avoiding multiple seeds at the same start time on the same date."
     },
     {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260702-1230",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260702-1245",
       "date": "2026-07-02",
-      "start_time": "12:30",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "start_time": "12:45",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "same_start_time_already_seeded",
-      "message": "Avoiding multiple seeds at the same start time on the same date."
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
       "source_offer_id": "offer-209809-instructor_24057895173-20260702-1245",
       "date": "2026-07-02",
       "start_time": "12:45",
       "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260702-1245",
+      "date": "2026-07-02",
+      "start_time": "12:45",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
@@ -2511,32 +2533,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260702-1245",
-      "date": "2026-07-02",
-      "start_time": "12:45",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
       "source_offer_id": "offer-351632-instructor_24057895173-20260702-1245",
       "date": "2026-07-02",
       "start_time": "12:45",
       "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260702-1245",
-      "date": "2026-07-02",
-      "start_time": "12:45",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:5",
@@ -2742,28 +2742,6 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260706-1430",
-      "date": "2026-07-06",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver CPR AED",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260706-1430",
-      "date": "2026-07-06",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
       "source_offer_id": "offer-251545-instructor_24057895173-20260706-1430",
       "date": "2026-07-06",
       "start_time": "14:30",
@@ -2775,9 +2753,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260706-1445",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260706-1430",
       "date": "2026-07-06",
-      "start_time": "14:45",
+      "start_time": "14:30",
       "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -2786,9 +2764,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260706-1445",
+      "source_offer_id": "offer-344085-instructor_24057895173-20260706-1430",
       "date": "2026-07-06",
-      "start_time": "14:45",
+      "start_time": "14:30",
       "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -2819,9 +2797,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260706-1500",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260706-1445",
       "date": "2026-07-06",
-      "start_time": "15:00",
+      "start_time": "14:45",
       "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -2830,9 +2808,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260706-1500",
+      "source_offer_id": "offer-344085-instructor_24057895173-20260706-1445",
       "date": "2026-07-06",
-      "start_time": "15:00",
+      "start_time": "14:45",
       "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -2856,6 +2834,28 @@
       "date": "2026-07-06",
       "start_time": "15:00",
       "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-329495-instructor_24057895173-20260706-1500",
+      "date": "2026-07-06",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-344085-instructor_24057895173-20260706-1500",
+      "date": "2026-07-06",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:10",
@@ -2918,10 +2918,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260707-1230",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260707-1230",
       "date": "2026-07-07",
       "start_time": "12:30",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:12",
@@ -3215,28 +3215,6 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260713-1430",
-      "date": "2026-07-13",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver CPR AED",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260713-1430",
-      "date": "2026-07-13",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
       "source_offer_id": "offer-251545-instructor_24057895173-20260713-1430",
       "date": "2026-07-13",
       "start_time": "14:30",
@@ -3248,9 +3226,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260713-1445",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260713-1430",
       "date": "2026-07-13",
-      "start_time": "14:45",
+      "start_time": "14:30",
       "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -3259,9 +3237,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260713-1445",
+      "source_offer_id": "offer-344085-instructor_24057895173-20260713-1430",
       "date": "2026-07-13",
-      "start_time": "14:45",
+      "start_time": "14:30",
       "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -3292,9 +3270,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260713-1500",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260713-1445",
       "date": "2026-07-13",
-      "start_time": "15:00",
+      "start_time": "14:45",
       "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -3303,9 +3281,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260713-1500",
+      "source_offer_id": "offer-344085-instructor_24057895173-20260713-1445",
       "date": "2026-07-13",
-      "start_time": "15:00",
+      "start_time": "14:45",
       "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -3329,6 +3307,28 @@
       "date": "2026-07-13",
       "start_time": "15:00",
       "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-329495-instructor_24057895173-20260713-1500",
+      "date": "2026-07-13",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-344085-instructor_24057895173-20260713-1500",
+      "date": "2026-07-13",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:22",
@@ -3391,10 +3391,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260714-1230",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260714-1230",
       "date": "2026-07-14",
       "start_time": "12:30",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:24",
@@ -3688,28 +3688,6 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260720-1430",
-      "date": "2026-07-20",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver CPR AED",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260720-1430",
-      "date": "2026-07-20",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
       "source_offer_id": "offer-251545-instructor_24057895173-20260720-1430",
       "date": "2026-07-20",
       "start_time": "14:30",
@@ -3721,9 +3699,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260720-1445",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260720-1430",
       "date": "2026-07-20",
-      "start_time": "14:45",
+      "start_time": "14:30",
       "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -3732,9 +3710,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260720-1445",
+      "source_offer_id": "offer-344085-instructor_24057895173-20260720-1430",
       "date": "2026-07-20",
-      "start_time": "14:45",
+      "start_time": "14:30",
       "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -3765,9 +3743,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260720-1500",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260720-1445",
       "date": "2026-07-20",
-      "start_time": "15:00",
+      "start_time": "14:45",
       "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -3776,9 +3754,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260720-1500",
+      "source_offer_id": "offer-344085-instructor_24057895173-20260720-1445",
       "date": "2026-07-20",
-      "start_time": "15:00",
+      "start_time": "14:45",
       "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -3802,6 +3780,28 @@
       "date": "2026-07-20",
       "start_time": "15:00",
       "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-329495-instructor_24057895173-20260720-1500",
+      "date": "2026-07-20",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-344085-instructor_24057895173-20260720-1500",
+      "date": "2026-07-20",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:35",
@@ -3864,10 +3864,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260722-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260722-0915",
       "date": "2026-07-22",
       "start_time": "09:15",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
@@ -3886,10 +3886,10 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260722-1230",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260722-1230",
       "date": "2026-07-22",
       "start_time": "12:30",
-      "course_title": "AHA BLS Provider",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
@@ -3897,10 +3897,10 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260722-1230",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260722-1230",
       "date": "2026-07-22",
       "start_time": "12:30",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:39",
@@ -4051,10 +4051,10 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260726-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260726-0915",
       "date": "2026-07-26",
       "start_time": "09:15",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:45",
@@ -4128,28 +4128,6 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260727-1430",
-      "date": "2026-07-27",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver CPR AED",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260727-1430",
-      "date": "2026-07-27",
-      "start_time": "14:30",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
-      "reason_code": "family_mix_target_already_met",
-      "message": "Family mix target already met for this date."
-    },
-    {
       "source_offer_id": "offer-251545-instructor_24057895173-20260727-1430",
       "date": "2026-07-27",
       "start_time": "14:30",
@@ -4161,9 +4139,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260727-1445",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260727-1430",
       "date": "2026-07-27",
-      "start_time": "14:45",
+      "start_time": "14:30",
       "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -4172,9 +4150,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260727-1445",
+      "source_offer_id": "offer-344085-instructor_24057895173-20260727-1430",
       "date": "2026-07-27",
-      "start_time": "14:45",
+      "start_time": "14:30",
       "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -4205,9 +4183,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-329495-instructor_24057895173-20260727-1500",
+      "source_offer_id": "offer-329495-instructor_24057895173-20260727-1445",
       "date": "2026-07-27",
-      "start_time": "15:00",
+      "start_time": "14:45",
       "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -4216,9 +4194,9 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-344085-instructor_24057895173-20260727-1500",
+      "source_offer_id": "offer-344085-instructor_24057895173-20260727-1445",
       "date": "2026-07-27",
-      "start_time": "15:00",
+      "start_time": "14:45",
       "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
@@ -4242,6 +4220,28 @@
       "date": "2026-07-27",
       "start_time": "15:00",
       "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-329495-instructor_24057895173-20260727-1500",
+      "date": "2026-07-27",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
+      "reason_code": "family_mix_target_already_met",
+      "message": "Family mix target already met for this date."
+    },
+    {
+      "source_offer_id": "offer-344085-instructor_24057895173-20260727-1500",
+      "date": "2026-07-27",
+      "start_time": "15:00",
+      "course_title": "AHA Heartsaver CPR AED",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:47",
@@ -4425,10 +4425,10 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260729-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260729-0915",
       "date": "2026-07-29",
       "start_time": "09:15",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:51",
@@ -4447,10 +4447,10 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-209806-instructor_24057895173-20260729-1230",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260729-1230",
       "date": "2026-07-29",
       "start_time": "12:30",
-      "course_title": "AHA BLS Provider",
+      "course_title": "AHA BLS Provider Renewal",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:51",
@@ -4458,10 +4458,10 @@
       "message": "Family mix target already met for this date."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260729-1230",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260729-1230",
       "date": "2026-07-29",
       "start_time": "12:30",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:51",
@@ -4557,10 +4557,10 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260803-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0915",
       "date": "2026-08-03",
       "start_time": "09:15",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
@@ -4579,10 +4579,32 @@
       "message": "Family mix target already met for this date."
     },
     {
+      "source_offer_id": "offer-209808-instructor_24057895173-20260803-0800",
+      "date": "2026-08-03",
+      "start_time": "08:00",
+      "course_title": "AHA Heartsaver CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
       "source_offer_id": "offer-209809-instructor_24057895173-20260803-0800",
       "date": "2026-08-03",
       "start_time": "08:00",
       "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260803-0800",
+      "date": "2026-08-03",
+      "start_time": "08:00",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
@@ -4612,17 +4634,6 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260803-0800",
-      "date": "2026-08-03",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
       "source_offer_id": "offer-351632-instructor_24057895173-20260803-0800",
       "date": "2026-08-03",
       "start_time": "08:00",
@@ -4634,10 +4645,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260803-0800",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260803-0815",
       "date": "2026-08-03",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "start_time": "08:15",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
@@ -4649,6 +4660,17 @@
       "date": "2026-08-03",
       "start_time": "08:15",
       "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260803-0815",
+      "date": "2026-08-03",
+      "start_time": "08:15",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
@@ -4678,17 +4700,6 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260803-0815",
-      "date": "2026-08-03",
-      "start_time": "08:15",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
       "source_offer_id": "offer-351632-instructor_24057895173-20260803-0815",
       "date": "2026-08-03",
       "start_time": "08:15",
@@ -4700,10 +4711,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260803-0815",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260803-0830",
       "date": "2026-08-03",
-      "start_time": "08:15",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
@@ -4715,6 +4726,17 @@
       "date": "2026-08-03",
       "start_time": "08:30",
       "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260803-0830",
+      "date": "2026-08-03",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
@@ -4744,32 +4766,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260803-0830",
-      "date": "2026-08-03",
-      "start_time": "08:30",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
       "source_offer_id": "offer-351632-instructor_24057895173-20260803-0830",
       "date": "2026-08-03",
       "start_time": "08:30",
       "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260803-0830",
-      "date": "2026-08-03",
-      "start_time": "08:30",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:58",
@@ -4898,10 +4898,10 @@
       "message": "No source offer satisfied this family mix goal."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260805-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260805-0915",
       "date": "2026-08-05",
       "start_time": "09:15",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:60",
@@ -4986,10 +4986,32 @@
       "message": "Family mix target already met for this date."
     },
     {
+      "source_offer_id": "offer-209808-instructor_24057895173-20260810-0800",
+      "date": "2026-08-10",
+      "start_time": "08:00",
+      "course_title": "AHA Heartsaver CPR AED Online",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
       "source_offer_id": "offer-209809-instructor_24057895173-20260810-0800",
       "date": "2026-08-10",
       "start_time": "08:00",
       "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260810-0800",
+      "date": "2026-08-10",
+      "start_time": "08:00",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
@@ -5019,17 +5041,6 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260810-0800",
-      "date": "2026-08-10",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
       "source_offer_id": "offer-351632-instructor_24057895173-20260810-0800",
       "date": "2026-08-10",
       "start_time": "08:00",
@@ -5041,10 +5052,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260810-0800",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260810-0815",
       "date": "2026-08-10",
-      "start_time": "08:00",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "start_time": "08:15",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
@@ -5056,6 +5067,17 @@
       "date": "2026-08-10",
       "start_time": "08:15",
       "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260810-0815",
+      "date": "2026-08-10",
+      "start_time": "08:15",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
@@ -5085,17 +5107,6 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260810-0815",
-      "date": "2026-08-10",
-      "start_time": "08:15",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
       "source_offer_id": "offer-351632-instructor_24057895173-20260810-0815",
       "date": "2026-08-10",
       "start_time": "08:15",
@@ -5107,10 +5118,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260810-0815",
+      "source_offer_id": "offer-209808-instructor_24057895173-20260810-0830",
       "date": "2026-08-10",
-      "start_time": "08:15",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
@@ -5122,6 +5133,17 @@
       "date": "2026-08-10",
       "start_time": "08:30",
       "course_title": "AHA Heartsaver First Aid CPR AED",
+      "course_family": "Heartsaver",
+      "instructor_display_name": "Brian Ennis",
+      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
+      "reason_code": "scheduler_consumption_window_overlap",
+      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
+    },
+    {
+      "source_offer_id": "offer-251545-instructor_24057895173-20260810-0830",
+      "date": "2026-08-10",
+      "start_time": "08:30",
+      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
@@ -5151,32 +5173,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-209808-instructor_24057895173-20260810-0830",
-      "date": "2026-08-10",
-      "start_time": "08:30",
-      "course_title": "AHA Heartsaver CPR AED Online",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
       "source_offer_id": "offer-351632-instructor_24057895173-20260810-0830",
       "date": "2026-08-10",
       "start_time": "08:30",
       "course_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
-      "course_family": "Heartsaver",
-      "instructor_display_name": "Brian Ennis",
-      "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
-      "reason_code": "scheduler_consumption_window_overlap",
-      "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
-    },
-    {
-      "source_offer_id": "offer-251545-instructor_24057895173-20260810-0830",
-      "date": "2026-08-10",
-      "start_time": "08:30",
-      "course_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
       "course_family": "Heartsaver",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:65",
@@ -5239,10 +5239,10 @@
       "message": "Offer overlaps a previously selected scheduler consumption window in the same instructor/resource lane."
     },
     {
-      "source_offer_id": "offer-359474-instructor_24057895173-20260811-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260811-0915",
       "date": "2026-08-11",
       "start_time": "09:15",
-      "course_title": "AHA BLS Provider Renewal",
+      "course_title": "AHA BLS Provider",
       "course_family": "BLS",
       "instructor_display_name": "Brian Ennis",
       "source_availability_window": "brian_do_not_schedule:inverse_gap:66",
