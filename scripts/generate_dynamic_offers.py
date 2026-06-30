@@ -8,6 +8,13 @@ from pathlib import Path
 from typing import Any
 
 
+from scripts.audit_preview_summaries import write_summary
+from scripts.local_data_paths import (
+    dynamic_offers_preview_path,
+    dynamic_offers_preview_summary_json_path,
+    dynamic_offers_preview_summary_md_path,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 
@@ -23,7 +30,9 @@ INPUT_PATHS = {
     "schedule_future": ROOT / "docs" / "data" / "schedule_future.json",
 }
 
-OFFERS_PATH = AUDIT_DIR / "dynamic_offers_preview.json"
+OFFERS_PATH = dynamic_offers_preview_path(ROOT)
+OFFERS_SUMMARY_JSON_PATH = dynamic_offers_preview_summary_json_path(ROOT)
+OFFERS_SUMMARY_MD_PATH = dynamic_offers_preview_summary_md_path(ROOT)
 REPORT_PATH = AUDIT_DIR / "dynamic_offers_report.md"
 CONSUMPTION_SUMMARY_PATH = AUDIT_DIR / "scheduler_consumption_window_summary.json"
 CONSUMPTION_REPORT_PATH = AUDIT_DIR / "scheduler_consumption_window_report.md"
@@ -775,6 +784,7 @@ def run() -> dict[str, Any]:
         "warnings": warnings[:250],
     }
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+    OFFERS_PATH.parent.mkdir(parents=True, exist_ok=True)
     preview = {
         "generated_at": datetime.now().astimezone().isoformat(),
         "read_only": True,
@@ -788,6 +798,13 @@ def run() -> dict[str, Any]:
         "rejections": rejections,
     }
     OFFERS_PATH.write_text(json.dumps(preview, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    write_summary(
+        OFFERS_PATH,
+        OFFERS_SUMMARY_JSON_PATH,
+        OFFERS_SUMMARY_MD_PATH,
+        kind="dynamic_offers_preview",
+        repo_root=ROOT,
+    )
     REPORT_PATH.write_text(render_report(offers, rejections, stats, loaded, missing), encoding="utf-8")
     CONSUMPTION_SUMMARY_PATH.write_text(json.dumps(consumption_summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     CONSUMPTION_REPORT_PATH.write_text(render_consumption_report(warnings, consumption_summary), encoding="utf-8")
@@ -799,7 +816,7 @@ def run() -> dict[str, Any]:
         "available_blocks_read": stats["available_blocks_read"],
         "offers_generated": len(offers),
         "rejections_generated": len(rejections),
-        "output_paths": [OFFERS_PATH, REPORT_PATH, CONSUMPTION_SUMMARY_PATH, CONSUMPTION_REPORT_PATH],
+        "output_paths": [OFFERS_PATH, OFFERS_SUMMARY_JSON_PATH, OFFERS_SUMMARY_MD_PATH, REPORT_PATH, CONSUMPTION_SUMMARY_PATH, CONSUMPTION_REPORT_PATH],
     }
 
 

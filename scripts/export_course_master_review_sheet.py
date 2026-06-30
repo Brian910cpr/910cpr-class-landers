@@ -8,10 +8,12 @@ from pathlib import Path
 from typing import Any
 
 
+from scripts.local_data_paths import public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 COURSE_MASTER_PATH = ROOT / "data" / "config" / "course_master.json"
-PUBLIC_SELLABLE_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+PUBLIC_SELLABLE_PATH = public_sellable_offers_preview_path(ROOT)
 
 CSV_PATH = AUDIT_DIR / "course_master_review_sheet.csv"
 MD_PATH = AUDIT_DIR / "course_master_review_sheet.md"

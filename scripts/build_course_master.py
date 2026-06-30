@@ -12,6 +12,8 @@ import openpyxl
 from scripts import build_slug_hubs
 
 
+from scripts.local_data_paths import public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_DIR = ROOT / "data" / "config"
 AUDIT_DIR = ROOT / "data" / "audit"
@@ -20,7 +22,7 @@ COURSE_CATALOG_PATH = CONFIG_DIR / "course_catalog.json"
 COURSE_MAP_PATH = CONFIG_DIR / "course_map.json"
 COURSE_EXPORT_PATH = ROOT / "data" / "raw" / "course-export.xlsx"
 SLUG_HUBS_PATH = CONFIG_DIR / "slug_hubs.json"
-PUBLIC_SELLABLE_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+PUBLIC_SELLABLE_PATH = public_sellable_offers_preview_path(ROOT)
 PUBLIC_OFFER_POLICY_PATH = CONFIG_DIR / "public_offer_policy.json"
 CONSUMPTION_RULES_PATH = ROOT / "data" / "inventory" / "course_consumption_rules.json"
 COURSE_VISIBILITY_PATH = CONFIG_DIR / "course_visibility_policy.json"
@@ -638,7 +640,7 @@ def run() -> dict[str, Any]:
             "data/config/course_map.json",
             "data/config/slug_hubs.json",
             "data/inventory/course_consumption_rules.json",
-            "data/audit/public_sellable_offers_preview.json",
+            "data/runtime/audit_previews/public_sellable_offers_preview.json",
         ],
         "courses": courses,
     }

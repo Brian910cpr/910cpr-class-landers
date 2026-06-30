@@ -7,6 +7,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 DEBUG_DIR = ROOT / "debug"
@@ -283,8 +285,8 @@ def summarize_counts(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def run() -> dict[str, Any]:
-    dynamic = read_json(AUDIT_DIR / "dynamic_offers_preview.json")
-    public_sellable = read_json(AUDIT_DIR / "public_sellable_offers_preview.json")
+    dynamic = read_json(dynamic_offers_preview_path(ROOT))
+    public_sellable = read_json(public_sellable_offers_preview_path(ROOT))
     seeds = read_json(AUDIT_DIR / "schedule_seeds_preview.json")
     urls = read_json(AUDIT_DIR / "seed_appointment_url_preview.json")
     course_master = read_json(ROOT / "data" / "config" / "course_master.json")
@@ -306,7 +308,7 @@ def run() -> dict[str, Any]:
     ]
     upstream_resolved = dynamic_august_total > 0
     august_seed_urls = [row for row in urls.get("previews", []) if isinstance(row, dict) and is_august(row)]
-    first_breakpoint = "resolved_at_dynamic_offers_preview" if upstream_resolved else "data/audit/dynamic_offers_preview.json"
+    first_breakpoint = "resolved_at_dynamic_offers_preview" if upstream_resolved else "data/runtime/audit_previews/dynamic_offers_preview.json"
     first_breakpoint_reason = (
         "RRULE expansion now feeds August availability into live_availability_snapshot_preview.json; active dynamic generation contains August offers. Any remaining August thinning is downstream public sellable/seed/render policy, not the original availability-source break."
         if upstream_resolved
@@ -428,7 +430,7 @@ def render_minimum_fix(report: dict[str, Any]) -> str:
         "",
         "## Smallest Change",
         "",
-        "Keep reviewed recurring availability expanding into the active availability source used by `data/audit/dynamic_offers_preview.json`. Then rerun the existing pipeline without bypassing public filters.",
+        "Keep reviewed recurring availability expanding into the active availability source used by `data/runtime/audit_previews/dynamic_offers_preview.json`. Then rerun the existing pipeline without bypassing public filters.",
         "",
         "The prior first break was not page rendering and not Course Master gating. After RRULE expansion, August no longer vanishes before active dynamic offers.",
         "",

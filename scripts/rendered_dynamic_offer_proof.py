@@ -14,11 +14,13 @@ from scripts import public_dynamic_inventory_proof as url_proof
 from scripts import public_offer_integrity_audit as integrity
 
 
+from scripts.local_data_paths import public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 DOCS_DIR = ROOT / "docs"
 
-PUBLIC_SELLABLE_OFFERS_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+PUBLIC_SELLABLE_OFFERS_PATH = public_sellable_offers_preview_path(ROOT)
 PRESENTATION_POLICY_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.json"
 PUBLIC_INTEGRITY_PATH = AUDIT_DIR / "public_offer_integrity_report.json"
 REPORT_MD_PATH = AUDIT_DIR / "rendered_dynamic_offer_proof.md"

@@ -9,6 +9,8 @@ from typing import Any
 
 from scripts import generate_dynamic_offers
 
+from scripts.local_data_paths import dynamic_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 DEBUG_DIR = ROOT / "debug"
@@ -133,7 +135,7 @@ def load_all() -> dict[str, Any]:
     return {
         "seed_simulation": read_json(DEBUG_DIR / "seed_simulation_report.json"),
         "live_snapshot": read_json(AUDIT_DIR / "live_availability_snapshot_preview.json"),
-        "dynamic": read_json(AUDIT_DIR / "dynamic_offers_preview.json"),
+        "dynamic": read_json(dynamic_offers_preview_path(ROOT)),
         "schedule_future": read_json(ROOT / "docs" / "data" / "schedule_future.json"),
         "calendar_sources": read_json(ROOT / "data" / "config" / "calendar_sources.json"),
         "appointment_containers": read_json(ROOT / "data" / "inventory" / "appointment_containers.json"),
@@ -153,7 +155,7 @@ def build_diff_rows(payloads: dict[str, Any]) -> list[dict[str, Any]]:
             rows.append(normalize_window("runtime_calendar_event", row, row.get("_source_file", ""), clean(row.get("summary"))))
     for row in payloads["dynamic"].get("offers", []):
         if isinstance(row, dict) and (is_august(row) or is_bls(row)):
-            rows.append(normalize_window("dynamic_offer", row, "data/audit/dynamic_offers_preview.json", clean(row.get("reason"))))
+            rows.append(normalize_window("dynamic_offer", row, "data/runtime/audit_previews/dynamic_offers_preview.json", clean(row.get("reason"))))
     rows.sort(key=lambda item: (item["date"], item["start_time"], item["stage"], item["source_file"]))
     return rows
 
@@ -206,7 +208,7 @@ def summarize(payloads: dict[str, Any], diff_rows: list[dict[str, Any]]) -> dict
         "live_snapshot_script": "scripts/build_live_availability_snapshot.py",
         "active_dynamic_generator": "scripts/generate_dynamic_offers.py",
         "active_dynamic_input_path": "data/audit/live_availability_snapshot_preview.json",
-        "active_dynamic_output_path": "data/audit/dynamic_offers_preview.json",
+        "active_dynamic_output_path": "data/runtime/audit_previews/dynamic_offers_preview.json",
         "source_mismatch_resolved": source_mismatch_resolved,
         "first_divergence_file": first_divergence,
         "zero_reason": zero_reason,

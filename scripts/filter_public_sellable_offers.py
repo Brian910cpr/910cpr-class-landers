@@ -6,21 +6,31 @@ from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.audit_preview_summaries import write_summary
 from scripts.dynamic_offer_presentation_policy import build_report as build_presentation_report
 from scripts.dynamic_offer_presentation_policy import render_markdown as render_presentation_markdown
 
 
+from scripts.local_data_paths import (
+    dynamic_offers_preview_path,
+    public_sellable_offers_preview_path,
+    public_sellable_offers_preview_summary_json_path,
+    public_sellable_offers_preview_summary_md_path,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 
-DYNAMIC_OFFERS_PATH = AUDIT_DIR / "dynamic_offers_preview.json"
+DYNAMIC_OFFERS_PATH = dynamic_offers_preview_path(ROOT)
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
 APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 LOCATION_RESOURCE_MAP_PATH = ROOT / "data" / "config" / "location_resource_map.json"
 PUBLIC_OFFER_POLICY_PATH = ROOT / "data" / "config" / "public_offer_policy.json"
 SEED_STRATEGY_POLICY_PATH = ROOT / "data" / "config" / "seed_strategy_policy.json"
 COURSE_VISIBILITY_POLICY_PATH = ROOT / "data" / "config" / "course_visibility_policy.json"
-SELLABLE_OFFERS_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+SELLABLE_OFFERS_PATH = public_sellable_offers_preview_path(ROOT)
+SELLABLE_SUMMARY_JSON_PATH = public_sellable_offers_preview_summary_json_path(ROOT)
+SELLABLE_SUMMARY_MD_PATH = public_sellable_offers_preview_summary_md_path(ROOT)
 REPORT_PATH = AUDIT_DIR / "public_sellable_offers_report.md"
 PRESENTATION_POLICY_JSON_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.json"
 PRESENTATION_POLICY_REPORT_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.md"
@@ -477,6 +487,7 @@ def run() -> dict[str, Any]:
         cap_preference_policy=cap_preference_policy if isinstance(cap_preference_policy, dict) else {},
     )
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+    SELLABLE_OFFERS_PATH.parent.mkdir(parents=True, exist_ok=True)
     preview = {
         "generated_at": datetime.now().astimezone().isoformat(),
         "read_only": True,
@@ -493,6 +504,13 @@ def run() -> dict[str, Any]:
         "hidden_offers": hidden,
     }
     SELLABLE_OFFERS_PATH.write_text(json.dumps(preview, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    write_summary(
+        SELLABLE_OFFERS_PATH,
+        SELLABLE_SUMMARY_JSON_PATH,
+        SELLABLE_SUMMARY_MD_PATH,
+        kind="public_sellable_offers_preview",
+        repo_root=ROOT,
+    )
     REPORT_PATH.write_text(render_report(kept, hidden, stats, missing), encoding="utf-8")
     presentation_report = build_presentation_report(preview, schedule_future or {})
     presentation_policy_json_path.write_text(json.dumps(presentation_report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -508,7 +526,7 @@ def run() -> dict[str, Any]:
         "stats": stats,
         "missing": missing,
         "presentation_stats": presentation_report["stats"],
-        "output_paths": [SELLABLE_OFFERS_PATH, REPORT_PATH, presentation_policy_json_path, presentation_policy_report_path],
+        "output_paths": [SELLABLE_OFFERS_PATH, SELLABLE_SUMMARY_JSON_PATH, SELLABLE_SUMMARY_MD_PATH, REPORT_PATH, presentation_policy_json_path, presentation_policy_report_path],
     }
 
 

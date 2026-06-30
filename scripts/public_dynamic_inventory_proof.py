@@ -15,12 +15,14 @@ from urllib.parse import parse_qs, unquote_plus, urlparse
 from scripts import public_offer_integrity_audit as integrity
 
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 DOCS_DIR = ROOT / "docs"
 
-PUBLIC_SELLABLE_OFFERS_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
-DYNAMIC_OFFERS_PATH = AUDIT_DIR / "dynamic_offers_preview.json"
+PUBLIC_SELLABLE_OFFERS_PATH = public_sellable_offers_preview_path(ROOT)
+DYNAMIC_OFFERS_PATH = dynamic_offers_preview_path(ROOT)
 SEED_URL_PREVIEW_PATH = AUDIT_DIR / "seed_appointment_url_preview.json"
 SCHEDULE_FUTURE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"

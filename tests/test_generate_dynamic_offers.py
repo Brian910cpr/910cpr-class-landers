@@ -387,12 +387,16 @@ class DynamicOffersTest(unittest.TestCase):
             original_input_paths = generate_dynamic_offers.INPUT_PATHS
             original_audit_dir = generate_dynamic_offers.AUDIT_DIR
             original_offers = generate_dynamic_offers.OFFERS_PATH
+            original_offers_summary_json = generate_dynamic_offers.OFFERS_SUMMARY_JSON_PATH
+            original_offers_summary_md = generate_dynamic_offers.OFFERS_SUMMARY_MD_PATH
             original_report = generate_dynamic_offers.REPORT_PATH
             original_consumption_summary = generate_dynamic_offers.CONSUMPTION_SUMMARY_PATH
             original_consumption_report = generate_dynamic_offers.CONSUMPTION_REPORT_PATH
             try:
                 generate_dynamic_offers.AUDIT_DIR = audit_dir
-                generate_dynamic_offers.OFFERS_PATH = audit_dir / "dynamic_offers_preview.json"
+                generate_dynamic_offers.OFFERS_PATH = root / "data" / "runtime" / "audit_previews" / "dynamic_offers_preview.json"
+                generate_dynamic_offers.OFFERS_SUMMARY_JSON_PATH = audit_dir / "dynamic_offers_preview_summary.json"
+                generate_dynamic_offers.OFFERS_SUMMARY_MD_PATH = audit_dir / "dynamic_offers_preview_summary.md"
                 generate_dynamic_offers.REPORT_PATH = audit_dir / "dynamic_offers_report.md"
                 generate_dynamic_offers.CONSUMPTION_SUMMARY_PATH = audit_dir / "scheduler_consumption_window_summary.json"
                 generate_dynamic_offers.CONSUMPTION_REPORT_PATH = audit_dir / "scheduler_consumption_window_report.md"
@@ -414,15 +418,19 @@ class DynamicOffersTest(unittest.TestCase):
                 written = sorted(path.relative_to(root).as_posix() for path in audit_dir.glob("dynamic_offers_*"))
                 self.assertEqual(
                     [
-                        "data/audit/dynamic_offers_preview.json",
+                        "data/audit/dynamic_offers_preview_summary.json",
+                        "data/audit/dynamic_offers_preview_summary.md",
                         "data/audit/dynamic_offers_report.md",
                     ],
                     written,
                 )
+                self.assertTrue((root / "data" / "runtime" / "audit_previews" / "dynamic_offers_preview.json").exists())
             finally:
                 generate_dynamic_offers.INPUT_PATHS = original_input_paths
                 generate_dynamic_offers.AUDIT_DIR = original_audit_dir
                 generate_dynamic_offers.OFFERS_PATH = original_offers
+                generate_dynamic_offers.OFFERS_SUMMARY_JSON_PATH = original_offers_summary_json
+                generate_dynamic_offers.OFFERS_SUMMARY_MD_PATH = original_offers_summary_md
                 generate_dynamic_offers.REPORT_PATH = original_report
                 generate_dynamic_offers.CONSUMPTION_SUMMARY_PATH = original_consumption_summary
                 generate_dynamic_offers.CONSUMPTION_REPORT_PATH = original_consumption_report

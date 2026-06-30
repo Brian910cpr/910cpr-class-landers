@@ -9,11 +9,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.local_data_paths import public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 SEEDS_PATH = AUDIT_DIR / "schedule_seeds_preview.json"
 URL_PREVIEW_PATH = AUDIT_DIR / "seed_appointment_url_preview.json"
-PUBLIC_SELLABLE_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+PUBLIC_SELLABLE_PATH = public_sellable_offers_preview_path(ROOT)
 OLD_RENDER_PROOF_PATH = AUDIT_DIR / "august_bls_rendered_seed_proof.json"
 BLS_HTML_PATH = ROOT / "docs" / "bls.html"
 SCHEDULE_FUTURE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
@@ -202,7 +204,7 @@ def main() -> None:
         "stages": [
             {"stage": "selected seed output", "input": "data/audit/schedule_seeds_preview.json", "output": "data/audit/schedule_seeds_preview.json", "august_bls_seed_count": len(selected_august_bls), "four_selected_present": len(selected_august_bls) == 4},
             {"stage": "appointment URL preview", "input": "data/audit/schedule_seeds_preview.json", "output": "data/audit/seed_appointment_url_preview.json", "august_bls_seed_count": len(august_bls_previews), "four_selected_present": len(august_bls_previews) == 4},
-            {"stage": "public sellable candidates", "input": "data/audit/public_sellable_offers_preview.json", "output": "data/audit/public_sellable_offers_preview.json", "august_bls_text_count": len(august_bls_text_sellable), "august_aha_bls_enabled_course_count": len(august_bls_sellable), "note": "candidate pool, not final selected seed source"},
+            {"stage": "public sellable candidates", "input": "data/runtime/audit_previews/public_sellable_offers_preview.json", "output": "data/runtime/audit_previews/public_sellable_offers_preview.json", "august_bls_text_count": len(august_bls_text_sellable), "august_aha_bls_enabled_course_count": len(august_bls_sellable), "note": "candidate pool, not final selected seed source"},
             {"stage": "BLS hub render", "input": "data/audit/seed_appointment_url_preview.json + docs/data/schedule_future.json", "output": "docs/bls.html", "august_bls_seed_count": rendered_count, "four_selected_present": rendered_count == 4},
         ],
         "page_inventory_source": {
@@ -210,7 +212,7 @@ def main() -> None:
             "real_class_source": "docs/data/schedule_future.json or docs/data/canonical_schedule_from_class_report.json when authoritative",
             "selected_seed_source": "data/audit/seed_appointment_url_preview.json",
             "dynamic_url_proof_source": "data/audit/seed_appointment_url_preview.json",
-            "public_sellable_candidate_source": "data/audit/public_sellable_offers_preview.json",
+            "public_sellable_candidate_source": "data/runtime/audit_previews/public_sellable_offers_preview.json",
         },
         "counts": {
             "august_bls_public_sellable_candidates": len(august_bls_text_sellable),
@@ -251,7 +253,7 @@ def main() -> None:
         writer.writerow({"stage": "selected_august_bls_seeds", "before_count": 4, "after_count": len(selected_august_bls), "source": "data/audit/schedule_seeds_preview.json", "reason": "selected seed source unchanged"})
         writer.writerow({"stage": "august_bls_url_previews", "before_count": 4, "after_count": len(august_bls_previews), "source": "data/audit/seed_appointment_url_preview.json", "reason": "URL proof unchanged"})
         writer.writerow({"stage": "selected_august_bls_rendered_rows", "before_count": old_rendered, "after_count": rendered_count, "source": "docs/bls.html", "reason": "URL-preview rows now carry BLS tab IDs"})
-        writer.writerow({"stage": "august_bls_public_sellable_candidates", "before_count": len(august_bls_text_sellable), "after_count": len(august_bls_text_sellable), "source": "data/audit/public_sellable_offers_preview.json", "reason": "BLS-text candidate pool unchanged"})
+        writer.writerow({"stage": "august_bls_public_sellable_candidates", "before_count": len(august_bls_text_sellable), "after_count": len(august_bls_text_sellable), "source": "data/runtime/audit_previews/public_sellable_offers_preview.json", "reason": "BLS-text candidate pool unchanged"})
         writer.writerow({"stage": "duplicate_selected_seed_rows", "before_count": 0, "after_count": duplicate_count, "source": "docs/bls.html", "reason": "selected appointment URLs should render once"})
 
     TRACE_MD.write_text(
@@ -277,7 +279,7 @@ def main() -> None:
                 "- Builder: `scripts/build_slug_hubs.py`",
                 "- Real Enrollware/Class Report rows: `docs/data/schedule_future.json` or canonical Class Report schedule when authoritative.",
                 "- Selected appointment seed rows: `data/audit/seed_appointment_url_preview.json`.",
-                "- Candidate pool only: `data/audit/public_sellable_offers_preview.json`.",
+                "- Candidate pool only: `data/runtime/audit_previews/public_sellable_offers_preview.json`.",
                 "- Output page: `docs/bls.html`.",
                 "",
                 "## Fix",

@@ -9,13 +9,15 @@ from pathlib import Path
 from typing import Any
 
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 AUGUST_PREFIX = "2026-08"
 UNKNOWN = "UNKNOWN"
 
-DYNAMIC_PATH = AUDIT_DIR / "dynamic_offers_preview.json"
-PUBLIC_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+DYNAMIC_PATH = dynamic_offers_preview_path(ROOT)
+PUBLIC_PATH = public_sellable_offers_preview_path(ROOT)
 SEEDS_PATH = AUDIT_DIR / "schedule_seeds_preview.json"
 URLS_PATH = AUDIT_DIR / "seed_appointment_url_preview.json"
 LIVE_PATH = AUDIT_DIR / "live_availability_snapshot_preview.json"
@@ -296,8 +298,8 @@ def run() -> dict[str, Any]:
             "path": rel(path),
             "size_mb": file_mb(path),
             "tracked": rel(path) in tracked,
-            "downstream_tests_require_full_file": True,
-            "recommendation": "Keep temporarily on this review branch for exact audit reproducibility; long-term, store summarized/truncated previews in git and move full generated previews to runtime/debug or external artifact storage.",
+            "downstream_tests_require_full_file": False,
+            "recommendation": "Full generated preview is stored under ignored runtime storage. Keep compact summaries tracked in data/audit and regenerate the full preview locally when row-level audit detail is needed.",
         })
 
     summary = {
@@ -502,7 +504,7 @@ def render_large_file_md(files: list[dict[str, Any]]) -> str:
     lines = [
         "# Large Generated Audit File Policy",
         "",
-        "Status: report only. No files were deleted, moved, truncated, or compressed.",
+        "Status: full generated previews are stored under ignored runtime storage; compact summaries remain tracked in `data/audit`.",
         "",
         "| File | Size MB | Tracked | Downstream tests need full file now? | Recommendation |",
         "| --- | ---: | --- | --- | --- |",

@@ -1,0 +1,82 @@
+{
+  "behavior_change_intended": false,
+  "branch": "codex/large-preview-runtime-migration",
+  "docs_generation_depends_on_full_public_sellable_preview": true,
+  "generated_at": "2026-06-30T11:24:20",
+  "head": "aac616c0b65df555745a1ceb2b3a764b6cc46ab7",
+  "migration_decision": "Full generated previews are ignored runtime artifacts. Compact summaries and migration reports remain tracked.",
+  "old_tracked_paths": {
+    "data/audit/dynamic_offers_preview.json": {
+      "before_size_bytes": 103363008,
+      "exists": false,
+      "staged_for_deletion": true,
+      "tracked_after_commit": false,
+      "tracked_before_commit": true
+    },
+    "data/audit/public_sellable_offers_preview.json": {
+      "before_size_bytes": 101112247,
+      "exists": false,
+      "staged_for_deletion": true,
+      "tracked_after_commit": false,
+      "tracked_before_commit": true
+    }
+  },
+  "runtime_full_paths": {
+    "data/runtime/audit_previews/dynamic_offers_preview.json": {
+      "exists": true,
+      "size_bytes": 103363008,
+      "tracked": false
+    },
+    "data/runtime/audit_previews/public_sellable_offers_preview.json": {
+      "exists": true,
+      "size_bytes": 101112265,
+      "tracked": false
+    }
+  },
+  "runtime_public_site_depends_on_full_previews": false,
+  "tracked_summary_paths": {
+    "data/audit/dynamic_offers_preview_summary.json": {
+      "exists": true,
+      "size_bytes": 381,
+      "staged_for_add": true,
+      "summary": {
+        "august_bls_count": 4366,
+        "august_count": 20901,
+        "bls_count": 8738,
+        "full_preview_path": "data/runtime/audit_previews/dynamic_offers_preview.json",
+        "full_preview_size_bytes": 103363008,
+        "generated_at": "2026-06-30T11:20:58",
+        "kind": "dynamic_offers_preview",
+        "selected_seed_count": 0,
+        "top_rejection_or_hidden_reasons": [],
+        "total_count": 42909
+      },
+      "tracked_after_commit": true
+    },
+    "data/audit/public_sellable_offers_preview_summary.json": {
+      "exists": true,
+      "size_bytes": 388,
+      "staged_for_add": true,
+      "summary": {
+        "august_bls_count": 18,
+        "august_count": 60,
+        "bls_count": 63,
+        "full_preview_path": "data/runtime/audit_previews/public_sellable_offers_preview.json",
+        "full_preview_size_bytes": 101112265,
+        "generated_at": "2026-06-30T11:21:20",
+        "kind": "public_sellable_offers_preview",
+        "selected_seed_count": 0,
+        "top_rejection_or_hidden_reasons": [],
+        "total_count": 210
+      },
+      "tracked_after_commit": true
+    }
+  },
+  "validation_expectations": {
+    "august_bls_selected_seeds": 6,
+    "duplicate_selected_seed_rows": 0,
+    "initial_count": 3,
+    "preferred_time": "09:15",
+    "renewal_count": 3
+  }
+}

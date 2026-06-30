@@ -22,11 +22,11 @@ class AugustOfferExplosionAuditTest(unittest.TestCase):
         self.assertEqual(0, self.summary["august_rendered_seed_rows"])
         self.assertTrue(self.summary["safety_checks"]["rrule_expansion_creates_candidates_not_public_rows"])
 
-    def test_large_generated_files_are_tracked_review_artifacts(self) -> None:
+    def test_large_generated_files_are_runtime_artifacts(self) -> None:
         files = {item["path"]: item for item in self.summary["large_files"]}
-        self.assertTrue(files["data/audit/dynamic_offers_preview.json"]["tracked"])
-        self.assertTrue(files["data/audit/public_sellable_offers_preview.json"]["tracked"])
-        self.assertGreater(files["data/audit/dynamic_offers_preview.json"]["size_mb"], 50)
+        self.assertFalse(files["data/runtime/audit_previews/dynamic_offers_preview.json"]["tracked"])
+        self.assertFalse(files["data/runtime/audit_previews/public_sellable_offers_preview.json"]["tracked"])
+        self.assertGreater(files["data/runtime/audit_previews/dynamic_offers_preview.json"]["size_mb"], 50)
 
 
 if __name__ == "__main__":

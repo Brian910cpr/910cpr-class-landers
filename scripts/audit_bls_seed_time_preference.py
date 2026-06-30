@@ -9,11 +9,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 POLICY_PATH = ROOT / "data" / "config" / "seed_strategy_policy.json"
-DYNAMIC_PATH = AUDIT_DIR / "dynamic_offers_preview.json"
-SELLABLE_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+DYNAMIC_PATH = dynamic_offers_preview_path(ROOT)
+SELLABLE_PATH = public_sellable_offers_preview_path(ROOT)
 SEEDS_PATH = AUDIT_DIR / "schedule_seeds_preview.json"
 URLS_PATH = AUDIT_DIR / "seed_appointment_url_preview.json"
 BLS_HTML_PATH = ROOT / "docs" / "bls.html"

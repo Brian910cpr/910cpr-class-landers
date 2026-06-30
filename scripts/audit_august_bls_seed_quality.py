@@ -11,14 +11,16 @@ from pathlib import Path
 from typing import Any
 
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 AUGUST_PREFIX = "2026-08"
 PREFERRED_TIMES = ["09:15", "12:30", "18:15", "18:45"]
 UNKNOWN = "UNKNOWN"
 
-PUBLIC_SELLABLE_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
-DYNAMIC_PATH = AUDIT_DIR / "dynamic_offers_preview.json"
+PUBLIC_SELLABLE_PATH = public_sellable_offers_preview_path(ROOT)
+DYNAMIC_PATH = dynamic_offers_preview_path(ROOT)
 SEEDS_PATH = AUDIT_DIR / "schedule_seeds_preview.json"
 URLS_PATH = AUDIT_DIR / "seed_appointment_url_preview.json"
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
@@ -414,7 +416,7 @@ def render_file_policy_md(summary: dict[str, Any]) -> str:
         "",
         "Status: report only. No generated preview files were moved, deleted, truncated, or compressed.",
         "",
-        f"- `data/audit/public_sellable_offers_preview.json`: {summary['large_public_sellable_preview_size_mb']} MB",
+        f"- `data/runtime/audit_previews/public_sellable_offers_preview.json`: {summary['large_public_sellable_preview_size_mb']} MB",
         "- It remains tracked on this review branch because downstream audits currently read the full preview.",
         "- A summarized audit output can replace it long-term for Git history, provided local regeneration remains deterministic.",
         "- Recommended repo policy: keep compact summaries and CSVs in git; move full generated previews to ignored runtime/debug output or CI artifacts after review approval.",

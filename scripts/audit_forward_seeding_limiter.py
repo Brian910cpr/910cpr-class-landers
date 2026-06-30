@@ -11,6 +11,8 @@ from typing import Any
 
 from scripts import build_candidate_slot_report, build_live_availability_snapshot, build_seed_simulation_report, export_calendar_snapshots
 
+from scripts.local_data_paths import dynamic_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 DATA_CONFIG_DIR = ROOT / "data" / "config"
@@ -137,7 +139,7 @@ def classify_candidate(path: Path, line: str) -> str:
 def summarize() -> dict[str, Any]:
     seed_payload = read_json(ROOT / "debug" / "seed_simulation_report.json")
     live_payload = read_json(AUDIT_DIR / "live_availability_snapshot_preview.json")
-    dynamic_payload = read_json(AUDIT_DIR / "dynamic_offers_preview.json")
+    dynamic_payload = read_json(dynamic_offers_preview_path(ROOT))
     candidate_horizons = read_json(DATA_CONFIG_DIR / "candidate_horizons.json")
     seed_rules = read_json(DATA_CONFIG_DIR / "seed_selection_rules.json")
     calendar_sources = read_json(DATA_CONFIG_DIR / "calendar_sources.json")

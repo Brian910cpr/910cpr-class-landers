@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any
 
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 RUNTIME_DIR = ROOT / "data" / "runtime" / "calendar_snapshots"
@@ -58,8 +60,8 @@ def load_current() -> dict[str, Any]:
     return {
         "runtime_events": runtime_events(),
         "live": read_json(AUDIT_DIR / "live_availability_snapshot_preview.json"),
-        "dynamic": read_json(AUDIT_DIR / "dynamic_offers_preview.json"),
-        "public_sellable": read_json(AUDIT_DIR / "public_sellable_offers_preview.json"),
+        "dynamic": read_json(dynamic_offers_preview_path(ROOT)),
+        "public_sellable": read_json(public_sellable_offers_preview_path(ROOT)),
         "seeds": read_json(AUDIT_DIR / "schedule_seeds_preview.json"),
         "urls": read_json(AUDIT_DIR / "seed_appointment_url_preview.json"),
         "public_schedule": read_json(ROOT / "docs" / "public_schedule.json"),

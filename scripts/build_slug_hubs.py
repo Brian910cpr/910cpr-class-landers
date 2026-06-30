@@ -38,6 +38,8 @@ from supervisor.status_snapshot import write_status_snapshot
 from zoneinfo import ZoneInfo
 
 
+from scripts.local_data_paths import public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
@@ -45,7 +47,7 @@ CANONICAL_CLASS_REPORT_PATH = ROOT / "docs" / "data" / "canonical_schedule_from_
 CUSTOMER_FACING_OFFERS_PATH = ROOT / "docs" / "data" / "customer_facing_offers.json"
 FREE_TIME_SCHEDULER_CONFIG_PATH = ROOT / "docs" / "data" / "free_time_scheduler_config.json"
 SEED_APPOINTMENT_URL_PREVIEW_PATH = ROOT / "data" / "audit" / "seed_appointment_url_preview.json"
-PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH = ROOT / "data" / "audit" / "public_sellable_offers_preview.json"
+PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH = public_sellable_offers_preview_path(ROOT)
 PRESENTATION_POLICY_PREVIEW_PATH = ROOT / "data" / "audit" / "dynamic_offer_presentation_policy_report.json"
 UNIVERSAL_OFFER_INVENTORY_PATH = ROOT / "data" / "audit" / "universal_offer_inventory.json"
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"

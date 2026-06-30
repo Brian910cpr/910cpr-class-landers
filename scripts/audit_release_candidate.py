@@ -13,13 +13,15 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 DOCS_DIR = ROOT / "docs"
 
 PREVIEW_FILES = [
-    ROOT / "data" / "audit" / "dynamic_offers_preview.json",
-    ROOT / "data" / "audit" / "public_sellable_offers_preview.json",
+    dynamic_offers_preview_path(ROOT),
+    public_sellable_offers_preview_path(ROOT),
 ]
 
 RENDER_PAGES = [
@@ -362,10 +364,10 @@ def build_large_file_policy() -> dict:
         "files": files,
         "github_warning_threshold_mb": 50,
         "should_keep_tracked_long_term": False,
-        "safe_to_remove_in_this_release_candidate": False,
-        "reason_not_removed": "The active branch still has build, audit, and test code reading these exact tracked paths; removing or relocating them safely requires a separate migration that updates producers, consumers, tests, and tracked summary fixtures together.",
-        "recommended_policy": "Keep compact Markdown/JSON/CSV proof artifacts tracked. Move full generated previews to ignored runtime/debug/cache storage after a dedicated migration, and replace tests that assert large tracked files with summary-fixture assertions.",
-        "implemented_repo_hygiene": "No file deletion or relocation was performed in this release-candidate pass.",
+        "safe_to_remove_in_this_release_candidate": True,
+        "reason_not_removed": "",
+        "recommended_policy": "Keep compact Markdown/JSON/CSV proof artifacts tracked. Keep full generated previews under ignored runtime storage and regenerate them locally when row-level detail is needed.",
+        "implemented_repo_hygiene": "Full generated previews were moved to data/runtime/audit_previews/ and compact summaries remain tracked under data/audit/.",
     }
 
 

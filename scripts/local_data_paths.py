@@ -92,6 +92,34 @@ def print_resolved_path(resolved: ResolvedPath) -> None:
     print(f"{resolved.label}: {resolved.path} ({resolved.source})")
 
 
+def runtime_audit_preview_dir(repo_root: Path) -> Path:
+    return repo_root / "data" / "runtime" / "audit_previews"
+
+
+def dynamic_offers_preview_path(repo_root: Path) -> Path:
+    return runtime_audit_preview_dir(repo_root) / "dynamic_offers_preview.json"
+
+
+def public_sellable_offers_preview_path(repo_root: Path) -> Path:
+    return runtime_audit_preview_dir(repo_root) / "public_sellable_offers_preview.json"
+
+
+def dynamic_offers_preview_summary_json_path(repo_root: Path) -> Path:
+    return repo_root / "data" / "audit" / "dynamic_offers_preview_summary.json"
+
+
+def public_sellable_offers_preview_summary_json_path(repo_root: Path) -> Path:
+    return repo_root / "data" / "audit" / "public_sellable_offers_preview_summary.json"
+
+
+def dynamic_offers_preview_summary_md_path(repo_root: Path) -> Path:
+    return repo_root / "data" / "audit" / "dynamic_offers_preview_summary.md"
+
+
+def public_sellable_offers_preview_summary_md_path(repo_root: Path) -> Path:
+    return repo_root / "data" / "audit" / "public_sellable_offers_preview_summary.md"
+
+
 def missing_live_input_message(
     resolved: ResolvedPath,
     *,

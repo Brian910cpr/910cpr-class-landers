@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any
 
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 AUGUST_PREFIX = "2026-08"
@@ -18,8 +20,8 @@ POLICY_PATH = ROOT / "data" / "config" / "public_offer_policy.json"
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
 COURSE_MASTER_PATH = ROOT / "data" / "config" / "course_master.json"
 COURSE_MAP_PATH = ROOT / "data" / "config" / "course_map.json"
-DYNAMIC_PATH = AUDIT_DIR / "dynamic_offers_preview.json"
-PUBLIC_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+DYNAMIC_PATH = dynamic_offers_preview_path(ROOT)
+PUBLIC_PATH = public_sellable_offers_preview_path(ROOT)
 SEEDS_PATH = AUDIT_DIR / "schedule_seeds_preview.json"
 URLS_PATH = AUDIT_DIR / "seed_appointment_url_preview.json"
 INTEGRITY_PATH = AUDIT_DIR / "public_offer_integrity_report.json"
