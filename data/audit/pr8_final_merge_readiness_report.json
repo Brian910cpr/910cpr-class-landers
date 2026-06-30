@@ -1,0 +1,173 @@
+{
+  "diff_health": {
+    "compact_summaries_present": {
+      "data/audit/dynamic_offers_preview_summary.json": true,
+      "data/audit/large_preview_before_after_file_sizes.csv": true,
+      "data/audit/large_preview_runtime_migration_report.md": true,
+      "data/audit/public_sellable_offers_preview_summary.json": true
+    },
+    "files_added": 110,
+    "files_deleted": 2,
+    "files_modified": 44,
+    "old_giant_previews_tracked_at_head": {
+      "data/audit/dynamic_offers_preview.json": false,
+      "data/audit/public_sellable_offers_preview.json": false
+    },
+    "runtime_audit_previews_ignored": true,
+    "tracked_runtime_or_cache_file_count": 52802,
+    "tracked_runtime_or_cache_file_sample": [
+      "data/runtime/acls_hub_debug.json",
+      "data/runtime/arc_hub_debug.json",
+      "data/runtime/bls_hub_debug.json",
+      "data/runtime/build_course_at_city.json",
+      "data/runtime/build_courses.json",
+      "data/runtime/build_index_and_sitemap.json",
+      "data/runtime/build_locations.json",
+      "data/runtime/build_request_group_session.json",
+      "data/runtime/build_schedule_future.json",
+      "data/runtime/build_sessions_current.json",
+      "data/runtime/build_slug_hubs.json",
+      "data/runtime/calendar_snapshots/amy_availability.json",
+      "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+      "data/runtime/calendar_snapshots/nick_availability.json",
+      "data/runtime/enrollware_sync/20260427-074805/desired_sessions.json",
+      "data/runtime/enrollware_sync/20260427-074805/sync_report.json",
+      "data/runtime/enrollware_sync/20260427-074805/sync_report.md",
+      "data/runtime/enrollware_sync/playwright_scaffold_20260427-074844.json",
+      "data/runtime/enrollware_sync/reconciliation_20260427-074902.json",
+      "data/runtime/enrollware_sync/reconciliation_20260427-074950.json",
+      "data/runtime/group-training_hub_debug.json",
+      "data/runtime/heartsaver_hub_debug.json",
+      "data/runtime/hsi_hub_debug.json",
+      "data/runtime/pals_hub_debug.json",
+      "data/runtime/progress.json",
+      "data/runtime/uscg-elementary-first-aid-cpr_hub_debug.json",
+      "debug/344085_after_reload_discard_dirty.png",
+      "debug/344085_save_debug_after_click.png",
+      "debug/344085_save_debug_before_click.png",
+      "debug/after_save_test_209811.png"
+    ],
+    "unexpected_runtime_cache_files_tracked": false
+  },
+  "feature_behavior": {
+    "all_seed_times": [
+      "09:15"
+    ],
+    "august_bls_seed_count": 6,
+    "duplicate_selected_seed_rows": 0,
+    "heartcode_count": 0,
+    "initial_count": 3,
+    "passed": true,
+    "real_august_bls_rows": [
+      {
+        "date": "2026-08-14",
+        "href": "/classes/13601250.html#ForwardToEnrollware",
+        "label": "AHA BLS Provider (Initial)",
+        "time": "12:45"
+      },
+      {
+        "date": "2026-08-10",
+        "href": "/classes/12946259.html#ForwardToEnrollware",
+        "label": "AHA BLS Provider (Renewal)",
+        "time": "09:00"
+      }
+    ],
+    "renewal_count": 3,
+    "selected_seed_rows": [
+      {
+        "appointmentDayId": "260714",
+        "button_text": "Book This Class",
+        "courseId": "209806",
+        "date": "2026-08-04",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
+        "label": "AHA BLS Provider",
+        "startTime": "9:15 AM",
+        "time": "09:15"
+      },
+      {
+        "appointmentDayId": "260720",
+        "button_text": "Book This Class",
+        "courseId": "209806",
+        "date": "2026-08-10",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
+        "label": "AHA BLS Provider",
+        "startTime": "9:15 AM",
+        "time": "09:15"
+      },
+      {
+        "appointmentDayId": "260722",
+        "button_text": "Book This Class",
+        "courseId": "209806",
+        "date": "2026-08-12",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+        "label": "AHA BLS Provider",
+        "startTime": "9:15 AM",
+        "time": "09:15"
+      },
+      {
+        "appointmentDayId": "260713",
+        "button_text": "Book This Class",
+        "courseId": "359474",
+        "date": "2026-08-03",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
+        "label": "AHA BLS Provider Renewal",
+        "startTime": "9:15 AM",
+        "time": "09:15"
+      },
+      {
+        "appointmentDayId": "260715",
+        "button_text": "Book This Class",
+        "courseId": "359474",
+        "date": "2026-08-05",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
+        "label": "AHA BLS Provider Renewal",
+        "startTime": "9:15 AM",
+        "time": "09:15"
+      },
+      {
+        "appointmentDayId": "260721",
+        "button_text": "Book This Class",
+        "courseId": "359474",
+        "date": "2026-08-11",
+        "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
+        "label": "AHA BLS Provider Renewal",
+        "startTime": "9:15 AM",
+        "time": "09:15"
+      }
+    ],
+    "url_failures": []
+  },
+  "generated_at": "2026-06-30T13:26:43",
+  "human_approval_items": [
+    "Approve PR #8 for merge timing.",
+    "Approve no-deploy merge gate and any post-merge deploy window separately."
+  ],
+  "pr": {
+    "base": "main",
+    "number": 8,
+    "reviewed_feature_head_before_report_commit": "46fda0d09c0c277d0d63fc08c4da79171f59959f",
+    "source": "codex/august-seed-breakpoint",
+    "url": "https://github.com/Brian910cpr/910cpr-class-landers/pull/8"
+  },
+  "ready_to_deploy": false,
+  "ready_to_merge": true,
+  "recommended_next_command_if_ready": "Merge PR #8 in GitHub after human approval; do not deploy until release timing is approved.",
+  "remaining_blockers": [],
+  "safety": {
+    "course_344085_not_on_hsi": true,
+    "hsi_pediatric_449422_suppressed": true,
+    "passed": true,
+    "unknown_suppressed": true,
+    "visible_internal_word_hits": {}
+  },
+  "validations": {
+    "audit_august_bls_seed_quality": "passed",
+    "audit_august_offer_explosion": "passed",
+    "audit_august_seed_breakpoint": "passed",
+    "audit_bls_public_offer_policy_enablement": "passed",
+    "audit_bls_seed_time_preference": "passed",
+    "audit_live_availability_snapshot_trace": "passed",
+    "public_offer_integrity_audit": "passed, Audit failed: False",
+    "unittest_discover_tests": "passed, 163 tests OK"
+  }
+}
