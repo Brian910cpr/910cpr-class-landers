@@ -13,6 +13,7 @@ data/private/
 docs/data/private/
 *.local.xlsx
 data/runtime/free_time_scheduler/
+data/runtime/audit_previews/
 
 # Internal Zapier/Enrollware registration event imports and review bundles.
 # These can contain student/contact/payment/account clues and must not be

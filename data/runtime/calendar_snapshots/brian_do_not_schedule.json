@@ -1,335 +1,25 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-06-19T17:21:21.957209-04:00",
+  "generated_at": "2026-06-29T15:37:35.280712-04:00",
   "read_only_snapshot": true,
   "calendar_source_id": "brian_do_not_schedule",
   "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
   "source_type": "inverse_google_calendar",
   "source_display_name": "910CPR - Brian DoNotSchedule",
   "date_range": {
-    "start": "2026-06-19T17:21:21.208861-04:00",
-    "end": "2026-08-18T17:21:21.208861-04:00",
+    "start": "2026-06-29T15:37:34.470018-04:00",
+    "end": "2026-08-28T15:37:34.470018-04:00",
     "days": 60
   },
   "export_status": "ok",
   "url_source": "derived_public_ics_from_calendar_id",
-  "event_count": 13,
+  "event_count": 49,
   "events": [
-    {
-      "raw_properties": {
-        "DTSTART": "20260622T060000",
-        "DTEND": "20260622T083000",
-        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
-        "CREATED": "20260618T233949Z",
-        "LAST-MODIFIED": "20260618T233949Z",
-        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-        "SEQUENCE": "0",
-        "STATUS": "CONFIRMED",
-        "SUMMARY": "Jonah to LaCrosse",
-        "TRANSP": "OPAQUE"
-      },
-      "recurrence": [
-        {
-          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-        }
-      ],
-      "start_raw": "20260622T060000",
-      "start": "2026-06-22T06:00:00",
-      "calendar_source_id": "brian_do_not_schedule",
-      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
-      "source_type": "inverse_google_calendar",
-      "read_only_snapshot": true,
-      "end_raw": "20260622T083000",
-      "end": "2026-06-22T08:30:00",
-      "updated": "2026-06-18T23:39:49+00:00",
-      "event_id": "5898hq9hprslca7itssau3tq3j@google.com",
-      "created": "2026-06-18T23:39:49+00:00",
-      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED",
-      "title": "Jonah to LaCrosse",
-      "summary": "Jonah to LaCrosse",
-      "description": "",
-      "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
-    },
-    {
-      "raw_properties": {
-        "DTSTART": "20260704T120000Z",
-        "DTEND": "20260704T170000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "37d9u0mq0lh09sngouh6alou82@google.com",
-        "CREATED": "20260619T205823Z",
-        "LAST-MODIFIED": "20260619T211637Z",
-        "LOCATION": "CVS\\, 4600 Oleander Dr\\, Wilmington\\, NC 28403\\, USA",
-        "SEQUENCE": "0",
-        "STATUS": "CONFIRMED",
-        "SUMMARY": "TEST",
-        "TRANSP": "OPAQUE"
-      },
-      "recurrence": [],
-      "start_raw": "20260704T120000Z",
-      "start": "2026-07-04T12:00:00+00:00",
-      "calendar_source_id": "brian_do_not_schedule",
-      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
-      "source_type": "inverse_google_calendar",
-      "read_only_snapshot": true,
-      "end_raw": "20260704T170000Z",
-      "end": "2026-07-04T17:00:00+00:00",
-      "updated": "2026-06-19T21:16:37+00:00",
-      "event_id": "37d9u0mq0lh09sngouh6alou82@google.com",
-      "created": "2026-06-19T20:58:23+00:00",
-      "location": "CVS\\, 4600 Oleander Dr\\, Wilmington\\, NC 28403\\, USA",
-      "status": "CONFIRMED",
-      "title": "TEST",
-      "summary": "TEST",
-      "description": "",
-      "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
-    },
-    {
-      "raw_properties": {
-        "DTSTART": "20260630T220000Z",
-        "DTEND": "20260701T100000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "d7ivg6fscs60vqj8l9m24r9ja0@google.com",
-        "CREATED": "20260619T001651Z",
-        "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-06-30T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
-        "LAST-MODIFIED": "20260619T001651Z",
-        "LOCATION": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-        "SEQUENCE": "0",
-        "STATUS": "CONFIRMED",
-        "SUMMARY": "ADR F/R Shift",
-        "TRANSP": "OPAQUE"
-      },
-      "recurrence": [],
-      "start_raw": "20260630T220000Z",
-      "start": "2026-06-30T22:00:00+00:00",
-      "calendar_source_id": "brian_do_not_schedule",
-      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
-      "source_type": "inverse_google_calendar",
-      "read_only_snapshot": true,
-      "end_raw": "20260701T100000Z",
-      "end": "2026-07-01T10:00:00+00:00",
-      "updated": "2026-06-19T00:16:51+00:00",
-      "event_id": "d7ivg6fscs60vqj8l9m24r9ja0@google.com",
-      "created": "2026-06-19T00:16:51+00:00",
-      "description": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-06-30T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
-      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "status": "CONFIRMED",
-      "title": "ADR F/R Shift",
-      "summary": "ADR F/R Shift",
-      "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
-    },
-    {
-      "raw_properties": {
-        "DTSTART": "20260626T220000Z",
-        "DTEND": "20260627T100000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "1kc1pam65tvbjhakodoliftsh4@google.com",
-        "CREATED": "20260619T001650Z",
-        "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-06-26T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
-        "LAST-MODIFIED": "20260619T001650Z",
-        "LOCATION": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-        "SEQUENCE": "0",
-        "STATUS": "CONFIRMED",
-        "SUMMARY": "ADR F/R Shift",
-        "TRANSP": "OPAQUE"
-      },
-      "recurrence": [],
-      "start_raw": "20260626T220000Z",
-      "start": "2026-06-26T22:00:00+00:00",
-      "calendar_source_id": "brian_do_not_schedule",
-      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
-      "source_type": "inverse_google_calendar",
-      "read_only_snapshot": true,
-      "end_raw": "20260627T100000Z",
-      "end": "2026-06-27T10:00:00+00:00",
-      "updated": "2026-06-19T00:16:50+00:00",
-      "event_id": "1kc1pam65tvbjhakodoliftsh4@google.com",
-      "created": "2026-06-19T00:16:50+00:00",
-      "description": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-06-26T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
-      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "status": "CONFIRMED",
-      "title": "ADR F/R Shift",
-      "summary": "ADR F/R Shift",
-      "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
-    },
-    {
-      "raw_properties": {
-        "DTSTART": "20260704T040000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "4jgsd3masf2ccq7algku6rs7j8@google.com",
-        "CREATED": "20260619T001758Z",
-        "LAST-MODIFIED": "20260619T204426Z",
-        "SEQUENCE": "2",
-        "STATUS": "CONFIRMED",
-        "SUMMARY": "Fourth of July",
-        "TRANSP": "TRANSPARENT"
-      },
-      "recurrence": [],
-      "start_raw": "20260704T040000Z",
-      "start": "2026-07-04T04:00:00+00:00",
-      "calendar_source_id": "brian_do_not_schedule",
-      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
-      "source_type": "inverse_google_calendar",
-      "read_only_snapshot": true,
-      "updated": "2026-06-19T20:44:26+00:00",
-      "event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
-      "created": "2026-06-19T00:17:58+00:00",
-      "status": "CONFIRMED",
-      "title": "Fourth of July",
-      "summary": "Fourth of July",
-      "description": "",
-      "location": "",
-      "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
-    },
-    {
-      "raw_properties": {
-        "DTSTART": "20260704T163000Z",
-        "DTEND": "20260704T210100Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
-        "CREATED": "20260616T200353Z",
-        "LAST-MODIFIED": "20260616T200353Z",
-        "LOCATION": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
-        "SEQUENCE": "0",
-        "STATUS": "CONFIRMED",
-        "SUMMARY": "Beya's Fourth of July",
-        "TRANSP": "OPAQUE"
-      },
-      "recurrence": [],
-      "start_raw": "20260704T163000Z",
-      "start": "2026-07-04T16:30:00+00:00",
-      "calendar_source_id": "brian_do_not_schedule",
-      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
-      "source_type": "inverse_google_calendar",
-      "read_only_snapshot": true,
-      "end_raw": "20260704T210100Z",
-      "end": "2026-07-04T21:01:00+00:00",
-      "updated": "2026-06-16T20:03:53+00:00",
-      "event_id": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
-      "created": "2026-06-16T20:03:53+00:00",
-      "location": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED",
-      "title": "Beya's Fourth of July",
-      "summary": "Beya's Fourth of July",
-      "description": "",
-      "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
-    },
-    {
-      "raw_properties": {
-        "DTSTART": "20260619T220000Z",
-        "DTEND": "20260620T100000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "15pt2htulen4qt3cosom965d82@google.com",
-        "CREATED": "20260618T234207Z",
-        "LAST-MODIFIED": "20260619T002647Z",
-        "LOCATION": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-        "SEQUENCE": "1",
-        "STATUS": "CONFIRMED",
-        "SUMMARY": "ADR F/R",
-        "TRANSP": "OPAQUE"
-      },
-      "recurrence": [],
-      "start_raw": "20260619T220000Z",
-      "start": "2026-06-19T22:00:00+00:00",
-      "calendar_source_id": "brian_do_not_schedule",
-      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
-      "source_type": "inverse_google_calendar",
-      "read_only_snapshot": true,
-      "end_raw": "20260620T100000Z",
-      "end": "2026-06-20T10:00:00+00:00",
-      "updated": "2026-06-19T00:26:47+00:00",
-      "event_id": "15pt2htulen4qt3cosom965d82@google.com",
-      "created": "2026-06-18T23:42:07+00:00",
-      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "status": "CONFIRMED",
-      "title": "ADR F/R",
-      "summary": "ADR F/R",
-      "description": "",
-      "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
-    },
-    {
-      "raw_properties": {
-        "DTSTART": "20260623T080000Z",
-        "DTEND": "20260623T100000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "6nrdhqtuo4tmialep0dcfpqd7h@google.com",
-        "CREATED": "20260618T234008Z",
-        "LAST-MODIFIED": "20260618T234008Z",
-        "LOCATION": "Wilmington International Airport\\, 1740 Airport Blvd\\, Wilmington\\, NC 28405\\, USA",
-        "SEQUENCE": "0",
-        "STATUS": "CONFIRMED",
-        "SUMMARY": "Nick to ILM",
-        "TRANSP": "OPAQUE"
-      },
-      "recurrence": [],
-      "start_raw": "20260623T080000Z",
-      "start": "2026-06-23T08:00:00+00:00",
-      "calendar_source_id": "brian_do_not_schedule",
-      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
-      "source_type": "inverse_google_calendar",
-      "read_only_snapshot": true,
-      "end_raw": "20260623T100000Z",
-      "end": "2026-06-23T10:00:00+00:00",
-      "updated": "2026-06-18T23:40:08+00:00",
-      "event_id": "6nrdhqtuo4tmialep0dcfpqd7h@google.com",
-      "created": "2026-06-18T23:40:08+00:00",
-      "location": "Wilmington International Airport\\, 1740 Airport Blvd\\, Wilmington\\, NC 28405\\, USA",
-      "status": "CONFIRMED",
-      "title": "Nick to ILM",
-      "summary": "Nick to ILM",
-      "description": "",
-      "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
-    },
-    {
-      "raw_properties": {
-        "DTSTART": "20260624T100000Z",
-        "DTEND": "20260624T220000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "dfr280lgcf6jnf7e4s6jubis0s@google.com",
-        "CREATED": "20260619T001649Z",
-        "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:1ij3eg78e1smrd6c7ne27fim5u@google.com|2026-06-24T06:00:00]\\n[SOURCE_EVENT_ID:1ij3eg78e1smrd6c7ne27fim5u@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
-        "LAST-MODIFIED": "20260619T001649Z",
-        "LOCATION": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-        "SEQUENCE": "0",
-        "STATUS": "CONFIRMED",
-        "SUMMARY": "ADR F/R Shift",
-        "TRANSP": "OPAQUE"
-      },
-      "recurrence": [],
-      "start_raw": "20260624T100000Z",
-      "start": "2026-06-24T10:00:00+00:00",
-      "calendar_source_id": "brian_do_not_schedule",
-      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
-      "source_type": "inverse_google_calendar",
-      "read_only_snapshot": true,
-      "end_raw": "20260624T220000Z",
-      "end": "2026-06-24T22:00:00+00:00",
-      "updated": "2026-06-19T00:16:49+00:00",
-      "event_id": "dfr280lgcf6jnf7e4s6jubis0s@google.com",
-      "created": "2026-06-19T00:16:49+00:00",
-      "description": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:1ij3eg78e1smrd6c7ne27fim5u@google.com|2026-06-24T06:00:00]\\n[SOURCE_EVENT_ID:1ij3eg78e1smrd6c7ne27fim5u@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
-      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "status": "CONFIRMED",
-      "title": "ADR F/R Shift",
-      "summary": "ADR F/R Shift",
-      "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
-    },
     {
       "raw_properties": {
         "DTSTART": "20260629T220000Z",
         "DTEND": "20260630T100000Z",
-        "DTSTAMP": "20260619T212121Z",
+        "DTSTAMP": "20260629T193734Z",
         "UID": "tfa0iue3bqvd9qprfqfmuk20ho@google.com",
         "CREATED": "20260619T001650Z",
         "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-06-29T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
@@ -342,12 +32,14 @@
       },
       "recurrence": [],
       "start_raw": "20260629T220000Z",
+      "start_params": {},
       "start": "2026-06-29T22:00:00+00:00",
       "calendar_source_id": "brian_do_not_schedule",
       "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
       "source_type": "inverse_google_calendar",
       "read_only_snapshot": true,
       "end_raw": "20260630T100000Z",
+      "end_params": {},
       "end": "2026-06-30T10:00:00+00:00",
       "updated": "2026-06-19T00:16:50+00:00",
       "event_id": "tfa0iue3bqvd9qprfqfmuk20ho@google.com",
@@ -357,53 +49,78 @@
       "status": "CONFIRMED",
       "title": "ADR F/R Shift",
       "summary": "ADR F/R Shift",
+      "recurrence_source": "explicit_event",
+      "generated_from_rrule": false,
+      "original_uid": "tfa0iue3bqvd9qprfqfmuk20ho@google.com",
+      "recurrence_source_uid": "tfa0iue3bqvd9qprfqfmuk20ho@google.com",
       "creator": "UNKNOWN",
       "organizer": "UNKNOWN"
     },
     {
       "raw_properties": {
-        "DTSTART": "20260622T120000Z",
-        "DTEND": "20260622T160000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "cgojcopnc8s38b9hc4pmab9kc5hm6bb1cli6cb9i60q30dpm6thjgc31co@google.com",
-        "CREATED": "20260619T211544Z",
-        "DESCRIPTION": "CHRISTOPHER\\, please reply CONFIRM to confirm your Safelite appt for replacement service on 6/22/2026 between 8:00 AM - 12:00 PM. If you need to reschedule visit https://safel.it/qf6F6mbwHG.",
-        "LAST-MODIFIED": "20260619T211545Z",
-        "LOCATION": "4902 Merlot Crt\\nWilmington\\nNC\\n28409\\nUSA",
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
-        "SUMMARY": "Safelite Replace",
+        "SUMMARY": "Jonah to LaCrosse",
         "TRANSP": "OPAQUE"
       },
-      "recurrence": [],
-      "start_raw": "20260622T120000Z",
-      "start": "2026-06-22T12:00:00+00:00",
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-06-30T06:00:00-04:00",
       "calendar_source_id": "brian_do_not_schedule",
       "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
       "source_type": "inverse_google_calendar",
       "read_only_snapshot": true,
-      "end_raw": "20260622T160000Z",
-      "end": "2026-06-22T16:00:00+00:00",
-      "updated": "2026-06-19T21:15:45+00:00",
-      "event_id": "cgojcopnc8s38b9hc4pmab9kc5hm6bb1cli6cb9i60q30dpm6thjgc31co@google.com",
-      "created": "2026-06-19T21:15:44+00:00",
-      "description": "CHRISTOPHER\\, please reply CONFIRM to confirm your Safelite appt for replacement service on 6/22/2026 between 8:00 AM - 12:00 PM. If you need to reschedule visit https://safel.it/qf6F6mbwHG.",
-      "location": "4902 Merlot Crt\\nWilmington\\nNC\\n28409\\nUSA",
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-06-30T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260630T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED",
-      "title": "Safelite Replace",
-      "summary": "Safelite Replace",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
       "creator": "UNKNOWN",
-      "organizer": "UNKNOWN"
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-06-30T06:00:00-04:00",
+      "occurrence_end": "2026-06-30T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
     },
     {
       "raw_properties": {
-        "DTSTART": "20260621T220000Z",
-        "DTEND": "20260622T100000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "t89s00b1e8vc7ckc8l72201pto@google.com",
-        "CREATED": "20260619T001649Z",
-        "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-06-21T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
-        "LAST-MODIFIED": "20260619T001649Z",
+        "DTSTART": "20260630T220000Z",
+        "DTEND": "20260701T100000Z",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "d7ivg6fscs60vqj8l9m24r9ja0@google.com",
+        "CREATED": "20260619T001651Z",
+        "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-06-30T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+        "LAST-MODIFIED": "20260619T001651Z",
         "LOCATION": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -411,63 +128,2452 @@
         "TRANSP": "OPAQUE"
       },
       "recurrence": [],
-      "start_raw": "20260621T220000Z",
-      "start": "2026-06-21T22:00:00+00:00",
+      "start_raw": "20260630T220000Z",
+      "start_params": {},
+      "start": "2026-06-30T22:00:00+00:00",
       "calendar_source_id": "brian_do_not_schedule",
       "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
       "source_type": "inverse_google_calendar",
       "read_only_snapshot": true,
-      "end_raw": "20260622T100000Z",
-      "end": "2026-06-22T10:00:00+00:00",
-      "updated": "2026-06-19T00:16:49+00:00",
-      "event_id": "t89s00b1e8vc7ckc8l72201pto@google.com",
-      "created": "2026-06-19T00:16:49+00:00",
-      "description": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-06-21T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+      "end_raw": "20260701T100000Z",
+      "end_params": {},
+      "end": "2026-07-01T10:00:00+00:00",
+      "updated": "2026-06-19T00:16:51+00:00",
+      "event_id": "d7ivg6fscs60vqj8l9m24r9ja0@google.com",
+      "created": "2026-06-19T00:16:51+00:00",
+      "description": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-06-30T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
       "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "status": "CONFIRMED",
       "title": "ADR F/R Shift",
       "summary": "ADR F/R Shift",
+      "recurrence_source": "explicit_event",
+      "generated_from_rrule": false,
+      "original_uid": "d7ivg6fscs60vqj8l9m24r9ja0@google.com",
+      "recurrence_source_uid": "d7ivg6fscs60vqj8l9m24r9ja0@google.com",
       "creator": "UNKNOWN",
       "organizer": "UNKNOWN"
     },
     {
       "raw_properties": {
-        "DTSTART": "20260621T170000Z",
-        "DTEND": "20260621T210000Z",
-        "DTSTAMP": "20260619T212121Z",
-        "UID": "0anh74c8rov075p9j08875rjjn@google.com",
-        "CREATED": "20260619T193735Z",
-        "LAST-MODIFIED": "20260619T193736Z",
-        "LOCATION": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
-        "SUMMARY": "Fathers' Day @ Beya's",
+        "SUMMARY": "Jonah to LaCrosse",
         "TRANSP": "OPAQUE"
       },
-      "recurrence": [],
-      "start_raw": "20260621T170000Z",
-      "start": "2026-06-21T17:00:00+00:00",
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-01T06:00:00-04:00",
       "calendar_source_id": "brian_do_not_schedule",
       "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
       "source_type": "inverse_google_calendar",
       "read_only_snapshot": true,
-      "end_raw": "20260621T210000Z",
-      "end": "2026-06-21T21:00:00+00:00",
-      "updated": "2026-06-19T19:37:36+00:00",
-      "event_id": "0anh74c8rov075p9j08875rjjn@google.com",
-      "created": "2026-06-19T19:37:35+00:00",
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-01T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260701T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-01T06:00:00-04:00",
+      "occurrence_end": "2026-07-01T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260701T100000Z",
+        "DTEND": "20260701T220000Z",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "1r302f1rhorat32q6ojm03uqdk@google.com",
+        "CREATED": "20260629T190909Z",
+        "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:1ij3eg78e1smrd6c7ne27fim5u@google.com|2026-07-01T06:00:00]\\n[SOURCE_EVENT_ID:1ij3eg78e1smrd6c7ne27fim5u@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+        "LAST-MODIFIED": "20260629T190909Z",
+        "LOCATION": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "ADR F/R Shift",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [],
+      "start_raw": "20260701T100000Z",
+      "start_params": {},
+      "start": "2026-07-01T10:00:00+00:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260701T220000Z",
+      "end_params": {},
+      "end": "2026-07-01T22:00:00+00:00",
+      "updated": "2026-06-29T19:09:09+00:00",
+      "event_id": "1r302f1rhorat32q6ojm03uqdk@google.com",
+      "created": "2026-06-29T19:09:09+00:00",
+      "description": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:1ij3eg78e1smrd6c7ne27fim5u@google.com|2026-07-01T06:00:00]\\n[SOURCE_EVENT_ID:1ij3eg78e1smrd6c7ne27fim5u@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "status": "CONFIRMED",
+      "title": "ADR F/R Shift",
+      "summary": "ADR F/R Shift",
+      "recurrence_source": "explicit_event",
+      "generated_from_rrule": false,
+      "original_uid": "1r302f1rhorat32q6ojm03uqdk@google.com",
+      "recurrence_source_uid": "1r302f1rhorat32q6ojm03uqdk@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-02T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-02T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260702T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-02T06:00:00-04:00",
+      "occurrence_end": "2026-07-02T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260702T220000Z",
+        "DTEND": "20260703T100000Z",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "bpgnf8evrnn7k5qnsgak6jmrjg@google.com",
+        "CREATED": "20260629T192409Z",
+        "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-07-02T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+        "LAST-MODIFIED": "20260629T192410Z",
+        "LOCATION": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "ADR F/R Shift",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [],
+      "start_raw": "20260702T220000Z",
+      "start_params": {},
+      "start": "2026-07-02T22:00:00+00:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260703T100000Z",
+      "end_params": {},
+      "end": "2026-07-03T10:00:00+00:00",
+      "updated": "2026-06-29T19:24:10+00:00",
+      "event_id": "bpgnf8evrnn7k5qnsgak6jmrjg@google.com",
+      "created": "2026-06-29T19:24:09+00:00",
+      "description": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-07-02T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "status": "CONFIRMED",
+      "title": "ADR F/R Shift",
+      "summary": "ADR F/R Shift",
+      "recurrence_source": "explicit_event",
+      "generated_from_rrule": false,
+      "original_uid": "bpgnf8evrnn7k5qnsgak6jmrjg@google.com",
+      "recurrence_source_uid": "bpgnf8evrnn7k5qnsgak6jmrjg@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-03T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-03T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260703T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-03T06:00:00-04:00",
+      "occurrence_end": "2026-07-03T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260704T040000Z",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+        "CREATED": "20260619T001758Z",
+        "LAST-MODIFIED": "20260619T204426Z",
+        "SEQUENCE": "2",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Fourth of July",
+        "TRANSP": "TRANSPARENT"
+      },
+      "recurrence": [],
+      "start_raw": "20260704T040000Z",
+      "start_params": {},
+      "start": "2026-07-04T04:00:00+00:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "updated": "2026-06-19T20:44:26+00:00",
+      "event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+      "created": "2026-06-19T00:17:58+00:00",
+      "status": "CONFIRMED",
+      "title": "Fourth of July",
+      "summary": "Fourth of July",
+      "recurrence_source": "explicit_event",
+      "generated_from_rrule": false,
+      "original_uid": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+      "recurrence_source_uid": "4jgsd3masf2ccq7algku6rs7j8@google.com",
+      "description": "",
+      "location": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260704T154500Z",
+        "DTEND": "20260704T210000Z",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
+        "CREATED": "20260616T200353Z",
+        "LAST-MODIFIED": "20260629T041658Z",
+        "LOCATION": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Beya's Fourth of July",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [],
+      "start_raw": "20260704T154500Z",
+      "start_params": {},
+      "start": "2026-07-04T15:45:00+00:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260704T210000Z",
+      "end_params": {},
+      "end": "2026-07-04T21:00:00+00:00",
+      "updated": "2026-06-29T04:16:58+00:00",
+      "event_id": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
+      "created": "2026-06-16T20:03:53+00:00",
       "location": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED",
-      "title": "Fathers' Day @ Beya's",
-      "summary": "Fathers' Day @ Beya's",
+      "title": "Beya's Fourth of July",
+      "summary": "Beya's Fourth of July",
+      "recurrence_source": "explicit_event",
+      "generated_from_rrule": false,
+      "original_uid": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
+      "recurrence_source_uid": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
       "description": "",
       "creator": "UNKNOWN",
       "organizer": "UNKNOWN"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260705T220000Z",
+        "DTEND": "20260706T100000Z",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "ihsdri9u0e2k2000hh1i4tfqdo@google.com",
+        "CREATED": "20260629T192411Z",
+        "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-07-05T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+        "LAST-MODIFIED": "20260629T192411Z",
+        "LOCATION": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "ADR F/R Shift",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [],
+      "start_raw": "20260705T220000Z",
+      "start_params": {},
+      "start": "2026-07-05T22:00:00+00:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260706T100000Z",
+      "end_params": {},
+      "end": "2026-07-06T10:00:00+00:00",
+      "updated": "2026-06-29T19:24:11+00:00",
+      "event_id": "ihsdri9u0e2k2000hh1i4tfqdo@google.com",
+      "created": "2026-06-29T19:24:11+00:00",
+      "description": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:61b1ftdargolu9o4kb6otp5q7t@google.com|2026-07-05T18:00:00]\\n[SOURCE_EVENT_ID:61b1ftdargolu9o4kb6otp5q7t@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "status": "CONFIRMED",
+      "title": "ADR F/R Shift",
+      "summary": "ADR F/R Shift",
+      "recurrence_source": "explicit_event",
+      "generated_from_rrule": false,
+      "original_uid": "ihsdri9u0e2k2000hh1i4tfqdo@google.com",
+      "recurrence_source_uid": "ihsdri9u0e2k2000hh1i4tfqdo@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-06T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-06T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260706T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-06T06:00:00-04:00",
+      "occurrence_end": "2026-07-06T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-07T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-07T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260707T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-07T06:00:00-04:00",
+      "occurrence_end": "2026-07-07T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-08T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-08T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260708T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-08T06:00:00-04:00",
+      "occurrence_end": "2026-07-08T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260708T100000Z",
+        "DTEND": "20260708T220000Z",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "m0rgl3apldd2lqtkm7u917q57k@google.com",
+        "CREATED": "20260629T192412Z",
+        "DESCRIPTION": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:1ij3eg78e1smrd6c7ne27fim5u@google.com|2026-07-08T06:00:00]\\n[SOURCE_EVENT_ID:1ij3eg78e1smrd6c7ne27fim5u@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+        "LAST-MODIFIED": "20260629T192412Z",
+        "LOCATION": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "ADR F/R Shift",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [],
+      "start_raw": "20260708T100000Z",
+      "start_params": {},
+      "start": "2026-07-08T10:00:00+00:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260708T220000Z",
+      "end_params": {},
+      "end": "2026-07-08T22:00:00+00:00",
+      "updated": "2026-06-29T19:24:12+00:00",
+      "event_id": "m0rgl3apldd2lqtkm7u917q57k@google.com",
+      "created": "2026-06-29T19:24:12+00:00",
+      "description": "Copied from source calendar because it matched \"brian\".\\n\\n[SOURCE_EVENT_KEY:1ij3eg78e1smrd6c7ne27fim5u@google.com|2026-07-08T06:00:00]\\n[SOURCE_EVENT_ID:1ij3eg78e1smrd6c7ne27fim5u@google.com]\\n\\nOriginal title:\\nBrian\\n\\nOriginal description:\\n",
+      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "status": "CONFIRMED",
+      "title": "ADR F/R Shift",
+      "summary": "ADR F/R Shift",
+      "recurrence_source": "explicit_event",
+      "generated_from_rrule": false,
+      "original_uid": "m0rgl3apldd2lqtkm7u917q57k@google.com",
+      "recurrence_source_uid": "m0rgl3apldd2lqtkm7u917q57k@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-09T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-09T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260709T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-09T06:00:00-04:00",
+      "occurrence_end": "2026-07-09T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-10T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-10T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260710T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-10T06:00:00-04:00",
+      "occurrence_end": "2026-07-10T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-13T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-13T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260713T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-13T06:00:00-04:00",
+      "occurrence_end": "2026-07-13T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-14T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-14T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260714T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-14T06:00:00-04:00",
+      "occurrence_end": "2026-07-14T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-15T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-15T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260715T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-15T06:00:00-04:00",
+      "occurrence_end": "2026-07-15T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-16T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-16T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260716T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-16T06:00:00-04:00",
+      "occurrence_end": "2026-07-16T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-17T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-17T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260717T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-17T06:00:00-04:00",
+      "occurrence_end": "2026-07-17T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260717T183000Z",
+        "DTEND": "20260717T191500Z",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "651ai0vvnfl7kvvvd9k4kl23dv@google.com",
+        "X-GOOGLE-CONFERENCE": "https://meet.google.com/wee-rusp-hou",
+        "CREATED": "20260622T204412Z",
+        "DESCRIPTION": "Join with Google Meet: https://meet.google.com/wee-rusp-hou\\nOr dial: (US) +1 314-833-0686 PIN: 358621950#\\nMore phone numbers: https://tel.meet/wee-rusp-hou?pin=7244083091616&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+        "LAST-MODIFIED": "20260622T204415Z",
+        "LOCATION": "Browning Orthodontics\\, 604 Junction Creek Dr\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Browning Orthodon",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [],
+      "start_raw": "20260717T183000Z",
+      "start_params": {},
+      "start": "2026-07-17T18:30:00+00:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260717T191500Z",
+      "end_params": {},
+      "end": "2026-07-17T19:15:00+00:00",
+      "updated": "2026-06-22T20:44:15+00:00",
+      "event_id": "651ai0vvnfl7kvvvd9k4kl23dv@google.com",
+      "created": "2026-06-22T20:44:12+00:00",
+      "description": "Join with Google Meet: https://meet.google.com/wee-rusp-hou\\nOr dial: (US) +1 314-833-0686 PIN: 358621950#\\nMore phone numbers: https://tel.meet/wee-rusp-hou?pin=7244083091616&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+      "location": "Browning Orthodontics\\, 604 Junction Creek Dr\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Browning Orthodon",
+      "summary": "Browning Orthodon",
+      "recurrence_source": "explicit_event",
+      "generated_from_rrule": false,
+      "original_uid": "651ai0vvnfl7kvvvd9k4kl23dv@google.com",
+      "recurrence_source_uid": "651ai0vvnfl7kvvvd9k4kl23dv@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-20T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-20T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260720T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-20T06:00:00-04:00",
+      "occurrence_end": "2026-07-20T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-21T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-21T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260721T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-21T06:00:00-04:00",
+      "occurrence_end": "2026-07-21T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-22T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-22T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260722T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-22T06:00:00-04:00",
+      "occurrence_end": "2026-07-22T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-23T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-23T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260723T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-23T06:00:00-04:00",
+      "occurrence_end": "2026-07-23T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-24T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-24T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260724T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-24T06:00:00-04:00",
+      "occurrence_end": "2026-07-24T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-27T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-27T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260727T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-27T06:00:00-04:00",
+      "occurrence_end": "2026-07-27T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-28T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-28T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260728T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-28T06:00:00-04:00",
+      "occurrence_end": "2026-07-28T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-29T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-29T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260729T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-29T06:00:00-04:00",
+      "occurrence_end": "2026-07-29T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-30T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-30T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260730T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-30T06:00:00-04:00",
+      "occurrence_end": "2026-07-30T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260622T060000",
+        "DTEND": "20260622T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "EXDATE": "20260622T060000",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "5898hq9hprslca7itssau3tq3j@google.com",
+        "CREATED": "20260618T233949Z",
+        "LAST-MODIFIED": "20260622T103122Z",
+        "LOCATION": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "Jonah to LaCrosse",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        },
+        {
+          "exdate": "20260622T060000"
+        }
+      ],
+      "start_raw": "20260622T060000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-07-31T06:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260622T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-07-31T08:30:00-04:00",
+      "updated": "2026-06-22T10:31:22+00:00",
+      "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260731T0600000400",
+      "created": "2026-06-18T23:39:49+00:00",
+      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "Jonah to LaCrosse",
+      "summary": "Jonah to LaCrosse",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "recurrence_source_uid": "5898hq9hprslca7itssau3tq3j@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-07-31T06:00:00-04:00",
+      "occurrence_end": "2026-07-31T08:30:00-04:00",
+      "recurring_master_event_id": "5898hq9hprslca7itssau3tq3j@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T063000",
+        "DTEND": "20260819T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+        "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
+        "CREATED": "20260605T190959Z",
+        "DESCRIPTION": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+        "LAST-MODIFIED": "20260605T191309Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Drop Off",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        }
+      ],
+      "start_raw": "20260819T063000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-19T06:30:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-19T08:30:00-04:00",
+      "updated": "2026-06-05T19:13:09+00:00",
+      "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260819T0630000400",
+      "created": "2026-06-05T19:09:59+00:00",
+      "description": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Drop Off",
+      "summary": "CFA Drop Off",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "recurrence_source_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-19T06:30:00-04:00",
+      "occurrence_end": "2026-08-19T08:30:00-04:00",
+      "recurring_master_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T150000",
+        "DTEND": "20260819T173000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+        "CREATED": "20260605T191527Z",
+        "LAST-MODIFIED": "20260605T191618Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Pickup",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+        }
+      ],
+      "start_raw": "20260819T150000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-19T15:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T173000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-19T17:30:00-04:00",
+      "updated": "2026-06-05T19:16:18+00:00",
+      "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260819T1500000400",
+      "created": "2026-06-05T19:15:27+00:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Pickup",
+      "summary": "CFA Pickup",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "recurrence_source_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-19T15:00:00-04:00",
+      "occurrence_end": "2026-08-19T17:30:00-04:00",
+      "recurring_master_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T063000",
+        "DTEND": "20260819T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+        "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
+        "CREATED": "20260605T190959Z",
+        "DESCRIPTION": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+        "LAST-MODIFIED": "20260605T191309Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Drop Off",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        }
+      ],
+      "start_raw": "20260819T063000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-20T06:30:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-20T08:30:00-04:00",
+      "updated": "2026-06-05T19:13:09+00:00",
+      "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260820T0630000400",
+      "created": "2026-06-05T19:09:59+00:00",
+      "description": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Drop Off",
+      "summary": "CFA Drop Off",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "recurrence_source_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-20T06:30:00-04:00",
+      "occurrence_end": "2026-08-20T08:30:00-04:00",
+      "recurring_master_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T150000",
+        "DTEND": "20260819T173000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+        "CREATED": "20260605T191527Z",
+        "LAST-MODIFIED": "20260605T191618Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Pickup",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+        }
+      ],
+      "start_raw": "20260819T150000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-20T15:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T173000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-20T17:30:00-04:00",
+      "updated": "2026-06-05T19:16:18+00:00",
+      "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260820T1500000400",
+      "created": "2026-06-05T19:15:27+00:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Pickup",
+      "summary": "CFA Pickup",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "recurrence_source_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-20T15:00:00-04:00",
+      "occurrence_end": "2026-08-20T17:30:00-04:00",
+      "recurring_master_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T063000",
+        "DTEND": "20260819T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+        "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
+        "CREATED": "20260605T190959Z",
+        "DESCRIPTION": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+        "LAST-MODIFIED": "20260605T191309Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Drop Off",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        }
+      ],
+      "start_raw": "20260819T063000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-21T06:30:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-21T08:30:00-04:00",
+      "updated": "2026-06-05T19:13:09+00:00",
+      "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260821T0630000400",
+      "created": "2026-06-05T19:09:59+00:00",
+      "description": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Drop Off",
+      "summary": "CFA Drop Off",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "recurrence_source_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-21T06:30:00-04:00",
+      "occurrence_end": "2026-08-21T08:30:00-04:00",
+      "recurring_master_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T150000",
+        "DTEND": "20260819T173000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+        "CREATED": "20260605T191527Z",
+        "LAST-MODIFIED": "20260605T191618Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Pickup",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+        }
+      ],
+      "start_raw": "20260819T150000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-21T15:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T173000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-21T17:30:00-04:00",
+      "updated": "2026-06-05T19:16:18+00:00",
+      "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260821T1500000400",
+      "created": "2026-06-05T19:15:27+00:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Pickup",
+      "summary": "CFA Pickup",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "recurrence_source_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-21T15:00:00-04:00",
+      "occurrence_end": "2026-08-21T17:30:00-04:00",
+      "recurring_master_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T063000",
+        "DTEND": "20260819T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+        "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
+        "CREATED": "20260605T190959Z",
+        "DESCRIPTION": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+        "LAST-MODIFIED": "20260605T191309Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Drop Off",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        }
+      ],
+      "start_raw": "20260819T063000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-24T06:30:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-24T08:30:00-04:00",
+      "updated": "2026-06-05T19:13:09+00:00",
+      "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260824T0630000400",
+      "created": "2026-06-05T19:09:59+00:00",
+      "description": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Drop Off",
+      "summary": "CFA Drop Off",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "recurrence_source_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-24T06:30:00-04:00",
+      "occurrence_end": "2026-08-24T08:30:00-04:00",
+      "recurring_master_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T150000",
+        "DTEND": "20260819T173000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+        "CREATED": "20260605T191527Z",
+        "LAST-MODIFIED": "20260605T191618Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Pickup",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+        }
+      ],
+      "start_raw": "20260819T150000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-24T15:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T173000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-24T17:30:00-04:00",
+      "updated": "2026-06-05T19:16:18+00:00",
+      "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260824T1500000400",
+      "created": "2026-06-05T19:15:27+00:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Pickup",
+      "summary": "CFA Pickup",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "recurrence_source_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-24T15:00:00-04:00",
+      "occurrence_end": "2026-08-24T17:30:00-04:00",
+      "recurring_master_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T063000",
+        "DTEND": "20260819T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+        "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
+        "CREATED": "20260605T190959Z",
+        "DESCRIPTION": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+        "LAST-MODIFIED": "20260605T191309Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Drop Off",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        }
+      ],
+      "start_raw": "20260819T063000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-25T06:30:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-25T08:30:00-04:00",
+      "updated": "2026-06-05T19:13:09+00:00",
+      "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260825T0630000400",
+      "created": "2026-06-05T19:09:59+00:00",
+      "description": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Drop Off",
+      "summary": "CFA Drop Off",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "recurrence_source_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-25T06:30:00-04:00",
+      "occurrence_end": "2026-08-25T08:30:00-04:00",
+      "recurring_master_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T150000",
+        "DTEND": "20260819T173000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+        "CREATED": "20260605T191527Z",
+        "LAST-MODIFIED": "20260605T191618Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Pickup",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+        }
+      ],
+      "start_raw": "20260819T150000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-25T15:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T173000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-25T17:30:00-04:00",
+      "updated": "2026-06-05T19:16:18+00:00",
+      "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260825T1500000400",
+      "created": "2026-06-05T19:15:27+00:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Pickup",
+      "summary": "CFA Pickup",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "recurrence_source_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-25T15:00:00-04:00",
+      "occurrence_end": "2026-08-25T17:30:00-04:00",
+      "recurring_master_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T063000",
+        "DTEND": "20260819T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+        "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
+        "CREATED": "20260605T190959Z",
+        "DESCRIPTION": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+        "LAST-MODIFIED": "20260605T191309Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Drop Off",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        }
+      ],
+      "start_raw": "20260819T063000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-26T06:30:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-26T08:30:00-04:00",
+      "updated": "2026-06-05T19:13:09+00:00",
+      "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260826T0630000400",
+      "created": "2026-06-05T19:09:59+00:00",
+      "description": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Drop Off",
+      "summary": "CFA Drop Off",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "recurrence_source_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-26T06:30:00-04:00",
+      "occurrence_end": "2026-08-26T08:30:00-04:00",
+      "recurring_master_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T150000",
+        "DTEND": "20260819T173000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+        "CREATED": "20260605T191527Z",
+        "LAST-MODIFIED": "20260605T191618Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Pickup",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+        }
+      ],
+      "start_raw": "20260819T150000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-26T15:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T173000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-26T17:30:00-04:00",
+      "updated": "2026-06-05T19:16:18+00:00",
+      "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260826T1500000400",
+      "created": "2026-06-05T19:15:27+00:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Pickup",
+      "summary": "CFA Pickup",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "recurrence_source_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-26T15:00:00-04:00",
+      "occurrence_end": "2026-08-26T17:30:00-04:00",
+      "recurring_master_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T063000",
+        "DTEND": "20260819T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+        "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
+        "CREATED": "20260605T190959Z",
+        "DESCRIPTION": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+        "LAST-MODIFIED": "20260605T191309Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Drop Off",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        }
+      ],
+      "start_raw": "20260819T063000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-27T06:30:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-27T08:30:00-04:00",
+      "updated": "2026-06-05T19:13:09+00:00",
+      "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260827T0630000400",
+      "created": "2026-06-05T19:09:59+00:00",
+      "description": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Drop Off",
+      "summary": "CFA Drop Off",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "recurrence_source_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-27T06:30:00-04:00",
+      "occurrence_end": "2026-08-27T08:30:00-04:00",
+      "recurring_master_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T150000",
+        "DTEND": "20260819T173000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+        "CREATED": "20260605T191527Z",
+        "LAST-MODIFIED": "20260605T191618Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Pickup",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+        }
+      ],
+      "start_raw": "20260819T150000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-27T15:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T173000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-27T17:30:00-04:00",
+      "updated": "2026-06-05T19:16:18+00:00",
+      "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260827T1500000400",
+      "created": "2026-06-05T19:15:27+00:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Pickup",
+      "summary": "CFA Pickup",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "recurrence_source_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-27T15:00:00-04:00",
+      "occurrence_end": "2026-08-27T17:30:00-04:00",
+      "recurring_master_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T063000",
+        "DTEND": "20260819T083000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+        "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
+        "CREATED": "20260605T190959Z",
+        "DESCRIPTION": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+        "LAST-MODIFIED": "20260605T191309Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "0",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Drop Off",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+        }
+      ],
+      "start_raw": "20260819T063000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-28T06:30:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T083000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-28T08:30:00-04:00",
+      "updated": "2026-06-05T19:13:09+00:00",
+      "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260828T0630000400",
+      "created": "2026-06-05T19:09:59+00:00",
+      "description": "Join with Google Meet: https://meet.google.com/qff-qwmq-qmc\\nOr dial: (US) +1 252-381-0260 PIN: 219977292#\\nMore phone numbers: https://tel.meet/qff-qwmq-qmc?pin=7463505085115&hs=7\\n\\nLearn more about Meet at: https://support.google.com/a/users/answer/9282720",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Drop Off",
+      "summary": "CFA Drop Off",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "recurrence_source_uid": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-28T06:30:00-04:00",
+      "occurrence_end": "2026-08-28T08:30:00-04:00",
+      "recurring_master_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com"
+    },
+    {
+      "raw_properties": {
+        "DTSTART": "20260819T150000",
+        "DTEND": "20260819T173000",
+        "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "DTSTAMP": "20260629T193734Z",
+        "UID": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+        "CREATED": "20260605T191527Z",
+        "LAST-MODIFIED": "20260605T191618Z",
+        "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+        "SEQUENCE": "1",
+        "STATUS": "CONFIRMED",
+        "SUMMARY": "CFA Pickup",
+        "TRANSP": "OPAQUE"
+      },
+      "recurrence": [
+        {
+          "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+        }
+      ],
+      "start_raw": "20260819T150000",
+      "start_params": {
+        "TZID": "America/New_York"
+      },
+      "start": "2026-08-28T15:00:00-04:00",
+      "calendar_source_id": "brian_do_not_schedule",
+      "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
+      "source_type": "inverse_google_calendar",
+      "read_only_snapshot": true,
+      "end_raw": "20260819T173000",
+      "end_params": {
+        "TZID": "America/New_York"
+      },
+      "end": "2026-08-28T17:30:00-04:00",
+      "updated": "2026-06-05T19:16:18+00:00",
+      "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260828T1500000400",
+      "created": "2026-06-05T19:15:27+00:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED",
+      "title": "CFA Pickup",
+      "summary": "CFA Pickup",
+      "recurrence_source": "recurring_expanded_instance",
+      "generated_from_rrule": true,
+      "original_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "recurrence_source_uid": "70b4tsu83auf8fb9k9pa2fvmpi@google.com",
+      "description": "",
+      "creator": "UNKNOWN",
+      "organizer": "UNKNOWN",
+      "occurrence_start": "2026-08-28T15:00:00-04:00",
+      "occurrence_end": "2026-08-28T17:30:00-04:00",
+      "recurring_master_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com"
     }
   ],
   "warnings": [],
   "skipped": {
-    "outside_export_window": 10
+    "outside_export_window": 18
   },
   "public_site_affected": false,
   "enrollware_called": false,

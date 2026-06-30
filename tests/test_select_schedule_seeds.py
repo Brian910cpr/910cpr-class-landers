@@ -202,6 +202,61 @@ class ScheduleSeedsTest(unittest.TestCase):
         self.assertEqual(["bls-1700"], [seed["source_offer_id"] for seed in seeds])
         self.assertIn("scheduler_consumption_window_overlap", [item["reason_code"] for item in hidden])
 
+    def test_bls_variant_balance_alternates_initial_and_renewal_by_seed_date(self) -> None:
+        offers = []
+        for date in ["2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06"]:
+            offers.extend([
+                {
+                    "offer_id": f"initial-{date}",
+                    "date": date,
+                    "start_time": "09:15",
+                    "end_time": "11:15",
+                    "course_id": "209806",
+                    "course_title": "AHA BLS Provider",
+                    "course_family": "BLS",
+                    "instructor_display_name": "Brian Ennis",
+                    "instructor_person_id": "brian",
+                    "location": "Shipyard",
+                    "resource": "Shipyard Office",
+                    "source_availability_window": f"window-{date}",
+                },
+                {
+                    "offer_id": f"renewal-{date}",
+                    "date": date,
+                    "start_time": "09:15",
+                    "end_time": "11:15",
+                    "course_id": "359474",
+                    "course_title": "AHA BLS Provider Renewal",
+                    "course_family": "BLS",
+                    "instructor_display_name": "Brian Ennis",
+                    "instructor_person_id": "brian",
+                    "location": "Shipyard",
+                    "resource": "Shipyard Office",
+                    "source_availability_window": f"window-{date}",
+                },
+            ])
+        policy = {
+            "required_seed_mix_by_date": {"BLS": {"count": 1, "required": True}},
+            "max_seeds_per_instructor_window": 1,
+            "max_seeds_per_family_per_date": {"BLS": 1},
+            "preferred_start_times_by_family": {"BLS": ["09:15"]},
+            "course_title_priority_terms": ["BLS Provider"],
+            "bls_seed_variant_balance": {
+                "enabled": True,
+                "mode": "alternate_initial_renewal_by_bls_date",
+                "course_id_order": ["209806", "359474"],
+            },
+        }
+
+        seeds, hidden, _stats = select_schedule_seeds.select_seeds({"offers": offers}, policy)
+
+        self.assertEqual(
+            ["209806", "359474", "209806", "359474"],
+            [seed["course_id"] for seed in seeds],
+        )
+        self.assertEqual(4, len({(seed["date"], seed["start_time"]) for seed in seeds}))
+        self.assertTrue(all(item["reason_code"] == "family_mix_target_already_met" for item in hidden))
+
     def test_run_outputs_are_scoped_to_audit_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

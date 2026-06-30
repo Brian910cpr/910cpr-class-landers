@@ -1,0 +1,167 @@
+{
+  "generated_at": "2026-06-30T06:36:41.249087",
+  "rule": {
+    "recommendation": "C. Keep one BLS seed per date, but alternate course type by seed date.",
+    "implemented": true,
+    "policy_key": "bls_seed_variant_balance",
+    "mode": "alternate_initial_renewal_by_bls_date"
+  },
+  "before": {
+    "selected_count": 6,
+    "counts": {
+      "Initial": 6
+    },
+    "rows": [
+      {
+        "date": "2026-08-03",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "variant": "Initial"
+      },
+      {
+        "date": "2026-08-04",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "variant": "Initial"
+      },
+      {
+        "date": "2026-08-05",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "variant": "Initial"
+      },
+      {
+        "date": "2026-08-10",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "variant": "Initial"
+      },
+      {
+        "date": "2026-08-11",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "variant": "Initial"
+      },
+      {
+        "date": "2026-08-12",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "variant": "Initial"
+      }
+    ]
+  },
+  "after": {
+    "selected_count": 6,
+    "counts": {
+      "Renewal": 3,
+      "Initial": 3
+    },
+    "rows": [
+      {
+        "date": "2026-08-03",
+        "start_time": "09:15",
+        "course_id": "359474",
+        "variant": "Renewal",
+        "course_title": "AHA BLS Provider Renewal",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
+        "rendered": true,
+        "visible_date": "Monday, August 3",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider Renewal",
+        "row_source": "seed_appointment_url_preview",
+        "url_occurrences": 1
+      },
+      {
+        "date": "2026-08-04",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "variant": "Initial",
+        "course_title": "AHA BLS Provider",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
+        "rendered": true,
+        "visible_date": "Tuesday, August 4",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider",
+        "row_source": "seed_appointment_url_preview",
+        "url_occurrences": 1
+      },
+      {
+        "date": "2026-08-05",
+        "start_time": "09:15",
+        "course_id": "359474",
+        "variant": "Renewal",
+        "course_title": "AHA BLS Provider Renewal",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
+        "rendered": true,
+        "visible_date": "Wednesday, August 5",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider Renewal",
+        "row_source": "seed_appointment_url_preview",
+        "url_occurrences": 1
+      },
+      {
+        "date": "2026-08-10",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "variant": "Initial",
+        "course_title": "AHA BLS Provider",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
+        "rendered": true,
+        "visible_date": "Monday, August 10",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider",
+        "row_source": "seed_appointment_url_preview",
+        "url_occurrences": 1
+      },
+      {
+        "date": "2026-08-11",
+        "start_time": "09:15",
+        "course_id": "359474",
+        "variant": "Renewal",
+        "course_title": "AHA BLS Provider Renewal",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
+        "rendered": true,
+        "visible_date": "Tuesday, August 11",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider Renewal",
+        "row_source": "seed_appointment_url_preview",
+        "url_occurrences": 1
+      },
+      {
+        "date": "2026-08-12",
+        "start_time": "09:15",
+        "course_id": "209806",
+        "variant": "Initial",
+        "course_title": "AHA BLS Provider",
+        "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+        "rendered": true,
+        "visible_date": "Wednesday, August 12",
+        "visible_time": "9:15 AM - 11:15 AM",
+        "visible_course_label": "AHA BLS Provider",
+        "row_source": "seed_appointment_url_preview",
+        "url_occurrences": 1
+      }
+    ]
+  },
+  "candidate_trace_counts": {
+    "family_mix_target_already_met": 12,
+    "selected": 6
+  },
+  "rendered_rows": 6,
+  "duplicate_selected_seed_rows": 0,
+  "real_august_bls_enrollware_rows": [
+    {
+      "session_id": "12946259",
+      "course_id": "359474",
+      "variant": "Renewal",
+      "start_at": "2026-08-10T09:00:00-04:00"
+    },
+    {
+      "session_id": "13601250",
+      "course_id": "209806",
+      "variant": "Initial",
+      "start_at": "2026-08-14T12:45:00-04:00"
+    }
+  ],
+  "plain_answer": "Initial won before because daily BLS family mix sorted by preferred start, then course_title_priority_terms; 'BLS Provider' ranked Initial before Renewal. Renewal rows were present as seed candidates and rejected mostly as family_mix_target_already_met."
+}

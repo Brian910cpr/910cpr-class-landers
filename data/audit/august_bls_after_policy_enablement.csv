@@ -1,0 +1,17 @@
+stage,courseId,count
+dynamic_august_bls_candidates,209806,1085
+dynamic_august_bls_candidates,210549,1137
+dynamic_august_bls_candidates,359474,1085
+dynamic_august_bls_candidates,440431,1059
+dynamic_august_bls_candidates,445670,1150
+dynamic_august_bls_candidates,463743,1150
+public_sellable_august_bls,209806,6
+public_sellable_august_bls,210549,6
+public_sellable_august_bls,359474,6
+public_sellable_august_bls,445670,6
+selected_august_bls_seeds,209806,3
+selected_august_bls_seeds,359474,3
+rendered_august_bls_rows,209806,1
+rendered_august_bls_rows,359474,1
+rendered_august_bls_rows,463743,1
+august_total_selected_seeds,ALL,6

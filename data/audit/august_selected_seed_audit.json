@@ -1,0 +1,356 @@
+{
+  "summary": {
+    "generated_at": "2026-06-30T13:51:57",
+    "read_only": true,
+    "deployed": false,
+    "live_august_availability_blocks": 29,
+    "dynamic_august_offers": 20901,
+    "dynamic_august_bls_offers": 6666,
+    "dynamic_august_aha_bls_offers": 4366,
+    "public_sellable_august_offers": 60,
+    "public_sellable_august_bls_offers": 24,
+    "selected_august_seeds": 6,
+    "august_appointment_url_previews": 6,
+    "august_rendered_seed_rows": 0,
+    "real_august_enrollware_rows": 6,
+    "public_offer_integrity_failed": false,
+    "public_offer_policy": {
+      "schema_version": "0.1",
+      "description": "Read-only public sellability policy for filtering dynamic offer previews. This config does not publish offers, create appointments, or change Enrollware behavior.",
+      "enabled_course_ids": [
+        "209806",
+        "359474",
+        "210549",
+        "445670",
+        "344085",
+        "209808",
+        "209809",
+        "329495",
+        "351632",
+        "251545"
+      ],
+      "disabled_course_ids": [],
+      "enabled_course_families": [
+        "BLS",
+        "Heartsaver",
+        "ACLS",
+        "PALS"
+      ],
+      "disabled_course_families": [
+        "ARC",
+        "HSI",
+        "USCG"
+      ],
+      "allowed_start_minutes": [
+        "00",
+        "15",
+        "30",
+        "45"
+      ],
+      "dynamic_public_start_time_window": {
+        "enabled": true,
+        "earliest_start": "08:00",
+        "latest_start": "19:00",
+        "timezone": "America/New_York"
+      },
+      "minimum_lead_hours": 24,
+      "maximum_days_out": 60,
+      "preferred_start_times_by_family": {
+        "BLS": [],
+        "Heartsaver": [],
+        "ACLS": [],
+        "PALS": []
+      },
+      "max_offers_per_course_per_day": 4,
+      "max_offers_per_course_per_week": 3,
+      "max_total_offers_per_day": 24,
+      "hide_online_only": true,
+      "hide_manual_only": true,
+      "hide_low_capacity_offers": false,
+      "require_confirmed_appointment_container": true,
+      "notes": "Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families."
+    },
+    "seed_strategy_policy": {
+      "schema_version": "0.1",
+      "description": "Read-only seed strategy policy for converting public-sellable offer possibilities into intentional schedule seeds. This config does not publish offers, create appointments, or change Enrollware behavior.",
+      "max_seeds_per_instructor_window": 4,
+      "max_seeds_per_date": 8,
+      "max_seeds_per_family_per_date": {
+        "BLS": 1,
+        "Heartsaver": 1,
+        "ACLS": 1,
+        "PALS": 1,
+        "HSI": 1
+      },
+      "required_seed_mix_by_date": {
+        "BLS": {
+          "count": 1,
+          "required": true
+        },
+        "Heartsaver": {
+          "count": 1,
+          "required": true
+        },
+        "ACLS": {
+          "count": 1,
+          "required": false,
+          "not_before": "13:00"
+        },
+        "PALS": {
+          "count": 1,
+          "required": false,
+          "not_before": "13:00"
+        },
+        "HSI": {
+          "count": 1,
+          "required": false
+        }
+      },
+      "avoid_same_start_time_per_date": true,
+      "morning_friendly_families": [
+        "BLS",
+        "Heartsaver",
+        "HSI"
+      ],
+      "advanced_families": [
+        "ACLS",
+        "PALS"
+      ],
+      "amy_advanced_not_before": "13:00",
+      "amy_mode": "protected_pilot",
+      "amy_advanced_seed_start": "14:00",
+      "amy_heartcode_stack_fill_start": "13:00",
+      "amy_advanced_public_seed_courses": [
+        "ACLS Provider Initial",
+        "ACLS Provider Renewal",
+        "PALS Provider",
+        "PALS Renewal"
+      ],
+      "amy_heartcode_stack_fill_courses": [
+        "ACLS HeartCode",
+        "PALS HeartCode"
+      ],
+      "family_priority_by_time_band": {
+        "morning": [
+          "BLS",
+          "Heartsaver",
+          "HSI",
+          "ACLS",
+          "PALS"
+        ],
+        "afternoon": [
+          "ACLS",
+          "PALS",
+          "BLS",
+          "Heartsaver",
+          "HSI"
+        ],
+        "evening": [
+          "BLS",
+          "Heartsaver",
+          "HSI",
+          "ACLS",
+          "PALS"
+        ]
+      },
+      "preferred_start_times_by_family": {
+        "BLS": [
+          "09:15",
+          "12:30",
+          "18:15",
+          "18:45",
+          "08:30",
+          "09:00",
+          "08:00",
+          "08:15"
+        ],
+        "Heartsaver": [
+          "10:30",
+          "13:00",
+          "18:00"
+        ],
+        "ACLS": [
+          "13:00"
+        ],
+        "PALS": [
+          "13:00"
+        ],
+        "HSI": [
+          "10:30",
+          "13:00",
+          "18:00"
+        ]
+      },
+      "allow_multiple_course_variants_same_time": false,
+      "bls_seed_variant_balance": {
+        "enabled": true,
+        "mode": "alternate_initial_renewal_by_bls_date",
+        "course_id_order": [
+          "209806",
+          "359474"
+        ],
+        "notes": "Keep one BLS seed per date, but alternate AHA BLS Initial and Renewal across eligible BLS seed dates when both are available."
+      },
+      "default_setup_buffer_minutes": 15,
+      "default_cleanup_buffer_minutes": 30,
+      "course_title_priority_terms": [
+        "BLS Provider",
+        "Heartsaver First Aid CPR AED",
+        "HSI BLS + Adult First Aid",
+        "PALS Provider",
+        "ACLS Provider"
+      ],
+      "notes": "V0 conservative stack-seed strategy. Selects a small intentional seed set from public-sellable possibilities and preserves source offer lineage."
+    },
+    "selected_seed_sufficiency": "looks_alive_enough_after_bls_enablement",
+    "minimal_safe_adjustment": "No further broadening is recommended in this step. The AHA BLS IDs now reach public sellable and seed selection; keep observing selected seed spread and real Enrollware conflicts before increasing per-date seed counts.",
+    "safety_checks": {
+      "real_enrollware_class_report_rows_still_render": true,
+      "unknown_course_key_seed_rows_suppressed": true,
+      "august_hsi_dynamic_offers_blocked_before_seed_selection": true,
+      "hsi_or_pediatric_course_master_blockers_visible": true,
+      "public_offer_integrity_passes": true,
+      "course_master_gates_downstream_not_bypassed": true,
+      "rrule_expansion_creates_candidates_not_public_rows": true,
+      "generated_offers_require_normal_selection_and_gating": true
+    },
+    "large_files": [
+      {
+        "path": "data/runtime/audit_previews/dynamic_offers_preview.json",
+        "size_mb": 98.69,
+        "tracked": false,
+        "downstream_tests_require_full_file": false,
+        "recommendation": "Full generated preview is stored under ignored runtime storage. Keep compact summaries tracked in data/audit and regenerate the full preview locally when row-level audit detail is needed."
+      },
+      {
+        "path": "data/runtime/audit_previews/public_sellable_offers_preview.json",
+        "size_mb": 96.62,
+        "tracked": false,
+        "downstream_tests_require_full_file": false,
+        "recommendation": "Full generated preview is stored under ignored runtime storage. Keep compact summaries tracked in data/audit and regenerate the full preview locally when row-level audit detail is needed."
+      }
+    ]
+  },
+  "selected_seeds": [
+    {
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260803-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260803-0915",
+      "course": "AHA BLS Provider Renewal",
+      "course_key": "aha_bls_provider_renewal",
+      "course_family": "BLS",
+      "course_id": "359474",
+      "appointmentDayId": 260713,
+      "startTime": "09:15",
+      "date": "2026-08-03",
+      "end_time": "11:15",
+      "duration_minutes": 120,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "source_availability_block": "brian_do_not_schedule:inverse_gap:58",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
+      "page_or_card": "bls.html or BLS schedule card if seed rendering is approved",
+      "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu",
+      "classification": "BLS"
+    },
+    {
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260804-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260804-0915",
+      "course": "AHA BLS Provider",
+      "course_key": "aha_bls_provider",
+      "course_family": "BLS",
+      "course_id": "209806",
+      "appointmentDayId": 260714,
+      "startTime": "09:15",
+      "date": "2026-08-04",
+      "end_time": "11:15",
+      "duration_minutes": 120,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "source_availability_block": "brian_do_not_schedule:inverse_gap:59",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
+      "page_or_card": "bls.html or BLS schedule card if seed rendering is approved",
+      "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu",
+      "classification": "BLS"
+    },
+    {
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260805-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260805-0915",
+      "course": "AHA BLS Provider Renewal",
+      "course_key": "aha_bls_provider_renewal",
+      "course_family": "BLS",
+      "course_id": "359474",
+      "appointmentDayId": 260715,
+      "startTime": "09:15",
+      "date": "2026-08-05",
+      "end_time": "11:15",
+      "duration_minutes": 120,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "source_availability_block": "brian_do_not_schedule:inverse_gap:60",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
+      "page_or_card": "bls.html or BLS schedule card if seed rendering is approved",
+      "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu",
+      "classification": "BLS"
+    },
+    {
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260810-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260810-0915",
+      "course": "AHA BLS Provider",
+      "course_key": "aha_bls_provider",
+      "course_family": "BLS",
+      "course_id": "209806",
+      "appointmentDayId": 260720,
+      "startTime": "09:15",
+      "date": "2026-08-10",
+      "end_time": "11:15",
+      "duration_minutes": 120,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "source_availability_block": "brian_do_not_schedule:inverse_gap:65",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
+      "page_or_card": "bls.html or BLS schedule card if seed rendering is approved",
+      "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu",
+      "classification": "BLS"
+    },
+    {
+      "seed_id": "seed-offer-359474-instructor_24057895173-20260811-0915",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260811-0915",
+      "course": "AHA BLS Provider Renewal",
+      "course_key": "aha_bls_provider_renewal",
+      "course_family": "BLS",
+      "course_id": "359474",
+      "appointmentDayId": 260721,
+      "startTime": "09:15",
+      "date": "2026-08-11",
+      "end_time": "11:15",
+      "duration_minutes": 120,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "source_availability_block": "brian_do_not_schedule:inverse_gap:66",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
+      "page_or_card": "bls.html or BLS schedule card if seed rendering is approved",
+      "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu",
+      "classification": "BLS"
+    },
+    {
+      "seed_id": "seed-offer-209806-instructor_24057895173-20260812-0915",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260812-0915",
+      "course": "AHA BLS Provider",
+      "course_key": "aha_bls_provider",
+      "course_family": "BLS",
+      "course_id": "209806",
+      "appointmentDayId": 260722,
+      "startTime": "09:15",
+      "date": "2026-08-12",
+      "end_time": "11:15",
+      "duration_minutes": 120,
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "instructor": "Brian Ennis",
+      "source_availability_block": "brian_do_not_schedule:inverse_gap:67",
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+      "page_or_card": "bls.html or BLS schedule card if seed rendering is approved",
+      "why_selected": "public_sellable_offer; selected_as_stack_seed; read_only_seed_preview_not_public_menu",
+      "classification": "BLS"
+    }
+  ]
+}

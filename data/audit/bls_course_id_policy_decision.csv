@@ -1,0 +1,4 @@
+courseId,enrollware_course_name,normalized_course_key,public_page_card_destination,appointment_seed_eligibility,dynamic_offer_eligibility,course_master_appointment_seed_allowed,course_master_dynamic_offer_allowed,course_master_review_needed,enabled_now,reason
+209806,AHA BLS Provider,aha_bls_provider,docs/bls.html#bls-provider,True,True,False,False,,True,Reviewed AHA BLS course ID; enabled narrowly in public_offer_policy so existing public filters and seed strategy can evaluate it.
+359474,AHA BLS Provider Renewal,aha_bls_provider_renewal,docs/bls.html#bls-renewal,True,True,False,False,,True,Reviewed AHA BLS course ID; enabled narrowly in public_offer_policy so existing public filters and seed strategy can evaluate it.
+210549,AHA HeartCode BLS,aha_heartcode_bls,docs/bls.html#bls-heartcode,True,True,False,False,,True,Reviewed AHA BLS course ID; enabled narrowly in public_offer_policy so existing public filters and seed strategy can evaluate it.

@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Any
 
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 STATUS_PATH = AUDIT_DIR / "first_dynamic_booking_status.json"
@@ -108,8 +110,8 @@ class Stage:
 def build_status() -> dict[str, Any]:
     paths = {
         "live_availability": AUDIT_DIR / "live_availability_snapshot_preview.json",
-        "dynamic_offers": AUDIT_DIR / "dynamic_offers_preview.json",
-        "public_sellable_offers": AUDIT_DIR / "public_sellable_offers_preview.json",
+        "dynamic_offers": dynamic_offers_preview_path(ROOT),
+        "public_sellable_offers": public_sellable_offers_preview_path(ROOT),
         "schedule_seeds": AUDIT_DIR / "schedule_seeds_preview.json",
         "seed_url_preview": AUDIT_DIR / "seed_appointment_url_preview.json",
         "internal_dynamic_seed_preview": AUDIT_DIR / "internal_dynamic_seed_preview.json",

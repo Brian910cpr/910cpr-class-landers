@@ -96,6 +96,49 @@ class PublicSellableOffersTest(unittest.TestCase):
         self.assertEqual(2, len(kept))
         self.assertTrue(any("max_offers_per_course_per_day_exceeded" in item["reason_codes"] for item in hidden))
 
+    def test_aha_bls_caps_prefer_seed_strategy_times_before_early_starts(self) -> None:
+        offers = [
+            {
+                "offer_id": "early",
+                "date": "2026-08-03",
+                "start_time": "08:00",
+                "course_id": "209806",
+                "course_family": "BLS",
+            },
+            {
+                "offer_id": "preferred",
+                "date": "2026-08-03",
+                "start_time": "09:15",
+                "course_id": "209806",
+                "course_family": "BLS",
+            },
+        ]
+        dynamic = {"offers": offers}
+        courses = {"courses": [{"course_id": "209806", "family": "BLS"}]}
+        policy = {
+            "enabled_course_families": ["BLS"],
+            "allowed_start_minutes": ["00", "15"],
+            "minimum_lead_hours": 24,
+            "maximum_days_out": 60,
+            "max_offers_per_course_per_day": 1,
+        }
+        cap_preference_policy = {
+            "preferred_start_times_by_family": {
+                "BLS": ["09:15", "08:00"],
+            }
+        }
+
+        kept, hidden, _ = filter_public_sellable_offers.filter_offers(
+            dynamic,
+            courses,
+            policy,
+            now=datetime(2026, 7, 30, 12, 0),
+            cap_preference_policy=cap_preference_policy,
+        )
+
+        self.assertEqual(["preferred"], [offer["offer_id"] for offer in kept])
+        self.assertTrue(any(item["offer"]["offer_id"] == "early" and "max_offers_per_course_per_day_exceeded" in item["reason_codes"] for item in hidden))
+
     def test_confirmed_container_policy_keeps_only_container_backed_offers(self) -> None:
         dynamic = {
             "offers": [
@@ -396,6 +439,8 @@ class PublicSellableOffersTest(unittest.TestCase):
             original_containers = filter_public_sellable_offers.APPOINTMENT_CONTAINERS_PATH
             original_policy = filter_public_sellable_offers.PUBLIC_OFFER_POLICY_PATH
             original_output = filter_public_sellable_offers.SELLABLE_OFFERS_PATH
+            original_summary_json = filter_public_sellable_offers.SELLABLE_SUMMARY_JSON_PATH
+            original_summary_md = filter_public_sellable_offers.SELLABLE_SUMMARY_MD_PATH
             original_report = filter_public_sellable_offers.REPORT_PATH
             try:
                 filter_public_sellable_offers.AUDIT_DIR = audit_dir
@@ -403,7 +448,9 @@ class PublicSellableOffersTest(unittest.TestCase):
                 filter_public_sellable_offers.COURSE_CATALOG_PATH = missing / "courses.json"
                 filter_public_sellable_offers.APPOINTMENT_CONTAINERS_PATH = missing / "containers.json"
                 filter_public_sellable_offers.PUBLIC_OFFER_POLICY_PATH = missing / "policy.json"
-                filter_public_sellable_offers.SELLABLE_OFFERS_PATH = audit_dir / "public_sellable_offers_preview.json"
+                filter_public_sellable_offers.SELLABLE_OFFERS_PATH = root / "data" / "runtime" / "audit_previews" / "public_sellable_offers_preview.json"
+                filter_public_sellable_offers.SELLABLE_SUMMARY_JSON_PATH = audit_dir / "public_sellable_offers_preview_summary.json"
+                filter_public_sellable_offers.SELLABLE_SUMMARY_MD_PATH = audit_dir / "public_sellable_offers_preview_summary.md"
                 filter_public_sellable_offers.REPORT_PATH = audit_dir / "public_sellable_offers_report.md"
 
                 result = filter_public_sellable_offers.run()
@@ -412,11 +459,13 @@ class PublicSellableOffersTest(unittest.TestCase):
                 written = sorted(path.relative_to(root).as_posix() for path in audit_dir.glob("public_sellable_offers_*"))
                 self.assertEqual(
                     [
-                        "data/audit/public_sellable_offers_preview.json",
+                        "data/audit/public_sellable_offers_preview_summary.json",
+                        "data/audit/public_sellable_offers_preview_summary.md",
                         "data/audit/public_sellable_offers_report.md",
                     ],
                     written,
                 )
+                self.assertTrue((root / "data" / "runtime" / "audit_previews" / "public_sellable_offers_preview.json").exists())
             finally:
                 filter_public_sellable_offers.AUDIT_DIR = original_audit_dir
                 filter_public_sellable_offers.DYNAMIC_OFFERS_PATH = original_dynamic
@@ -424,6 +473,8 @@ class PublicSellableOffersTest(unittest.TestCase):
                 filter_public_sellable_offers.APPOINTMENT_CONTAINERS_PATH = original_containers
                 filter_public_sellable_offers.PUBLIC_OFFER_POLICY_PATH = original_policy
                 filter_public_sellable_offers.SELLABLE_OFFERS_PATH = original_output
+                filter_public_sellable_offers.SELLABLE_SUMMARY_JSON_PATH = original_summary_json
+                filter_public_sellable_offers.SELLABLE_SUMMARY_MD_PATH = original_summary_md
                 filter_public_sellable_offers.REPORT_PATH = original_report
 
 

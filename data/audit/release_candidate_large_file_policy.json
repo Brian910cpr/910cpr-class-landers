@@ -1,0 +1,71 @@
+{
+  "files": {
+    "data/audit/dynamic_offers_preview.json": {
+      "exists": true,
+      "reference_count": 19,
+      "referencing_scripts_or_tests": [
+        "scripts/audit_august_bls_seed_quality.py",
+        "scripts/audit_august_offer_explosion.py",
+        "scripts/audit_august_seed_breakpoint.py",
+        "scripts/audit_bls_preferred_time_cap_blockers.py",
+        "scripts/audit_bls_public_offer_policy_enablement.py",
+        "scripts/audit_bls_seed_time_preference.py",
+        "scripts/audit_forward_seeding_limiter.py",
+        "scripts/audit_live_availability_snapshot_trace.py",
+        "scripts/audit_release_candidate.py",
+        "scripts/audit_rrule_expansion_fix.py",
+        "scripts/build_universal_offer_inventory.py",
+        "scripts/check_first_dynamic_booking_status.py",
+        "scripts/filter_public_sellable_offers.py",
+        "scripts/generate_dynamic_offers.py",
+        "scripts/public_dynamic_inventory_proof.py",
+        "scripts/public_offer_integrity_audit.py",
+        "tests/test_august_offer_explosion.py",
+        "tests/test_generate_dynamic_offers.py",
+        "tests/test_public_offer_integrity_audit.py"
+      ],
+      "size_bytes": 103363008,
+      "size_mb_binary": 98.57,
+      "tracked": true
+    },
+    "data/audit/public_sellable_offers_preview.json": {
+      "exists": true,
+      "reference_count": 24,
+      "referencing_scripts_or_tests": [
+        "scripts/audit_august_bls_seed_quality.py",
+        "scripts/audit_august_offer_explosion.py",
+        "scripts/audit_august_seed_breakpoint.py",
+        "scripts/audit_bls_initial_renewal_seed_balance.py",
+        "scripts/audit_bls_preferred_time_cap_blockers.py",
+        "scripts/audit_bls_public_offer_policy_enablement.py",
+        "scripts/audit_bls_seed_render_handoff.py",
+        "scripts/audit_bls_seed_time_preference.py",
+        "scripts/audit_release_candidate.py",
+        "scripts/audit_rrule_expansion_fix.py",
+        "scripts/build_course_master.py",
+        "scripts/build_slug_hubs.py",
+        "scripts/build_universal_offer_inventory.py",
+        "scripts/check_first_dynamic_booking_status.py",
+        "scripts/dynamic_offer_presentation_policy.py",
+        "scripts/export_course_master_review_sheet.py",
+        "scripts/filter_public_sellable_offers.py",
+        "scripts/public_dynamic_inventory_proof.py",
+        "scripts/public_offer_integrity_audit.py",
+        "scripts/rendered_dynamic_offer_proof.py",
+        "scripts/select_schedule_seeds.py",
+        "tests/test_august_offer_explosion.py",
+        "tests/test_filter_public_sellable_offers.py",
+        "tests/test_public_offer_integrity_audit.py"
+      ],
+      "size_bytes": 101112247,
+      "size_mb_binary": 96.43,
+      "tracked": true
+    }
+  },
+  "github_warning_threshold_mb": 50,
+  "implemented_repo_hygiene": "No file deletion or relocation was performed in this release-candidate pass.",
+  "reason_not_removed": "The active branch still has build, audit, and test code reading these exact tracked paths; removing or relocating them safely requires a separate migration that updates producers, consumers, tests, and tracked summary fixtures together.",
+  "recommended_policy": "Keep compact Markdown/JSON/CSV proof artifacts tracked. Move full generated previews to ignored runtime/debug/cache storage after a dedicated migration, and replace tests that assert large tracked files with summary-fixture assertions.",
+  "safe_to_remove_in_this_release_candidate": false,
+  "should_keep_tracked_long_term": false
+}

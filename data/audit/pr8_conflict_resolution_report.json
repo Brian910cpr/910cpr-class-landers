@@ -1,0 +1,109 @@
+{
+  "august_bls_seed_count": 6,
+  "base_main_commit_merged": "51e97c4cdb0debc934730b5d1cbf14e6d376d6b9",
+  "compact_summaries_tracked": [
+    "data/audit/dynamic_offers_preview_summary.json",
+    "data/audit/public_sellable_offers_preview_summary.json"
+  ],
+  "conflicts_resolved": [
+    "docs/bls.html"
+  ],
+  "deploy_performed": false,
+  "docs_bls_resolution_summary": "Merged latest main iCal schedule refresh, then regenerated dynamic offers, public-sellable preview, seed selection, appointment URL preview, and slug hubs so BLS appointment seeds are rendered through the normal pipeline.",
+  "duplicate_selected_seed_rows": 0,
+  "existing_real_august_bls_rows": [
+    {
+      "date": "2026-08-14",
+      "href": "/classes/13601250.html#ForwardToEnrollware",
+      "label": "AHA BLS Provider (Initial)",
+      "time": "12:45"
+    },
+    {
+      "date": "2026-08-10",
+      "href": "/classes/12946259.html#ForwardToEnrollware",
+      "label": "AHA BLS Provider (Renewal)",
+      "time": "09:00"
+    }
+  ],
+  "generated_at": "2026-06-30T13:53:22",
+  "giant_previews_tracked": [],
+  "git_status_before_commit": "M data/audit/amy_stack_fill_candidates.json\n M data/audit/august_bls_after_policy_enablement.csv\n M data/audit/august_bls_public_sellable_24.csv\n M data/audit/august_bls_rendered_seed_proof.json\n M data/audit/august_bls_seed_pipeline.csv\n M data/audit/august_bls_seed_policy_recommendation.md\n M data/audit/august_bls_seed_quality_audit.json\n M data/audit/august_heartsaver_seed_pipeline.csv\n M data/audit/august_offer_compression_pipeline.csv\n M data/audit/august_offer_explosion_breakdown.json\n M data/audit/august_public_visibility_sufficiency.md\n M data/audit/august_seed_breakpoint_report.json\n M data/audit/august_seed_breakpoint_report.md\n M data/audit/august_selected_seed_after_bls_enablement.json\n M data/audit/august_selected_seed_after_bls_enablement.md\n M data/audit/august_selected_seed_audit.json\n M data/audit/august_selected_seed_audit.md\n M data/audit/bls_public_offer_policy_enablement_report.json\n M data/audit/bls_seed_time_preference_report.json\n M data/audit/course_master_build_report.json\n M data/audit/course_master_build_report.md\n M data/audit/course_master_review_sheet.csv\n M data/audit/course_master_review_sheet.json\n M data/audit/course_master_review_sheet.md\n M data/audit/dynamic_offer_presentation_policy_report.json\n M data/audit/dynamic_offers_preview_summary.json\n M data/audit/dynamic_offers_preview_summary.md\n M data/audit/dynamic_offers_report.md\n M data/audit/forward_seeding_limiter_trace.json\n M data/audit/generated_preview_file_size_policy.md\n M data/audit/horizon_config_candidates.csv\n M data/audit/large_generated_audit_file_policy.md\n M data/audit/live_availability_snapshot_trace.json\n M data/audit/live_availability_snapshot_trace.md\n M data/audit/minimum_fix_to_light_up_august.md\n M data/audit/public_offer_integrity_report.json\n M data/audit/public_offer_integrity_report.md\n M data/audit/public_offer_policy_safety_check.md\n M data/audit/public_sellable_offers_preview_summary.json\n M data/audit/public_sellable_offers_preview_summary.md\n M data/audit/public_sellable_offers_report.md\n M data/audit/schedule_seeds_preview.json\n M data/audit/scheduler_consumption_window_report.md\n M data/audit/scheduler_consumption_window_summary.json\n M data/audit/seed_appointment_url_preview.json\n M data/audit/seed_sim_vs_active_generation_diff.csv\n M data/config/course_master.json\n M data/runtime/acls_hub_debug.json\n M data/runtime/arc_hub_debug.json\n M data/runtime/bls_hub_debug.json\n M data/runtime/build_slug_hubs.json\n M data/runtime/group-training_hub_debug.json\n M data/runtime/heartsaver_hub_debug.json\n M data/runtime/hsi_hub_debug.json\n M data/runtime/pals_hub_debug.json\n M data/runtime/uscg-elementary-first-aid-cpr_hub_debug.json\n M data/state/supervisor_status.json\nM  data/state_public/enrollware_ical_hash.txt\n M debug/hub_session_classification.json\n M debug/status/build_slug_hubs.json\nMM docs/acls.html\nMM docs/arc.html\nMM docs/bls.html\nM  docs/classes/10009265.html\nM  docs/classes/10009276.html\nM  docs/classes/10009277.html\nM  docs/classes/11341054.html\nM  docs/classes/12774031.html\nM  docs/classes/12774032.html\nM  docs/classes/12774033.html\nM  docs/classes/12774034.html\nM  docs/classes/12774037.html\nM  docs/classes/12774040.html\nM  docs/classes/12774085.html\nM  docs/classes/12774086.html\nM  docs/classes/12774087.html\nM  docs/classes/12774088.html\nM  docs/classes/12774089.html\nM  docs/classes/12774090.html\nM  docs/classes/12774091.html\nM  docs/classes/12774092.html\nM  docs/classes/12774093.html\nM  docs/classes/12774094.html\nM  docs/classes/12774095.html\nM  docs/classes/12774096.html\nM  docs/classes/12774097.html\nM  docs/classes/12774325.html\nM  docs/classes/12774326.html\nM  docs/classes/12774327.html\nM  docs/classes/12774328.html\nM  docs/classes/12774334.html\nM  docs/classes/12774335.html\nM  docs/classes/12774336.html\nM  docs/classes/12774337.html\nM  docs/classes/12774338.html\nM  docs/classes/12774339.html\nM  docs/classes/12774340.html\nM  docs/classes/12774341.html\nM  docs/classes/12774342.html\nM  docs/classes/12774343.html\nM  docs/classes/12774344.html\nM  docs/classes/12774345.html\nM  docs/classes/12774346.html\nM  docs/classes/12774347.html\nM  docs/classes/12774348.html\nM  docs/classes/12774548.html\nM  docs/classes/12774571.html\nM  docs/classes/12774572.html\nM  docs/classes/12774575.html\nM  docs/classes/12774577.html\nM  docs/classes/12774579.html\nM  docs/classes/12774582.html\nM  docs/classes/12774584.html\nM  docs/classes/12774585.html\nM  docs/classes/12774586.html\nM  docs/classes/12774587.html\nM  docs/classes/12774588.html\nM  docs/classes/12774589.html\nM  docs/classes/12774590.html\nM  docs/classes/12774591.html\nM  docs/classes/12774592.html\nM  docs/classes/12774593.html\nM  docs/classes/12774594.html\nM  docs/classes/12774595.html\nM  docs/classes/12774596.html\nM  docs/classes/12774597.html\nM  docs/classes/12774598.html\nM  docs/classes/12774599.html\nM  docs/classes/12774600.html\nM  docs/classes/12775294.html\nM  docs/classes/12775295.html\nM  docs/classes/12775296.html\nM  docs/classes/12775297.html\nM  docs/classes/12775298.html\nM  docs/classes/12775300.html\nM  docs/classes/12775301.html\nM  docs/classes/12775302.html\nM  docs/classes/12775306.html\nM  docs/classes/12775308.html\nM  docs/classes/12775309.html\nM  docs/classes/12775310.html\nM  docs/classes/12775311.html\nM  docs/classes/12775312.html\nM  docs/classes/12775313.html\nM  docs/classes/12775314.html\nM  docs/classes/12775315.html\nM  docs/classes/12775316.html\nM  docs/classes/12775317.html\nM  docs/classes/12775318.html\nM  docs/classes/12775319.html\nM  docs/classes/12775320.html\nM  docs/classes/12775321.html\nM  docs/classes/12775322.html\nM  docs/classes/12775323.html\nM  docs/classes/12775324.html\nM  docs/classes/12775325.html\nM  docs/classes/12775527.html\nM  docs/classes/12775528.html\nM  docs/classes/12775529.html\nM  docs/classes/12775530.html\nM  docs/classes/12775533.html\nM  docs/classes/12775534.html\nM  docs/classes/12775536.html\nM  docs/classes/12775539.html\nM  docs/classes/12775540.html\nM  docs/classes/12775541.html\nM  docs/classes/12775542.html\nM  docs/classes/12775543.html\nM  docs/classes/12775544.html\nM  docs/classes/12775545.html\nM  docs/classes/12775546.html\nM  docs/classes/12775547.html\nM  docs/classes/12775548.html\nM  docs/classes/12775549.html\nM  docs/classes/12775550.html\nM  docs/classes/12775551.html\nM  docs/classes/12775552.html\nM  docs/classes/12775553.html\nM  docs/classes/12775554.html\nM  docs/classes/12775555.html\nM  docs/classes/12775556.html\nM  docs/classes/12775557.html\nM  docs/classes/12775558.html\nM  docs/classes/12775772.html\nM  docs/classes/12775779.html\nM  docs/classes/12775781.html\nM  docs/classes/12775784.html\nM  docs/classes/12775786.html\nM  docs/classes/12775787.html\nM  docs/classes/12775788.html\nM  docs/classes/12775789.html\nM  docs/classes/12775790.html\nM  docs/classes/12775791.html\nM  docs/classes/12775792.html\nM  docs/classes/12775793.html\nM  docs/classes/12775794.html\nM  docs/classes/12775795.html\nM  docs/classes/12775796.html\nM  docs/classes/12775797.html\nM  docs/classes/12775798.html\nM  docs/classes/12775799.html\nM  docs/classes/12775800.html\nM  docs/classes/12775801.html\nM  docs/classes/12775802.html\nM  docs/classes/12775803.html\nM  docs/classes/12775975.html\nM  docs/classes/12775976.html\nM  docs/classes/12775977.html\nM  docs/classes/12775978.html\nM  docs/classes/12775984.html\nM  docs/classes/12775985.html\nM  docs/classes/12775987.html\nM  docs/classes/12775990.html\nM  docs/classes/12775992.html\nM  docs/classes/12775997.html\nM  docs/classes/12776000.html\nM  docs/classes/12776142.html\nM  docs/classes/12776143.html\nM  docs/classes/12776144.html\nM  docs/classes/12776145.html\nM  docs/classes/12776148.html\nM  docs/classes/12776149.html\nM  docs/classes/12776151.html\nM  docs/classes/12776152.html\nM  docs/classes/12776153.html\nM  docs/classes/12776154.html\nM  docs/classes/12776155.html\nM  docs/classes/12776156.html\nM  docs/classes/12776157.html\nM  docs/classes/12776158.html\nM  docs/classes/12776159.html\nM  docs/classes/12776160.html\nM  docs/classes/12776161.html\nM  docs/classes/12776162.html\nM  docs/classes/12776163.html\nM  docs/classes/12776164.html\nM  docs/classes/12776165.html\nM  docs/classes/12776266.html\nM  docs/classes/12776267.html\nM  docs/classes/12776269.html\nM  docs/classes/12776270.html\nM  docs/classes/12776273.html\nM  docs/classes/12776274.html\nM  docs/classes/12776336.html\nM  docs/classes/12776337.html\nM  docs/classes/12776339.html\nM  docs/classes/12776340.html\nM  docs/classes/12776341.html\nM  docs/classes/12776342.html\nM  docs/classes/12776343.html\nM  docs/classes/12776344.html\nM  docs/classes/12776416.html\nM  docs/classes/12776419.html\nM  docs/classes/12776420.html\nM  docs/classes/12776421.html\nM  docs/classes/12776422.html\nM  docs/classes/12776424.html\nM  docs/classes/12776425.html\nM  docs/classes/12776428.html\nM  docs/classes/12776429.html\nM  docs/classes/12776430.html\nM  docs/classes/12776432.html\nM  docs/classes/12776433.html\nM  docs/classes/12776434.html\nM  docs/classes/12776435.html\nM  docs/classes/12776436.html\nM  docs/classes/12776437.html\nM  docs/classes/12776438.html\nM  docs/classes/12776439.html\nM  docs/classes/12776440.html\nM  docs/classes/12776441.html\nM  docs/classes/12776554.html\nM  docs/classes/12776557.html\nM  docs/classes/12776559.html\nM  docs/classes/12776562.html\nM  docs/classes/12776563.html\nM  docs/classes/12776564.html\nM  docs/classes/12776565.html\nM  docs/classes/12776566.html\nM  docs/classes/12776567.html\nM  docs/classes/12776568.html\nM  docs/classes/12776569.html\nM  docs/classes/12776570.html\nM  docs/classes/12776571.html\nM  docs/classes/12776632.html\nM  docs/classes/12776635.html\nM  docs/classes/12776666.html\nM  docs/classes/12776667.html\nM  docs/classes/12776668.html\nM  docs/classes/12776669.html\nM  docs/classes/12776696.html\nM  docs/classes/12776697.html\nM  docs/classes/12776699.html\nM  docs/classes/12776700.html\nM  docs/classes/12776701.html\nM  docs/classes/12776702.html\nM  docs/classes/12776703.html\nM  docs/classes/12776704.html\nM  docs/classes/12776770.html\nM  docs/classes/12776773.html\nM  docs/classes/12776774.html\nM  docs/classes/12776775.html\nM  docs/classes/12776776.html\nM  docs/classes/12776778.html\nM  docs/classes/12776779.html\nM  docs/classes/12776780.html\nM  docs/classes/12776781.html\nM  docs/classes/12776782.html\nM  docs/classes/12776783.html\nM  docs/classes/12776784.html\nM  docs/classes/12776785.html\nM  docs/classes/12776786.html\nM  docs/classes/12776787.html\nM  docs/classes/12776866.html\nM  docs/classes/12783382.html\nM  docs/classes/12783383.html\nM  docs/classes/12783384.html\nM  docs/classes/12783385.html\nM  docs/classes/12783386.html\nM  docs/classes/12783387.html\nM  docs/classes/12783389.html\nM  docs/classes/12783390.html\nM  docs/classes/12946259.html\nM  docs/classes/12946261.html\nM  docs/classes/12946272.html\nM  docs/classes/13460876.html\nM  docs/classes/13472467.html\nM  docs/classes/13472468.html\nM  docs/classes/13472469.html\nM  docs/classes/13472474.html\nM  docs/classes/13472475.html\nM  docs/classes/13472476.html\nM  docs/classes/13472477.html\nM  docs/classes/13472483.html\nM  docs/classes/13472484.html\nM  docs/classes/13472490.html\nM  docs/classes/13472491.html\nM  docs/classes/13600390.html\nM  docs/classes/13601250.html\nM  docs/classes/13601272.html\nM  docs/classes/13613957.html\nM  docs/classes/13623240.html\nM  docs/classes/13623263.html\nM  docs/classes/13623366.html\nM  docs/classes/13652911.html\nM  docs/classes/13652925.html\nM  docs/classes/13652926.html\nM  docs/classes/13652927.html\nM  docs/classes/13652928.html\nM  docs/classes/13652929.html\nM  docs/classes/13652930.html\nM  docs/classes/13652931.html\nM  docs/classes/13652932.html\nM  docs/classes/13652933.html\nM  docs/classes/13652934.html\nM  docs/classes/13652937.html\nM  docs/classes/13652938.html\nM  docs/classes/13652939.html\nM  docs/classes/13652940.html\nM  docs/classes/13652941.html\nM  docs/classes/13652942.html\nM  docs/classes/13652943.html\nM  docs/classes/13652944.html\nM  docs/classes/13652945.html\nM  docs/classes/13652946.html\nM  docs/classes/13653161.html\nM  docs/classes/13662704.html\nM  docs/classes/13673156.html\nM  docs/classes/13673157.html\nM  docs/classes/13673158.html\nM  docs/classes/13673159.html\nM  docs/classes/13673160.html\nM  docs/classes/13673161.html\nM  docs/classes/13673162.html\nM  docs/classes/13673163.html\nM  docs/classes/13673164.html\nM  docs/classes/13673165.html\nM  docs/classes/13673166.html\nM  docs/classes/13673167.html\nM  docs/classes/13673168.html\nM  docs/classes/13673169.html\nM  docs/classes/13673170.html\nM  docs/classes/13673171.html\nM  docs/classes/13673172.html\nM  docs/classes/13673173.html\nM  docs/classes/13673174.html\nM  docs/classes/13673175.html\nM  docs/classes/13673176.html\nM  docs/classes/13673177.html\nM  docs/classes/13673178.html\nM  docs/classes/13673179.html\nM  docs/classes/13673180.html\nM  docs/classes/13673181.html\nM  docs/classes/13673182.html\nM  docs/classes/13673183.html\nM  docs/classes/13673184.html\nM  docs/classes/13673185.html\nM  docs/classes/13673186.html\nM  docs/classes/13673187.html\nM  docs/classes/13673188.html\nM  docs/classes/13673189.html\nM  docs/classes/13673190.html\nM  docs/classes/13673191.html\nM  docs/classes/13673192.html\nM  docs/classes/13673193.html\nM  docs/classes/13673194.html\nM  docs/classes/13673195.html\nM  docs/classes/13676931.html\nM  docs/classes/index.html\nMM docs/courses/aha-heartsaver-cpr-aed.html\nMM docs/courses/bloodborne-pathogens.html\nMM docs/courses/heartsaver-cpr-aed.html\nMM docs/courses/heartsaver-first-aid-cpr-aed.html\nMM docs/courses/heartsaver-first-aid.html\nMM docs/courses/heartsaver-pediatric-first-aid-cpr-aed.html\nM  docs/data/schedule_future.json\nMM docs/group-training.html\nMM docs/heartsaver.html\nMM docs/hsi.html\nM  docs/locations/nc-wilmington-4018-shipyard-blvd-room-b-910cpr-s-office.html\nMM docs/pals.html\nM  docs/sitemap.xml\nMM docs/uscg-elementary-first-aid-cpr.html",
+  "heartcode_count": 0,
+  "initial_count": 3,
+  "large_preview_conflicts": "Resolved by preserving PR branch deletion; old giant audit previews remain absent from tracked branch head.",
+  "latest_main_schedule_refresh_preserved": true,
+  "pr8_expected_mergeable_after_push": true,
+  "pr_head_before_merge": "a2f0c509a7d0be5cf3bc9a8ab4362eae4b280d0e",
+  "renewal_count": 3,
+  "runtime_preview_path_ignored": true,
+  "selected_august_bls_seed_rows": [
+    {
+      "appointmentDayId": "260714",
+      "courseId": "209806",
+      "date": "2026-08-04",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
+      "label": "AHA BLS Provider",
+      "startTime": "9:15 AM",
+      "time": "09:15"
+    },
+    {
+      "appointmentDayId": "260720",
+      "courseId": "209806",
+      "date": "2026-08-10",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
+      "label": "AHA BLS Provider",
+      "startTime": "9:15 AM",
+      "time": "09:15"
+    },
+    {
+      "appointmentDayId": "260722",
+      "courseId": "209806",
+      "date": "2026-08-12",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+      "label": "AHA BLS Provider",
+      "startTime": "9:15 AM",
+      "time": "09:15"
+    },
+    {
+      "appointmentDayId": "260713",
+      "courseId": "359474",
+      "date": "2026-08-03",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
+      "label": "AHA BLS Provider Renewal",
+      "startTime": "9:15 AM",
+      "time": "09:15"
+    },
+    {
+      "appointmentDayId": "260715",
+      "courseId": "359474",
+      "date": "2026-08-05",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
+      "label": "AHA BLS Provider Renewal",
+      "startTime": "9:15 AM",
+      "time": "09:15"
+    },
+    {
+      "appointmentDayId": "260721",
+      "courseId": "359474",
+      "date": "2026-08-11",
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
+      "label": "AHA BLS Provider Renewal",
+      "startTime": "9:15 AM",
+      "time": "09:15"
+    }
+  ],
+  "selected_seed_times": [
+    "09:15"
+  ],
+  "unmerged_paths": [],
+  "validation_results": {
+    "audit_august_bls_seed_quality": "passed; August BLS public sellable offers 24, selected 6, rendered 6",
+    "audit_august_offer_explosion": "passed; August dynamic offers 20901, BLS dynamic offers 6666, public sellable 60, selected seeds 6",
+    "audit_august_seed_breakpoint": "passed; first breakpoint resolved_at_dynamic_offers_preview",
+    "audit_bls_public_offer_policy_enablement": "passed; August BLS selected seeds 6",
+    "audit_bls_seed_time_preference": "passed; rendered August BLS seeds 6, duplicate selected seed rows 0",
+    "audit_live_availability_snapshot_trace": "passed; live snapshot August blocks 29, dynamic August offers 20901",
+    "public_offer_integrity_audit": "passed; Audit failed: False, existing Enrollware classes shown 208, public sellable total 418",
+    "unittest discover -s tests": "passed; 163 tests OK"
+  }
+}

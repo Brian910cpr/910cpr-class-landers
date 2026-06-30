@@ -1,0 +1,8 @@
+{
+  "render_regenerated": false,
+  "reason": "No public page/render build was run for this RRULE fix branch. The task was kept to snapshot, dynamic, public-filter, seed, URL-preview, and audit generation.",
+  "public_schedule_august_rows_current": 2,
+  "schedule_future_august_rows_current": 6,
+  "public_schedule_august_seed_rows_current": 0,
+  "schedule_future_august_seed_rows_current": 0
+}

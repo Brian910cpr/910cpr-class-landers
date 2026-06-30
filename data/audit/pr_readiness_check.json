@@ -1,0 +1,20 @@
+{
+  "branch": "codex/august-seed-breakpoint",
+  "branch_clean_before_pr_prep_reports": true,
+  "deploy_blocker": "No deploy requested; large generated preview decision and release timing not approved.",
+  "generated_at": "2026-06-30T06:51:51",
+  "git_status_short_branch": "## codex/august-seed-breakpoint...origin/codex/august-seed-breakpoint",
+  "latest_commit": "de8517e4bdd1d00c2558f1c4ff7aa51657a2e40b",
+  "merge_blocker": "Large generated preview policy needs human decision; recommended follow-up migration before deploy.",
+  "ready_for_deploy": false,
+  "ready_for_merge": false,
+  "ready_for_pr_creation": true,
+  "reports_created": [
+    "data/audit/release_candidate_pr_summary.md",
+    "data/audit/large_preview_file_decision_matrix.md",
+    "data/audit/large_preview_file_decision_matrix.json",
+    "data/audit/large_preview_migration_followup_plan.md",
+    "data/audit/pr_readiness_check.md",
+    "data/audit/pr_readiness_check.json"
+  ]
+}

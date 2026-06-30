@@ -8,11 +8,13 @@ from pathlib import Path
 from typing import Any
 
 
+from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 
-DYNAMIC_OFFERS_PATH = AUDIT_DIR / "dynamic_offers_preview.json"
-PUBLIC_SELLABLE_OFFERS_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+DYNAMIC_OFFERS_PATH = dynamic_offers_preview_path(ROOT)
+PUBLIC_SELLABLE_OFFERS_PATH = public_sellable_offers_preview_path(ROOT)
 SCHEDULE_FUTURE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
 LIVE_AVAILABILITY_PATH = AUDIT_DIR / "live_availability_snapshot_preview.json"

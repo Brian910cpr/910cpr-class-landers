@@ -1,0 +1,152 @@
+{
+  "generated_at": "2026-06-30T04:45:28.699508",
+  "question": "Why did selected BLS seeds have URL proof but not render in docs/bls.html?",
+  "answer": "Selected seed URL previews were valid, but URL-preview seed rows did not carry BLS tab IDs into the slug hub tab renderer. The page builder only renders appointment seeds inside a tab when tab_ids or the course_key mapping matches that tab.",
+  "first_disappearing_stage_before_fix": {
+    "file": "scripts/build_slug_hubs.py",
+    "function": "appointment_offers_for_tab",
+    "reason": "build_hub_seed_offer_from_url_preview produced selected BLS rows without tab_ids; course_catalog course_key values aha_bls_provider and aha_bls_provider_renewal did not match the older APPOINTMENT_COURSE_TAB_IDS keys."
+  },
+  "fix": {
+    "file": "scripts/build_slug_hubs.py",
+    "functions": [
+      "build_hub_seed_offer_from_url_preview",
+      "appointment_seed_tab_ids",
+      "render_appointment_seed_offer_card"
+    ],
+    "description": "Selected URL-preview seed rows now carry BLS tab IDs, seed_id, source_offer_id, and appointmentDayId; appointment seed CTA text matches real rows."
+  },
+  "stages": [
+    {
+      "stage": "selected seed output",
+      "input": "data/audit/schedule_seeds_preview.json",
+      "output": "data/audit/schedule_seeds_preview.json",
+      "august_bls_seed_count": 4,
+      "four_selected_present": true
+    },
+    {
+      "stage": "appointment URL preview",
+      "input": "data/audit/schedule_seeds_preview.json",
+      "output": "data/audit/seed_appointment_url_preview.json",
+      "august_bls_seed_count": 4,
+      "four_selected_present": true
+    },
+    {
+      "stage": "public sellable candidates",
+      "input": "data/audit/public_sellable_offers_preview.json",
+      "output": "data/audit/public_sellable_offers_preview.json",
+      "august_bls_text_count": 24,
+      "august_aha_bls_enabled_course_count": 18,
+      "note": "candidate pool, not final selected seed source"
+    },
+    {
+      "stage": "BLS hub render",
+      "input": "data/audit/seed_appointment_url_preview.json + docs/data/schedule_future.json",
+      "output": "docs/bls.html",
+      "august_bls_seed_count": 4,
+      "four_selected_present": true
+    }
+  ],
+  "page_inventory_source": {
+    "builder": "scripts/build_slug_hubs.py",
+    "real_class_source": "docs/data/schedule_future.json or docs/data/canonical_schedule_from_class_report.json when authoritative",
+    "selected_seed_source": "data/audit/seed_appointment_url_preview.json",
+    "dynamic_url_proof_source": "data/audit/seed_appointment_url_preview.json",
+    "public_sellable_candidate_source": "data/audit/public_sellable_offers_preview.json"
+  },
+  "counts": {
+    "august_bls_public_sellable_candidates": 24,
+    "august_aha_bls_public_sellable_candidates": 18,
+    "august_bls_selected_seeds": 4,
+    "august_bls_url_previews": 4,
+    "selected_august_bls_rendered_before_fix": 0,
+    "selected_august_bls_rendered_after_fix": 4,
+    "schedule_future_real_bls_rows": 115,
+    "schedule_future_real_august_bls_rows": 2,
+    "public_schedule_real_august_bls_rows": 1,
+    "html_real_august_bls_known_rows": 2,
+    "duplicate_selected_seed_rows": 0
+  },
+  "rendered_seeds": [
+    {
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "date": "2026-08-03",
+      "start_time": "08:30",
+      "appointmentDayId": 260713,
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=8%3A30%20AM&courseId=209806",
+      "rendered": true,
+      "page": "docs/bls.html",
+      "page_card_destination": "bls-provider",
+      "visible_date": "Monday, August 3",
+      "visible_time": "8:30 AM - 10:30 AM",
+      "visible_course_label": "AHA BLS Provider",
+      "location": "Wilmington",
+      "button_text": "Book This Class",
+      "row_source": "seed_appointment_url_preview",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260803-0830",
+      "appears_alongside_real_enrollware_rows": true,
+      "duplicate_selected_seed_rows": 1
+    },
+    {
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
+      "date": "2026-08-04",
+      "start_time": "08:00",
+      "appointmentDayId": 260714,
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=8%3A00%20AM&courseId=359474",
+      "rendered": true,
+      "page": "docs/bls.html",
+      "page_card_destination": "bls-renewal",
+      "visible_date": "Tuesday, August 4",
+      "visible_time": "8:00 AM - 10:00 AM",
+      "visible_course_label": "AHA BLS Provider Renewal",
+      "location": "Wilmington",
+      "button_text": "Book This Class",
+      "row_source": "seed_appointment_url_preview",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260804-0800",
+      "appears_alongside_real_enrollware_rows": true,
+      "duplicate_selected_seed_rows": 1
+    },
+    {
+      "course_id": "209806",
+      "course_title": "AHA BLS Provider",
+      "date": "2026-08-10",
+      "start_time": "08:30",
+      "appointmentDayId": 260720,
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=8%3A30%20AM&courseId=209806",
+      "rendered": true,
+      "page": "docs/bls.html",
+      "page_card_destination": "bls-provider",
+      "visible_date": "Monday, August 10",
+      "visible_time": "8:30 AM - 10:30 AM",
+      "visible_course_label": "AHA BLS Provider",
+      "location": "Wilmington",
+      "button_text": "Book This Class",
+      "row_source": "seed_appointment_url_preview",
+      "source_offer_id": "offer-209806-instructor_24057895173-20260810-0830",
+      "appears_alongside_real_enrollware_rows": true,
+      "duplicate_selected_seed_rows": 1
+    },
+    {
+      "course_id": "359474",
+      "course_title": "AHA BLS Provider Renewal",
+      "date": "2026-08-11",
+      "start_time": "08:00",
+      "appointmentDayId": 260721,
+      "booking_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=8%3A00%20AM&courseId=359474",
+      "rendered": true,
+      "page": "docs/bls.html",
+      "page_card_destination": "bls-renewal",
+      "visible_date": "Tuesday, August 11",
+      "visible_time": "8:00 AM - 10:00 AM",
+      "visible_course_label": "AHA BLS Provider Renewal",
+      "location": "Wilmington",
+      "button_text": "Book This Class",
+      "row_source": "seed_appointment_url_preview",
+      "source_offer_id": "offer-359474-instructor_24057895173-20260811-0800",
+      "appears_alongside_real_enrollware_rows": true,
+      "duplicate_selected_seed_rows": 1
+    }
+  ]
+}

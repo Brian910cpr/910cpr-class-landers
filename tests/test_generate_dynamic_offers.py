@@ -267,6 +267,36 @@ class DynamicOffersTest(unittest.TestCase):
         self.assertEqual("4018 Shipyard Blvd, Wilmington, NC 28403, USA", offers[0]["source_location"])
         self.assertIn("instructor_time_only_confirmed_container_target", offers[0]["reasons"])
 
+    def test_august_live_snapshot_block_generates_august_bls_offer(self) -> None:
+        loaded = self.base_loaded()
+        loaded["appointment_containers"] = self.brian_shipyard_container()
+        loaded["live_availability_snapshot"] = {
+            "availability_blocks": [{
+                "instructor_name": "Brian Ennis",
+                "person_id": "person_brian",
+                "start_datetime": "2026-08-04T13:00:00",
+                "end_datetime": "2026-08-04T16:00:00",
+                "date": "2026-08-04",
+                "end_date": "2026-08-04",
+                "start_time": "13:00",
+                "end_time": "16:00",
+                "availability_status": "available",
+                "availability_location_mode": "instructor_time_only",
+                "source_location": "report_only_august_alignment_fixture",
+                "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+                "allowed_course_families": ["BLS"],
+                "source_event_id": "august-brian-bls-live-fixture",
+            }]
+        }
+
+        offers, _rejections, stats = generate_dynamic_offers.generate_offers(loaded)
+
+        august_offers = [offer for offer in offers if offer["date"].startswith("2026-08")]
+        self.assertEqual("live_availability_snapshot", stats["availability_source_used"])
+        self.assertGreaterEqual(len(august_offers), 1)
+        self.assertEqual("2026-08-04", august_offers[0]["date"])
+        self.assertEqual("209806", august_offers[0]["course_id"])
+
     def test_bls_provider_consumption_window_includes_default_buffers(self) -> None:
         loaded = self.base_loaded()
         loaded["course_catalog"]["courses"][0].pop("setup_buffer_minutes")
@@ -357,12 +387,16 @@ class DynamicOffersTest(unittest.TestCase):
             original_input_paths = generate_dynamic_offers.INPUT_PATHS
             original_audit_dir = generate_dynamic_offers.AUDIT_DIR
             original_offers = generate_dynamic_offers.OFFERS_PATH
+            original_offers_summary_json = generate_dynamic_offers.OFFERS_SUMMARY_JSON_PATH
+            original_offers_summary_md = generate_dynamic_offers.OFFERS_SUMMARY_MD_PATH
             original_report = generate_dynamic_offers.REPORT_PATH
             original_consumption_summary = generate_dynamic_offers.CONSUMPTION_SUMMARY_PATH
             original_consumption_report = generate_dynamic_offers.CONSUMPTION_REPORT_PATH
             try:
                 generate_dynamic_offers.AUDIT_DIR = audit_dir
-                generate_dynamic_offers.OFFERS_PATH = audit_dir / "dynamic_offers_preview.json"
+                generate_dynamic_offers.OFFERS_PATH = root / "data" / "runtime" / "audit_previews" / "dynamic_offers_preview.json"
+                generate_dynamic_offers.OFFERS_SUMMARY_JSON_PATH = audit_dir / "dynamic_offers_preview_summary.json"
+                generate_dynamic_offers.OFFERS_SUMMARY_MD_PATH = audit_dir / "dynamic_offers_preview_summary.md"
                 generate_dynamic_offers.REPORT_PATH = audit_dir / "dynamic_offers_report.md"
                 generate_dynamic_offers.CONSUMPTION_SUMMARY_PATH = audit_dir / "scheduler_consumption_window_summary.json"
                 generate_dynamic_offers.CONSUMPTION_REPORT_PATH = audit_dir / "scheduler_consumption_window_report.md"
@@ -384,15 +418,19 @@ class DynamicOffersTest(unittest.TestCase):
                 written = sorted(path.relative_to(root).as_posix() for path in audit_dir.glob("dynamic_offers_*"))
                 self.assertEqual(
                     [
-                        "data/audit/dynamic_offers_preview.json",
+                        "data/audit/dynamic_offers_preview_summary.json",
+                        "data/audit/dynamic_offers_preview_summary.md",
                         "data/audit/dynamic_offers_report.md",
                     ],
                     written,
                 )
+                self.assertTrue((root / "data" / "runtime" / "audit_previews" / "dynamic_offers_preview.json").exists())
             finally:
                 generate_dynamic_offers.INPUT_PATHS = original_input_paths
                 generate_dynamic_offers.AUDIT_DIR = original_audit_dir
                 generate_dynamic_offers.OFFERS_PATH = original_offers
+                generate_dynamic_offers.OFFERS_SUMMARY_JSON_PATH = original_offers_summary_json
+                generate_dynamic_offers.OFFERS_SUMMARY_MD_PATH = original_offers_summary_md
                 generate_dynamic_offers.REPORT_PATH = original_report
                 generate_dynamic_offers.CONSUMPTION_SUMMARY_PATH = original_consumption_summary
                 generate_dynamic_offers.CONSUMPTION_REPORT_PATH = original_consumption_report

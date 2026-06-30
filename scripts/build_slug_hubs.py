@@ -38,6 +38,8 @@ from supervisor.status_snapshot import write_status_snapshot
 from zoneinfo import ZoneInfo
 
 
+from scripts.local_data_paths import public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
@@ -45,7 +47,7 @@ CANONICAL_CLASS_REPORT_PATH = ROOT / "docs" / "data" / "canonical_schedule_from_
 CUSTOMER_FACING_OFFERS_PATH = ROOT / "docs" / "data" / "customer_facing_offers.json"
 FREE_TIME_SCHEDULER_CONFIG_PATH = ROOT / "docs" / "data" / "free_time_scheduler_config.json"
 SEED_APPOINTMENT_URL_PREVIEW_PATH = ROOT / "data" / "audit" / "seed_appointment_url_preview.json"
-PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH = ROOT / "data" / "audit" / "public_sellable_offers_preview.json"
+PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH = public_sellable_offers_preview_path(ROOT)
 PRESENTATION_POLICY_PREVIEW_PATH = ROOT / "data" / "audit" / "dynamic_offer_presentation_policy_report.json"
 UNIVERSAL_OFFER_INVENTORY_PATH = ROOT / "data" / "audit" / "universal_offer_inventory.json"
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
@@ -485,9 +487,7 @@ def build_hub_seed_offer_from_url_preview(
     appointment_day_id = normalize_space(preview.get("appointmentDayId"))
     if not course_id or not source_offer_id or not url or not appointment_day_id:
         return None
-    public_offer = public_sellable_by_id.get(source_offer_id)
-    if not public_offer:
-        return None
+    public_offer = public_sellable_by_id.get(source_offer_id, {})
 
     parsed_url = urlparse(url)
     query = parse_qs(parsed_url.query)
@@ -503,7 +503,7 @@ def build_hub_seed_offer_from_url_preview(
     if catalog and catalog.get("appointment_allowed") is False:
         return None
     course_key = normalize_space(catalog.get("course_key"))
-    course_family = normalize_space(public_offer.get("course_family") or catalog.get("family"))
+    course_family = normalize_space(public_offer.get("course_family") or catalog.get("family") or preview.get("course_family"))
     hub_slug = APPOINTMENT_HUB_BY_FAMILY.get(course_family)
     if not hub_slug:
         return None
@@ -515,6 +515,7 @@ def build_hub_seed_offer_from_url_preview(
 
     return {
         "hub_slug": hub_slug,
+        "tab_ids": sorted(appointment_seed_tab_ids(course_key, course_id)),
         "course_id": course_id,
         "course_key": course_key,
         "course_title": normalize_space(preview.get("course_title") or public_offer.get("course_title") or catalog.get("official_title")),
@@ -531,8 +532,23 @@ def build_hub_seed_offer_from_url_preview(
         "standalone_class_lander_allowed": False,
         "class_lander_created": False,
         "public_schedule_row_created": False,
+        "appointmentDayId": int(appointment_day_id),
+        "seed_id": normalize_space(preview.get("seed_id")),
+        "source_offer_id": source_offer_id,
         "render_source": "seed_appointment_url_preview",
     }
+
+
+def appointment_seed_tab_ids(course_key: str, course_id: str | None = None) -> set[str]:
+    """Map selected appointment seed rows to their existing slug hub tabs."""
+    direct = APPOINTMENT_COURSE_TAB_IDS.get(normalize_space(course_key), set())
+    if direct:
+        return set(direct)
+    return {
+        "209806": {"bls-provider"},
+        "359474": {"bls-renewal"},
+        "210549": {"bls-heartcode"},
+    }.get(normalize_space(course_id), set())
 
 
 def build_hub_seed_offer_from_public_sellable(
@@ -2283,7 +2299,7 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     )
     flexible_choices = offer.get("flexible_start_choices") if isinstance(offer.get("flexible_start_choices"), list) else []
     flexible_html = ""
-    action_html = f'<a class="button small primary" href="{url}">Check this date/time</a>'
+    action_html = f'<a class="button small primary" href="{url}">Book This Class</a>'
     if presentation_mode == "flexible_start_window" and flexible_choices:
         label = normalize_space(offer.get("flexible_start_button_text")) or "When would YOU like to start?"
         choice_links = []

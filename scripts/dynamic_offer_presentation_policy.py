@@ -8,9 +8,11 @@ from pathlib import Path
 from typing import Any
 
 
+from scripts.local_data_paths import public_sellable_offers_preview_path
+
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
-PUBLIC_SELLABLE_OFFERS_PATH = AUDIT_DIR / "public_sellable_offers_preview.json"
+PUBLIC_SELLABLE_OFFERS_PATH = public_sellable_offers_preview_path(ROOT)
 SCHEDULE_FUTURE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 PRESENTATION_JSON_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.json"
 PRESENTATION_MD_PATH = AUDIT_DIR / "dynamic_offer_presentation_policy_report.md"

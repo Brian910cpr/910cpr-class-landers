@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T22:32:19.087463-04:00",
+  "generated_at": "2026-06-30T13:51:59.987396-04:00",
   "recommendation": {
     "course_catalog_should_be_promoted_or_renamed": false,
     "course_master_should_be_generated_from_course_catalog_plus_enrollware_export": true,
@@ -169,10 +169,15 @@
     ],
     "courses_lacking_enrollware_course_id": [],
     "courses_used_by_public_sellable_offers": [
+      "209806",
       "209808",
+      "209809",
+      "210549",
       "251545",
       "329495",
       "344085",
+      "351632",
+      "359474",
       "445670"
     ],
     "public_sellable_dynamic_offers_missing_course_master_data": [],

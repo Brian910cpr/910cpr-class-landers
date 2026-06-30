@@ -1,0 +1,7 @@
+file,phase,path,size_bytes,size_mib,tracked,exists
+data/audit/dynamic_offers_preview.json,before,data/audit/dynamic_offers_preview.json,103363008,98.57,True,False
+data/audit/dynamic_offers_preview.json,after_runtime_full,data/runtime/audit_previews/dynamic_offers_preview.json,103363008,98.57,False,True
+data/audit/public_sellable_offers_preview.json,before,data/audit/public_sellable_offers_preview.json,101112247,96.43,True,False
+data/audit/public_sellable_offers_preview.json,after_runtime_full,data/runtime/audit_previews/public_sellable_offers_preview.json,101112265,96.43,False,True
+data/audit/dynamic_offers_preview_summary.json,after_tracked_summary,data/audit/dynamic_offers_preview_summary.json,381,0.0004,True,True
+data/audit/public_sellable_offers_preview_summary.json,after_tracked_summary,data/audit/public_sellable_offers_preview_summary.json,388,0.0004,True,True

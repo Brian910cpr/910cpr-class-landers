@@ -8,17 +8,17 @@ Private event descriptions are stored only inside the local runtime snapshot JSO
 
 - Calendar sources found: 3
 - Snapshots written: 3
-- Total events exported: 19
-- Date range exported: 2026-06-19T17:21:21.208861-04:00 through 2026-08-18T17:21:21.208861-04:00
+- Total events exported: 49
+- Date range exported: 2026-06-29T15:37:34.470018-04:00 through 2026-08-28T15:37:34.470018-04:00
 - Private calendar secrets loaded: False
 
 ## Events Exported Per Source
 
 | Source | Calendar ID Present | ICS URL Attempted | URL Source | Type | Status | Failure Reason | Events | Snapshot | Warning Count |
 | --- | --- | --- | --- | --- | --- | --- | ---: | --- | ---: |
-| amy_availability | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | google_calendar | ok |  | 6 | `E:\GitHub\910cpr-class-landers\data\runtime\calendar_snapshots\amy_availability.json` | 0 |
-| nick_availability | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | google_calendar | ok |  | 0 | `E:\GitHub\910cpr-class-landers\data\runtime\calendar_snapshots\nick_availability.json` | 0 |
-| brian_do_not_schedule | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | inverse_google_calendar | ok |  | 13 | `E:\GitHub\910cpr-class-landers\data\runtime\calendar_snapshots\brian_do_not_schedule.json` | 0 |
+| amy_availability | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | google_calendar | ok |  | 0 | `E:\GitHub\910cpr-class-landers_august_seed_breakpoint\data\runtime\calendar_snapshots\amy_availability.json` | 0 |
+| nick_availability | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | google_calendar | ok |  | 0 | `E:\GitHub\910cpr-class-landers_august_seed_breakpoint\data\runtime\calendar_snapshots\nick_availability.json` | 0 |
+| brian_do_not_schedule | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | inverse_google_calendar | ok |  | 49 | `E:\GitHub\910cpr-class-landers_august_seed_breakpoint\data\runtime\calendar_snapshots\brian_do_not_schedule.json` | 0 |
 
 ## Warnings
 
