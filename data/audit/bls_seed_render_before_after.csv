@@ -1,0 +1,6 @@
+stage,before_count,after_count,source,reason
+selected_august_bls_seeds,4,4,data/audit/schedule_seeds_preview.json,selected seed source unchanged
+august_bls_url_previews,4,4,data/audit/seed_appointment_url_preview.json,URL proof unchanged
+selected_august_bls_rendered_rows,0,4,docs/bls.html,URL-preview rows now carry BLS tab IDs
+august_bls_public_sellable_candidates,24,24,data/audit/public_sellable_offers_preview.json,BLS-text candidate pool unchanged
+duplicate_selected_seed_rows,0,0,docs/bls.html,selected appointment URLs should render once

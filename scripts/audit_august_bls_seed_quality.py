@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import csv
+import html
 import json
+import re
 import urllib.parse
 from collections import Counter, defaultdict
 from datetime import date, datetime
@@ -97,6 +99,21 @@ def booking_url(offer: dict[str, Any]) -> str:
         "courseId": clean(offer.get("course_id")),
     }
     return "https://coastalcprtraining.enrollware.com/enroll?" + urllib.parse.urlencode(params)
+
+
+def rendered_url_present(page_html: str, url: Any) -> bool:
+    text = clean(url)
+    if not text:
+        return False
+    return text in page_html or html.escape(text, quote=True) in page_html
+
+
+def rendered_button_text(page_html: str, url: Any) -> str:
+    escaped = html.escape(clean(url), quote=True)
+    match = re.search(rf'<a [^>]*href="{re.escape(escaped)}"[^>]*>(.*?)</a>', page_html, re.S)
+    if not match:
+        return ""
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html.unescape(match.group(1)))).strip()
 
 
 def appointment_day_expected(target_date: str, container: dict[str, Any]) -> int | None:
@@ -223,20 +240,20 @@ def run() -> dict[str, Any]:
     ]
     render_rows = []
     for row in selected_rows:
-        rendered_url_present = clean(row["booking_url"]) in bls_html
+        url_rendered = rendered_url_present(bls_html, row["booking_url"])
         rendered_seed_future = any(clean(item.get("seed_id")) and clean(item.get("source_offer_id")) == clean(sellable_lookup.get(clean(row.get("source_offer_id")), {}).get("offer_id")) for item in schedule_future.get("sessions", []))
         render_rows.append({
             "page_card_destination": page_card(clean(row["courseId"])),
-            "visible_date": row["date"] if rendered_url_present else "",
-            "visible_time": row["start_time"] if rendered_url_present else "",
-            "visible_course_label": row["course_name"] if rendered_url_present else "",
-            "visible_button_text": "Check this date/time" if rendered_url_present else "",
+            "visible_date": row["date"] if url_rendered else "",
+            "visible_time": row["start_time"] if url_rendered else "",
+            "visible_course_label": row["course_name"] if url_rendered else "",
+            "visible_button_text": rendered_button_text(bls_html, row["booking_url"]) if url_rendered else "",
             "url_type": "appointment_seed",
             "booking_url": row["booking_url"],
-            "renders_on_current_bls_html": rendered_url_present,
+            "renders_on_current_bls_html": url_rendered,
             "rendered_seed_row_in_schedule_future": rendered_seed_future,
-            "appears_alongside_real_enrollware_rows": rendered_url_present and bool(public_bls_august_rows),
-            "proof_note": "No current rendered seed row found; this branch generated URL proof only." if not rendered_url_present else "Rendered in docs/bls.html.",
+            "appears_alongside_real_enrollware_rows": url_rendered and bool(public_bls_august_rows),
+            "proof_note": "No current rendered seed row found; this branch generated URL proof only." if not url_rendered else "Rendered in docs/bls.html.",
         })
 
     url_sanity = []
