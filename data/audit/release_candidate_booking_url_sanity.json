@@ -1,0 +1,71 @@
+{
+  "august_bls_appointment_seed_rows": [
+    {
+      "appointmentDayId": "260714",
+      "courseId": "209806",
+      "date": "2026-08-04",
+      "failures": [],
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260714&startTime=9%3A15%20AM&courseId=209806",
+      "startTime": "9:15 AM",
+      "time": "09:15",
+      "visible_label": "AHA BLS Provider"
+    },
+    {
+      "appointmentDayId": "260720",
+      "courseId": "209806",
+      "date": "2026-08-10",
+      "failures": [],
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260720&startTime=9%3A15%20AM&courseId=209806",
+      "startTime": "9:15 AM",
+      "time": "09:15",
+      "visible_label": "AHA BLS Provider"
+    },
+    {
+      "appointmentDayId": "260722",
+      "courseId": "209806",
+      "date": "2026-08-12",
+      "failures": [],
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=9%3A15%20AM&courseId=209806",
+      "startTime": "9:15 AM",
+      "time": "09:15",
+      "visible_label": "AHA BLS Provider"
+    },
+    {
+      "appointmentDayId": "260713",
+      "courseId": "359474",
+      "date": "2026-08-03",
+      "failures": [],
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260713&startTime=9%3A15%20AM&courseId=359474",
+      "startTime": "9:15 AM",
+      "time": "09:15",
+      "visible_label": "AHA BLS Provider Renewal"
+    },
+    {
+      "appointmentDayId": "260715",
+      "courseId": "359474",
+      "date": "2026-08-05",
+      "failures": [],
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260715&startTime=9%3A15%20AM&courseId=359474",
+      "startTime": "9:15 AM",
+      "time": "09:15",
+      "visible_label": "AHA BLS Provider Renewal"
+    },
+    {
+      "appointmentDayId": "260721",
+      "courseId": "359474",
+      "date": "2026-08-11",
+      "failures": [],
+      "href": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260721&startTime=9%3A15%20AM&courseId=359474",
+      "startTime": "9:15 AM",
+      "time": "09:15",
+      "visible_label": "AHA BLS Provider Renewal"
+    }
+  ],
+  "august_bls_appointment_seed_rows_checked": 6,
+  "course_344085_not_on_hsi_page": true,
+  "hsi_pediatric_449422_suppressed": true,
+  "no_wrong_bls_card_detected": true,
+  "passed": true,
+  "unknown_course_key_suppressed": true,
+  "url_failures": []
+}
