@@ -74,6 +74,16 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn('"210549"', html)
         self.assertIn("optionGroups[selected.family]?.courseIds", html)
 
+    def test_rendered_register_cards_hide_debug_details(self):
+        html = build_bls_block_schedule_pilot.render_html(self.payload)
+        self.assertIn("Times shown are start times.", html)
+        self.assertIn("course.location", html)
+        self.assertNotIn("appointmentDayId $", html)
+        self.assertNotIn("courseId $", html)
+        self.assertNotIn("durationMinutes} min", html)
+        self.assertIn("className = 'course-card'", html)
+        self.assertIn('id="date-list" class="month-stack"', html)
+
 
 if __name__ == "__main__":
     unittest.main()
