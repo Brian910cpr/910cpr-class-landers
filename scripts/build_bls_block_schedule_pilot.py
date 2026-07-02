@@ -87,8 +87,8 @@ def css() -> str:
     .muted { color: var(--muted); }
     .pilot-grid {
       display: grid;
-      grid-template-columns: minmax(210px, 270px) minmax(180px, 250px) minmax(180px, 220px) minmax(0, 1fr);
-      gap: 20px;
+      grid-template-columns: minmax(220px, 1.05fr) minmax(270px, 1.2fr) minmax(170px, .85fr) minmax(230px, 1fr);
+      gap: 16px;
       align-items: start;
     }
     .panel {
@@ -128,16 +128,75 @@ def css() -> str:
       box-shadow: inset 3px 0 0 var(--accent);
       background: #eef7fc;
     }
+    .course-card {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+    }
+    .course-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: #e8f2f8;
+      color: var(--accent-dark);
+      font-weight: 700;
+      font-size: .82rem;
+    }
+    .course-copy { display: grid; gap: 3px; }
+    .course-title { font-weight: 700; }
+    .course-help {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.3;
+    }
+    .month-stack { display: grid; gap: 14px; }
+    .month-title {
+      margin: 0 0 8px;
+      font-size: .95rem;
+      font-weight: 700;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+    }
+    .weekday, .calendar-pad {
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: .75rem;
+    }
+    .day-button {
+      min-height: 34px;
+      padding: 0;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+    }
     .course-list { display: grid; gap: 12px; }
     .course {
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 14px;
+      padding: 12px;
       background: var(--band);
     }
     .course-meta {
       color: var(--muted);
       font-size: .92rem;
+      margin: 3px 0 12px;
+    }
+    .register-note {
+      color: var(--muted);
+      font-size: .88rem;
       margin-bottom: 12px;
     }
     .register-link {
@@ -162,6 +221,7 @@ def css() -> str:
     @media (max-width: 820px) {
       .pilot-grid { grid-template-columns: 1fr; }
       header, main { padding: 18px; }
+      .panel { padding: 14px; }
     }
     """
 
@@ -184,6 +244,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "durationMinutes": course["durationMinutes"],
                     "appointmentDayId": course["appointmentDayId"],
                     "appointmentUrl": course["appointmentUrl"],
+                    "location": course["location"],
                 }
                 courses.append(course_record)
                 course_options_by_id.setdefault(course["courseId"], {
@@ -245,8 +306,8 @@ def render_html(payload: dict[str, Any]) -> str:
         </div>
       </div>
       <div class="panel">
-        <h2>Dates</h2>
-        <div id="date-list" class="button-list"></div>
+        <h2>Calendar</h2>
+        <div id="date-list" class="month-stack"></div>
       </div>
       <div class="panel">
         <h2>Start Times</h2>
@@ -254,6 +315,7 @@ def render_html(payload: dict[str, Any]) -> str:
       </div>
       <div class="panel">
         <h2>Register</h2>
+        <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
         <div id="course-list" class="course-list"></div>
       </div>
     </section>
@@ -320,8 +382,24 @@ def render_html(payload: dict[str, Any]) -> str:
       courseOptions.forEach(course => {{
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = course.courseName;
+        button.className = 'course-card';
         button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
+        const icon = document.createElement('span');
+        icon.className = 'course-icon';
+        icon.textContent = course.courseName.includes('HeartCode') ? 'HC' : (course.courseName.includes('Renewal') ? 'RN' : 'BLS');
+        icon.setAttribute('aria-hidden', 'true');
+        const copy = document.createElement('span');
+        copy.className = 'course-copy';
+        const title = document.createElement('span');
+        title.className = 'course-title';
+        title.textContent = course.courseName;
+        const help = document.createElement('span');
+        help.className = 'course-help';
+        help.textContent = course.courseName.includes('HeartCode')
+          ? 'Skills session for online HeartCode BLS.'
+          : (course.courseName.includes('Renewal') ? 'For current or recently expired BLS cards.' : 'Full BLS Provider classroom option.');
+        copy.append(title, help);
+        button.append(icon, copy);
         button.addEventListener('click', () => {{
           selectedCourseId = course.courseId;
           renderAll();
@@ -339,17 +417,61 @@ def render_html(payload: dict[str, Any]) -> str:
         host.innerHTML = '<div class="empty">No public dates are available for this option.</div>';
         return;
       }}
+      const availableByDate = new Map(days.map(day => [day.date, day]));
+      const monthKeys = [];
       days.forEach(day => {{
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = day.displayDate;
-        button.setAttribute('aria-pressed', String(day.date === selectedDate));
-        button.addEventListener('click', () => {{
-          selectedDate = day.date;
-          selectedStart = day.startTimes[0]?.startTime || '';
-          renderAll();
+        const monthKey = day.date.slice(0, 7);
+        if (!monthKeys.includes(monthKey)) {{
+          monthKeys.push(monthKey);
+        }}
+      }});
+      monthKeys.slice(0, 3).forEach(monthKey => {{
+        const [year, month] = monthKey.split('-').map(Number);
+        const first = new Date(year, month - 1, 1);
+        const last = new Date(year, month, 0);
+        const section = document.createElement('section');
+        section.className = 'month';
+        const title = document.createElement('h3');
+        title.className = 'month-title';
+        title.textContent = first.toLocaleDateString(undefined, {{ month: 'long', year: 'numeric' }});
+        const grid = document.createElement('div');
+        grid.className = 'calendar-grid';
+        ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(label => {{
+          const item = document.createElement('div');
+          item.className = 'weekday';
+          item.textContent = label;
+          grid.appendChild(item);
         }});
-        host.appendChild(button);
+        for (let i = 0; i < first.getDay(); i += 1) {{
+          const pad = document.createElement('div');
+          pad.className = 'calendar-pad';
+          grid.appendChild(pad);
+        }}
+        for (let dayNum = 1; dayNum <= last.getDate(); dayNum += 1) {{
+          const dateKey = `${{monthKey}}-${{String(dayNum).padStart(2, '0')}}`;
+          const available = availableByDate.get(dateKey);
+          if (available) {{
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'day-button';
+            button.textContent = String(dayNum);
+            button.setAttribute('aria-label', `${{available.displayDate}} available`);
+            button.setAttribute('aria-pressed', String(available.date === selectedDate));
+            button.addEventListener('click', () => {{
+              selectedDate = available.date;
+              selectedStart = available.startTimes[0]?.startTime || '';
+              renderAll();
+            }});
+            grid.appendChild(button);
+          }} else {{
+            const pad = document.createElement('div');
+            pad.className = 'calendar-pad';
+            pad.textContent = String(dayNum);
+            grid.appendChild(pad);
+          }}
+        }}
+        section.append(title, grid);
+        host.appendChild(section);
       }});
     }}
 
@@ -390,7 +512,7 @@ def render_html(payload: dict[str, Any]) -> str:
         title.textContent = course.courseName;
         const meta = document.createElement('div');
         meta.className = 'course-meta';
-        meta.textContent = `${{course.displayStartTime}} · ${{course.durationMinutes}} min · appointmentDayId ${{course.appointmentDayId}} · courseId ${{course.courseId}}`;
+        meta.textContent = `${{course.location}} · ${{course.displayStartTime}}`;
         const link = document.createElement('a');
         link.className = 'register-link';
         link.href = course.appointmentUrl;

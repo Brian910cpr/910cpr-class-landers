@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-02T09:40:12.248417-04:00",
+  "generatedAt": "2026-07-02T11:24:39.851085-04:00",
   "pilot": "bls_block_start_time_selector",
   "readOnlyDataBuild": true,
   "publicPage": "docs/bls-schedule.html",
@@ -78920,10 +78920,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA Heartsaver� First Aid CPR AED � Blended from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -78937,10 +78936,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA Heartsaver� First Aid CPR AED � Blended from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -78954,10 +78952,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA Heartsaver� First Aid CPR AED � Blended from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -78971,10 +78968,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA Heartsaver� First Aid CPR AED � Blended from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -78988,10 +78984,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA Heartsaver� First Aid CPR AED � Blended from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -79005,10 +79000,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA Heartsaver� First Aid CPR AED � Blended from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -79022,10 +79016,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -79039,10 +79032,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -79056,10 +79048,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -79076,7 +79067,7 @@
         "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": "conflicts with AHA BLS HeartCode� from docs/data/schedule_future.json"
     },
     {
       "date": "2026-07-02",
@@ -79093,7 +79084,7 @@
         "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": "conflicts with AHA BLS HeartCode� from docs/data/schedule_future.json"
     },
     {
       "date": "2026-07-02",
@@ -79107,10 +79098,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -79127,7 +79117,7 @@
         "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": "conflicts with AHA BLS HeartCode� from docs/data/schedule_future.json"
     },
     {
       "date": "2026-07-02",
@@ -79144,7 +79134,7 @@
         "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": "conflicts with AHA BLS HeartCode� from docs/data/schedule_future.json"
     },
     {
       "date": "2026-07-02",
@@ -79158,10 +79148,9 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "appointmentDayId": 260681,
       "reasons": [
-        "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": null
     },
     {
       "date": "2026-07-02",
@@ -79178,7 +79167,7 @@
         "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": "conflicts with AHA BLS HeartCode� from docs/data/schedule_future.json"
     },
     {
       "date": "2026-07-02",
@@ -79195,7 +79184,7 @@
         "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": "conflicts with AHA BLS HeartCode� from docs/data/schedule_future.json"
     },
     {
       "date": "2026-07-02",
@@ -79212,7 +79201,7 @@
         "conflicts_with_existing_enrollware_occupancy",
         "inside_minimum_lead_time"
       ],
-      "conflictReason": "conflicts with AHA BLS Provider (Initial) from docs/data/schedule_future.json"
+      "conflictReason": "conflicts with AHA BLS HeartCode� from docs/data/schedule_future.json"
     },
     {
       "date": "2026-07-02",
@@ -84690,7 +84679,7 @@
   ],
   "rejectionReasonCounts": {
     "outside_public_dynamic_hours": 2838,
-    "conflicts_with_existing_enrollware_occupancy": 1245,
+    "conflicts_with_existing_enrollware_occupancy": 1234,
     "does_not_fit_inside_availability_after_duration_and_buffers": 488,
     "inside_minimum_lead_time": 201
   }
