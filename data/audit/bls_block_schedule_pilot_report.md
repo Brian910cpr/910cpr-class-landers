@@ -9,10 +9,10 @@ Local build artifact for the customer-facing BLS pilot. Enrollware was not calle
 - Horizon days: `180`
 - Minimum lead hours: `24`
 - Whole block presented as class: `False`
-- Public-selectable offers: `1573`
-- Public-selectable dates: `39`
-- Public-selectable start times: `567`
-- Rejected course/start evaluations: `4028`
+- Public-selectable offers: `1651`
+- Public-selectable dates: `40`
+- Public-selectable start times: `591`
+- Rejected course/start evaluations: `4037`
 
 ## Sample Public-Selectable URLs
 
@@ -31,10 +31,10 @@ Local build artifact for the customer-facing BLS pilot. Enrollware was not calle
 
 ## Top Rejection Reasons
 
-- `outside_public_dynamic_hours`: 2874
-- `conflicts_with_existing_enrollware_occupancy`: 1309
-- `does_not_fit_inside_availability_after_duration_and_buffers`: 356
-- `inside_minimum_lead_time`: 108
+- `outside_public_dynamic_hours`: 2838
+- `conflicts_with_existing_enrollware_occupancy`: 1245
+- `does_not_fit_inside_availability_after_duration_and_buffers`: 488
+- `inside_minimum_lead_time`: 201
 
 ## Source Files
 

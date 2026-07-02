@@ -78,7 +78,7 @@ def css() -> str:
       background: var(--surface);
       line-height: 1.45;
     }
-    header, main { max-width: 1040px; margin: 0 auto; padding: 24px; }
+    header, main { max-width: 1120px; margin: 0 auto; padding: 24px; }
     header { border-bottom: 1px solid var(--line); }
     h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
     h2 { margin: 0 0 12px; font-size: 1.25rem; letter-spacing: 0; }
@@ -87,7 +87,7 @@ def css() -> str:
     .muted { color: var(--muted); }
     .pilot-grid {
       display: grid;
-      grid-template-columns: minmax(180px, 260px) minmax(180px, 240px) minmax(0, 1fr);
+      grid-template-columns: minmax(210px, 270px) minmax(180px, 250px) minmax(180px, 220px) minmax(0, 1fr);
       gap: 20px;
       align-items: start;
     }
@@ -98,6 +98,20 @@ def css() -> str:
       padding: 16px;
     }
     .button-list { display: grid; gap: 8px; }
+    .choice-list { display: grid; gap: 8px; margin-bottom: 14px; }
+    .option-tools { display: grid; gap: 12px; }
+    .compare-toggle {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .compare-toggle input {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+    }
     button, .register-link {
       min-height: 42px;
       border-radius: 6px;
@@ -153,21 +167,37 @@ def css() -> str:
 
 
 def render_html(payload: dict[str, Any]) -> str:
+    course_options_by_id: dict[str, dict[str, Any]] = {}
+    option_groups: dict[str, dict[str, Any]] = {}
     page_dates = []
     for day in payload["dates"]:
         start_times = []
         for slot in day["startTimes"]:
-            courses = [
-                {
+            courses = []
+            for course in slot["courses"]:
+                family = course.get("courseFamily") or "BLS"
+                course_record = {
                     "courseId": course["courseId"],
                     "courseName": course["courseName"],
+                    "family": family,
                     "displayStartTime": course["displayStartTime"],
                     "durationMinutes": course["durationMinutes"],
                     "appointmentDayId": course["appointmentDayId"],
                     "appointmentUrl": course["appointmentUrl"],
                 }
-                for course in slot["courses"]
-            ]
+                courses.append(course_record)
+                course_options_by_id.setdefault(course["courseId"], {
+                    "courseId": course["courseId"],
+                    "courseName": course["courseName"],
+                    "family": family,
+                })
+                group = option_groups.setdefault(family, {
+                    "family": family,
+                    "label": f"All AHA {family} options",
+                    "courseIds": [],
+                })
+                if course["courseId"] not in group["courseIds"]:
+                    group["courseIds"].append(course["courseId"])
             start_times.append({
                 "startTime": slot["startTime"],
                 "displayStartTime": slot["displayStartTime"],
@@ -179,9 +209,15 @@ def render_html(payload: dict[str, Any]) -> str:
             "startTimes": start_times,
         })
     data_json = json.dumps(page_dates, ensure_ascii=False)
+    course_options = [
+        course_options_by_id[course_id]
+        for course_id in ("209806", "359474", "210549")
+        if course_id in course_options_by_id
+    ]
+    course_options_json = json.dumps(course_options, ensure_ascii=False)
+    option_groups_json = json.dumps(option_groups, ensure_ascii=False)
     counts = payload["counts"]
-    first_date = payload["dates"][0]["date"] if payload["dates"] else ""
-    first_start = payload["dates"][0]["startTimes"][0]["startTime"] if payload["dates"] and payload["dates"][0]["startTimes"] else ""
+    first_course = course_options[0]["courseId"] if course_options else ""
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -193,11 +229,21 @@ def render_html(payload: dict[str, Any]) -> str:
 <body>
   <header>
     <h1>BLS Schedule Pilot</h1>
-    <p class="muted">Select a date, then a public start time, then choose the BLS course registration that fits that block.</p>
+    <p class="muted">Select the BLS course format first, then choose a public date and start time.</p>
     <p class="muted">Pilot proof: whole availability blocks are not shown as class times. Public-selectable offers: {counts['publicSelectableOfferCount']}.</p>
   </header>
   <main>
     <section class="pilot-grid" aria-label="BLS block-based schedule pilot">
+      <div class="panel">
+        <h2>Course</h2>
+        <div id="course-option-list" class="choice-list"></div>
+        <div class="option-tools">
+          <label class="compare-toggle">
+            <input id="compare-toggle" type="checkbox">
+            <span>Need BLS ASAP? Show all AHA BLS options</span>
+          </label>
+        </div>
+      </div>
       <div class="panel">
         <h2>Dates</h2>
         <div id="date-list" class="button-list"></div>
@@ -207,28 +253,93 @@ def render_html(payload: dict[str, Any]) -> str:
         <div id="start-list" class="button-list"></div>
       </div>
       <div class="panel">
-        <h2>Course Choices</h2>
+        <h2>Register</h2>
         <div id="course-list" class="course-list"></div>
       </div>
     </section>
   </main>
   <script>
     const scheduleDates = {data_json};
-    let selectedDate = {json.dumps(first_date)};
-    let selectedStart = {json.dumps(first_start)};
+    const courseOptions = {course_options_json};
+    const optionGroups = {option_groups_json};
+    let selectedCourseId = {json.dumps(first_course)};
+    let compareMode = false;
+    let selectedDate = '';
+    let selectedStart = '';
 
     function byId(id) {{
       return document.getElementById(id);
     }}
 
+    function activeCourseIds() {{
+      const selected = courseOptions.find(course => course.courseId === selectedCourseId);
+      if (!selected) {{
+        return new Set();
+      }}
+      if (compareMode) {{
+        return new Set(optionGroups[selected.family]?.courseIds || [selectedCourseId]);
+      }}
+      return new Set([selectedCourseId]);
+    }}
+
+    function filteredCourses(slot) {{
+      const ids = activeCourseIds();
+      return slot.courses.filter(course => ids.has(course.courseId));
+    }}
+
+    function filteredDates() {{
+      return scheduleDates.map(day => {{
+        const startTimes = day.startTimes.map(slot => ({{
+          ...slot,
+          courses: filteredCourses(slot)
+        }})).filter(slot => slot.courses.length);
+        return {{ ...day, startTimes }};
+      }}).filter(day => day.startTimes.length);
+    }}
+
+    function syncSelection() {{
+      const days = filteredDates();
+      if (!days.length) {{
+        selectedDate = '';
+        selectedStart = '';
+        return days;
+      }}
+      if (!days.some(day => day.date === selectedDate)) {{
+        selectedDate = days[0].date;
+      }}
+      const day = days.find(item => item.date === selectedDate);
+      if (!day.startTimes.some(slot => slot.startTime === selectedStart)) {{
+        selectedStart = day.startTimes[0]?.startTime || '';
+      }}
+      return days;
+    }}
+
+    function renderCourseOptions() {{
+      const host = byId('course-option-list');
+      host.innerHTML = '';
+      courseOptions.forEach(course => {{
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = course.courseName;
+        button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
+        button.addEventListener('click', () => {{
+          selectedCourseId = course.courseId;
+          renderAll();
+        }});
+        host.appendChild(button);
+      }});
+      byId('compare-toggle').checked = compareMode;
+    }}
+
     function renderDates() {{
       const host = byId('date-list');
       host.innerHTML = '';
-      if (!scheduleDates.length) {{
-        host.innerHTML = '<div class="empty">No public BLS block start times are available.</div>';
+      const days = syncSelection();
+      if (!days.length) {{
+        host.innerHTML = '<div class="empty">No public dates are available for this option.</div>';
         return;
       }}
-      scheduleDates.forEach(day => {{
+      days.forEach(day => {{
         const button = document.createElement('button');
         button.type = 'button';
         button.textContent = day.displayDate;
@@ -245,7 +356,7 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderStarts() {{
       const host = byId('start-list');
       host.innerHTML = '';
-      const day = scheduleDates.find(item => item.date === selectedDate);
+      const day = filteredDates().find(item => item.date === selectedDate);
       if (!day || !day.startTimes.length) {{
         host.innerHTML = '<div class="empty">Select another date.</div>';
         return;
@@ -266,7 +377,7 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderCourses() {{
       const host = byId('course-list');
       host.innerHTML = '';
-      const day = scheduleDates.find(item => item.date === selectedDate);
+      const day = filteredDates().find(item => item.date === selectedDate);
       const slot = day?.startTimes.find(item => item.startTime === selectedStart);
       if (!slot || !slot.courses.length) {{
         host.innerHTML = '<div class="empty">Select a start time.</div>';
@@ -290,10 +401,17 @@ def render_html(payload: dict[str, Any]) -> str:
     }}
 
     function renderAll() {{
+      syncSelection();
+      renderCourseOptions();
       renderDates();
       renderStarts();
       renderCourses();
     }}
+
+    byId('compare-toggle').addEventListener('change', event => {{
+      compareMode = event.target.checked;
+      renderAll();
+    }});
 
     renderAll();
   </script>
