@@ -5,17 +5,17 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 ## Summary
 
 - Configured calendar sources found: 3
-- Local snapshot found: E:\GitHub\910cpr-class-landers_august_seed_breakpoint\data\runtime\calendar_snapshots
+- Local snapshot found: E:\GitHub\910cpr-class-landers\data\runtime\calendar_snapshots
 - Instructors mapped: 2
 - Blocks generated: 116
-- Blocks blocked/placeheld: 1
-- Inverse-generated availability blocks: 68
-- Inverse blocking event blocks: 48
+- Blocks blocked/placeheld: 0
+- Inverse-generated availability blocks: 62
+- Inverse blocking event blocks: 54
 - DNS markers found: 0
 
 ## Blocked Reason Counts
 
-- `event_missing_parseable_start_or_end`: 1
+- None
 
 ## Missing Calendar Source Config / Snapshots
 
@@ -23,9 +23,7 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 
 ## Calendar Sources Blocked Or Placeholdered
 
-| Source | Type | Reason | Message |
-| --- | --- | --- | --- |
-| brian_do_not_schedule | inverse_google_calendar | `event_missing_parseable_start_or_end` | Calendar event was not usable as an inverse blocking interval. |
+- None
 
 ## Instructors Mapped
 

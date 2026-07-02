@@ -1,0 +1,262 @@
+{
+  "schema_version": "0.1",
+  "description": "Config for direct-URL block-based schedule pages. This file does not change Enrollware course IDs or appointment URL behavior.",
+  "pages": {
+    "bls": {
+      "page_key": "bls",
+      "family": "BLS",
+      "certifying_body": "AHA",
+      "title": "BLS Schedule Pilot",
+      "meta_description": "Select an AHA BLS course, date, and public start time.",
+      "intro": "Select the BLS course format first, then choose a public date and start time.",
+      "output_path": "docs/bls-schedule.html",
+      "report_json_path": "data/audit/bls_block_schedule_pilot.json",
+      "report_md_path": "data/audit/bls_block_schedule_pilot_report.md",
+      "compare_mode": {
+        "enabled": true,
+        "label": "Need BLS ASAP? Show all AHA BLS options",
+        "groups": {
+          "BLS": {
+            "label": "All AHA BLS options",
+            "course_ids": ["209806", "359474", "210549"]
+          }
+        }
+      },
+      "course_options": [
+        {
+          "course_id": "209806",
+          "display_label": "AHA BLS Provider",
+          "icon_label": "BLS",
+          "clarification": "Full BLS Provider classroom option.",
+          "delivery_mode": "in-person",
+          "variant": "initial"
+        },
+        {
+          "course_id": "359474",
+          "display_label": "AHA BLS Provider Renewal",
+          "icon_label": "RN",
+          "clarification": "For current or recently expired BLS cards.",
+          "delivery_mode": "in-person",
+          "variant": "renewal"
+        },
+        {
+          "course_id": "210549",
+          "display_label": "AHA HeartCode BLS",
+          "icon_label": "HC",
+          "clarification": "Skills session for online HeartCode BLS.",
+          "delivery_mode": "skills-session",
+          "variant": "heartcode"
+        }
+      ]
+    },
+    "acls": {
+      "page_key": "acls",
+      "family": "ACLS",
+      "certifying_body": "AHA",
+      "title": "ACLS Schedule",
+      "meta_description": "Select an AHA ACLS course, date, and public start time.",
+      "intro": "Select the ACLS course format first, then choose a public date and start time.",
+      "output_path": "docs/acls-schedule.html",
+      "compare_mode": {
+        "enabled": true,
+        "label": "Need ACLS ASAP? Show all AHA ACLS options",
+        "groups": {
+          "ACLS": {
+            "label": "All AHA ACLS options",
+            "course_ids": ["241108", "209818", "209811"]
+          }
+        }
+      },
+      "course_options": [
+        {
+          "course_id": "241108",
+          "display_label": "AHA ACLS Provider (Initial)",
+          "icon_label": "ACLS",
+          "clarification": "Initial ACLS Provider classroom option.",
+          "delivery_mode": "in-person",
+          "variant": "initial"
+        },
+        {
+          "course_id": "209818",
+          "display_label": "AHA ACLS Provider (Renewal)",
+          "icon_label": "RN",
+          "clarification": "Renewal classroom option for ACLS providers.",
+          "delivery_mode": "in-person",
+          "variant": "renewal"
+        },
+        {
+          "course_id": "209811",
+          "display_label": "AHA ACLS HeartCode",
+          "icon_label": "HC",
+          "clarification": "Skills session for online HeartCode ACLS.",
+          "delivery_mode": "skills-session",
+          "variant": "heartcode"
+        }
+      ]
+    },
+    "pals": {
+      "page_key": "pals",
+      "family": "PALS",
+      "certifying_body": "AHA",
+      "title": "PALS Schedule",
+      "meta_description": "Select an AHA PALS course, date, and public start time.",
+      "intro": "Select the PALS course format first, then choose a public date and start time.",
+      "output_path": "docs/pals-schedule.html",
+      "compare_mode": {
+        "enabled": true,
+        "label": "Need PALS ASAP? Show all AHA PALS options",
+        "groups": {
+          "PALS": {
+            "label": "All AHA PALS options",
+            "course_ids": ["209805", "251496", "209812"]
+          }
+        }
+      },
+      "course_options": [
+        {
+          "course_id": "209805",
+          "display_label": "AHA PALS Provider",
+          "icon_label": "PALS",
+          "clarification": "Initial PALS Provider classroom option.",
+          "delivery_mode": "in-person",
+          "variant": "initial"
+        },
+        {
+          "course_id": "251496",
+          "display_label": "AHA PALS Renewal",
+          "icon_label": "RN",
+          "clarification": "Renewal classroom option for PALS providers.",
+          "delivery_mode": "in-person",
+          "variant": "renewal"
+        },
+        {
+          "course_id": "209812",
+          "display_label": "AHA PALS HeartCode",
+          "icon_label": "HC",
+          "clarification": "Skills session for online HeartCode PALS.",
+          "delivery_mode": "skills-session",
+          "variant": "heartcode"
+        }
+      ]
+    },
+    "heartsaver": {
+      "page_key": "heartsaver",
+      "family": "Heartsaver",
+      "certifying_body": "AHA",
+      "title": "Heartsaver Schedule",
+      "meta_description": "Select an AHA Heartsaver course, date, and public start time.",
+      "intro": "Select the Heartsaver course format first, then choose a public date and start time.",
+      "output_path": "docs/heartsaver-schedule.html",
+      "compare_mode": {
+        "enabled": true,
+        "label": "Need First Aid or CPR ASAP? Show all AHA Heartsaver options",
+        "groups": {
+          "Heartsaver": {
+            "label": "All AHA Heartsaver options",
+            "course_ids": ["344085", "209809", "251545"]
+          }
+        }
+      },
+      "course_options": [
+        {
+          "course_id": "344085",
+          "display_label": "AHA Heartsaver CPR AED",
+          "icon_label": "CPR",
+          "clarification": "CPR and AED classroom option.",
+          "delivery_mode": "in-person",
+          "variant": "cpr-aed"
+        },
+        {
+          "course_id": "209809",
+          "display_label": "AHA Heartsaver First Aid CPR AED",
+          "icon_label": "FA",
+          "clarification": "First Aid, CPR, and AED classroom option.",
+          "delivery_mode": "in-person",
+          "variant": "first-aid-cpr-aed"
+        },
+        {
+          "course_id": "251545",
+          "display_label": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+          "icon_label": "PED",
+          "clarification": "Pediatric First Aid/CPR/AED option where scheduling rules allow.",
+          "delivery_mode": "blended",
+          "variant": "pediatric"
+        }
+      ]
+    },
+    "hsi": {
+      "page_key": "hsi",
+      "family": "HSI",
+      "certifying_body": "HSI",
+      "title": "HSI Schedule",
+      "meta_description": "HSI block-schedule readiness placeholder.",
+      "intro": "HSI schedule readiness is audited before public page generation.",
+      "output_path": "docs/hsi-schedule.html",
+      "compare_mode": {
+        "enabled": true,
+        "label": "Need HSI ASAP? Show all HSI options",
+        "groups": {
+          "HSI": {
+            "label": "All HSI options",
+            "course_ids": ["463743", "445670"]
+          }
+        }
+      },
+      "course_options": [
+        {
+          "course_id": "463743",
+          "display_label": "HSI BLS Challenge",
+          "icon_label": "HSI",
+          "clarification": "HSI BLS challenge option.",
+          "delivery_mode": "in-person",
+          "variant": "challenge"
+        },
+        {
+          "course_id": "445670",
+          "display_label": "HSI BLS + Adult First Aid",
+          "icon_label": "FA",
+          "clarification": "HSI BLS plus Adult First Aid option.",
+          "delivery_mode": "in-person",
+          "variant": "bls-first-aid"
+        }
+      ]
+    },
+    "arc": {
+      "page_key": "arc",
+      "family": "ARC",
+      "certifying_body": "ARC",
+      "title": "Red Cross Schedule",
+      "meta_description": "Red Cross block-schedule readiness placeholder.",
+      "intro": "Red Cross schedule readiness is audited before public page generation.",
+      "output_path": "docs/arc-schedule.html",
+      "compare_mode": {
+        "enabled": true,
+        "label": "Need Red Cross ASAP? Show all Red Cross options",
+        "groups": {
+          "ARC": {
+            "label": "All Red Cross options",
+            "course_ids": ["248288", "248287"]
+          }
+        }
+      },
+      "course_options": [
+        {
+          "course_id": "248288",
+          "display_label": "American Red Cross Basic Life Support",
+          "icon_label": "ARC",
+          "clarification": "Red Cross BLS classroom option.",
+          "delivery_mode": "in-person",
+          "variant": "bls"
+        },
+        {
+          "course_id": "248287",
+          "display_label": "American Red Cross Basic Life Support - Blended Learning",
+          "icon_label": "BL",
+          "clarification": "Red Cross BLS blended learning option.",
+          "delivery_mode": "blended",
+          "variant": "bls-blended"
+        }
+      ]
+    }
+  }
+}

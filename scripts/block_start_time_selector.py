@@ -28,6 +28,7 @@ LOCATION_RESOURCE_MAP_PATH = ROOT / "data" / "config" / "location_resource_map.j
 APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 PUBLIC_LOCATION_POLICY_PATH = ROOT / "data" / "config" / "public_location_policy.json"
 PUBLIC_OFFER_POLICY_PATH = ROOT / "data" / "config" / "public_offer_policy.json"
+BLOCK_SCHEDULE_PAGES_PATH = ROOT / "data" / "config" / "block_schedule_pages.json"
 LIVE_AVAILABILITY_PATH = AUDIT_DIR / "live_availability_snapshot_preview.json"
 LEGACY_AVAILABILITY_PATH = ROOT / "data" / "inventory" / "instructor_availability.json"
 SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
@@ -37,6 +38,7 @@ BLS_PILOT_COURSE_IDS = ("209806", "359474", "210549")
 START_STEP_MINUTES = 30
 AS_OF_DATE = date(2026, 7, 2)
 UNKNOWN = "UNKNOWN"
+APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS = {"brian_do_not_schedule"}
 
 
 class BlockSelectorInputError(RuntimeError):
@@ -126,6 +128,215 @@ def load_selected_windows(loaded: dict[str, Any]) -> tuple[list[dict[str, Any]],
     if not windows:
         raise BlockSelectorInputError("No real availability blocks were found in live snapshot or legacy fallback")
     return windows, stats
+
+
+def live_snapshot_generated_at(payload: dict[str, Any]) -> datetime | None:
+    generated_at = payload.get("generated_at") or payload.get("generatedAt")
+    return parse_dt(generated_at)
+
+
+def require_current_live_availability_snapshot() -> dict[str, Any]:
+    payload = read_required_json(LIVE_AVAILABILITY_PATH)
+    if not isinstance(payload, dict):
+        raise BlockSelectorInputError(f"{LIVE_AVAILABILITY_PATH} must contain a JSON object")
+    generated_at = live_snapshot_generated_at(payload)
+    if not generated_at:
+        raise BlockSelectorInputError(f"{LIVE_AVAILABILITY_PATH} is missing a valid generated_at timestamp")
+    if generated_at.date() < AS_OF_DATE:
+        raise BlockSelectorInputError(
+            f"{LIVE_AVAILABILITY_PATH} is stale: generated_at={generated_at.isoformat()} "
+            f"is before required as-of date {AS_OF_DATE.isoformat()}. "
+            "Run python -m scripts.export_calendar_snapshots and python -m scripts.build_live_availability_snapshot."
+        )
+    return payload
+
+
+def live_snapshot_block_id(window: dict[str, Any], index: int) -> str:
+    return clean_text(window.get("source_event_id") or window.get("source_availability_window") or f"live_availability_snapshot[{index}]")
+
+
+def selected_public_page_live_windows(live_payload: dict[str, Any], location_resource_map: Any) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    raw_blocks = generate_dynamic_offers.availability_windows(live_payload)
+    selected: list[dict[str, Any]] = []
+    suppressed: list[dict[str, Any]] = []
+    approved_inverse_used: list[dict[str, Any]] = []
+    for index, window in enumerate(raw_blocks, start=1):
+        if not generate_dynamic_offers.valid_available_window(window):
+            continue
+        block_id = live_snapshot_block_id(window, index)
+        source_calendar_id = clean_text(window.get("source_calendar_id"))
+        inverse_generated = window.get("inverse_generated") is True
+        if inverse_generated and source_calendar_id not in APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS:
+            suppressed.append({
+                "date": window.get("date"),
+                "startTime": window.get("start_time"),
+                "endTime": window.get("end_time"),
+                "sourceAvailabilityBlockId": block_id,
+                "sourceCalendarId": source_calendar_id,
+                "reason": "inverse_generated_availability_source_not_approved_for_public_page",
+            })
+            continue
+        if inverse_generated:
+            approved_inverse_used.append({
+                "date": window.get("date"),
+                "startTime": window.get("start_time"),
+                "endTime": window.get("end_time"),
+                "sourceAvailabilityBlockId": block_id,
+                "sourceCalendarId": source_calendar_id,
+                "reason": "approved_inverse_generated_availability_source",
+            })
+        normalized = generate_dynamic_offers.normalize_live_availability_window(window, index, location_resource_map)
+        normalized["source_availability_window"] = block_id
+        normalized["approved_inverse_generated"] = inverse_generated
+        normalized["source_live_availability_block"] = {
+            "sourceAvailabilityBlockId": block_id,
+            "date": window.get("date"),
+            "startDateTime": window.get("start_datetime"),
+            "endDateTime": window.get("end_datetime"),
+            "instructor": window.get("instructor_name"),
+            "location": window.get("location_name"),
+            "sourceCalendarId": window.get("source_calendar_id"),
+            "sourceType": window.get("source_type"),
+            "inverseGenerated": inverse_generated,
+            "approvedInverseGenerated": inverse_generated,
+        }
+        selected.append(normalized)
+    stats = {
+        "availability_source_used": "live_availability_snapshot",
+        "availability_fallback_used": False,
+        "available_blocks_read": len(selected),
+        "live_available_blocks_read": len(selected),
+        "legacy_available_blocks_read": 0,
+        "availability_source_reason": "strict_current_live_snapshot_public_page",
+        "suppressed_available_blocks_read": len(suppressed),
+        "suppressed_available_block_dates": sorted({str(item["date"]) for item in suppressed if item.get("date")}),
+        "suppressed_available_blocks": suppressed[:500],
+        "approved_inverse_blocks_used": approved_inverse_used[:500],
+        "approved_inverse_blocks_used_count": len(approved_inverse_used),
+        "unapproved_inverse_blocks_suppressed_count": len(suppressed),
+        "approved_inverse_source_calendar_ids": sorted(APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS),
+    }
+    return selected, stats
+
+
+def current_public_live_block_index() -> dict[str, dict[str, Any]]:
+    location_resource_map = read_required_json(LOCATION_RESOURCE_MAP_PATH)
+    live_payload = require_current_live_availability_snapshot()
+    windows, _stats = selected_public_page_live_windows(live_payload, location_resource_map)
+    out: dict[str, dict[str, Any]] = {}
+    for window in windows:
+        block_id = clean_text(window.get("source_availability_window"))
+        if not block_id:
+            continue
+        start, end = window_datetimes(window)
+        out[block_id] = {
+            "block": window,
+            "start": start,
+            "end": end,
+        }
+    return out
+
+
+def rebuild_payload_dates(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    page_config = payload.get("pageConfig", {})
+    allowed_course_ids = [
+        clean_text(item)
+        for item in page_config.get("allowed_course_ids", [])
+        if clean_text(item)
+    ]
+    if not allowed_course_ids:
+        allowed_course_ids = sorted({clean_text(offer.get("courseId")) for offer in payload.get("offers", []) if clean_text(offer.get("courseId"))})
+    grouped_dates: dict[str, dict[str, Any]] = {}
+    for offer in payload.get("offers", []):
+        date_group = grouped_dates.setdefault(
+            offer["date"],
+            {"date": offer["date"], "displayDate": offer["displayDate"], "startTimes": {}},
+        )
+        start_group = date_group["startTimes"].setdefault(
+            offer["startTime"],
+            {"startTime": offer["startTime"], "displayStartTime": offer["displayStartTime"], "courses": []},
+        )
+        start_group["courses"].append(offer)
+
+    dates = []
+    for date_group in grouped_dates.values():
+        start_times = []
+        for start_group in date_group["startTimes"].values():
+            start_group["courses"].sort(
+                key=lambda item: (
+                    allowed_course_ids.index(item["courseId"]) if item["courseId"] in allowed_course_ids else 999,
+                    item["courseName"],
+                )
+            )
+            start_times.append(start_group)
+        start_times.sort(key=lambda item: item["startTime"])
+        dates.append({**date_group, "startTimes": start_times})
+    dates.sort(key=lambda item: item["date"])
+    return dates
+
+
+def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, Any]:
+    live_blocks = current_public_live_block_index()
+    kept: list[dict[str, Any]] = []
+    suppressed: list[dict[str, Any]] = []
+    for offer in payload.get("offers", []):
+        block_id = clean_text(offer.get("availabilityBlockId"))
+        block = live_blocks.get(block_id)
+        start = parse_dt(f"{offer.get('date')}T{offer.get('startTime')}")
+        consumption_end = parse_dt(f"{offer.get('date')}T{offer.get('schedulerConsumptionEnd')}")
+        reason = ""
+        if not block:
+            reason = "source_availability_block_missing_from_current_live_snapshot"
+        elif not start or not consumption_end:
+            reason = "invalid_offer_consumption_window"
+        elif start < block["start"] or consumption_end > block["end"]:
+            reason = "offer_consumption_window_no_longer_fits_current_live_block"
+        if reason:
+            suppressed.append({
+                "date": offer.get("date"),
+                "startTime": offer.get("startTime"),
+                "courseId": offer.get("courseId"),
+                "courseName": offer.get("courseName"),
+                "sourceAvailabilityBlockId": block_id,
+                "availabilityWindow": offer.get("availabilityWindow"),
+                "reason": reason,
+            })
+        else:
+            kept.append(offer)
+
+    if not suppressed:
+        payload.setdefault("liveAvailabilityGuard", {})
+        payload["liveAvailabilityGuard"].update({
+            "enabled": True,
+            "renderedDates": sorted({offer["date"] for offer in kept}),
+            "sourceBlocksUsed": sorted({clean_text(offer.get("availabilityBlockId")) for offer in kept if clean_text(offer.get("availabilityBlockId"))}),
+            "suppressedStaleOrOrphanedOffers": [],
+            "suppressedDates": [],
+        })
+        return payload
+
+    payload = {**payload, "offers": kept}
+    payload["dates"] = rebuild_payload_dates(payload)
+    counts = {**payload["counts"]}
+    counts["publicSelectableOfferCount"] = len(kept)
+    counts["publicSelectableDateCount"] = len(payload["dates"])
+    counts["publicSelectableStartTimeCount"] = sum(len(item["startTimes"]) for item in payload["dates"])
+    counts["suppressedStaleOrOrphanedOfferCount"] = len(suppressed)
+    payload["counts"] = counts
+    payload["liveAvailabilityGuard"] = {
+        **payload.get("liveAvailabilityGuard", {}),
+        "enabled": True,
+        "renderedDates": sorted({offer["date"] for offer in kept}),
+        "sourceBlocksUsed": sorted({clean_text(offer.get("availabilityBlockId")) for offer in kept if clean_text(offer.get("availabilityBlockId"))}),
+        "suppressedStaleOrOrphanedOffers": suppressed[:1000],
+        "suppressedDates": sorted({str(item["date"]) for item in suppressed if item.get("date")}),
+    }
+    payload["proof"] = {
+        **payload.get("proof", {}),
+        "visibleStartLabels": sorted({offer["displayStartTime"] for offer in kept})[:20],
+        "availabilityWindowsThatGeneratedOffers": sorted({offer["availabilityWindow"] for offer in kept}),
+    }
+    return payload
 
 
 def window_datetimes(window: dict[str, Any]) -> tuple[datetime, datetime]:
@@ -240,9 +451,46 @@ def find_url(
 
 
 def build_bls_pilot_schedule() -> dict[str, Any]:
+    return build_block_schedule_page(load_block_schedule_page_configs()["bls"])
+
+
+def load_block_schedule_page_configs() -> dict[str, dict[str, Any]]:
+    payload = read_required_json(BLOCK_SCHEDULE_PAGES_PATH)
+    pages = payload.get("pages") if isinstance(payload, dict) else None
+    if not isinstance(pages, dict):
+        raise BlockSelectorInputError(f"{BLOCK_SCHEDULE_PAGES_PATH} must contain a pages object")
+    normalized: dict[str, dict[str, Any]] = {}
+    for key, page in pages.items():
+        if not isinstance(page, dict):
+            continue
+        page_key = normalize_key(page.get("page_key") or key)
+        course_options = page.get("course_options")
+        if not page_key or not isinstance(course_options, list) or not course_options:
+            raise BlockSelectorInputError(f"Block schedule page {key} must define course_options")
+        allowed_course_ids = []
+        for option in course_options:
+            if not isinstance(option, dict) or not clean_text(option.get("course_id")):
+                raise BlockSelectorInputError(f"Block schedule page {key} has an invalid course option")
+            allowed_course_ids.append(clean_text(option["course_id"]))
+        normalized[page_key] = {
+            **page,
+            "page_key": page_key,
+            "allowed_course_ids": allowed_course_ids,
+        }
+    return normalized
+
+
+def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
+    page_key = normalize_key(page_config.get("page_key"))
+    if not page_key:
+        raise BlockSelectorInputError("Block schedule page config is missing page_key")
+    allowed_course_ids = [clean_text(item) for item in page_config.get("allowed_course_ids", []) if clean_text(item)]
+    if not allowed_course_ids:
+        raise BlockSelectorInputError(f"Block schedule page {page_key} has no allowed course IDs")
+
+    live_availability_snapshot = require_current_live_availability_snapshot()
     loaded = {
-        "live_availability_snapshot": read_required_json(LIVE_AVAILABILITY_PATH) if LIVE_AVAILABILITY_PATH.exists() else None,
-        "instructor_availability": read_required_json(LEGACY_AVAILABILITY_PATH),
+        "live_availability_snapshot": live_availability_snapshot,
         "location_resource_map": read_required_json(LOCATION_RESOURCE_MAP_PATH),
         "course_catalog": read_required_json(COURSE_CATALOG_PATH),
         "people_catalog": read_required_json(PEOPLE_CATALOG_PATH),
@@ -258,17 +506,26 @@ def build_bls_pilot_schedule() -> dict[str, Any]:
     containers = active_containers(loaded["appointment_containers"])
     if not containers:
         raise BlockSelectorInputError(f"{APPOINTMENT_CONTAINERS_PATH} has no active appointment containers")
-    windows, availability_stats = load_selected_windows(loaded)
+    windows, availability_stats = selected_public_page_live_windows(live_availability_snapshot, loaded["location_resource_map"])
     occupancy = build_occupancy(loaded)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy)
 
     selected_courses: list[dict[str, Any]] = []
-    for course_id in BLS_PILOT_COURSE_IDS:
+    config_course_options = {
+        clean_text(option.get("course_id")): option
+        for option in page_config.get("course_options", [])
+        if isinstance(option, dict) and clean_text(option.get("course_id"))
+    }
+    for course_id in allowed_course_ids:
         if course_id not in course_rules:
-            raise BlockSelectorInputError(f"BLS pilot course {course_id} is missing from {COURSE_RULES_PATH}")
+            raise BlockSelectorInputError(f"Block schedule page {page_key} course {course_id} is missing from {COURSE_RULES_PATH}")
         if course_id not in course_catalog:
-            raise BlockSelectorInputError(f"BLS pilot course {course_id} is missing from {COURSE_CATALOG_PATH}")
-        selected_courses.append({**course_catalog[course_id], **course_rules[course_id]})
+            raise BlockSelectorInputError(f"Block schedule page {page_key} course {course_id} is missing from {COURSE_CATALOG_PATH}")
+        selected_courses.append({
+            **course_catalog[course_id],
+            **course_rules[course_id],
+            "schedule_page_option": config_course_options.get(course_id, {}),
+        })
 
     rejections: list[dict[str, Any]] = []
     blocks_seen = 0
@@ -297,6 +554,7 @@ def build_bls_pilot_schedule() -> dict[str, Any]:
                     "courseName": clean_text(course.get("clean_course_name") or course.get("short_title") or course_id),
                     "availabilityBlockId": clean_text(window.get("source_availability_window") or f"availability[{window_index}]"),
                     "availabilityWindow": f"{window_start.strftime('%H:%M')}-{window_end.strftime('%H:%M')}",
+                    "sourceAvailabilityBlock": window.get("source_live_availability_block", {}),
                     "instructor": instructor_name,
                     "location": location,
                 }
@@ -336,7 +594,7 @@ def build_bls_pilot_schedule() -> dict[str, Any]:
                     course_id,
                     course_family,
                     public_offer_policy,
-                    set(BLS_PILOT_COURSE_IDS),
+                    set(allowed_course_ids),
                 )
                 if reasons or public_reasons:
                     rejections.append({
@@ -350,6 +608,8 @@ def build_bls_pilot_schedule() -> dict[str, Any]:
                     **context,
                     "displayDate": display_date(start.date().isoformat()),
                     "courseFamily": course_family,
+                    "certifyingBody": clean_text(course.get("brand") or course.get("provider") or page_config.get("certifying_body") or UNKNOWN),
+                    "deliveryMode": clean_text(course.get("blended_classroom_skills") or course.get("delivery_type") or UNKNOWN),
                     "durationMinutes": course["duration_minutes"],
                     "setupBufferMinutes": course["setup_buffer_minutes"],
                     "cleanupBufferMinutes": course["cleanup_buffer_minutes"],
@@ -377,7 +637,7 @@ def build_bls_pilot_schedule() -> dict[str, Any]:
     for date_group in grouped_dates.values():
         start_times = []
         for start_group in date_group["startTimes"].values():
-            start_group["courses"].sort(key=lambda item: (item["courseId"] != "209806", item["courseName"]))
+            start_group["courses"].sort(key=lambda item: (allowed_course_ids.index(item["courseId"]) if item["courseId"] in allowed_course_ids else 999, item["courseName"]))
             start_times.append(start_group)
         start_times.sort(key=lambda item: item["startTime"])
         dates.append({**date_group, "startTimes": start_times})
@@ -387,9 +647,11 @@ def build_bls_pilot_schedule() -> dict[str, Any]:
     block_windows = {offer["availabilityWindow"] for offer in offers}
     payload = {
         "generatedAt": datetime.now().astimezone().isoformat(),
-        "pilot": "bls_block_start_time_selector",
+        "pilot": "block_start_time_selector",
+        "pageKey": page_key,
+        "pageConfig": page_config,
         "readOnlyDataBuild": True,
-        "publicPage": "docs/bls-schedule.html",
+        "publicPage": clean_text(page_config.get("output_path") or ""),
         "asOfDate": AS_OF_DATE.isoformat(),
         "availability_source_used": availability_stats["availability_source_used"],
         "availability_fallback_used": availability_stats["availability_fallback_used"],
@@ -399,7 +661,6 @@ def build_bls_pilot_schedule() -> dict[str, Any]:
         "minimumLeadHours": int(public_offer_policy.get("minimum_lead_hours") or 0),
         "inputFiles": {
             "liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
-            "legacyAvailabilityFallback": str(LEGACY_AVAILABILITY_PATH),
             "courseConsumptionRules": str(COURSE_RULES_PATH),
             "courseCatalog": str(COURSE_CATALOG_PATH),
             "peopleCatalog": str(PEOPLE_CATALOG_PATH),
@@ -408,6 +669,7 @@ def build_bls_pilot_schedule() -> dict[str, Any]:
             "appointmentContainers": str(APPOINTMENT_CONTAINERS_PATH),
             "sessionsCurrent": str(SESSIONS_CURRENT_PATH),
             "scheduleFuture": str(SCHEDULE_FUTURE_PATH),
+            "blockSchedulePages": str(BLOCK_SCHEDULE_PAGES_PATH),
         },
         "counts": {
             "availabilityBlocksFound": availability_stats["available_blocks_read"],
@@ -417,7 +679,28 @@ def build_bls_pilot_schedule() -> dict[str, Any]:
             "publicSelectableDateCount": len(dates),
             "publicSelectableStartTimeCount": sum(len(item["startTimes"]) for item in dates),
             "rejectedOfferCount": len(rejections),
+            "suppressedStaleOrOrphanedOfferCount": 0,
             "wholeBlockPresentedAsClass": False,
+        },
+        "liveAvailabilityGuard": {
+            "enabled": True,
+            "liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
+            "renderedDates": sorted(grouped_dates),
+            "sourceBlocksUsed": sorted(
+                {
+                    offer["availabilityBlockId"]
+                    for offer in offers
+                    if clean_text(offer.get("availabilityBlockId"))
+                }
+            ),
+            "approvedInverseSourceCalendarIds": availability_stats.get("approved_inverse_source_calendar_ids", []),
+            "approvedInverseBlocksUsed": availability_stats.get("approved_inverse_blocks_used", []),
+            "approvedInverseBlocksUsedCount": availability_stats.get("approved_inverse_blocks_used_count", 0),
+            "unapprovedInverseBlocksSuppressedCount": availability_stats.get("unapproved_inverse_blocks_suppressed_count", 0),
+            "suppressedAvailableBlocks": availability_stats.get("suppressed_available_blocks", []),
+            "suppressedAvailableBlockDates": availability_stats.get("suppressed_available_block_dates", []),
+            "suppressedStaleOrOrphanedOffers": [],
+            "suppressedDates": [],
         },
         "proof": {
             "whole_block_presented_as_class": False,

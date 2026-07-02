@@ -7,7 +7,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.block_start_time_selector import ROOT, build_bls_pilot_schedule
+from scripts.block_start_time_selector import (
+    ROOT,
+    apply_final_live_availability_guard,
+    build_block_schedule_page,
+    build_bls_pilot_schedule,
+    load_block_schedule_page_configs,
+)
 
 
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -18,6 +24,7 @@ HTML_PATH = ROOT / "docs" / "bls-schedule.html"
 def render_report(payload: dict[str, Any]) -> str:
     counts = payload["counts"]
     sample_offers = payload["offers"][:10]
+    guard = payload.get("liveAvailabilityGuard", {})
     lines = [
         "# BLS Block-Based Schedule Pilot",
         "",
@@ -34,6 +41,7 @@ def render_report(payload: dict[str, Any]) -> str:
         f"- Public-selectable dates: `{counts['publicSelectableDateCount']}`",
         f"- Public-selectable start times: `{counts['publicSelectableStartTimeCount']}`",
         f"- Rejected course/start evaluations: `{counts['rejectedOfferCount']}`",
+        f"- Suppressed stale/orphaned offers: `{counts.get('suppressedStaleOrOrphanedOfferCount', 0)}`",
         "",
         "## Sample Public-Selectable URLs",
         "",
@@ -53,6 +61,14 @@ def render_report(payload: dict[str, Any]) -> str:
         lines.extend(f"- `{reason}`: {count}" for reason, count in list(reasons.items())[:20])
     else:
         lines.append("- None")
+    lines.extend(["", "## Final Live Availability Guard", ""])
+    lines.extend([
+        f"- Enabled: `{guard.get('enabled') is True}`",
+        f"- Rendered dates: `{', '.join(guard.get('renderedDates', [])) or 'none'}`",
+        f"- Source blocks used: `{len(guard.get('sourceBlocksUsed', []))}`",
+        f"- Suppressed available block dates: `{', '.join(guard.get('suppressedAvailableBlockDates', [])) or 'none'}`",
+        f"- Suppressed stale/orphaned offer dates: `{', '.join(guard.get('suppressedDates', [])) or 'none'}`",
+    ])
     lines.extend(["", "## Source Files", ""])
     lines.extend(f"- `{name}`: `{path}`" for name, path in payload["inputFiles"].items())
     return "\n".join(lines) + "\n"
@@ -227,8 +243,34 @@ def css() -> str:
 
 
 def render_html(payload: dict[str, Any]) -> str:
-    course_options_by_id: dict[str, dict[str, Any]] = {}
+    page_config = payload.get("pageConfig", {})
+    configured_options = {
+        str(option.get("course_id")): option
+        for option in page_config.get("course_options", [])
+        if isinstance(option, dict) and option.get("course_id")
+    }
+    page_family = str(page_config.get("family") or "BLS")
+    course_options_by_id: dict[str, dict[str, Any]] = {
+        course_id: {
+            "courseId": course_id,
+            "courseName": option.get("display_label") or course_id,
+            "family": page_family,
+            "iconLabel": option.get("icon_label") or page_family,
+            "clarification": option.get("clarification") or "",
+        }
+        for course_id, option in configured_options.items()
+    }
     option_groups: dict[str, dict[str, Any]] = {}
+    configured_compare_groups = page_config.get("compare_mode", {}).get("groups", {})
+    if isinstance(configured_compare_groups, dict):
+        for group_key, group_config in configured_compare_groups.items():
+            if not isinstance(group_config, dict):
+                continue
+            option_groups[group_key] = {
+                "family": group_key,
+                "label": group_config.get("label") or f"All {group_key} options",
+                "courseIds": [str(item) for item in group_config.get("course_ids", [])],
+            }
     page_dates = []
     for day in payload["dates"]:
         start_times = []
@@ -249,16 +291,30 @@ def render_html(payload: dict[str, Any]) -> str:
                 courses.append(course_record)
                 course_options_by_id.setdefault(course["courseId"], {
                     "courseId": course["courseId"],
-                    "courseName": course["courseName"],
+                    "courseName": configured_options.get(course["courseId"], {}).get("display_label") or course["courseName"],
                     "family": family,
+                    "iconLabel": configured_options.get(course["courseId"], {}).get("icon_label") or family,
+                    "clarification": configured_options.get(course["courseId"], {}).get("clarification") or "",
                 })
-                group = option_groups.setdefault(family, {
-                    "family": family,
-                    "label": f"All AHA {family} options",
-                    "courseIds": [],
-                })
-                if course["courseId"] not in group["courseIds"]:
-                    group["courseIds"].append(course["courseId"])
+                compare_groups = page_config.get("compare_mode", {}).get("groups", {})
+                if isinstance(compare_groups, dict):
+                    for group_key, group_config in compare_groups.items():
+                        group_ids = [str(item) for item in group_config.get("course_ids", [])] if isinstance(group_config, dict) else []
+                        if course["courseId"] in group_ids:
+                            group = option_groups.setdefault(group_key, {
+                                "family": group_key,
+                                "label": group_config.get("label") or f"All {group_key} options",
+                                "courseIds": group_ids,
+                            })
+                            break
+                    else:
+                        group = option_groups.setdefault(family, {
+                            "family": family,
+                            "label": f"All {family} options",
+                            "courseIds": [],
+                        })
+                        if course["courseId"] not in group["courseIds"]:
+                            group["courseIds"].append(course["courseId"])
             start_times.append({
                 "startTime": slot["startTime"],
                 "displayStartTime": slot["displayStartTime"],
@@ -270,27 +326,32 @@ def render_html(payload: dict[str, Any]) -> str:
             "startTimes": start_times,
         })
     data_json = json.dumps(page_dates, ensure_ascii=False)
+    configured_course_ids = [str(option.get("course_id")) for option in page_config.get("course_options", []) if isinstance(option, dict)]
     course_options = [
         course_options_by_id[course_id]
-        for course_id in ("209806", "359474", "210549")
+        for course_id in configured_course_ids
         if course_id in course_options_by_id
     ]
     course_options_json = json.dumps(course_options, ensure_ascii=False)
     option_groups_json = json.dumps(option_groups, ensure_ascii=False)
     counts = payload["counts"]
     first_course = course_options[0]["courseId"] if course_options else ""
+    title = html.escape(str(page_config.get("title") or "Block Schedule"))
+    intro = html.escape(str(page_config.get("intro") or "Select a course, date, and start time."))
+    compare_label = html.escape(str(page_config.get("compare_mode", {}).get("label") or "Show all options"))
+    compare_enabled = page_config.get("compare_mode", {}).get("enabled") is True
     return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BLS Schedule Pilot | 910CPR</title>
+  <title>{title} | 910CPR</title>
   <style>{css()}</style>
 </head>
 <body>
   <header>
-    <h1>BLS Schedule Pilot</h1>
-    <p class="muted">Select the BLS course format first, then choose a public date and start time.</p>
+    <h1>{title}</h1>
+    <p class="muted">{intro}</p>
     <p class="muted">Pilot proof: whole availability blocks are not shown as class times. Public-selectable offers: {counts['publicSelectableOfferCount']}.</p>
   </header>
   <main>
@@ -301,7 +362,7 @@ def render_html(payload: dict[str, Any]) -> str:
         <div class="option-tools">
           <label class="compare-toggle">
             <input id="compare-toggle" type="checkbox">
-            <span>Need BLS ASAP? Show all AHA BLS options</span>
+            <span>{compare_label}</span>
           </label>
         </div>
       </div>
@@ -339,7 +400,8 @@ def render_html(payload: dict[str, Any]) -> str:
         return new Set();
       }}
       if (compareMode) {{
-        return new Set(optionGroups[selected.family]?.courseIds || [selectedCourseId]);
+        const group = Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId));
+        return new Set(group?.courseIds || optionGroups[selected.family]?.courseIds || [selectedCourseId]);
       }}
       return new Set([selectedCourseId]);
     }}
@@ -386,7 +448,7 @@ def render_html(payload: dict[str, Any]) -> str:
         button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
         const icon = document.createElement('span');
         icon.className = 'course-icon';
-        icon.textContent = course.courseName.includes('HeartCode') ? 'HC' : (course.courseName.includes('Renewal') ? 'RN' : 'BLS');
+        icon.textContent = course.iconLabel || course.family;
         icon.setAttribute('aria-hidden', 'true');
         const copy = document.createElement('span');
         copy.className = 'course-copy';
@@ -395,9 +457,7 @@ def render_html(payload: dict[str, Any]) -> str:
         title.textContent = course.courseName;
         const help = document.createElement('span');
         help.className = 'course-help';
-        help.textContent = course.courseName.includes('HeartCode')
-          ? 'Skills session for online HeartCode BLS.'
-          : (course.courseName.includes('Renewal') ? 'For current or recently expired BLS cards.' : 'Full BLS Provider classroom option.');
+        help.textContent = course.clarification || '';
         copy.append(title, help);
         button.append(icon, copy);
         button.addEventListener('click', () => {{
@@ -407,6 +467,7 @@ def render_html(payload: dict[str, Any]) -> str:
         host.appendChild(button);
       }});
       byId('compare-toggle').checked = compareMode;
+      byId('compare-toggle').disabled = {str(not compare_enabled).lower()};
     }}
 
     function renderDates() {{
@@ -544,18 +605,34 @@ def render_html(payload: dict[str, Any]) -> str:
 
 def run() -> dict[str, Any]:
     payload = build_bls_pilot_schedule()
-    REPORT_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_JSON_PATH.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    REPORT_MD_PATH.write_text(render_report(payload), encoding="utf-8")
-    HTML_PATH.write_text(render_html(payload), encoding="utf-8")
+    return write_page_outputs(payload, REPORT_JSON_PATH, REPORT_MD_PATH, HTML_PATH)
+
+
+def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_md_path: Path, html_path: Path) -> dict[str, Any]:
+    payload = apply_final_live_availability_guard(payload)
+    report_json_path.parent.mkdir(parents=True, exist_ok=True)
+    report_md_path.parent.mkdir(parents=True, exist_ok=True)
+    html_path.parent.mkdir(parents=True, exist_ok=True)
+    report_json_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    report_md_path.write_text(render_report(payload), encoding="utf-8")
+    html_path.write_text(render_html(payload), encoding="utf-8")
     return {
         "counts": payload["counts"],
         "availability_source_used": payload["availability_source_used"],
         "availability_fallback_used": payload["availability_fallback_used"],
         "horizon_days": payload["horizonDays"],
         "top_rejection_reasons": dict(Counter(payload.get("rejectionReasonCounts", {})).most_common(10)),
-        "output_paths": [REPORT_JSON_PATH, REPORT_MD_PATH, HTML_PATH],
+        "output_paths": [report_json_path, report_md_path, html_path],
     }
+
+
+def run_page(page_key: str) -> dict[str, Any]:
+    page_config = load_block_schedule_page_configs()[page_key]
+    payload = build_block_schedule_page(page_config)
+    report_json_path = ROOT / page_config.get("report_json_path", f"data/audit/{page_key}_block_schedule.json")
+    report_md_path = ROOT / page_config.get("report_md_path", f"data/audit/{page_key}_block_schedule_report.md")
+    html_path = ROOT / page_config["output_path"]
+    return write_page_outputs(payload, report_json_path, report_md_path, html_path)
 
 
 def main() -> int:

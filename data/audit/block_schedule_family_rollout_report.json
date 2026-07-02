@@ -1,0 +1,260 @@
+{
+  "generated_at": "2026-07-02T15:07:34.195231-04:00",
+  "generated_pages": [
+    "E:\\GitHub\\910cpr-class-landers\\docs\\heartsaver-schedule.html"
+  ],
+  "families": [
+    {
+      "page_key": "bls",
+      "family": "BLS",
+      "certifying_body": "AHA",
+      "output_path": "docs/bls-schedule.html",
+      "course_ids": [
+        "209806",
+        "359474",
+        "210549"
+      ],
+      "course_rules_found": true,
+      "counts": {
+        "availabilityBlocksFound": 62,
+        "availabilityBlocksEvaluated": 62,
+        "publicLocationBlocksEvaluated": 62,
+        "publicSelectableOfferCount": 1597,
+        "publicSelectableDateCount": 39,
+        "publicSelectableStartTimeCount": 573,
+        "rejectedOfferCount": 3752,
+        "wholeBlockPresentedAsClass": false
+      },
+      "top_rejection_reasons": {
+        "outside_public_dynamic_hours": 2670,
+        "conflicts_with_existing_enrollware_occupancy": 1187,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 443,
+        "inside_minimum_lead_time": 18
+      },
+      "page_audit": {
+        "invalid_register_urls": 0,
+        "full_availability_block_labels_visible": false,
+        "midnight_or_overnight_starts_visible": false,
+        "debug_metadata_visible": false,
+        "hard_duration_text_visible": false,
+        "course_first_default_supported": true,
+        "compare_mode_supported": true,
+        "offsite_private_locations_visible": false
+      },
+      "issues": [],
+      "ready_for_generation": true
+    },
+    {
+      "page_key": "acls",
+      "family": "ACLS",
+      "certifying_body": "AHA",
+      "output_path": "docs/acls-schedule.html",
+      "course_ids": [
+        "241108",
+        "209818",
+        "209811"
+      ],
+      "course_rules_found": true,
+      "counts": {
+        "availabilityBlocksFound": 62,
+        "availabilityBlocksEvaluated": 62,
+        "publicLocationBlocksEvaluated": 62,
+        "publicSelectableOfferCount": 0,
+        "publicSelectableDateCount": 0,
+        "publicSelectableStartTimeCount": 0,
+        "rejectedOfferCount": 5349,
+        "wholeBlockPresentedAsClass": false
+      },
+      "top_rejection_reasons": {
+        "course_family_not_allowed_by_availability": 5349,
+        "instructor_lacks_required_certification": 5349,
+        "outside_public_dynamic_hours": 2670,
+        "conflicts_with_existing_enrollware_occupancy": 1563,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 1302,
+        "inside_minimum_lead_time": 18
+      },
+      "page_audit": {
+        "invalid_register_urls": 0,
+        "full_availability_block_labels_visible": false,
+        "midnight_or_overnight_starts_visible": false,
+        "debug_metadata_visible": false,
+        "hard_duration_text_visible": false,
+        "course_first_default_supported": true,
+        "compare_mode_supported": true,
+        "offsite_private_locations_visible": false
+      },
+      "issues": [
+        "no_public_selectable_offers"
+      ],
+      "ready_for_generation": false
+    },
+    {
+      "page_key": "pals",
+      "family": "PALS",
+      "certifying_body": "AHA",
+      "output_path": "docs/pals-schedule.html",
+      "course_ids": [
+        "209805",
+        "251496",
+        "209812"
+      ],
+      "course_rules_found": true,
+      "counts": {
+        "availabilityBlocksFound": 62,
+        "availabilityBlocksEvaluated": 62,
+        "publicLocationBlocksEvaluated": 62,
+        "publicSelectableOfferCount": 0,
+        "publicSelectableDateCount": 0,
+        "publicSelectableStartTimeCount": 0,
+        "rejectedOfferCount": 5349,
+        "wholeBlockPresentedAsClass": false
+      },
+      "top_rejection_reasons": {
+        "course_family_not_allowed_by_availability": 5349,
+        "instructor_lacks_required_certification": 5349,
+        "outside_public_dynamic_hours": 2670,
+        "conflicts_with_existing_enrollware_occupancy": 1563,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 1302,
+        "inside_minimum_lead_time": 18
+      },
+      "page_audit": {
+        "invalid_register_urls": 0,
+        "full_availability_block_labels_visible": false,
+        "midnight_or_overnight_starts_visible": false,
+        "debug_metadata_visible": false,
+        "hard_duration_text_visible": false,
+        "course_first_default_supported": true,
+        "compare_mode_supported": true,
+        "offsite_private_locations_visible": false
+      },
+      "issues": [
+        "no_public_selectable_offers"
+      ],
+      "ready_for_generation": false
+    },
+    {
+      "page_key": "heartsaver",
+      "family": "Heartsaver",
+      "certifying_body": "AHA",
+      "output_path": "docs/heartsaver-schedule.html",
+      "course_ids": [
+        "344085",
+        "209809",
+        "251545"
+      ],
+      "course_rules_found": true,
+      "counts": {
+        "availabilityBlocksFound": 62,
+        "availabilityBlocksEvaluated": 62,
+        "publicLocationBlocksEvaluated": 62,
+        "publicSelectableOfferCount": 1507,
+        "publicSelectableDateCount": 39,
+        "publicSelectableStartTimeCount": 512,
+        "rejectedOfferCount": 3842,
+        "wholeBlockPresentedAsClass": false
+      },
+      "top_rejection_reasons": {
+        "outside_public_dynamic_hours": 2670,
+        "conflicts_with_existing_enrollware_occupancy": 1274,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 629,
+        "inside_minimum_lead_time": 18
+      },
+      "page_audit": {
+        "invalid_register_urls": 0,
+        "full_availability_block_labels_visible": false,
+        "midnight_or_overnight_starts_visible": false,
+        "debug_metadata_visible": false,
+        "hard_duration_text_visible": false,
+        "course_first_default_supported": true,
+        "compare_mode_supported": true,
+        "offsite_private_locations_visible": false
+      },
+      "issues": [],
+      "ready_for_generation": true
+    },
+    {
+      "page_key": "hsi",
+      "family": "HSI",
+      "certifying_body": "HSI",
+      "output_path": "docs/hsi-schedule.html",
+      "course_ids": [
+        "463743",
+        "445670"
+      ],
+      "course_rules_found": true,
+      "counts": {
+        "availabilityBlocksFound": 62,
+        "availabilityBlocksEvaluated": 62,
+        "publicLocationBlocksEvaluated": 62,
+        "publicSelectableOfferCount": 1103,
+        "publicSelectableDateCount": 43,
+        "publicSelectableStartTimeCount": 591,
+        "rejectedOfferCount": 2463,
+        "wholeBlockPresentedAsClass": false
+      },
+      "top_rejection_reasons": {
+        "outside_public_dynamic_hours": 1780,
+        "conflicts_with_existing_enrollware_occupancy": 753,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 251,
+        "inside_minimum_lead_time": 12
+      },
+      "page_audit": {
+        "invalid_register_urls": 0,
+        "full_availability_block_labels_visible": false,
+        "midnight_or_overnight_starts_visible": false,
+        "debug_metadata_visible": false,
+        "hard_duration_text_visible": false,
+        "course_first_default_supported": true,
+        "compare_mode_supported": true,
+        "offsite_private_locations_visible": false
+      },
+      "issues": [
+        "family_disabled_by_public_offer_policy_requires_explicit_approval"
+      ],
+      "ready_for_generation": false
+    },
+    {
+      "page_key": "arc",
+      "family": "ARC",
+      "certifying_body": "ARC",
+      "output_path": "docs/arc-schedule.html",
+      "course_ids": [
+        "248288",
+        "248287"
+      ],
+      "course_rules_found": true,
+      "counts": {
+        "availabilityBlocksFound": 62,
+        "availabilityBlocksEvaluated": 62,
+        "publicLocationBlocksEvaluated": 62,
+        "publicSelectableOfferCount": 0,
+        "publicSelectableDateCount": 0,
+        "publicSelectableStartTimeCount": 0,
+        "rejectedOfferCount": 3566,
+        "wholeBlockPresentedAsClass": false
+      },
+      "top_rejection_reasons": {
+        "instructor_lacks_required_certification": 3566,
+        "outside_public_dynamic_hours": 1780,
+        "conflicts_with_existing_enrollware_occupancy": 830,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 378,
+        "inside_minimum_lead_time": 12
+      },
+      "page_audit": {
+        "invalid_register_urls": 0,
+        "full_availability_block_labels_visible": false,
+        "midnight_or_overnight_starts_visible": false,
+        "debug_metadata_visible": false,
+        "hard_duration_text_visible": false,
+        "course_first_default_supported": true,
+        "compare_mode_supported": true,
+        "offsite_private_locations_visible": false
+      },
+      "issues": [
+        "family_disabled_by_public_offer_policy_requires_explicit_approval",
+        "no_public_selectable_offers"
+      ],
+      "ready_for_generation": false
+    }
+  ]
+}
