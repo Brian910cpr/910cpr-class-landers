@@ -116,6 +116,33 @@ def css() -> str:
     .button-list { display: grid; gap: 8px; }
     .choice-list { display: grid; gap: 8px; margin-bottom: 14px; }
     .option-tools { display: grid; gap: 12px; }
+    .delivery-filter {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+    .delivery-filter legend {
+      padding: 0;
+      margin: 0 0 2px;
+      font-weight: 700;
+      font-size: .95rem;
+    }
+    .delivery-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .delivery-options label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 32px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: .9rem;
+    }
+    .delivery-options input { margin: 0; }
     .compare-toggle {
       display: flex;
       gap: 9px;
@@ -210,6 +237,19 @@ def css() -> str:
       font-size: .92rem;
       margin: 3px 0 12px;
     }
+    .delivery-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--accent-dark);
+      background: #eef7fc;
+      font-size: .78rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
     .register-note {
       color: var(--muted);
       font-size: .88rem;
@@ -256,6 +296,7 @@ def render_html(payload: dict[str, Any]) -> str:
             "courseName": option.get("display_label") or course_id,
             "family": page_family,
             "variant": option.get("variant") or "",
+            "deliveryMode": option.get("delivery_mode") or "",
             "deepLinkAliases": [
                 str(alias)
                 for alias in ([option.get("variant")] + list(option.get("deep_link_aliases", [])))
@@ -288,6 +329,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "courseId": course["courseId"],
                     "courseName": course["courseName"],
                     "family": family,
+                    "deliveryMode": configured_options.get(course["courseId"], {}).get("delivery_mode") or course.get("deliveryMode") or "",
                     "displayStartTime": course["displayStartTime"],
                     "durationMinutes": course["durationMinutes"],
                     "appointmentDayId": course["appointmentDayId"],
@@ -300,6 +342,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "courseName": configured_options.get(course["courseId"], {}).get("display_label") or course["courseName"],
                     "family": family,
                     "variant": configured_options.get(course["courseId"], {}).get("variant") or "",
+                    "deliveryMode": configured_options.get(course["courseId"], {}).get("delivery_mode") or course.get("deliveryMode") or "",
                     "deepLinkAliases": [
                         str(alias)
                         for alias in (
@@ -373,6 +416,14 @@ def render_html(payload: dict[str, Any]) -> str:
     <section class="pilot-grid" aria-label="BLS block-based schedule pilot">
       <div class="panel">
         <h2>Course</h2>
+        <fieldset class="delivery-filter">
+          <legend>Delivery type</legend>
+          <div class="delivery-options">
+            <label><input type="radio" name="delivery-filter" value="all" checked> All</label>
+            <label><input type="radio" name="delivery-filter" value="in-person"> In-person</label>
+            <label><input type="radio" name="delivery-filter" value="blended"> Blended</label>
+          </div>
+        </fieldset>
         <div id="course-option-list" class="choice-list"></div>
         <div class="option-tools">
           <label class="compare-toggle">
@@ -401,6 +452,7 @@ def render_html(payload: dict[str, Any]) -> str:
     const courseOptions = {course_options_json};
     const optionGroups = {option_groups_json};
     let selectedCourseId = {json.dumps(first_course)};
+    let selectedDelivery = 'all';
     let compareMode = false;
     let selectedDate = '';
     let selectedStart = '';
@@ -427,14 +479,54 @@ def render_html(payload: dict[str, Any]) -> str:
       return matched?.courseId || '';
     }}
 
+    function deliveryFromDeepLink() {{
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('delivery'));
+      return ['all', 'in-person', 'blended'].includes(requested) ? requested : 'all';
+    }}
+
+    function deliveryLabel(value) {{
+      if (value === 'in-person') {{
+        return 'In-person';
+      }}
+      if (value === 'blended') {{
+        return 'Blended';
+      }}
+      return 'All';
+    }}
+
+    function courseMatchesDelivery(course) {{
+      return selectedDelivery === 'all' || normalizeDeepLink(course.deliveryMode) === selectedDelivery;
+    }}
+
+    function visibleCourseOptions() {{
+      return courseOptions.filter(courseMatchesDelivery);
+    }}
+
+    function syncCourseSelection() {{
+      const visibleOptions = visibleCourseOptions();
+      if (!visibleOptions.length) {{
+        selectedCourseId = '';
+        return;
+      }}
+      if (!visibleOptions.some(course => course.courseId === selectedCourseId)) {{
+        selectedCourseId = visibleOptions[0].courseId;
+      }}
+    }}
+
     function activeCourseIds() {{
+      syncCourseSelection();
       const selected = courseOptions.find(course => course.courseId === selectedCourseId);
       if (!selected) {{
         return new Set();
       }}
       if (compareMode) {{
         const group = Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId));
-        return new Set(group?.courseIds || optionGroups[selected.family]?.courseIds || [selectedCourseId]);
+        const groupIds = group?.courseIds || optionGroups[selected.family]?.courseIds || [selectedCourseId];
+        return new Set(groupIds.filter(courseId => {{
+          const course = courseOptions.find(option => option.courseId === courseId);
+          return course && courseMatchesDelivery(course);
+        }}));
       }}
       return new Set([selectedCourseId]);
     }}
@@ -474,7 +566,7 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderCourseOptions() {{
       const host = byId('course-option-list');
       host.innerHTML = '';
-      courseOptions.forEach(course => {{
+      visibleCourseOptions().forEach(course => {{
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'course-card';
@@ -499,6 +591,12 @@ def render_html(payload: dict[str, Any]) -> str:
         }});
         host.appendChild(button);
       }});
+      if (!host.children.length) {{
+        host.innerHTML = '<div class="empty">No matching times are currently available. Try All delivery types.</div>';
+      }}
+      document.querySelectorAll('input[name="delivery-filter"]').forEach(input => {{
+        input.checked = input.value === selectedDelivery;
+      }});
       byId('compare-toggle').checked = compareMode;
       byId('compare-toggle').disabled = {str(not compare_enabled).lower()};
     }}
@@ -508,7 +606,7 @@ def render_html(payload: dict[str, Any]) -> str:
       host.innerHTML = '';
       const days = syncSelection();
       if (!days.length) {{
-        host.innerHTML = '<div class="empty">No public dates are available for this option.</div>';
+        host.innerHTML = '<div class="empty">No matching times are currently available. Try All delivery types.</div>';
         return;
       }}
       const availableByDate = new Map(days.map(day => [day.date, day]));
@@ -574,7 +672,7 @@ def render_html(payload: dict[str, Any]) -> str:
       host.innerHTML = '';
       const day = filteredDates().find(item => item.date === selectedDate);
       if (!day || !day.startTimes.length) {{
-        host.innerHTML = '<div class="empty">Select another date.</div>';
+        host.innerHTML = '<div class="empty">No matching times are currently available. Try All delivery types.</div>';
         return;
       }}
       day.startTimes.forEach(slot => {{
@@ -596,7 +694,7 @@ def render_html(payload: dict[str, Any]) -> str:
       const day = filteredDates().find(item => item.date === selectedDate);
       const slot = day?.startTimes.find(item => item.startTime === selectedStart);
       if (!slot || !slot.courses.length) {{
-        host.innerHTML = '<div class="empty">Select a start time.</div>';
+        host.innerHTML = '<div class="empty">No matching times are currently available. Try All delivery types.</div>';
         return;
       }}
       slot.courses.forEach(course => {{
@@ -607,16 +705,20 @@ def render_html(payload: dict[str, Any]) -> str:
         const meta = document.createElement('div');
         meta.className = 'course-meta';
         meta.textContent = `${{course.location}} · ${{course.displayStartTime}}`;
+        const badge = document.createElement('div');
+        badge.className = 'delivery-badge';
+        badge.textContent = deliveryLabel(course.deliveryMode);
         const link = document.createElement('a');
         link.className = 'register-link';
         link.href = course.appointmentUrl;
         link.textContent = 'Register';
-        item.append(title, meta, link);
+        item.append(title, meta, badge, link);
         host.appendChild(item);
       }});
     }}
 
     function renderAll() {{
+      syncCourseSelection();
       syncSelection();
       renderCourseOptions();
       renderDates();
@@ -629,6 +731,14 @@ def render_html(payload: dict[str, Any]) -> str:
       renderAll();
     }});
 
+    document.querySelectorAll('input[name="delivery-filter"]').forEach(input => {{
+      input.addEventListener('change', event => {{
+        selectedDelivery = event.target.value;
+        renderAll();
+      }});
+    }});
+
+    selectedDelivery = deliveryFromDeepLink();
     selectedCourseId = courseIdFromDeepLink() || selectedCourseId;
     renderAll();
   </script>
