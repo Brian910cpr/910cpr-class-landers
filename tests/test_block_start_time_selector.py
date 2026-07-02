@@ -56,8 +56,23 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("BLS Schedule Pilot", html)
         self.assertIn("Register", html)
         self.assertIn("appointmentDayId", html)
+        self.assertIn("Need BLS ASAP? Show all AHA BLS options", html)
+        self.assertIn("const courseOptions =", html)
+        self.assertIn("const optionGroups =", html)
+        self.assertIn("let compareMode = false", html)
+        self.assertIn("function activeCourseIds()", html)
         self.assertNotIn("12:00 AM-6:00 PM", html)
         self.assertNotIn("12:00 AM\u20136:00 PM", html)
+        self.assertNotIn("Calendy", html)
+        self.assertNotIn("shotgun", html.lower())
+
+    def test_compare_mode_data_model_groups_bls_family_generically(self):
+        html = build_bls_block_schedule_pilot.render_html(self.payload)
+        self.assertIn('"family": "BLS"', html)
+        self.assertIn('"209806"', html)
+        self.assertIn('"359474"', html)
+        self.assertIn('"210549"', html)
+        self.assertIn("optionGroups[selected.family]?.courseIds", html)
 
 
 if __name__ == "__main__":
