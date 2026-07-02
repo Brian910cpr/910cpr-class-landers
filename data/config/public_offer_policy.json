@@ -35,7 +35,7 @@
     "timezone": "America/New_York"
   },
   "minimum_lead_hours": 24,
-  "maximum_days_out": 60,
+  "maximum_days_out": 180,
   "preferred_start_times_by_family": {
     "BLS": [],
     "Heartsaver": [],
