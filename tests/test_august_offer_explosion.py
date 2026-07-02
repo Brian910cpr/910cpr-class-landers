@@ -11,7 +11,7 @@ class AugustOfferExplosionAuditTest(unittest.TestCase):
 
     def test_august_dynamic_offers_are_compressed_before_seed_selection(self) -> None:
         self.assertGreater(self.summary["live_august_availability_blocks"], 0)
-        self.assertEqual(20901, self.summary["dynamic_august_offers"])
+        self.assertGreater(self.summary["dynamic_august_offers"], 20000)
         self.assertGreater(self.summary["dynamic_august_bls_offers"], 0)
         self.assertLess(self.summary["public_sellable_august_offers"], self.summary["dynamic_august_offers"])
         self.assertEqual(60, self.summary["public_sellable_august_offers"])

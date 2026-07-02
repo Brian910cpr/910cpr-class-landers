@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29T15:37:44.094132-04:00",
+  "generated_at": "2026-07-02T15:53:19.009792-04:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -7,7 +7,7 @@
   "appointments_created": false,
   "appointment_urls_changed": false,
   "worker_creation_enabled": false,
-  "local_snapshot_path": "E:\\GitHub\\910cpr-class-landers_august_seed_breakpoint\\data\\runtime\\calendar_snapshots",
+  "local_snapshot_path": "E:\\GitHub\\910cpr-class-landers\\data\\runtime\\calendar_snapshots",
   "stats": {
     "configured_calendar_sources_found": 3,
     "instructors_mapped": [
@@ -23,164 +23,22 @@
       }
     ],
     "blocks_generated": 116,
-    "blocks_blocked": 1,
+    "blocks_blocked": 0,
     "dns_markers_found": 0,
-    "blocked_reason_counts": {
-      "event_missing_parseable_start_or_end": 1
-    },
-    "blocked_all_reason_counts": {
-      "event_missing_parseable_start_or_end": 1
-    },
+    "blocked_reason_counts": {},
+    "blocked_all_reason_counts": {},
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 48,
-      "available": 68
+      "blocked": 54,
+      "available": 62
     },
-    "inverse_generated_availability_blocks": 68,
-    "inverse_blocking_event_blocks": 48
+    "inverse_generated_availability_blocks": 62,
+    "inverse_blocking_event_blocks": 54
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-29T18:00:00",
-      "end_datetime": "2026-06-30T06:00:00",
-      "date": "2026-06-29",
-      "end_date": "2026-06-30",
-      "start_time": "18:00",
-      "end_time": "06:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "tfa0iue3bqvd9qprfqfmuk20ho@google.com",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-30T06:00:00",
-      "end_datetime": "2026-06-30T08:30:00",
-      "date": "2026-06-30",
-      "end_date": "2026-06-30",
-      "start_time": "06:00",
-      "end_time": "08:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260630T0600000400",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-30T18:00:00",
-      "end_datetime": "2026-07-01T06:00:00",
-      "date": "2026-06-30",
-      "end_date": "2026-07-01",
-      "start_time": "18:00",
-      "end_time": "06:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "d7ivg6fscs60vqj8l9m24r9ja0@google.com",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-01T06:00:00",
-      "end_datetime": "2026-07-01T08:30:00",
-      "date": "2026-07-01",
-      "end_date": "2026-07-01",
-      "start_time": "06:00",
-      "end_time": "08:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260701T0600000400",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-01T06:00:00",
-      "end_datetime": "2026-07-01T18:00:00",
-      "date": "2026-07-01",
-      "end_date": "2026-07-01",
-      "start_time": "06:00",
-      "end_time": "18:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "1r302f1rhorat32q6ojm03uqdk@google.com",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-02T06:00:00",
-      "end_datetime": "2026-07-02T08:30:00",
-      "date": "2026-07-02",
-      "end_date": "2026-07-02",
-      "start_time": "06:00",
-      "end_time": "08:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260702T0600000400",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -230,6 +88,29 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-04T07:00:00",
+      "end_datetime": "2026-07-04T11:45:00",
+      "date": "2026-07-04",
+      "end_date": "2026-07-04",
+      "start_time": "07:00",
+      "end_time": "11:45",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "6opm4pj66so36b9occs38b9k6hh62bb260q64b9pcgqjidb1c5gj0opo70@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-04T11:45:00",
       "end_datetime": "2026-07-04T17:00:00",
       "date": "2026-07-04",
@@ -243,6 +124,29 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "ckr62ohpc8q3gb9i6krmab9k68q6cb9o61gjgb9j6gojceb4ccqj6ohl74@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-04T17:00:00",
+      "end_datetime": "2026-07-04T21:00:00",
+      "date": "2026-07-04",
+      "end_date": "2026-07-04",
+      "start_time": "17:00",
+      "end_time": "21:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "64sm6dhj69im8bb374rmab9k68qm2b9p6gr6ab9pcdhjgc1m6tgjadhl6c@google.com",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -414,6 +318,29 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-12T18:00:00",
+      "end_datetime": "2026-07-13T06:00:00",
+      "date": "2026-07-12",
+      "end_date": "2026-07-13",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "8ripfo3f9fo9301h760406ut6c@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-13T06:00:00",
       "end_datetime": "2026-07-13T08:30:00",
       "date": "2026-07-13",
@@ -427,6 +354,29 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260713T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-13T18:00:00",
+      "end_datetime": "2026-07-14T06:00:00",
+      "date": "2026-07-13",
+      "end_date": "2026-07-14",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "vp8656udqf8qhc96evfnu8uee0@google.com",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -473,6 +423,29 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260715T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-15T06:00:00",
+      "end_datetime": "2026-07-15T18:00:00",
+      "date": "2026-07-15",
+      "end_date": "2026-07-15",
+      "start_time": "06:00",
+      "end_time": "18:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "f9uqdhdqqn4ddj0cedurhbiep0@google.com",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -552,6 +525,29 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-19T18:00:00",
+      "end_datetime": "2026-07-20T06:00:00",
+      "date": "2026-07-19",
+      "end_date": "2026-07-20",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "3gktiaeaf0qsmo7ap7lhlk16oc@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-20T06:00:00",
       "end_datetime": "2026-07-20T08:30:00",
       "date": "2026-07-20",
@@ -598,6 +594,29 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-21T18:00:00",
+      "end_datetime": "2026-07-22T06:00:00",
+      "date": "2026-07-21",
+      "end_date": "2026-07-22",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "qcngaqg9nlltsnh41kbnn9h8b4@google.com",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-22T06:00:00",
       "end_datetime": "2026-07-22T08:30:00",
       "date": "2026-07-22",
@@ -611,6 +630,29 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260722T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-22T06:00:00",
+      "end_datetime": "2026-07-22T18:00:00",
+      "date": "2026-07-22",
+      "end_date": "2026-07-22",
+      "start_time": "06:00",
+      "end_time": "18:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "fp87r1srssll41eqjhov7vn8cc@google.com",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -657,6 +699,29 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260724T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-26T18:00:00",
+      "end_datetime": "2026-07-27T06:00:00",
+      "date": "2026-07-26",
+      "end_date": "2026-07-27",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "keoftcc895rlkv08oukf6ppggk@google.com",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -726,6 +791,29 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260729T0600000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-29T06:00:00",
+      "end_datetime": "2026-07-29T18:00:00",
+      "date": "2026-07-29",
+      "end_date": "2026-07-29",
+      "start_time": "06:00",
+      "end_time": "18:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "45hm7ft62nb13ukbl7728156og@google.com",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1150,11 +1238,57 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-29T15:45:00",
-      "end_datetime": "2026-06-29T18:00:00",
-      "date": "2026-06-29",
-      "end_date": "2026-06-29",
-      "start_time": "15:45",
+      "start_datetime": "2026-08-31T06:30:00",
+      "end_datetime": "2026-08-31T08:30:00",
+      "date": "2026-08-31",
+      "end_date": "2026-08-31",
+      "start_time": "06:30",
+      "end_time": "08:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260831T0630000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-31T15:00:00",
+      "end_datetime": "2026-08-31T17:30:00",
+      "date": "2026-08-31",
+      "end_date": "2026-08-31",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260831T1500000400",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-02T16:00:00",
+      "end_datetime": "2026-07-02T18:00:00",
+      "date": "2026-07-02",
+      "end_date": "2026-07-02",
+      "start_time": "16:00",
       "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -1168,126 +1302,6 @@
       ],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "brian_do_not_schedule:inverse_gap:1",
-      "source_type": "inverse_google_calendar",
-      "inverse_generated": true,
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_blocking_gap_expansion",
-        "default_open_minus_blocking_events"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-06-30T08:30:00",
-      "end_datetime": "2026-06-30T18:00:00",
-      "date": "2026-06-30",
-      "end_date": "2026-06-30",
-      "start_time": "08:30",
-      "end_time": "18:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:2",
-      "source_type": "inverse_google_calendar",
-      "inverse_generated": true,
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_blocking_gap_expansion",
-        "default_open_minus_blocking_events"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-01T18:00:00",
-      "end_datetime": "2026-07-02T00:00:00",
-      "date": "2026-07-01",
-      "end_date": "2026-07-02",
-      "start_time": "18:00",
-      "end_time": "00:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:3",
-      "source_type": "inverse_google_calendar",
-      "inverse_generated": true,
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_blocking_gap_expansion",
-        "default_open_minus_blocking_events"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-02T00:00:00",
-      "end_datetime": "2026-07-02T06:00:00",
-      "date": "2026-07-02",
-      "end_date": "2026-07-02",
-      "start_time": "00:00",
-      "end_time": "06:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:4",
-      "source_type": "inverse_google_calendar",
-      "inverse_generated": true,
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_blocking_gap_expansion",
-        "default_open_minus_blocking_events"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-02T08:30:00",
-      "end_datetime": "2026-07-02T18:00:00",
-      "date": "2026-07-02",
-      "end_date": "2026-07-02",
-      "start_time": "08:30",
-      "end_time": "18:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:5",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1317,7 +1331,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:6",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:2",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1331,11 +1345,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-04T00:00:00",
-      "end_datetime": "2026-07-04T11:45:00",
+      "end_datetime": "2026-07-04T07:00:00",
       "date": "2026-07-04",
       "end_date": "2026-07-04",
       "start_time": "00:00",
-      "end_time": "11:45",
+      "end_time": "07:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -1347,7 +1361,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:7",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:3",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1360,11 +1374,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-04T17:00:00",
+      "start_datetime": "2026-07-04T21:00:00",
       "end_datetime": "2026-07-05T00:00:00",
       "date": "2026-07-04",
       "end_date": "2026-07-05",
-      "start_time": "17:00",
+      "start_time": "21:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -1377,7 +1391,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:8",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:4",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1407,7 +1421,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:9",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:5",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1437,7 +1451,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:10",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:6",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1467,7 +1481,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:11",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:7",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1497,7 +1511,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:12",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:8",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1527,7 +1541,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:13",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:9",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1557,7 +1571,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:14",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:10",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1587,7 +1601,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:15",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:11",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1617,7 +1631,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:16",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:12",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1647,7 +1661,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:17",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:13",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1677,7 +1691,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:18",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:14",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1707,7 +1721,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:19",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:15",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1721,11 +1735,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-12T00:00:00",
-      "end_datetime": "2026-07-13T00:00:00",
+      "end_datetime": "2026-07-12T18:00:00",
       "date": "2026-07-12",
-      "end_date": "2026-07-13",
+      "end_date": "2026-07-12",
       "start_time": "00:00",
-      "end_time": "00:00",
+      "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -1737,37 +1751,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:20",
-      "source_type": "inverse_google_calendar",
-      "inverse_generated": true,
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_blocking_gap_expansion",
-        "default_open_minus_blocking_events"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-13T00:00:00",
-      "end_datetime": "2026-07-13T06:00:00",
-      "date": "2026-07-13",
-      "end_date": "2026-07-13",
-      "start_time": "00:00",
-      "end_time": "06:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:21",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:16",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1781,11 +1765,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-13T08:30:00",
-      "end_datetime": "2026-07-14T00:00:00",
+      "end_datetime": "2026-07-13T18:00:00",
       "date": "2026-07-13",
-      "end_date": "2026-07-14",
+      "end_date": "2026-07-13",
       "start_time": "08:30",
-      "end_time": "00:00",
+      "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -1797,37 +1781,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:22",
-      "source_type": "inverse_google_calendar",
-      "inverse_generated": true,
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_blocking_gap_expansion",
-        "default_open_minus_blocking_events"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-14T00:00:00",
-      "end_datetime": "2026-07-14T06:00:00",
-      "date": "2026-07-14",
-      "end_date": "2026-07-14",
-      "start_time": "00:00",
-      "end_time": "06:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:23",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:17",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1857,7 +1811,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:24",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:18",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1887,7 +1841,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:25",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:19",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1900,11 +1854,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-15T08:30:00",
+      "start_datetime": "2026-07-15T18:00:00",
       "end_datetime": "2026-07-16T00:00:00",
       "date": "2026-07-15",
       "end_date": "2026-07-16",
-      "start_time": "08:30",
+      "start_time": "18:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -1917,7 +1871,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:26",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:20",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1947,7 +1901,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:27",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:21",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -1977,7 +1931,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:28",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:22",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2007,7 +1961,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:29",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:23",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2037,7 +1991,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:30",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:24",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2067,7 +2021,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:31",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:25",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2097,7 +2051,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:32",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:26",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2111,11 +2065,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-19T00:00:00",
-      "end_datetime": "2026-07-20T00:00:00",
+      "end_datetime": "2026-07-19T18:00:00",
       "date": "2026-07-19",
-      "end_date": "2026-07-20",
+      "end_date": "2026-07-19",
       "start_time": "00:00",
-      "end_time": "00:00",
+      "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -2127,37 +2081,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:33",
-      "source_type": "inverse_google_calendar",
-      "inverse_generated": true,
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_blocking_gap_expansion",
-        "default_open_minus_blocking_events"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-20T00:00:00",
-      "end_datetime": "2026-07-20T06:00:00",
-      "date": "2026-07-20",
-      "end_date": "2026-07-20",
-      "start_time": "00:00",
-      "end_time": "06:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:34",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:27",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2187,7 +2111,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:35",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:28",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2217,7 +2141,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:36",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:29",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2231,11 +2155,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-21T08:30:00",
-      "end_datetime": "2026-07-22T00:00:00",
+      "end_datetime": "2026-07-21T18:00:00",
       "date": "2026-07-21",
-      "end_date": "2026-07-22",
+      "end_date": "2026-07-21",
       "start_time": "08:30",
-      "end_time": "00:00",
+      "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -2247,7 +2171,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:37",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:30",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2260,41 +2184,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-22T00:00:00",
-      "end_datetime": "2026-07-22T06:00:00",
-      "date": "2026-07-22",
-      "end_date": "2026-07-22",
-      "start_time": "00:00",
-      "end_time": "06:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:38",
-      "source_type": "inverse_google_calendar",
-      "inverse_generated": true,
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_blocking_gap_expansion",
-        "default_open_minus_blocking_events"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-22T08:30:00",
+      "start_datetime": "2026-07-22T18:00:00",
       "end_datetime": "2026-07-23T00:00:00",
       "date": "2026-07-22",
       "end_date": "2026-07-23",
-      "start_time": "08:30",
+      "start_time": "18:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -2307,7 +2201,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:39",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:31",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2337,7 +2231,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:40",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:32",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2367,7 +2261,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:41",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:33",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2397,7 +2291,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:42",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:34",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2427,7 +2321,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:43",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:35",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2457,7 +2351,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:44",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:36",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2471,11 +2365,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-07-26T00:00:00",
-      "end_datetime": "2026-07-27T00:00:00",
+      "end_datetime": "2026-07-26T18:00:00",
       "date": "2026-07-26",
-      "end_date": "2026-07-27",
+      "end_date": "2026-07-26",
       "start_time": "00:00",
-      "end_time": "00:00",
+      "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -2487,37 +2381,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:45",
-      "source_type": "inverse_google_calendar",
-      "inverse_generated": true,
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_blocking_gap_expansion",
-        "default_open_minus_blocking_events"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-27T00:00:00",
-      "end_datetime": "2026-07-27T06:00:00",
-      "date": "2026-07-27",
-      "end_date": "2026-07-27",
-      "start_time": "00:00",
-      "end_time": "06:00",
-      "availability_status": "available",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [
-        "BLS",
-        "HSI",
-        "Heartsaver",
-        "USCG"
-      ],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:46",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:37",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2547,7 +2411,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:47",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:38",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2577,7 +2441,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:48",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:39",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2607,7 +2471,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:49",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:40",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2637,7 +2501,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:50",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:41",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2650,11 +2514,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-29T08:30:00",
+      "start_datetime": "2026-07-29T18:00:00",
       "end_datetime": "2026-07-30T00:00:00",
       "date": "2026-07-29",
       "end_date": "2026-07-30",
-      "start_time": "08:30",
+      "start_time": "18:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -2667,7 +2531,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:51",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:42",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2697,7 +2561,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:52",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:43",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2727,7 +2591,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:53",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:44",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2757,7 +2621,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:54",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:45",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2787,7 +2651,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:55",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:46",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2817,7 +2681,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:56",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:47",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2847,7 +2711,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:57",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:48",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2877,7 +2741,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:58",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:49",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2907,7 +2771,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:59",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:50",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2937,7 +2801,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:60",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:51",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2967,7 +2831,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:61",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:52",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -2997,7 +2861,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:62",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:53",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -3027,7 +2891,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:63",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:54",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -3057,7 +2921,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:64",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:55",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -3087,7 +2951,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:65",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:56",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -3117,7 +2981,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:66",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:57",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -3147,7 +3011,7 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:67",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:58",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -3161,11 +3025,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-08-13T00:00:00",
-      "end_datetime": "2026-08-13T15:45:00",
+      "end_datetime": "2026-08-14T00:00:00",
       "date": "2026-08-13",
-      "end_date": "2026-08-13",
+      "end_date": "2026-08-14",
       "start_time": "00:00",
-      "end_time": "15:45",
+      "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -3177,7 +3041,97 @@
         "USCG"
       ],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "brian_do_not_schedule:inverse_gap:68",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:59",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-14T00:00:00",
+      "end_datetime": "2026-08-15T00:00:00",
+      "date": "2026-08-14",
+      "end_date": "2026-08-15",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:60",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-15T00:00:00",
+      "end_datetime": "2026-08-16T00:00:00",
+      "date": "2026-08-15",
+      "end_date": "2026-08-16",
+      "start_time": "00:00",
+      "end_time": "00:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:61",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-16T00:00:00",
+      "end_datetime": "2026-08-16T16:00:00",
+      "date": "2026-08-16",
+      "end_date": "2026-08-16",
+      "start_time": "00:00",
+      "end_time": "16:00",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:62",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
@@ -3188,16 +3142,5 @@
       ]
     }
   ],
-  "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_event_id": "4jgsd3masf2ccq7algku6rs7j8@google.com",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "event_missing_parseable_start_or_end",
-      "all_reason_codes": [
-        "event_missing_parseable_start_or_end"
-      ],
-      "message": "Calendar event was not usable as an inverse blocking interval."
-    }
-  ]
+  "blocked_or_placeholder_sources": []
 }
