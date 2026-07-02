@@ -164,7 +164,8 @@
           "icon_label": "CPR",
           "clarification": "CPR and AED classroom option.",
           "delivery_mode": "in-person",
-          "variant": "cpr-aed"
+          "variant": "cpr-aed",
+          "deep_link_aliases": ["cpr-aed"]
         },
         {
           "course_id": "209809",
@@ -172,7 +173,8 @@
           "icon_label": "FA",
           "clarification": "First Aid, CPR, and AED classroom option.",
           "delivery_mode": "in-person",
-          "variant": "first-aid-cpr-aed"
+          "variant": "first-aid-cpr-aed",
+          "deep_link_aliases": ["first-aid-cpr-aed"]
         },
         {
           "course_id": "251545",
@@ -180,7 +182,8 @@
           "icon_label": "PED",
           "clarification": "Pediatric First Aid/CPR/AED option where scheduling rules allow.",
           "delivery_mode": "blended",
-          "variant": "pediatric"
+          "variant": "pediatric",
+          "deep_link_aliases": ["pediatric-first-aid-cpr-aed"]
         }
       ]
     },

@@ -12,7 +12,7 @@ Local build artifact for the customer-facing BLS pilot. Enrollware was not calle
 - Public-selectable offers: `1507`
 - Public-selectable dates: `39`
 - Public-selectable start times: `512`
-- Rejected course/start evaluations: `3842`
+- Rejected course/start evaluations: `3839`
 - Suppressed stale/orphaned offers: `0`
 
 ## Sample Public-Selectable URLs
@@ -33,9 +33,9 @@ Local build artifact for the customer-facing BLS pilot. Enrollware was not calle
 ## Top Rejection Reasons
 
 - `outside_public_dynamic_hours`: 2670
-- `conflicts_with_existing_enrollware_occupancy`: 1276
-- `does_not_fit_inside_availability_after_duration_and_buffers`: 629
-- `inside_minimum_lead_time`: 15
+- `conflicts_with_existing_enrollware_occupancy`: 1273
+- `does_not_fit_inside_availability_after_duration_and_buffers`: 623
+- `inside_minimum_lead_time`: 12
 
 ## Final Live Availability Guard
 

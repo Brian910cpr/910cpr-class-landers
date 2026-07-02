@@ -255,6 +255,12 @@ def render_html(payload: dict[str, Any]) -> str:
             "courseId": course_id,
             "courseName": option.get("display_label") or course_id,
             "family": page_family,
+            "variant": option.get("variant") or "",
+            "deepLinkAliases": [
+                str(alias)
+                for alias in ([option.get("variant")] + list(option.get("deep_link_aliases", [])))
+                if alias
+            ],
             "iconLabel": option.get("icon_label") or page_family,
             "clarification": option.get("clarification") or "",
         }
@@ -293,6 +299,15 @@ def render_html(payload: dict[str, Any]) -> str:
                     "courseId": course["courseId"],
                     "courseName": configured_options.get(course["courseId"], {}).get("display_label") or course["courseName"],
                     "family": family,
+                    "variant": configured_options.get(course["courseId"], {}).get("variant") or "",
+                    "deepLinkAliases": [
+                        str(alias)
+                        for alias in (
+                            [configured_options.get(course["courseId"], {}).get("variant")]
+                            + list(configured_options.get(course["courseId"], {}).get("deep_link_aliases", []))
+                        )
+                        if alias
+                    ],
                     "iconLabel": configured_options.get(course["courseId"], {}).get("icon_label") or family,
                     "clarification": configured_options.get(course["courseId"], {}).get("clarification") or "",
                 })
@@ -392,6 +407,24 @@ def render_html(payload: dict[str, Any]) -> str:
 
     function byId(id) {{
       return document.getElementById(id);
+    }}
+
+    function normalizeDeepLink(value) {{
+      return String(value || '').trim().toLowerCase().replace(/^#/, '');
+    }}
+
+    function courseIdFromDeepLink() {{
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {{
+        return '';
+      }}
+      const matched = courseOptions.find(course =>
+        course.courseId === requested ||
+        normalizeDeepLink(course.variant) === requested ||
+        (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested)
+      );
+      return matched?.courseId || '';
     }}
 
     function activeCourseIds() {{
@@ -596,6 +629,7 @@ def render_html(payload: dict[str, Any]) -> str:
       renderAll();
     }});
 
+    selectedCourseId = courseIdFromDeepLink() || selectedCourseId;
     renderAll();
   </script>
 </body>
