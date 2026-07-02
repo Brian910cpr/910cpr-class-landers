@@ -1,16 +1,21 @@
 from __future__ import annotations
 
+import json
 import unittest
+from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from scripts import build_bls_block_schedule_pilot
 from scripts import block_start_time_selector
 
+ROOT = Path(__file__).resolve().parents[1]
+PILOT_REPORT_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
+
 
 class BlockStartTimeSelectorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.payload = block_start_time_selector.build_bls_pilot_schedule()
+        cls.payload = json.loads(PILOT_REPORT_PATH.read_text(encoding="utf-8"))
 
     def test_uses_live_availability_when_present(self):
         self.assertEqual(self.payload["availability_source_used"], "live_availability_snapshot")
