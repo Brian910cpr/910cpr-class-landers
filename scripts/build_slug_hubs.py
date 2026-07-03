@@ -2311,34 +2311,46 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     flexible_html = ""
     action_html = f'<a class="button small primary" href="{url}">Book This Class</a>'
     if presentation_mode == "flexible_start_window" and flexible_choices:
-        label = normalize_space(offer.get("flexible_start_button_text")) or "When would YOU like to start?"
+        label = "Choose your start time:"
         choice_links = []
-        for choice in flexible_choices:
+        valid_choice_records = []
+        seen_start_times: set[str] = set()
+        sorted_choices = sorted(
+            [choice for choice in flexible_choices if isinstance(choice, dict)],
+            key=lambda choice: parse_dt(choice.get("appointment_display_start")) or datetime.max.replace(tzinfo=TZ),
+        )
+        for choice in sorted_choices:
             if not isinstance(choice, dict):
                 continue
             if not is_valid_appointment_seed_registration_url(choice.get("appointment_registration_url")):
                 continue
             choice_url = escape(choice.get("appointment_registration_url") or "#", quote=True)
             choice_start_dt = parse_dt(choice.get("appointment_display_start"))
-            choice_end_dt = parse_dt(choice.get("appointment_display_end"))
             choice_label = normalize_space(choice.get("start_time"))
             if choice_start_dt:
                 choice_label = format_time_line(choice_start_dt)
-            if choice_start_dt and choice_end_dt:
-                choice_label = f"{format_time_line(choice_start_dt)} - {format_time_line(choice_end_dt)}"
+            if not choice_label or choice_label in seen_start_times:
+                continue
+            seen_start_times.add(choice_label)
             choice_offer_id = escape(normalize_space(choice.get("offer_id")), quote=True)
+            valid_choice_records.append((choice, choice_label, choice_offer_id, choice_url))
             choice_links.append(
-                f'<a class="button small secondary" href="{choice_url}" data-source-offer-id="{choice_offer_id}">{escape(choice_label)}</a>'
+                f'<a class="slug-flexible-start-time-link" href="{choice_url}" data-source-offer-id="{choice_offer_id}">{escape(choice_label)}</a>'
             )
         if choice_links:
-            flexible_html = f"""
-    <details class="slug-flexible-start-choices">
-      <summary>{escape(label)}</summary>
-      <div class="slug-flexible-start-choice-list">
-        {''.join(choice_links)}
-      </div>
-    </details>"""
-            action_html = f'<a class="button small primary" href="{url}">{escape(label)}</a>'
+            if len(choice_links) == 1:
+                _single_choice, single_label, single_offer_id, single_url = valid_choice_records[0]
+                action_html = f'<a class="button small primary" href="{single_url}" data-source-offer-id="{single_offer_id}">Register for {escape(single_label)}</a>'
+                flexible_html = ""
+            else:
+                flexible_html = f"""
+  <div class="slug-flexible-start-choices" aria-label="Choose your start time">
+    <div class="slug-flexible-start-label">{escape(label)}</div>
+    <div class="slug-flexible-start-choice-list">
+      {'<span class="slug-flexible-start-separator">·</span>'.join(choice_links)}
+    </div>
+  </div>"""
+                action_html = '<span class="slug-pill-action-note">Select a start time below</span>'
     return f"""
 <article class="slug-pill slug-appointment-option" {data_attrs}{debug_source_data_attrs(offer, kind_hint="appointment_seed")}>
   <div class="slug-pill-date">

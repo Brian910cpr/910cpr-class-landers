@@ -656,6 +656,8 @@
     const locationNode = pill.querySelector(".slug-pill-chip-location");
     const timeNode = Array.from(pill.querySelectorAll(".slug-pill-chip")).find((chip) => !chip.classList.contains("slug-pill-chip-location"));
     const buttonNode = pill.querySelector(".slug-pill-actions .button");
+    const actionNoteNode = pill.querySelector(".slug-pill-actions .slug-pill-action-note");
+    const flexibleStartNode = pill.querySelector(".slug-flexible-start-choices");
     const hintNode = pill.querySelector(".slug-pill-hint");
     const isRequestable = pill.classList.contains("slug-requestable-offer") || pill.getAttribute("data-offer-source") === "customer_facing_offers";
     const offerSource = pill.getAttribute("data-offer-source") || (buttonNode ? buttonNode.getAttribute("data-offer-source") : "") || "";
@@ -674,6 +676,8 @@
       href: buttonNode ? buttonNode.getAttribute("href") : "",
       originalHref: buttonNode ? (buttonNode.getAttribute("data-original-href") || buttonNode.getAttribute("href") || "") : "",
       buttonText: buttonNode ? buttonNode.textContent.trim() : "Register",
+      actionNote: actionNoteNode ? actionNoteNode.textContent.trim() : "",
+      flexibleStartHtml: flexibleStartNode ? flexibleStartNode.outerHTML : "",
       hint: hintNode ? hintNode.textContent.trim() : "",
       sessionId: pill.getAttribute("data-session-id") || "",
       sessionStart: start ? start.toISOString() : "",
@@ -768,12 +772,14 @@
             </div>
             <div class="slug-time-actions">
               ${row.hint ? `<div class="slug-pill-hint">${escapeHtml(row.hint)}</div>` : ""}
+              ${row.actionNote ? `<div class="slug-pill-action-note">${escapeHtml(row.actionNote)}</div>` : ""}
               ${row.href ? (
                 row.isRequestable
                   ? `<a class="button small secondary" href="${escapeHtml(row.href)}" data-offer-source="${escapeHtml(row.offerSource)}" data-real-enrollware-session="${escapeHtml(row.realEnrollwareSession)}" data-course-key="${escapeHtml(row.courseKey)}" data-requested-start="${escapeHtml(row.requestedStart || row.sessionStart)}" data-location-name="${escapeHtml(row.locationName || row.location)}">${escapeHtml(row.buttonText)}</a>`
                   : `<a class="button small primary" href="${escapeHtml(row.href)}" data-original-href="${escapeHtml(row.originalHref || row.href)}" data-session-id="${escapeHtml(row.sessionId)}" data-session-start="${escapeHtml(row.sessionStart)}" data-session-end="${escapeHtml(row.sessionEnd)}">${escapeHtml(row.buttonText)}</a>`
               ) : ""}
             </div>
+            ${row.flexibleStartHtml || ""}
           </div>
         `).join("");
         const certLogos = groupCertifyingLogos(group.rows);

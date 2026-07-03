@@ -999,6 +999,11 @@ a {
     align-items: start;
   }
 
+  .slug-flexible-start-choices {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
   .slug-pill-actions .button,
   .slug-panel-cta .button,
   .slug-banner .button {
@@ -3037,6 +3042,57 @@ textarea {
 
 .slug-pill-actions .button.small {
   min-width: 140px;
+}
+
+.slug-pill-action-note {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.slug-flexible-start-choices {
+  grid-column: 2 / -1;
+  min-width: 0;
+  margin-top: 10px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.slug-flexible-start-label {
+  color: var(--heading);
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.slug-flexible-start-choice-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: center;
+}
+
+.slug-flexible-start-time-link {
+  color: var(--medical-dark);
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.slug-flexible-start-time-link:focus,
+.slug-flexible-start-time-link:hover {
+  color: var(--cta-dark);
+}
+
+.slug-flexible-start-separator {
+  color: var(--muted);
+}
+
+.slug-time-row > .slug-flexible-start-choices {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 0;
 }
 
 .slug-empty {

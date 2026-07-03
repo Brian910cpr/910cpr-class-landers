@@ -125,10 +125,48 @@ class DynamicOfferPresentationPolicyTest(unittest.TestCase):
         html = build_slug_hubs.render_appointment_seed_offer_card(row)
 
         self.assertEqual(1, html.count("slug-appointment-option"))
-        self.assertIn("When would YOU like to start?", html)
+        self.assertNotIn("When would YOU like to start?", html)
+        self.assertIn("Choose your start time:", html)
+        self.assertIn("Select a start time below", html)
+        self.assertEqual(2, html.count('class="slug-flexible-start-time-link"'))
         self.assertIn("2%3A30%20PM", html)
         self.assertIn("2%3A45%20PM", html)
+        self.assertNotIn("button small secondary", html)
         self.assertIn('data-presentation-mode="flexible_start_window"', html)
+
+    def test_flexible_start_card_with_one_valid_choice_uses_direct_time_button(self) -> None:
+        row = {
+            "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+            "start_datetime": "2026-07-04T14:30:00",
+            "end_datetime": "2026-07-04T15:15:00",
+            "location_name": "Shipyard",
+            "instructor_display_name": "Brian Ennis",
+            "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=1&startTime=2%3A30%20PM&courseId=329495",
+            "presentation_mode": "flexible_start_window",
+            "flexible_start_button_text": "When would YOU like to start?",
+            "source_offer_id": "offer-329495-instructor_test-20260704-1430",
+            "render_source": "dynamic_offer_presentation_policy",
+            "flexible_start_choices": [
+                {
+                    "offer_id": "offer-329495-instructor_test-20260704-1430",
+                    "appointment_display_start": "2026-07-04T14:30:00",
+                    "appointment_registration_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=1&startTime=2%3A30%20PM&courseId=329495",
+                },
+                {
+                    "offer_id": "offer-329495-instructor_test-20260704-1445",
+                    "appointment_display_start": "2026-07-04T14:45:00",
+                    "appointment_registration_url": "https://example.com/not-an-appointment",
+                },
+            ],
+        }
+
+        html = build_slug_hubs.render_appointment_seed_offer_card(row)
+
+        self.assertIn("Register for 2:30 PM", html)
+        self.assertIn("2%3A30%20PM", html)
+        self.assertNotIn("Choose your start time:", html)
+        self.assertNotIn("2%3A45%20PM", html)
+        self.assertNotIn("When would YOU like to start?", html)
 
 
 if __name__ == "__main__":
