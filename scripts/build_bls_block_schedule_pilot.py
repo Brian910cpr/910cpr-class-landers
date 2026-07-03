@@ -116,6 +116,18 @@ def css() -> str:
     .button-list { display: grid; gap: 8px; }
     .choice-list { display: grid; gap: 8px; margin-bottom: 14px; }
     .option-tools { display: grid; gap: 12px; }
+    .disclosure-toggle {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .disclosure-toggle input {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+    }
     .delivery-filter {
       display: grid;
       gap: 7px;
@@ -297,6 +309,7 @@ def render_html(payload: dict[str, Any]) -> str:
             "family": page_family,
             "variant": option.get("variant") or "",
             "deliveryMode": option.get("delivery_mode") or "",
+            "recommended": option.get("recommended", True) is not False,
             "deepLinkAliases": [
                 str(alias)
                 for alias in ([option.get("variant")] + list(option.get("deep_link_aliases", [])))
@@ -343,6 +356,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "family": family,
                     "variant": configured_options.get(course["courseId"], {}).get("variant") or "",
                     "deliveryMode": configured_options.get(course["courseId"], {}).get("delivery_mode") or course.get("deliveryMode") or "",
+                    "recommended": configured_options.get(course["courseId"], {}).get("recommended", True) is not False,
                     "deepLinkAliases": [
                         str(alias)
                         for alias in (
@@ -392,12 +406,19 @@ def render_html(payload: dict[str, Any]) -> str:
     ]
     course_options_json = json.dumps(course_options, ensure_ascii=False)
     option_groups_json = json.dumps(option_groups, ensure_ascii=False)
+    delivery_values = []
+    for course in course_options:
+        value = str(course.get("deliveryMode") or "").strip()
+        if value and value not in delivery_values:
+            delivery_values.append(value)
+    delivery_filter_enabled = len(delivery_values) > 1
     counts = payload["counts"]
     first_course = course_options[0]["courseId"] if course_options else ""
     title = html.escape(str(page_config.get("title") or "Block Schedule"))
     intro = html.escape(str(page_config.get("intro") or "Select a course, date, and start time."))
     compare_label = html.escape(str(page_config.get("compare_mode", {}).get("label") or "Show all options"))
     compare_enabled = page_config.get("compare_mode", {}).get("enabled") is True
+    show_all_label = html.escape(str(page_config.get("show_all_label") or "Show all course options"))
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -419,13 +440,18 @@ def render_html(payload: dict[str, Any]) -> str:
         <fieldset class="delivery-filter">
           <legend>Delivery type</legend>
           <div class="delivery-options">
-            <label><input type="radio" name="delivery-filter" value="all" checked> All</label>
-            <label><input type="radio" name="delivery-filter" value="in-person"> In-person</label>
-            <label><input type="radio" name="delivery-filter" value="blended"> Blended</label>
+            <label data-delivery-option="all"><input type="radio" name="delivery-filter" value="all" checked> All</label>
+            <label data-delivery-option="in-person"><input type="radio" name="delivery-filter" value="in-person"> In-person</label>
+            <label data-delivery-option="blended"><input type="radio" name="delivery-filter" value="blended"> Blended</label>
+            <label data-delivery-option="skills-session"><input type="radio" name="delivery-filter" value="skills-session"> HeartCode/Skills</label>
           </div>
         </fieldset>
         <div id="course-option-list" class="choice-list"></div>
         <div class="option-tools">
+          <label class="disclosure-toggle">
+            <input id="show-all-toggle" type="checkbox">
+            <span>{show_all_label}</span>
+          </label>
           <label class="compare-toggle">
             <input id="compare-toggle" type="checkbox">
             <span>{compare_label}</span>
@@ -451,8 +477,11 @@ def render_html(payload: dict[str, Any]) -> str:
     const scheduleDates = {data_json};
     const courseOptions = {course_options_json};
     const optionGroups = {option_groups_json};
+    const deliveryModes = new Set(courseOptions.map(course => normalizeDeepLink(course.deliveryMode)).filter(Boolean));
+    const deliveryFilterEnabled = {str(delivery_filter_enabled).lower()};
     let selectedCourseId = {json.dumps(first_course)};
     let selectedDelivery = 'all';
+    let showAllOptions = false;
     let compareMode = false;
     let selectedDate = '';
     let selectedStart = '';
@@ -482,7 +511,13 @@ def render_html(payload: dict[str, Any]) -> str:
     function deliveryFromDeepLink() {{
       const params = new URLSearchParams(window.location.search);
       const requested = normalizeDeepLink(params.get('delivery'));
-      return ['all', 'in-person', 'blended'].includes(requested) ? requested : 'all';
+      const allowed = new Set(['all', ...courseOptions.map(course => normalizeDeepLink(course.deliveryMode)).filter(Boolean)]);
+      return allowed.has(requested) ? requested : 'all';
+    }}
+
+    function showAllFromDeepLink() {{
+      const params = new URLSearchParams(window.location.search);
+      return ['1', 'true', 'yes'].includes(normalizeDeepLink(params.get('showAll')));
     }}
 
     function deliveryLabel(value) {{
@@ -492,6 +527,9 @@ def render_html(payload: dict[str, Any]) -> str:
       if (value === 'blended') {{
         return 'Blended';
       }}
+      if (value === 'skills-session') {{
+        return 'HeartCode/Skills';
+      }}
       return 'All';
     }}
 
@@ -500,7 +538,7 @@ def render_html(payload: dict[str, Any]) -> str:
     }}
 
     function visibleCourseOptions() {{
-      return courseOptions.filter(courseMatchesDelivery);
+      return courseOptions.filter(course => courseMatchesDelivery(course) && (showAllOptions || course.recommended !== false));
     }}
 
     function syncCourseSelection() {{
@@ -566,6 +604,14 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderCourseOptions() {{
       const host = byId('course-option-list');
       host.innerHTML = '';
+      const deliveryFilter = document.querySelector('.delivery-filter');
+      if (deliveryFilter) {{
+        deliveryFilter.hidden = !deliveryFilterEnabled;
+      }}
+      document.querySelectorAll('[data-delivery-option]').forEach(item => {{
+        const value = item.getAttribute('data-delivery-option');
+        item.hidden = value !== 'all' && !deliveryModes.has(value);
+      }});
       visibleCourseOptions().forEach(course => {{
         const button = document.createElement('button');
         button.type = 'button';
@@ -597,6 +643,7 @@ def render_html(payload: dict[str, Any]) -> str:
       document.querySelectorAll('input[name="delivery-filter"]').forEach(input => {{
         input.checked = input.value === selectedDelivery;
       }});
+      byId('show-all-toggle').checked = showAllOptions;
       byId('compare-toggle').checked = compareMode;
       byId('compare-toggle').disabled = {str(not compare_enabled).lower()};
     }}
@@ -731,6 +778,11 @@ def render_html(payload: dict[str, Any]) -> str:
       renderAll();
     }});
 
+    byId('show-all-toggle').addEventListener('change', event => {{
+      showAllOptions = event.target.checked;
+      renderAll();
+    }});
+
     document.querySelectorAll('input[name="delivery-filter"]').forEach(input => {{
       input.addEventListener('change', event => {{
         selectedDelivery = event.target.value;
@@ -739,6 +791,7 @@ def render_html(payload: dict[str, Any]) -> str:
     }});
 
     selectedDelivery = deliveryFromDeepLink();
+    showAllOptions = showAllFromDeepLink();
     selectedCourseId = courseIdFromDeepLink() || selectedCourseId;
     renderAll();
   </script>
