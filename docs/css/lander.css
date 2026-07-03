@@ -1707,6 +1707,12 @@ a {
   line-height: 1.2;
 }
 
+.home-course-tile-copy span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
 .home-help-panel {
   grid-column: 1 / -1;
   display: grid;

@@ -687,17 +687,17 @@ def render_classes_finder_index(
             "action": "Find CPR / First Aid classes",
             "label": "Common requirements",
             "common": [
-                {"label": "First Aid CPR AED", "href": "/courses/heartsaver-first-aid-cpr-aed.html"},
-                {"label": "CPR AED", "href": "/courses/heartsaver-cpr-aed.html"},
+                {"label": "AHA Heartsaver First Aid CPR AED", "href": "/courses/heartsaver-first-aid-cpr-aed.html"},
+                {"label": "AHA Heartsaver CPR AED", "href": "/courses/heartsaver-cpr-aed.html"},
                 {"label": "Pediatric First Aid", "href": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html"},
-                {"label": "Family & Friends", "href": "/heartsaver.html"},
+                {"label": "Family & Friends", "href": "/courses/aha-family-friends-cpr.html"},
             ],
             "link_label": "Choose your class",
             "links": [
-                ("First Aid CPR AED", "/courses/heartsaver-first-aid-cpr-aed.html"),
-                ("CPR AED", "/courses/heartsaver-cpr-aed.html"),
+                ("AHA Heartsaver First Aid CPR AED", "/courses/heartsaver-first-aid-cpr-aed.html"),
+                ("AHA Heartsaver CPR AED", "/courses/heartsaver-cpr-aed.html"),
                 ("Pediatric First Aid CPR AED", "/courses/heartsaver-pediatric-first-aid-cpr-aed.html"),
-                ("Family & Friends CPR", "/heartsaver.html"),
+                ("Family & Friends CPR", "/courses/aha-family-friends-cpr.html"),
             ],
         },
         {
@@ -708,12 +708,11 @@ def render_classes_finder_index(
             "action": "Find Red Cross classes",
             "label": "Common requirements",
             "common": [
-                {"label": "ARC BLS", "href": "/arc.html"},
-                {"label": "ARC First Aid CPR AED", "href": "/arc.html"},
+                {"label": "ARC Programs", "href": "/arc.html"},
                 "Blended learning",
             ],
             "link_label": "Choose your class",
-            "links": [("Red Cross BLS", "/arc.html"), ("Red Cross First Aid CPR AED", "/arc.html")],
+            "links": [("ARC Programs", "/arc.html")],
         },
         {
             "title": "HSI Required",
@@ -723,12 +722,11 @@ def render_classes_finder_index(
             "action": "Find HSI classes",
             "label": "Common requirements",
             "common": [
-                {"label": "HSI CPR AED", "href": "/hsi.html"},
-                {"label": "HSI First Aid CPR AED", "href": "/hsi.html"},
+                {"label": "HSI Programs", "href": "/hsi.html"},
                 "Blended learning",
             ],
             "link_label": "Choose your class",
-            "links": [("HSI CPR AED", "/hsi.html"), ("HSI First Aid CPR AED", "/hsi.html")],
+            "links": [("HSI Programs", "/hsi.html")],
         },
         {
             "title": "USCG / Maritime",
@@ -747,19 +745,19 @@ def render_classes_finder_index(
             "title": "Not Sure What I Need",
             "description": "Use this if the wording from your job, school, agency, or licensing board is unclear. We can help you avoid choosing the wrong class.",
             "image": "/images/confused-frustrated.png",
-            "href": "/group-training.html",
+            "href": "/index.html#class-finder",
             "action": "Help me choose",
             "label": "Best when",
             "common": [
                 "Unclear requirement",
-                {"label": "Group training", "href": "/group-training.html"},
-                {"label": "Private class", "href": "/group-training.html"},
+                {"label": "Course finder", "href": "/index.html#class-finder"},
+                {"label": "Call 910-395-5193", "href": "tel:9103955193"},
                 "Employer request",
             ],
             "link_label": "Contact us",
             "links": [
                 ("Call 910-395-5193", "tel:9103955193"),
-                ("Request help choosing", "/request_group_session.html"),
+                ("Use course finder", "/index.html#class-finder"),
                 ("Group training request", "/group-training.html"),
             ],
         },
@@ -1878,7 +1876,7 @@ def render_homepage() -> str:
     <div class="card home-noscript">
       <h2>Quick class links</h2>
       <p>Course links could not load in this browser. You can still choose a class below.</p>
-      <p><a class="button primary" href="/bls.html">AHA BLS</a> <a class="button secondary" href="/acls.html">AHA ACLS</a> <a class="button secondary" href="/pals.html">AHA PALS</a> <a class="button secondary" href="/heartsaver.html">First Aid CPR AED</a> <a class="button secondary" href="/arc.html">Red Cross</a> <a class="button secondary" href="/hsi.html">HSI</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG / Maritime</a></p>
+      <p><a class="button primary" href="/bls.html">AHA BLS</a> <a class="button secondary" href="/acls.html">AHA ACLS</a> <a class="button secondary" href="/pals.html">AHA PALS</a> <a class="button secondary" href="/courses/heartsaver-first-aid-cpr-aed.html">AHA Heartsaver First Aid CPR AED</a> <a class="button secondary" href="/courses/heartsaver-cpr-aed.html">AHA Heartsaver CPR AED</a> <a class="button secondary" href="/arc.html">ARC Programs</a> <a class="button secondary" href="/hsi.html">HSI Programs</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG / Maritime</a> <a class="button secondary" href="/courses/aha-family-friends-cpr.html">Family & Friends CPR</a></p>
     </div>
   </div>
 </noscript>

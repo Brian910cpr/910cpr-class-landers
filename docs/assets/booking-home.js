@@ -19,34 +19,26 @@
       image: "/images/pals_general.png",
     },
     {
-      title: "First Aid CPR AED",
-      href: "/heartsaver.html",
+      title: "AHA Heartsaver First Aid CPR AED",
+      href: "/courses/heartsaver-first-aid-cpr-aed.html",
       image: "/images/heartsaver_general.png",
     },
     {
-      title: "CPR AED",
-      href: "/heartsaver.html",
+      title: "AHA Heartsaver CPR AED",
+      href: "/courses/heartsaver-cpr-aed.html",
       image: "/images/HS-FA-CPR-AED.jpeg",
     },
     {
-      title: "Red Cross BLS",
+      title: "ARC Programs",
+      subtitle: "BLS and First Aid/CPR/AED",
       href: "/arc.html",
       image: "/images/0arc.png",
     },
     {
-      title: "Red Cross First Aid CPR AED",
-      href: "/arc.html",
-      image: "/images/bystanderAED_JPEG.jpg",
-    },
-    {
-      title: "HSI CPR AED",
+      title: "HSI Programs",
+      subtitle: "BLS and First Aid/CPR/AED",
       href: "/hsi.html",
       image: "/images/0hsi.png",
-    },
-    {
-      title: "HSI First Aid CPR AED",
-      href: "/hsi.html",
-      image: "/images/4_cards_.jpg",
     },
     {
       title: "USCG / Maritime",
@@ -55,7 +47,7 @@
     },
     {
       title: "Family & Friends CPR",
-      href: "/heartsaver.html",
+      href: "/courses/aha-family-friends-cpr.html",
       image: "/images/confused-frustrated.png",
     },
   ];
@@ -66,6 +58,7 @@
         <img src="${escapeAttribute(course.image)}" alt="" loading="lazy" onerror="this.hidden=true">
         <span class="home-course-tile-copy">
           <strong>${escapeHtml(course.title)}</strong>
+          ${course.subtitle ? `<span>${escapeHtml(course.subtitle)}</span>` : ""}
         </span>
       </a>
     `;
@@ -81,7 +74,7 @@
         <p>Send us the wording from your job, school, email, or form. We'll help you avoid choosing the wrong class.</p>
       </div>
       <div class="home-help-actions">
-        <a class="button primary" href="/request_group_session.html">Help me choose</a>
+        <a class="button primary" href="/index.html#class-finder">Help me choose</a>
         <a class="button secondary" href="/group-training.html">Training for a group or workplace</a>
         <a class="button secondary" href="tel:9103955193">Call 910-395-5193</a>
       </div>
