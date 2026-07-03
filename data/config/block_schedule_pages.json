@@ -19,7 +19,11 @@
         "groups": {
           "BLS": {
             "label": "All AHA BLS options",
-            "course_ids": ["209806", "359474", "210549"]
+            "course_ids": [
+              "209806",
+              "359474",
+              "210549"
+            ]
           }
         }
       },
@@ -31,7 +35,10 @@
           "clarification": "Full BLS Provider classroom option.",
           "delivery_mode": "in-person",
           "variant": "initial",
-          "deep_link_aliases": ["provider", "bls-provider"]
+          "deep_link_aliases": [
+            "provider",
+            "bls-provider"
+          ]
         },
         {
           "course_id": "359474",
@@ -40,7 +47,10 @@
           "clarification": "For current or recently expired BLS cards.",
           "delivery_mode": "in-person",
           "variant": "renewal",
-          "deep_link_aliases": ["provider-renewal", "bls-renewal"]
+          "deep_link_aliases": [
+            "provider-renewal",
+            "bls-renewal"
+          ]
         },
         {
           "course_id": "210549",
@@ -49,7 +59,9 @@
           "clarification": "Skills session for online HeartCode BLS.",
           "delivery_mode": "skills-session",
           "variant": "heartcode",
-          "deep_link_aliases": ["heartcode-bls"]
+          "deep_link_aliases": [
+            "heartcode-bls"
+          ]
         }
       ]
     },
@@ -68,7 +80,11 @@
         "groups": {
           "ACLS": {
             "label": "All AHA ACLS options",
-            "course_ids": ["241108", "209818", "209811"]
+            "course_ids": [
+              "241108",
+              "209818",
+              "209811"
+            ]
           }
         }
       },
@@ -80,7 +96,10 @@
           "clarification": "Initial ACLS Provider classroom option.",
           "delivery_mode": "in-person",
           "variant": "initial",
-          "deep_link_aliases": ["provider", "acls-provider"]
+          "deep_link_aliases": [
+            "provider",
+            "acls-provider"
+          ]
         },
         {
           "course_id": "209818",
@@ -89,7 +108,10 @@
           "clarification": "Renewal classroom option for ACLS providers.",
           "delivery_mode": "in-person",
           "variant": "renewal",
-          "deep_link_aliases": ["provider-renewal", "acls-renewal"]
+          "deep_link_aliases": [
+            "provider-renewal",
+            "acls-renewal"
+          ]
         },
         {
           "course_id": "209811",
@@ -98,7 +120,9 @@
           "clarification": "Skills session for online HeartCode ACLS.",
           "delivery_mode": "skills-session",
           "variant": "heartcode",
-          "deep_link_aliases": ["heartcode-acls"]
+          "deep_link_aliases": [
+            "heartcode-acls"
+          ]
         }
       ]
     },
@@ -117,7 +141,11 @@
         "groups": {
           "PALS": {
             "label": "All AHA PALS options",
-            "course_ids": ["209805", "251496", "209812"]
+            "course_ids": [
+              "209805",
+              "251496",
+              "209812"
+            ]
           }
         }
       },
@@ -129,7 +157,10 @@
           "clarification": "Initial PALS Provider classroom option.",
           "delivery_mode": "in-person",
           "variant": "initial",
-          "deep_link_aliases": ["provider", "pals-provider"]
+          "deep_link_aliases": [
+            "provider",
+            "pals-provider"
+          ]
         },
         {
           "course_id": "251496",
@@ -138,7 +169,10 @@
           "clarification": "Renewal classroom option for PALS providers.",
           "delivery_mode": "in-person",
           "variant": "renewal",
-          "deep_link_aliases": ["provider-renewal", "pals-renewal"]
+          "deep_link_aliases": [
+            "provider-renewal",
+            "pals-renewal"
+          ]
         },
         {
           "course_id": "209812",
@@ -147,7 +181,9 @@
           "clarification": "Skills session for online HeartCode PALS.",
           "delivery_mode": "skills-session",
           "variant": "heartcode",
-          "deep_link_aliases": ["heartcode-pals"]
+          "deep_link_aliases": [
+            "heartcode-pals"
+          ]
         }
       ]
     },
@@ -166,7 +202,14 @@
         "groups": {
           "Heartsaver": {
             "label": "All AHA Heartsaver options",
-            "course_ids": ["344085", "209809", "251545"]
+            "course_ids": [
+              "344085",
+              "209808",
+              "209809",
+              "329495",
+              "351632",
+              "251545"
+            ]
           }
         }
       },
@@ -178,7 +221,22 @@
           "clarification": "CPR and AED classroom option.",
           "delivery_mode": "in-person",
           "variant": "cpr-aed",
-          "deep_link_aliases": ["cpr-aed"]
+          "deep_link_aliases": [
+            "cpr-aed"
+          ]
+        },
+        {
+          "course_id": "209808",
+          "display_label": "AHA Heartsaver CPR AED Online",
+          "icon_label": "CPR",
+          "clarification": "Online portion plus scheduled skills check where rules allow.",
+          "delivery_mode": "blended",
+          "variant": "cpr-aed-online",
+          "deep_link_aliases": [
+            "cpr-aed-online",
+            "heartcode-first-aid-cpr-aed"
+          ],
+          "recommended": false
         },
         {
           "course_id": "209809",
@@ -187,7 +245,33 @@
           "clarification": "First Aid, CPR, and AED classroom option.",
           "delivery_mode": "in-person",
           "variant": "first-aid-cpr-aed",
-          "deep_link_aliases": ["first-aid-cpr-aed"]
+          "deep_link_aliases": [
+            "first-aid-cpr-aed"
+          ]
+        },
+        {
+          "course_id": "329495",
+          "display_label": "AHA Heartsaver First Aid CPR AED - Blended",
+          "icon_label": "BL",
+          "clarification": "Blended First Aid, CPR, and AED option.",
+          "delivery_mode": "blended",
+          "variant": "first-aid-cpr-aed-blended",
+          "deep_link_aliases": [
+            "first-aid-cpr-aed-blended"
+          ],
+          "recommended": false
+        },
+        {
+          "course_id": "351632",
+          "display_label": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+          "icon_label": "PED",
+          "clarification": "In-person pediatric First Aid, CPR, and AED option.",
+          "delivery_mode": "in-person",
+          "variant": "pediatric-first-aid-cpr-aed-in-person",
+          "deep_link_aliases": [
+            "pediatric-first-aid-cpr-aed-in-person"
+          ],
+          "recommended": false
         },
         {
           "course_id": "251545",
@@ -196,7 +280,9 @@
           "clarification": "Pediatric First Aid/CPR/AED option where scheduling rules allow.",
           "delivery_mode": "blended",
           "variant": "pediatric",
-          "deep_link_aliases": ["pediatric-first-aid-cpr-aed"]
+          "deep_link_aliases": [
+            "pediatric-first-aid-cpr-aed"
+          ]
         }
       ]
     },
@@ -214,7 +300,10 @@
         "groups": {
           "HSI": {
             "label": "All HSI options",
-            "course_ids": ["463743", "445670"]
+            "course_ids": [
+              "463743",
+              "445670"
+            ]
           }
         }
       },
@@ -251,7 +340,10 @@
         "groups": {
           "ARC": {
             "label": "All Red Cross options",
-            "course_ids": ["248288", "248287"]
+            "course_ids": [
+              "248288",
+              "248287"
+            ]
           }
         }
       },

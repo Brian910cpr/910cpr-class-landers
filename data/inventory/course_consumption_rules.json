@@ -84,7 +84,9 @@
       "brand_mix_weight": 1.0,
       "occupancy_pool": "AHA_BLS_RENEWAL",
       "escalation_tier": 1,
-      "compatible_with": ["ARC_BLS_RENEWAL"],
+      "compatible_with": [
+        "ARC_BLS_RENEWAL"
+      ],
       "suppresses_when_empty": false,
       "can_ride_existing_momentum": false,
       "minimum_anchor_strength": 0
@@ -111,7 +113,10 @@
       "brand_mix_weight": 1.0,
       "occupancy_pool": "BLS_SKILLS_POOL",
       "escalation_tier": 2,
-      "compatible_with": ["ARC_BLS_SKILLS", "HSI_BLS_SKILLS"],
+      "compatible_with": [
+        "ARC_BLS_SKILLS",
+        "HSI_BLS_SKILLS"
+      ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1
@@ -300,7 +305,10 @@
       "brand_mix_weight": 1.0,
       "occupancy_pool": "LAYPERSON_CPR_POOL",
       "escalation_tier": 2,
-      "compatible_with": ["HSI_ADULT_INFANT_CPR_AED", "ARC_ADULT_PEDIATRIC_CPR_AED"],
+      "compatible_with": [
+        "HSI_ADULT_INFANT_CPR_AED",
+        "ARC_ADULT_PEDIATRIC_CPR_AED"
+      ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1
@@ -327,7 +335,10 @@
       "brand_mix_weight": 1.0,
       "occupancy_pool": "LAYPERSON_FA_CPR_POOL",
       "escalation_tier": 2,
-      "compatible_with": ["HSI_FA_CPR_AED", "ARC_FA_CPR_AED"],
+      "compatible_with": [
+        "HSI_FA_CPR_AED",
+        "ARC_FA_CPR_AED"
+      ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1
@@ -354,7 +365,100 @@
       "brand_mix_weight": 1.0,
       "occupancy_pool": "LAYPERSON_FA_CPR_POOL",
       "escalation_tier": 2,
-      "compatible_with": ["HSI_FA_CPR_AED", "ARC_FA_CPR_AED"],
+      "compatible_with": [
+        "HSI_FA_CPR_AED",
+        "ARC_FA_CPR_AED"
+      ],
+      "suppresses_when_empty": true,
+      "can_ride_existing_momentum": true,
+      "minimum_anchor_strength": 1
+    },
+    {
+      "course_id": "209808",
+      "clean_course_name": "AHA Heartsaver CPR AED Online",
+      "course_family": "Heartsaver",
+      "duration_minutes": 120,
+      "duration_bucket": "120",
+      "requires_contiguous_block": true,
+      "fragmentation_tolerant": true,
+      "overlapping_allowed": false,
+      "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
+      "public_priority": 60,
+      "minimum_reservation_block_minutes": 120,
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 10,
+      "brand": "AHA",
+      "economic_priority": 60,
+      "brand_mix_weight": 1.0,
+      "occupancy_pool": "LAYPERSON_CPR_POOL",
+      "escalation_tier": 2,
+      "compatible_with": [
+        "HSI_ADULT_INFANT_CPR_AED",
+        "ARC_ADULT_PEDIATRIC_CPR_AED"
+      ],
+      "suppresses_when_empty": true,
+      "can_ride_existing_momentum": true,
+      "minimum_anchor_strength": 1
+    },
+    {
+      "course_id": "329495",
+      "clean_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
+      "course_family": "Heartsaver",
+      "duration_minutes": 120,
+      "duration_bucket": "120",
+      "requires_contiguous_block": true,
+      "fragmentation_tolerant": true,
+      "overlapping_allowed": false,
+      "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
+      "public_priority": 63,
+      "minimum_reservation_block_minutes": 120,
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 10,
+      "brand": "AHA",
+      "economic_priority": 63,
+      "brand_mix_weight": 1.0,
+      "occupancy_pool": "LAYPERSON_FA_CPR_POOL",
+      "escalation_tier": 2,
+      "compatible_with": [
+        "HSI_FA_CPR_AED",
+        "ARC_FA_CPR_AED"
+      ],
+      "suppresses_when_empty": true,
+      "can_ride_existing_momentum": true,
+      "minimum_anchor_strength": 1
+    },
+    {
+      "course_id": "351632",
+      "clean_course_name": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "course_family": "Heartsaver",
+      "duration_minutes": 150,
+      "duration_bucket": "150",
+      "requires_contiguous_block": true,
+      "fragmentation_tolerant": true,
+      "overlapping_allowed": false,
+      "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
+      "public_priority": 63,
+      "minimum_reservation_block_minutes": 150,
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 1,
+      "default_capacity": 10,
+      "brand": "AHA",
+      "economic_priority": 63,
+      "brand_mix_weight": 1.0,
+      "occupancy_pool": "LAYPERSON_FA_CPR_POOL",
+      "escalation_tier": 2,
+      "compatible_with": [
+        "HSI_FA_CPR_AED",
+        "ARC_FA_CPR_AED"
+      ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1
@@ -435,7 +539,10 @@
       "brand_mix_weight": 0.65,
       "occupancy_pool": "BLS_SKILLS_POOL",
       "escalation_tier": 2,
-      "compatible_with": ["AHA_BLS_HEARTCODE_SKILLS", "HSI_BLS_SKILLS"],
+      "compatible_with": [
+        "AHA_BLS_HEARTCODE_SKILLS",
+        "HSI_BLS_SKILLS"
+      ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1
@@ -462,7 +569,11 @@
       "brand_mix_weight": 0.65,
       "occupancy_pool": "BLS_SKILLS_POOL",
       "escalation_tier": 2,
-      "compatible_with": ["AHA_BLS_HEARTCODE_SKILLS", "HSI_BLS_SKILLS", "AHA_BLS_RENEWAL"],
+      "compatible_with": [
+        "AHA_BLS_HEARTCODE_SKILLS",
+        "HSI_BLS_SKILLS",
+        "AHA_BLS_RENEWAL"
+      ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1
@@ -489,7 +600,12 @@
       "brand_mix_weight": 0.65,
       "occupancy_pool": "HSI_BLS_FA_SKILLS_POOL",
       "escalation_tier": 2,
-      "compatible_with": ["AHA_BLS_HEARTCODE_SKILLS", "ARC_BLS_SKILLS", "HSI_BLS_SKILLS", "HSI_FA_CPR_AED"],
+      "compatible_with": [
+        "AHA_BLS_HEARTCODE_SKILLS",
+        "ARC_BLS_SKILLS",
+        "HSI_BLS_SKILLS",
+        "HSI_FA_CPR_AED"
+      ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1
@@ -516,7 +632,10 @@
       "brand_mix_weight": 0.65,
       "occupancy_pool": "BLS_SKILLS_POOL",
       "escalation_tier": 2,
-      "compatible_with": ["AHA_BLS_HEARTCODE_SKILLS", "ARC_BLS_SKILLS"],
+      "compatible_with": [
+        "AHA_BLS_HEARTCODE_SKILLS",
+        "ARC_BLS_SKILLS"
+      ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1

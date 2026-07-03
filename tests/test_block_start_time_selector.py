@@ -105,7 +105,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         payload = block_start_time_selector.build_block_schedule_page(configs["heartsaver"])
         self.assertEqual(payload["publicPage"], "docs/heartsaver-schedule.html")
         course_ids = {offer["courseId"] for offer in payload["offers"]}
-        self.assertLessEqual(course_ids, {"344085", "209809", "251545"})
+        self.assertLessEqual(course_ids, {"344085", "209808", "209809", "329495", "351632", "251545"})
         html = build_bls_block_schedule_pilot.render_html(payload)
         self.assertIn("Heartsaver Schedule", html)
         self.assertIn("Need First Aid or CPR ASAP? Show all AHA Heartsaver options", html)
@@ -120,6 +120,10 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("Show all course options", html)
         self.assertIn('"deliveryMode": "in-person"', html)
         self.assertIn('"deliveryMode": "blended"', html)
+        self.assertIn('"recommended": false', html)
+        self.assertIn('"209808"', html)
+        self.assertIn('"329495"', html)
+        self.assertIn('"351632"', html)
         if payload["offers"]:
             self.assertIn("appointmentDayId", html)
         self.assertNotIn("appointmentDayId $", html)
