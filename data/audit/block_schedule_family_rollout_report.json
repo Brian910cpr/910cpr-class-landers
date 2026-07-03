@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-02T15:07:34.195231-04:00",
+  "generated_at": "2026-07-02T21:04:14.668237-04:00",
   "generated_pages": [
     "E:\\GitHub\\910cpr-class-landers\\docs\\heartsaver-schedule.html"
   ],
@@ -16,19 +16,20 @@
       ],
       "course_rules_found": true,
       "counts": {
-        "availabilityBlocksFound": 62,
-        "availabilityBlocksEvaluated": 62,
-        "publicLocationBlocksEvaluated": 62,
-        "publicSelectableOfferCount": 1597,
+        "availabilityBlocksFound": 63,
+        "availabilityBlocksEvaluated": 63,
+        "publicLocationBlocksEvaluated": 63,
+        "publicSelectableOfferCount": 1618,
         "publicSelectableDateCount": 39,
-        "publicSelectableStartTimeCount": 573,
-        "rejectedOfferCount": 3752,
+        "publicSelectableStartTimeCount": 580,
+        "rejectedOfferCount": 3803,
+        "suppressedStaleOrOrphanedOfferCount": 0,
         "wholeBlockPresentedAsClass": false
       },
       "top_rejection_reasons": {
-        "outside_public_dynamic_hours": 2670,
-        "conflicts_with_existing_enrollware_occupancy": 1187,
-        "does_not_fit_inside_availability_after_duration_and_buffers": 443,
+        "outside_public_dynamic_hours": 2736,
+        "conflicts_with_existing_enrollware_occupancy": 1177,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 450,
         "inside_minimum_lead_time": 18
       },
       "page_audit": {
@@ -39,9 +40,13 @@
         "hard_duration_text_visible": false,
         "course_first_default_supported": true,
         "compare_mode_supported": true,
+        "show_all_mode_supported": true,
+        "delivery_filter_supported": true,
+        "deep_links_supported": true,
         "offsite_private_locations_visible": false
       },
       "issues": [],
+      "release_recommendation": "ready_for_direct_url_release",
       "ready_for_generation": true
     },
     {
@@ -56,21 +61,22 @@
       ],
       "course_rules_found": true,
       "counts": {
-        "availabilityBlocksFound": 62,
-        "availabilityBlocksEvaluated": 62,
-        "publicLocationBlocksEvaluated": 62,
+        "availabilityBlocksFound": 63,
+        "availabilityBlocksEvaluated": 63,
+        "publicLocationBlocksEvaluated": 63,
         "publicSelectableOfferCount": 0,
         "publicSelectableDateCount": 0,
         "publicSelectableStartTimeCount": 0,
-        "rejectedOfferCount": 5349,
+        "rejectedOfferCount": 5421,
+        "suppressedStaleOrOrphanedOfferCount": 0,
         "wholeBlockPresentedAsClass": false
       },
       "top_rejection_reasons": {
-        "course_family_not_allowed_by_availability": 5349,
-        "instructor_lacks_required_certification": 5349,
-        "outside_public_dynamic_hours": 2670,
-        "conflicts_with_existing_enrollware_occupancy": 1563,
-        "does_not_fit_inside_availability_after_duration_and_buffers": 1302,
+        "course_family_not_allowed_by_availability": 5421,
+        "instructor_lacks_required_certification": 5421,
+        "outside_public_dynamic_hours": 2736,
+        "conflicts_with_existing_enrollware_occupancy": 1554,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 1323,
         "inside_minimum_lead_time": 18
       },
       "page_audit": {
@@ -81,11 +87,15 @@
         "hard_duration_text_visible": false,
         "course_first_default_supported": true,
         "compare_mode_supported": true,
+        "show_all_mode_supported": true,
+        "delivery_filter_supported": true,
+        "deep_links_supported": true,
         "offsite_private_locations_visible": false
       },
       "issues": [
         "no_public_selectable_offers"
       ],
+      "release_recommendation": "do_not_release_direct_url_page_yet",
       "ready_for_generation": false
     },
     {
@@ -100,21 +110,22 @@
       ],
       "course_rules_found": true,
       "counts": {
-        "availabilityBlocksFound": 62,
-        "availabilityBlocksEvaluated": 62,
-        "publicLocationBlocksEvaluated": 62,
+        "availabilityBlocksFound": 63,
+        "availabilityBlocksEvaluated": 63,
+        "publicLocationBlocksEvaluated": 63,
         "publicSelectableOfferCount": 0,
         "publicSelectableDateCount": 0,
         "publicSelectableStartTimeCount": 0,
-        "rejectedOfferCount": 5349,
+        "rejectedOfferCount": 5421,
+        "suppressedStaleOrOrphanedOfferCount": 0,
         "wholeBlockPresentedAsClass": false
       },
       "top_rejection_reasons": {
-        "course_family_not_allowed_by_availability": 5349,
-        "instructor_lacks_required_certification": 5349,
-        "outside_public_dynamic_hours": 2670,
-        "conflicts_with_existing_enrollware_occupancy": 1563,
-        "does_not_fit_inside_availability_after_duration_and_buffers": 1302,
+        "course_family_not_allowed_by_availability": 5421,
+        "instructor_lacks_required_certification": 5421,
+        "outside_public_dynamic_hours": 2736,
+        "conflicts_with_existing_enrollware_occupancy": 1554,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 1323,
         "inside_minimum_lead_time": 18
       },
       "page_audit": {
@@ -125,11 +136,15 @@
         "hard_duration_text_visible": false,
         "course_first_default_supported": true,
         "compare_mode_supported": true,
+        "show_all_mode_supported": true,
+        "delivery_filter_supported": true,
+        "deep_links_supported": true,
         "offsite_private_locations_visible": false
       },
       "issues": [
         "no_public_selectable_offers"
       ],
+      "release_recommendation": "do_not_release_direct_url_page_yet",
       "ready_for_generation": false
     },
     {
@@ -144,19 +159,20 @@
       ],
       "course_rules_found": true,
       "counts": {
-        "availabilityBlocksFound": 62,
-        "availabilityBlocksEvaluated": 62,
-        "publicLocationBlocksEvaluated": 62,
-        "publicSelectableOfferCount": 1507,
+        "availabilityBlocksFound": 63,
+        "availabilityBlocksEvaluated": 63,
+        "publicLocationBlocksEvaluated": 63,
+        "publicSelectableOfferCount": 1527,
         "publicSelectableDateCount": 39,
-        "publicSelectableStartTimeCount": 512,
-        "rejectedOfferCount": 3842,
+        "publicSelectableStartTimeCount": 519,
+        "rejectedOfferCount": 3894,
+        "suppressedStaleOrOrphanedOfferCount": 0,
         "wholeBlockPresentedAsClass": false
       },
       "top_rejection_reasons": {
-        "outside_public_dynamic_hours": 2670,
-        "conflicts_with_existing_enrollware_occupancy": 1274,
-        "does_not_fit_inside_availability_after_duration_and_buffers": 629,
+        "outside_public_dynamic_hours": 2736,
+        "conflicts_with_existing_enrollware_occupancy": 1261,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 639,
         "inside_minimum_lead_time": 18
       },
       "page_audit": {
@@ -167,9 +183,13 @@
         "hard_duration_text_visible": false,
         "course_first_default_supported": true,
         "compare_mode_supported": true,
+        "show_all_mode_supported": true,
+        "delivery_filter_supported": true,
+        "deep_links_supported": true,
         "offsite_private_locations_visible": false
       },
       "issues": [],
+      "release_recommendation": "ready_for_direct_url_release",
       "ready_for_generation": true
     },
     {
@@ -183,19 +203,20 @@
       ],
       "course_rules_found": true,
       "counts": {
-        "availabilityBlocksFound": 62,
-        "availabilityBlocksEvaluated": 62,
-        "publicLocationBlocksEvaluated": 62,
-        "publicSelectableOfferCount": 1103,
+        "availabilityBlocksFound": 63,
+        "availabilityBlocksEvaluated": 63,
+        "publicLocationBlocksEvaluated": 63,
+        "publicSelectableOfferCount": 1117,
         "publicSelectableDateCount": 43,
-        "publicSelectableStartTimeCount": 591,
-        "rejectedOfferCount": 2463,
+        "publicSelectableStartTimeCount": 598,
+        "rejectedOfferCount": 2497,
+        "suppressedStaleOrOrphanedOfferCount": 0,
         "wholeBlockPresentedAsClass": false
       },
       "top_rejection_reasons": {
-        "outside_public_dynamic_hours": 1780,
-        "conflicts_with_existing_enrollware_occupancy": 753,
-        "does_not_fit_inside_availability_after_duration_and_buffers": 251,
+        "outside_public_dynamic_hours": 1824,
+        "conflicts_with_existing_enrollware_occupancy": 748,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 255,
         "inside_minimum_lead_time": 12
       },
       "page_audit": {
@@ -206,11 +227,15 @@
         "hard_duration_text_visible": false,
         "course_first_default_supported": true,
         "compare_mode_supported": true,
+        "show_all_mode_supported": true,
+        "delivery_filter_supported": true,
+        "deep_links_supported": true,
         "offsite_private_locations_visible": false
       },
       "issues": [
         "family_disabled_by_public_offer_policy_requires_explicit_approval"
       ],
+      "release_recommendation": "fix_blockers_before_release",
       "ready_for_generation": false
     },
     {
@@ -224,20 +249,21 @@
       ],
       "course_rules_found": true,
       "counts": {
-        "availabilityBlocksFound": 62,
-        "availabilityBlocksEvaluated": 62,
-        "publicLocationBlocksEvaluated": 62,
+        "availabilityBlocksFound": 63,
+        "availabilityBlocksEvaluated": 63,
+        "publicLocationBlocksEvaluated": 63,
         "publicSelectableOfferCount": 0,
         "publicSelectableDateCount": 0,
         "publicSelectableStartTimeCount": 0,
-        "rejectedOfferCount": 3566,
+        "rejectedOfferCount": 3614,
+        "suppressedStaleOrOrphanedOfferCount": 0,
         "wholeBlockPresentedAsClass": false
       },
       "top_rejection_reasons": {
-        "instructor_lacks_required_certification": 3566,
-        "outside_public_dynamic_hours": 1780,
-        "conflicts_with_existing_enrollware_occupancy": 830,
-        "does_not_fit_inside_availability_after_duration_and_buffers": 378,
+        "instructor_lacks_required_certification": 3614,
+        "outside_public_dynamic_hours": 1824,
+        "conflicts_with_existing_enrollware_occupancy": 822,
+        "does_not_fit_inside_availability_after_duration_and_buffers": 384,
         "inside_minimum_lead_time": 12
       },
       "page_audit": {
@@ -248,12 +274,16 @@
         "hard_duration_text_visible": false,
         "course_first_default_supported": true,
         "compare_mode_supported": true,
+        "show_all_mode_supported": true,
+        "delivery_filter_supported": true,
+        "deep_links_supported": true,
         "offsite_private_locations_visible": false
       },
       "issues": [
         "family_disabled_by_public_offer_policy_requires_explicit_approval",
         "no_public_selectable_offers"
       ],
+      "release_recommendation": "do_not_release_direct_url_page_yet",
       "ready_for_generation": false
     }
   ]

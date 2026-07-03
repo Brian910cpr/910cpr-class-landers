@@ -41,6 +41,9 @@ def page_audit(payload: dict[str, Any]) -> dict[str, Any]:
         "hard_duration_text_visible": "durationMinutes} min" in html or " 120 min" in html,
         "course_first_default_supported": "let selectedCourseId =" in html and "function activeCourseIds()" in html,
         "compare_mode_supported": "compareMode" in html and "Need " in html,
+        "show_all_mode_supported": "showAllOptions" in html and "showAllFromDeepLink" in html,
+        "delivery_filter_supported": "deliveryFromDeepLink" in html and "delivery-filter" in html,
+        "deep_links_supported": "courseIdFromDeepLink" in html and "deliveryFromDeepLink" in html and "showAllFromDeepLink" in html,
         "offsite_private_locations_visible": any(
             "offsite" in offer.get("location", "").lower() or "private" in offer.get("location", "").lower()
             for offer in payload.get("offers", [])
@@ -79,6 +82,12 @@ def readiness_for_page(page_key: str, page_config: dict[str, Any], public_offer_
                 issues.append("debug_metadata_visible")
             if audit["hard_duration_text_visible"]:
                 issues.append("hard_duration_text_visible")
+            if not audit["course_first_default_supported"]:
+                issues.append("course_first_default_not_supported")
+            if not audit["show_all_mode_supported"]:
+                issues.append("show_all_mode_not_supported")
+            if not audit["deep_links_supported"]:
+                issues.append("deep_links_not_supported")
             if audit["offsite_private_locations_visible"]:
                 issues.append("offsite_private_locations_visible")
     else:
@@ -90,6 +99,11 @@ def readiness_for_page(page_key: str, page_config: dict[str, Any], public_offer_
         }
 
     top_rejections = dict(Counter((payload or {}).get("rejectionReasonCounts", {})).most_common(10))
+    release_recommendation = "ready_for_direct_url_release"
+    if "no_public_selectable_offers" in issues:
+        release_recommendation = "do_not_release_direct_url_page_yet"
+    elif issues:
+        release_recommendation = "fix_blockers_before_release"
     return {
         "page_key": page_key,
         "family": page_config.get("family"),
@@ -101,6 +115,7 @@ def readiness_for_page(page_key: str, page_config: dict[str, Any], public_offer_
         "top_rejection_reasons": top_rejections,
         "page_audit": audit,
         "issues": issues,
+        "release_recommendation": release_recommendation,
         "ready_for_generation": not issues,
     }
 
@@ -133,6 +148,7 @@ def render_report(report: dict[str, Any]) -> str:
             f"- Output path: `{item['output_path']}`",
             f"- Course IDs: `{', '.join(item['course_ids'])}`",
             f"- Ready for generation: `{item['ready_for_generation']}`",
+            f"- Release recommendation: `{item.get('release_recommendation', 'UNKNOWN')}`",
             f"- Public-selectable offers: `{item['counts'].get('publicSelectableOfferCount', 0)}`",
             f"- Public-selectable dates: `{item['counts'].get('publicSelectableDateCount', 0)}`",
             f"- Public-selectable start times: `{item['counts'].get('publicSelectableStartTimeCount', 0)}`",

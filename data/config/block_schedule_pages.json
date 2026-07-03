@@ -12,6 +12,7 @@
       "output_path": "docs/bls-schedule.html",
       "report_json_path": "data/audit/bls_block_schedule_pilot.json",
       "report_md_path": "data/audit/bls_block_schedule_pilot_report.md",
+      "show_all_label": "Show all certification options",
       "compare_mode": {
         "enabled": true,
         "label": "Need BLS ASAP? Show all AHA BLS options",
@@ -29,7 +30,8 @@
           "icon_label": "BLS",
           "clarification": "Full BLS Provider classroom option.",
           "delivery_mode": "in-person",
-          "variant": "initial"
+          "variant": "initial",
+          "deep_link_aliases": ["provider", "bls-provider"]
         },
         {
           "course_id": "359474",
@@ -37,7 +39,8 @@
           "icon_label": "RN",
           "clarification": "For current or recently expired BLS cards.",
           "delivery_mode": "in-person",
-          "variant": "renewal"
+          "variant": "renewal",
+          "deep_link_aliases": ["provider-renewal", "bls-renewal"]
         },
         {
           "course_id": "210549",
@@ -45,7 +48,8 @@
           "icon_label": "HC",
           "clarification": "Skills session for online HeartCode BLS.",
           "delivery_mode": "skills-session",
-          "variant": "heartcode"
+          "variant": "heartcode",
+          "deep_link_aliases": ["heartcode-bls"]
         }
       ]
     },
@@ -57,6 +61,7 @@
       "meta_description": "Select an AHA ACLS course, date, and public start time.",
       "intro": "Select the ACLS course format first, then choose a public date and start time.",
       "output_path": "docs/acls-schedule.html",
+      "show_all_label": "Show all certification options",
       "compare_mode": {
         "enabled": true,
         "label": "Need ACLS ASAP? Show all AHA ACLS options",
@@ -74,7 +79,8 @@
           "icon_label": "ACLS",
           "clarification": "Initial ACLS Provider classroom option.",
           "delivery_mode": "in-person",
-          "variant": "initial"
+          "variant": "initial",
+          "deep_link_aliases": ["provider", "acls-provider"]
         },
         {
           "course_id": "209818",
@@ -82,7 +88,8 @@
           "icon_label": "RN",
           "clarification": "Renewal classroom option for ACLS providers.",
           "delivery_mode": "in-person",
-          "variant": "renewal"
+          "variant": "renewal",
+          "deep_link_aliases": ["provider-renewal", "acls-renewal"]
         },
         {
           "course_id": "209811",
@@ -90,7 +97,8 @@
           "icon_label": "HC",
           "clarification": "Skills session for online HeartCode ACLS.",
           "delivery_mode": "skills-session",
-          "variant": "heartcode"
+          "variant": "heartcode",
+          "deep_link_aliases": ["heartcode-acls"]
         }
       ]
     },
@@ -102,6 +110,7 @@
       "meta_description": "Select an AHA PALS course, date, and public start time.",
       "intro": "Select the PALS course format first, then choose a public date and start time.",
       "output_path": "docs/pals-schedule.html",
+      "show_all_label": "Show all certification options",
       "compare_mode": {
         "enabled": true,
         "label": "Need PALS ASAP? Show all AHA PALS options",
@@ -119,7 +128,8 @@
           "icon_label": "PALS",
           "clarification": "Initial PALS Provider classroom option.",
           "delivery_mode": "in-person",
-          "variant": "initial"
+          "variant": "initial",
+          "deep_link_aliases": ["provider", "pals-provider"]
         },
         {
           "course_id": "251496",
@@ -127,7 +137,8 @@
           "icon_label": "RN",
           "clarification": "Renewal classroom option for PALS providers.",
           "delivery_mode": "in-person",
-          "variant": "renewal"
+          "variant": "renewal",
+          "deep_link_aliases": ["provider-renewal", "pals-renewal"]
         },
         {
           "course_id": "209812",
@@ -135,7 +146,8 @@
           "icon_label": "HC",
           "clarification": "Skills session for online HeartCode PALS.",
           "delivery_mode": "skills-session",
-          "variant": "heartcode"
+          "variant": "heartcode",
+          "deep_link_aliases": ["heartcode-pals"]
         }
       ]
     },
@@ -147,6 +159,7 @@
       "meta_description": "Select an AHA Heartsaver course, date, and public start time.",
       "intro": "Select the Heartsaver course format first, then choose a public date and start time.",
       "output_path": "docs/heartsaver-schedule.html",
+      "show_all_label": "Show all course options",
       "compare_mode": {
         "enabled": true,
         "label": "Need First Aid or CPR ASAP? Show all AHA Heartsaver options",
