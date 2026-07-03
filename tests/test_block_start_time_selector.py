@@ -129,6 +129,26 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("appointmentDayId $", html)
         self.assertNotIn("courseId $", html)
 
+    def test_heartsaver_cpr_aed_public_ids_exclude_fire_department_partner_course(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        heartsaver = configs["heartsaver"]
+        options_by_variant = {option.get("variant"): option for option in heartsaver["course_options"]}
+        self.assertEqual(options_by_variant["cpr-aed"]["course_id"], "344085")
+        self.assertEqual(options_by_variant["cpr-aed-online"]["course_id"], "209808")
+        configured_ids = {option["course_id"] for option in heartsaver["course_options"]}
+        self.assertNotIn("460465", configured_ids)
+        self.assertIn("Fire Department/public-safety partner", heartsaver["course_id_notes"]["460465"])
+
+        payload = block_start_time_selector.build_block_schedule_page(heartsaver)
+        public_ids = {offer["courseId"] for offer in payload["offers"]}
+        self.assertIn("344085", public_ids)
+        self.assertIn("209808", public_ids)
+        self.assertNotIn("460465", public_ids)
+        html = build_bls_block_schedule_pilot.render_html(payload)
+        self.assertIn("courseId=344085", html)
+        self.assertIn("courseId=209808", html)
+        self.assertNotIn("courseId=460465", html)
+
     def test_final_live_guard_suppresses_july_4_stale_offer_without_live_block(self):
         stale_payload = {
             "pageConfig": {"allowed_course_ids": ["209806"]},

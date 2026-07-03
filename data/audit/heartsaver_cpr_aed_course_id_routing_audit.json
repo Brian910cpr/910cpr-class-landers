@@ -1,0 +1,242 @@
+{
+  "course_id_rule": {
+    "routine_public_heartsaver_cpr_aed_in_person": "344085",
+    "routine_public_heartsaver_cpr_aed_blended": "209808",
+    "reserved_partner_fire_department_course_id": "460465",
+    "reserved_460465_policy": "Fire Department/public-safety partner programs only ($0 class with optional $30 public participant card fee); not routine public scheduling."
+  },
+  "scan_scope": {
+    "root": "E:\\GitHub\\910cpr-class-landers",
+    "excluded": [
+      ".git",
+      "__pycache__",
+      "data/runtime",
+      "data/audit/heartsaver_cpr_aed_course_id_routing_audit.json",
+      "data/audit/heartsaver_cpr_aed_course_id_routing_audit.md"
+    ],
+    "note": "data/runtime excluded as non-release runtime preview data; audit report files excluded from self-counting."
+  },
+  "references_460465_found": [
+    {
+      "file": "data/audit/heartsaver_block_schedule.json",
+      "line": 106,
+      "snippet": "\"460465\": \"Reserved for Fire Department/public-safety partner programs only ($0 class with optional public participant card fee). Do not use for routine public Heartsaver CPR AED routing.\"",
+      "classification": "preserved_policy_guard",
+      "action": "preserved",
+      "reason": "Intentional config/audit metadata note preventing routine public reuse of reserved partner course ID."
+    },
+    {
+      "file": "data/config/block_schedule_pages.json",
+      "line": 291,
+      "snippet": "\"460465\": \"Reserved for Fire Department/public-safety partner programs only ($0 class with optional public participant card fee). Do not use for routine public Heartsaver CPR AED routing.\"",
+      "classification": "preserved_policy_guard",
+      "action": "preserved",
+      "reason": "Intentional config/audit metadata note preventing routine public reuse of reserved partner course ID."
+    },
+    {
+      "file": "debug/apply_pilot_skips.json",
+      "line": 135,
+      "snippet": "\"course_type_id\": \"460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/apply_pilot_skips.json",
+      "line": 140,
+      "snippet": "\"edit_url\": \"https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/apply_pilot_skips.json",
+      "line": 148,
+      "snippet": "\"course_type_id\": \"460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/apply_pilot_skips.json",
+      "line": 153,
+      "snippet": "\"edit_url\": \"https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/apply_pilot_skips.json",
+      "line": 434,
+      "snippet": "\"course_type_id\": \"460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/apply_pilot_skips.json",
+      "line": 439,
+      "snippet": "\"edit_url\": \"https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_appointment_course_match_report.csv",
+      "line": 12,
+      "snippet": "AHA - Heartsaver\u00ae CPR AED - In-person,AHA - Heartsaver\u00ae CPR AED - In-person \ud83d\ude92,460465,Heartsaver,$0.00,low,low-confidence normalized candidate score 1.00; skipped,https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465,no,not inspected",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_appointment_course_match_report.csv",
+      "line": 13,
+      "snippet": "AHA - Heartsaver\u00ae CPR AED - In-person \ud83d\ude92,AHA - Heartsaver\u00ae CPR AED - In-person \ud83d\ude92,460465,Heartsaver,$0.00,low,low-confidence normalized candidate score 1.00; skipped,https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465,no,not inspe...",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_appointment_course_match_report.csv",
+      "line": 54,
+      "snippet": "Heartsaver\u00ae TOTAL In-Person,AHA - Heartsaver\u00ae CPR AED - In-person \ud83d\ude92,460465,Heartsaver,$0.00,low,low-confidence normalized candidate score 0.76; skipped,https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465,no,not inspected",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_course_list_clipboard.htmlfrag",
+      "line": 16,
+      "snippet": "\" style=\"box-sizing: content-box; padding: 10px; text-align: center; line-height: 1.3em; font-weight: bold; border-bottom: 1px solid rgb(221, 221, 221); font-size: 15px; white-space: nowrap;\">Action<span style=\"box-sizing: border-box;\"></span></th></tr></th...",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_course_name_cleanup_apply_report.json",
+      "line": 780,
+      "snippet": "\"\ufeffcourse_type_id\": \"460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_course_name_cleanup_apply_report.json",
+      "line": 788,
+      "snippet": "\"edit_url\": \"https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_course_name_cleanup_review_all.csv",
+      "line": 51,
+      "snippet": "460465,AHA - Heartsaver\u00ae CPR AED - In-person \ud83d\ude92,AHA - Heartsaver\u00ae CPR AED - In-person \ud83d\ude92,,,$0 placeholder/legacy/internal risk,low,skipped,https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465,$0 placeholder/legacy/internal risk",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_course_name_cleanup_skipped_review.csv",
+      "line": 24,
+      "snippet": "AHA - Heartsaver\u00ae CPR AED - In-person \ud83d\ude92,low,,AHA - Heartsaver\u00ae CPR AED - In-person \ud83d\ude92,,https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465,,$0 placeholder/legacy/internal risk,$0 placeholder/legacy/internal risk,skipped,460465",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_course_type_rows.json",
+      "line": 548,
+      "snippet": "\"edit_url\": \"https://www.enrollware.com/admin/course-edit.aspx?ret=course-list.aspx&id=460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "debug/enrollware_course_type_rows.json",
+      "line": 549,
+      "snippet": "\"course_type_id\": \"460465\",",
+      "classification": "preserved_debug_reference",
+      "action": "preserved",
+      "reason": "Debug/admin snapshot or prior matching report; not public routing or generated site output."
+    },
+    {
+      "file": "tests/test_block_start_time_selector.py",
+      "line": 139,
+      "snippet": "self.assertNotIn(\"460465\", configured_ids)",
+      "classification": "preserved_regression_guard",
+      "action": "preserved",
+      "reason": "Regression test asserts reserved partner course ID is excluded from public Heartsaver routing/output."
+    },
+    {
+      "file": "tests/test_block_start_time_selector.py",
+      "line": 140,
+      "snippet": "self.assertIn(\"Fire Department/public-safety partner\", heartsaver[\"course_id_notes\"][\"460465\"])",
+      "classification": "preserved_regression_guard",
+      "action": "preserved",
+      "reason": "Regression test asserts reserved partner course ID is excluded from public Heartsaver routing/output."
+    },
+    {
+      "file": "tests/test_block_start_time_selector.py",
+      "line": 146,
+      "snippet": "self.assertNotIn(\"460465\", public_ids)",
+      "classification": "preserved_regression_guard",
+      "action": "preserved",
+      "reason": "Regression test asserts reserved partner course ID is excluded from public Heartsaver routing/output."
+    },
+    {
+      "file": "tests/test_block_start_time_selector.py",
+      "line": 150,
+      "snippet": "self.assertNotIn(\"courseId=460465\", html)",
+      "classification": "preserved_regression_guard",
+      "action": "preserved",
+      "reason": "Regression test asserts reserved partner course ID is excluded from public Heartsaver routing/output."
+    }
+  ],
+  "summary": {
+    "total_460465_references_found": 22,
+    "routine_public_routing_460465_references_found": 0,
+    "non_debug_review_required_460465_files": [],
+    "replaced_references": 0,
+    "preserved_references": 22,
+    "public_heartsaver_offer_course_ids_after_rebuild": [
+      "209808",
+      "209809",
+      "251545",
+      "329495",
+      "344085",
+      "351632"
+    ],
+    "public_heartsaver_contains_460465_after_rebuild": false,
+    "invalid_register_url_count": 0,
+    "heartsaver_public_offer_count": 3014,
+    "heartsaver_public_date_count": 39,
+    "heartsaver_public_start_time_count": 512
+  },
+  "sample_urls": {
+    "344085_in_person": {
+      "courseName": "AHA Heartsaver CPR AED",
+      "deliveryMode": "classroom",
+      "date": "2026-07-03",
+      "displayStartTime": "9:30 AM",
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A30%20AM&courseId=344085"
+    },
+    "209808_blended": {
+      "courseName": "AHA Heartsaver CPR AED Online",
+      "deliveryMode": "blended",
+      "date": "2026-07-03",
+      "displayStartTime": "9:30 AM",
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A30%20AM&courseId=209808"
+    }
+  },
+  "changed_files_intended": [
+    "data/config/block_schedule_pages.json",
+    "data/audit/heartsaver_block_schedule.json",
+    "data/audit/heartsaver_block_schedule_report.md",
+    "docs/heartsaver-schedule.html",
+    "tests/test_block_start_time_selector.py",
+    "data/audit/heartsaver_cpr_aed_course_id_routing_audit.json",
+    "data/audit/heartsaver_cpr_aed_course_id_routing_audit.md"
+  ]
+}

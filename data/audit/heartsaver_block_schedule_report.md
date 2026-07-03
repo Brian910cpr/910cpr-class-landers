@@ -33,7 +33,7 @@ Local build artifact for the customer-facing BLS pilot. Enrollware was not calle
 ## Top Rejection Reasons
 
 - `outside_public_dynamic_hours`: 5340
-- `conflicts_with_existing_enrollware_occupancy`: 2546
+- `conflicts_with_existing_enrollware_occupancy`: 2522
 - `does_not_fit_inside_availability_after_duration_and_buffers`: 1246
 - `inside_minimum_lead_time`: 24
 

@@ -284,7 +284,12 @@
             "pediatric-first-aid-cpr-aed"
           ]
         }
-      ]
+      ],
+      "course_id_notes": {
+        "344085": "Routine public AHA Heartsaver CPR AED in-person course. Use for public in-person CPR/AED scheduler routing.",
+        "209808": "Routine public AHA Heartsaver CPR AED blended/online plus skills course. Use for public blended CPR/AED scheduler routing.",
+        "460465": "Reserved for Fire Department/public-safety partner programs only ($0 class with optional public participant card fee). Do not use for routine public Heartsaver CPR AED routing."
+      }
     },
     "hsi": {
       "page_key": "hsi",
