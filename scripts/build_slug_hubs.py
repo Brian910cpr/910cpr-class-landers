@@ -2311,6 +2311,7 @@ def render_appointment_seed_offer_card(offer: dict[str, Any]) -> str:
     flexible_html = ""
     action_html = f'<a class="button small primary" href="{url}">Book This Class</a>'
     if presentation_mode == "flexible_start_window" and flexible_choices:
+        time_range = "Start times available"
         label = "Choose your start time:"
         choice_links = []
         valid_choice_records = []

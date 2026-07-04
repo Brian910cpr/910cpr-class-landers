@@ -197,7 +197,7 @@
       "output_path": "docs/heartsaver-schedule.html",
       "show_all_label": "Show all course options",
       "compare_mode": {
-        "enabled": true,
+        "enabled": false,
         "label": "Need First Aid or CPR ASAP? Show all AHA Heartsaver options",
         "groups": {
           "Heartsaver": {

@@ -1,0 +1,76 @@
+{
+  "schema_version": "0.1",
+  "generated_at": "2026-07-03",
+  "purpose": "Audit reusable course-description content sources and implementation surfaces for 910CPR course pages and schedule selectors.",
+  "source_files_reviewed": [
+    "data/config/course_master.json",
+    "data/config/course_catalog.json",
+    "data/config/slug_hubs.json",
+    "data/config/block_schedule_pages.json",
+    "data/content/course_descriptions.json",
+    "docs/courses/heartsaver-first-aid-cpr-aed.html",
+    "docs/courses/heartsaver-cpr-aed.html",
+    "docs/courses/heartsaver-pediatric-first-aid-cpr-aed.html",
+    "docs/bls.html",
+    "docs/acls.html",
+    "docs/pals.html",
+    "docs/arc.html",
+    "docs/hsi.html",
+    "docs/heartsaver-schedule.html",
+    "docs/bls-schedule.html"
+  ],
+  "source_findings": {
+    "slug_hubs": "Strongest existing source for public page copy, especially Heartsaver, ARC, HSI, BLS, ACLS, and PALS hub/course-panel descriptions.",
+    "course_master": "Contains short descriptions for schedule-facing records. Only some records have rich description_long content; several long descriptions are unknown or contain partner-specific copy that should not be blindly promoted.",
+    "course_catalog": "Useful canonical operational metadata, but not complete enough to be the final public description source.",
+    "generated_class_pages": "May contain Enrollware-derived class/session detail pages, but those are not the right reusable source for broad course descriptions.",
+    "schedule_selector_pages": "Previously had short option clarification text only; now use compact expandable course details from data/content/course_descriptions.json.",
+    "date_time_cards": "Intentionally unchanged. Long descriptions are not added to individual date/time/register cards."
+  },
+  "implemented_content_file": "data/content/course_descriptions.json",
+  "implemented_selector_surface": {
+    "builder": "scripts/build_bls_block_schedule_pilot.py",
+    "behavior": "Course cards include optional collapsed Course details panels using structured content fields. Register cards and appointment URLs are unchanged.",
+    "pages_rebuilt": [
+      "docs/bls-schedule.html",
+      "docs/heartsaver-schedule.html"
+    ]
+  },
+  "courses_with_structured_content": [
+    {"course_id": "209806", "title": "AHA BLS Provider", "family": "BLS", "source_status": "structured_summary_added"},
+    {"course_id": "359474", "title": "AHA BLS Provider Renewal", "family": "BLS", "source_status": "structured_summary_added"},
+    {"course_id": "210549", "title": "AHA HeartCode BLS", "family": "BLS", "source_status": "structured_summary_added"},
+    {"course_id": "241108", "title": "AHA ACLS Provider", "family": "ACLS", "source_status": "structured_summary_added"},
+    {"course_id": "209818", "title": "AHA ACLS Renewal", "family": "ACLS", "source_status": "structured_summary_added"},
+    {"course_id": "209811", "title": "AHA ACLS HeartCode", "family": "ACLS", "source_status": "structured_summary_added"},
+    {"course_id": "209805", "title": "AHA PALS Provider", "family": "PALS", "source_status": "structured_summary_added"},
+    {"course_id": "251496", "title": "AHA PALS Renewal", "family": "PALS", "source_status": "structured_summary_added"},
+    {"course_id": "209812", "title": "AHA PALS HeartCode", "family": "PALS", "source_status": "structured_summary_added"},
+    {"course_id": "344085", "title": "AHA Heartsaver CPR AED", "family": "Heartsaver", "source_status": "structured_summary_added"},
+    {"course_id": "209808", "title": "AHA Heartsaver CPR AED Online + Skills", "family": "Heartsaver", "source_status": "structured_summary_added"},
+    {"course_id": "209809", "title": "AHA Heartsaver First Aid CPR AED", "family": "Heartsaver", "source_status": "structured_summary_added"},
+    {"course_id": "329495", "title": "AHA Heartsaver First Aid CPR AED Online + Skills", "family": "Heartsaver", "source_status": "structured_summary_added"},
+    {"course_id": "351632", "title": "AHA Heartsaver Pediatric First Aid / CPR / AED", "family": "Heartsaver", "source_status": "structured_summary_added"},
+    {"course_id": "251545", "title": "AHA Heartsaver Pediatric First Aid CPR AED Online + Skills", "family": "Heartsaver", "source_status": "structured_summary_added"},
+    {"course_id": "248288", "title": "American Red Cross Basic Life Support", "family": "ARC", "source_status": "structured_summary_added"},
+    {"course_id": "248287", "title": "American Red Cross Basic Life Support - Blended Learning", "family": "ARC", "source_status": "structured_summary_added"},
+    {"course_id": "445670", "title": "HSI BLS + Adult First Aid", "family": "HSI", "source_status": "structured_summary_added"},
+    {"course_id": "463743", "title": "HSI BLS", "family": "HSI", "source_status": "structured_summary_added"}
+  ],
+  "copyright_handling": {
+    "verbatim_enrollware_copy_imported": false,
+    "approach": "Concise 910CPR-controlled summaries and structured fields were added instead of copying long third-party/manual prose verbatim."
+  },
+  "validation_notes": {
+    "schedule_logic_changed": false,
+    "course_ids_changed": false,
+    "appointment_url_behavior_changed": false,
+    "date_time_cards_changed": false,
+    "heartsaver_asap_broadening_control": "Removed in pending local selector work; generated Heartsaver schedule output does not contain the public ASAP broadening label."
+  },
+  "recommended_next_steps": [
+    "Promote course_descriptions.json into slug hub/course-page generation after review of page-specific copy precedence.",
+    "Backfill richer ARC and HSI course-specific details once accepted public descriptions are approved.",
+    "Avoid using partner-specific course_master.description_long values until each is reviewed for public context."
+  ]
+}

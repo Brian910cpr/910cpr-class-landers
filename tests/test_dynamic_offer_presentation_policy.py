@@ -128,6 +128,8 @@ class DynamicOfferPresentationPolicyTest(unittest.TestCase):
         self.assertNotIn("When would YOU like to start?", html)
         self.assertIn("Choose your start time:", html)
         self.assertIn("Select a start time below", html)
+        self.assertIn("Start times available", html)
+        self.assertNotIn("2:30 PM - 3:15 PM", html)
         self.assertEqual(2, html.count('class="slug-flexible-start-time-link"'))
         self.assertIn("2%3A30%20PM", html)
         self.assertIn("2%3A45%20PM", html)

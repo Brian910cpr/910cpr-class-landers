@@ -9,33 +9,33 @@ Local build artifact for the customer-facing BLS pilot. Enrollware was not calle
 - Horizon days: `180`
 - Minimum lead hours: `24`
 - Whole block presented as class: `False`
-- Public-selectable offers: `1618`
+- Public-selectable offers: `1619`
 - Public-selectable dates: `39`
-- Public-selectable start times: `580`
-- Rejected course/start evaluations: `3803`
+- Public-selectable start times: `579`
+- Rejected course/start evaluations: `3727`
 - Suppressed stale/orphaned offers: `0`
 
 ## Sample Public-Selectable URLs
 
 | Date | Start | Course | appointmentDayId | URL |
 | --- | --- | --- | ---: | --- |
+| 2026-07-03 | 8:30 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=8%3A30%20AM&courseId=209806` |
+| 2026-07-03 | 8:30 AM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=8%3A30%20AM&courseId=359474` |
+| 2026-07-03 | 8:30 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=8%3A30%20AM&courseId=210549` |
+| 2026-07-03 | 9:00 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A00%20AM&courseId=209806` |
+| 2026-07-03 | 9:00 AM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A00%20AM&courseId=359474` |
+| 2026-07-03 | 9:00 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A00%20AM&courseId=210549` |
 | 2026-07-03 | 9:30 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A30%20AM&courseId=209806` |
 | 2026-07-03 | 9:30 AM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A30%20AM&courseId=359474` |
 | 2026-07-03 | 9:30 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A30%20AM&courseId=210549` |
-| 2026-07-03 | 10:00 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=10%3A00%20AM&courseId=210549` |
-| 2026-07-03 | 10:30 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=10%3A30%20AM&courseId=210549` |
-| 2026-07-03 | 2:30 PM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=2%3A30%20PM&courseId=209806` |
-| 2026-07-03 | 2:30 PM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=2%3A30%20PM&courseId=359474` |
-| 2026-07-03 | 2:30 PM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=2%3A30%20PM&courseId=210549` |
-| 2026-07-03 | 3:00 PM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=3%3A00%20PM&courseId=209806` |
-| 2026-07-03 | 3:00 PM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=3%3A00%20PM&courseId=359474` |
+| 2026-07-03 | 10:00 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=10%3A00%20AM&courseId=209806` |
 
 ## Top Rejection Reasons
 
-- `outside_public_dynamic_hours`: 2736
-- `conflicts_with_existing_enrollware_occupancy`: 1177
-- `does_not_fit_inside_availability_after_duration_and_buffers`: 450
-- `inside_minimum_lead_time`: 18
+- `outside_public_dynamic_hours`: 2670
+- `conflicts_with_existing_enrollware_occupancy`: 1155
+- `does_not_fit_inside_availability_after_duration_and_buffers`: 437
+- `inside_minimum_lead_time`: 12
 
 ## Final Live Availability Guard
 

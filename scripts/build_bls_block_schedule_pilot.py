@@ -19,6 +19,15 @@ from scripts.block_start_time_selector import (
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
 REPORT_MD_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot_report.md"
 HTML_PATH = ROOT / "docs" / "bls-schedule.html"
+COURSE_DESCRIPTIONS_PATH = ROOT / "data" / "content" / "course_descriptions.json"
+
+
+def load_course_descriptions() -> dict[str, dict[str, Any]]:
+    if not COURSE_DESCRIPTIONS_PATH.exists():
+        return {}
+    payload = json.loads(COURSE_DESCRIPTIONS_PATH.read_text(encoding="utf-8"))
+    courses = payload.get("courses", {}) if isinstance(payload, dict) else {}
+    return {str(course_id): course for course_id, course in courses.items() if isinstance(course, dict)}
 
 
 def render_report(payload: dict[str, Any]) -> str:
@@ -112,6 +121,7 @@ def css() -> str:
       border-radius: 8px;
       background: var(--surface);
       padding: 16px;
+      min-width: 0;
     }
     .button-list { display: grid; gap: 8px; }
     .choice-list { display: grid; gap: 8px; margin-bottom: 14px; }
@@ -132,6 +142,7 @@ def css() -> str:
       display: grid;
       gap: 7px;
       margin-bottom: 14px;
+      min-inline-size: 0;
     }
     .delivery-filter legend {
       padding: 0;
@@ -209,7 +220,53 @@ def css() -> str:
       font-size: .86rem;
       line-height: 1.3;
     }
+    .course-delivery {
+      color: var(--accent-dark);
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .course-details {
+      grid-column: 2;
+      color: var(--muted);
+      font-size: .84rem;
+    }
+    .course-details summary {
+      cursor: pointer;
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+    .course-details-body {
+      display: grid;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .course-details-body ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .course-page-link {
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
     .month-stack { display: grid; gap: 14px; }
+    .month-nav {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .month-nav button {
+      min-height: 40px;
+      padding: 8px 11px;
+      text-align: center;
+    }
+    .month-nav-title {
+      font-weight: 800;
+      text-align: center;
+    }
     .month-title {
       margin: 0 0 8px;
       font-size: .95rem;
@@ -238,11 +295,40 @@ def css() -> str:
       font-size: .9rem;
     }
     .course-list { display: grid; gap: 12px; }
+    .start-group {
+      display: grid;
+      gap: 8px;
+    }
+    .start-group + .start-group { margin-top: 12px; }
+    .start-group-label {
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .start-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .start-grid button {
+      min-width: 76px;
+      text-align: center;
+      justify-content: center;
+    }
     .course {
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 12px;
       background: var(--band);
+    }
+    .selected-summary {
+      display: grid;
+      gap: 6px;
+    }
+    .selected-summary-row {
+      color: var(--muted);
+      font-size: .92rem;
     }
     .course-meta {
       color: var(--muted);
@@ -288,14 +374,56 @@ def css() -> str:
     }
     @media (max-width: 820px) {
       .pilot-grid { grid-template-columns: 1fr; }
+      .pilot-grid > * { min-width: 0; }
       header, main { padding: 18px; }
       .panel { padding: 14px; }
+      .choice-list {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(238px, 82%);
+        gap: 10px;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 8px;
+      }
+      .course-card {
+        min-height: 112px;
+        align-content: start;
+        scroll-snap-align: start;
+      }
+      .course-help {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .month-stack { gap: 0; }
+      .month-nav { display: flex; }
+      .month:not([data-mobile-visible="true"]) { display: none; }
+      .calendar-grid { gap: 6px; }
+      .weekday,
+      .calendar-pad,
+      .day-button {
+        min-height: 42px;
+      }
+      .button-list {
+        display: block;
+      }
+      .start-grid button {
+        min-height: 42px;
+        flex: 1 0 72px;
+      }
+      .register-link {
+        width: 100%;
+      }
     }
     """
 
 
 def render_html(payload: dict[str, Any]) -> str:
     page_config = payload.get("pageConfig", {})
+    course_descriptions = load_course_descriptions()
     configured_options = {
         str(option.get("course_id")): option
         for option in page_config.get("course_options", [])
@@ -317,6 +445,7 @@ def render_html(payload: dict[str, Any]) -> str:
             ],
             "iconLabel": option.get("icon_label") or page_family,
             "clarification": option.get("clarification") or "",
+            "details": course_descriptions.get(course_id, {}),
         }
         for course_id, option in configured_options.items()
     }
@@ -367,6 +496,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     ],
                     "iconLabel": configured_options.get(course["courseId"], {}).get("icon_label") or family,
                     "clarification": configured_options.get(course["courseId"], {}).get("clarification") or "",
+                    "details": course_descriptions.get(course["courseId"], {}),
                 })
                 compare_groups = page_config.get("compare_mode", {}).get("groups", {})
                 if isinstance(compare_groups, dict):
@@ -419,6 +549,13 @@ def render_html(payload: dict[str, Any]) -> str:
     compare_label = html.escape(str(page_config.get("compare_mode", {}).get("label") or "Show all options"))
     compare_enabled = page_config.get("compare_mode", {}).get("enabled") is True
     show_all_label = html.escape(str(page_config.get("show_all_label") or "Show all course options"))
+    compare_toggle_html = ""
+    if compare_enabled:
+        compare_toggle_html = f"""
+          <label class="compare-toggle">
+            <input id="compare-toggle" type="checkbox">
+            <span>{compare_label}</span>
+          </label>"""
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -452,10 +589,7 @@ def render_html(payload: dict[str, Any]) -> str:
             <input id="show-all-toggle" type="checkbox">
             <span>{show_all_label}</span>
           </label>
-          <label class="compare-toggle">
-            <input id="compare-toggle" type="checkbox">
-            <span>{compare_label}</span>
-          </label>
+          {compare_toggle_html}
         </div>
       </div>
       <div class="panel">
@@ -485,9 +619,14 @@ def render_html(payload: dict[str, Any]) -> str:
     let compareMode = false;
     let selectedDate = '';
     let selectedStart = '';
+    let mobileMonthIndex = 0;
 
     function byId(id) {{
       return document.getElementById(id);
+    }}
+
+    function isMobileLayout() {{
+      return window.matchMedia('(max-width: 820px)').matches;
     }}
 
     function normalizeDeepLink(value) {{
@@ -531,6 +670,16 @@ def render_html(payload: dict[str, Any]) -> str:
         return 'HeartCode/Skills';
       }}
       return 'All';
+    }}
+
+    function selectedDateLabel() {{
+      const day = filteredDates().find(item => item.date === selectedDate);
+      return day?.displayDate || '';
+    }}
+
+    function selectedCourseLabel() {{
+      const course = courseOptions.find(item => item.courseId === selectedCourseId);
+      return course?.courseName || '';
     }}
 
     function courseMatchesDelivery(course) {{
@@ -593,6 +742,7 @@ def render_html(payload: dict[str, Any]) -> str:
       }}
       if (!days.some(day => day.date === selectedDate)) {{
         selectedDate = days[0].date;
+        mobileMonthIndex = Math.max(0, [...new Set(days.map(day => day.date.slice(0, 7)))].indexOf(selectedDate.slice(0, 7)));
       }}
       const day = days.find(item => item.date === selectedDate);
       if (!day.startTimes.some(slot => slot.startTime === selectedStart)) {{
@@ -626,11 +776,56 @@ def render_html(payload: dict[str, Any]) -> str:
         const title = document.createElement('span');
         title.className = 'course-title';
         title.textContent = course.courseName;
+        const delivery = document.createElement('span');
+        delivery.className = 'course-delivery';
+        delivery.textContent = deliveryLabel(course.deliveryMode);
         const help = document.createElement('span');
         help.className = 'course-help';
         help.textContent = course.clarification || '';
-        copy.append(title, help);
+        copy.append(title, delivery, help);
         button.append(icon, copy);
+        const details = course.details || {{}};
+        if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length || details.full_course_page) {{
+          const detailBox = document.createElement('details');
+          detailBox.className = 'course-details';
+          const summary = document.createElement('summary');
+          summary.textContent = 'Course details';
+          const body = document.createElement('div');
+          body.className = 'course-details-body';
+          if (details.short_description) {{
+            const short = document.createElement('div');
+            short.textContent = details.short_description;
+            body.appendChild(short);
+          }}
+          if (details.who_this_is_for) {{
+            const audience = document.createElement('div');
+            audience.textContent = details.who_this_is_for;
+            body.appendChild(audience);
+          }}
+          if ((details.topics_covered || []).length) {{
+            const topics = document.createElement('ul');
+            details.topics_covered.slice(0, 5).forEach(topic => {{
+              const item = document.createElement('li');
+              item.textContent = topic;
+              topics.appendChild(item);
+            }});
+            body.appendChild(topics);
+          }}
+          if (details.certification_issued) {{
+            const cert = document.createElement('div');
+            cert.textContent = details.certification_issued;
+            body.appendChild(cert);
+          }}
+          if (details.full_course_page) {{
+            const link = document.createElement('a');
+            link.className = 'course-page-link';
+            link.href = details.full_course_page;
+            link.textContent = 'Full course page';
+            body.appendChild(link);
+          }}
+          detailBox.append(summary, body);
+          button.appendChild(detailBox);
+        }}
         button.addEventListener('click', () => {{
           selectedCourseId = course.courseId;
           renderAll();
@@ -644,8 +839,10 @@ def render_html(payload: dict[str, Any]) -> str:
         input.checked = input.value === selectedDelivery;
       }});
       byId('show-all-toggle').checked = showAllOptions;
-      byId('compare-toggle').checked = compareMode;
-      byId('compare-toggle').disabled = {str(not compare_enabled).lower()};
+      const compareToggle = byId('compare-toggle');
+      if (compareToggle) {{
+        compareToggle.checked = compareMode;
+      }}
     }}
 
     function renderDates() {{
@@ -664,12 +861,46 @@ def render_html(payload: dict[str, Any]) -> str:
           monthKeys.push(monthKey);
         }}
       }});
-      monthKeys.slice(0, 3).forEach(monthKey => {{
+      if (mobileMonthIndex >= monthKeys.length) {{
+        mobileMonthIndex = Math.max(0, monthKeys.length - 1);
+      }}
+      const activeMonthKey = isMobileLayout() ? monthKeys[mobileMonthIndex] : (selectedDate ? selectedDate.slice(0, 7) : monthKeys[mobileMonthIndex]);
+      const activeMonthIndex = monthKeys.includes(activeMonthKey) ? monthKeys.indexOf(activeMonthKey) : mobileMonthIndex;
+      if (isMobileLayout()) {{
+        mobileMonthIndex = activeMonthIndex;
+        const nav = document.createElement('div');
+        nav.className = 'month-nav';
+        const previous = document.createElement('button');
+        previous.type = 'button';
+        previous.textContent = 'Previous';
+        previous.disabled = mobileMonthIndex <= 0;
+        previous.addEventListener('click', () => {{
+          mobileMonthIndex = Math.max(0, mobileMonthIndex - 1);
+          renderDates();
+        }});
+        const navTitle = document.createElement('div');
+        navTitle.className = 'month-nav-title';
+        const [activeYear, activeMonth] = monthKeys[mobileMonthIndex].split('-').map(Number);
+        navTitle.textContent = new Date(activeYear, activeMonth - 1, 1).toLocaleDateString(undefined, {{ month: 'long', year: 'numeric' }});
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.textContent = 'Next';
+        next.disabled = mobileMonthIndex >= monthKeys.length - 1;
+        next.addEventListener('click', () => {{
+          mobileMonthIndex = Math.min(monthKeys.length - 1, mobileMonthIndex + 1);
+          renderDates();
+        }});
+        nav.append(previous, navTitle, next);
+        host.appendChild(nav);
+      }}
+      const renderedMonthKeys = isMobileLayout() ? [monthKeys[mobileMonthIndex]] : monthKeys.slice(0, 3);
+      renderedMonthKeys.forEach(monthKey => {{
         const [year, month] = monthKey.split('-').map(Number);
         const first = new Date(year, month - 1, 1);
         const last = new Date(year, month, 0);
         const section = document.createElement('section');
         section.className = 'month';
+        section.dataset.mobileVisible = String(monthKey === monthKeys[mobileMonthIndex]);
         const title = document.createElement('h3');
         title.className = 'month-title';
         title.textContent = first.toLocaleDateString(undefined, {{ month: 'long', year: 'numeric' }});
@@ -698,6 +929,7 @@ def render_html(payload: dict[str, Any]) -> str:
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {{
               selectedDate = available.date;
+              mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
               selectedStart = available.startTimes[0]?.startTime || '';
               renderAll();
             }});
@@ -722,7 +954,25 @@ def render_html(payload: dict[str, Any]) -> str:
         host.innerHTML = '<div class="empty">No matching times are currently available. Try All delivery types.</div>';
         return;
       }}
+      const groups = new Map();
       day.startTimes.forEach(slot => {{
+        const [hourText] = slot.startTime.split(':');
+        const hour = Number.parseInt(hourText, 10);
+        const label = hour < 12 ? 'AM' : 'PM';
+        if (!groups.has(label)) {{
+          groups.set(label, []);
+        }}
+        groups.get(label).push(slot);
+      }});
+      groups.forEach((slots, label) => {{
+        const group = document.createElement('div');
+        group.className = 'start-group';
+        const groupLabel = document.createElement('div');
+        groupLabel.className = 'start-group-label';
+        groupLabel.textContent = label;
+        const grid = document.createElement('div');
+        grid.className = 'start-grid';
+        slots.forEach(slot => {{
         const button = document.createElement('button');
         button.type = 'button';
         button.textContent = slot.displayStartTime;
@@ -731,7 +981,10 @@ def render_html(payload: dict[str, Any]) -> str:
           selectedStart = slot.startTime;
           renderAll();
         }});
-        host.appendChild(button);
+          grid.appendChild(button);
+        }});
+        group.append(groupLabel, grid);
+        host.appendChild(group);
       }});
     }}
 
@@ -747,11 +1000,20 @@ def render_html(payload: dict[str, Any]) -> str:
       slot.courses.forEach(course => {{
         const item = document.createElement('article');
         item.className = 'course';
+        const summary = document.createElement('div');
+        summary.className = 'selected-summary';
         const title = document.createElement('h3');
         title.textContent = course.courseName;
-        const meta = document.createElement('div');
-        meta.className = 'course-meta';
-        meta.textContent = `${{course.location}} · ${{course.displayStartTime}}`;
+        const dateRow = document.createElement('div');
+        dateRow.className = 'selected-summary-row';
+        dateRow.textContent = selectedDateLabel();
+        const timeRow = document.createElement('div');
+        timeRow.className = 'selected-summary-row';
+        timeRow.textContent = course.displayStartTime;
+        const locationRow = document.createElement('div');
+        locationRow.className = 'selected-summary-row';
+        locationRow.textContent = course.location;
+        summary.append(title, dateRow, timeRow, locationRow);
         const badge = document.createElement('div');
         badge.className = 'delivery-badge';
         badge.textContent = deliveryLabel(course.deliveryMode);
@@ -759,7 +1021,7 @@ def render_html(payload: dict[str, Any]) -> str:
         link.className = 'register-link';
         link.href = course.appointmentUrl;
         link.textContent = 'Register';
-        item.append(title, meta, badge, link);
+        item.append(summary, badge, link);
         host.appendChild(item);
       }});
     }}
@@ -773,10 +1035,13 @@ def render_html(payload: dict[str, Any]) -> str:
       renderCourses();
     }}
 
-    byId('compare-toggle').addEventListener('change', event => {{
-      compareMode = event.target.checked;
-      renderAll();
-    }});
+    const compareToggle = byId('compare-toggle');
+    if (compareToggle) {{
+      compareToggle.addEventListener('change', event => {{
+        compareMode = event.target.checked;
+        renderAll();
+      }});
+    }}
 
     byId('show-all-toggle').addEventListener('change', event => {{
       showAllOptions = event.target.checked;
@@ -788,6 +1053,11 @@ def render_html(payload: dict[str, Any]) -> str:
         selectedDelivery = event.target.value;
         renderAll();
       }});
+    }});
+
+    window.addEventListener('resize', () => {{
+      renderDates();
+      renderStarts();
     }});
 
     selectedDelivery = deliveryFromDeepLink();
