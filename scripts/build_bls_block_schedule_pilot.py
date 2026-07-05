@@ -684,8 +684,7 @@ def render_html(payload: dict[str, Any]) -> str:
             <div class="delivery-options">
               <label data-delivery-option="all"><input type="radio" name="delivery-filter" value="all" checked> All</label>
               <label data-delivery-option="in-person"><input type="radio" name="delivery-filter" value="in-person"> In-person</label>
-              <label data-delivery-option="blended"><input type="radio" name="delivery-filter" value="blended"> Blended</label>
-              <label data-delivery-option="skills-session"><input type="radio" name="delivery-filter" value="skills-session"> HeartCode/Skills</label>
+              <label data-delivery-option="online-skills"><input type="radio" name="delivery-filter" value="online-skills"> Online + Skills</label>
             </div>
           </fieldset>
           <div class="option-tools">
@@ -716,7 +715,7 @@ def render_html(payload: dict[str, Any]) -> str:
     const scheduleDates = {data_json};
     const courseOptions = {course_options_json};
     const optionGroups = {option_groups_json};
-    const deliveryModes = new Set(courseOptions.map(course => normalizeDeepLink(course.deliveryMode)).filter(Boolean));
+    const deliveryModes = new Set(courseOptions.map(course => publicDeliveryBucket(course.deliveryMode)).filter(Boolean));
     const deliveryFilterEnabled = {str(delivery_filter_enabled).lower()};
     let selectedCourseId = {json.dumps(first_course)};
     let selectedDelivery = 'all';
@@ -738,6 +737,32 @@ def render_html(payload: dict[str, Any]) -> str:
       return String(value || '').trim().toLowerCase().replace(/^#/, '');
     }}
 
+    function publicDeliveryBucket(value) {{
+      const normalized = normalizeDeepLink(value).replace(/[\\s_]+/g, '-').replace(/\\+/g, '-');
+      if (!normalized) {{
+        return '';
+      }}
+      if (normalized === 'in-person' || normalized === 'inperson' || normalized === 'classroom') {{
+        return 'in-person';
+      }}
+      if ([
+        'blended',
+        'heartcode',
+        'skills-session',
+        'skills',
+        'online-skills',
+        'online-learning-skills',
+        'online-in-person-skills',
+        'online-plus-skills',
+        'online-and-skills',
+        'online-hands-on-skills',
+        'online-learning-in-person-skills'
+      ].includes(normalized) || (normalized.includes('online') && normalized.includes('skills'))) {{
+        return 'online-skills';
+      }}
+      return normalized;
+    }}
+
     function courseIdFromDeepLink() {{
       const params = new URLSearchParams(window.location.search);
       const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
@@ -754,8 +779,9 @@ def render_html(payload: dict[str, Any]) -> str:
 
     function deliveryFromDeepLink() {{
       const params = new URLSearchParams(window.location.search);
-      const requested = normalizeDeepLink(params.get('delivery'));
-      const allowed = new Set(['all', ...courseOptions.map(course => normalizeDeepLink(course.deliveryMode)).filter(Boolean)]);
+      const raw = normalizeDeepLink(params.get('delivery'));
+      const requested = raw === 'all' ? 'all' : publicDeliveryBucket(raw);
+      const allowed = new Set(['all', ...courseOptions.map(course => publicDeliveryBucket(course.deliveryMode)).filter(Boolean)]);
       return allowed.has(requested) ? requested : 'all';
     }}
 
@@ -765,14 +791,12 @@ def render_html(payload: dict[str, Any]) -> str:
     }}
 
     function deliveryLabel(value) {{
-      if (value === 'in-person') {{
+      const bucket = publicDeliveryBucket(value);
+      if (bucket === 'in-person') {{
         return 'In-person';
       }}
-      if (value === 'blended') {{
-        return 'Blended';
-      }}
-      if (value === 'skills-session') {{
-        return 'HeartCode/Skills';
+      if (bucket === 'online-skills') {{
+        return 'Online + Skills';
       }}
       return 'All';
     }}
@@ -788,7 +812,7 @@ def render_html(payload: dict[str, Any]) -> str:
     }}
 
     function courseMatchesDelivery(course) {{
-      return selectedDelivery === 'all' || normalizeDeepLink(course.deliveryMode) === selectedDelivery;
+      return selectedDelivery === 'all' || publicDeliveryBucket(course.deliveryMode) === selectedDelivery;
     }}
 
     function visibleCourseOptions() {{
