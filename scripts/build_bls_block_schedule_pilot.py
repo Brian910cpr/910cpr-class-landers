@@ -34,10 +34,11 @@ def render_report(payload: dict[str, Any]) -> str:
     counts = payload["counts"]
     sample_offers = payload["offers"][:10]
     guard = payload.get("liveAvailabilityGuard", {})
+    page_title = payload.get("pageConfig", {}).get("title") or "Block-Based Schedule Page"
     lines = [
-        "# BLS Block-Based Schedule Pilot",
+        f"# {page_title}",
         "",
-        "Local build artifact for the customer-facing BLS pilot. Enrollware was not called, course IDs were not changed, and appointment URL behavior uses the existing URL builder.",
+        "Local build artifact for a customer-facing block schedule page. Enrollware was not called, course IDs were not changed, and appointment URL behavior uses the existing URL builder.",
         "",
         "## Summary",
         "",
@@ -110,6 +111,32 @@ def css() -> str:
     h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: 0; }
     p { margin: 0 0 12px; }
     .muted { color: var(--muted); }
+    .page-subtitle {
+      margin: 0 0 8px;
+      color: var(--accent-dark);
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+    .page-context {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 18px;
+    }
+    .page-note {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: var(--band);
+      padding: 14px;
+    }
+    .page-note h2 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+    .page-note ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
     .pilot-grid {
       display: grid;
       grid-template-columns: minmax(220px, 1.05fr) minmax(270px, 1.2fr) minmax(170px, .85fr) minmax(230px, 1fr);
@@ -545,10 +572,48 @@ def render_html(payload: dict[str, Any]) -> str:
     counts = payload["counts"]
     first_course = course_options[0]["courseId"] if course_options else ""
     title = html.escape(str(page_config.get("title") or "Block Schedule"))
+    subtitle = html.escape(str(page_config.get("subtitle") or ""))
     intro = html.escape(str(page_config.get("intro") or "Select a course, date, and start time."))
+    explanation = html.escape(str(page_config.get("explanation") or ""))
+    documentation_note = page_config.get("documentation_note", {})
+    student_note = html.escape(str(page_config.get("student_note") or ""))
+    context_html = ""
+    if explanation or isinstance(documentation_note, dict) or student_note:
+        note_html = ""
+        if isinstance(documentation_note, dict) and (documentation_note.get("title") or documentation_note.get("body") or documentation_note.get("bullets")):
+            note_title = html.escape(str(documentation_note.get("title") or "Documentation note"))
+            note_body = html.escape(str(documentation_note.get("body") or ""))
+            bullet_items = [
+                f"<li>{html.escape(str(item))}</li>"
+                for item in documentation_note.get("bullets", [])
+                if str(item).strip()
+            ]
+            bullet_html = f"<ul>{''.join(bullet_items)}</ul>" if bullet_items else ""
+            note_html = f"""
+      <div class="page-note">
+        <h2>{note_title}</h2>
+        <p>{note_body}</p>
+        {bullet_html}
+      </div>"""
+        student_html = f'<p class="muted">{student_note}</p>' if student_note else ""
+        explanation_html = f"<p>{explanation}</p>" if explanation else ""
+        context_html = f"""
+    <section class="page-context" aria-label="Course context">
+      {explanation_html}
+      {note_html}
+      {student_html}
+    </section>"""
     compare_label = html.escape(str(page_config.get("compare_mode", {}).get("label") or "Show all options"))
     compare_enabled = page_config.get("compare_mode", {}).get("enabled") is True
     show_all_label = html.escape(str(page_config.get("show_all_label") or "Show all course options"))
+    show_all_enabled = page_config.get("show_all_enabled", True) is not False
+    show_all_toggle_html = ""
+    if show_all_enabled:
+        show_all_toggle_html = f"""
+          <label class="disclosure-toggle">
+            <input id="show-all-toggle" type="checkbox">
+            <span>{show_all_label}</span>
+          </label>"""
     compare_toggle_html = ""
     if compare_enabled:
         compare_toggle_html = f"""
@@ -567,10 +632,12 @@ def render_html(payload: dict[str, Any]) -> str:
 <body>
   <header>
     <h1>{title}</h1>
+    {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
     <p class="muted">{intro}</p>
     <p class="muted">Pilot proof: whole availability blocks are not shown as class times. Public-selectable offers: {counts['publicSelectableOfferCount']}.</p>
   </header>
   <main>
+    {context_html}
     <section class="pilot-grid" aria-label="BLS block-based schedule pilot">
       <div class="panel">
         <h2>Course</h2>
@@ -585,10 +652,7 @@ def render_html(payload: dict[str, Any]) -> str:
         </fieldset>
         <div id="course-option-list" class="choice-list"></div>
         <div class="option-tools">
-          <label class="disclosure-toggle">
-            <input id="show-all-toggle" type="checkbox">
-            <span>{show_all_label}</span>
-          </label>
+          {show_all_toggle_html}
           {compare_toggle_html}
         </div>
       </div>
@@ -838,7 +902,10 @@ def render_html(payload: dict[str, Any]) -> str:
       document.querySelectorAll('input[name="delivery-filter"]').forEach(input => {{
         input.checked = input.value === selectedDelivery;
       }});
-      byId('show-all-toggle').checked = showAllOptions;
+      const showAllToggle = byId('show-all-toggle');
+      if (showAllToggle) {{
+        showAllToggle.checked = showAllOptions;
+      }}
       const compareToggle = byId('compare-toggle');
       if (compareToggle) {{
         compareToggle.checked = compareMode;
@@ -1043,10 +1110,13 @@ def render_html(payload: dict[str, Any]) -> str:
       }});
     }}
 
-    byId('show-all-toggle').addEventListener('change', event => {{
-      showAllOptions = event.target.checked;
-      renderAll();
-    }});
+    const showAllToggle = byId('show-all-toggle');
+    if (showAllToggle) {{
+      showAllToggle.addEventListener('change', event => {{
+        showAllOptions = event.target.checked;
+        renderAll();
+      }});
+    }}
 
     document.querySelectorAll('input[name="delivery-filter"]').forEach(input => {{
       input.addEventListener('change', event => {{

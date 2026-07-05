@@ -159,6 +159,42 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("courseId=209808", html)
         self.assertNotIn("courseId=460465", html)
 
+    def test_uscg_cover_page_uses_only_aha_heartsaver_first_aid_cpr_aed_inventory(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        uscg = configs["uscg_first_aid_cpr_aed"]
+        configured_ids = {option["course_id"] for option in uscg["course_options"]}
+        self.assertEqual(configured_ids, {"209809", "329495"})
+        excluded_ids = {"344085", "209808", "351632", "251545", "460465", "248288", "248287", "445670", "463743"}
+        self.assertTrue(configured_ids.isdisjoint(excluded_ids))
+        self.assertFalse(uscg["compare_mode"]["enabled"])
+        self.assertIn("Fire Department/public-safety partner", uscg["course_id_notes"]["460465"])
+
+        payload = block_start_time_selector.build_block_schedule_page(uscg)
+        self.assertEqual(payload["publicPage"], "docs/courses/uscg-first-aid-cpr-aed.html")
+        public_ids = {offer["courseId"] for offer in payload["offers"]}
+        self.assertLessEqual(public_ids, configured_ids)
+        html = build_bls_block_schedule_pilot.render_html(payload)
+        self.assertIn("USCG-Approved First Aid / CPR / AED", html)
+        self.assertIn("AHA Heartsaver First Aid CPR AED Total", html)
+        self.assertIn("AMERHA-216", html)
+        self.assertIn("captain", html)
+        self.assertIn("OUPV", html)
+        self.assertIn("Master", html)
+        self.assertIn("Merchant Mariner Credential", html)
+        self.assertIn("online learning plus an in-person skills session", html)
+        self.assertNotIn("fully online", html.lower())
+        self.assertNotIn("Need First Aid or CPR ASAP", html)
+        self.assertNotIn('id="compare-toggle"', html)
+        self.assertNotIn('id="show-all-toggle"', html)
+        self.assertNotIn("courseId=344085", html)
+        self.assertNotIn("courseId=209808", html)
+        self.assertNotIn("courseId=351632", html)
+        self.assertNotIn("courseId=251545", html)
+        self.assertNotIn("courseId=460465", html)
+        if payload["offers"]:
+            self.assertIn("courseId=209809", html)
+            self.assertIn("courseId=329495", html)
+
     def test_final_live_guard_suppresses_july_4_stale_offer_without_live_block(self):
         stale_payload = {
             "pageConfig": {"allowed_course_ids": ["209806"]},

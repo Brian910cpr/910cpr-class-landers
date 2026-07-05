@@ -291,6 +291,77 @@
         "460465": "Reserved for Fire Department/public-safety partner programs only ($0 class with optional public participant card fee). Do not use for routine public Heartsaver CPR AED routing."
       }
     },
+    "uscg-first-aid-cpr-aed": {
+      "page_key": "uscg-first-aid-cpr-aed",
+      "family": "Heartsaver",
+      "certifying_body": "AHA",
+      "title": "USCG-Approved First Aid / CPR / AED",
+      "subtitle": "AHA Heartsaver First Aid CPR AED Total \u2014 AMERHA-216",
+      "meta_description": "AHA Heartsaver First Aid CPR AED Total options for captain's license, OUPV, Master, and Merchant Mariner Credential applicants who need AMERHA-216 USCG documentation.",
+      "intro": "Select the AHA Heartsaver First Aid CPR AED format, then choose a public date and start time.",
+      "explanation": "This page is a local cover page for mariners and captain's license applicants. It uses the same real AHA Heartsaver First Aid CPR AED classes already available through 910CPR; it does not create separate USCG classroom inventory.",
+      "documentation_note": {
+        "title": "USCG documentation path",
+        "body": "Students who complete all required sections can receive the AHA course completion card and AMERHA-216 USCG documentation for the First Aid / CPR / AED requirement.",
+        "bullets": [
+          "For captain's license, OUPV, Master, and Merchant Mariner Credential applicants.",
+          "Complete every required AMERHA-216 section for the documentation path.",
+          "Bring photo ID and tell the instructor you need USCG/mariner documentation."
+        ]
+      },
+      "student_note": "The blended option is online learning plus an in-person skills session, so students still attend the scheduled skills session.",
+      "output_path": "docs/courses/uscg-first-aid-cpr-aed.html",
+      "report_json_path": "data/audit/uscg_first_aid_cpr_aed_block_schedule.json",
+      "report_md_path": "data/audit/uscg_first_aid_cpr_aed_block_schedule_report.md",
+      "show_all_label": "Show all delivery options",
+      "show_all_enabled": false,
+      "compare_mode": {
+        "enabled": false,
+        "label": "",
+        "groups": {
+          "USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED": {
+            "label": "AHA Heartsaver First Aid CPR AED Total options",
+            "course_ids": [
+              "209809",
+              "329495"
+            ]
+          }
+        }
+      },
+      "course_options": [
+        {
+          "course_id": "209809",
+          "display_label": "In-person AHA Heartsaver First Aid CPR AED",
+          "icon_label": "FA",
+          "clarification": "Classroom AHA Heartsaver First Aid CPR AED Total path for USCG/AMERHA-216 documentation.",
+          "delivery_mode": "in-person",
+          "variant": "in-person",
+          "deep_link_aliases": [
+            "classroom",
+            "uscg-in-person",
+            "first-aid-cpr-aed"
+          ]
+        },
+        {
+          "course_id": "329495",
+          "display_label": "Online learning + in-person skills session",
+          "icon_label": "BL",
+          "clarification": "Blended AHA Heartsaver First Aid CPR AED Total path for USCG/AMERHA-216 documentation.",
+          "delivery_mode": "blended",
+          "variant": "online-learning-skills",
+          "deep_link_aliases": [
+            "blended",
+            "uscg-blended",
+            "first-aid-cpr-aed-blended"
+          ]
+        }
+      ],
+      "course_id_notes": {
+        "209809": "Routine public AHA Heartsaver First Aid CPR AED in-person course used for the USCG/AMERHA-216 cover page.",
+        "329495": "Routine public AHA Heartsaver First Aid CPR AED blended course used for the USCG/AMERHA-216 cover page.",
+        "460465": "Reserved for Fire Department/public-safety partner programs only. Do not use for this public USCG cover page."
+      }
+    },
     "hsi": {
       "page_key": "hsi",
       "family": "HSI",
