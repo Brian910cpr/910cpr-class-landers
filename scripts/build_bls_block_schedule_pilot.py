@@ -137,9 +137,24 @@ def css() -> str:
       margin: 8px 0 0;
       padding-left: 20px;
     }
-    .pilot-grid {
+    .selector-shell {
       display: grid;
-      grid-template-columns: minmax(220px, 1.05fr) minmax(270px, 1.2fr) minmax(170px, .85fr) minmax(230px, 1fr);
+      gap: 16px;
+    }
+    .course-selector-panel {
+      display: grid;
+      gap: 14px;
+    }
+    .course-selector-top {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .selector-grid {
+      display: grid;
+      grid-template-columns: minmax(340px, 1.35fr) minmax(210px, .8fr) minmax(280px, 1fr);
       gap: 16px;
       align-items: start;
     }
@@ -151,8 +166,23 @@ def css() -> str:
       min-width: 0;
     }
     .button-list { display: grid; gap: 8px; }
-    .choice-list { display: grid; gap: 8px; margin-bottom: 14px; }
-    .option-tools { display: grid; gap: 12px; }
+    .choice-list {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(250px, 1fr);
+      gap: 10px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: x proximity;
+      padding: 0 2px 8px;
+      margin-bottom: 0;
+    }
+    .option-tools {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
     .disclosure-toggle {
       display: flex;
       gap: 9px;
@@ -168,7 +198,7 @@ def css() -> str:
     .delivery-filter {
       display: grid;
       gap: 7px;
-      margin-bottom: 14px;
+      margin: 0;
       min-inline-size: 0;
     }
     .delivery-filter legend {
@@ -227,6 +257,9 @@ def css() -> str:
       gap: 10px;
       width: 100%;
       padding: 12px;
+      min-height: 118px;
+      align-content: start;
+      scroll-snap-align: start;
     }
     .course-icon {
       display: inline-flex;
@@ -400,24 +433,25 @@ def css() -> str:
       background: var(--band);
     }
     @media (max-width: 820px) {
-      .pilot-grid { grid-template-columns: 1fr; }
-      .pilot-grid > * { min-width: 0; }
+      .selector-grid { grid-template-columns: 1fr; }
+      .selector-grid > *,
+      .selector-shell > * { min-width: 0; }
       header, main { padding: 18px; }
       .panel { padding: 14px; }
-      .choice-list {
+      .course-selector-top {
         display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: minmax(238px, 82%);
+        gap: 12px;
+      }
+      .option-tools {
+        display: grid;
         gap: 10px;
-        overflow-x: auto;
-        overscroll-behavior-inline: contain;
+      }
+      .choice-list {
+        grid-auto-columns: minmax(238px, 82%);
         scroll-snap-type: x mandatory;
-        padding-bottom: 8px;
       }
       .course-card {
         min-height: 112px;
-        align-content: start;
-        scroll-snap-align: start;
       }
       .course-help {
         display: -webkit-box;
@@ -638,36 +672,43 @@ def render_html(payload: dict[str, Any]) -> str:
   </header>
   <main>
     {context_html}
-    <section class="pilot-grid" aria-label="BLS block-based schedule pilot">
-      <div class="panel">
-        <h2>Course</h2>
-        <fieldset class="delivery-filter">
-          <legend>Delivery type</legend>
-          <div class="delivery-options">
-            <label data-delivery-option="all"><input type="radio" name="delivery-filter" value="all" checked> All</label>
-            <label data-delivery-option="in-person"><input type="radio" name="delivery-filter" value="in-person"> In-person</label>
-            <label data-delivery-option="blended"><input type="radio" name="delivery-filter" value="blended"> Blended</label>
-            <label data-delivery-option="skills-session"><input type="radio" name="delivery-filter" value="skills-session"> HeartCode/Skills</label>
+    <section class="selector-shell" aria-label="Block-based schedule selector">
+      <div class="panel course-selector-panel">
+        <div class="course-selector-top">
+          <div>
+            <h2>Course</h2>
+            <p class="muted">Choose the course or delivery format first.</p>
           </div>
-        </fieldset>
-        <div id="course-option-list" class="choice-list"></div>
-        <div class="option-tools">
-          {show_all_toggle_html}
-          {compare_toggle_html}
+          <fieldset class="delivery-filter">
+            <legend>Delivery type</legend>
+            <div class="delivery-options">
+              <label data-delivery-option="all"><input type="radio" name="delivery-filter" value="all" checked> All</label>
+              <label data-delivery-option="in-person"><input type="radio" name="delivery-filter" value="in-person"> In-person</label>
+              <label data-delivery-option="blended"><input type="radio" name="delivery-filter" value="blended"> Blended</label>
+              <label data-delivery-option="skills-session"><input type="radio" name="delivery-filter" value="skills-session"> HeartCode/Skills</label>
+            </div>
+          </fieldset>
+          <div class="option-tools">
+            {show_all_toggle_html}
+            {compare_toggle_html}
+          </div>
         </div>
+        <div id="course-option-list" class="choice-list"></div>
       </div>
-      <div class="panel">
-        <h2>Calendar</h2>
-        <div id="date-list" class="month-stack"></div>
-      </div>
-      <div class="panel">
-        <h2>Start Times</h2>
-        <div id="start-list" class="button-list"></div>
-      </div>
-      <div class="panel">
-        <h2>Register</h2>
-        <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
-        <div id="course-list" class="course-list"></div>
+      <div class="selector-grid">
+        <div class="panel">
+          <h2>Calendar</h2>
+          <div id="date-list" class="month-stack"></div>
+        </div>
+        <div class="panel">
+          <h2>Start Times</h2>
+          <div id="start-list" class="button-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Register</h2>
+          <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
+          <div id="course-list" class="course-list"></div>
+        </div>
       </div>
     </section>
   </main>

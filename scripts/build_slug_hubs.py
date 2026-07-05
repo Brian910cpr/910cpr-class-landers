@@ -58,6 +58,8 @@ COURSE_MAP_PATH = ROOT / "data" / "config" / "course_map.json"
 REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
 OUTPUT_DIR = ROOT / "docs"
 COURSES_OUTPUT_DIR = OUTPUT_DIR / "courses"
+USCG_SELECTOR_PAGE = COURSES_OUTPUT_DIR / "uscg-first-aid-cpr-aed.html"
+USCG_OLD_PUBLIC_PAGE = OUTPUT_DIR / "uscg-elementary-first-aid-cpr.html"
 STATE_DIR = ROOT / "data" / "state"
 RUNTIME_DIR = ROOT / "data" / "runtime"
 SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
@@ -3297,6 +3299,14 @@ def render_brand_bar() -> str:
 """.strip()
 
 
+def sync_uscg_old_url_to_selector() -> Path | None:
+    """Keep the old USCG public URL backed by the live selector page when available."""
+    if not USCG_SELECTOR_PAGE.exists():
+        return None
+    USCG_OLD_PUBLIC_PAGE.write_text(USCG_SELECTOR_PAGE.read_text(encoding="utf-8"), encoding="utf-8")
+    return USCG_OLD_PUBLIC_PAGE
+
+
 def render_ecosystem_session_preview(sessions: list[dict[str, Any]], *, page_slug: str, empty_copy: str) -> str:
     if not sessions:
         return f"""
@@ -3734,6 +3744,9 @@ def build() -> None:
                     print(f"Wrote {course_output}")
             reporter.update(current=index, total=len(manifest), last_output_file=last_output)
             print(f"Wrote {last_output}")
+        uscg_alias_output = sync_uscg_old_url_to_selector()
+        if uscg_alias_output:
+            print(f"Wrote {uscg_alias_output}")
         consolidated_debug_path = ROOT / "debug" / "hub_session_classification.json"
         consolidated_debug_path.parent.mkdir(parents=True, exist_ok=True)
         consolidated_debug_path.write_text(

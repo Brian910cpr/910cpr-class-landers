@@ -1,6 +1,6 @@
-# BLS Block-Based Schedule Pilot
+# Heartsaver Schedule
 
-Local build artifact for the customer-facing BLS pilot. Enrollware was not called, course IDs were not changed, and appointment URL behavior uses the existing URL builder.
+Local build artifact for a customer-facing block schedule page. Enrollware was not called, course IDs were not changed, and appointment URL behavior uses the existing URL builder.
 
 ## Summary
 
@@ -9,10 +9,10 @@ Local build artifact for the customer-facing BLS pilot. Enrollware was not calle
 - Horizon days: `180`
 - Minimum lead hours: `24`
 - Whole block presented as class: `False`
-- Public-selectable offers: `3066`
+- Public-selectable offers: `3110`
 - Public-selectable dates: `38`
-- Public-selectable start times: `520`
-- Rejected course/start evaluations: `7626`
+- Public-selectable start times: `527`
+- Rejected course/start evaluations: `7582`
 - Suppressed stale/orphaned offers: `0`
 
 ## Sample Public-Selectable URLs
@@ -33,7 +33,7 @@ Local build artifact for the customer-facing BLS pilot. Enrollware was not calle
 ## Top Rejection Reasons
 
 - `outside_public_dynamic_hours`: 5340
-- `conflicts_with_existing_enrollware_occupancy`: 2470
+- `conflicts_with_existing_enrollware_occupancy`: 2414
 - `does_not_fit_inside_availability_after_duration_and_buffers`: 1246
 - `inside_minimum_lead_time`: 24
 

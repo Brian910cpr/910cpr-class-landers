@@ -102,6 +102,10 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("className = 'start-group'", html)
         self.assertIn("className = 'month-nav'", html)
         self.assertIn('id="date-list" class="month-stack"', html)
+        self.assertIn('class="selector-shell"', html)
+        self.assertIn('class="panel course-selector-panel"', html)
+        self.assertIn('class="selector-grid"', html)
+        self.assertNotIn('class="pilot-grid"', html)
 
     def test_config_driven_heartsaver_page_generates_valid_schedule(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
