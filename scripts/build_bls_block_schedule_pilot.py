@@ -326,6 +326,20 @@ def css() -> str:
       justify-content: center;
       font-size: .9rem;
     }
+    .day-button.is-past,
+    .start-grid button.is-past {
+      color: #6b7280;
+      border-color: #d1d5db;
+      background: #f3f4f6;
+      cursor: not-allowed;
+      opacity: .72;
+    }
+    .day-button.is-past[aria-pressed="true"],
+    .start-grid button.is-past[aria-pressed="true"] {
+      border-color: #d1d5db;
+      box-shadow: none;
+      background: #f3f4f6;
+    }
     .course-list { display: grid; gap: 12px; }
     .start-group {
       display: grid;
@@ -795,6 +809,54 @@ def render_html(payload: dict[str, Any]) -> str:
       return slot.courses.filter(course => ids.has(course.courseId));
     }}
 
+    const scheduleTimezone = 'America/New_York';
+
+    function businessNow() {{
+      const parts = new Intl.DateTimeFormat('en-CA', {{
+        timeZone: scheduleTimezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }}).formatToParts(new Date()).reduce((values, part) => {{
+        values[part.type] = part.value;
+        return values;
+      }}, {{}});
+      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
+      return {{
+        dateKey: `${{parts.year}}-${{parts.month}}-${{parts.day}}`,
+        minutes: (hour * 60) + Number(parts.minute)
+      }};
+    }}
+
+    function startMinutes(startTime) {{
+      const [hour, minute] = String(startTime || '').split(':').map(Number);
+      return (hour * 60) + minute;
+    }}
+
+    function isPastStart(day, slot, now = businessNow()) {{
+      if (!day || !slot) {{
+        return true;
+      }}
+      if (day.date < now.dateKey) {{
+        return true;
+      }}
+      if (day.date > now.dateKey) {{
+        return false;
+      }}
+      return startMinutes(slot.startTime) <= now.minutes;
+    }}
+
+    function selectableStartTimes(day, now = businessNow()) {{
+      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+    }}
+
+    function isSelectableDate(day, now = businessNow()) {{
+      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
+    }}
+
     function filteredDates() {{
       return scheduleDates.map(day => {{
         const startTimes = day.startTimes.map(slot => ({{
@@ -807,18 +869,26 @@ def render_html(payload: dict[str, Any]) -> str:
 
     function syncSelection() {{
       const days = filteredDates();
+      const now = businessNow();
+      const selectableDays = days.filter(day => isSelectableDate(day, now));
       if (!days.length) {{
         selectedDate = '';
         selectedStart = '';
         return days;
       }}
-      if (!days.some(day => day.date === selectedDate)) {{
-        selectedDate = days[0].date;
+      if (!selectableDays.length) {{
+        selectedDate = '';
+        selectedStart = '';
+        return days;
+      }}
+      if (!selectableDays.some(day => day.date === selectedDate)) {{
+        selectedDate = selectableDays[0].date;
         mobileMonthIndex = Math.max(0, [...new Set(days.map(day => day.date.slice(0, 7)))].indexOf(selectedDate.slice(0, 7)));
       }}
       const day = days.find(item => item.date === selectedDate);
-      if (!day.startTimes.some(slot => slot.startTime === selectedStart)) {{
-        selectedStart = day.startTimes[0]?.startTime || '';
+      const starts = selectableStartTimes(day, now);
+      if (!starts.some(slot => slot.startTime === selectedStart)) {{
+        selectedStart = starts[0]?.startTime || '';
       }}
       return days;
     }}
@@ -913,6 +983,7 @@ def render_html(payload: dict[str, Any]) -> str:
       const host = byId('date-list');
       host.innerHTML = '';
       const days = syncSelection();
+      const now = businessNow();
       if (!days.length) {{
         host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
         return;
@@ -989,12 +1060,21 @@ def render_html(payload: dict[str, Any]) -> str:
             button.type = 'button';
             button.className = 'day-button';
             button.textContent = String(dayNum);
-            button.setAttribute('aria-label', `${{available.displayDate}} available`);
+            const disabled = !isSelectableDate(available, now);
+            if (disabled) {{
+              button.classList.add('is-past');
+            }}
+            button.disabled = disabled;
+            button.setAttribute('aria-disabled', String(disabled));
+            button.setAttribute('aria-label', available.displayDate + ' ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times' : 'available'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {{
+              if (!isSelectableDate(available)) {{
+                return;
+              }}
               selectedDate = available.date;
               mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
-              selectedStart = available.startTimes[0]?.startTime || '';
+              selectedStart = selectableStartTimes(available)[0]?.startTime || '';
               renderAll();
             }});
             grid.appendChild(button);
@@ -1040,8 +1120,18 @@ def render_html(payload: dict[str, Any]) -> str:
         const button = document.createElement('button');
         button.type = 'button';
         button.textContent = slot.displayStartTime;
+        const disabled = isPastStart(day, slot);
+        if (disabled) {{
+          button.classList.add('is-past');
+        }}
+        button.disabled = disabled;
+        button.setAttribute('aria-disabled', String(disabled));
+        button.setAttribute('aria-label', slot.displayStartTime + ' ' + (disabled ? 'not bookable; past ' + scheduleTimezone + ' start time' : 'available'));
         button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
         button.addEventListener('click', () => {{
+          if (isPastStart(day, slot)) {{
+            return;
+          }}
           selectedStart = slot.startTime;
           renderAll();
         }});
@@ -1057,7 +1147,7 @@ def render_html(payload: dict[str, Any]) -> str:
       host.innerHTML = '';
       const day = filteredDates().find(item => item.date === selectedDate);
       const slot = day?.startTimes.find(item => item.startTime === selectedStart);
-      if (!slot || !slot.courses.length) {{
+      if (!slot || isPastStart(day, slot) || !slot.courses.length) {{
         host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
         return;
       }}

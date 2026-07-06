@@ -112,6 +112,51 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn('class="selector-grid"', html)
         self.assertNotIn('class="pilot-grid"', html)
 
+    def test_schedule_ui_greys_past_dates_and_times_without_removing_data(self):
+        html = build_bls_block_schedule_pilot.render_html(self.payload)
+        self.assertIn("const scheduleTimezone = 'America/New_York'", html)
+        self.assertIn("timeZone: scheduleTimezone", html)
+        self.assertIn("function isPastStart(day, slot, now = businessNow())", html)
+        self.assertIn("function isSelectableDate(day, now = businessNow())", html)
+        self.assertIn("button.classList.add('is-past')", html)
+        self.assertIn("button.disabled = disabled", html)
+        self.assertIn("button.setAttribute('aria-disabled', String(disabled))", html)
+        self.assertIn("not bookable; past date or no future ' + scheduleTimezone + ' start times", html)
+        self.assertIn("not bookable; past ' + scheduleTimezone + ' start time", html)
+        self.assertIn("selectedStart = selectableStartTimes(available)[0]?.startTime || ''", html)
+        self.assertIn("if (!slot || isPastStart(day, slot) || !slot.courses.length)", html)
+        self.assertIn("const scheduleDates =", html)
+        self.assertIn("appointmentUrl", html)
+
+    def test_schedule_ui_keeps_future_enrollware_urls_unchanged(self):
+        payload = {
+            **self.payload,
+            "dates": [{
+                "date": "2099-08-01",
+                "displayDate": "Saturday, August 1, 2099",
+                "startTimes": [{
+                    "startTime": "14:30",
+                    "displayStartTime": "2:30 PM",
+                    "courses": [{
+                        "courseId": "209806",
+                        "courseName": "AHA BLS Provider",
+                        "family": "BLS",
+                        "deliveryMode": "in-person",
+                        "displayStartTime": "2:30 PM",
+                        "durationMinutes": 120,
+                        "appointmentDayId": 260683,
+                        "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A30%20PM&courseId=209806",
+                        "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+                    }],
+                }],
+            }],
+        }
+        html = build_bls_block_schedule_pilot.render_html(payload)
+        self.assertIn(
+            "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A30%20PM&courseId=209806",
+            html,
+        )
+
     def test_config_driven_heartsaver_page_generates_valid_schedule(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
         payload = block_start_time_selector.build_block_schedule_page(configs["heartsaver"])
