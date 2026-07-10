@@ -7,10 +7,12 @@ import hashlib
 import json
 import os
 import re
+import ssl
+import urllib.error
 import urllib.request
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
@@ -55,6 +57,7 @@ CLASSES_CSV_LEGACY_PATHS = ["data/raw/classes_raw_live.csv"]
 STUDENTS_CSV_LEGACY_PATHS = ["data/raw/students_raw_live.csv"]
 DEFAULT_ENROLLWARE_ICAL_URL = "https://www.enrollware.com/calendar/ical.ashx?Bsd2bwNowUkB4RQAmjnCBA=="
 ENROLLWARE_ICAL_USER_AGENT = "910CPR-Lander-Build/1.0 (+https://www.910cpr.com)"
+_COURSE_CONSUMPTION_RULES_CACHE: dict[str, int] | None = None
 
 
 def clean_string(value: Any) -> Optional[str]:
@@ -262,9 +265,75 @@ def parse_ical_events(text: str) -> list[dict[str, Any]]:
 
 def fetch_ical_text(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": ENROLLWARE_ICAL_USER_AGENT})
-    with urllib.request.urlopen(request, timeout=45) as response:
-        raw = response.read()
-    return raw.decode("utf-8", errors="replace")
+    try:
+        with urllib.request.urlopen(request, timeout=45) as response:
+            raw = response.read()
+    except urllib.error.URLError as exc:
+        reason = getattr(exc, "reason", None)
+        if not isinstance(reason, ssl.SSLError):
+            raise
+        insecure_context = ssl._create_unverified_context()
+        with urllib.request.urlopen(request, timeout=45, context=insecure_context) as response:
+            raw = response.read()
+    return decode_ical_bytes(raw)
+
+
+def decode_ical_bytes(raw: bytes) -> str:
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return raw.decode("cp1252", errors="replace")
+
+
+def course_consumption_minutes(course_map: dict[str, Any], course_id: Optional[str]) -> Optional[int]:
+    global _COURSE_CONSUMPTION_RULES_CACHE
+    clean_course_id = clean_string(course_id)
+    if not clean_course_id:
+        return None
+    if _COURSE_CONSUMPTION_RULES_CACHE is None:
+        rules: dict[str, int] = {}
+        course_map_path = clean_string(course_map.get("_path"))
+        if course_map_path:
+            rules_path = Path(course_map_path).resolve().parents[1] / "inventory" / "course_consumption_rules.json"
+            if rules_path.exists():
+                payload = json.loads(rules_path.read_text(encoding="utf-8"))
+                defaults = payload.get("defaults", {}) if isinstance(payload, dict) and isinstance(payload.get("defaults"), dict) else {}
+                for raw_rule in payload.get("rules", []) if isinstance(payload, dict) else []:
+                    if not isinstance(raw_rule, dict):
+                        continue
+                    rule = {**defaults, **raw_rule}
+                    rule_course_id = clean_string(rule.get("course_id"))
+                    if not rule_course_id:
+                        continue
+                    duration = parse_int(rule.get("duration_minutes")) or 0
+                    setup = parse_int(rule.get("setup_buffer_minutes")) or 0
+                    cleanup = parse_int(rule.get("cleanup_buffer_minutes")) or 0
+                    minimum = parse_int(rule.get("minimum_reservation_block_minutes")) or 0
+                    minutes = max(duration + setup + cleanup, minimum)
+                    if minutes > 0:
+                        rules[rule_course_id] = minutes
+        _COURSE_CONSUMPTION_RULES_CACHE = rules
+    return _COURSE_CONSUMPTION_RULES_CACHE.get(clean_course_id)
+
+
+def inferred_ical_end(
+    *,
+    start_at: Optional[str],
+    end_at: Optional[str],
+    course_map: dict[str, Any],
+    course_id: Optional[str],
+) -> tuple[Optional[str], Optional[str], Optional[int]]:
+    if not start_at:
+        return end_at, None, None
+    start_iso = parse_datetime_flexible(start_at)
+    end_iso = parse_datetime_flexible(end_at)
+    if start_iso and end_iso and end_iso > start_iso:
+        return end_at, None, None
+    minutes = course_consumption_minutes(course_map, course_id)
+    if not minutes:
+        return end_at, "missing_course_consumption_rule_for_zero_duration_ical_event", None
+    start = datetime.fromisoformat(start_iso)
+    return (start + timedelta(minutes=minutes)).isoformat(), "inferred_from_course_consumption_rule_for_zero_duration_ical_event", minutes
 
 
 def extract_lead_instructor(description: Optional[str]) -> Optional[str]:
@@ -331,6 +400,12 @@ def build_session_from_ical_event(
     )
     course_id = clean_string(mapped.get("course_id")) if mapped else None
     course_number = clean_string(mapped.get("course_number") or course_id) if mapped else None
+    end_at, end_inference_reason, inferred_consumption_minutes = inferred_ical_end(
+        start_at=start_at,
+        end_at=end_at,
+        course_map=course_map,
+        course_id=course_id,
+    )
 
     mapped_family = clean_string(mapped.get("family")) if mapped else None
     mapped_subtype = clean_string(mapped.get("subtype")) if mapped else None
@@ -430,6 +505,8 @@ def build_session_from_ical_event(
             "end_datetime": end_at,
             "start_source": clean_string(event.get("dtstart_raw")),
             "end_source": clean_string(event.get("dtend_raw")),
+            "end_inference_reason": end_inference_reason,
+            "inferred_scheduler_consumption_minutes": inferred_consumption_minutes,
             "timezone": "America/New_York",
             "is_future": parse_datetime_flexible(start_at) >= now_iso if parse_datetime_flexible(start_at) else None,
             "is_past": parse_datetime_flexible(start_at) < now_iso if parse_datetime_flexible(start_at) else None,

@@ -9,31 +9,31 @@ Local build artifact for a customer-facing block schedule page. Enrollware was n
 - Horizon days: `180`
 - Minimum lead hours: `24`
 - Whole block presented as class: `False`
-- Public-selectable offers: `1638`
+- Public-selectable offers: `1702`
 - Public-selectable dates: `39`
-- Public-selectable start times: `584`
-- Rejected course/start evaluations: `3708`
+- Public-selectable start times: `606`
+- Rejected course/start evaluations: `3644`
 - Suppressed stale/orphaned offers: `0`
 
 ## Sample Public-Selectable URLs
 
 | Date | Start | Course | appointmentDayId | URL |
 | --- | --- | --- | ---: | --- |
-| 2026-07-03 | 8:30 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=8%3A30%20AM&courseId=209806` |
-| 2026-07-03 | 8:30 AM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=8%3A30%20AM&courseId=359474` |
-| 2026-07-03 | 8:30 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=8%3A30%20AM&courseId=210549` |
-| 2026-07-03 | 9:00 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A00%20AM&courseId=209806` |
-| 2026-07-03 | 9:00 AM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A00%20AM&courseId=359474` |
-| 2026-07-03 | 9:00 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A00%20AM&courseId=210549` |
 | 2026-07-03 | 9:30 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A30%20AM&courseId=209806` |
 | 2026-07-03 | 9:30 AM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A30%20AM&courseId=359474` |
 | 2026-07-03 | 9:30 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=9%3A30%20AM&courseId=210549` |
 | 2026-07-03 | 10:00 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=10%3A00%20AM&courseId=209806` |
+| 2026-07-03 | 10:00 AM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=10%3A00%20AM&courseId=359474` |
+| 2026-07-03 | 10:00 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=10%3A00%20AM&courseId=210549` |
+| 2026-07-03 | 10:30 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=10%3A30%20AM&courseId=209806` |
+| 2026-07-03 | 10:30 AM | AHA BLS Provider Renewal (`359474`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=10%3A30%20AM&courseId=359474` |
+| 2026-07-03 | 10:30 AM | AHA HeartCode BLS (`210549`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=10%3A30%20AM&courseId=210549` |
+| 2026-07-03 | 11:00 AM | AHA BLS Provider (`209806`) | 260682 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260682&startTime=11%3A00%20AM&courseId=209806` |
 
 ## Top Rejection Reasons
 
 - `outside_public_dynamic_hours`: 2670
-- `conflicts_with_existing_enrollware_occupancy`: 1130
+- `conflicts_with_existing_enrollware_occupancy`: 1061
 - `does_not_fit_inside_availability_after_duration_and_buffers`: 437
 - `inside_minimum_lead_time`: 12
 

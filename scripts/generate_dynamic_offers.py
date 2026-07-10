@@ -358,12 +358,31 @@ def normalize_occupancy(payload: Any, source_file: str) -> list[dict[str, Any]]:
             continue
         start = parse_dt(session.get("start_at") or session.get("start") or session.get("start_datetime"))
         end = parse_dt(session.get("end_at") or session.get("end") or session.get("end_datetime"))
+        location = session.get("location_name") or session.get("location_display") or session.get("location")
+        if isinstance(location, dict):
+            location = location.get("location_name") or location.get("location_display")
+        instructor = session.get("lead_instructor_name") or session.get("instructor")
+        staffing = session.get("staffing")
+        if not instructor and isinstance(staffing, dict):
+            instructor = staffing.get("lead_instructor_name") or staffing.get("instructor")
+        course_title = (
+            session.get("course_name")
+            or session.get("official_course_name")
+            or session.get("raw_course_name")
+        )
+        course = session.get("course")
+        if not course_title and isinstance(course, dict):
+            course_title = (
+                course.get("course_name_raw")
+                or course.get("course_name_primary_clean")
+                or course.get("mapped_clean_title")
+            )
         out.append({
             "start": start,
             "end": end,
-            "location": clean_text(session.get("location_name") or session.get("location_display") or session.get("location")),
-            "instructor": clean_text(session.get("lead_instructor_name") or session.get("instructor")),
-            "course_title": clean_text(session.get("course_name") or session.get("official_course_name") or session.get("raw_course_name") or UNKNOWN),
+            "location": clean_text(location),
+            "instructor": clean_text(instructor),
+            "course_title": clean_text(course_title or UNKNOWN),
             "source_file": source_file,
         })
     return out

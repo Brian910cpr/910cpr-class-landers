@@ -64,6 +64,24 @@ class DynamicOffersTest(unittest.TestCase):
             }]
         }
 
+    def test_normalize_occupancy_reads_nested_ical_session_fields(self) -> None:
+        payload = {
+            "sessions": [{
+                "start": "2026-07-13T15:30:00-04:00",
+                "end": "2026-07-13T17:30:00-04:00",
+                "course": {"course_name_raw": "AHA Heartsaver CPR AED Online"},
+                "location": {"location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"},
+                "staffing": {"lead_instructor_name": "Brian Ennis"},
+            }]
+        }
+
+        rows = generate_dynamic_offers.normalize_occupancy(payload, "data/sessions_current.json")
+
+        self.assertEqual(1, len(rows))
+        self.assertEqual("AHA Heartsaver CPR AED Online", rows[0]["course_title"])
+        self.assertEqual("Brian Ennis", rows[0]["instructor"])
+        self.assertEqual("NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office", rows[0]["location"])
+
     def test_generates_offer_for_scheduler_enabled_qualified_person(self) -> None:
         loaded = {
             "course_catalog": {
