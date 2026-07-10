@@ -1,10 +1,15 @@
 {
-  "schema_version": "1.0",
-  "description": "Public display allowlist for Enrollware iCal LOCATION values. Offsite/client locations remain internal occupancy blockers.",
-  "public_location_exact": [
-    "NC - Wilmington: 4018 Shipyard Blvd; Room A @ 910CPR's Office",
-    "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-    "NC - Wilmington: 4018 Shipyard Blvd; Room C @ 910CPR's Office"
-  ],
-  "public_location_prefixes": []
+  "schema_version": "2.0",
+  "description": "Documentation-only public class location policy. Runtime public eligibility is enforced by scripts.public_class_eligibility.is_public_class_location.",
+  "public_class_location_prefix": "::",
+  "comparison": {
+    "trim_before_compare": true,
+    "case_sensitive": true,
+    "required_check": "trim(location_name).startswith(\"::\")"
+  },
+  "notes": [
+    "Do not add page-specific exact-location allowlists.",
+    "Do not infer public status from Shipyard, Wilmington, available seats, active status, price, course type, or booking URL.",
+    "Private/non-public locations must still be allowed to block occupancy internally, but must not be published or receive public booking links."
+  ]
 }

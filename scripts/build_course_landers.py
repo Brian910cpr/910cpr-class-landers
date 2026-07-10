@@ -14,6 +14,7 @@ from scripts.hybrid_inventory import (
     sort_by_momentum,
     sort_by_start,
 )
+from scripts.public_class_eligibility import session_has_public_class_location
 from zoneinfo import ZoneInfo
 
 
@@ -385,6 +386,16 @@ def match_sessions(course: dict[str, Any], sessions: list[dict[str, Any]]) -> li
         matched.append({**session, "_parsed_start": dt})
 
     return sort_by_start(matched)
+
+
+def public_course_lander_sessions(schedule_payload: dict[str, Any]) -> list[dict[str, Any]]:
+    sessions = schedule_payload.get("sessions", [])
+    if not isinstance(sessions, list):
+        raise ValueError("schedule_future.json must contain a top-level 'sessions' list.")
+    return [
+        session for session in sessions
+        if isinstance(session, dict) and session_has_public_class_location(session)
+    ]
 
 
 def human_location(value: str) -> str:
@@ -836,9 +847,7 @@ def main() -> None:
 
     archive = load_json(ARCHIVE_PATH)
     schedule_payload = load_json(SCHEDULE_PATH)
-    sessions = schedule_payload.get("sessions", [])
-    if not isinstance(sessions, list):
-        raise ValueError("schedule_future.json must contain a top-level 'sessions' list.")
+    sessions = public_course_lander_sessions(schedule_payload)
 
     courses = archive.get("courses", [])
     if not isinstance(courses, list):

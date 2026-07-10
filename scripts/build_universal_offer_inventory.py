@@ -10,6 +10,7 @@ from urllib.parse import quote
 
 
 from scripts.local_data_paths import dynamic_offers_preview_path, public_sellable_offers_preview_path
+from scripts.public_class_eligibility import public_location_rejection_reason
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
@@ -823,6 +824,10 @@ def build_appointment_url_offers(
             "course_title": preview.get("course_title"),
             "offer_type": "appointment_url",
         }
+        location_reason = public_location_rejection_reason(preview.get("location"))
+        if location_reason:
+            rejections.append({**context, "reason_code": location_reason})
+            continue
         if preview.get("blocking_reason"):
             rejections.append({**context, "reason_code": "seed_url_blocked", "detail": preview.get("blocking_reason")})
             continue
@@ -968,6 +973,10 @@ def build_request_block_offers(
             "course_title": offer.get("course_title"),
             "offer_type": "request_only_block",
         }
+        location_reason = public_location_rejection_reason(offer.get("offer_location") or offer.get("location"))
+        if location_reason:
+            rejections.append({**context, "reason_code": location_reason})
+            continue
         if not course:
             rejections.append({**context, "reason_code": "course_not_found"})
             continue
@@ -1202,6 +1211,10 @@ def build_future_request_block_offers(
             "course_title": offer.get("course_title"),
             "offer_type": "future_request_block",
         }
+        location_reason = public_location_rejection_reason(offer.get("offer_location") or offer.get("location"))
+        if location_reason:
+            rejections.append({**context, "reason_code": location_reason})
+            continue
         if not course:
             rejections.append({**context, "reason_code": "course_not_found"})
             continue

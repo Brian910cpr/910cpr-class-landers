@@ -2,11 +2,17 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.public_class_eligibility import session_has_public_class_location
+
 SESSION_ID_RE = re.compile(r"[?&]id=(\d+)")
 
 
@@ -32,7 +38,7 @@ def raw_location_values(session: dict[str, Any]) -> list[str]:
     return [str(value) for value in values if value not in (None, "")]
 
 
-def tbd_session_ids(sessions_current_path: Path) -> set[str]:
+def nonpublic_session_ids(sessions_current_path: Path) -> set[str]:
     payload = json.loads(sessions_current_path.read_text(encoding="utf-8"))
     sessions = payload.get("sessions", []) if isinstance(payload, dict) else []
     return {
@@ -40,7 +46,7 @@ def tbd_session_ids(sessions_current_path: Path) -> set[str]:
         for session in sessions
         if isinstance(session, dict)
         and str(session.get("session_id") or "").strip()
-        and any("TBD" in value.upper() for value in raw_location_values(session))
+        and not session_has_public_class_location(session)
     }
 
 
@@ -66,6 +72,8 @@ def write_public_schedule_from_future(schedule_future_path: Path, output_paths: 
         session_id = str(session.get("session_id") or "").strip()
         if not session_id or session_id in suppressed_ids:
             continue
+        if not session_has_public_class_location(session):
+            continue
         course_id = session.get("course_id")
         course_name = session.get("course_name") or session.get("raw_course_name") or session.get("official_course_name") or ""
         rows.append(
@@ -77,6 +85,8 @@ def write_public_schedule_from_future(schedule_future_path: Path, output_paths: 
                 "title": course_name,
                 "start": session.get("start_at") or "",
                 "location": session.get("location_display") or session.get("location_name") or "",
+                "location_name": session.get("location_name") or session.get("raw_location") or "",
+                "location_display": session.get("location_display") or "",
                 "seats_available": session.get("available_seats"),
                 "register_url": session.get("registration_url") or "",
                 "schedule_url": f"https://coastalcprtraining.enrollware.com/schedule#ct{course_id}" if course_id else "",
@@ -101,7 +111,14 @@ def remove_suppressed_public_schedule_entries(path: Path, suppressed_ids: set[st
         sessions = payload.get("sessions")
         if not isinstance(sessions, list):
             return 0
-        kept = [entry for entry in sessions if not isinstance(entry, dict) or public_schedule_id(entry) not in suppressed_ids]
+        kept = [
+            entry for entry in sessions
+            if not isinstance(entry, dict)
+            or (
+                public_schedule_id(entry) not in suppressed_ids
+                and session_has_public_class_location(entry)
+            )
+        ]
         removed = len(sessions) - len(kept)
         if removed:
             payload["sessions"] = kept
@@ -109,7 +126,14 @@ def remove_suppressed_public_schedule_entries(path: Path, suppressed_ids: set[st
             path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         return removed
     if isinstance(payload, list):
-        kept = [entry for entry in payload if not isinstance(entry, dict) or public_schedule_id(entry) not in suppressed_ids]
+        kept = [
+            entry for entry in payload
+            if not isinstance(entry, dict)
+            or (
+                public_schedule_id(entry) not in suppressed_ids
+                and session_has_public_class_location(entry)
+            )
+        ]
         removed = len(payload) - len(kept)
         if removed:
             path.write_text(json.dumps(kept, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -163,7 +187,7 @@ def delete_class_pages(classes_dir: Path, suppressed_ids: set[str]) -> int:
 
 
 def main() -> int:
-    suppressed_ids = tbd_session_ids(ROOT / "data" / "sessions_current.json")
+    suppressed_ids = nonpublic_session_ids(ROOT / "data" / "sessions_current.json")
     deleted_pages = delete_class_pages(ROOT / "docs" / "classes", suppressed_ids)
     public_rows = write_public_schedule_from_future(
         ROOT / "docs" / "data" / "schedule_future.json",
@@ -175,7 +199,7 @@ def main() -> int:
         removed_legacy_rows += remove_suppressed_public_schedule_entries(path, suppressed_ids)
     files_changed, rows_removed = scrub_html_references(ROOT / "docs", suppressed_ids)
 
-    print(f"Suppressed TBD session IDs: {len(suppressed_ids)}")
+    print(f"Suppressed non-public session IDs: {len(suppressed_ids)}")
     print(f"Deleted class pages: {deleted_pages}")
     print(f"Public schedule rows written: {public_rows}")
     print(f"Removed legacy public schedule rows: {removed_legacy_rows}")

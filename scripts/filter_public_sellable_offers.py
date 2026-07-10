@@ -9,6 +9,7 @@ from typing import Any
 from scripts.audit_preview_summaries import write_summary
 from scripts.dynamic_offer_presentation_policy import build_report as build_presentation_report
 from scripts.dynamic_offer_presentation_policy import render_markdown as render_presentation_markdown
+from scripts.public_class_eligibility import public_location_rejection_reason
 
 
 from scripts.local_data_paths import (
@@ -227,6 +228,9 @@ def base_rejection_reasons(offer: dict[str, Any], course: dict[str, Any] | None,
     reasons: list[str] = []
     course_id = str(offer.get("course_id") or "")
     family = str(offer.get("course_family") or "")
+    location_reason = public_location_rejection_reason(offer.get("location"))
+    if location_reason:
+        reasons.append(location_reason)
     visibility_state = course_visibility_state(course_id)
     if visibility_state == "hidden":
         reasons.append("course_visibility_hidden")

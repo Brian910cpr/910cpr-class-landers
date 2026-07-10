@@ -39,6 +39,7 @@ from zoneinfo import ZoneInfo
 
 
 from scripts.local_data_paths import public_sellable_offers_preview_path
+from scripts.public_class_eligibility import is_public_class_location, session_has_public_class_location
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "data" / "config" / "slug_hubs.json"
@@ -153,7 +154,11 @@ def load_authoritative_schedule() -> tuple[list[dict[str, Any]], Path]:
     source_path = authoritative_schedule_path()
     schedule = json.loads(source_path.read_text(encoding="utf-8"))
     sessions = schedule.get("sessions", []) if isinstance(schedule, dict) else []
-    return [session for session in sessions if isinstance(session, dict)], source_path
+    return [
+        session
+        for session in sessions
+        if isinstance(session, dict) and session_has_public_class_location(session)
+    ], source_path
 
 
 def load_customer_facing_offers() -> dict[str, list[dict[str, Any]]]:

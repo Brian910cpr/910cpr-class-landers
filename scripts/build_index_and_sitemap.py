@@ -13,6 +13,7 @@ if __package__ in (None, ""):
 from scripts.build_status import BuildStatusReporter
 from scripts.build_course_landers import COURSE_SESSION_ALIASES, TITLE_OVERRIDES
 from scripts.stale_class_link_fallbacks import infer_current_public_destination
+from scripts.public_class_eligibility import session_has_public_class_location
 from supervisor.status_snapshot import write_status_snapshot
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -455,6 +456,8 @@ def load_schedule_future_sessions() -> list[dict]:
     for session in sessions:
         if not isinstance(session, dict):
             continue
+        if not session_has_public_class_location(session):
+            continue
         enriched = dict(session)
         enriched["_parsed_start"] = parse_local_datetime(enriched.get("start_at", ""))
         enriched["_source_file"] = str(source_file)
@@ -474,6 +477,8 @@ def public_session_source_label(sessions: list[dict]) -> str:
 
 
 def schedule_future_to_public_session(session: dict) -> dict | None:
+    if not session_has_public_class_location(session):
+        return None
     session_id = str(session.get("session_id") or session.get("id") or "").strip()
     if not session_id:
         return None

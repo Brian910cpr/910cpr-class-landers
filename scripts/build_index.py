@@ -14,6 +14,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(ROOT))
 
 from scripts.stale_class_link_fallbacks import safe_class_detail_href
+from scripts.public_class_eligibility import session_has_public_class_location
 
 DOCS_DIR = ROOT / "docs"
 SCHEDULE_FILE = DOCS_DIR / "data" / "schedule.json"
@@ -452,7 +453,11 @@ def year_page(year: str, grouped: dict[str, list[dict]], canonical_path: str) ->
 def load_sessions() -> list[dict]:
     source = SCHEDULE_FILE if SCHEDULE_FILE.exists() else SCHEDULE_FALLBACK_FILE
     data = json.loads(source.read_text(encoding="utf-8"))
-    return data.get("sessions") or []
+    sessions = data.get("sessions") or []
+    return [
+        session for session in sessions
+        if isinstance(session, dict) and session_has_public_class_location(session)
+    ]
 
 
 def main() -> None:

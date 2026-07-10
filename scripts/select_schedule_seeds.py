@@ -8,6 +8,7 @@ from typing import Any
 
 
 from scripts.local_data_paths import public_sellable_offers_preview_path
+from scripts.public_class_eligibility import public_location_rejection_reason
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
@@ -442,7 +443,14 @@ def select_seeds(public_preview: Any, policy: dict[str, Any], course_catalog: An
                 "reason": "stack_fill_candidate_not_public_seed",
             })
     container_filter_enabled = course_catalog is not None or containers_payload is not None
-    offers = filter_container_backed_offers([offer for offer in offers if isinstance(offer, dict)], course_catalog, containers_payload, hidden, location_resource_map)
+    public_location_offers: list[dict[str, Any]] = []
+    for offer in [offer for offer in offers if isinstance(offer, dict)]:
+        location_reason = public_location_rejection_reason(offer.get("location"))
+        if location_reason:
+            reject(hidden, offer, location_reason, "Offer location does not begin with the public class prefix.")
+        else:
+            public_location_offers.append(offer)
+    offers = filter_container_backed_offers(public_location_offers, course_catalog, containers_payload, hidden, location_resource_map)
     container_backed_kept = len(offers)
     candidates: list[dict[str, Any]] = []
     amy_violations = 0

@@ -19,9 +19,11 @@ except ModuleNotFoundError:
 try:
     from scripts.title_cleaner import normalize_course_title, seo_title_for_session
     from scripts.build_metadata import apply_build_metadata, current_build_metadata
+    from scripts.public_class_eligibility import session_has_public_class_location
 except ModuleNotFoundError:
     from title_cleaner import normalize_course_title, seo_title_for_session
     from build_metadata import apply_build_metadata, current_build_metadata
+    from public_class_eligibility import session_has_public_class_location
 
 TZ = ZoneInfo("America/New_York")
 
@@ -207,7 +209,11 @@ def load_sessions_from_file(path: Path) -> list[dict]:
         raw_sessions = data
     else:
         raw_sessions = []
-    return [normalize_session_record(item) for item in raw_sessions if isinstance(item, dict)]
+    return [
+        normalize_session_record(item)
+        for item in raw_sessions
+        if isinstance(item, dict) and session_has_public_class_location(item)
+    ]
 
 
 def is_mapped(session: dict) -> bool:

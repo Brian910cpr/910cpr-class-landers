@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 from scripts.local_data_paths import resolve_live_input_path
+from scripts.public_class_eligibility import is_public_class_location, session_has_public_class_location
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW_REPORT = resolve_live_input_path(
@@ -25,6 +26,7 @@ RAW_REPORT = resolve_live_input_path(
 CSS_PATH = "/css/lander.css"
 GROUP_URL = "/request_group_session.html"
 NEARBY_MAP_PATH = ROOT / "data" / "config" / "nearby_cities.json"
+SESSIONS_CURRENT_PATH = ROOT / "data" / "sessions_current.json"
 SITE_BASE = "https://www.910cpr.com"
 
 COURSE_FAMILY_RULES = [
@@ -114,10 +116,28 @@ def load_nearby_map() -> dict:
         return json.loads(NEARBY_MAP_PATH.read_text(encoding="utf-8"))
     return {}
 
+
+def nonpublic_session_ids_from_current(path: Path = SESSIONS_CURRENT_PATH) -> set[str]:
+    if not path.exists():
+        return set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return set()
+    sessions = payload.get("sessions", []) if isinstance(payload, dict) else []
+    return {
+        str(session.get("session_id") or "").strip()
+        for session in sessions
+        if isinstance(session, dict)
+        and str(session.get("session_id") or "").strip()
+        and not session_has_public_class_location(session)
+    }
+
 def load_sessions(path: Path | None = None) -> list[SessionRecord]:
     report = path or RAW_REPORT
     df = pd.read_excel(report)
     sessions = []
+    nonpublic_ids = nonpublic_session_ids_from_current()
     for _, row in df.iterrows():
         course_html = str(row.get("Course", "") or "")
         md = parse_img_metadata(course_html)
@@ -132,7 +152,12 @@ def load_sessions(path: Path | None = None) -> list[SessionRecord]:
         students = int(row.get("Students") or 0)
         loc = str(row.get("Location", "") or "")
         city = extract_city(loc)
-        is_public = loc.strip().startswith("::") and seats < 100 and bool(reg)
+        is_public = (
+            is_public_class_location(loc)
+            and session_id not in nonpublic_ids
+            and seats < 100
+            and bool(reg)
+        )
         sessions.append(SessionRecord(
             session_id=session_id,
             course_html=course_html,

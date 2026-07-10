@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+from scripts.public_class_eligibility import public_location_rejection_reason
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
@@ -230,6 +231,11 @@ def build_preview_records(seeds_payload: Any, course_catalog: Any, containers_pa
             continue
         if course.get("appointment_allowed") is not True:
             base_record["blocking_reason"] = "appointment_not_allowed"
+            records.append(base_record)
+            continue
+        location_reason = public_location_rejection_reason(seed.get("location"))
+        if location_reason:
+            base_record["blocking_reason"] = location_reason
             records.append(base_record)
             continue
         if course.get("appointment_container_required") is True and not containers:

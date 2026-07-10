@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from scripts.build_status import BuildStatusReporter
 from scripts.local_data_paths import missing_live_input_message, print_resolved_path, resolve_live_input_path
+from scripts.public_class_eligibility import session_has_public_class_location
 from supervisor.status_snapshot import write_status_snapshot
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
@@ -141,7 +142,7 @@ def has_tbd_location(session: dict[str, Any]) -> bool:
 
 
 def has_public_raw_location(session: dict[str, Any]) -> bool:
-    return any(value.strip().startswith("::") for value in raw_location_values(session))
+    return session_has_public_class_location(session)
 
 
 def safe_console_text(value: str) -> str:
@@ -441,7 +442,7 @@ def main() -> int:
                 skipped_past += 1
                 reporter.update(current=index, total=len(sessions))
                 continue
-            if not ical_authoritative and not has_public_raw_location(session):
+            if not has_public_raw_location(session):
                 print(f"NON-PUBLIC LOCATION SUPPRESSED: session_id={session_id} location={safe_console_text(debug_location_value(session))}")
                 skipped_non_public_location += 1
                 skipped_non_public_session_ids.append(session_id)

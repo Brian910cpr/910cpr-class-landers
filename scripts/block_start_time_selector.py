@@ -18,6 +18,7 @@ from scripts.build_seed_appointment_url_preview import (
     build_registration_url,
     matching_container,
 )
+from scripts.public_class_eligibility import is_public_class_location
 
 
 AUDIT_DIR = ROOT / "data" / "audit"
@@ -347,13 +348,7 @@ def window_datetimes(window: dict[str, Any]) -> tuple[datetime, datetime]:
 
 
 def public_location_allowed(location: str, policy: dict[str, Any]) -> bool:
-    exact = {clean_text(item) for item in policy.get("public_location_exact", [])}
-    prefixes = tuple(clean_text(item) for item in policy.get("public_location_prefixes", []))
-    if location in exact:
-        return True
-    if prefixes and location.startswith(prefixes):
-        return True
-    return "shipyard" in normalize_key(location)
+    return is_public_class_location(location)
 
 
 def public_policy_reasons(

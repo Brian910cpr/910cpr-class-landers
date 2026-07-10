@@ -13,6 +13,7 @@ from scripts.hub_utils import (
     session_rows,
     slugify,
 )
+from scripts.public_class_eligibility import is_public_class_location
 
 OUTPUT_DIR = os.path.join("docs", "course-at-city")
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,6 +54,27 @@ def purge_stale_outputs(output_dir: str) -> int:
     return removed
 
 
+def eligible_course_at_city_sessions(sessions):
+    eligible = []
+    for s in sessions:
+        location_name = str(
+            getattr(s, "location_raw", "")
+            or getattr(s, "location_name", "")
+            or getattr(s, "location_display", "")
+            or getattr(s, "location", "")
+        )
+        if not is_public_class_location(location_name):
+            continue
+        city = str(getattr(s, "city", "")).strip()
+        family = str(getattr(s, "course_family", "")).strip()
+        if not valid_city(city):
+            continue
+        if not valid_family(family):
+            continue
+        eligible.append(s)
+    return eligible
+
+
 def build_course_at_city():
     reporter = BuildStatusReporter("build_course_at_city")
     reporter.set_context(inputs=[SESSIONS_INPUT], outputs=[ROOT / OUTPUT_DIR])
@@ -68,15 +90,9 @@ def build_course_at_city():
 
         combo_map = {}
 
-        for s in future_public:
+        for s in eligible_course_at_city_sessions(future_public):
             city = str(getattr(s, "city", "")).strip()
             family = str(getattr(s, "course_family", "")).strip()
-
-            if not valid_city(city):
-                continue
-
-            if not valid_family(family):
-                continue
 
             key = (family, city)
             combo_map.setdefault(key, []).append(s)

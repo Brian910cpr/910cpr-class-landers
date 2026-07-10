@@ -1,12 +1,29 @@
 import json
 import os
 import re
+import sys
 from collections import defaultdict
 from datetime import datetime
+from pathlib import Path
 from urllib.parse import quote
 
 BASE_DIR = os.path.join("docs", "classes")
-SCHEDULE_PATH = os.path.join("data", "schedule.json")
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.public_class_eligibility import is_public_class_location
+
+SCHEDULE_PATH = os.path.join("docs", "data", "schedule_future.json")
+LEGACY_SCHEDULE_PATH = os.path.join("data", "schedule.json")
+MANIFEST_PATH = os.path.join("docs", "data", "generated_class_aggregate_manifest.json")
+CONTROLLED_GENERATED_DIRS = (
+    BASE_DIR,
+    os.path.join(BASE_DIR, "months"),
+    os.path.join(BASE_DIR, "cities"),
+    os.path.join(BASE_DIR, "courses"),
+    os.path.join(BASE_DIR, "course-at-city"),
+)
 
 def as_text(value, default="") -> str:
     if value is None:
@@ -83,7 +100,8 @@ def html_escape(text: str) -> str:
 
 
 def load_schedule():
-    with open(SCHEDULE_PATH, "r", encoding="utf-8") as f:
+    schedule_path = SCHEDULE_PATH if os.path.exists(SCHEDULE_PATH) else LEGACY_SCHEDULE_PATH
+    with open(schedule_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     if isinstance(data, list):
@@ -210,7 +228,7 @@ def normalize_session(raw: dict) -> dict:
 
     city_slug = as_text(get_first(raw, ("city_slug", "citySlug"))) or slugify(city)
 
-    start_raw = get_first(raw, ("startDate", "start_date", "start", "datetime", "date_time"))
+    start_raw = get_first(raw, ("startDate", "start_date", "start_at", "start", "datetime", "date_time"))
     start_raw = as_text(start_raw)
 
     if start_raw:
@@ -317,6 +335,59 @@ def write_file(path: str, content: str):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
+    return os.path.normpath(path)
+
+
+def repo_rel(path: str) -> str:
+    try:
+        return os.path.relpath(path, ".").replace(os.sep, "/")
+    except ValueError:
+        return os.path.normpath(path).replace(os.sep, "/")
+
+
+def is_controlled_generated_html(path: str) -> bool:
+    normalized = os.path.normpath(path)
+    if not normalized.lower().endswith(".html"):
+        return False
+    directory = os.path.dirname(normalized)
+    if directory == os.path.normpath(BASE_DIR):
+        name = os.path.basename(normalized).lower()
+        return bool(re.fullmatch(r"\d+\.html", name)) or name == "index.html"
+    return directory in {os.path.normpath(d) for d in CONTROLLED_GENERATED_DIRS[1:]}
+
+
+def cleanup_stale_generated_pages(expected_paths: set[str]) -> list[str]:
+    expected = {os.path.normpath(path) for path in expected_paths}
+    deleted: list[str] = []
+    for directory in CONTROLLED_GENERATED_DIRS:
+        if not os.path.isdir(directory):
+            continue
+        for name in os.listdir(directory):
+            path = os.path.normpath(os.path.join(directory, name))
+            if not os.path.isfile(path) or not is_controlled_generated_html(path):
+                continue
+            if path in expected:
+                continue
+            os.remove(path)
+            deleted.append(repo_rel(path))
+    return sorted(deleted)
+
+
+def write_generated_manifest(expected_paths: set[str], deleted_paths: list[str], sessions: list[dict]):
+    os.makedirs(os.path.dirname(MANIFEST_PATH), exist_ok=True)
+    payload = {
+        "generator": "scripts/build-classes-index.py",
+        "public_location_rule": "trim location_name, require exact startsWith('::') via is_public_class_location(location_name)",
+        "controlled_directories": [repo_rel(path) for path in CONTROLLED_GENERATED_DIRS],
+        "source": SCHEDULE_PATH if os.path.exists(SCHEDULE_PATH) else LEGACY_SCHEDULE_PATH,
+        "public_session_count": len(sessions),
+        "expected_files": sorted(repo_rel(path) for path in expected_paths),
+        "deleted_stale_files": deleted_paths,
+    }
+    with open(MANIFEST_PATH, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+        f.write("\n")
+    return payload
 
 
 def session_label(s: dict) -> str:
@@ -324,6 +395,7 @@ def session_label(s: dict) -> str:
 
 
 def build_indexes(sessions: list[dict]):
+    generated_paths: set[str] = set()
     by_month = defaultdict(list)
     by_cert = defaultdict(list)
     by_course = defaultdict(list)
@@ -411,7 +483,7 @@ def build_indexes(sessions: list[dict]):
     )
     root_body += "</div>"
 
-    write_file(
+    generated_paths.add(write_file(
         os.path.join(BASE_DIR, "index.html"),
         page(
             "CPR Classes | 910CPR",
@@ -419,7 +491,9 @@ def build_indexes(sessions: list[dict]):
             "/classes/",
             root_body,
         ),
-    )
+    ))
+    for s in sessions:
+        generated_paths.add(os.path.normpath(os.path.join(BASE_DIR, f"{quote(s['session_id'])}.html")))
 
     # Month pages
     for month_key, items in by_month.items():
@@ -433,7 +507,7 @@ def build_indexes(sessions: list[dict]):
         )
         body += "</div>"
 
-        write_file(
+        generated_paths.add(write_file(
             os.path.join(BASE_DIR, "months", f"{month_key}.html"),
             page(
                 f"{month_label} CPR Classes | 910CPR",
@@ -441,7 +515,7 @@ def build_indexes(sessions: list[dict]):
                 f"/classes/months/{month_key}.html",
                 body,
             ),
-        )
+        ))
 
     # Certifying body pages
     for cert_slug, items in by_cert.items():
@@ -483,7 +557,7 @@ def build_indexes(sessions: list[dict]):
         )
         body += "</div>"
 
-        write_file(
+        generated_paths.add(write_file(
             os.path.join(BASE_DIR, "courses", f"{course_slug}.html"),
             page(
                 f"{course_name} Classes | 910CPR",
@@ -491,7 +565,7 @@ def build_indexes(sessions: list[dict]):
                 f"/classes/courses/{course_slug}.html",
                 body,
             ),
-        )
+        ))
 
     # City pages
     for city_slug, items in by_city.items():
@@ -508,7 +582,7 @@ def build_indexes(sessions: list[dict]):
         )
         body += "</div>"
 
-        write_file(
+        generated_paths.add(write_file(
             os.path.join(BASE_DIR, "cities", f"{city_slug}.html"),
             page(
                 f"CPR Classes in {city} | 910CPR",
@@ -516,7 +590,7 @@ def build_indexes(sessions: list[dict]):
                 f"/classes/cities/{city_slug}.html",
                 body,
             ),
-        )
+        ))
 
     # Course at city pages
     for key, items in by_course_city.items():
@@ -534,7 +608,7 @@ def build_indexes(sessions: list[dict]):
         )
         body += "</div>"
 
-        write_file(
+        generated_paths.add(write_file(
             os.path.join(BASE_DIR, "course-at-city", f"{key}.html"),
             page(
                 f"{course_name} in {city} | 910CPR",
@@ -542,7 +616,7 @@ def build_indexes(sessions: list[dict]):
                 f"/classes/course-at-city/{key}.html",
                 body,
             ),
-        )
+        ))
 
     # Industry pages
     for industry, items in by_industry.items():
@@ -568,14 +642,23 @@ def build_indexes(sessions: list[dict]):
                 body,
             ),
         )
+    deleted_paths = cleanup_stale_generated_pages(generated_paths)
+    manifest = write_generated_manifest(generated_paths, deleted_paths, sessions)
+    return manifest
 
 
 def main():
     ensure_dirs()
     raw_sessions = load_schedule()
-    sessions = [normalize_session(s) for s in raw_sessions]
-    build_indexes(sessions)
-    print(f"Built classes index system from {SCHEDULE_PATH}")
+    public_raw_sessions = [
+        s for s in raw_sessions
+        if is_public_class_location(as_text(get_first(s, ("location_name", "location", "locationName", "venue"), "")))
+    ]
+    sessions = [normalize_session(s) for s in public_raw_sessions]
+    manifest = build_indexes(sessions)
+    print(f"Built classes index system from {manifest['source']}")
+    print(f"Public sessions included: {manifest['public_session_count']}")
+    print(f"Stale generated class files deleted: {len(manifest['deleted_stale_files'])}")
 
 
 if __name__ == "__main__":
