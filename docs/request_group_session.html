@@ -8,26 +8,11 @@
 <meta name="robots" content="index,follow">
 
 <link rel="stylesheet" href="/css/lander.css">
-<link rel="canonical" href="https://www.910cpr.com/request_group_session.html">
-<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH');
-</script>
-<!-- End Google Tag Manager -->
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
 <div class="wrap">
   <div class="page-shell">
-
+    
 <div class='card request-shell'>
   <section class='hero request-hero'>
     <div class='hero-main'>
@@ -70,6 +55,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class='muted'>Share the basics below and we’ll follow up with the best scheduling path for your team.</p>
       </div>
       <form method='post' action='#'>
+        <input id='request_type' type='hidden' name='request_type' value='group'>
         <div class='grid-2'>
           <label class='field'><span>Name</span><input type='text' name='name' autocomplete='name' required></label>
           <label class='field'><span>Organization</span><input type='text' name='organization' autocomplete='organization'></label>
@@ -106,12 +92,46 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </aside>
   </section>
 </div>
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var program = (params.get("program") || "").trim();
+  var requestType = (params.get("request_type") || "group").trim();
+  var programInput = document.getElementById("program");
+  var requestTypeInput = document.getElementById("request_type");
+  if (requestTypeInput) requestTypeInput.value = requestType || "group";
+  if (!program || !programInput) return;
+  programInput.value = program;
+  var normalizedProgram = program.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  var bestButton = null;
+  document.querySelectorAll(".request-tab-btn[data-program]").forEach(function (button) {
+    var label = (button.getAttribute("data-program") || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+    if (!bestButton && (normalizedProgram.indexOf(label) !== -1 || label.indexOf(normalizedProgram) !== -1)) {
+      bestButton = button;
+    }
+  });
+  if (!bestButton) {
+    if (normalizedProgram.indexOf("first aid") !== -1 || normalizedProgram.indexOf("cpr aed") !== -1) {
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#fa_cpr_aed']");
+    } else if (normalizedProgram.indexOf("acls") !== -1) {
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#acls']");
+    } else if (normalizedProgram.indexOf("pals") !== -1) {
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#pals']");
+    } else if (normalizedProgram.indexOf("uscg") !== -1 || normalizedProgram.indexOf("maritime") !== -1) {
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#uscg']");
+    } else if (normalizedProgram.indexOf("heartcode") !== -1) {
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#heartcode']");
+    } else if (normalizedProgram.indexOf("bls") !== -1) {
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#bls']");
+    }
+  }
+  if (bestButton) bestButton.click();
+})();
+</script>
 
   </div>
 </div>
 <script src="/assets/hub-ui.js"></script>
 <script src="/assets/session-expiry.js"></script>
-
-<p class="entity-identity">910CPR is an Authorized American Heart Association Training Site serving Coastal North Carolina.</p>
 </body>
 </html>

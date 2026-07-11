@@ -155,7 +155,7 @@ def normalize_session_record(session: dict) -> dict:
     normalized = dict(session)
     normalized.update(
         {
-            "session_id": str(session.get("session_id") or "").strip(),
+            "session_id": str(session.get("class_id") or session.get("session_id") or "").strip(),
             "course_id": str(course.get("course_id") or session.get("source_course_id") or "").strip(),
             "course_number": str(course.get("course_number") or course.get("course_id") or session.get("source_course_id") or "").strip(),
             "course_name": course.get("mapped_clean_title")
@@ -180,7 +180,9 @@ def normalize_session_record(session: dict) -> dict:
             "enrolled_count": capacity.get("registered_count") if capacity.get("registered_count") not in (None, "") else session.get("enrolled_count"),
             "available_seats": capacity.get("available_seats") if capacity.get("available_seats") not in (None, "") else session.get("available_seats"),
             "is_full": capacity.get("is_full") if capacity.get("is_full") not in (None, "") else session.get("is_full"),
-            "registration_url": commerce.get("registration_url") or session.get("registration_url") or session.get("registration_link") or "",
+            "registration_url": commerce.get("registration_url") or session.get("registration_url") or session.get("registration_link") or session.get("register_url") or "",
+            "registration_status": status.get("registration_status") or session.get("registration_status") or "",
+            "public_direct_booking": status.get("public_direct_booking") if status.get("public_direct_booking") not in (None, "") else session.get("public_direct_booking"),
             "session_status": status.get("session_status") or session.get("session_status") or "",
             "last_updated_at": status.get("last_updated_at") or session.get("last_updated_at") or "",
             "mapped_family": session.get("mapped_family") or course.get("mapped_family") or "",
@@ -209,11 +211,33 @@ def load_sessions_from_file(path: Path) -> list[dict]:
         raw_sessions = data
     else:
         raw_sessions = []
-    return [
-        normalize_session_record(item)
-        for item in raw_sessions
-        if isinstance(item, dict) and session_has_public_class_location(item)
-    ]
+    sessions = []
+    for item in raw_sessions:
+        if not isinstance(item, dict) or not session_has_public_class_location(item):
+            continue
+        normalized = normalize_session_record(item)
+        if not is_public_direct_bookable_session(normalized):
+            continue
+        sessions.append(normalized)
+    return sessions
+
+
+def is_public_direct_bookable_session(session: dict) -> bool:
+    """Return whether a public class should get a direct-booking class lander.
+
+    Schedule-future includes closed/full classes as occupancy. Those rows must
+    continue to block conflicts, but they must not produce public direct
+    booking pages.
+    """
+    direct = session.get("public_direct_booking")
+    if direct is False or str(direct).strip().lower() == "false":
+        return False
+    registration_status = str(session.get("registration_status") or "").strip().lower()
+    if registration_status in {"closed", "full"}:
+        return False
+    if session.get("is_full") is True or str(session.get("is_full")).strip().lower() == "true":
+        return False
+    return verified_enrollware_url(enrollware_url_for_session(session))
 
 
 def is_mapped(session: dict) -> bool:
@@ -1404,6 +1428,7 @@ def render_retained_course_lander_page(
 {render_gtm_body()}
 <div class="wrap">
   <div class="page-shell">
+    <span id="ForwardToEnrollware" aria-hidden="true"></span>
     <header class="site-brand-bar">
       <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
         <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
@@ -2057,6 +2082,7 @@ TEMPLATE = """<!DOCTYPE html>
 {gtm_body}
 <div class="wrap">
   <div class="page-shell">
+    <span id="ForwardToEnrollware" aria-hidden="true"></span>
     <header class="site-brand-bar">
       <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
         <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
@@ -2215,7 +2241,9 @@ def write_retained_course_landers_report(
     data_file: Path,
     canonical_sessions: list[dict],
     render_sessions: list[dict],
+    deleted_page_ids: list[str] | None = None,
 ) -> dict:
+    deleted_page_ids = deleted_page_ids or []
     active_ids = {str(session.get("session_id") or "").strip() for session in canonical_sessions if str(session.get("session_id") or "").strip()}
     render_by_id = {str(session.get("session_id") or "").strip(): session for session in render_sessions if str(session.get("session_id") or "").strip()}
     existing_page_ids = {path.stem for path in OUTPUT_DIR.glob("*.html") if path.name.lower() != "index.html"}
@@ -2251,13 +2279,21 @@ def write_retained_course_landers_report(
 
     payload = {
         "dataset_used": str(data_file.relative_to(ROOT)).replace("\\", "/"),
-        "pages_deleted_count": 0,
+        "pages_deleted_count": len(deleted_page_ids),
         "live_specific_class_pages_count": len(live_specific_class_pages),
         "retained_course_landers_count": len(retained_course_landers),
         "needs_review_count": len(needs_review),
         "live_specific_class_pages": live_specific_class_pages,
         "retained_course_landers": retained_course_landers,
         "needs_review": needs_review,
+        "deleted_pages": [
+            {
+                "class_id": class_id,
+                "path": str((OUTPUT_DIR / f"{class_id}.html").relative_to(ROOT)).replace("\\", "/"),
+                "reason": "class_id_missing_from_current_direct_bookable_public_schedule",
+            }
+            for class_id in deleted_page_ids
+        ],
     }
     DEBUG_DIR.mkdir(parents=True, exist_ok=True)
     RETAINED_CLASS_LANDERS_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -2268,7 +2304,7 @@ def write_retained_course_landers_report(
         f"- Live specific class pages: {len(live_specific_class_pages)}",
         f"- Retained course landers: {len(retained_course_landers)}",
         f"- Needs review: {len(needs_review)}",
-        f"- Pages deleted: 0",
+        f"- Pages deleted: {len(deleted_page_ids)}",
         "",
         "## Retained Course Landers",
     ]
@@ -2281,6 +2317,16 @@ def write_retained_course_landers_report(
     )
     if len(retained_course_landers) > 500:
         lines.append(f"- ... {len(retained_course_landers) - 500} more")
+    lines.extend(["", "## Deleted Stale Class Pages"])
+    lines.extend(
+        [
+            f"- docs/classes/{class_id}.html: class_id_missing_from_current_direct_bookable_public_schedule"
+            for class_id in deleted_page_ids[:500]
+        ]
+        or ["- None"]
+    )
+    if len(deleted_page_ids) > 500:
+        lines.append(f"- ... {len(deleted_page_ids) - 500} more")
     lines.extend(["", "## Needs Review"])
     lines.extend([f"- {item['path']}: {item['reason']}" for item in needs_review[:500]] or ["- None"])
     if len(needs_review) > 500:
@@ -2337,27 +2383,19 @@ def main() -> None:
             render_by_id[sid] = session
 
     existing_page_ids = {path.stem for path in OUTPUT_DIR.glob("*.html") if path.name.lower() != "index.html"}
-    for class_id in existing_page_ids:
-        if class_id not in render_by_id:
-            render_by_id[class_id] = {
-                "session_id": class_id,
-                "course_name": "",
-                "location_display": "",
-                "session_status": "retained_course_lander",
-                "_retained_course_lander": True,
-                "_needs_review": True,
-            }
+    deleted_page_ids = []
+    for class_id in sorted(existing_page_ids - canonical_ids):
+        path = OUTPUT_DIR / f"{class_id}.html"
+        if path.exists():
+            path.unlink()
+            deleted_page_ids.append(class_id)
 
     sessions = []
-    for session_id in sorted(canonical_ids | existing_page_ids):
+    for session_id in sorted(canonical_ids):
         session = dict(render_by_id[session_id])
-        if session_id not in canonical_ids:
-            session["_retained_course_lander"] = True
-            session["session_status"] = "retained_course_lander"
-            session["registration_url"] = ""
         sessions.append(session)
 
-    retained_report = write_retained_course_landers_report(data_file, canonical_sessions, sessions)
+    retained_report = write_retained_course_landers_report(data_file, canonical_sessions, sessions, deleted_page_ids)
     all_reviews = load_reviews()
     build_meta = current_build_metadata("scripts/build_landers.py", str(data_file))
     build_stamp = build_meta.visible

@@ -117,6 +117,7 @@ def build():
         <p class='muted'>Share the basics below and we’ll follow up with the best scheduling path for your team.</p>
       </div>
       <form method='post' action='#'>
+        <input id='request_type' type='hidden' name='request_type' value='group'>
         <div class='grid-2'>
           <label class='field'><span>Name</span><input type='text' name='name' autocomplete='name' required></label>
           <label class='field'><span>Organization</span><input type='text' name='organization' autocomplete='organization'></label>
@@ -153,6 +154,42 @@ def build():
     </aside>
   </section>
 </div>
+<script>
+(function () {{
+  var params = new URLSearchParams(window.location.search);
+  var program = (params.get("program") || "").trim();
+  var requestType = (params.get("request_type") || "group").trim();
+  var programInput = document.getElementById("program");
+  var requestTypeInput = document.getElementById("request_type");
+  if (requestTypeInput) requestTypeInput.value = requestType || "group";
+  if (!program || !programInput) return;
+  programInput.value = program;
+  var normalizedProgram = program.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  var bestButton = null;
+  document.querySelectorAll(".request-tab-btn[data-program]").forEach(function (button) {{
+    var label = (button.getAttribute("data-program") || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+    if (!bestButton && (normalizedProgram.indexOf(label) !== -1 || label.indexOf(normalizedProgram) !== -1)) {{
+      bestButton = button;
+    }}
+  }});
+  if (!bestButton) {{
+    if (normalizedProgram.indexOf("first aid") !== -1 || normalizedProgram.indexOf("cpr aed") !== -1) {{
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#fa_cpr_aed']");
+    }} else if (normalizedProgram.indexOf("acls") !== -1) {{
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#acls']");
+    }} else if (normalizedProgram.indexOf("pals") !== -1) {{
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#pals']");
+    }} else if (normalizedProgram.indexOf("uscg") !== -1 || normalizedProgram.indexOf("maritime") !== -1) {{
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#uscg']");
+    }} else if (normalizedProgram.indexOf("heartcode") !== -1) {{
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#heartcode']");
+    }} else if (normalizedProgram.indexOf("bls") !== -1) {{
+      bestButton = document.querySelector(".request-tab-btn[data-tab-target='#bls']");
+    }}
+  }}
+  if (bestButton) bestButton.click();
+}})();
+</script>
 """
         html = render_page("Request On-Site Group Training | 910CPR", body, "Request on-site BLS, HeartCode BLS, First Aid/CPR/AED, ACLS, PALS, or USCG group training.")
         OUTPUT.write_text(html, encoding='utf-8')

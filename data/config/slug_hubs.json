@@ -90,8 +90,8 @@
             "HeartCode",
             "Instructor"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209806",
-          "full_schedule_label": "See full BLS Provider schedule",
+          "full_schedule_url": "/bls-schedule.html",
+          "full_schedule_label": "Choose BLS Provider dates",
           "primary_cta_label": "See BLS Provider page"
         },
         {
@@ -107,8 +107,8 @@
           "name_contains": [
             "BLS Provider Renewal"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct359474",
-          "full_schedule_label": "See full BLS renewal schedule",
+          "full_schedule_url": "/bls-schedule.html",
+          "full_schedule_label": "Choose BLS renewal dates",
           "primary_cta_label": "See BLS renewal page"
         },
         {
@@ -125,8 +125,8 @@
             "BLS Provider HeartCode Skills",
             "HeartCode"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct210549",
-          "full_schedule_label": "See full HeartCode skills schedule",
+          "full_schedule_url": "/bls-schedule.html",
+          "full_schedule_label": "Choose HeartCode BLS skills dates",
           "primary_cta_label": "See HeartCode skills page"
         }
       ],
@@ -347,8 +347,8 @@
           "exclude_name_contains": [
             "Pediatric"
           ],
-          "full_schedule_url": "/heartsaver.html",
-          "full_schedule_label": "See full Heartsaver First Aid CPR AED schedule",
+          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_label": "Choose Heartsaver First Aid CPR AED dates",
           "primary_cta_label": "See in-person class page"
         },
         {
@@ -369,8 +369,8 @@
           "exclude_name_contains": [
             "Pediatric"
           ],
-          "full_schedule_url": "/heartsaver.html",
-          "full_schedule_label": "See full Heartsaver First Aid CPR AED schedule",
+          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_label": "Choose blended Heartsaver First Aid CPR AED dates",
           "primary_cta_label": "See blended class page"
         },
         {
@@ -389,8 +389,8 @@
             "Pediatric",
             "First Aid"
           ],
-          "full_schedule_url": "/heartsaver.html",
-          "full_schedule_label": "See full Heartsaver CPR AED schedule",
+          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_label": "Choose Heartsaver CPR AED dates",
           "primary_cta_label": "See CPR AED page"
         },
         {
@@ -409,8 +409,8 @@
             "Pediatric",
             "First Aid"
           ],
-          "full_schedule_url": "/heartsaver.html",
-          "full_schedule_label": "See full Heartsaver CPR AED schedule",
+          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_label": "Choose blended Heartsaver CPR AED dates",
           "primary_cta_label": "See blended CPR AED page"
         },
         {
@@ -428,8 +428,8 @@
           "name_contains": [
             "Heartsaver® Pediatric First Aid CPR AED"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
-          "full_schedule_label": "See full pediatric Heartsaver schedule",
+          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_label": "Choose pediatric Heartsaver dates",
           "primary_cta_label": "See pediatric page"
         },
         {
@@ -447,8 +447,8 @@
           "name_contains": [
             "Heartsaver® Pediatric First Aid CPR AED"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251545",
-          "full_schedule_label": "See full pediatric Heartsaver schedule",
+          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_label": "Choose blended pediatric Heartsaver dates",
           "primary_cta_label": "See pediatric page"
         }
       ]
@@ -708,8 +708,8 @@
           "exclude_name_contains": [
             "Instructor"
           ],
-          "full_schedule_url": "/courses/bls-first-aid-combo.html",
-          "full_schedule_label": "See HSI BLS + First Aid dates",
+          "full_schedule_url": "/hsi.html#hsi-bls-fa",
+          "full_schedule_label": "Stay on HSI BLS + First Aid options",
           "primary_cta_label": "See HSI BLS + First Aid dates",
           "secondary_cta_label": "Ask about combo dates"
         },
@@ -813,8 +813,8 @@
           "name_contains": [
             "USCG Elementary First Aid | CPR"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct253768",
-          "full_schedule_label": "See full USCG Elementary First Aid CPR schedule",
+          "full_schedule_url": "/courses/uscg-first-aid-cpr-aed.html",
+          "full_schedule_label": "Open USCG schedule selector",
           "primary_cta_label": "See full USCG page"
         }
       ]
@@ -844,8 +844,8 @@
             "AHA BLS Provider",
             "BLS Provider HeartCode Skills"
           ],
-          "full_schedule_url": "/bls.html",
-          "full_schedule_label": "See public BLS options",
+          "full_schedule_url": "/request_group_session.html?program=BLS%20On-Site%20Group%20Training&request_type=group",
+          "full_schedule_label": "Request on-site BLS group training",
           "primary_cta_label": "Request on-site BLS"
         },
         {
@@ -863,8 +863,8 @@
           "exclude_name_contains": [
             "Pediatric"
           ],
-          "full_schedule_url": "/heartsaver.html",
-          "full_schedule_label": "See public Heartsaver options",
+          "full_schedule_url": "/request_group_session.html?program=First%20Aid%20CPR%20AED%20Group%20Training&request_type=group",
+          "full_schedule_label": "Request First Aid / CPR / AED group training",
           "primary_cta_label": "Request group training"
         },
         {
@@ -883,8 +883,8 @@
           "exclude_name_contains": [
             "Instructor"
           ],
-          "full_schedule_url": "/acls.html",
-          "full_schedule_label": "See public ACLS options",
+          "full_schedule_url": "/request_group_session.html?program=ACLS%20Group%20Training&request_type=group",
+          "full_schedule_label": "Request ACLS group training",
           "primary_cta_label": "Request group ACLS"
         },
         {
@@ -903,8 +903,8 @@
           "exclude_name_contains": [
             "Instructor"
           ],
-          "full_schedule_url": "/pals.html",
-          "full_schedule_label": "See public PALS options",
+          "full_schedule_url": "/request_group_session.html?program=PALS%20Group%20Training&request_type=group",
+          "full_schedule_label": "Request PALS group training",
           "primary_cta_label": "Request group PALS"
         },
         {
@@ -918,8 +918,8 @@
           "name_contains": [
             "USCG Elementary First Aid | CPR"
           ],
-          "full_schedule_url": "/uscg-elementary-first-aid-cpr.html",
-          "full_schedule_label": "See public USCG options",
+          "full_schedule_url": "/request_group_session.html?program=USCG%20Group%20Training&request_type=group",
+          "full_schedule_label": "Request USCG group training",
           "primary_cta_label": "Request group USCG training"
         }
       ]
