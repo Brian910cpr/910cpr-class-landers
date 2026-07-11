@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.public_class_eligibility import is_public_class_location
 
-SCHEDULE_PATH = os.path.join("docs", "data", "schedule_future.json")
+SCHEDULE_PATH = os.path.join("docs", "public_schedule.json")
 LEGACY_SCHEDULE_PATH = os.path.join("data", "schedule.json")
 MANIFEST_PATH = os.path.join("docs", "data", "generated_class_aggregate_manifest.json")
 CONTROLLED_GENERATED_DIRS = (
@@ -202,7 +202,7 @@ def class_or_fallback_url(session_id: str, *context_parts: str) -> str:
 
 def normalize_session(raw: dict) -> dict:
     session_id = as_text(
-        get_first(raw, ("session_id", "id", "sessionId", "class_id", "classId"))
+        get_first(raw, ("class_id", "classId", "session_id", "id", "sessionId"))
     )
     if not session_id:
         raise ValueError(f"Missing session id in record: {raw}")

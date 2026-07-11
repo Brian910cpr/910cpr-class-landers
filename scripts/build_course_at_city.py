@@ -1,4 +1,6 @@
 import os
+import json
+from datetime import datetime
 from pathlib import Path
 from scripts.build_status import BuildStatusReporter
 try:
@@ -7,7 +9,9 @@ except ModuleNotFoundError:
     def tqdm(iterable, **_kwargs):
         return iterable
 from scripts.hub_utils import (
-    load_sessions,
+    SessionRecord,
+    extract_city,
+    normalize_course_family,
     upcoming_public_sessions,
     render_page,
     session_rows,
@@ -17,7 +21,47 @@ from scripts.public_class_eligibility import is_public_class_location
 
 OUTPUT_DIR = os.path.join("docs", "course-at-city")
 ROOT = Path(__file__).resolve().parents[1]
-SESSIONS_INPUT = ROOT / "data" / "sessions_current.json"
+SESSIONS_INPUT = ROOT / "docs" / "public_schedule.json"
+
+
+def load_public_schedule_sessions() -> list[SessionRecord]:
+    payload = json.loads(SESSIONS_INPUT.read_text(encoding="utf-8"))
+    rows = payload.get("sessions", []) if isinstance(payload, dict) else []
+    sessions: list[SessionRecord] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        location = str(row.get("location_name") or row.get("location") or "")
+        course_name = str(row.get("course") or row.get("title") or "")
+        start_raw = str(row.get("start") or "")
+        try:
+            start_at = datetime.fromisoformat(start_raw.replace("Z", "+00:00")) if start_raw else None
+            if start_at and start_at.tzinfo is not None:
+                start_at = start_at.replace(tzinfo=None)
+        except Exception:
+            start_at = None
+        sessions.append(SessionRecord(
+            session_id=str(row.get("class_id") or row.get("session_id") or ""),
+            course_html=course_name,
+            course_name=course_name,
+            course_family=normalize_course_family(course_name),
+            course_id=str(row.get("course_id") or ""),
+            cert_body="",
+            body_course_title=course_name,
+            delivery_code="",
+            price="",
+            start_at=start_at,
+            end_at=None,
+            location_raw=location,
+            city=extract_city(location),
+            instructor="",
+            students=0,
+            seats=0,
+            registration_link=str(row.get("register_url") or ""),
+            is_public=is_public_class_location(location),
+            is_regional_private=False,
+        ))
+    return sessions
 
 
 def valid_city(city: str) -> bool:
@@ -81,7 +125,7 @@ def build_course_at_city():
     count = 0
     last_output = None
     try:
-        sessions = load_sessions()
+        sessions = load_public_schedule_sessions()
         future_public = upcoming_public_sessions(
             [s for s in sessions if getattr(s, "is_public", False)]
         )

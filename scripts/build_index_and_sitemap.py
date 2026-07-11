@@ -524,6 +524,12 @@ def schedule_future_to_public_session(session: dict) -> dict | None:
     status = str(session.get("session_status") or "").strip().lower()
     if status not in {"published", "active"}:
         return None
+    registration_status = str(session.get("registration_status") or "").strip().lower()
+    if registration_status in {"closed", "full"}:
+        return None
+    direct_booking = session.get("public_direct_booking")
+    if direct_booking is False or str(direct_booking).strip().lower() == "false":
+        return None
     if not re.match(r"^https://coastalcprtraining\.enrollware\.com/enroll\?(?:.*&)?id=\d+(?:&.*)?$", register_url):
         return None
     if session.get("is_full") is True:

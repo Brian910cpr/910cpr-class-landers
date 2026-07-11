@@ -17,7 +17,7 @@ from scripts.stale_class_link_fallbacks import safe_class_detail_href
 from scripts.public_class_eligibility import session_has_public_class_location
 
 DOCS_DIR = ROOT / "docs"
-SCHEDULE_FILE = DOCS_DIR / "data" / "schedule.json"
+SCHEDULE_FILE = DOCS_DIR / "public_schedule.json"
 SCHEDULE_FALLBACK_FILE = DOCS_DIR / "data" / "schedule_future.json"
 
 TOPICS_DIR = DOCS_DIR / "topics"
@@ -454,10 +454,18 @@ def load_sessions() -> list[dict]:
     source = SCHEDULE_FILE if SCHEDULE_FILE.exists() else SCHEDULE_FALLBACK_FILE
     data = json.loads(source.read_text(encoding="utf-8"))
     sessions = data.get("sessions") or []
-    return [
-        session for session in sessions
-        if isinstance(session, dict) and session_has_public_class_location(session)
-    ]
+    normalized = []
+    for session in sessions:
+        if not isinstance(session, dict) or not session_has_public_class_location(session):
+            continue
+        item = dict(session)
+        item["session_id"] = str(item.get("class_id") or item.get("session_id") or item.get("id") or "").strip()
+        item["course_name"] = item.get("course_name") or item.get("course") or item.get("title") or ""
+        item["start_at"] = item.get("start_at") or item.get("start") or ""
+        item["registration_url"] = item.get("registration_url") or item.get("register_url") or ""
+        item["location_display"] = item.get("location_display") or item.get("location_name") or item.get("location") or ""
+        normalized.append(item)
+    return normalized
 
 
 def main() -> None:
