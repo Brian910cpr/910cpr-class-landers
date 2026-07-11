@@ -13,6 +13,14 @@ ROOT = Path(__file__).resolve().parents[1]
 PILOT_REPORT_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
 
 
+def artifact_offers(artifact):
+    out = []
+    for day in artifact.get("dates", []):
+        for slot in day.get("startTimes", []):
+            out.extend(slot.get("courses", []))
+    return out
+
+
 class BlockStartTimeSelectorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -57,12 +65,16 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         for window in self.payload["proof"]["availabilityWindowsThatGeneratedOffers"]:
             self.assertNotIn(window, visible_labels)
 
-    def test_rendered_html_has_register_links_but_not_block_class_label(self):
+    def test_rendered_html_loads_shell_without_actionable_static_times(self):
         html = build_bls_block_schedule_pilot.render_html(self.payload)
         self.assertIn("BLS Schedule Pilot", html)
         self.assertIn("Register", html)
-        if self.payload["offers"]:
-            self.assertIn("appointmentDayId", html)
+        self.assertIn("Checking current class times…", html)
+        self.assertIn("const embeddedScheduleDates = []", html)
+        self.assertIn("let scheduleDates = embeddedScheduleDates", html)
+        self.assertIn("fetch(availabilityUrl, { cache: 'no-store' })", html)
+        self.assertIn("selector-resolved-availability.v1", html)
+        self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         self.assertIn("Need BLS ASAP? Show all AHA BLS options", html)
         self.assertIn("const courseOptions =", html)
         self.assertIn("const optionGroups =", html)
@@ -125,12 +137,17 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("not bookable; past ' + scheduleTimezone + ' start time", html)
         self.assertIn("selectedStart = selectableStartTimes(available)[0]?.startTime || ''", html)
         self.assertIn("if (!slot || isPastStart(day, slot) || !slot.courses.length)", html)
-        self.assertIn("const scheduleDates =", html)
-        self.assertIn("appointmentUrl", html)
+        self.assertIn("let scheduleDates = embeddedScheduleDates", html)
+        self.assertIn("availabilityReady()", html)
+        self.assertIn("renderAvailabilityPlaceholder", html)
+        self.assertIn("Current class times are temporarily unavailable.", html)
+        self.assertIn("course.appointmentUrl", html)
 
-    def test_schedule_ui_keeps_future_enrollware_urls_unchanged(self):
+    def test_availability_artifact_keeps_future_enrollware_urls_unchanged(self):
         payload = {
             **self.payload,
+            "pageKey": "test-page",
+            "publicPage": "docs/test-page.html",
             "dates": [{
                 "date": "2099-08-01",
                 "displayDate": "Saturday, August 1, 2099",
@@ -150,12 +167,36 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                     }],
                 }],
             }],
+            "offers": [{
+                "date": "2099-08-01",
+                "displayDate": "Saturday, August 1, 2099",
+                "startTime": "14:30",
+                "displayStartTime": "2:30 PM",
+                "courseId": "209806",
+                "courseName": "AHA BLS Provider",
+                "courseFamily": "BLS",
+                "deliveryMode": "in-person",
+                "durationMinutes": 120,
+                "appointmentDayId": 260683,
+                "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A30%20PM&courseId=209806",
+                "location": ":: Wilmington; Shipyard Blvd",
+                "availabilityBlockId": "test-block",
+                "sourceAvailabilityBlock": {"sourceAvailabilityBlockId": "test-block"},
+                "schedulerConsumptionEnd": "16:30",
+                "publicSelectable": True,
+            }],
         }
         html = build_bls_block_schedule_pilot.render_html(payload)
-        self.assertIn(
+        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
+        self.assertNotIn(
             "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A30%20PM&courseId=209806",
             html,
         )
+        self.assertIn(
+            "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260683&startTime=2%3A30%20PM&courseId=209806",
+            json.dumps(artifact, ensure_ascii=False),
+        )
+        self.assertNotIn("offers", artifact)
 
     def test_config_driven_heartsaver_page_generates_valid_schedule(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
@@ -194,8 +235,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn('"209808"', html)
         self.assertIn('"329495"', html)
         self.assertIn('"351632"', html)
-        if payload["offers"]:
-            self.assertIn("appointmentDayId", html)
+        self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         self.assertNotIn("appointmentDayId $", html)
         self.assertNotIn("courseId $", html)
 
@@ -215,9 +255,37 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("209808", public_ids)
         self.assertNotIn("460465", public_ids)
         html = build_bls_block_schedule_pilot.render_html(payload)
-        self.assertIn("courseId=344085", html)
-        self.assertIn("courseId=209808", html)
+        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
+        artifact_json = json.dumps(artifact, ensure_ascii=False)
+        self.assertIn("courseId=344085", artifact_json)
+        self.assertIn("courseId=209808", artifact_json)
+        self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         self.assertNotIn("courseId=460465", html)
+
+    def test_heartsaver_artifact_excludes_newly_conflicting_pediatric_offer(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        payload = block_start_time_selector.build_block_schedule_page(configs["heartsaver"])
+        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
+        conflicting = [
+            offer for offer in artifact_offers(artifact)
+            if offer.get("date") == "2026-07-13"
+            and offer.get("startTime") == "15:30"
+            and str(offer.get("courseId")) == "251545"
+        ]
+        self.assertEqual([], conflicting)
+
+    def test_public_artifact_uses_only_public_double_colon_locations(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        for page_key in ("bls", "heartsaver", "uscg_first_aid_cpr_aed"):
+            with self.subTest(page_key=page_key):
+                payload = block_start_time_selector.build_block_schedule_page(configs[page_key])
+                artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
+                self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
+                for offer in artifact_offers(artifact):
+                    self.assertTrue(
+                        str(offer.get("location") or "").strip().startswith("::"),
+                        f"{page_key} exposed non-public location: {offer.get('location')}",
+                    )
 
     def test_uscg_cover_page_uses_only_aha_heartsaver_first_aid_cpr_aed_inventory(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
@@ -251,9 +319,11 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("courseId=351632", html)
         self.assertNotIn("courseId=251545", html)
         self.assertNotIn("courseId=460465", html)
+        self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
+        artifact_json = json.dumps(build_bls_block_schedule_pilot.public_selector_availability_payload(payload), ensure_ascii=False)
         if payload["offers"]:
-            self.assertIn("courseId=209809", html)
-            self.assertIn("courseId=329495", html)
+            self.assertIn("courseId=209809", artifact_json)
+            self.assertIn("courseId=329495", artifact_json)
 
     def test_final_live_guard_suppresses_july_4_stale_offer_without_live_block(self):
         stale_payload = {

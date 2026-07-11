@@ -412,11 +412,108 @@ def has_required_cert(person: dict[str, Any], course: dict[str, Any]) -> bool:
     return bool(generate_dynamic_offers.person_certification_codes(person).intersection(requirements))
 
 
-def build_occupancy(loaded: dict[str, Any]) -> list[dict[str, Any]]:
-    return (
-        generate_dynamic_offers.normalize_occupancy(loaded.get("sessions_current"), "data/sessions_current.json")
-        + generate_dynamic_offers.normalize_occupancy(loaded.get("schedule_future"), "docs/data/schedule_future.json")
+def session_course_id(session: dict[str, Any]) -> str:
+    course = session.get("course")
+    if isinstance(course, dict):
+        for key in ("course_id", "course_number", "courseId"):
+            value = clean_text(course.get(key))
+            if value:
+                return value
+    for key in ("course_id", "course_number", "courseId"):
+        value = clean_text(session.get(key))
+        if value:
+            return value
+    return ""
+
+
+def occupancy_duration_overrides(payload: Any, course_rules: dict[str, dict[str, Any]]) -> dict[tuple[str, str], dict[str, Any]]:
+    if not isinstance(payload, dict) or not isinstance(payload.get("sessions"), list):
+        return {}
+    overrides: dict[tuple[str, str], dict[str, Any]] = {}
+    for session in payload["sessions"]:
+        if not isinstance(session, dict):
+            continue
+        start = parse_dt(session.get("start_at") or session.get("start") or session.get("start_datetime"))
+        end = parse_dt(session.get("end_at") or session.get("end") or session.get("end_datetime"))
+        course_id = session_course_id(session)
+        rule = course_rules.get(course_id)
+        if not start or not rule:
+            continue
+        if end and end > start:
+            continue
+        overrides[(start.isoformat(), course_id)] = {
+            "end": start + timedelta(minutes=int(rule["scheduler_consumption_minutes"])),
+            "course_id": course_id,
+            "duration_rule_key": course_id,
+            "duration_rule_source": str(COURSE_RULES_PATH),
+            "duration_minutes": rule["duration_minutes"],
+            "setup_buffer_minutes": rule["setup_buffer_minutes"],
+            "cleanup_buffer_minutes": rule["cleanup_buffer_minutes"],
+            "scheduler_consumption_minutes": rule["scheduler_consumption_minutes"],
+            "duration_resolution": "course_id",
+        }
+    return overrides
+
+
+def apply_occupancy_duration_rules(
+    occupancy: list[dict[str, Any]],
+    payload: Any,
+    course_rules: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    overrides = occupancy_duration_overrides(payload, course_rules)
+    if not overrides:
+        return occupancy
+    for block in occupancy:
+        start = block.get("start")
+        if not start:
+            continue
+        course_id = ""
+        title = clean_text(block.get("course_title"))
+        for candidate_id, rule in course_rules.items():
+            if title == clean_text(rule.get("clean_course_name")):
+                course_id = candidate_id
+                break
+        override = overrides.get((start.isoformat(), course_id))
+        if not override:
+            # Some imported titles include encoding artifacts. Match by start and
+            # let the original session course id supply the rule when available.
+            matching = [item for (start_key, _course_id), item in overrides.items() if start_key == start.isoformat()]
+            override = matching[0] if len(matching) == 1 else None
+        if override and (not block.get("end") or block["end"] <= start):
+            block["end"] = override["end"]
+            block["course_id"] = override["course_id"]
+            block["duration_rule_key"] = override["duration_rule_key"]
+            block["duration_rule_source"] = override["duration_rule_source"]
+            block["duration_resolution"] = override["duration_resolution"]
+            block["scheduler_consumption_minutes"] = override["scheduler_consumption_minutes"]
+    return occupancy
+
+
+def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    location_resource_map = loaded.get("location_resource_map")
+    sessions_current = apply_occupancy_duration_rules(
+        generate_dynamic_offers.normalize_occupancy(loaded.get("sessions_current"), "data/sessions_current.json"),
+        loaded.get("sessions_current"),
+        course_rules,
     )
+    schedule_future = apply_occupancy_duration_rules(
+        generate_dynamic_offers.normalize_occupancy(loaded.get("schedule_future"), "docs/data/schedule_future.json"),
+        loaded.get("schedule_future"),
+        course_rules,
+    )
+    occupancy = sessions_current + schedule_future
+    for block in occupancy:
+        canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
+            block.get("location"),
+            block.get("location"),
+            location_resource_map,
+        )
+        if normalized:
+            block["raw_location"] = block.get("location")
+            block["location"] = canonical
+            block["resource"] = resource
+            block["location_resolution"] = "location_resource_map"
+    return occupancy
 
 
 def find_url(
@@ -502,7 +599,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     if not containers:
         raise BlockSelectorInputError(f"{APPOINTMENT_CONTAINERS_PATH} has no active appointment containers")
     windows, availability_stats = selected_public_page_live_windows(live_availability_snapshot, loaded["location_resource_map"])
-    occupancy = build_occupancy(loaded)
+    occupancy = build_occupancy(loaded, course_rules)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy)
 
     selected_courses: list[dict[str, Any]] = []

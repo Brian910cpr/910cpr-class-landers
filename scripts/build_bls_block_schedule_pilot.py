@@ -6,6 +6,7 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from scripts.block_start_time_selector import (
     ROOT,
@@ -20,6 +21,7 @@ REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
 REPORT_MD_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot_report.md"
 HTML_PATH = ROOT / "docs" / "bls-schedule.html"
 COURSE_DESCRIPTIONS_PATH = ROOT / "data" / "content" / "course_descriptions.json"
+SELECTOR_AVAILABILITY_DIR = ROOT / "docs" / "data" / "block-selector-availability"
 
 
 def load_course_descriptions() -> dict[str, dict[str, Any]]:
@@ -28,6 +30,37 @@ def load_course_descriptions() -> dict[str, dict[str, Any]]:
     payload = json.loads(COURSE_DESCRIPTIONS_PATH.read_text(encoding="utf-8"))
     courses = payload.get("courses", {}) if isinstance(payload, dict) else {}
     return {str(course_id): course for course_id, course in courses.items() if isinstance(course, dict)}
+
+
+def selector_availability_path(page_key: str) -> Path:
+    safe_key = "".join(ch if ch.isalnum() or ch in {"-", "_"} else "-" for ch in str(page_key or "selector"))
+    return SELECTOR_AVAILABILITY_DIR / f"{safe_key}.json"
+
+
+def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schemaVersion": "selector-resolved-availability.v1",
+        "generatedAt": payload.get("generatedAt"),
+        "pageKey": payload.get("pageKey"),
+        "publicPage": payload.get("publicPage"),
+        "sourceArtifacts": {
+            "hotSyncCurrentOccupancy": "data/sessions_current.json",
+            "publicScheduleFuture": "docs/data/schedule_future.json",
+            "liveAvailabilitySnapshot": payload.get("inputFiles", {}).get("liveAvailabilitySnapshot"),
+            "courseConsumptionRules": payload.get("inputFiles", {}).get("courseConsumptionRules"),
+        },
+        "authority": {
+            "name": "block_start_time_selector.build_block_schedule_page",
+            "description": (
+                "Resolved selector availability generated server-side from the same Work Order 1B "
+                "occupancy, conflict, course-consumption, public-location, and public-offer rules. "
+                "Browsers consume this result and do not run an independent conflict engine."
+            ),
+        },
+        "counts": payload.get("counts", {}),
+        "liveAvailabilityGuard": payload.get("liveAvailabilityGuard", {}),
+        "dates": payload.get("dates", []),
+    }
 
 
 def render_report(payload: dict[str, Any]) -> str:
@@ -521,9 +554,16 @@ def render_html(payload: dict[str, Any]) -> str:
                     "deliveryMode": configured_options.get(course["courseId"], {}).get("delivery_mode") or course.get("deliveryMode") or "",
                     "displayStartTime": course["displayStartTime"],
                     "durationMinutes": course["durationMinutes"],
+                    "setupBufferMinutes": course.get("setupBufferMinutes"),
+                    "cleanupBufferMinutes": course.get("cleanupBufferMinutes"),
+                    "schedulerConsumptionMinutes": course.get("schedulerConsumptionMinutes"),
+                    "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
                     "appointmentDayId": course["appointmentDayId"],
                     "appointmentUrl": course["appointmentUrl"],
                     "location": course["location"],
+                    "availabilityBlockId": course.get("availabilityBlockId"),
+                    "sourceAvailabilityBlock": course.get("sourceAvailabilityBlock", {}),
+                    "publicSelectable": course.get("publicSelectable") is True,
                 }
                 courses.append(course_record)
                 course_options_by_id.setdefault(course["courseId"], {
@@ -574,7 +614,15 @@ def render_html(payload: dict[str, Any]) -> str:
             "displayDate": day["displayDate"],
             "startTimes": start_times,
         })
-    data_json = json.dumps(page_dates, ensure_ascii=False)
+    page_key = str(payload.get("pageKey") or page_config.get("page_key") or "selector")
+    availability_version = str(payload.get("generatedAt") or datetime.now().astimezone().isoformat())
+    availability_url = (
+        "/"
+        + str(selector_availability_path(page_key).relative_to(ROOT / "docs")).replace("\\", "/")
+        + "?v="
+        + quote(availability_version, safe="")
+    )
+    data_json = json.dumps([], ensure_ascii=False)
     configured_course_ids = [str(option.get("course_id")) for option in page_config.get("course_options", []) if isinstance(option, dict)]
     course_options = [
         course_options_by_id[course_id]
@@ -583,6 +631,7 @@ def render_html(payload: dict[str, Any]) -> str:
     ]
     course_options_json = json.dumps(course_options, ensure_ascii=False)
     option_groups_json = json.dumps(option_groups, ensure_ascii=False)
+    availability_url_json = json.dumps(availability_url)
     counts = payload["counts"]
     first_course = course_options[0]["courseId"] if course_options else ""
     title = html.escape(str(page_config.get("title") or "Block Schedule"))
@@ -684,9 +733,14 @@ def render_html(payload: dict[str, Any]) -> str:
     </section>
   </main>
   <script>
-    const scheduleDates = {data_json};
+    const embeddedScheduleDates = {data_json};
+    const availabilityUrl = {availability_url_json};
     const courseOptions = {course_options_json};
     const optionGroups = {option_groups_json};
+    let scheduleDates = embeddedScheduleDates;
+    let availabilityState = 'checking';
+    let availabilityMessage = 'Checking current class times…';
+    let resolvedAvailability = null;
     let selectedCourseId = {json.dumps(first_course)};
     let showAllOptions = false;
     let compareMode = false;
@@ -696,6 +750,28 @@ def render_html(payload: dict[str, Any]) -> str:
 
     function byId(id) {{
       return document.getElementById(id);
+    }}
+
+    function setAvailabilityMessage(message) {{
+      availabilityMessage = message || 'Checking current class times…';
+    }}
+
+    function renderAvailabilityPlaceholder(message = availabilityMessage) {{
+      ['date-list', 'start-list', 'course-list'].forEach(id => {{
+        const host = byId(id);
+        if (host) {{
+          host.innerHTML = '';
+          const box = document.createElement('div');
+          box.className = 'empty';
+          box.setAttribute('role', id === 'start-list' ? 'status' : 'note');
+          box.textContent = message;
+          host.appendChild(box);
+        }}
+      }});
+    }}
+
+    function availabilityReady() {{
+      return availabilityState === 'ready';
     }}
 
     function isMobileLayout() {{
@@ -858,6 +934,9 @@ def render_html(payload: dict[str, Any]) -> str:
     }}
 
     function filteredDates() {{
+      if (!availabilityReady()) {{
+        return [];
+      }}
       return scheduleDates.map(day => {{
         const startTimes = day.startTimes.map(slot => ({{
           ...slot,
@@ -982,6 +1061,10 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderDates() {{
       const host = byId('date-list');
       host.innerHTML = '';
+      if (!availabilityReady()) {{
+        renderAvailabilityPlaceholder();
+        return;
+      }}
       const days = syncSelection();
       const now = businessNow();
       if (!days.length) {{
@@ -1093,6 +1176,10 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderStarts() {{
       const host = byId('start-list');
       host.innerHTML = '';
+      if (!availabilityReady()) {{
+        renderAvailabilityPlaceholder();
+        return;
+      }}
       const day = filteredDates().find(item => item.date === selectedDate);
       if (!day || !day.startTimes.length) {{
         host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
@@ -1145,6 +1232,10 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderCourses() {{
       const host = byId('course-list');
       host.innerHTML = '';
+      if (!availabilityReady()) {{
+        renderAvailabilityPlaceholder();
+        return;
+      }}
       const day = filteredDates().find(item => item.date === selectedDate);
       const slot = day?.startTimes.find(item => item.startTime === selectedStart);
       if (!slot || isPastStart(day, slot) || !slot.courses.length) {{
@@ -1182,6 +1273,11 @@ def render_html(payload: dict[str, Any]) -> str:
 
     function renderAll() {{
       syncCourseSelection();
+      if (!availabilityReady()) {{
+        renderCourseOptions();
+        renderAvailabilityPlaceholder();
+        return;
+      }}
       syncSelection();
       renderCourseOptions();
       renderDates();
@@ -1206,13 +1302,45 @@ def render_html(payload: dict[str, Any]) -> str:
     }}
 
     window.addEventListener('resize', () => {{
-      renderDates();
-      renderStarts();
+      if (availabilityReady()) {{
+        renderDates();
+        renderStarts();
+      }}
     }});
 
     showAllOptions = showAllFromDeepLink();
     selectedCourseId = courseIdFromDeepLink() || selectedCourseId;
     renderAll();
+
+    async function loadResolvedAvailability() {{
+      availabilityState = 'checking';
+      setAvailabilityMessage('Checking current class times…');
+      renderAll();
+      try {{
+        const response = await fetch(availabilityUrl, {{ cache: 'no-store' }});
+        if (!response.ok) {{
+          throw new Error(`availability fetch failed: ${{response.status}}`);
+        }}
+        const payload = await response.json();
+        if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {{
+          throw new Error('availability payload has an unexpected shape');
+        }}
+        resolvedAvailability = payload;
+        scheduleDates = payload.dates;
+        availabilityState = 'ready';
+        setAvailabilityMessage('');
+        renderAll();
+      }} catch (error) {{
+        console.error(error);
+        resolvedAvailability = null;
+        scheduleDates = [];
+        availabilityState = 'failed';
+        setAvailabilityMessage('Current class times are temporarily unavailable. Please retry in a moment or contact 910CPR.');
+        renderAll();
+      }}
+    }}
+
+    loadResolvedAvailability();
   </script>
 </body>
 </html>
@@ -1226,11 +1354,17 @@ def run() -> dict[str, Any]:
 
 def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_md_path: Path, html_path: Path) -> dict[str, Any]:
     payload = apply_final_live_availability_guard(payload)
+    availability_path = selector_availability_path(str(payload.get("pageKey") or "selector"))
     report_json_path.parent.mkdir(parents=True, exist_ok=True)
     report_md_path.parent.mkdir(parents=True, exist_ok=True)
     html_path.parent.mkdir(parents=True, exist_ok=True)
+    availability_path.parent.mkdir(parents=True, exist_ok=True)
     report_json_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     report_md_path.write_text(render_report(payload), encoding="utf-8")
+    availability_path.write_text(
+        json.dumps(public_selector_availability_payload(payload), separators=(",", ":"), ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
     html_path.write_text(render_html(payload), encoding="utf-8")
     return {
         "counts": payload["counts"],
@@ -1238,7 +1372,7 @@ def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_m
         "availability_fallback_used": payload["availability_fallback_used"],
         "horizon_days": payload["horizonDays"],
         "top_rejection_reasons": dict(Counter(payload.get("rejectionReasonCounts", {})).most_common(10)),
-        "output_paths": [report_json_path, report_md_path, html_path],
+        "output_paths": [report_json_path, report_md_path, availability_path, html_path],
     }
 
 
