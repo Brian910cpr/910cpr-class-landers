@@ -7,6 +7,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from scripts import build_bls_block_schedule_pilot
+from scripts import build_deployed_selector_pages
 from scripts import block_start_time_selector
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -276,7 +277,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_public_artifact_uses_only_public_double_colon_locations(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        for page_key in ("bls", "heartsaver", "uscg_first_aid_cpr_aed"):
+        for page_key in ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed"):
             with self.subTest(page_key=page_key):
                 payload = block_start_time_selector.build_block_schedule_page(configs[page_key])
                 artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
@@ -286,6 +287,98 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                         str(offer.get("location") or "").strip().startswith("::"),
                         f"{page_key} exposed non-public location: {offer.get('location')}",
                     )
+
+    def test_acls_and_pals_are_deployed_selector_pages(self):
+        self.assertIn("acls", build_deployed_selector_pages.DEPLOYED_SELECTOR_PAGE_KEYS)
+        self.assertIn("pals", build_deployed_selector_pages.DEPLOYED_SELECTOR_PAGE_KEYS)
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        self.assertEqual(configs["acls"]["output_path"], "docs/acls-schedule.html")
+        self.assertEqual(configs["pals"]["output_path"], "docs/pals-schedule.html")
+
+    def test_acls_selector_shell_and_artifact_support_all_variants_without_static_times(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        payload = block_start_time_selector.build_block_schedule_page(configs["acls"])
+        guarded = block_start_time_selector.apply_final_live_availability_guard(payload)
+        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(guarded)
+        html = build_bls_block_schedule_pilot.render_html(guarded)
+        course_ids = {option["course_id"] for option in configs["acls"]["course_options"]}
+        self.assertEqual(course_ids, {"241108", "209818", "209811"})
+        self.assertIn("AHA ACLS Provider (Initial)", html)
+        self.assertIn("AHA ACLS Provider (Renewal)", html)
+        self.assertIn("AHA ACLS HeartCode", html)
+        self.assertIn("Checking current class times…", html)
+        self.assertIn("const embeddedScheduleDates = []", html)
+        self.assertIn("fetch(availabilityUrl, { cache: 'no-store' })", html)
+        self.assertIn("Current class times are temporarily unavailable.", html)
+        self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
+        offers = artifact_offers(artifact)
+        self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
+        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "241108"))
+        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "209818"))
+        self.assertEqual(0, sum(1 for offer in offers if offer.get("courseId") == "209811"))
+        self.assertEqual({"seated_class"}, {offer.get("offerType") for offer in offers})
+        self.assertNotIn("12774086", json.dumps(artifact, ensure_ascii=False))
+        self.assertNotIn("12774096", json.dumps(artifact, ensure_ascii=False))
+
+    def test_pals_selector_shell_and_artifact_support_all_variants_without_static_times(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        payload = block_start_time_selector.build_block_schedule_page(configs["pals"])
+        guarded = block_start_time_selector.apply_final_live_availability_guard(payload)
+        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(guarded)
+        html = build_bls_block_schedule_pilot.render_html(guarded)
+        course_ids = {option["course_id"] for option in configs["pals"]["course_options"]}
+        self.assertEqual(course_ids, {"209805", "251496", "209812"})
+        self.assertIn("AHA PALS Provider", html)
+        self.assertIn("AHA PALS Renewal", html)
+        self.assertIn("AHA PALS HeartCode", html)
+        self.assertIn("Checking current class times…", html)
+        self.assertIn("const embeddedScheduleDates = []", html)
+        self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
+        offers = artifact_offers(artifact)
+        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "209805"))
+        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "251496"))
+        self.assertEqual(0, sum(1 for offer in offers if offer.get("courseId") == "209812"))
+        self.assertEqual({"seated_class"}, {offer.get("offerType") for offer in offers})
+
+    def test_closed_full_classes_remain_occupancy_but_not_direct_selector_offers(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        payload = block_start_time_selector.build_block_schedule_page(configs["acls"])
+        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(
+            block_start_time_selector.apply_final_live_availability_guard(payload)
+        )
+        artifact_json = json.dumps(artifact, ensure_ascii=False)
+        self.assertNotIn("12774086", artifact_json)
+        self.assertNotIn("12774096", artifact_json)
+        occupancy = block_start_time_selector.build_occupancy(
+            {
+                "sessions_current": block_start_time_selector.read_required_json(block_start_time_selector.SESSIONS_CURRENT_PATH),
+                "schedule_future": block_start_time_selector.read_required_json(block_start_time_selector.SCHEDULE_FUTURE_PATH),
+                "location_resource_map": block_start_time_selector.read_required_json(block_start_time_selector.LOCATION_RESOURCE_MAP_PATH),
+            },
+            block_start_time_selector.course_rules_by_id(
+                block_start_time_selector.read_required_json(block_start_time_selector.COURSE_RULES_PATH)
+            ),
+        )
+        occupancy_text = json.dumps(occupancy, default=str, ensure_ascii=False)
+        self.assertIn("AHA ACLS HeartCode", occupancy_text)
+
+    def test_acls_and_pals_hub_schedule_links_target_real_selector_pages(self):
+        slug_hubs = json.loads((ROOT / "data" / "config" / "slug_hubs.json").read_text(encoding="utf-8"))
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        expected_targets = {
+            "acls": "/acls-schedule.html",
+            "pals": "/pals-schedule.html",
+        }
+        for slug, expected in expected_targets.items():
+            with self.subTest(slug=slug):
+                page = next(item for item in slug_hubs["pages"] if item["slug"] == slug)
+                urls = {
+                    tab.get("full_schedule_url")
+                    for tab in page.get("tabs", [])
+                    if tab.get("full_schedule_url")
+                }
+                self.assertEqual({expected}, urls)
+                self.assertEqual(configs[slug]["output_path"], f"docs/{expected.lstrip('/')}")
 
     def test_uscg_cover_page_uses_only_aha_heartsaver_first_aid_cpr_aed_inventory(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()

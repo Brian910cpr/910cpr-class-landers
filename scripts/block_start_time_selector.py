@@ -281,6 +281,9 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
     kept: list[dict[str, Any]] = []
     suppressed: list[dict[str, Any]] = []
     for offer in payload.get("offers", []):
+        if clean_text(offer.get("offerType")) == "seated_class":
+            kept.append(offer)
+            continue
         block_id = clean_text(offer.get("availabilityBlockId"))
         block = live_blocks.get(block_id)
         start = parse_dt(f"{offer.get('date')}T{offer.get('startTime')}")
@@ -516,6 +519,73 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
     return occupancy
 
 
+def public_direct_bookable_session(session: dict[str, Any]) -> bool:
+    return session.get("public_direct_booking") is not False and clean_text(session.get("registration_status") or "open").lower() not in {"closed", "full"}
+
+
+def seated_class_selector_offers(
+    *,
+    schedule_future_payload: Any,
+    selected_courses: list[dict[str, Any]],
+    selected_course_ids: set[str],
+    course_rules: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    if not isinstance(schedule_future_payload, dict) or not isinstance(schedule_future_payload.get("sessions"), list):
+        return []
+    courses_by_id = {str(course.get("course_id")): course for course in selected_courses}
+    offers: list[dict[str, Any]] = []
+    for session in schedule_future_payload["sessions"]:
+        if not isinstance(session, dict):
+            continue
+        course_id = clean_text(session.get("course_id"))
+        if course_id not in selected_course_ids or not public_direct_bookable_session(session):
+            continue
+        start = parse_dt(session.get("start_at"))
+        end = parse_dt(session.get("end_at"))
+        if not start or not end:
+            continue
+        course = courses_by_id.get(course_id, {})
+        rule = course_rules.get(course_id, {})
+        scheduler_minutes = int(rule.get("scheduler_consumption_minutes") or max(1, int((end - start).total_seconds() // 60)))
+        consumption_end = start + timedelta(minutes=scheduler_minutes)
+        registration_url = clean_text(session.get("registration_url"))
+        if not registration_url:
+            continue
+        offers.append({
+            "date": start.date().isoformat(),
+            "displayDate": display_date(start.date().isoformat()),
+            "startTime": start.strftime("%H:%M"),
+            "displayStartTime": display_time(start),
+            "courseId": course_id,
+            "courseName": clean_text(session.get("course_name") or course.get("clean_course_name") or course.get("short_title") or course_id),
+            "courseFamily": clean_text(course.get("course_family") or course.get("family") or session.get("mapped_family") or ""),
+            "certifyingBody": clean_text(course.get("brand") or course.get("provider") or session.get("certifying_body") or UNKNOWN),
+            "deliveryMode": clean_text(course.get("blended_classroom_skills") or course.get("delivery_type") or session.get("delivery_mode") or UNKNOWN),
+            "durationMinutes": int(rule.get("duration_minutes") or max(1, int((end - start).total_seconds() // 60))),
+            "setupBufferMinutes": int(rule.get("setup_buffer_minutes") or 0),
+            "cleanupBufferMinutes": int(rule.get("cleanup_buffer_minutes") or 0),
+            "schedulerConsumptionMinutes": scheduler_minutes,
+            "schedulerConsumptionEnd": consumption_end.strftime("%H:%M"),
+            "appointmentDayId": None,
+            "matchedContainerId": None,
+            "appointmentUrl": registration_url,
+            "registrationUrl": registration_url,
+            "availabilityBlockId": f"seated:{clean_text(session.get('session_id'))}",
+            "availabilityWindow": "seated-class",
+            "sourceAvailabilityBlock": {
+                "source": "docs/data/schedule_future.json",
+                "sessionId": clean_text(session.get("session_id")),
+                "registrationStatus": clean_text(session.get("registration_status") or "open"),
+                "publicDirectBooking": session.get("public_direct_booking") is not False,
+            },
+            "instructor": clean_text(session.get("lead_instructor_name") or UNKNOWN),
+            "location": clean_text(session.get("location_name") or session.get("location_display") or UNKNOWN),
+            "offerType": "seated_class",
+            "publicSelectable": True,
+        })
+    return offers
+
+
 def find_url(
     window: dict[str, Any],
     start: datetime,
@@ -712,6 +782,16 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "appointmentUrl": url,
                     "publicSelectable": True,
                 })
+
+    if page_config.get("include_seated_classes") is True:
+        offers.extend(
+            seated_class_selector_offers(
+                schedule_future_payload=loaded.get("schedule_future"),
+                selected_courses=selected_courses,
+                selected_course_ids=set(allowed_course_ids),
+                course_rules=course_rules,
+            )
+        )
 
     grouped_dates: dict[str, dict[str, Any]] = {}
     for offer in offers:

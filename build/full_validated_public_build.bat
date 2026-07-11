@@ -53,7 +53,7 @@ echo === Build slug hubs ===
 python -m scripts.build_slug_hubs || goto :fail
 
 echo.
-echo === Build deployed selector pages ===
+echo === Build deployed selector pages (BLS, Heartsaver, ACLS, PALS, USCG) ===
 python -m scripts.build_deployed_selector_pages || goto :fail
 
 echo.

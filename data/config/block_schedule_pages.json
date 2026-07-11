@@ -73,6 +73,9 @@
       "meta_description": "Select an AHA ACLS course, date, and public start time.",
       "intro": "Select the ACLS course format first, then choose a public date and start time.",
       "output_path": "docs/acls-schedule.html",
+      "include_seated_classes": true,
+      "report_json_path": "data/audit/acls_block_schedule.json",
+      "report_md_path": "data/audit/acls_block_schedule_report.md",
       "show_all_label": "Show all certification options",
       "compare_mode": {
         "enabled": true,
@@ -134,6 +137,9 @@
       "meta_description": "Select an AHA PALS course, date, and public start time.",
       "intro": "Select the PALS course format first, then choose a public date and start time.",
       "output_path": "docs/pals-schedule.html",
+      "include_seated_classes": true,
+      "report_json_path": "data/audit/pals_block_schedule.json",
+      "report_md_path": "data/audit/pals_block_schedule_report.md",
       "show_all_label": "Show all certification options",
       "compare_mode": {
         "enabled": true,

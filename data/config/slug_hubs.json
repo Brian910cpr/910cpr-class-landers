@@ -161,7 +161,7 @@
             "AHA ACLS Provider",
             "ACLS Provider Initial"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct241108",
+          "full_schedule_url": "/acls-schedule.html",
           "full_schedule_label": "See full ACLS provider schedule",
           "primary_cta_label": "See ACLS provider page"
         },
@@ -181,7 +181,7 @@
             "AHA ACLS Provider Update",
             "ACLS Renewal"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209818",
+          "full_schedule_url": "/acls-schedule.html",
           "full_schedule_label": "See full ACLS renewal schedule",
           "primary_cta_label": "See ACLS renewal page"
         },
@@ -201,7 +201,7 @@
             "ACLS HeartCode",
             "ACLS Skills Session"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209811",
+          "full_schedule_url": "/acls-schedule.html",
           "full_schedule_label": "See full ACLS HeartCode schedule",
           "primary_cta_label": "See ACLS HeartCode page"
         }
@@ -235,7 +235,7 @@
             "PALS Provider - In-Person - Initial",
             "PALS Provider Class"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209805",
+          "full_schedule_url": "/pals-schedule.html",
           "full_schedule_label": "See full PALS provider schedule",
           "primary_cta_label": "See PALS provider page"
         },
@@ -254,7 +254,7 @@
             "PALS Renewal",
             "PALS Instructor Renewal"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct251496",
+          "full_schedule_url": "/pals-schedule.html",
           "full_schedule_label": "See full PALS renewal schedule",
           "primary_cta_label": "See PALS renewal page"
         },
@@ -272,7 +272,7 @@
             "PALS Provider - HeartCode",
             "PALS HeartCode"
           ],
-          "full_schedule_url": "https://coastalcprtraining.enrollware.com/schedule#ct209812",
+          "full_schedule_url": "/pals-schedule.html",
           "full_schedule_label": "See full PALS HeartCode schedule",
           "primary_cta_label": "See PALS HeartCode page"
         }
