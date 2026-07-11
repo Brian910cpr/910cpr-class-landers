@@ -1,13 +1,18 @@
 from __future__ import annotations
 
+import json
 import unittest
 from datetime import datetime
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 from scripts.build_sessions_current import (
+    build_sessions_from_enrollware_ical,
     build_session_from_ical_event,
     decode_ical_bytes,
+    enrollment_page_unavailable_reason,
     load_course_map,
     parse_ical_events,
 )
@@ -21,6 +26,79 @@ class EnrollwareIcalImportTests(unittest.TestCase):
 
         self.assertIn("Heartsaver® CPR AED Online", text)
         self.assertNotIn("Heartsaver�", text)
+
+    def test_enrollment_page_unavailable_reason_detects_closed_and_full_classes(self) -> None:
+        self.assertEqual(
+            "enrollware_registration_closed",
+            enrollment_page_unavailable_reason("<html>Registration for this class is closed.</html>"),
+        )
+        self.assertEqual(
+            "enrollware_class_full",
+            enrollment_page_unavailable_reason("<html>This class is currently full.</html>"),
+        )
+        self.assertIsNone(enrollment_page_unavailable_reason("<html><button>Register</button></html>"))
+
+    def test_ical_import_retains_closed_and_full_classes_with_direct_booking_disabled(self) -> None:
+        ics = """BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+UID:closed-class
+SUMMARY:AHA BLS Provider (Initial)
+DESCRIPTION:Instructors:\\nBrian Ennis (lead)
+DTSTART:20260701T130000Z
+DTEND:20260701T150000Z
+LOCATION:NC - Wilmington: 4018 Shipyard Blvd\\; Room B @ 910CPR's Office
+URL:https://coastalcprtraining.enrollware.com/enroll?id=111
+END:VEVENT
+BEGIN:VEVENT
+UID:full-class
+SUMMARY:AHA BLS Provider (Initial)
+DESCRIPTION:Instructors:\\nBrian Ennis (lead)
+DTSTART:20260702T130000Z
+DTEND:20260702T150000Z
+LOCATION:NC - Wilmington: 4018 Shipyard Blvd\\; Room B @ 910CPR's Office
+URL:https://coastalcprtraining.enrollware.com/enroll?id=222
+END:VEVENT
+END:VCALENDAR
+"""
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output = root / "data" / "sessions_current.json"
+            audit = root / "data" / "audit"
+            repo_root = Path(__file__).resolve().parents[1]
+            course_map = load_course_map(repo_root, "data/config/course_map.json")
+
+            def page_for_url(url: str) -> str:
+                if url.endswith("111"):
+                    return "Registration for this class is closed."
+                if url.endswith("222"):
+                    return "This class is currently full."
+                return "Register"
+
+            with patch("scripts.build_sessions_current.fetch_ical_text", return_value=ics), patch(
+                "scripts.build_sessions_current.fetch_enrollment_page_text",
+                side_effect=page_for_url,
+            ):
+                build_sessions_from_enrollware_ical(
+                    repo_root=root,
+                    ical_url="https://example.test/calendar.ics",
+                    output_path=output,
+                    audit_dir=audit,
+                    course_map=course_map,
+                )
+
+            payload = json_load(output)
+            sessions = {session["session_id"]: session for session in payload["sessions"]}
+            self.assertEqual({"closed-class", "full-class"}, set(sessions))
+            self.assertEqual("closed", sessions["closed-class"]["status"]["registration_status"])
+            self.assertEqual("full", sessions["full-class"]["status"]["registration_status"])
+            self.assertIs(False, sessions["closed-class"]["status"]["public_direct_booking"])
+            self.assertIs(False, sessions["full-class"]["status"]["public_direct_booking"])
+
+    def test_unavailable_registration_filter_does_not_hard_code_stale_session_ids(self) -> None:
+        source = (Path(__file__).resolve().parents[1] / "scripts" / "build_sessions_current.py").read_text(encoding="utf-8")
+        self.assertNotIn("12774086", source)
+        self.assertNotIn("12774096", source)
 
     def test_parse_ical_event_and_build_session(self) -> None:
         ics = """BEGIN:VCALENDAR
@@ -109,6 +187,9 @@ END:VCALENDAR
             "inferred_from_course_consumption_rule_for_zero_duration_ical_event",
         )
         self.assertEqual(session["timing"]["inferred_scheduler_consumption_minutes"], 120)
+
+def json_load(path: Path):
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

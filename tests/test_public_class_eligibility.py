@@ -13,6 +13,7 @@ from scripts import block_start_time_selector
 from scripts import build_course_at_city
 from scripts import build_course_landers
 from scripts import build_index
+from scripts import build_schedule_future
 from scripts import hub_utils
 from scripts import build_seed_appointment_url_preview
 from scripts import filter_public_sellable_offers
@@ -30,6 +31,16 @@ def load_legacy_class_index_module():
 
 
 class PublicClassEligibilityTests(unittest.TestCase):
+    AMY_ACLS_PALS_SESSION_IDS = {
+        "13673159", "13673169", "13673179", "13673189",
+        "13673160", "13673170", "13673180", "13673190",
+        "13673161", "13673171", "13673181", "13673191",
+        "13673162", "13673172", "13673182", "13673192",
+        "13673163", "13673173", "13673185", "13673193",
+        "13673164", "13673174", "13673183", "13673194",
+        "13673165", "13673175", "13673184", "13673195",
+    }
+
     def test_double_colon_public_locations_are_public(self) -> None:
         self.assertTrue(is_public_class_location(":: Wilmington"))
         self.assertTrue(is_public_class_location(":: Holly Ridge"))
@@ -46,6 +57,43 @@ class PublicClassEligibilityTests(unittest.TestCase):
     def test_selector_pages_exclude_private_locations(self) -> None:
         self.assertFalse(block_start_time_selector.public_location_allowed("Brunswick Oral & Maxillofacial Surgery", {}))
         self.assertTrue(block_start_time_selector.public_location_allowed(":: Wilmington; Shipyard Blvd - B", {}))
+
+    def test_schedule_future_direct_double_colon_location_is_public(self) -> None:
+        session = {"location": {"location_name": ":: Wilmington; Shipyard Blvd"}}
+        self.assertEqual(
+            ":: Wilmington; Shipyard Blvd",
+            build_schedule_future.public_location_for_session(session, {}),
+        )
+
+    def test_schedule_future_room_a_b_c_locations_map_to_public_resources(self) -> None:
+        aliases = build_schedule_future.load_public_location_aliases(
+            Path(__file__).resolve().parents[1] / build_schedule_future.LOCATION_RESOURCE_MAP_PATH
+        )
+        cases = {
+            "NC - Wilmington: 4018 Shipyard Blvd; Room A @ 910CPR's Office": ":: Wilmington; Shipyard Blvd - A",
+            "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office": ":: Wilmington; Shipyard Blvd - B",
+            "NC - Wilmington: 4018 Shipyard Blvd; Room C @ 910CPR's Office": ":: Wilmington; Shipyard Blvd - C (Other)",
+        }
+        for raw, expected in cases.items():
+            with self.subTest(raw=raw):
+                session = {"location": {"location_name": raw}}
+                self.assertEqual(expected, build_schedule_future.public_location_for_session(session, aliases))
+
+    def test_schedule_future_unmapped_non_double_colon_location_is_suppressed(self) -> None:
+        session = {"location": {"location_name": "Brunswick Oral & Maxillofacial Surgery"}}
+        self.assertIsNone(build_schedule_future.public_location_for_session(session, {}))
+
+    def test_schedule_future_mapped_private_location_is_suppressed(self) -> None:
+        session = {"location": {"location_name": "Private Alias"}}
+        aliases = {build_schedule_future.normalize_location_key("Private Alias"): "Private Canonical"}
+        self.assertIsNone(build_schedule_future.public_location_for_session(session, aliases))
+
+    def test_schedule_future_has_no_blanket_ical_bypass_for_unmapped_private_location(self) -> None:
+        session = {
+            "session_id": "private-ical",
+            "location": {"location_name": "Brunswick Oral & Maxillofacial Surgery"},
+        }
+        self.assertIsNone(build_schedule_future.public_location_for_session(session, {}))
 
     def test_private_location_cannot_receive_direct_booking_url_preview(self) -> None:
         seeds = {
@@ -133,6 +181,100 @@ class PublicClassEligibilityTests(unittest.TestCase):
             self.assertEqual(payload["count"], 1)
             self.assertEqual(payload["sessions"][0]["class_id"], "20000001")
             self.assertNotIn("12946261", out.read_text(encoding="utf-8"))
+
+    def test_public_schedule_json_writer_excludes_closed_and_full_direct_booking_rows(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "schedule_future.json"
+            out = root / "public_schedule.json"
+            base = {
+                "course_id": "209806",
+                "course_name": "AHA BLS Provider",
+                "start_at": "2026-08-10T09:00:00-04:00",
+                "location_name": ":: Wilmington",
+                "registration_url": "https://example.test/enroll",
+            }
+            source.write_text(json_dump({
+                "build": {"generated_at": "2026-07-10T12:00:00-04:00"},
+                "sessions": [
+                    {**base, "session_id": "open", "registration_status": "open", "public_direct_booking": True},
+                    {**base, "session_id": "closed", "registration_status": "closed", "public_direct_booking": False},
+                    {**base, "session_id": "full", "registration_status": "full", "public_direct_booking": False},
+                ],
+            }), encoding="utf-8")
+
+            count = suppress_tbd_public_inventory.write_public_schedule_from_future(source, [out], set())
+            text = out.read_text(encoding="utf-8")
+            self.assertEqual(count, 1)
+            self.assertIn('"class_id": "open"', text)
+            self.assertNotIn('"class_id": "closed"', text)
+            self.assertNotIn('"class_id": "full"', text)
+
+    def test_suppress_tbd_cli_uses_normalized_schedule_future_not_raw_current_locations(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            schedule_future = root / "docs" / "data" / "schedule_future.json"
+            public_schedule = root / "docs" / "public_schedule.json"
+            current = root / "data" / "sessions_current.json"
+            schedule_future.parent.mkdir(parents=True)
+            current.parent.mkdir(parents=True)
+
+            schedule_future.write_text(json_dump({
+                "build": {"generated_at": "2026-07-11T12:00:00-04:00"},
+                "sessions": [
+                    {
+                        "session_id": "13673159",
+                        "course_id": "209818",
+                        "course_name": "AHA ACLS Provider (Initial)",
+                        "start_at": "2026-08-10T09:00:00-04:00",
+                        "location_name": ":: Wilmington; Shipyard Blvd - B",
+                        "location_display": ":: Wilmington; Shipyard Blvd - B",
+                        "registration_url": "https://example.test/enroll?id=13673159",
+                    }
+                ],
+            }), encoding="utf-8")
+            current.write_text(json_dump({
+                "sessions": [
+                    {
+                        "session_id": "13673159",
+                        "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+                    }
+                ],
+            }), encoding="utf-8")
+
+            old_root = suppress_tbd_public_inventory.ROOT
+            try:
+                suppress_tbd_public_inventory.ROOT = root
+                suppress_tbd_public_inventory.main()
+            finally:
+                suppress_tbd_public_inventory.ROOT = old_root
+
+            payload = json_load(public_schedule)
+            self.assertEqual(1, payload["count"])
+            self.assertEqual("13673159", payload["sessions"][0]["class_id"])
+            self.assertEqual(":: Wilmington; Shipyard Blvd - B", payload["sessions"][0]["location_name"])
+
+    def test_schedule_future_contains_known_good_amy_acls_pals_sessions_after_regeneration(self) -> None:
+        path = Path(__file__).resolve().parents[1] / "docs" / "data" / "schedule_future.json"
+        payload = json_load(path)
+        sessions = payload.get("sessions", [])
+        amy_sessions = [
+            session for session in sessions
+            if str(session.get("session_id")) in self.AMY_ACLS_PALS_SESSION_IDS
+        ]
+        self.assertEqual(28, len(amy_sessions))
+        self.assertEqual(self.AMY_ACLS_PALS_SESSION_IDS, {str(session.get("session_id")) for session in amy_sessions})
+        self.assertTrue(all(str(session.get("location_name") or "").startswith("::") for session in amy_sessions))
+
+    def test_schedule_future_public_rows_all_have_public_locations(self) -> None:
+        path = Path(__file__).resolve().parents[1] / "docs" / "data" / "schedule_future.json"
+        payload = json_load(path)
+        bad = [
+            (session.get("session_id"), session.get("location_name"))
+            for session in payload.get("sessions", [])
+            if not str(session.get("location_name") or "").strip().startswith("::")
+        ]
+        self.assertEqual([], bad)
 
     def test_topic_source_loader_excludes_private_locations(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

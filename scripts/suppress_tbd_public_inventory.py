@@ -16,6 +16,10 @@ from scripts.public_class_eligibility import session_has_public_class_location
 SESSION_ID_RE = re.compile(r"[?&]id=(\d+)")
 
 
+def is_public_direct_bookable(session: dict[str, Any]) -> bool:
+    return session.get("public_direct_booking") is not False and str(session.get("registration_status") or "open").strip().lower() not in {"closed", "full"}
+
+
 def raw_location_values(session: dict[str, Any]) -> list[str]:
     location = session.get("location")
     values: list[Any] = [
@@ -50,6 +54,20 @@ def nonpublic_session_ids(sessions_current_path: Path) -> set[str]:
     }
 
 
+def nonpublic_session_ids_from_schedule_future(schedule_future_path: Path) -> set[str]:
+    payload = json.loads(schedule_future_path.read_text(encoding="utf-8"))
+    sessions = payload.get("sessions", []) if isinstance(payload, dict) else payload
+    if not isinstance(sessions, list):
+        return set()
+    return {
+        str(session.get("session_id") or "").strip()
+        for session in sessions
+        if isinstance(session, dict)
+        and str(session.get("session_id") or "").strip()
+        and not session_has_public_class_location(session)
+    }
+
+
 def public_schedule_id(entry: dict[str, Any]) -> str:
     for key in ("class_id", "classSchedId", "sched_id", "id"):
         value = str(entry.get(key) or "").strip()
@@ -71,6 +89,8 @@ def write_public_schedule_from_future(schedule_future_path: Path, output_paths: 
             continue
         session_id = str(session.get("session_id") or "").strip()
         if not session_id or session_id in suppressed_ids:
+            continue
+        if not is_public_direct_bookable(session):
             continue
         if not session_has_public_class_location(session):
             continue
@@ -160,6 +180,8 @@ def remove_html_session_rows(text: str, suppressed_ids: set[str]) -> tuple[str, 
 
 
 def scrub_html_references(docs_dir: Path, suppressed_ids: set[str]) -> tuple[int, int]:
+    if not suppressed_ids:
+        return 0, 0
     files_changed = 0
     rows_removed = 0
     id_pattern = re.compile("|".join(re.escape(session_id) for session_id in sorted(suppressed_ids, key=len, reverse=True)))
@@ -187,10 +209,11 @@ def delete_class_pages(classes_dir: Path, suppressed_ids: set[str]) -> int:
 
 
 def main() -> int:
-    suppressed_ids = nonpublic_session_ids(ROOT / "data" / "sessions_current.json")
+    schedule_future_path = ROOT / "docs" / "data" / "schedule_future.json"
+    suppressed_ids = nonpublic_session_ids_from_schedule_future(schedule_future_path)
     deleted_pages = delete_class_pages(ROOT / "docs" / "classes", suppressed_ids)
     public_rows = write_public_schedule_from_future(
-        ROOT / "docs" / "data" / "schedule_future.json",
+        schedule_future_path,
         [ROOT / "docs" / "public_schedule.json", ROOT / "docs" / "data" / "public_schedule.json"],
         suppressed_ids,
     )

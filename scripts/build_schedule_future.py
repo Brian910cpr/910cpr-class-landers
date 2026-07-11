@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from scripts.build_status import BuildStatusReporter
 from scripts.local_data_paths import missing_live_input_message, print_resolved_path, resolve_live_input_path
-from scripts.public_class_eligibility import session_has_public_class_location
+from scripts.public_class_eligibility import is_public_class_location
 from supervisor.status_snapshot import write_status_snapshot
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
@@ -23,6 +23,7 @@ from scripts.course_identity_resolver import (
 
 TZ = ZoneInfo("America/New_York")
 ID_FROM_LINK_RE = re.compile(r"[?&]id=(\d+)")
+LOCATION_RESOURCE_MAP_PATH = Path("data/config/location_resource_map.json")
 
 
 def clean_string(value: Any) -> Optional[str]:
@@ -141,8 +142,57 @@ def has_tbd_location(session: dict[str, Any]) -> bool:
     return any("TBD" in value.upper() for value in raw_location_values(session))
 
 
-def has_public_raw_location(session: dict[str, Any]) -> bool:
-    return session_has_public_class_location(session)
+def normalize_location_key(value: Any) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", str(value or "").strip().lower()).strip("_")
+
+
+def load_public_location_aliases(path: Path) -> dict[str, str]:
+    if not path.exists():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    aliases: dict[str, str] = {}
+    for location in payload.get("locations", []) if isinstance(payload, dict) else []:
+        if not isinstance(location, dict):
+            continue
+        canonical = clean_string(location.get("canonical_public_location")) or ""
+        for value in [canonical, *(location.get("aliases", []) if isinstance(location.get("aliases"), list) else [])]:
+            key = normalize_location_key(value)
+            if key and canonical:
+                aliases[key] = canonical
+        for resource in location.get("internal_resources", []) if isinstance(location.get("internal_resources"), list) else []:
+            if not isinstance(resource, dict):
+                continue
+            resource_name = clean_string(resource.get("resource_name")) or ""
+            for value in [resource_name, *(resource.get("aliases", []) if isinstance(resource.get("aliases"), list) else [])]:
+                key = normalize_location_key(value)
+                if key and resource_name:
+                    aliases[key] = resource_name
+    return aliases
+
+
+def public_location_for_session(session: dict[str, Any], aliases: dict[str, str]) -> str | None:
+    for value in raw_location_values(session):
+        raw = clean_string(value)
+        if not raw:
+            continue
+        if is_public_class_location(raw):
+            return raw
+        mapped = aliases.get(normalize_location_key(raw))
+        if mapped and is_public_class_location(mapped):
+            return mapped
+    return None
+
+
+def apply_public_location(session: dict[str, Any], public_location: str) -> None:
+    location = session.get("location")
+    if not isinstance(location, dict):
+        location = {}
+        session["location"] = location
+    location.setdefault("source_location_name", debug_location_value(session))
+    location["location_name"] = public_location
+    location["location_display"] = public_location
+    session["location_name"] = public_location
+    session["location_display"] = public_location
 
 
 def safe_console_text(value: str) -> str:
@@ -239,6 +289,10 @@ def build_public_future_session(session: dict[str, Any], course_identity: dict[s
         "is_full": capacity.get("is_full"),
         "registration_url": commerce.get("registration_url"),
         "session_status": status.get("session_status"),
+        "registration_status": status.get("registration_status") or session.get("registration_status") or "open",
+        "public_direct_booking": status.get("public_direct_booking") if "public_direct_booking" in status else session.get("public_direct_booking", True),
+        "registration_status_source": status.get("registration_status_source") or session.get("registration_status_source"),
+        "registration_status_reason": status.get("registration_status_reason") or session.get("registration_status_reason"),
         "mapped_family": session.get("mapped_family") or identity.get("family") or course.get("mapped_family"),
         "mapped_subtype": session.get("mapped_subtype") or identity.get("subtype") or course.get("mapped_subtype"),
         "mapped_certifying_body": session.get("mapped_certifying_body") or identity.get("certifying_body") or course.get("mapped_certifying_body"),
@@ -342,6 +396,7 @@ def main() -> int:
     try:
         aliases = load_aliases(aliases_path)
         course_reference = json.loads(course_map_path.read_text(encoding="utf-8"))
+        public_location_aliases = load_public_location_aliases(repo_root / LOCATION_RESOURCE_MAP_PATH)
         raw = json.loads(input_path.read_text(encoding="utf-8"))
         sessions = raw.get("sessions", [])
         source_mode = str(raw.get("build", {}).get("source_mode") or "").strip()
@@ -442,13 +497,16 @@ def main() -> int:
                 skipped_past += 1
                 reporter.update(current=index, total=len(sessions))
                 continue
-            if not has_public_raw_location(session):
+            raw_has_tbd_location = has_tbd_location(session)
+            public_location = public_location_for_session(session, public_location_aliases)
+            if not public_location:
                 print(f"NON-PUBLIC LOCATION SUPPRESSED: session_id={session_id} location={safe_console_text(debug_location_value(session))}")
                 skipped_non_public_location += 1
                 skipped_non_public_session_ids.append(session_id)
                 reporter.update(current=index, total=len(sessions))
                 continue
-            if has_tbd_location(session):
+            apply_public_location(session, public_location)
+            if raw_has_tbd_location:
                 print(f"TBD LOCATION SUPPRESSED: session_id={session_id} location={safe_console_text(debug_location_value(session))}")
                 skipped_tbd_location += 1
                 skipped_tbd_session_ids.append(session_id)

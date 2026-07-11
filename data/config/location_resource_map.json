@@ -15,11 +15,17 @@
       "internal_resources": [
         {
           "resource_name": ":: Wilmington; Shipyard Blvd - A",
+          "aliases": [
+            "NC - Wilmington: 4018 Shipyard Blvd; Room A @ 910CPR's Office"
+          ],
           "confirmed_appointment_container": false,
           "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
         },
         {
           "resource_name": ":: Wilmington; Shipyard Blvd - B",
+          "aliases": [
+            "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+          ],
           "confirmed_appointment_container": false,
           "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
         },
@@ -30,6 +36,9 @@
         },
         {
           "resource_name": ":: Wilmington; Shipyard Blvd - C (Other)",
+          "aliases": [
+            "NC - Wilmington: 4018 Shipyard Blvd; Room C @ 910CPR's Office"
+          ],
           "confirmed_appointment_container": false,
           "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
         },

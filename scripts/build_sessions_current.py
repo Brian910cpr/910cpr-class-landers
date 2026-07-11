@@ -278,11 +278,56 @@ def fetch_ical_text(url: str) -> str:
     return decode_ical_bytes(raw)
 
 
+def fetch_enrollment_page_text(url: str) -> str:
+    request = urllib.request.Request(url, headers={"User-Agent": ENROLLWARE_ICAL_USER_AGENT})
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            raw = response.read()
+    except urllib.error.URLError as exc:
+        reason = getattr(exc, "reason", None)
+        if not isinstance(reason, ssl.SSLError):
+            raise
+        insecure_context = ssl._create_unverified_context()
+        with urllib.request.urlopen(request, timeout=20, context=insecure_context) as response:
+            raw = response.read()
+    return decode_ical_bytes(raw)
+
+
 def decode_ical_bytes(raw: bytes) -> str:
     try:
         return raw.decode("utf-8")
     except UnicodeDecodeError:
         return raw.decode("cp1252", errors="replace")
+
+
+def enrollment_page_unavailable_reason(text: str) -> Optional[str]:
+    visible_text = re.sub(r"<script[\s\S]*?</script>", " ", text, flags=re.IGNORECASE)
+    visible_text = re.sub(r"<style[\s\S]*?</style>", " ", visible_text, flags=re.IGNORECASE)
+    visible_text = re.sub(r"<[^>]+>", " ", visible_text)
+    visible_text = html.unescape(re.sub(r"\s+", " ", visible_text)).strip().lower()
+    if "registration for this class is closed" in visible_text:
+        return "enrollware_registration_closed"
+    if "this class is currently full" in visible_text:
+        return "enrollware_class_full"
+    return None
+
+
+def enrollment_url_unavailable_reason(url: Optional[str]) -> Optional[str]:
+    clean_url = clean_string(url)
+    if not clean_url:
+        return None
+    try:
+        return enrollment_page_unavailable_reason(fetch_enrollment_page_text(clean_url))
+    except Exception as exc:
+        return f"enrollware_registration_status_check_failed:{exc.__class__.__name__}"
+
+
+def registration_status_from_unavailable_reason(reason: Optional[str]) -> str:
+    if reason == "enrollware_registration_closed":
+        return "closed"
+    if reason == "enrollware_class_full":
+        return "full"
+    return "open"
 
 
 def course_consumption_minutes(course_map: dict[str, Any], course_id: Optional[str]) -> Optional[int]:
@@ -532,6 +577,8 @@ def build_session_from_ical_event(
         },
         "status": {
             "session_status": "active",
+            "registration_status": "open",
+            "public_direct_booking": True,
             "source_of_truth": "enrollware_ical",
             "last_updated_at": now_iso,
         },
@@ -559,6 +606,7 @@ def build_sessions_from_enrollware_ical(
     sessions: list[dict[str, Any]] = []
     skipped: list[dict[str, Any]] = []
     unmapped_rows: list[dict[str, Any]] = []
+    unavailable_rows: list[dict[str, Any]] = []
 
     for event in events:
         session_id = stable_ical_session_id(event)
@@ -577,6 +625,28 @@ def build_sessions_from_enrollware_ical(
                 }
             )
             continue
+        registration_unavailable_reason = enrollment_url_unavailable_reason(session.get("commerce", {}).get("registration_url"))
+        registration_status = registration_status_from_unavailable_reason(registration_unavailable_reason)
+        if registration_status in {"closed", "full"}:
+            status = session.setdefault("status", {})
+            status["registration_status"] = registration_status
+            status["public_direct_booking"] = False
+            status["registration_status_source"] = "enrollware_registration_page"
+            status["registration_status_reason"] = registration_unavailable_reason
+            session["registration_status"] = registration_status
+            session["public_direct_booking"] = False
+            session["registration_status_source"] = "enrollware_registration_page"
+            session["registration_status_reason"] = registration_unavailable_reason
+            unavailable_rows.append(
+                {
+                    "session_id": session.get("session_id"),
+                    "raw_course": session.get("course", {}).get("course_name_primary_clean"),
+                    "start_at": session.get("timing", {}).get("start_at"),
+                    "location": session.get("location", {}).get("location_display"),
+                    "registration_url": session.get("commerce", {}).get("registration_url"),
+                    "reason": registration_unavailable_reason,
+                }
+            )
         sessions.append(session)
         if session.get("mapping_status") != "mapped":
             unmapped_rows.append(
@@ -611,6 +681,7 @@ def build_sessions_from_enrollware_ical(
                 "ical_events_read": len(events),
                 "sessions_written": len(sessions),
                 "skipped_events": len(skipped),
+                "registration_unavailable_sessions_marked_not_direct_bookable": len(unavailable_rows),
                 "unmapped_sessions": len(unmapped_rows),
                 "prior_sessions_read": len(previous_by_id),
                 "sessions_added_compared_with_prior_source": len(added_ids),
@@ -640,6 +711,7 @@ def build_sessions_from_enrollware_ical(
         "ical_events_read": len(events),
         "public_sessions_created": len(sessions),
         "skipped_events": len(skipped),
+        "registration_unavailable_sessions_marked_not_direct_bookable": len(unavailable_rows),
         "unmapped_sessions": len(unmapped_rows),
         "prior_sessions_read": len(previous_by_id),
         "sessions_added_compared_with_prior_source": len(added_ids),
@@ -660,6 +732,7 @@ def build_sessions_from_enrollware_ical(
         f"- iCal events read: `{len(events)}`",
         f"- Public sessions created: `{len(sessions)}`",
         f"- Skipped events: `{len(skipped)}`",
+        f"- Registration unavailable sessions marked not direct-bookable: `{len(unavailable_rows)}`",
         f"- Unmapped sessions: `{len(unmapped_rows)}`",
         f"- Prior sessions read: `{len(previous_by_id)}`",
         f"- Classes removed compared with prior source: `{len(removed_ids)}`",
@@ -681,6 +754,16 @@ def build_sessions_from_enrollware_ical(
             )
     else:
         report_lines.append("- None")
+    report_lines.extend(["", "## Registration Unavailable Exclusions", ""])
+    if unavailable_rows:
+        report_lines.append("| Session ID | Reason | Course | Start | Location |")
+        report_lines.append("|---|---|---|---|---|")
+        for item in unavailable_rows[:50]:
+            report_lines.append(
+                f"| `{item.get('session_id')}` | {item.get('reason') or ''} | {item.get('raw_course') or ''} | {item.get('start_at') or ''} | {item.get('location') or ''} |"
+            )
+    else:
+        report_lines.append("- None")
     report_lines.extend(["", "## Unmapped Examples", ""])
     if unmapped_rows:
         for row in unmapped_rows[:20]:
@@ -692,6 +775,7 @@ def build_sessions_from_enrollware_ical(
     print(f"Wrote {output_path}")
     print(f"iCal events read: {len(events)}")
     print(f"Public sessions created: {len(sessions)}")
+    print(f"Registration unavailable sessions marked not direct-bookable: {len(unavailable_rows)}")
     print(f"Classes removed compared with prior source: {len(removed_ids)}")
     print(f"Wrote {audit_dir / 'enrollware_ical_import_summary.json'}")
     print(f"Wrote {audit_dir / 'enrollware_ical_import_report.md'}")

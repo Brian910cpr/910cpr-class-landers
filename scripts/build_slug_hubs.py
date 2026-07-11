@@ -150,6 +150,10 @@ def schedule_source_label(path: Path) -> str:
         return str(path)
 
 
+def is_public_direct_bookable_session(session: dict[str, Any]) -> bool:
+    return session.get("public_direct_booking") is not False and normalize_space(session.get("registration_status")).lower() not in {"closed", "full"}
+
+
 def load_authoritative_schedule() -> tuple[list[dict[str, Any]], Path]:
     source_path = authoritative_schedule_path()
     schedule = json.loads(source_path.read_text(encoding="utf-8"))
@@ -157,7 +161,9 @@ def load_authoritative_schedule() -> tuple[list[dict[str, Any]], Path]:
     return [
         session
         for session in sessions
-        if isinstance(session, dict) and session_has_public_class_location(session)
+        if isinstance(session, dict)
+        and session_has_public_class_location(session)
+        and is_public_direct_bookable_session(session)
     ], source_path
 
 
