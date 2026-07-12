@@ -3,7 +3,7 @@ from __future__ import annotations
 from scripts.build_bls_block_schedule_pilot import run_page
 
 
-DEPLOYED_SELECTOR_PAGE_KEYS = ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed")
+DEPLOYED_SELECTOR_PAGE_KEYS = ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed", "hsi")
 
 
 def main() -> int:

@@ -1,0 +1,165 @@
+{
+  "courses": [
+    {
+      "course_id": "374378",
+      "course_key": "hsi_adult_first_aid_cpr_aed",
+      "display_name": "HSI Adult First Aid | CPR AED",
+      "official_title": "HSI Adult First Aid | CPR AED",
+      "delivery_method": "classroom",
+      "appointment_allowed": true,
+      "duration_minutes_catalog": 180,
+      "has_explicit_consumption_rule": false,
+      "rule_duration_minutes": null,
+      "rule_scheduler_consumption_minutes": null,
+      "required_instructor_qualification": [
+        "HSI_INSTRUCTOR"
+      ],
+      "room_resource_requirement": [
+        "UNKNOWN"
+      ],
+      "existing_public_destination": "/courses/hsi-first-aid-cpr-aed.html",
+      "current_generator_before_repair": "slug hub seated/request-only category, no safe dynamic selector output",
+      "current_generator_after_repair": "fail-closed for dynamic selector offers pending explicit course_consumption_rules.json rule",
+      "dynamic_appointment_offers_enabled_after_repair": false,
+      "shares_legacy_defective_path_before_repair": false
+    },
+    {
+      "course_id": "422270",
+      "course_key": "hsi_adult_first_aid_cpr_aed_alt",
+      "display_name": "HSI Adult First Aid | CPR AED",
+      "official_title": "HSI Adult First Aid | CPR AED",
+      "delivery_method": "classroom",
+      "appointment_allowed": true,
+      "duration_minutes_catalog": 180,
+      "has_explicit_consumption_rule": false,
+      "rule_duration_minutes": null,
+      "rule_scheduler_consumption_minutes": null,
+      "required_instructor_qualification": [
+        "HSI_INSTRUCTOR"
+      ],
+      "room_resource_requirement": [
+        "UNKNOWN"
+      ],
+      "existing_public_destination": "HSI hub/category support; dynamic selector suppressed until explicit rule exists",
+      "current_generator_before_repair": "slug hub seated/request-only category, no safe dynamic selector output",
+      "current_generator_after_repair": "fail-closed for dynamic selector offers pending explicit course_consumption_rules.json rule",
+      "dynamic_appointment_offers_enabled_after_repair": false,
+      "shares_legacy_defective_path_before_repair": false
+    },
+    {
+      "course_id": "371954",
+      "course_key": "hsi_adult_first_aid_cpr_aed_blended",
+      "display_name": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "official_title": "HSI Adult First Aid | CPR AED - Blended Learning",
+      "delivery_method": "blended",
+      "appointment_allowed": true,
+      "duration_minutes_catalog": 45,
+      "has_explicit_consumption_rule": false,
+      "rule_duration_minutes": null,
+      "rule_scheduler_consumption_minutes": null,
+      "required_instructor_qualification": [
+        "HSI_INSTRUCTOR"
+      ],
+      "room_resource_requirement": [
+        "UNKNOWN"
+      ],
+      "existing_public_destination": "HSI hub/category support; dynamic selector suppressed until explicit rule exists",
+      "current_generator_before_repair": "slug hub seated/request-only category, no safe dynamic selector output",
+      "current_generator_after_repair": "fail-closed for dynamic selector offers pending explicit course_consumption_rules.json rule",
+      "dynamic_appointment_offers_enabled_after_repair": false,
+      "shares_legacy_defective_path_before_repair": false
+    },
+    {
+      "course_id": "463743",
+      "course_key": "hsi_bls_challenge",
+      "display_name": "HSI BLS Challenge",
+      "official_title": "HSI BLS Challenge",
+      "delivery_method": "classroom",
+      "appointment_allowed": true,
+      "duration_minutes_catalog": 45,
+      "has_explicit_consumption_rule": true,
+      "rule_duration_minutes": 120,
+      "rule_scheduler_consumption_minutes": 120,
+      "required_instructor_qualification": [
+        "HSI_INSTRUCTOR"
+      ],
+      "room_resource_requirement": [
+        "UNKNOWN"
+      ],
+      "existing_public_destination": "HSI hub/category support; dynamic selector suppressed until explicit rule exists",
+      "current_generator_before_repair": "slug hub seated/request-only category, no safe dynamic selector output",
+      "current_generator_after_repair": "scripts/build_deployed_selector_pages.py -> scripts/block_start_time_selector.py",
+      "dynamic_appointment_offers_enabled_after_repair": true,
+      "shares_legacy_defective_path_before_repair": false
+    },
+    {
+      "course_id": "445670",
+      "course_key": "hsi_bls_adult_first_aid_blended",
+      "display_name": "HSI BLS + Adult First Aid",
+      "official_title": "HSI BLS and Adult First Aid | Blended Learning",
+      "delivery_method": "blended",
+      "appointment_allowed": true,
+      "duration_minutes_catalog": 45,
+      "has_explicit_consumption_rule": true,
+      "rule_duration_minutes": 45,
+      "rule_scheduler_consumption_minutes": 45,
+      "required_instructor_qualification": [
+        "HSI_INSTRUCTOR"
+      ],
+      "room_resource_requirement": [
+        "UNKNOWN"
+      ],
+      "existing_public_destination": "/hsi-schedule.html",
+      "current_generator_before_repair": "scripts/build_slug_hubs.py + dynamic_offer_presentation_policy",
+      "current_generator_after_repair": "scripts/build_deployed_selector_pages.py -> scripts/block_start_time_selector.py",
+      "dynamic_appointment_offers_enabled_after_repair": true,
+      "shares_legacy_defective_path_before_repair": true
+    },
+    {
+      "course_id": "448630",
+      "course_key": "hsi_basic_life_support",
+      "display_name": "HSI Basic Life Support",
+      "official_title": "HSI Basic Life Support",
+      "delivery_method": "classroom",
+      "appointment_allowed": true,
+      "duration_minutes_catalog": 150,
+      "has_explicit_consumption_rule": false,
+      "rule_duration_minutes": null,
+      "rule_scheduler_consumption_minutes": null,
+      "required_instructor_qualification": [
+        "HSI_INSTRUCTOR"
+      ],
+      "room_resource_requirement": [
+        "UNKNOWN"
+      ],
+      "existing_public_destination": "/hsi-schedule.html?course=challenge",
+      "current_generator_before_repair": "slug hub seated/request-only category, no safe dynamic selector output",
+      "current_generator_after_repair": "fail-closed for dynamic selector offers pending explicit course_consumption_rules.json rule",
+      "dynamic_appointment_offers_enabled_after_repair": false,
+      "shares_legacy_defective_path_before_repair": false
+    },
+    {
+      "course_id": "449422",
+      "course_key": "hsi_pediatric_first_aid_cpr_aed_blended",
+      "display_name": "HSI Pediatric First Aid | CPR AED - Blended",
+      "official_title": "HSI Pediatric First Aid | CPR AED - Blended",
+      "delivery_method": "blended",
+      "appointment_allowed": true,
+      "duration_minutes_catalog": 45,
+      "has_explicit_consumption_rule": false,
+      "rule_duration_minutes": null,
+      "rule_scheduler_consumption_minutes": null,
+      "required_instructor_qualification": [
+        "HSI_INSTRUCTOR"
+      ],
+      "room_resource_requirement": [
+        "UNKNOWN"
+      ],
+      "existing_public_destination": "HSI hub/category support; dynamic selector suppressed until explicit rule exists",
+      "current_generator_before_repair": "slug hub seated/request-only category, no safe dynamic selector output",
+      "current_generator_after_repair": "fail-closed for dynamic selector offers pending explicit course_consumption_rules.json rule",
+      "dynamic_appointment_offers_enabled_after_repair": false,
+      "shares_legacy_defective_path_before_repair": false
+    }
+  ]
+}

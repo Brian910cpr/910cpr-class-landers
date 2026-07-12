@@ -1,0 +1,124 @@
+{
+  "families": [
+    {
+      "family": "bls",
+      "before_exists": true,
+      "before": {
+        "offer_count": 1677,
+        "date_count": 39,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 67
+      },
+      "after": {
+        "offer_count": 1610,
+        "date_count": 38,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 0
+      },
+      "removed_count": 67,
+      "added_count": 0,
+      "note": "Removed tuples were dynamic offers overlapping newly recognized blocked live-calendar occupancy"
+    },
+    {
+      "family": "heartsaver",
+      "before_exists": true,
+      "before": {
+        "offer_count": 3186,
+        "date_count": 39,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 118
+      },
+      "after": {
+        "offer_count": 3068,
+        "date_count": 36,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 0
+      },
+      "removed_count": 118,
+      "added_count": 0,
+      "note": "Removed tuples were dynamic offers overlapping newly recognized blocked live-calendar occupancy"
+    },
+    {
+      "family": "acls",
+      "before_exists": true,
+      "before": {
+        "offer_count": 14,
+        "date_count": 7,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 0
+      },
+      "after": {
+        "offer_count": 14,
+        "date_count": 7,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 0
+      },
+      "removed_count": 0,
+      "added_count": 0,
+      "note": "No tuple change"
+    },
+    {
+      "family": "pals",
+      "before_exists": true,
+      "before": {
+        "offer_count": 14,
+        "date_count": 7,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 0
+      },
+      "after": {
+        "offer_count": 14,
+        "date_count": 7,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 0
+      },
+      "removed_count": 0,
+      "added_count": 0,
+      "note": "No tuple change"
+    },
+    {
+      "family": "uscg",
+      "before_exists": true,
+      "before": {
+        "offer_count": 1053,
+        "date_count": 39,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 38
+      },
+      "after": {
+        "offer_count": 1015,
+        "date_count": 36,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 0
+      },
+      "removed_count": 38,
+      "added_count": 0,
+      "note": "Removed tuples were dynamic offers overlapping newly recognized blocked live-calendar occupancy"
+    },
+    {
+      "family": "hsi",
+      "before_exists": false,
+      "before": null,
+      "after": {
+        "offer_count": 1107,
+        "date_count": 42,
+        "duplicate_count": 0,
+        "private_location_count": 0,
+        "dynamic_overlap_count": 0
+      },
+      "removed_count": 0,
+      "added_count": 1107,
+      "note": "HSI new artifact expected"
+    }
+  ]
+}

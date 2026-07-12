@@ -1,0 +1,55 @@
+{
+  "root_cause": "HSI hub rendered static appointment offers from the legacy slug-hub dynamic-offer presentation path instead of the selector-resolved availability authority. That path consumed public_sellable_offers_preview/dynamic_offer_presentation_policy and embedded appointment URLs in docs/hsi.html.",
+  "old_path": [
+    "data/audit/live_availability_snapshot_preview.json",
+    "scripts/generate_dynamic_offers.py -> data/runtime/audit_previews/dynamic_offers_preview.json",
+    "scripts/filter_public_sellable_offers.py -> data/runtime/audit_previews/public_sellable_offers_preview.json",
+    "scripts/dynamic_offer_presentation_policy.py -> data/audit/dynamic_offer_presentation_policy_report.json",
+    "scripts/build_slug_hubs.py -> docs/hsi.html static appointment cards"
+  ],
+  "new_path": [
+    "data/audit/live_availability_snapshot_preview.json",
+    "data/sessions_current.json + docs/data/schedule_future.json + blocked live-calendar intervals as occupancy",
+    "data/inventory/course_consumption_rules.json",
+    "scripts/block_start_time_selector.py",
+    "scripts/build_deployed_selector_pages.py",
+    "docs/data/block-selector-availability/hsi.json",
+    "docs/hsi-schedule.html browser fetch with cache no-store and fail-closed shell"
+  ],
+  "legacy_public_hsi_offer_count": 17,
+  "legacy_policy_render_hsi_offer_count": 7,
+  "legacy_course_ids": {
+    "445670": 17
+  },
+  "new_hsi_offer_count": 1107,
+  "new_hsi_course_ids": {
+    "463743": 519,
+    "445670": 588
+  },
+  "blocked_interval_loss_point": "scripts/build_slug_hubs.py consumed render_offers from dynamic_offer_presentation_policy and wrote static HSI appointment cards. HSI was not in scripts.build_deployed_selector_pages.DEPLOYED_SELECTOR_PAGE_KEYS, so it did not use selector-resolved-availability.v1.",
+  "defect_classification": {
+    "no_occupancy_check": false,
+    "start_time_only_comparison": false,
+    "wrong_course_duration": false,
+    "wrong_instructor_or_resource": false,
+    "timezone_normalization": false,
+    "date_rollover": false,
+    "stale_generated_data": true,
+    "different_source_authority": true,
+    "incorrect_interval_boundary_semantics": false
+  },
+  "observed_example_status": {
+    "blocked_interval": "3:00 PM-9:00 PM",
+    "bad_public_times": [
+      "5:45 PM",
+      "6:00 PM",
+      "6:15 PM"
+    ],
+    "regression_test": "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_blocked_calendar_interval_occupancy_rejects_hsi_overlap_boundaries",
+    "result": "Rejected by shared has_conflict interval overlap using offer_start < occupied_end and offer_end > occupied_start."
+  },
+  "files": {
+    "trace_markdown": "data/audit/hsi_blocked_time_trace.md",
+    "trace_json": "data/audit/hsi_blocked_time_trace.json"
+  }
+}

@@ -1769,7 +1769,7 @@
       "scheduler_display_duration_minutes": 45,
       "setup_buffer_minutes": null,
       "cleanup_buffer_minutes": null,
-      "scheduler_consumption_minutes": null,
+      "scheduler_consumption_minutes": 60,
       "minimum_lead_time_hours": 24,
       "maximum_lookahead_days": 60,
       "allowed_days_of_week": [
@@ -1783,12 +1783,12 @@
       ],
       "allowed_start_time_min": "08:00",
       "allowed_start_time_max": "19:00",
-      "dynamic_offer_allowed": false,
-      "appointment_seed_allowed": false,
+      "dynamic_offer_allowed": true,
+      "appointment_seed_allowed": true,
       "requires_instructor_availability": true,
       "requires_existing_enrollware_class": false,
       "can_stack_with_same_course": false,
-      "minimum_gap_minutes": 120,
+      "minimum_gap_minutes": 60,
       "max_students_default": 2,
       "min_students_default": 1,
       "registration_backend": "enrollware",
@@ -1819,7 +1819,7 @@
         "UNKNOWN"
       ],
       "room_requirements": [],
-      "notes_internal": "Generated from course_catalog.json; not authoritative for production behavior yet. Dynamic offers blocked until duration/setup/cleanup are reviewed.",
+      "notes_internal": "HSI BLS Challenge is dynamically allowed. The 45-minute classroom/display duration is informational; scheduling uses a 60-minute operational consumption window.",
       "source_files": [
         "data/config/course_catalog.json",
         "data/config/course_map.json",
@@ -1831,7 +1831,6 @@
         "hub_tab",
         "setup_buffer_minutes",
         "cleanup_buffer_minutes",
-        "scheduler_consumption_minutes",
         "base_price",
         "card_type"
       ]

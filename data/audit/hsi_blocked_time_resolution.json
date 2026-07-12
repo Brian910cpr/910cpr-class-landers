@@ -1,0 +1,38 @@
+{
+  "artifact": "docs/data/block-selector-availability/hsi.json",
+  "closed_full_direct_booking_hsi_static_count": 0,
+  "counts": {
+    "availabilityBlocksEvaluated": 62,
+    "availabilityBlocksFound": 62,
+    "publicLocationBlocksEvaluated": 62,
+    "publicSelectableDateCount": 42,
+    "publicSelectableOfferCount": 1160,
+    "publicSelectableStartTimeCount": 588,
+    "rejectedOfferCount": 2404,
+    "suppressedStaleOrOrphanedOfferCount": 0,
+    "wholeBlockPresentedAsClass": false
+  },
+  "hsi_schedule_html_has_fail_closed_fetch": true,
+  "missing_or_invalid_duration_rejections": 0,
+  "non_public_location_count": 0,
+  "observed_bad_times": [],
+  "offer_count_by_course_id": {
+    "445670": 588,
+    "463743": 572
+  },
+  "offer_count_by_instructor": {
+    "Brian Ennis": 1160
+  },
+  "offer_count_by_location": {
+    ":: Wilmington; Shipyard Blvd": 1160
+  },
+  "private_location_rejections": 0,
+  "rejection_reason_counts": {
+    "conflicts_with_existing_enrollware_occupancy": 720,
+    "does_not_fit_inside_availability_after_duration_and_buffers": 125,
+    "inside_minimum_lead_time": 8,
+    "outside_public_dynamic_hours": 1780
+  },
+  "schema": "selector-resolved-availability.v1",
+  "static_hsi_html_appointment_url_count": 0
+}

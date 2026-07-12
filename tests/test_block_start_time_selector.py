@@ -277,7 +277,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_public_artifact_uses_only_public_double_colon_locations(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        for page_key in ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed"):
+        for page_key in ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed", "hsi"):
             with self.subTest(page_key=page_key):
                 payload = block_start_time_selector.build_block_schedule_page(configs[page_key])
                 artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
@@ -291,9 +291,11 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
     def test_acls_and_pals_are_deployed_selector_pages(self):
         self.assertIn("acls", build_deployed_selector_pages.DEPLOYED_SELECTOR_PAGE_KEYS)
         self.assertIn("pals", build_deployed_selector_pages.DEPLOYED_SELECTOR_PAGE_KEYS)
+        self.assertIn("hsi", build_deployed_selector_pages.DEPLOYED_SELECTOR_PAGE_KEYS)
         configs = block_start_time_selector.load_block_schedule_page_configs()
         self.assertEqual(configs["acls"]["output_path"], "docs/acls-schedule.html")
         self.assertEqual(configs["pals"]["output_path"], "docs/pals-schedule.html")
+        self.assertEqual(configs["hsi"]["output_path"], "docs/hsi-schedule.html")
 
     def test_acls_selector_shell_and_artifact_support_all_variants_without_static_times(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
@@ -339,6 +341,75 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "251496"))
         self.assertEqual(0, sum(1 for offer in offers if offer.get("courseId") == "209812"))
         self.assertEqual({"seated_class"}, {offer.get("offerType") for offer in offers})
+
+    def test_hsi_selector_shell_uses_resolved_authority_without_static_times(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        payload = block_start_time_selector.build_block_schedule_page(configs["hsi"])
+        guarded = block_start_time_selector.apply_final_live_availability_guard(payload)
+        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(guarded)
+        html = build_bls_block_schedule_pilot.render_html(guarded)
+        self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
+        self.assertEqual("hsi", artifact["pageKey"])
+        self.assertIn("HSI BLS Challenge", html)
+        self.assertIn("HSI BLS + Adult First Aid", html)
+        self.assertIn("Checking current class times…", html)
+        self.assertIn("fetch(availabilityUrl, { cache: 'no-store' })", html)
+        self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
+        offers = artifact_offers(artifact)
+        self.assertGreater(len(offers), 0)
+        self.assertLessEqual({offer["courseId"] for offer in offers}, {"463743", "445670"})
+        self.assertFalse([offer for offer in offers if not str(offer.get("location", "")).startswith("::")])
+
+    def test_hsi_hub_no_longer_embeds_static_dynamic_appointment_times(self):
+        html = (ROOT / "docs" / "hsi.html").read_text(encoding="utf-8")
+        self.assertIn("/hsi-schedule.html?course=challenge", html)
+        self.assertIn("/hsi-schedule.html?course=bls-first-aid", html)
+        self.assertNotIn("slug-appointment-option", html)
+        self.assertNotIn("appointmentDayId=", html)
+
+    def test_blocked_calendar_interval_occupancy_rejects_hsi_overlap_boundaries(self):
+        live_payload = {
+            "availability_blocks": [{
+                "availability_status": "blocked",
+                "instructor_name": "Brian Ennis",
+                "person_id": "instructor_24057895173",
+                "date": "2026-07-04",
+                "end_date": "2026-07-04",
+                "start_datetime": "2026-07-04T15:00:00-04:00",
+                "end_datetime": "2026-07-04T21:00:00-04:00",
+                "start_time": "15:00",
+                "end_time": "21:00",
+                "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+                "source_calendar_id": "brian_do_not_schedule",
+                "source_event_id": "blocked-3-to-9",
+                "source_type": "google_calendar_block",
+            }]
+        }
+        occupancy = block_start_time_selector.build_occupancy(
+            {
+                "sessions_current": {"sessions": []},
+                "schedule_future": {"sessions": []},
+                "live_availability_snapshot": live_payload,
+                "location_resource_map": block_start_time_selector.read_required_json(block_start_time_selector.LOCATION_RESOURCE_MAP_PATH),
+            },
+            {},
+        )
+        person = {"display_name": "Brian Ennis"}
+        location = ":: Wilmington; Shipyard Blvd"
+
+        def conflict(start_hour: int, start_minute: int, end_hour: int, end_minute: int) -> bool:
+            start = datetime(2026, 7, 4, start_hour, start_minute)
+            end = datetime(2026, 7, 4, end_hour, end_minute)
+            return block_start_time_selector.generate_dynamic_offers.has_conflict(start, end, occupancy, location, person)[0]
+
+        self.assertFalse(conflict(13, 30, 15, 0))
+        self.assertTrue(conflict(14, 30, 15, 15))
+        self.assertTrue(conflict(14, 0, 22, 0))
+        self.assertTrue(conflict(17, 45, 19, 15))
+        self.assertTrue(conflict(18, 0, 19, 30))
+        self.assertTrue(conflict(18, 15, 19, 45))
+        self.assertTrue(conflict(20, 45, 21, 15))
+        self.assertFalse(conflict(21, 0, 22, 30))
 
     def test_closed_full_classes_remain_occupancy_but_not_direct_selector_offers(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
@@ -519,6 +590,83 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             stats["suppressed_available_blocks"][0]["reason"],
             "inverse_generated_availability_source_not_approved_for_public_page",
         )
+
+    def test_missing_live_calendar_snapshot_fails_closed(self):
+        original_path = block_start_time_selector.LIVE_AVAILABILITY_PATH
+        block_start_time_selector.LIVE_AVAILABILITY_PATH = ROOT / "data" / "audit" / "missing_live_snapshot_for_test.json"
+        try:
+            with self.assertRaises(block_start_time_selector.BlockSelectorInputError):
+                block_start_time_selector.require_current_live_availability_snapshot()
+        finally:
+            block_start_time_selector.LIVE_AVAILABILITY_PATH = original_path
+
+    def test_stale_live_calendar_snapshot_fails_closed(self):
+        with self.assertRaises(block_start_time_selector.BlockSelectorInputError):
+            original_read = block_start_time_selector.read_required_json
+            block_start_time_selector.read_required_json = lambda _path: {
+                "generated_at": "2026-07-01T23:59:00-04:00",
+                "availability_blocks": [],
+            }
+            try:
+                block_start_time_selector.require_current_live_availability_snapshot()
+            finally:
+                block_start_time_selector.read_required_json = original_read
+
+    def test_malformed_blocked_calendar_occupancy_fails_closed(self):
+        malformed = {
+            "availability_blocks": [{
+                "availability_status": "blocked",
+                "source_event_id": "malformed-block",
+                "instructor_name": "Brian Ennis",
+                "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+                "date": "2026-07-04",
+                "start_time": "not-a-time",
+                "end_time": "21:00",
+            }]
+        }
+        with self.assertRaises(block_start_time_selector.BlockSelectorInputError):
+            block_start_time_selector.normalize_live_calendar_block_occupancy(malformed)
+
+    def test_blocked_calendar_occupancy_without_instructor_or_location_fails_closed(self):
+        unsafe = {
+            "availability_blocks": [{
+                "availability_status": "blocked",
+                "source_event_id": "unknown-resource-block",
+                "start_datetime": "2026-07-04T15:00:00-04:00",
+                "end_datetime": "2026-07-04T21:00:00-04:00",
+            }]
+        }
+        with self.assertRaises(block_start_time_selector.BlockSelectorInputError):
+            block_start_time_selector.normalize_live_calendar_block_occupancy(unsafe)
+
+    def test_valid_fresh_occupancy_allows_non_conflicting_hsi_offer(self):
+        live_payload = {
+            "availability_blocks": [{
+                "availability_status": "blocked",
+                "source_event_id": "valid-block",
+                "instructor_name": "Brian Ennis",
+                "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+                "start_datetime": "2026-07-04T15:00:00-04:00",
+                "end_datetime": "2026-07-04T21:00:00-04:00",
+            }]
+        }
+        occupancy = block_start_time_selector.build_occupancy(
+            {
+                "sessions_current": {"sessions": []},
+                "schedule_future": {"sessions": []},
+                "live_availability_snapshot": live_payload,
+                "location_resource_map": block_start_time_selector.read_required_json(block_start_time_selector.LOCATION_RESOURCE_MAP_PATH),
+            },
+            {},
+        )
+        conflict, reason = block_start_time_selector.generate_dynamic_offers.has_conflict(
+            datetime(2026, 7, 4, 21, 0),
+            datetime(2026, 7, 4, 21, 45),
+            occupancy,
+            ":: Wilmington; Shipyard Blvd",
+            {"display_name": "Brian Ennis"},
+        )
+        self.assertFalse(conflict, reason)
 
 
 if __name__ == "__main__":

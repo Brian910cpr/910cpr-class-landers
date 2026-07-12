@@ -628,6 +628,7 @@
       "full_schedule_banner": "Need more HSI options or upcoming dates? Open the full schedule for the selected HSI path.",
       "ecosystem_hub": true,
       "keep_empty_tabs": true,
+      "suppress_dynamic_appointment_offers": true,
       "primary_cta_label": "Compare HSI options",
       "secondary_cta_label": "Request HSI workplace training",
       "trust_title": "Built for workplace routing",
@@ -667,9 +668,9 @@
             "First Aid",
             "Instructor"
           ],
-          "full_schedule_url": "/courses/hsi-bls-blended-learning-skills-session.html",
-          "full_schedule_label": "See HSI BLS course details",
-          "primary_cta_label": "See HSI BLS details",
+          "full_schedule_url": "/hsi-schedule.html?course=challenge",
+          "full_schedule_label": "See HSI BLS Challenge dates",
+          "primary_cta_label": "See HSI BLS Challenge dates",
           "secondary_cta_label": "Ask about HSI BLS dates"
         },
         {
@@ -708,8 +709,8 @@
           "exclude_name_contains": [
             "Instructor"
           ],
-          "full_schedule_url": "/hsi.html#hsi-bls-fa",
-          "full_schedule_label": "Stay on HSI BLS + First Aid options",
+          "full_schedule_url": "/hsi-schedule.html?course=bls-first-aid",
+          "full_schedule_label": "See HSI BLS + First Aid dates",
           "primary_cta_label": "See HSI BLS + First Aid dates",
           "secondary_cta_label": "Ask about combo dates"
         },

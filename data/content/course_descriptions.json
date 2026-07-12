@@ -237,16 +237,16 @@
       "full_course_page": "/hsi.html"
     },
     "463743": {
-      "course_key": "hsi_bls",
-      "title": "HSI BLS",
+      "course_key": "hsi_bls_challenge",
+      "title": "HSI BLS Challenge",
       "certifying_body": "HSI",
       "family": "HSI",
-      "short_description": "HSI BLS option for students whose requirement accepts HSI Basic Life Support.",
-      "who_this_is_for": "Healthcare or workplace students whose employer, school, or program accepts HSI BLS.",
+      "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.",
+      "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.",
       "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"],
-      "required_materials": ["Course materials as assigned for the selected HSI class format."],
+      "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."],
       "certification_issued": "HSI certification issued after successful completion.",
-      "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."],
+      "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."],
       "full_course_page": "/hsi.html"
     }
   }

@@ -396,7 +396,12 @@
           "icon_label": "HSI",
           "clarification": "HSI BLS challenge option.",
           "delivery_mode": "in-person",
-          "variant": "challenge"
+          "variant": "challenge",
+          "deep_link_aliases": [
+            "challenge",
+            "hsi-bls",
+            "bls"
+          ]
         },
         {
           "course_id": "445670",
@@ -404,7 +409,12 @@
           "icon_label": "FA",
           "clarification": "HSI BLS plus Adult First Aid option.",
           "delivery_mode": "in-person",
-          "variant": "bls-first-aid"
+          "variant": "bls-first-aid",
+          "deep_link_aliases": [
+            "bls-first-aid",
+            "hsi-bls-fa",
+            "hsi-bls-first-aid"
+          ]
         }
       ]
     },

@@ -492,6 +492,39 @@ def apply_occupancy_duration_rules(
     return occupancy
 
 
+def normalize_live_calendar_block_occupancy(payload: Any) -> list[dict[str, Any]]:
+    """Treat authoritative blocked live-calendar windows as hard occupancy."""
+
+    out: list[dict[str, Any]] = []
+    for index, block in enumerate(generate_dynamic_offers.availability_windows(payload), start=1):
+        if block.get("availability_status") != "blocked":
+            continue
+        start, end, _source = generate_dynamic_offers.availability_window_datetimes(block)
+        if not start or not end:
+            raise BlockSelectorInputError(
+                "Blocked live-calendar occupancy has an invalid interval: "
+                f"source_event_id={clean_text(block.get('source_event_id') or f'blocked[{index}]')}"
+            )
+        instructor = clean_text(block.get("instructor_name") or UNKNOWN)
+        location = clean_text(block.get("location_name") or block.get("source_location") or UNKNOWN)
+        if instructor == UNKNOWN and location == UNKNOWN:
+            raise BlockSelectorInputError(
+                "Blocked live-calendar occupancy is missing both instructor and location: "
+                f"source_event_id={clean_text(block.get('source_event_id') or f'blocked[{index}]')}"
+            )
+        out.append({
+            "start": start,
+            "end": end,
+            "location": location,
+            "instructor": instructor,
+            "course_title": clean_text(block.get("summary") or block.get("source_type") or "Authoritative calendar block"),
+            "source_file": f"live_availability_snapshot.blocked[{index}]",
+            "source_calendar_id": clean_text(block.get("source_calendar_id") or UNKNOWN),
+            "source_event_id": clean_text(block.get("source_event_id") or UNKNOWN),
+        })
+    return out
+
+
 def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     location_resource_map = loaded.get("location_resource_map")
     sessions_current = apply_occupancy_duration_rules(
@@ -504,7 +537,8 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
         loaded.get("schedule_future"),
         course_rules,
     )
-    occupancy = sessions_current + schedule_future
+    calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"))
+    occupancy = sessions_current + schedule_future + calendar_blocks
     for block in occupancy:
         canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
             block.get("location"),
@@ -713,7 +747,12 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "startTime": start.strftime("%H:%M"),
                     "displayStartTime": display_time(start),
                     "courseId": course_id,
-                    "courseName": clean_text(course.get("clean_course_name") or course.get("short_title") or course_id),
+                    "courseName": clean_text(
+                        course.get("schedule_page_option", {}).get("display_label")
+                        or course.get("clean_course_name")
+                        or course.get("short_title")
+                        or course_id
+                    ),
                     "availabilityBlockId": clean_text(window.get("source_availability_window") or f"availability[{window_index}]"),
                     "availabilityWindow": f"{window_start.strftime('%H:%M')}-{window_end.strftime('%H:%M')}",
                     "sourceAvailabilityBlock": window.get("source_live_availability_block", {}),
@@ -817,8 +856,9 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
 
     rejected_counts = Counter(reason for item in rejections for reason in item["reasons"])
     block_windows = {offer["availabilityWindow"] for offer in offers}
+    source_generated_at = live_snapshot_generated_at(live_availability_snapshot)
     payload = {
-        "generatedAt": datetime.now().astimezone().isoformat(),
+        "generatedAt": source_generated_at.isoformat() if source_generated_at else AS_OF_DATE.isoformat(),
         "pilot": "block_start_time_selector",
         "pageKey": page_key,
         "pageConfig": page_config,

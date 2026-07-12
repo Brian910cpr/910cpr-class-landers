@@ -1,0 +1,40 @@
+{
+  "463743": {
+    "course_map_official_title": "HSI BLS Challenge",
+    "course_master_enrollware_name": "HSI BLS Challenge",
+    "course_catalog_official_title": "HSI BLS Challenge",
+    "delivery_method": "classroom",
+    "customer_prerequisite": null,
+    "catalog_duration_minutes": 45,
+    "course_master_scheduler_display_duration_minutes": 45,
+    "course_master_scheduler_consumption_minutes": 60,
+    "rule_clean_course_name": "HSI BLS Challenge",
+    "rule_duration_minutes": 60,
+    "rule_scheduler_consumption_minutes": 60,
+    "dynamic_offer_allowed_course_master": true,
+    "appointment_seed_allowed_course_master": true,
+    "appointment_eligible_rule": true,
+    "public_label_in_selector": "HSI BLS Challenge",
+    "booking_url_course_id": "463743",
+    "publishing_concern": ""
+  },
+  "445670": {
+    "course_map_official_title": "HSI BLS and Adult First Aid | Blended Learning",
+    "course_master_enrollware_name": "HSI BLS and Adult First Aid | Blended Learning",
+    "course_catalog_official_title": "HSI BLS and Adult First Aid | Blended Learning",
+    "delivery_method": "blended",
+    "customer_prerequisite": "Complete the assigned online course before the in-person skills session.",
+    "catalog_duration_minutes": 45,
+    "course_master_scheduler_display_duration_minutes": 45,
+    "course_master_scheduler_consumption_minutes": 90,
+    "rule_clean_course_name": "HSI BLS + Adult First Aid",
+    "rule_duration_minutes": 45,
+    "rule_scheduler_consumption_minutes": 45,
+    "dynamic_offer_allowed_course_master": true,
+    "appointment_seed_allowed_course_master": true,
+    "appointment_eligible_rule": true,
+    "public_label_in_selector": "HSI BLS + Adult First Aid",
+    "booking_url_course_id": "445670",
+    "publishing_concern": ""
+  }
+}

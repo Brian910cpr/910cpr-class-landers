@@ -3398,7 +3398,9 @@ def render_ecosystem_page(
             if enriched:
                 matched.append(enriched)
         matched = sort_sessions(matched)
-        tab_seed_offers = appointment_offers_for_tab(tab, appointment_seed_offers or [])
+        tab_seed_offers = []
+        if page.get("suppress_dynamic_appointment_offers") is not True:
+            tab_seed_offers = appointment_offers_for_tab(tab, appointment_seed_offers or [])
         jump_links.append(f"<a class=\"jump-chip\" href=\"#{escape(tab['id'], quote=True)}\">{escape(tab['label'])}</a>")
         category_cards.append(render_ecosystem_category_card(page, tab, matched, appointment_seed_offers=tab_seed_offers, universal_offers=universal_offers or []))
 
