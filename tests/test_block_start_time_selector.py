@@ -357,6 +357,19 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             )
             self.assertFalse(conflict, reason)
 
+    def test_family_cpr_artifact_excludes_past_and_minimum_lead_offers(self):
+        artifact = json.loads((ROOT / "docs" / "data" / "block-selector-availability" / "family_cpr.json").read_text(encoding="utf-8"))
+        offers = artifact_offers(artifact)
+        self.assertGreater(len(offers), 0)
+        reference = block_start_time_selector.selector_reference_datetime()
+        cutoff = reference + block_start_time_selector.timedelta(hours=24)
+        for offer in offers:
+            with self.subTest(date=offer.get("date"), start=offer.get("startTime")):
+                start = datetime.fromisoformat(f"{offer['date']}T{offer['startTime']}:00")
+                self.assertGreaterEqual(start, cutoff)
+                self.assertEqual("252737", offer.get("courseId"))
+                self.assertIn("courseId=252737", offer.get("appointmentUrl", ""))
+
     def test_public_artifact_uses_only_public_double_colon_locations(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
         for page_key in ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed", "hsi", "family_cpr"):

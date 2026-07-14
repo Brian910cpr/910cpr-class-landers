@@ -72,6 +72,10 @@ def parse_dt(value: Any) -> datetime | None:
         return None
 
 
+def selector_reference_datetime() -> datetime:
+    return datetime.now().astimezone().replace(tzinfo=None)
+
+
 def display_time(value: datetime) -> str:
     return value.strftime("%I:%M %p").lstrip("0")
 
@@ -360,8 +364,10 @@ def public_policy_reasons(
     course_family: str,
     policy: dict[str, Any],
     pilot_allowed_course_ids: set[str] | None = None,
+    reference_now: datetime | None = None,
 ) -> list[str]:
     reasons: list[str] = []
+    reference = reference_now or selector_reference_datetime()
     enabled_ids = {str(item) for item in policy.get("enabled_course_ids", [])}
     disabled_ids = {str(item) for item in policy.get("disabled_course_ids", [])}
     enabled_families = {str(item) for item in policy.get("enabled_course_families", [])}
@@ -387,10 +393,12 @@ def public_policy_reasons(
         if current < earliest or current > latest:
             reasons.append("outside_public_dynamic_hours")
     minimum_lead_hours = int(policy.get("minimum_lead_hours") or 0)
-    if minimum_lead_hours and start < datetime.combine(AS_OF_DATE, time.min) + timedelta(hours=minimum_lead_hours):
+    if start < reference:
+        reasons.append("starts_before_current_time")
+    elif minimum_lead_hours and start < reference + timedelta(hours=minimum_lead_hours):
         reasons.append("inside_minimum_lead_time")
     maximum_days_out = int(policy.get("maximum_days_out") or 0)
-    if maximum_days_out and start.date() > AS_OF_DATE + timedelta(days=maximum_days_out):
+    if maximum_days_out and start.date() > reference.date() + timedelta(days=maximum_days_out):
         reasons.append("outside_maximum_days_out")
     return reasons
 
@@ -705,6 +713,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     windows, availability_stats = selected_public_page_live_windows(live_availability_snapshot, loaded["location_resource_map"])
     occupancy = build_occupancy(loaded, course_rules)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy)
+    reference_now = selector_reference_datetime()
 
     selected_courses: list[dict[str, Any]] = []
     config_course_options = {
@@ -796,6 +805,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     course_family,
                     public_offer_policy,
                     set(allowed_course_ids),
+                    reference_now=reference_now,
                 )
                 if reasons or public_reasons:
                     rejections.append({
@@ -864,7 +874,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "pageConfig": page_config,
         "readOnlyDataBuild": True,
         "publicPage": clean_text(page_config.get("output_path") or ""),
-        "asOfDate": AS_OF_DATE.isoformat(),
+        "asOfDate": reference_now.date().isoformat(),
         "availability_source_used": availability_stats["availability_source_used"],
         "availability_fallback_used": availability_stats["availability_fallback_used"],
         "availabilitySource": availability_stats,
