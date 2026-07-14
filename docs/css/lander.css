@@ -1750,6 +1750,98 @@ a {
   justify-content: flex-end;
 }
 
+.home-course-chooser {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid rgba(15, 94, 156, 0.16);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.05);
+}
+
+.home-course-chooser[hidden] {
+  display: none;
+}
+
+.home-course-chooser:focus {
+  outline: 2px solid rgba(15, 94, 156, 0.35);
+  outline-offset: 3px;
+}
+
+.home-course-chooser-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.home-course-choice-group,
+.home-exact-wording {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-soft);
+}
+
+.home-course-choice-group h4,
+.home-exact-wording h4 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 16px;
+}
+
+.home-choice-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.home-choice-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--heading);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.home-choice-links a:hover,
+.home-choice-links a:focus-visible {
+  border-color: #b7cbdd;
+  outline: 2px solid rgba(15, 94, 156, 0.18);
+  outline-offset: 2px;
+}
+
+.home-exact-wording label {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.home-exact-wording textarea {
+  width: 100%;
+  min-height: 86px;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  font: inherit;
+  color: var(--text);
+}
+
+.home-help-secondary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .course-pathway-card {
   align-content: start;
 }
@@ -2018,8 +2110,13 @@ a.course-choice-chip:focus-visible {
     justify-content: stretch;
   }
 
-  .home-help-actions .button {
+  .home-help-actions .button,
+  .home-help-secondary-actions .button {
     width: 100%;
+  }
+
+  .home-course-chooser-grid {
+    grid-template-columns: 1fr;
   }
 
   .course-choice-chip {

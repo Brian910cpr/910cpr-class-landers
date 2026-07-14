@@ -21,7 +21,7 @@ CANONICAL_RUNTIME_CARDS = {
     "AHA Heartsaver CPR AED": ("/heartsaver.html#cpr-aed", "/images/HS-FA-CPR-AED.jpeg"),
     "ARC Programs": ("/arc.html", "/images/0arc.png"),
     "HSI Programs": ("/hsi.html", "/images/0hsi.png"),
-    "USCG / Maritime": ("/courses/uscg-first-aid-cpr-aed.html", None),
+    "USCG / Maritime": ("/courses/uscg-first-aid-cpr-aed.html", "/images/maritime-first-aid.svg"),
     "Family & Friends CPR": ("/family-cpr.html", "/images/FF-CPR-2.jpg"),
 }
 
@@ -107,12 +107,60 @@ class HomepageRoutingTests(unittest.TestCase):
         self.assertTrue((DOCS / "family-cpr.html").exists())
         self.assertTrue((DOCS / "images" / "FF-CPR-2.jpg").exists())
 
-    def test_not_sure_cta_uses_assistance_route_not_self_loop(self) -> None:
+    def test_not_sure_cta_uses_guided_chooser_not_raw_mailto(self) -> None:
         js = read(BOOKING_HOME)
         html = read(INDEX)
-        self.assertIn("mailto:info@910cpr.com?subject=Help%20Choosing%20A%20Class", js)
-        self.assertIn("mailto:info@910cpr.com?subject=Help%20Choosing%20A%20Class", html)
+        self.assertNotIn("mailto:info@910cpr.com?subject=Help%20Choosing%20A%20Class", js)
+        self.assertNotIn("mailto:info@910cpr.com?subject=Help%20Choosing%20A%20Class", html)
+        self.assertIn("Need help choosing the right class?", js)
+        self.assertIn("Help Me Choose the Right Class", js)
+        self.assertIn("data-course-chooser-toggle", js)
+        self.assertIn('aria-expanded="false"', js)
+        self.assertIn('aria-controls="guided-course-chooser"', js)
+        self.assertIn('id="guided-course-chooser"', js)
+        self.assertIn("chooserToggle?.addEventListener", js)
+        self.assertIn("firstLink", js)
+        self.assertIn("focus()", js)
         self.assertNotIn('href="/classes/"', html)
+
+    def test_guided_chooser_uses_canonical_course_destinations(self) -> None:
+        combined = read(INDEX) + "\n" + read(BOOKING_HOME)
+        expected = [
+            "/bls.html",
+            "/acls.html",
+            "/pals.html",
+            "/hsi.html#bls",
+            "/heartsaver.html#first-aid-cpr-aed",
+            "/heartsaver.html#cpr-aed",
+            "/heartsaver.html#pediatric-first-aid-cpr-aed",
+            "/family-cpr.html",
+        ]
+        for href in expected:
+            with self.subTest(href=href):
+                self.assertIn(href, combined)
+        self.assertIn('href="tel:9103955193"', combined)
+
+    def test_email_fallback_is_secondary_and_prefilled(self) -> None:
+        js = read(BOOKING_HOME)
+        self.assertIn("data-context-email-link", js)
+        self.assertIn("Email with this context", js)
+        self.assertIn("Help Choosing the Right CPR Class", js)
+        self.assertIn("I need help choosing the correct class.", js)
+        self.assertIn("Requirement from my employer, school, or license:", js)
+        self.assertIn("My deadline:", js)
+
+    def test_homepage_uscg_card_uses_maritime_svg_and_valid_route(self) -> None:
+        combined = read(INDEX) + "\n" + read(BOOKING_HOME)
+        self.assertIn('href: "/courses/uscg-first-aid-cpr-aed.html"', combined)
+        self.assertIn('image: "/images/maritime-first-aid.svg"', combined)
+        self.assertIn('src="/images/maritime-first-aid.svg"', combined)
+        self.assertTrue((DOCS / "images" / "maritime-first-aid.svg").exists())
+
+    def test_homepage_styles_prevent_mobile_horizontal_overflow(self) -> None:
+        css = read(DOCS / "css" / "lander.css")
+        self.assertIn(".home-course-chooser-grid", css)
+        self.assertIn("grid-template-columns: 1fr", css)
+        self.assertIn(".home-help-actions .button", css)
 
     def test_noscript_homepage_links_use_canonical_destinations(self) -> None:
         parser = LinkParser()
