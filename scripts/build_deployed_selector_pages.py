@@ -5,7 +5,7 @@ from pathlib import Path
 from scripts.build_bls_block_schedule_pilot import ROOT, render_redirect_html, run_page
 
 
-DEPLOYED_SELECTOR_PAGE_KEYS = ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed", "hsi")
+DEPLOYED_SELECTOR_PAGE_KEYS = ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed", "hsi", "family_cpr")
 
 
 def main() -> int:

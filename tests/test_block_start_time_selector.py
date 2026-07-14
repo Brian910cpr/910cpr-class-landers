@@ -293,9 +293,73 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         ]
         self.assertEqual([], conflicting)
 
+    def test_family_cpr_config_uses_authoritative_course_id_and_duration(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        self.assertIn("family_cpr", configs)
+        family = configs["family_cpr"]
+        self.assertEqual(family["output_path"], "docs/family-cpr.html")
+        self.assertIs(family.get("render_html"), False)
+        self.assertEqual([option["course_id"] for option in family["course_options"]], ["252737"])
+
+        rules = block_start_time_selector.course_rules_by_id(
+            block_start_time_selector.read_required_json(block_start_time_selector.COURSE_RULES_PATH)
+        )
+        self.assertIn("252737", rules)
+        self.assertEqual(120, rules["252737"]["duration_minutes"])
+        self.assertEqual(120, rules["252737"]["minimum_reservation_block_minutes"])
+        self.assertEqual(120, rules["252737"]["scheduler_consumption_minutes"])
+        self.assertTrue(rules["252737"]["appointment_eligible"])
+        self.assertFalse(rules["252737"]["anchor_eligible"])
+
+    def test_family_cpr_enters_normal_public_offer_generation(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        payload = block_start_time_selector.build_block_schedule_page(configs["family_cpr"])
+        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
+        offers = artifact_offers(artifact)
+        self.assertGreater(len(offers), 0)
+        self.assertEqual({"252737"}, {str(offer.get("courseId")) for offer in offers})
+        self.assertTrue(all("courseId=252737" in str(offer.get("appointmentUrl")) for offer in offers))
+        self.assertTrue(all(str(offer.get("location") or "").strip().startswith("::") for offer in offers))
+        self.assertNotIn("Registration for this class is closed", json.dumps(artifact, ensure_ascii=False))
+
+    def test_family_cpr_offers_are_unique_and_non_overlapping(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        payload = block_start_time_selector.build_block_schedule_page(configs["family_cpr"])
+        loaded = {
+            "live_availability_snapshot": block_start_time_selector.read_required_json(block_start_time_selector.LIVE_AVAILABILITY_PATH),
+            "location_resource_map": block_start_time_selector.read_required_json(block_start_time_selector.LOCATION_RESOURCE_MAP_PATH),
+            "sessions_current": block_start_time_selector.read_required_json(block_start_time_selector.SESSIONS_CURRENT_PATH),
+        }
+        rules = block_start_time_selector.course_rules_by_id(
+            block_start_time_selector.read_required_json(block_start_time_selector.COURSE_RULES_PATH)
+        )
+        occupancy = block_start_time_selector.build_occupancy(loaded, rules)
+        occupancy_index = block_start_time_selector.generate_dynamic_offers.occupancy_by_date(occupancy)
+        seen = set()
+        for offer in payload["offers"]:
+            key = (
+                offer["courseId"],
+                offer["date"],
+                offer["startTime"],
+                offer["instructor"],
+                offer["location"],
+            )
+            self.assertNotIn(key, seen)
+            seen.add(key)
+            start = datetime.fromisoformat(f"{offer['date']}T{offer['startTime']}:00")
+            end = datetime.fromisoformat(f"{offer['date']}T{offer['schedulerConsumptionEnd']}:00")
+            conflict, reason = block_start_time_selector.generate_dynamic_offers.has_conflict(
+                start,
+                end,
+                block_start_time_selector.generate_dynamic_offers.occupancy_candidates(occupancy_index, start, end),
+                offer["location"],
+                {"display_name": offer["instructor"]},
+            )
+            self.assertFalse(conflict, reason)
+
     def test_public_artifact_uses_only_public_double_colon_locations(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        for page_key in ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed", "hsi"):
+        for page_key in ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed", "hsi", "family_cpr"):
             with self.subTest(page_key=page_key):
                 payload = block_start_time_selector.build_block_schedule_page(configs[page_key])
                 artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)

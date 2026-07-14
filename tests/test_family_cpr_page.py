@@ -113,6 +113,24 @@ class FamilyCprPageTests(unittest.TestCase):
         self.assertTrue(any(href == "tel:9103955193" and text == "Call 910CPR" for href, text in links))
         self.assertTrue(any(href == "/heartsaver.html" and text == "View Other CPR Classes" for href, text in links))
 
+    def test_live_offer_section_fetches_authoritative_family_artifact(self) -> None:
+        html = family_html()
+        self.assertIn("/data/block-selector-availability/family_cpr.json", html)
+        self.assertIn("fetch(availabilityUrl, { cache: 'no-store' })", html)
+        self.assertIn("selector-resolved-availability.v1", html)
+        self.assertIn("Checking current Family &amp; Friends CPR times…", html)
+
+    def test_live_offer_section_has_no_static_appointment_inventory(self) -> None:
+        html = family_html()
+        self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
+        self.assertNotIn("courseId=252737", html)
+        self.assertNotIn("family-cpr-offer\"><", html)
+
+    def test_fallback_request_cta_remains_available_when_no_public_dates(self) -> None:
+        html = family_html()
+        self.assertIn("Public dates may be limited. Request an individual, family, or group session.", html)
+        self.assertIn("Current public Family & Friends CPR times are temporarily unavailable.", html)
+
     def test_redirect_shims_preserve_query_and_fragment_in_script(self) -> None:
         for rel in ["aha-family-friends-cpr.html", "courses/aha-family-friends-cpr.html", "ffcpr.html"]:
             with self.subTest(rel=rel):

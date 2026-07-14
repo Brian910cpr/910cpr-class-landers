@@ -1015,6 +1015,64 @@
       }
     },
     {
+      "course_id": "252737",
+      "course_key": "aha_family_friends_cpr",
+      "official_title": "AHA Family & Friends CPR",
+      "short_title": "AHA Family & Friends CPR",
+      "provider": "AHA",
+      "family": "Heartsaver",
+      "subtype": "Family & Friends CPR",
+      "delivery_type": "IP",
+      "renewal_or_initial": "UNKNOWN",
+      "blended_classroom_skills": "classroom",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": "UNKNOWN",
+      "cleanup_buffer_minutes": "UNKNOWN",
+      "default_capacity": 10,
+      "minimum_capacity": "UNKNOWN",
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": true,
+      "known_appointmentDayId_range": [
+        {
+          "container_id": "shipyard_brian_continuous_20260621_20270430",
+          "instructor_name": "Brian",
+          "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+          "first_valid_date": "2026-06-21",
+          "last_valid_date": "2027-04-30",
+          "first_valid_appointmentDayId": 260670,
+          "last_valid_appointmentDayId": 260983
+        }
+      ],
+      "manual_only": "UNKNOWN",
+      "online_only": false,
+      "classroom_only": true,
+      "required_instructor_certifications": [
+        "AHA_BLS_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "UNKNOWN"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_ADULT_INFANT_CPR_AED",
+          "ARC_ADULT_PEDIATRIC_CPR_AED"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "LAYPERSON_CPR_POOL",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "docs/courses/index.json and data/course_aliases.json",
+        "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
+        "appointment_container_source": "data/inventory/appointment_containers.json",
+        "duration_evidence": "Existing local Enrollware iCal Family & Friends sessions span 60, 90, and 120 minutes; scheduler rule uses conservative 120-minute operational reservation block.",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
+      }
+    },
+    {
       "course_id": "209808",
       "course_key": "aha_heartsaver_cpr_aed_online",
       "official_title": "AHA Heartsaver CPR AED Online",

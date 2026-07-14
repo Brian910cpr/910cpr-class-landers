@@ -1706,7 +1706,6 @@ def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_m
     availability_path = selector_availability_path(str(payload.get("pageKey") or "selector"))
     report_json_path.parent.mkdir(parents=True, exist_ok=True)
     report_md_path.parent.mkdir(parents=True, exist_ok=True)
-    html_path.parent.mkdir(parents=True, exist_ok=True)
     availability_path.parent.mkdir(parents=True, exist_ok=True)
     report_json_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     report_md_path.write_text(render_report(payload), encoding="utf-8")
@@ -1714,10 +1713,13 @@ def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_m
         json.dumps(public_selector_availability_payload(payload), separators=(",", ":"), ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
-    html_path.write_text(render_html(payload), encoding="utf-8")
-    output_paths = [report_json_path, report_md_path, availability_path, html_path]
+    output_paths = [report_json_path, report_md_path, availability_path]
+    if page_config.get("render_html") is not False:
+        html_path.parent.mkdir(parents=True, exist_ok=True)
+        html_path.write_text(render_html(payload), encoding="utf-8")
+        output_paths.append(html_path)
     legacy_schedule_path = page_config.get("legacy_schedule_path")
-    if legacy_schedule_path:
+    if legacy_schedule_path and page_config.get("render_html") is not False:
         legacy_path = ROOT / str(legacy_schedule_path)
         legacy_path.parent.mkdir(parents=True, exist_ok=True)
         legacy_path.write_text(render_redirect_html(legacy_path, html_path, str(page_config.get("title") or "Schedule")), encoding="utf-8")

@@ -610,6 +610,60 @@
       "back_link_label": "Back to All Courses",
       "back_link_href": "/index.html#courses",
       "delivery_help_title": "Course format guide"
+    },
+    "family_cpr": {
+      "page_key": "family_cpr",
+      "family": "Heartsaver",
+      "certifying_body": "AHA",
+      "title": "Family & Friends CPR",
+      "meta_description": "Hands-on CPR training for parents, grandparents, babysitters, caregivers, and community groups in Wilmington, North Carolina.",
+      "intro": "Choose a public Family & Friends CPR time when available, or request an individual, family, or group session.",
+      "output_path": "docs/family-cpr.html",
+      "render_html": false,
+      "report_json_path": "data/audit/family_cpr_block_schedule.json",
+      "report_md_path": "data/audit/family_cpr_block_schedule_report.md",
+      "show_all_label": "Show Family & Friends CPR options",
+      "compare_mode": {
+        "enabled": false,
+        "label": "Family & Friends CPR",
+        "groups": {
+          "Heartsaver": {
+            "label": "Family & Friends CPR",
+            "course_ids": [
+              "252737"
+            ]
+          }
+        }
+      },
+      "course_options": [
+        {
+          "course_id": "252737",
+          "display_label": "Family & Friends CPR",
+          "icon_label": "CPR",
+          "clarification": "Relaxed, hands-on CPR practice for families and community members. No certification card is included.",
+          "delivery_mode": "in-person",
+          "variant": "family-cpr",
+          "deep_link_aliases": [
+            "family",
+            "family-friends",
+            "family-and-friends",
+            "friends"
+          ],
+          "image_url": "/images/FF-CPR-2.jpg",
+          "image_alt": "Family CPR practice with an infant CPR manikin",
+          "delivery_badge": "IN-PERSON"
+        }
+      ],
+      "back_link_label": "Back to All Courses",
+      "back_link_href": "/index.html#courses",
+      "delivery_help_title": "Course format guide",
+      "delivery_help": [
+        {
+          "label": "EDUCATIONAL CPR",
+          "text": "Family & Friends CPR is hands-on practice for emergency readiness and does not include a certification card."
+        }
+      ],
+      "fallback_note": "Barnacle-without-anchor suppression is not active in the current selector path; Family & Friends CPR uses normal validated public offer rotation and may temporarily produce standalone offers."
     }
   }
 }
