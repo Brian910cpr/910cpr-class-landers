@@ -290,20 +290,20 @@ def css() -> str:
       overflow-x: auto;
       overscroll-behavior-inline: contain;
       scroll-snap-type: x proximity;
-      padding: 0 52px 10px;
+      padding: 0 0 10px;
       margin-bottom: 0;
-      scrollbar-gutter: stable;
     }
     .course-rail {
       position: relative;
       min-width: 0;
+      padding: 0 52px;
     }
     .course-rail:not(.has-overflow) .rail-arrow {
       display: none;
     }
     .rail-arrow {
       position: absolute;
-      top: 50%;
+      top: 56px;
       z-index: 2;
       display: inline-flex;
       align-items: center;
@@ -381,11 +381,11 @@ def css() -> str:
     }
     .course-card {
       display: grid;
-      grid-template-rows: 94px auto;
+      grid-template-rows: 118px auto;
       gap: 12px;
       width: 100%;
       padding: 0;
-      min-height: 235px;
+      min-height: 258px;
       align-content: start;
       scroll-snap-align: start;
       overflow: hidden;
@@ -395,7 +395,7 @@ def css() -> str:
       align-items: center;
       justify-content: center;
       width: 100%;
-      min-height: 94px;
+      min-height: 118px;
       border-radius: 6px 6px 0 0;
       background: linear-gradient(135deg, #e8f2f8, #f8fbfd);
       overflow: hidden;
@@ -403,9 +403,10 @@ def css() -> str:
     .course-icon img {
       display: block;
       width: 100%;
-      height: 94px;
+      height: 118px;
       object-fit: contain;
-      padding: 12px;
+      object-position: center;
+      padding: 6px;
     }
     .course-icon-fallback {
       display: inline-flex;
@@ -612,16 +613,21 @@ def css() -> str:
       }
       .choice-list {
         grid-auto-columns: minmax(238px, 82%);
+        padding-left: 0;
+        padding-right: 0;
+        scroll-snap-type: x mandatory;
+      }
+      .course-rail {
         padding-left: 44px;
         padding-right: 44px;
-        scroll-snap-type: x mandatory;
       }
       .rail-arrow {
         width: 38px;
         min-height: 48px;
+        top: 58px;
       }
       .course-card {
-        min-height: 228px;
+        min-height: 252px;
       }
       .delivery-help-list {
         grid-template-columns: 1fr;
@@ -1118,13 +1124,22 @@ def render_html(payload: dict[str, Any]) -> str:
       if (!rail || !list || !previous || !next) {{
         return;
       }}
+      const tolerance = 4;
       const maxScroll = Math.max(0, list.scrollWidth - list.clientWidth);
-      const hasOverflow = maxScroll > 4;
+      const endTolerance = Math.max(tolerance, Math.min(24, list.clientWidth * 0.06));
+      const hasOverflow = maxScroll > tolerance;
+      const atStart = list.scrollLeft <= tolerance;
+      const atEnd = list.scrollLeft >= maxScroll - endTolerance;
       rail.classList.toggle('has-overflow', hasOverflow);
-      previous.disabled = !hasOverflow || list.scrollLeft <= 4;
-      next.disabled = !hasOverflow || list.scrollLeft >= maxScroll - 4;
+      previous.disabled = !hasOverflow || atStart;
+      next.disabled = !hasOverflow || atEnd;
       previous.setAttribute('aria-disabled', String(previous.disabled));
       next.setAttribute('aria-disabled', String(next.disabled));
+    }}
+
+    function scheduleCourseRailUpdate() {{
+      updateCourseRailControls();
+      window.requestAnimationFrame(updateCourseRailControls);
     }}
 
     function scrollCourseRail(direction) {{
@@ -1135,7 +1150,9 @@ def render_html(payload: dict[str, Any]) -> str:
       const firstCard = list.querySelector('.course-card');
       const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : Math.max(240, list.clientWidth * 0.75);
       const gap = 12;
-      list.scrollBy({{ left: direction * (cardWidth + gap), behavior: 'smooth' }});
+      const maxScroll = Math.max(0, list.scrollWidth - list.clientWidth);
+      const target = Math.max(0, Math.min(maxScroll, list.scrollLeft + (direction * (cardWidth + gap))));
+      list.scrollTo({{ left: target, behavior: 'smooth' }});
       window.setTimeout(updateCourseRailControls, 260);
     }}
 
@@ -1354,7 +1371,7 @@ def render_html(payload: dict[str, Any]) -> str:
       if (!host.children.length) {{
         host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
       }}
-      updateCourseRailControls();
+      scheduleCourseRailUpdate();
       const showAllToggle = byId('show-all-toggle');
       if (showAllToggle) {{
         showAllToggle.checked = showAllOptions;
