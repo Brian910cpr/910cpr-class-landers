@@ -43,7 +43,7 @@
     {
       title: "USCG / Maritime",
       href: "/courses/uscg-first-aid-cpr-aed.html",
-      image: "/images/maritime-first-aid.svg",
+      image: "/images/stripes.png",
     },
     {
       title: "Family & Friends CPR",
