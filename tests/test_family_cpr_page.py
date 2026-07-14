@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import unittest
 from html.parser import HTMLParser
@@ -10,6 +11,8 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 FAMILY = DOCS / "family-cpr.html"
+FAMILY_ARTIFACT = DOCS / "data" / "block-selector-availability" / "family_cpr.json"
+FAMILY_AUDIT = ROOT / "data" / "audit" / "family_cpr_block_schedule.json"
 
 
 class FamilyLinkParser(HTMLParser):
@@ -118,18 +121,95 @@ class FamilyCprPageTests(unittest.TestCase):
         self.assertIn("/data/block-selector-availability/family_cpr.json", html)
         self.assertIn("fetch(availabilityUrl, { cache: 'no-store' })", html)
         self.assertIn("selector-resolved-availability.v1", html)
-        self.assertIn("Checking current Family &amp; Friends CPR times…", html)
+        self.assertIn("Checking current class times…", html)
+
+    def test_live_offer_section_uses_shared_selector_structure(self) -> None:
+        html = family_html()
+        self.assertIn('class="selector-shell"', html)
+        self.assertIn('class="selector-grid"', html)
+        self.assertIn('id="date-list" class="month-stack"', html)
+        self.assertIn('id="start-list" class="button-list"', html)
+        self.assertIn('id="course-list" class="course-list"', html)
+        self.assertIn("<h3>Calendar</h3>", html)
+        self.assertIn("<h3>Start Times</h3>", html)
+        self.assertIn("<h3>Register</h3>", html)
+        self.assertIn("function renderCalendar()", html)
+        self.assertIn("function renderStartTimes()", html)
+        self.assertIn("function renderRegistration()", html)
+        self.assertIn("course.appointmentUrl", html)
 
     def test_live_offer_section_has_no_static_appointment_inventory(self) -> None:
         html = family_html()
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         self.assertNotIn("courseId=252737", html)
         self.assertNotIn("family-cpr-offer\"><", html)
+        self.assertNotIn("family-cpr-offer-list", html)
+        self.assertNotIn("offers.slice(0, 8)", html)
+        self.assertNotIn("flattenOffers", html)
+        self.assertNotIn("renderOffers", html)
 
     def test_fallback_request_cta_remains_available_when_no_public_dates(self) -> None:
         html = family_html()
-        self.assertIn("Public dates may be limited. Request an individual, family, or group session.", html)
+        self.assertIn("No current public dates are available. Request an individual, family, or group session.", html)
         self.assertIn("Current public Family & Friends CPR times are temporarily unavailable.", html)
+
+    def test_family_artifact_urls_still_use_family_course_id(self) -> None:
+        payload = json.loads(FAMILY_ARTIFACT.read_text(encoding="utf-8"))
+        urls = []
+        for day in payload.get("dates", []):
+            for slot in day.get("startTimes", []):
+                for course in slot.get("courses", []):
+                    if course.get("appointmentUrl"):
+                        urls.append(course["appointmentUrl"])
+        self.assertTrue(urls)
+        for url in urls:
+            with self.subTest(url=url):
+                self.assertIn("courseId=252737", url)
+
+    def test_public_html_has_no_customer_visible_offer_count_phrases(self) -> None:
+        forbidden_patterns = [
+            r"\b\d+\s+current public options? available\b",
+            r"\b\d+\s+options? available\b",
+            r"\b\d+\s+public offers?\b",
+            r"\b\d+\s+offers?\b",
+            r"\bshowing\s+\d+\s+times\b",
+            r"public-selectable offers",
+            r"resolved offers",
+            r"selector inventory totals",
+        ]
+        public_pages = [
+            DOCS / "index.html",
+            DOCS / "family-cpr.html",
+            DOCS / "bls.html",
+            DOCS / "acls.html",
+            DOCS / "pals.html",
+            DOCS / "hsi.html",
+            DOCS / "heartsaver.html",
+            DOCS / "arc.html",
+            DOCS / "uscg-elementary-first-aid-cpr.html",
+            DOCS / "courses" / "uscg-first-aid-cpr-aed.html",
+        ]
+        next_page = DOCS / "next.html"
+        if next_page.exists():
+            public_pages.append(next_page)
+        for path in public_pages:
+            html = path.read_text(encoding="utf-8")
+            for pattern in forbidden_patterns:
+                with self.subTest(path=path, pattern=pattern):
+                    self.assertIsNone(re.search(pattern, html, flags=re.IGNORECASE))
+
+    def test_internal_json_and_audit_counts_remain_available(self) -> None:
+        artifact = json.loads(FAMILY_ARTIFACT.read_text(encoding="utf-8"))
+        audit = json.loads(FAMILY_AUDIT.read_text(encoding="utf-8"))
+        self.assertIn("dates", artifact)
+        self.assertIn("counts", audit)
+        self.assertGreater(audit["counts"].get("publicSelectableOfferCount", 0), 0)
+
+    def test_mobile_styles_prevent_page_level_horizontal_overflow(self) -> None:
+        html = family_html()
+        self.assertIn("overflow-x: hidden", html)
+        self.assertIn(".selector-grid > *", html)
+        self.assertIn("min-width: 0", html)
 
     def test_redirect_shims_preserve_query_and_fragment_in_script(self) -> None:
         for rel in ["aha-family-friends-cpr.html", "courses/aha-family-friends-cpr.html", "ffcpr.html"]:
