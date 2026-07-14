@@ -90,7 +90,7 @@
             "HeartCode",
             "Instructor"
           ],
-          "full_schedule_url": "/bls-schedule.html",
+          "full_schedule_url": "/bls.html",
           "full_schedule_label": "Choose BLS Provider dates",
           "primary_cta_label": "See BLS Provider page"
         },
@@ -107,7 +107,7 @@
           "name_contains": [
             "BLS Provider Renewal"
           ],
-          "full_schedule_url": "/bls-schedule.html",
+          "full_schedule_url": "/bls.html",
           "full_schedule_label": "Choose BLS renewal dates",
           "primary_cta_label": "See BLS renewal page"
         },
@@ -125,7 +125,7 @@
             "BLS Provider HeartCode Skills",
             "HeartCode"
           ],
-          "full_schedule_url": "/bls-schedule.html",
+          "full_schedule_url": "/bls.html",
           "full_schedule_label": "Choose HeartCode BLS skills dates",
           "primary_cta_label": "See HeartCode skills page"
         }
@@ -161,7 +161,7 @@
             "AHA ACLS Provider",
             "ACLS Provider Initial"
           ],
-          "full_schedule_url": "/acls-schedule.html",
+          "full_schedule_url": "/acls.html",
           "full_schedule_label": "See full ACLS provider schedule",
           "primary_cta_label": "See ACLS provider page"
         },
@@ -181,7 +181,7 @@
             "AHA ACLS Provider Update",
             "ACLS Renewal"
           ],
-          "full_schedule_url": "/acls-schedule.html",
+          "full_schedule_url": "/acls.html",
           "full_schedule_label": "See full ACLS renewal schedule",
           "primary_cta_label": "See ACLS renewal page"
         },
@@ -201,7 +201,7 @@
             "ACLS HeartCode",
             "ACLS Skills Session"
           ],
-          "full_schedule_url": "/acls-schedule.html",
+          "full_schedule_url": "/acls.html",
           "full_schedule_label": "See full ACLS HeartCode schedule",
           "primary_cta_label": "See ACLS HeartCode page"
         }
@@ -235,7 +235,7 @@
             "PALS Provider - In-Person - Initial",
             "PALS Provider Class"
           ],
-          "full_schedule_url": "/pals-schedule.html",
+          "full_schedule_url": "/pals.html",
           "full_schedule_label": "See full PALS provider schedule",
           "primary_cta_label": "See PALS provider page"
         },
@@ -254,7 +254,7 @@
             "PALS Renewal",
             "PALS Instructor Renewal"
           ],
-          "full_schedule_url": "/pals-schedule.html",
+          "full_schedule_url": "/pals.html",
           "full_schedule_label": "See full PALS renewal schedule",
           "primary_cta_label": "See PALS renewal page"
         },
@@ -272,7 +272,7 @@
             "PALS Provider - HeartCode",
             "PALS HeartCode"
           ],
-          "full_schedule_url": "/pals-schedule.html",
+          "full_schedule_url": "/pals.html",
           "full_schedule_label": "See full PALS HeartCode schedule",
           "primary_cta_label": "See PALS HeartCode page"
         }
@@ -347,7 +347,7 @@
           "exclude_name_contains": [
             "Pediatric"
           ],
-          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_url": "/heartsaver.html",
           "full_schedule_label": "Choose Heartsaver First Aid CPR AED dates",
           "primary_cta_label": "See in-person class page"
         },
@@ -369,7 +369,7 @@
           "exclude_name_contains": [
             "Pediatric"
           ],
-          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_url": "/heartsaver.html",
           "full_schedule_label": "Choose blended Heartsaver First Aid CPR AED dates",
           "primary_cta_label": "See blended class page"
         },
@@ -389,7 +389,7 @@
             "Pediatric",
             "First Aid"
           ],
-          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_url": "/heartsaver.html",
           "full_schedule_label": "Choose Heartsaver CPR AED dates",
           "primary_cta_label": "See CPR AED page"
         },
@@ -409,7 +409,7 @@
             "Pediatric",
             "First Aid"
           ],
-          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_url": "/heartsaver.html",
           "full_schedule_label": "Choose blended Heartsaver CPR AED dates",
           "primary_cta_label": "See blended CPR AED page"
         },
@@ -428,7 +428,7 @@
           "name_contains": [
             "Heartsaver® Pediatric First Aid CPR AED"
           ],
-          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_url": "/heartsaver.html",
           "full_schedule_label": "Choose pediatric Heartsaver dates",
           "primary_cta_label": "See pediatric page"
         },
@@ -447,7 +447,7 @@
           "name_contains": [
             "Heartsaver® Pediatric First Aid CPR AED"
           ],
-          "full_schedule_url": "/heartsaver-schedule.html",
+          "full_schedule_url": "/heartsaver.html",
           "full_schedule_label": "Choose blended pediatric Heartsaver dates",
           "primary_cta_label": "See pediatric page"
         }
@@ -668,7 +668,7 @@
             "First Aid",
             "Instructor"
           ],
-          "full_schedule_url": "/hsi-schedule.html?course=challenge",
+          "full_schedule_url": "/hsi.html?course=challenge",
           "full_schedule_label": "See HSI BLS Challenge dates",
           "primary_cta_label": "See HSI BLS Challenge dates",
           "secondary_cta_label": "Ask about HSI BLS dates"
@@ -709,7 +709,7 @@
           "exclude_name_contains": [
             "Instructor"
           ],
-          "full_schedule_url": "/hsi-schedule.html?course=bls-first-aid",
+          "full_schedule_url": "/hsi.html?course=bls-first-aid",
           "full_schedule_label": "See HSI BLS + First Aid dates",
           "primary_cta_label": "See HSI BLS + First Aid dates",
           "secondary_cta_label": "Ask about combo dates"

@@ -9,7 +9,8 @@
     "title": "ACLS Schedule",
     "meta_description": "Select an AHA ACLS course, date, and public start time.",
     "intro": "Select the ACLS course format first, then choose a public date and start time.",
-    "output_path": "docs/acls-schedule.html",
+    "output_path": "docs/acls.html",
+    "legacy_schedule_path": "docs/acls-schedule.html",
     "include_seated_classes": true,
     "report_json_path": "data/audit/acls_block_schedule.json",
     "report_md_path": "data/audit/acls_block_schedule_report.md",
@@ -72,7 +73,7 @@
     ]
   },
   "readOnlyDataBuild": true,
-  "publicPage": "docs/acls-schedule.html",
+  "publicPage": "docs/acls.html",
   "asOfDate": "2026-07-02",
   "availability_source_used": "live_availability_snapshot",
   "availability_fallback_used": false,

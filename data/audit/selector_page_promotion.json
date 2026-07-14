@@ -1,0 +1,148 @@
+{
+  "arc_promoted": false,
+  "arc_reason": "No validated ARC selector artifact/page exists; docs/data/block-selector-availability/arc.json is absent.",
+  "broken_links_scoped": [],
+  "checks": {
+    "acls": {
+      "checking_placeholder": true,
+      "fetch_no_store": true,
+      "no_embedded_dynamic_appointment_urls": true,
+      "no_full_course_page_detail_link": true,
+      "no_old_bubbly_copy": true,
+      "selector_shell": true
+    },
+    "acls-schedule.html": {
+      "noindex": true,
+      "preserves_query_and_hash": true,
+      "redirect_target": "/acls.html"
+    },
+    "bls": {
+      "checking_placeholder": true,
+      "fetch_no_store": true,
+      "no_embedded_dynamic_appointment_urls": true,
+      "no_full_course_page_detail_link": true,
+      "no_old_bubbly_copy": true,
+      "selector_shell": true
+    },
+    "bls-schedule.html": {
+      "noindex": true,
+      "preserves_query_and_hash": true,
+      "redirect_target": "/bls.html"
+    },
+    "heartsaver": {
+      "checking_placeholder": true,
+      "fetch_no_store": true,
+      "no_embedded_dynamic_appointment_urls": true,
+      "no_full_course_page_detail_link": true,
+      "no_old_bubbly_copy": true,
+      "selector_shell": true
+    },
+    "heartsaver-schedule.html": {
+      "noindex": true,
+      "preserves_query_and_hash": true,
+      "redirect_target": "/heartsaver.html"
+    },
+    "hsi": {
+      "checking_placeholder": true,
+      "fetch_no_store": true,
+      "no_embedded_dynamic_appointment_urls": true,
+      "no_full_course_page_detail_link": true,
+      "no_old_bubbly_copy": true,
+      "selector_shell": true
+    },
+    "hsi-schedule.html": {
+      "noindex": true,
+      "preserves_query_and_hash": true,
+      "redirect_target": "/hsi.html"
+    },
+    "pals": {
+      "checking_placeholder": true,
+      "fetch_no_store": true,
+      "no_embedded_dynamic_appointment_urls": true,
+      "no_full_course_page_detail_link": true,
+      "no_old_bubbly_copy": true,
+      "selector_shell": true
+    },
+    "pals-schedule.html": {
+      "noindex": true,
+      "preserves_query_and_hash": true,
+      "redirect_target": "/pals.html"
+    }
+  },
+  "counts": {
+    "scoped_broken_links": 0,
+    "scoped_self_loops": 0
+  },
+  "fragments_supported": {
+    "acls": [
+      "initial",
+      "renewal",
+      "heartcode"
+    ],
+    "bls": [
+      "initial",
+      "renewal",
+      "heartcode"
+    ],
+    "hsi": [
+      "bls",
+      "bls-first-aid",
+      "first-aid-cpr-aed",
+      "cpr-aed"
+    ],
+    "pals": [
+      "initial",
+      "renewal",
+      "heartcode"
+    ]
+  },
+  "generic_sitewide_audit_caveat": "scripts.audit_sitewide_links reports pre-existing low-confidence/internal-control-center findings outside the selector promotion scope; scoped canonical-family audit is clean.",
+  "hsi_arc_fixes": {
+    "arc_dynamic_availability_invented": false,
+    "arc_remains_request_only_info_page": true,
+    "hsi_request_only_fragments": [
+      "first-aid-cpr-aed",
+      "cpr-aed"
+    ],
+    "hsi_self_looping_details_removed": true
+  },
+  "old_pages_retired": [
+    "bls-schedule.html",
+    "acls-schedule.html",
+    "pals-schedule.html",
+    "hsi-schedule.html",
+    "heartsaver-schedule.html",
+    "arc-schedule.html"
+  ],
+  "pages_completed": [
+    "bls",
+    "acls",
+    "pals",
+    "hsi",
+    "heartsaver"
+  ],
+  "pages_promoted": {
+    "acls-schedule.html": "acls.html",
+    "arc-schedule.html": "arc.html (redirect only; ARC selector authority not validated)",
+    "bls-schedule.html": "bls.html",
+    "heartsaver-schedule.html": "heartsaver.html",
+    "hsi-schedule.html": "hsi.html",
+    "pals-schedule.html": "pals.html"
+  },
+  "redirects_created": {
+    "acls-schedule.html": "acls.html",
+    "arc-schedule.html": "arc.html",
+    "bls-schedule.html": "bls.html",
+    "heartsaver-schedule.html": "heartsaver.html",
+    "hsi-schedule.html": "hsi.html",
+    "pals-schedule.html": "pals.html"
+  },
+  "selector_artifacts_used": {
+    "acls": "acls.json",
+    "bls": "bls.json",
+    "heartsaver": "heartsaver.json",
+    "hsi": "hsi.json",
+    "pals": "pals.json"
+  },
+  "self_loops_scoped": []
+}

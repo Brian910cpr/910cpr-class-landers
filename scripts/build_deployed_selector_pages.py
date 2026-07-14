@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from scripts.build_bls_block_schedule_pilot import run_page
+from pathlib import Path
+
+from scripts.build_bls_block_schedule_pilot import ROOT, render_redirect_html, run_page
 
 
 DEPLOYED_SELECTOR_PAGE_KEYS = ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed", "hsi")
@@ -18,6 +20,10 @@ def main() -> int:
         )
         for path in result["output_paths"]:
             print(f"- {path}")
+    arc_redirect = ROOT / "docs" / "arc-schedule.html"
+    arc_target = ROOT / "docs" / "arc.html"
+    arc_redirect.write_text(render_redirect_html(arc_redirect, arc_target, "Red Cross Schedule"), encoding="utf-8")
+    print(f"arc redirect: {arc_redirect} -> {arc_target}")
     return 0
 
 

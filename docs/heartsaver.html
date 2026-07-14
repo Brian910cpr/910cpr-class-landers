@@ -1,162 +1,1089 @@
-<!-- BUILD_CODE: 2026-07-11 22:48 | scripts/build_slug_hubs.py | slug hub rebuild from docs/data/schedule_future.json -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta name="build-date" content="2026-07-11T22:48:47-04:00">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Heartsaver CPR Classes | 910CPR</title>
-<meta name="description" content="AHA Heartsaver CPR, AED, first aid, and pediatric options with practical emergency recognition for workplace, school, childcare, and professional requirements.">
-<meta name="robots" content="index,follow">
-<link rel="canonical" href="https://www.910cpr.com/heartsaver.html">
-<link rel="icon" type="image/png" href="images/logo.png">
-<link rel="shortcut icon" href="images/logo.png">
-<link rel="apple-touch-icon" href="images/logo.png">
-<link rel="stylesheet" href="css/lander.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Heartsaver Schedule | 910CPR</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18212c;
+      --muted: #647285;
+      --line: #d8dee8;
+      --surface: #ffffff;
+      --band: #f5f7fa;
+      --accent: #0a66a5;
+      --accent-dark: #074f80;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--surface);
+      line-height: 1.45;
+    }
+    header, main { max-width: 1120px; margin: 0 auto; padding: 24px; }
+    header { border-bottom: 1px solid var(--line); }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 1.25rem; letter-spacing: 0; }
+    h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: 0; }
+    p { margin: 0 0 12px; }
+    .muted { color: var(--muted); }
+    .page-subtitle {
+      margin: 0 0 8px;
+      color: var(--accent-dark);
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+    .page-context {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 18px;
+    }
+    .page-note {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: var(--band);
+      padding: 14px;
+    }
+    .page-note h2 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+    .page-note ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+    .selector-shell {
+      display: grid;
+      gap: 16px;
+    }
+    .course-selector-panel {
+      display: grid;
+      gap: 14px;
+    }
+    .course-selector-top {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .selector-grid {
+      display: grid;
+      grid-template-columns: minmax(340px, 1.35fr) minmax(210px, .8fr) minmax(280px, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 16px;
+      min-width: 0;
+    }
+    .button-list { display: grid; gap: 8px; }
+    .choice-list {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(250px, 1fr);
+      gap: 10px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: x proximity;
+      padding: 0 2px 8px;
+      margin-bottom: 0;
+    }
+    .option-tools {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .disclosure-toggle {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .disclosure-toggle input {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+    }
+    .compare-toggle {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .compare-toggle input {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+    }
+    button, .register-link {
+      min-height: 42px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      padding: 9px 11px;
+      cursor: pointer;
+    }
+    button[aria-pressed="true"] {
+      border-color: var(--accent);
+      box-shadow: inset 3px 0 0 var(--accent);
+      background: #eef7fc;
+    }
+    .course-card {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      min-height: 118px;
+      align-content: start;
+      scroll-snap-align: start;
+    }
+    .course-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: #e8f2f8;
+      color: var(--accent-dark);
+      font-weight: 700;
+      font-size: .82rem;
+    }
+    .course-copy { display: grid; gap: 3px; }
+    .course-title { font-weight: 700; }
+    .course-help {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.3;
+    }
+    .course-delivery {
+      color: var(--accent-dark);
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .course-details {
+      grid-column: 2;
+      color: var(--muted);
+      font-size: .84rem;
+    }
+    .course-details summary {
+      cursor: pointer;
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+    .course-details-body {
+      display: grid;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .course-details-body ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .course-page-link {
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+    .month-stack { display: grid; gap: 14px; }
+    .month-nav {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .month-nav button {
+      min-height: 40px;
+      padding: 8px 11px;
+      text-align: center;
+    }
+    .month-nav-title {
+      font-weight: 800;
+      text-align: center;
+    }
+    .month-title {
+      margin: 0 0 8px;
+      font-size: .95rem;
+      font-weight: 700;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+    }
+    .weekday, .calendar-pad {
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: .75rem;
+    }
+    .day-button {
+      min-height: 34px;
+      padding: 0;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+    }
+    .day-button.is-past,
+    .start-grid button.is-past {
+      color: #6b7280;
+      border-color: #d1d5db;
+      background: #f3f4f6;
+      cursor: not-allowed;
+      opacity: .72;
+    }
+    .day-button.is-past[aria-pressed="true"],
+    .start-grid button.is-past[aria-pressed="true"] {
+      border-color: #d1d5db;
+      box-shadow: none;
+      background: #f3f4f6;
+    }
+    .course-list { display: grid; gap: 12px; }
+    .start-group {
+      display: grid;
+      gap: 8px;
+    }
+    .start-group + .start-group { margin-top: 12px; }
+    .start-group-label {
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .start-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .start-grid button {
+      min-width: 76px;
+      text-align: center;
+      justify-content: center;
+    }
+    .course {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--band);
+    }
+    .selected-summary {
+      display: grid;
+      gap: 6px;
+    }
+    .selected-summary-row {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .course-meta {
+      color: var(--muted);
+      font-size: .92rem;
+      margin: 3px 0 12px;
+    }
+    .delivery-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--accent-dark);
+      background: #eef7fc;
+      font-size: .78rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .register-note {
+      color: var(--muted);
+      font-size: .88rem;
+      margin-bottom: 12px;
+    }
+    .register-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .register-link:hover { background: var(--accent-dark); }
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      color: var(--muted);
+      background: var(--band);
+    }
+    @media (max-width: 820px) {
+      .selector-grid { grid-template-columns: 1fr; }
+      .selector-grid > *,
+      .selector-shell > * { min-width: 0; }
+      header, main { padding: 18px; }
+      .panel { padding: 14px; }
+      .course-selector-top {
+        display: grid;
+        gap: 12px;
+      }
+      .option-tools {
+        display: grid;
+        gap: 10px;
+      }
+      .choice-list {
+        grid-auto-columns: minmax(238px, 82%);
+        scroll-snap-type: x mandatory;
+      }
+      .course-card {
+        min-height: 112px;
+      }
+      .course-help {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .month-stack { gap: 0; }
+      .month-nav { display: flex; }
+      .month:not([data-mobile-visible="true"]) { display: none; }
+      .calendar-grid { gap: 6px; }
+      .weekday,
+      .calendar-pad,
+      .day-button {
+        min-height: 42px;
+      }
+      .button-list {
+        display: block;
+      }
+      .start-grid button {
+        min-height: 42px;
+        flex: 1 0 72px;
+      }
+      .register-link {
+        width: 100%;
+      }
+    }
+    </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="page-shell">
-
-<div class="card slug-hub-shell">
-  <header class="site-brand-bar">
-  <a class="site-brand-link" href="index.html" aria-label="910CPR home">
-    <img class="site-brand-logo" src="images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='images/910CPR_wave.jpg';this.onerror=null;">
-    <span class="site-brand-wordmark">910CPR</span>
-  </a>
-</header>
-  <section class="hero slug-hero">
-    <div class="hero-main">
-      <div class="eyebrow">Workplace And Public CPR</div>
-      <h1>CPR And First Aid For Workplaces And Schools</h1>
-      <p class="subhead">AHA Heartsaver CPR, AED, first aid, and pediatric options that teach practical recognition and response for choking, opioid emergencies, stroke warning signs, seizures, asthma, heat illness, burns, and everyday injuries.</p>
-
-    </div>
-    <div class="hero-side">
-      <div class="slug-hero-image-wrap"><img class="slug-hero-image" src="images/heartsaver_general.png" alt="AHA Heartsaver CPR and first aid course" loading="lazy" onerror="this.parentElement.hidden=true"></div>
-    </div>
-  </section>
-
-
-
-  <section class="home-course-jumps heartsaver-course-jumps" aria-label="Heartsaver course options">
-    <div class="section-heading heartsaver-course-heading">
-      <div>
-        <div class="eyebrow">General Public Courses</div>
-        <h2>Jump to Heartsaver options</h2>
+  <header>
+    <h1>Heartsaver Schedule</h1>
+    
+    <p class="muted">Select the Heartsaver course format first, then choose a public date and start time.</p>
+    <p class="muted">Pilot proof: whole availability blocks are not shown as class times. Public-selectable offers: 3068.</p>
+  </header>
+  <main>
+    
+    <section class="page-context" aria-label="Course context">
+      
+      
+      
+    </section>
+    
+    <section class="selector-shell" aria-label="Block-based schedule selector">
+      <div class="panel course-selector-panel">
+        <div class="course-selector-top">
+          <div>
+            <h2>Course</h2>
+            <p class="muted">Choose the course or delivery format first.</p>
+          </div>
+          <div class="option-tools">
+            
+          <label class="disclosure-toggle">
+            <input id="show-all-toggle" type="checkbox">
+            <span>Show all course options</span>
+          </label>
+            
+          </div>
+        </div>
+        <div id="course-option-list" class="choice-list"></div>
       </div>
-      <p class="section-copy">Workforce, construction, childcare, health and fitness, hospitality, and general public CPR, AED, and first aid paths.</p>
-    </div>
-    <div class="heartsaver-course-grid">
-
-        <a class="course-jump-card heartsaver-jump-card heartsaver-featured-card" href="/courses/heartsaver-first-aid-cpr-aed.html">
-          <img src="images/HS-FA-CPR-AED.jpeg" alt="" loading="lazy">
-          <strong>Heartsaver First Aid CPR AED</strong>
-          <span>For workplace and community responders who need practical first aid, CPR, and AED training. Topics include choking, naloxone awareness, FAST stroke recognition, seizures, asthma, burns, heat illness, and common injury response.</span>
-          <b>View course options</b>
-        </a>
-        <a class="course-jump-card heartsaver-jump-card" href="/courses/heartsaver-cpr-aed.html">
-          <img src="images/HS-CPR-AED.jpeg" alt="" loading="lazy">
-          <strong>Heartsaver CPR AED</strong>
-          <span>A focused CPR/AED path for people who do not need the first aid module. It reinforces adult and child choking response and why breaths may matter in opioid-related respiratory arrest.</span>
-          <b>View course options</b>
-        </a>
-        <a class="course-jump-card heartsaver-jump-card" href="/courses/heartsaver-first-aid.html">
-          <img src="images/HS-FA.jpeg" alt="" loading="lazy">
-          <strong>Heartsaver First Aid</strong>
-          <span>First aid only, without CPR or AED. This course focuses on recognizing and responding to common injuries and illnesses such as bleeding, burns, allergic reactions, fainting, seizures, heat illness, and other everyday emergencies.</span>
-          <b>View course options</b>
-        </a>
-        <a class="course-jump-card heartsaver-jump-card" href="/courses/heartsaver-pediatric-first-aid-cpr-aed.html">
-          <img src="images/HS-PEDI-FA-CPR-AED.jpeg" alt="" loading="lazy">
-          <strong>Pediatric First Aid CPR AED</strong>
-          <span>For childcare, school, camp, and caregiver teams that need infant and child CPR, AED, choking, seizure, asthma, allergic reaction, heat illness, burn, and injury response practice.</span>
-          <b>View course options</b>
-        </a>
-        <a class="course-jump-card heartsaver-jump-card" href="/courses/bloodborne-pathogens.html">
-          <img src="images/HS-BBP.jpeg" alt="" loading="lazy">
-          <strong>Bloodborne Pathogens</strong>
-          <span>Heartsaver Bloodborne Pathogens online course teaches employees how to protect themselves and others from being exposed to blood or blood-containing materials. This course is designed to meet OSHA requirements for bloodborne pathogens training when paired with site-specific instruction.</span>
-          <b>View course options</b>
-        </a>
-    </div>
-  </section>
-
-
-  <section class="top-trust below-inventory-trust" aria-label="910CPR trust and reviews">
-    <div class="top-trust-copy">
-      <div class="home-status-label">Serving North And South Carolina</div>
-      <p>From the mountains to the coast, 910CPR helps healthcare teams, dental offices, schools, workplaces, and students meet real certification requirements with clear, organized classes.</p>
-    </div>
-    <a class="google-review-card" href="https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403" target="_blank" rel="noopener noreferrer" aria-label="Open 910CPR Google reviews in a new tab">
-      <span class="review-stars review-stars-large" aria-hidden="true">★★★★★</span>
-      <strong>Trusted by 496 5-star reviews on Google</strong>
-      <em>As of May 5, 2026</em>
-      <span>Read 910CPR reviews on Google</span>
-    </a>
-    <div class="review-snippets" aria-label="Common student review themes"><div class="review-theme-label">What students mention</div>
-          <article class="review-snippet">
-            <p>Students often mention knowledgeable instructors who keep CPR, BLS, ACLS, and PALS requirements clear.</p>
-          </article>
-          <article class="review-snippet">
-            <p>Renewing providers regularly describe the classes as organized, direct, and respectful of their time.</p>
-          </article>
-          <article class="review-snippet">
-            <p>Reviewers commonly point to clear explanations, hands-on practice, and a class experience that feels manageable.</p>
-          </article></div>
-  </section>
-
-  <section class="group-training-push" aria-label="On-site group training">
-    <div class="group-training-copy">
-      <div class="home-status-label">Group Training</div>
-      <h2>Training for your team? We come to you.</h2>
-      <p>No travel. No scheduling headaches. Your team already knows where to go.</p>
-    </div>
-    <div class="group-training-actions">
-      <a class="button primary group-training-primary" href="/request_group_session.html?program=First%20Aid%20/%20CPR%20/%20AED">Schedule On-Site Training</a>
-      <div class="group-training-individual">
-        <p>Just need a seat for yourself? Scroll down. We’ve got you covered.</p>
-        <a class="button secondary" href="/courses/heartsaver-first-aid-cpr-aed.html">View Upcoming Classes</a>
+      <div class="selector-grid">
+        <div class="panel">
+          <h2>Calendar</h2>
+          <div id="date-list" class="month-stack"></div>
+        </div>
+        <div class="panel">
+          <h2>Start Times</h2>
+          <div id="start-list" class="button-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Register</h2>
+          <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
+          <div id="course-list" class="course-list"></div>
+        </div>
       </div>
-    </div>
-  </section>
-  <section class="slug-training-options">
-    <div class="slug-banner-copy">
-      <div class="slug-banner-eyebrow">Other Training Options</div>
-      <h2>Need a different certifying body or delivery path?</h2>
-    </div>
-    <div class="training-option-grid">
-      <article class="training-option-card">
-  <h3>AHA Courses</h3>
-  <p>Browse the main American Heart Association paths including BLS, ACLS, PALS, and Heartsaver.</p>
-  <a class="text-link strong-link" href="/index.html">Browse AHA training</a>
-</article><article class="training-option-card">
-  <h3>American Red Cross Courses</h3>
-  <p>Compare Red Cross options if your employer, school, or program prefers ARC certification.</p>
-  <a class="text-link strong-link" href="/arc.html">Compare ARC options</a>
-</article><article class="training-option-card">
-  <h3>HSI Courses</h3>
-  <p>Explore HSI workplace-focused options when you need a non-AHA certification path.</p>
-  <a class="text-link strong-link" href="/hsi.html">Compare HSI options</a>
-</article><article class="training-option-card">
-  <h3>Group / Workplace Training</h3>
-  <p>Plan a private class for a team, office, school, or jobsite instead of booking individual seats.</p>
-  <a class="text-link strong-link" href="/group-training.html">Request group training</a>
-</article><article class="training-option-card">
-  <h3>USCG / Maritime First Aid</h3>
-  <p>Find the maritime-first option for crews and mariners who need USCG-aligned first aid and CPR.</p>
-  <a class="text-link strong-link" href="/uscg-elementary-first-aid-cpr.html">See maritime options</a>
-</article>
-    </div>
-  </section>
-</div>
+    </section>
+  </main>
+  <script>
+    const embeddedScheduleDates = [];
+    const availabilityUrl = "/data/block-selector-availability/heartsaver.json?v=2026-07-02T15%3A53%3A19.009792";
+    const courseOptions = [{"courseId": "344085", "courseName": "AHA Heartsaver CPR AED", "family": "Heartsaver", "variant": "cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["cpr-aed", "cpr-aed"], "iconLabel": "CPR", "clarification": "CPR and AED classroom option.", "details": {"course_key": "aha_heartsaver_cpr_aed", "title": "AHA Heartsaver CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "CPR and AED training for workplace, school, family, and community requirements that do not require first aid.", "who_this_is_for": "Students who need CPR/AED certification without a first aid component.", "topics_covered": ["Adult, child, and infant CPR concepts", "AED use", "Choking response", "When breaths matter", "Emergency action steps"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["This does not satisfy requirements that specifically ask for First Aid + CPR + AED.", "This is not BLS for healthcare providers."], "full_course_page": "/courses/heartsaver-cpr-aed.html"}}, {"courseId": "209808", "courseName": "AHA Heartsaver CPR AED Online", "family": "Heartsaver", "variant": "cpr-aed-online", "deliveryMode": "blended", "recommended": false, "deepLinkAliases": ["cpr-aed-online", "cpr-aed-online", "heartcode-first-aid-cpr-aed"], "iconLabel": "CPR", "clarification": "Online portion plus scheduled skills check where rules allow.", "details": {"course_key": "aha_heartsaver_cpr_aed_online", "title": "AHA Heartsaver CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended CPR/AED option with online coursework followed by an in-person skills session.", "who_this_is_for": "Students whose requirement accepts AHA Heartsaver CPR AED and who prefer online coursework before skills practice.", "topics_covered": ["Online CPR/AED coursework", "In-person CPR skills", "AED skills", "Choking response skills"], "required_materials": ["Completed AHA Heartsaver CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["This does not satisfy requirements that specifically ask for First Aid + CPR + AED.", "Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-cpr-aed.html"}}, {"courseId": "209809", "courseName": "AHA Heartsaver First Aid CPR AED", "family": "Heartsaver", "variant": "first-aid-cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["first-aid-cpr-aed", "first-aid-cpr-aed"], "iconLabel": "FA", "clarification": "First Aid, CPR, and AED classroom option.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed", "title": "AHA Heartsaver First Aid CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "First Aid, CPR, and AED training for workplace, school, and professional requirements.", "who_this_is_for": "Students who need a combined first aid, CPR, and AED certification for work, school, licensing, or general preparedness.", "topics_covered": ["First aid basics", "CPR and AED use", "Choking response", "Opioid emergency awareness", "Stroke warning signs", "Seizures", "Asthma support", "Heat illness", "Burns and common injuries"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use this path when your requirement specifically includes first aid plus CPR/AED."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "329495", "courseName": "AHA Heartsaver First Aid CPR AED - Blended", "family": "Heartsaver", "variant": "first-aid-cpr-aed-blended", "deliveryMode": "blended", "recommended": false, "deepLinkAliases": ["first-aid-cpr-aed-blended", "first-aid-cpr-aed-blended"], "iconLabel": "BL", "clarification": "Blended First Aid, CPR, and AED option.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed_blended", "title": "AHA Heartsaver First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended First Aid/CPR/AED option with online coursework and an in-person skills session.", "who_this_is_for": "Students whose requirement accepts blended Heartsaver First Aid CPR AED.", "topics_covered": ["Online first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA Heartsaver First Aid CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "351632", "courseName": "AHA Heartsaver Pediatric First Aid / CPR / AED", "family": "Heartsaver", "variant": "pediatric-first-aid-cpr-aed-in-person", "deliveryMode": "in-person", "recommended": false, "deepLinkAliases": ["pediatric-first-aid-cpr-aed-in-person", "pediatric-first-aid-cpr-aed-in-person"], "iconLabel": "PED", "clarification": "In-person pediatric First Aid, CPR, and AED option.", "details": {"course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed", "title": "AHA Heartsaver Pediatric First Aid / CPR / AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Pediatric first aid, CPR, AED, and emergency recognition for childcare, school, camp, and youth settings.", "who_this_is_for": "Childcare providers, school staff, camp staff, caregivers, and youth-program teams that need pediatric first aid with CPR/AED.", "topics_covered": ["Infant and child CPR concepts", "AED use", "Choking response", "Pediatric first aid", "Seizures", "Asthma", "Severe allergic reactions", "Heat illness", "Burns", "Injury care"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver Pediatric First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Designed for pediatric and childcare-related requirements.", "North Carolina childcare programs should verify the exact requirement with their licensing or employer contact."], "full_course_page": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html"}}, {"courseId": "251545", "courseName": "AHA Heartsaver Pediatric First Aid CPR AED Online", "family": "Heartsaver", "variant": "pediatric", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["pediatric", "pediatric-first-aid-cpr-aed"], "iconLabel": "PED", "clarification": "Pediatric First Aid/CPR/AED option where scheduling rules allow.", "details": {"course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online", "title": "AHA Heartsaver Pediatric First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended pediatric First Aid/CPR/AED option with online coursework and in-person skills.", "who_this_is_for": "Childcare, school, camp, and caregiver students whose requirement accepts the AHA blended pediatric path.", "topics_covered": ["Online pediatric first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected pediatric first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA pediatric Heartsaver online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver Pediatric First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html"}}];
+    const optionGroups = {"Heartsaver": {"family": "Heartsaver", "label": "All AHA Heartsaver options", "courseIds": ["344085", "209808", "209809", "329495", "351632", "251545"]}};
+    const unsupportedOptions = [];
+    let scheduleDates = embeddedScheduleDates;
+    let availabilityState = 'checking';
+    let availabilityMessage = 'Checking current class times…';
+    let resolvedAvailability = null;
+    let selectedCourseId = "344085";
+    let showAllOptions = false;
+    let compareMode = false;
+    let selectedDate = '';
+    let selectedStart = '';
+    let mobileMonthIndex = 0;
 
-  </div>
-</div>
-<script src="assets/hub-ui.js?v=20260511-hash-tabs"></script>
-<script src="assets/live-sessions.js"></script>
-<script src="assets/session-expiry.js"></script>
-<script src="assets/hybrid-inventory.js"></script>
-<div class="build-stamp">Build: 2026-07-11 22:48</div>
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function setAvailabilityMessage(message) {
+      availabilityMessage = message || 'Checking current class times…';
+    }
+
+    function renderAvailabilityPlaceholder(message = availabilityMessage) {
+      ['date-list', 'start-list', 'course-list'].forEach(id => {
+        const host = byId(id);
+        if (host) {
+          host.innerHTML = '';
+          const box = document.createElement('div');
+          box.className = 'empty';
+          box.setAttribute('role', id === 'start-list' ? 'status' : 'note');
+          box.textContent = message;
+          host.appendChild(box);
+        }
+      });
+    }
+
+    function availabilityReady() {
+      return availabilityState === 'ready';
+    }
+
+    function isMobileLayout() {
+      return window.matchMedia('(max-width: 820px)').matches;
+    }
+
+    function normalizeDeepLink(value) {
+      return String(value || '').trim().toLowerCase().replace(/^#/, '');
+    }
+
+    function publicDeliveryBucket(value) {
+      const normalized = normalizeDeepLink(value).replace(/[\s_]+/g, '-').replace(/\+/g, '-');
+      if (!normalized) {
+        return '';
+      }
+      if (normalized === 'in-person' || normalized === 'inperson' || normalized === 'classroom') {
+        return 'in-person';
+      }
+      if ([
+        'blended',
+        'heartcode',
+        'skills-session',
+        'skills',
+        'online-skills',
+        'online-learning-skills',
+        'online-in-person-skills',
+        'online-plus-skills',
+        'online-and-skills',
+        'online-hands-on-skills',
+        'online-learning-in-person-skills'
+      ].includes(normalized) || (normalized.includes('online') && normalized.includes('skills'))) {
+        return 'online-skills';
+      }
+      return normalized;
+    }
+
+    function courseIdFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return '';
+      }
+      const matched = courseOptions.find(course =>
+        course.courseId === requested ||
+        normalizeDeepLink(course.variant) === requested ||
+        (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested)
+      );
+      return matched?.courseId || '';
+    }
+
+    function requestOptionFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return null;
+      }
+      return unsupportedOptions.find(option =>
+        normalizeDeepLink(option.fragment) === requested ||
+        (option.deep_link_aliases || []).some(alias => normalizeDeepLink(alias) === requested)
+      ) || null;
+    }
+
+    function focusDeepLinkedElement() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return;
+      }
+      const requestOption = requestOptionFromDeepLink();
+      const courseOption = courseOptions.find(course =>
+        course.courseId === selectedCourseId &&
+        (normalizeDeepLink(course.variant) === requested || (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested))
+      );
+      const target = requestOption
+        ? document.querySelector(`[data-request-fragment="${CSS.escape(requestOption.fragment)}"]`)
+        : courseOption
+          ? document.querySelector(`[data-course-id="${CSS.escape(courseOption.courseId)}"]`)
+          : null;
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.focus({ preventScroll: true });
+      }
+    }
+
+    function showAllFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      return ['1', 'true', 'yes'].includes(normalizeDeepLink(params.get('showAll')));
+    }
+
+    function deliveryLabel(value) {
+      const bucket = publicDeliveryBucket(value);
+      if (bucket === 'in-person') {
+        return 'In-person';
+      }
+      if (bucket === 'online-skills') {
+        return 'Online + Skills';
+      }
+      return 'All';
+    }
+
+    function selectedDateLabel() {
+      const day = filteredDates().find(item => item.date === selectedDate);
+      return day?.displayDate || '';
+    }
+
+    function selectedCourseLabel() {
+      const course = courseOptions.find(item => item.courseId === selectedCourseId);
+      return course?.courseName || '';
+    }
+
+    function visibleCourseOptions() {
+      return courseOptions.filter(course => showAllOptions || course.recommended !== false);
+    }
+
+    function syncCourseSelection() {
+      const visibleOptions = visibleCourseOptions();
+      if (!visibleOptions.length) {
+        selectedCourseId = '';
+        return;
+      }
+      if (!visibleOptions.some(course => course.courseId === selectedCourseId)) {
+        selectedCourseId = visibleOptions[0].courseId;
+      }
+    }
+
+    function activeCourseIds() {
+      syncCourseSelection();
+      const selected = courseOptions.find(course => course.courseId === selectedCourseId);
+      if (!selected) {
+        return new Set();
+      }
+      if (compareMode) {
+        const group = Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId));
+        const groupIds = group?.courseIds || optionGroups[selected.family]?.courseIds || [selectedCourseId];
+        return new Set(groupIds.filter(courseId => {
+          const course = courseOptions.find(option => option.courseId === courseId);
+          return Boolean(course);
+        }));
+      }
+      return new Set([selectedCourseId]);
+    }
+
+    function filteredCourses(slot) {
+      const ids = activeCourseIds();
+      return slot.courses.filter(course => ids.has(course.courseId));
+    }
+
+    const scheduleTimezone = 'America/New_York';
+
+    function businessNow() {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: scheduleTimezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).formatToParts(new Date()).reduce((values, part) => {
+        values[part.type] = part.value;
+        return values;
+      }, {});
+      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
+      return {
+        dateKey: `${parts.year}-${parts.month}-${parts.day}`,
+        minutes: (hour * 60) + Number(parts.minute)
+      };
+    }
+
+    function startMinutes(startTime) {
+      const [hour, minute] = String(startTime || '').split(':').map(Number);
+      return (hour * 60) + minute;
+    }
+
+    function isPastStart(day, slot, now = businessNow()) {
+      if (!day || !slot) {
+        return true;
+      }
+      if (day.date < now.dateKey) {
+        return true;
+      }
+      if (day.date > now.dateKey) {
+        return false;
+      }
+      return startMinutes(slot.startTime) <= now.minutes;
+    }
+
+    function selectableStartTimes(day, now = businessNow()) {
+      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+    }
+
+    function isSelectableDate(day, now = businessNow()) {
+      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
+    }
+
+    function filteredDates() {
+      if (!availabilityReady()) {
+        return [];
+      }
+      return scheduleDates.map(day => {
+        const startTimes = day.startTimes.map(slot => ({
+          ...slot,
+          courses: filteredCourses(slot)
+        })).filter(slot => slot.courses.length);
+        return { ...day, startTimes };
+      }).filter(day => day.startTimes.length);
+    }
+
+    function syncSelection() {
+      const days = filteredDates();
+      const now = businessNow();
+      const selectableDays = days.filter(day => isSelectableDate(day, now));
+      if (!days.length) {
+        selectedDate = '';
+        selectedStart = '';
+        return days;
+      }
+      if (!selectableDays.length) {
+        selectedDate = '';
+        selectedStart = '';
+        return days;
+      }
+      if (!selectableDays.some(day => day.date === selectedDate)) {
+        selectedDate = selectableDays[0].date;
+        mobileMonthIndex = Math.max(0, [...new Set(days.map(day => day.date.slice(0, 7)))].indexOf(selectedDate.slice(0, 7)));
+      }
+      const day = days.find(item => item.date === selectedDate);
+      const starts = selectableStartTimes(day, now);
+      if (!starts.some(slot => slot.startTime === selectedStart)) {
+        selectedStart = starts[0]?.startTime || '';
+      }
+      return days;
+    }
+
+    function renderCourseOptions() {
+      const host = byId('course-option-list');
+      host.innerHTML = '';
+      visibleCourseOptions().forEach(course => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'course-card';
+        button.dataset.courseId = course.courseId;
+        button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
+        const icon = document.createElement('span');
+        icon.className = 'course-icon';
+        icon.textContent = course.iconLabel || course.family;
+        icon.setAttribute('aria-hidden', 'true');
+        const copy = document.createElement('span');
+        copy.className = 'course-copy';
+        const title = document.createElement('span');
+        title.className = 'course-title';
+        title.textContent = course.courseName;
+        const delivery = document.createElement('span');
+        delivery.className = 'course-delivery';
+        delivery.textContent = deliveryLabel(course.deliveryMode);
+        const help = document.createElement('span');
+        help.className = 'course-help';
+        help.textContent = course.clarification || '';
+        copy.append(title, delivery, help);
+        button.append(icon, copy);
+        const details = course.details || {};
+        if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length) {
+          const detailBox = document.createElement('details');
+          detailBox.className = 'course-details';
+          const summary = document.createElement('summary');
+          summary.textContent = 'Course details';
+          const body = document.createElement('div');
+          body.className = 'course-details-body';
+          if (details.short_description) {
+            const short = document.createElement('div');
+            short.textContent = details.short_description;
+            body.appendChild(short);
+          }
+          if (details.who_this_is_for) {
+            const audience = document.createElement('div');
+            audience.textContent = details.who_this_is_for;
+            body.appendChild(audience);
+          }
+          if ((details.topics_covered || []).length) {
+            const topics = document.createElement('ul');
+            details.topics_covered.slice(0, 5).forEach(topic => {
+              const item = document.createElement('li');
+              item.textContent = topic;
+              topics.appendChild(item);
+            });
+            body.appendChild(topics);
+          }
+          if (details.certification_issued) {
+            const cert = document.createElement('div');
+            cert.textContent = details.certification_issued;
+            body.appendChild(cert);
+          }
+          detailBox.append(summary, body);
+          button.appendChild(detailBox);
+        }
+        button.addEventListener('click', () => {
+          selectedCourseId = course.courseId;
+          renderAll();
+        });
+        host.appendChild(button);
+      });
+      if (!host.children.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+      }
+      const showAllToggle = byId('show-all-toggle');
+      if (showAllToggle) {
+        showAllToggle.checked = showAllOptions;
+      }
+      const compareToggle = byId('compare-toggle');
+      if (compareToggle) {
+        compareToggle.checked = compareMode;
+      }
+    }
+
+    function renderDates() {
+      const host = byId('date-list');
+      host.innerHTML = '';
+      if (!availabilityReady()) {
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      const days = syncSelection();
+      const now = businessNow();
+      if (!days.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        return;
+      }
+      const availableByDate = new Map(days.map(day => [day.date, day]));
+      const monthKeys = [];
+      days.forEach(day => {
+        const monthKey = day.date.slice(0, 7);
+        if (!monthKeys.includes(monthKey)) {
+          monthKeys.push(monthKey);
+        }
+      });
+      if (mobileMonthIndex >= monthKeys.length) {
+        mobileMonthIndex = Math.max(0, monthKeys.length - 1);
+      }
+      const activeMonthKey = isMobileLayout() ? monthKeys[mobileMonthIndex] : (selectedDate ? selectedDate.slice(0, 7) : monthKeys[mobileMonthIndex]);
+      const activeMonthIndex = monthKeys.includes(activeMonthKey) ? monthKeys.indexOf(activeMonthKey) : mobileMonthIndex;
+      if (isMobileLayout()) {
+        mobileMonthIndex = activeMonthIndex;
+        const nav = document.createElement('div');
+        nav.className = 'month-nav';
+        const previous = document.createElement('button');
+        previous.type = 'button';
+        previous.textContent = 'Previous';
+        previous.disabled = mobileMonthIndex <= 0;
+        previous.addEventListener('click', () => {
+          mobileMonthIndex = Math.max(0, mobileMonthIndex - 1);
+          renderDates();
+        });
+        const navTitle = document.createElement('div');
+        navTitle.className = 'month-nav-title';
+        const [activeYear, activeMonth] = monthKeys[mobileMonthIndex].split('-').map(Number);
+        navTitle.textContent = new Date(activeYear, activeMonth - 1, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.textContent = 'Next';
+        next.disabled = mobileMonthIndex >= monthKeys.length - 1;
+        next.addEventListener('click', () => {
+          mobileMonthIndex = Math.min(monthKeys.length - 1, mobileMonthIndex + 1);
+          renderDates();
+        });
+        nav.append(previous, navTitle, next);
+        host.appendChild(nav);
+      }
+      const renderedMonthKeys = isMobileLayout() ? [monthKeys[mobileMonthIndex]] : monthKeys.slice(0, 3);
+      renderedMonthKeys.forEach(monthKey => {
+        const [year, month] = monthKey.split('-').map(Number);
+        const first = new Date(year, month - 1, 1);
+        const last = new Date(year, month, 0);
+        const section = document.createElement('section');
+        section.className = 'month';
+        section.dataset.mobileVisible = String(monthKey === monthKeys[mobileMonthIndex]);
+        const title = document.createElement('h3');
+        title.className = 'month-title';
+        title.textContent = first.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+        const grid = document.createElement('div');
+        grid.className = 'calendar-grid';
+        ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(label => {
+          const item = document.createElement('div');
+          item.className = 'weekday';
+          item.textContent = label;
+          grid.appendChild(item);
+        });
+        for (let i = 0; i < first.getDay(); i += 1) {
+          const pad = document.createElement('div');
+          pad.className = 'calendar-pad';
+          grid.appendChild(pad);
+        }
+        for (let dayNum = 1; dayNum <= last.getDate(); dayNum += 1) {
+          const dateKey = `${monthKey}-${String(dayNum).padStart(2, '0')}`;
+          const available = availableByDate.get(dateKey);
+          if (available) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'day-button';
+            button.textContent = String(dayNum);
+            const disabled = !isSelectableDate(available, now);
+            if (disabled) {
+              button.classList.add('is-past');
+            }
+            button.disabled = disabled;
+            button.setAttribute('aria-disabled', String(disabled));
+            button.setAttribute('aria-label', available.displayDate + ' ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times' : 'available'));
+            button.setAttribute('aria-pressed', String(available.date === selectedDate));
+            button.addEventListener('click', () => {
+              if (!isSelectableDate(available)) {
+                return;
+              }
+              selectedDate = available.date;
+              mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
+              selectedStart = selectableStartTimes(available)[0]?.startTime || '';
+              renderAll();
+            });
+            grid.appendChild(button);
+          } else {
+            const pad = document.createElement('div');
+            pad.className = 'calendar-pad';
+            pad.textContent = String(dayNum);
+            grid.appendChild(pad);
+          }
+        }
+        section.append(title, grid);
+        host.appendChild(section);
+      });
+    }
+
+    function renderStarts() {
+      const host = byId('start-list');
+      host.innerHTML = '';
+      if (!availabilityReady()) {
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      const day = filteredDates().find(item => item.date === selectedDate);
+      if (!day || !day.startTimes.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        return;
+      }
+      const groups = new Map();
+      day.startTimes.forEach(slot => {
+        const [hourText] = slot.startTime.split(':');
+        const hour = Number.parseInt(hourText, 10);
+        const label = hour < 12 ? 'AM' : 'PM';
+        if (!groups.has(label)) {
+          groups.set(label, []);
+        }
+        groups.get(label).push(slot);
+      });
+      groups.forEach((slots, label) => {
+        const group = document.createElement('div');
+        group.className = 'start-group';
+        const groupLabel = document.createElement('div');
+        groupLabel.className = 'start-group-label';
+        groupLabel.textContent = label;
+        const grid = document.createElement('div');
+        grid.className = 'start-grid';
+        slots.forEach(slot => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = slot.displayStartTime;
+        const disabled = isPastStart(day, slot);
+        if (disabled) {
+          button.classList.add('is-past');
+        }
+        button.disabled = disabled;
+        button.setAttribute('aria-disabled', String(disabled));
+        button.setAttribute('aria-label', slot.displayStartTime + ' ' + (disabled ? 'not bookable; past ' + scheduleTimezone + ' start time' : 'available'));
+        button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
+        button.addEventListener('click', () => {
+          if (isPastStart(day, slot)) {
+            return;
+          }
+          selectedStart = slot.startTime;
+          renderAll();
+        });
+          grid.appendChild(button);
+        });
+        group.append(groupLabel, grid);
+        host.appendChild(group);
+      });
+    }
+
+    function renderCourses() {
+      const host = byId('course-list');
+      host.innerHTML = '';
+      if (!availabilityReady()) {
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      const day = filteredDates().find(item => item.date === selectedDate);
+      const slot = day?.startTimes.find(item => item.startTime === selectedStart);
+      if (!slot || isPastStart(day, slot) || !slot.courses.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        return;
+      }
+      slot.courses.forEach(course => {
+        const item = document.createElement('article');
+        item.className = 'course';
+        const summary = document.createElement('div');
+        summary.className = 'selected-summary';
+        const title = document.createElement('h3');
+        title.textContent = course.courseName;
+        const dateRow = document.createElement('div');
+        dateRow.className = 'selected-summary-row';
+        dateRow.textContent = selectedDateLabel();
+        const timeRow = document.createElement('div');
+        timeRow.className = 'selected-summary-row';
+        timeRow.textContent = course.displayStartTime;
+        const locationRow = document.createElement('div');
+        locationRow.className = 'selected-summary-row';
+        locationRow.textContent = course.location;
+        summary.append(title, dateRow, timeRow, locationRow);
+        const badge = document.createElement('div');
+        badge.className = 'delivery-badge';
+        badge.textContent = deliveryLabel(course.deliveryMode);
+        const link = document.createElement('a');
+        link.className = 'register-link';
+        link.href = course.appointmentUrl;
+        link.textContent = 'Register';
+        item.append(summary, badge, link);
+        host.appendChild(item);
+      });
+    }
+
+    function renderAll() {
+      syncCourseSelection();
+      if (!availabilityReady()) {
+        renderCourseOptions();
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      syncSelection();
+      renderCourseOptions();
+      renderDates();
+      renderStarts();
+      renderCourses();
+    }
+
+    const compareToggle = byId('compare-toggle');
+    if (compareToggle) {
+      compareToggle.addEventListener('change', event => {
+        compareMode = event.target.checked;
+        renderAll();
+      });
+    }
+
+    const showAllToggle = byId('show-all-toggle');
+    if (showAllToggle) {
+      showAllToggle.addEventListener('change', event => {
+        showAllOptions = event.target.checked;
+        renderAll();
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      if (availabilityReady()) {
+        renderDates();
+        renderStarts();
+      }
+    });
+
+    showAllOptions = showAllFromDeepLink();
+    selectedCourseId = courseIdFromDeepLink() || selectedCourseId;
+    renderAll();
+    setTimeout(focusDeepLinkedElement, 0);
+
+    window.addEventListener('hashchange', () => {
+      const requestedCourse = courseIdFromDeepLink();
+      if (requestedCourse) {
+        selectedCourseId = requestedCourse;
+      }
+      renderAll();
+      setTimeout(focusDeepLinkedElement, 0);
+    });
+
+    async function loadResolvedAvailability() {
+      availabilityState = 'checking';
+      setAvailabilityMessage('Checking current class times…');
+      renderAll();
+      try {
+        const response = await fetch(availabilityUrl, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`availability fetch failed: ${response.status}`);
+        }
+        const payload = await response.json();
+        if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {
+          throw new Error('availability payload has an unexpected shape');
+        }
+        resolvedAvailability = payload;
+        scheduleDates = payload.dates;
+        availabilityState = 'ready';
+        setAvailabilityMessage('');
+        renderAll();
+      } catch (error) {
+        console.error(error);
+        resolvedAvailability = null;
+        scheduleDates = [];
+        availabilityState = 'failed';
+        setAvailabilityMessage('Current class times are temporarily unavailable. Please retry in a moment or contact 910CPR.');
+        renderAll();
+      }
+    }
+
+    loadResolvedAvailability();
+  </script>
 </body>
 </html>

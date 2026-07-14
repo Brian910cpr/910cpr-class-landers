@@ -202,7 +202,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
     def test_config_driven_heartsaver_page_generates_valid_schedule(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
         payload = block_start_time_selector.build_block_schedule_page(configs["heartsaver"])
-        self.assertEqual(payload["publicPage"], "docs/heartsaver-schedule.html")
+        self.assertEqual(payload["publicPage"], "docs/heartsaver.html")
         course_ids = {offer["courseId"] for offer in payload["offers"]}
         self.assertLessEqual(course_ids, {"344085", "209808", "209809", "329495", "351632", "251545"})
         html = build_bls_block_schedule_pilot.render_html(payload)
@@ -226,7 +226,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn('value="skills-session"> HeartCode/Skills', html)
         self.assertIn("Course details", html)
         self.assertIn("topics_covered", html)
-        self.assertIn("Full course page", html)
+        self.assertNotIn("Full course page", html)
         self.assertIn("selected-summary", html)
         self.assertIn("start-grid", html)
         self.assertIn("Show all course options", html)
@@ -293,9 +293,12 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("pals", build_deployed_selector_pages.DEPLOYED_SELECTOR_PAGE_KEYS)
         self.assertIn("hsi", build_deployed_selector_pages.DEPLOYED_SELECTOR_PAGE_KEYS)
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        self.assertEqual(configs["acls"]["output_path"], "docs/acls-schedule.html")
-        self.assertEqual(configs["pals"]["output_path"], "docs/pals-schedule.html")
-        self.assertEqual(configs["hsi"]["output_path"], "docs/hsi-schedule.html")
+        self.assertEqual(configs["acls"]["output_path"], "docs/acls.html")
+        self.assertEqual(configs["pals"]["output_path"], "docs/pals.html")
+        self.assertEqual(configs["hsi"]["output_path"], "docs/hsi.html")
+        self.assertEqual(configs["acls"]["legacy_schedule_path"], "docs/acls-schedule.html")
+        self.assertEqual(configs["pals"]["legacy_schedule_path"], "docs/pals-schedule.html")
+        self.assertEqual(configs["hsi"]["legacy_schedule_path"], "docs/hsi-schedule.html")
 
     def test_acls_selector_shell_and_artifact_support_all_variants_without_static_times(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
@@ -352,6 +355,12 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertEqual("hsi", artifact["pageKey"])
         self.assertIn("HSI BLS Challenge", html)
         self.assertIn("HSI BLS + Adult First Aid", html)
+        self.assertIn("HSI First Aid / CPR / AED", html)
+        self.assertIn("HSI CPR / AED", html)
+        self.assertIn('data-request-fragment="first-aid-cpr-aed"', html)
+        self.assertIn('data-request-fragment="cpr-aed"', html)
+        self.assertIn("function focusDeepLinkedElement()", html)
+        self.assertIn("window.addEventListener('hashchange'", html)
         self.assertIn("Checking current class times…", html)
         self.assertIn("fetch(availabilityUrl, { cache: 'no-store' })", html)
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
@@ -362,10 +371,11 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_hsi_hub_no_longer_embeds_static_dynamic_appointment_times(self):
         html = (ROOT / "docs" / "hsi.html").read_text(encoding="utf-8")
-        self.assertIn("/hsi-schedule.html?course=challenge", html)
-        self.assertIn("/hsi-schedule.html?course=bls-first-aid", html)
+        self.assertIn("HSI BLS Challenge", html)
+        self.assertIn("HSI BLS + Adult First Aid", html)
         self.assertNotIn("slug-appointment-option", html)
         self.assertNotIn("appointmentDayId=", html)
+        self.assertIn("Checking current class times…", html)
 
     def test_blocked_calendar_interval_occupancy_rejects_hsi_overlap_boundaries(self):
         live_payload = {
@@ -437,8 +447,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         slug_hubs = json.loads((ROOT / "data" / "config" / "slug_hubs.json").read_text(encoding="utf-8"))
         configs = block_start_time_selector.load_block_schedule_page_configs()
         expected_targets = {
-            "acls": "/acls-schedule.html",
-            "pals": "/pals-schedule.html",
+            "acls": "/acls.html",
+            "pals": "/pals.html",
         }
         for slug, expected in expected_targets.items():
             with self.subTest(slug=slug):
@@ -450,6 +460,32 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                 }
                 self.assertEqual({expected}, urls)
                 self.assertEqual(configs[slug]["output_path"], f"docs/{expected.lstrip('/')}")
+
+    def test_promoted_family_pages_and_legacy_schedule_redirects(self):
+        redirects = {
+            "bls": "/bls.html",
+            "acls": "/acls.html",
+            "pals": "/pals.html",
+            "hsi": "/hsi.html",
+            "heartsaver": "/heartsaver.html",
+            "arc": "/arc.html",
+        }
+        for slug, target in redirects.items():
+            with self.subTest(slug=slug):
+                canonical = (ROOT / "docs" / f"{slug}.html").read_text(encoding="utf-8")
+                redirect = (ROOT / "docs" / f"{slug}-schedule.html").read_text(encoding="utf-8")
+                if slug == "arc":
+                    self.assertNotIn("selector-shell", canonical)
+                    self.assertIn("Scheduling assistance available", canonical)
+                else:
+                    self.assertIn("selector-shell", canonical)
+                    self.assertIn("const embeddedScheduleDates = []", canonical)
+                    self.assertIn("Checking current class times…", canonical)
+                    self.assertNotIn("Browse upcoming class times here", canonical)
+                    self.assertNotIn("appointmentDayId=", canonical)
+                self.assertIn(f'var target = "{target}";', redirect)
+                self.assertIn("window.location.replace(target + query + hash)", redirect)
+                self.assertIn('name="robots" content="noindex"', redirect)
 
     def test_uscg_cover_page_uses_only_aha_heartsaver_first_aid_cpr_aed_inventory(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()

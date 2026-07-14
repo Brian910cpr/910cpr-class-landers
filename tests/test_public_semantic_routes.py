@@ -85,13 +85,13 @@ class PublicSemanticRouteTests(unittest.TestCase):
     def test_course_family_schedule_routes_match_family(self) -> None:
         pages = slug_hub_pages()
         for tab in pages["bls"]["tabs"]:
-            self.assertEqual("/bls-schedule.html", tab["full_schedule_url"])
+            self.assertEqual("/bls.html", tab["full_schedule_url"])
         for tab in pages["acls"]["tabs"]:
-            self.assertEqual("/acls-schedule.html", tab["full_schedule_url"])
+            self.assertEqual("/acls.html", tab["full_schedule_url"])
         for tab in pages["pals"]["tabs"]:
-            self.assertEqual("/pals-schedule.html", tab["full_schedule_url"])
+            self.assertEqual("/pals.html", tab["full_schedule_url"])
         for tab in pages["heartsaver"]["tabs"]:
-            self.assertEqual("/heartsaver-schedule.html", tab["full_schedule_url"])
+            self.assertEqual("/heartsaver.html", tab["full_schedule_url"])
         for tab in pages["uscg-elementary-first-aid-cpr"]["tabs"]:
             self.assertEqual("/courses/uscg-first-aid-cpr-aed.html", tab["full_schedule_url"])
 

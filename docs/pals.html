@@ -1,426 +1,1093 @@
-<!-- BUILD_CODE: 2026-07-11 22:48 | scripts/build_slug_hubs.py | slug hub rebuild from docs/data/schedule_future.json -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta name="build-date" content="2026-07-11T22:48:47-04:00">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PALS Classes | 910CPR</title>
-<meta name="description" content="AHA PALS initial, renewal, and HeartCode skills options for pediatric and emergency care professionals with scheduled 910CPR class times.">
-<meta name="robots" content="index,follow">
-<link rel="canonical" href="https://www.910cpr.com/pals.html">
-<link rel="icon" type="image/png" href="images/logo.png">
-<link rel="shortcut icon" href="images/logo.png">
-<link rel="apple-touch-icon" href="images/logo.png">
-<link rel="stylesheet" href="css/lander.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PALS Schedule | 910CPR</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18212c;
+      --muted: #647285;
+      --line: #d8dee8;
+      --surface: #ffffff;
+      --band: #f5f7fa;
+      --accent: #0a66a5;
+      --accent-dark: #074f80;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--surface);
+      line-height: 1.45;
+    }
+    header, main { max-width: 1120px; margin: 0 auto; padding: 24px; }
+    header { border-bottom: 1px solid var(--line); }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 1.25rem; letter-spacing: 0; }
+    h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: 0; }
+    p { margin: 0 0 12px; }
+    .muted { color: var(--muted); }
+    .page-subtitle {
+      margin: 0 0 8px;
+      color: var(--accent-dark);
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+    .page-context {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 18px;
+    }
+    .page-note {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: var(--band);
+      padding: 14px;
+    }
+    .page-note h2 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+    .page-note ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+    .selector-shell {
+      display: grid;
+      gap: 16px;
+    }
+    .course-selector-panel {
+      display: grid;
+      gap: 14px;
+    }
+    .course-selector-top {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .selector-grid {
+      display: grid;
+      grid-template-columns: minmax(340px, 1.35fr) minmax(210px, .8fr) minmax(280px, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 16px;
+      min-width: 0;
+    }
+    .button-list { display: grid; gap: 8px; }
+    .choice-list {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(250px, 1fr);
+      gap: 10px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: x proximity;
+      padding: 0 2px 8px;
+      margin-bottom: 0;
+    }
+    .option-tools {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .disclosure-toggle {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .disclosure-toggle input {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+    }
+    .compare-toggle {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .compare-toggle input {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+    }
+    button, .register-link {
+      min-height: 42px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      padding: 9px 11px;
+      cursor: pointer;
+    }
+    button[aria-pressed="true"] {
+      border-color: var(--accent);
+      box-shadow: inset 3px 0 0 var(--accent);
+      background: #eef7fc;
+    }
+    .course-card {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      min-height: 118px;
+      align-content: start;
+      scroll-snap-align: start;
+    }
+    .course-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: #e8f2f8;
+      color: var(--accent-dark);
+      font-weight: 700;
+      font-size: .82rem;
+    }
+    .course-copy { display: grid; gap: 3px; }
+    .course-title { font-weight: 700; }
+    .course-help {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.3;
+    }
+    .course-delivery {
+      color: var(--accent-dark);
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .course-details {
+      grid-column: 2;
+      color: var(--muted);
+      font-size: .84rem;
+    }
+    .course-details summary {
+      cursor: pointer;
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+    .course-details-body {
+      display: grid;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .course-details-body ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .course-page-link {
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+    .month-stack { display: grid; gap: 14px; }
+    .month-nav {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .month-nav button {
+      min-height: 40px;
+      padding: 8px 11px;
+      text-align: center;
+    }
+    .month-nav-title {
+      font-weight: 800;
+      text-align: center;
+    }
+    .month-title {
+      margin: 0 0 8px;
+      font-size: .95rem;
+      font-weight: 700;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+    }
+    .weekday, .calendar-pad {
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: .75rem;
+    }
+    .day-button {
+      min-height: 34px;
+      padding: 0;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+    }
+    .day-button.is-past,
+    .start-grid button.is-past {
+      color: #6b7280;
+      border-color: #d1d5db;
+      background: #f3f4f6;
+      cursor: not-allowed;
+      opacity: .72;
+    }
+    .day-button.is-past[aria-pressed="true"],
+    .start-grid button.is-past[aria-pressed="true"] {
+      border-color: #d1d5db;
+      box-shadow: none;
+      background: #f3f4f6;
+    }
+    .course-list { display: grid; gap: 12px; }
+    .start-group {
+      display: grid;
+      gap: 8px;
+    }
+    .start-group + .start-group { margin-top: 12px; }
+    .start-group-label {
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .start-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .start-grid button {
+      min-width: 76px;
+      text-align: center;
+      justify-content: center;
+    }
+    .course {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--band);
+    }
+    .selected-summary {
+      display: grid;
+      gap: 6px;
+    }
+    .selected-summary-row {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .course-meta {
+      color: var(--muted);
+      font-size: .92rem;
+      margin: 3px 0 12px;
+    }
+    .delivery-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--accent-dark);
+      background: #eef7fc;
+      font-size: .78rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .register-note {
+      color: var(--muted);
+      font-size: .88rem;
+      margin-bottom: 12px;
+    }
+    .register-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .register-link:hover { background: var(--accent-dark); }
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      color: var(--muted);
+      background: var(--band);
+    }
+    @media (max-width: 820px) {
+      .selector-grid { grid-template-columns: 1fr; }
+      .selector-grid > *,
+      .selector-shell > * { min-width: 0; }
+      header, main { padding: 18px; }
+      .panel { padding: 14px; }
+      .course-selector-top {
+        display: grid;
+        gap: 12px;
+      }
+      .option-tools {
+        display: grid;
+        gap: 10px;
+      }
+      .choice-list {
+        grid-auto-columns: minmax(238px, 82%);
+        scroll-snap-type: x mandatory;
+      }
+      .course-card {
+        min-height: 112px;
+      }
+      .course-help {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .month-stack { gap: 0; }
+      .month-nav { display: flex; }
+      .month:not([data-mobile-visible="true"]) { display: none; }
+      .calendar-grid { gap: 6px; }
+      .weekday,
+      .calendar-pad,
+      .day-button {
+        min-height: 42px;
+      }
+      .button-list {
+        display: block;
+      }
+      .start-grid button {
+        min-height: 42px;
+        flex: 1 0 72px;
+      }
+      .register-link {
+        width: 100%;
+      }
+    }
+    </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="page-shell">
-
-<div class="card slug-hub-shell">
-  <header class="site-brand-bar">
-  <a class="site-brand-link" href="index.html" aria-label="910CPR home">
-    <img class="site-brand-logo" src="images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='images/910CPR_wave.jpg';this.onerror=null;">
-    <span class="site-brand-wordmark">910CPR</span>
-  </a>
-</header>
-  <section class="hero slug-hero">
-    <div class="hero-main">
-      <div class="eyebrow">Pediatric Advanced Life Support</div>
-      <h1>PALS Certification For Pediatric Care Teams</h1>
-      <p class="subhead">AHA PALS provider, renewal, and HeartCode skills options for clinicians who need accepted pediatric advanced life support training.</p>
-
-    </div>
-    <div class="hero-side">
-      <div class="slug-hero-image-wrap"><img class="slug-hero-image" src="images/pals_general.png" alt="AHA PALS Pediatric Advanced Life Support course" loading="lazy" onerror="this.parentElement.hidden=true"></div>
-    </div>
-  </section>
-
-
-
-
-  <section class="section-box slug-tabs-block" id="slug-tabs-pals" data-tabs>
-    <div class="tabs hub-tabs">
-      <button class='tab-btn active' data-program='AHA PALS Provider' data-tab-target='#pals-provider' type='button'><img class="hub-tab-icon" src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">PALS Provider</span><span class="hub-tab-tag">In-Person</span></span></button><button class='tab-btn' data-program='AHA PALS Renewal' data-tab-target='#pals-renewal' type='button'><img class="hub-tab-icon" src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">PALS Renewal</span><span class="hub-tab-tag">Renewal</span></span></button><button class='tab-btn' data-program='HeartCode PALS Skills' data-tab-target='#pals-heartcode' type='button'><img class="hub-tab-icon" src="images/tab_blended.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">PALS HeartCode</span><span class="hub-tab-tag">Online + Skills</span></span></button>
-    </div>
-    <section class="tab-panel active" id="pals-provider" data-banner="{&quot;url&quot;: &quot;/pals-schedule.html&quot;, &quot;label&quot;: &quot;See full PALS provider schedule&quot;}">
-  <div class="slug-panel-card">
-    <div class="slug-panel-head">
-      <div>
-        <div class="slug-panel-kicker">Start here, more dates available</div>
-        <h2>PALS Provider</h2>
-        <p class="slug-panel-copy">Initial or expired PALS certification in a traditional instructor-led classroom format.</p>
+  <header>
+    <h1>PALS Schedule</h1>
+    
+    <p class="muted">Select the PALS course format first, then choose a public date and start time.</p>
+    <p class="muted">Pilot proof: whole availability blocks are not shown as class times. Public-selectable offers: 14.</p>
+  </header>
+  <main>
+    
+    <section class="page-context" aria-label="Course context">
+      
+      
+      
+    </section>
+    
+    <section class="selector-shell" aria-label="Block-based schedule selector">
+      <div class="panel course-selector-panel">
+        <div class="course-selector-top">
+          <div>
+            <h2>Course</h2>
+            <p class="muted">Choose the course or delivery format first.</p>
+          </div>
+          <div class="option-tools">
+            
+          <label class="disclosure-toggle">
+            <input id="show-all-toggle" type="checkbox">
+            <span>Show all certification options</span>
+          </label>
+            
+          <label class="compare-toggle">
+            <input id="compare-toggle" type="checkbox">
+            <span>Need PALS ASAP? Show all AHA PALS options</span>
+          </label>
+          </div>
+        </div>
+        <div id="course-option-list" class="choice-list"></div>
       </div>
-    </div>
-    <section class="slug-inventory-section slug-scheduled-section">
-  <div class="slug-inventory-head">
-    <h3>Upcoming dates</h3>
-    <p>Browse upcoming class times here, then use Book This Class for the exact session you want.</p>
-  </div>
-  <div class="slug-pill-list" data-initial-visible="30" data-reveal-increment="15" data-reveal-label="PALS Provider">
-    <article class="slug-pill js-session-item" data-session-id="13673179" data-start="2026-07-15T14:00:00-04:00" data-end="2026-07-15T18:00:00-04:00" data-session-start="2026-07-15T14:00:00-04:00" data-row-href="/classes/13673179.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">15</div>
-    <div class="slug-pill-weekday">Wed</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Wednesday, July 15</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
-
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Provider</div>
-  </div>
-  <div class="slug-pill-actions">
-
-    <a class="button small primary" href="/classes/13673179.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673179">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673180" data-start="2026-07-16T14:00:00-04:00" data-end="2026-07-16T18:00:00-04:00" data-session-start="2026-07-16T14:00:00-04:00" data-row-href="/classes/13673180.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">16</div>
-    <div class="slug-pill-weekday">Thu</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Thursday, July 16</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
-
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Provider</div>
-  </div>
-  <div class="slug-pill-actions">
-
-    <a class="button small primary" href="/classes/13673180.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673180">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673181" data-start="2026-07-20T14:00:00-04:00" data-end="2026-07-20T18:00:00-04:00" data-session-start="2026-07-20T14:00:00-04:00" data-row-href="/classes/13673181.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">20</div>
-    <div class="slug-pill-weekday">Mon</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Monday, July 20</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
-
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Provider</div>
-  </div>
-  <div class="slug-pill-actions">
-
-    <a class="button small primary" href="/classes/13673181.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673181">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673182" data-start="2026-07-21T14:00:00-04:00" data-end="2026-07-21T18:00:00-04:00" data-session-start="2026-07-21T14:00:00-04:00" data-row-href="/classes/13673182.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">21</div>
-    <div class="slug-pill-weekday">Tue</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Tuesday, July 21</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
-
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Provider</div>
-  </div>
-  <div class="slug-pill-actions">
-
-    <a class="button small primary" href="/classes/13673182.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673182">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673185" data-start="2026-07-24T14:00:00-04:00" data-end="2026-07-24T18:00:00-04:00" data-session-start="2026-07-24T14:00:00-04:00" data-row-href="/classes/13673185.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">24</div>
-    <div class="slug-pill-weekday">Fri</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Friday, July 24</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
-
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Provider</div>
-  </div>
-  <div class="slug-pill-actions">
-
-    <a class="button small primary" href="/classes/13673185.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673185">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673183" data-start="2026-07-29T14:00:00-04:00" data-end="2026-07-29T18:00:00-04:00" data-session-start="2026-07-29T14:00:00-04:00" data-row-href="/classes/13673183.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">29</div>
-    <div class="slug-pill-weekday">Wed</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Wednesday, July 29</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
-
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Provider</div>
-  </div>
-  <div class="slug-pill-actions">
-
-    <a class="button small primary" href="/classes/13673183.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673183">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673184" data-start="2026-07-30T14:00:00-04:00" data-end="2026-07-30T18:00:00-04:00" data-session-start="2026-07-30T14:00:00-04:00" data-row-href="/classes/13673184.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">30</div>
-    <div class="slug-pill-weekday">Thu</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Thursday, July 30</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
-
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Provider</div>
-  </div>
-  <div class="slug-pill-actions">
-
-    <a class="button small primary" href="/classes/13673184.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673184">Book This Class</a>
-  </div>
-</article>
-  </div>
-</section>
-  </div>
-</section><section class="tab-panel" id="pals-renewal" data-banner="{&quot;url&quot;: &quot;/pals-schedule.html&quot;, &quot;label&quot;: &quot;See full PALS renewal schedule&quot;}">
-  <div class="slug-panel-card">
-    <div class="slug-panel-head">
-      <div>
-        <div class="slug-panel-kicker">Start here, more dates available</div>
-        <h2>PALS Renewal</h2>
-        <p class="slug-panel-copy">Focused recertification for providers who already hold PALS and need their next card without the full initial course.</p>
+      <div class="selector-grid">
+        <div class="panel">
+          <h2>Calendar</h2>
+          <div id="date-list" class="month-stack"></div>
+        </div>
+        <div class="panel">
+          <h2>Start Times</h2>
+          <div id="start-list" class="button-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Register</h2>
+          <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
+          <div id="course-list" class="course-list"></div>
+        </div>
       </div>
-    </div>
-    <section class="slug-inventory-section slug-scheduled-section">
-  <div class="slug-inventory-head">
-    <h3>Upcoming dates</h3>
-    <p>Browse upcoming class times here, then use Book This Class for the exact session you want.</p>
-  </div>
-  <div class="slug-pill-list" data-initial-visible="30" data-reveal-increment="15" data-reveal-label="PALS Renewal">
-    <article class="slug-pill js-session-item" data-session-id="13673189" data-start="2026-07-15T14:00:00-04:00" data-end="2026-07-15T18:00:00-04:00" data-session-start="2026-07-15T14:00:00-04:00" data-row-href="/classes/13673189.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">15</div>
-    <div class="slug-pill-weekday">Wed</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Wednesday, July 15</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
+    </section>
+  </main>
+  <script>
+    const embeddedScheduleDates = [];
+    const availabilityUrl = "/data/block-selector-availability/pals.json?v=2026-07-02T15%3A53%3A19.009792";
+    const courseOptions = [{"courseId": "209805", "courseName": "AHA PALS Provider", "family": "PALS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "pals-provider"], "iconLabel": "PALS", "clarification": "Initial PALS Provider classroom option.", "details": {"course_key": "aha_pals_provider", "title": "AHA PALS Provider", "certifying_body": "AHA", "family": "PALS", "short_description": "Pediatric advanced life support for clinicians who care for infants and children in emergencies.", "who_this_is_for": "Healthcare professionals involved in pediatric respiratory, shock, cardiac arrest, or emergency response.", "topics_covered": ["Pediatric assessment", "Respiratory emergencies", "Shock recognition", "Pediatric cardiac arrest algorithms", "Team dynamics"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm pediatric advanced life support requirements with your employer or program."], "full_course_page": "/pals.html"}}, {"courseId": "251496", "courseName": "AHA PALS Renewal", "family": "PALS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "pals-renewal"], "iconLabel": "RN", "clarification": "Renewal classroom option for PALS providers.", "details": {"course_key": "aha_pals_renewal", "title": "AHA PALS Renewal", "certifying_body": "AHA", "family": "PALS", "short_description": "Focused PALS renewal for current pediatric advanced life support providers.", "who_this_is_for": "Current PALS providers renewing an existing AHA PALS Provider card.", "topics_covered": ["PALS algorithm review", "Respiratory and shock scenarios", "Pediatric team response", "Skills verification"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose PALS Provider if you need a full initial class."], "full_course_page": "/pals.html"}}, {"courseId": "209812", "courseName": "AHA PALS HeartCode", "family": "PALS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-pals"], "iconLabel": "HC", "clarification": "Skills session for online HeartCode PALS.", "details": {"course_key": "aha_heartcode_pals", "title": "AHA PALS HeartCode", "certifying_body": "AHA", "family": "PALS", "short_description": "PALS skills session for students who completed the official AHA HeartCode PALS online course.", "who_this_is_for": "Clinicians completing the blended HeartCode PALS pathway.", "topics_covered": ["PALS skills verification", "Pediatric respiratory and shock scenarios", "Team response application"], "required_materials": ["Completed AHA HeartCode PALS certificate of completion before the skills session."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills portion, not the online HeartCode course purchase."], "full_course_page": "/courses/heartcode-pals.html"}}];
+    const optionGroups = {"PALS": {"family": "PALS", "label": "All AHA PALS options", "courseIds": ["209805", "251496", "209812"]}};
+    const unsupportedOptions = [];
+    let scheduleDates = embeddedScheduleDates;
+    let availabilityState = 'checking';
+    let availabilityMessage = 'Checking current class times…';
+    let resolvedAvailability = null;
+    let selectedCourseId = "209805";
+    let showAllOptions = false;
+    let compareMode = false;
+    let selectedDate = '';
+    let selectedStart = '';
+    let mobileMonthIndex = 0;
 
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Renewal</div>
-  </div>
-  <div class="slug-pill-actions">
+    function byId(id) {
+      return document.getElementById(id);
+    }
 
-    <a class="button small primary" href="/classes/13673189.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673189">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673190" data-start="2026-07-16T14:00:00-04:00" data-end="2026-07-16T18:00:00-04:00" data-session-start="2026-07-16T14:00:00-04:00" data-row-href="/classes/13673190.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">16</div>
-    <div class="slug-pill-weekday">Thu</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Thursday, July 16</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
+    function setAvailabilityMessage(message) {
+      availabilityMessage = message || 'Checking current class times…';
+    }
 
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Renewal</div>
-  </div>
-  <div class="slug-pill-actions">
+    function renderAvailabilityPlaceholder(message = availabilityMessage) {
+      ['date-list', 'start-list', 'course-list'].forEach(id => {
+        const host = byId(id);
+        if (host) {
+          host.innerHTML = '';
+          const box = document.createElement('div');
+          box.className = 'empty';
+          box.setAttribute('role', id === 'start-list' ? 'status' : 'note');
+          box.textContent = message;
+          host.appendChild(box);
+        }
+      });
+    }
 
-    <a class="button small primary" href="/classes/13673190.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673190">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673191" data-start="2026-07-20T14:00:00-04:00" data-end="2026-07-20T18:00:00-04:00" data-session-start="2026-07-20T14:00:00-04:00" data-row-href="/classes/13673191.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">20</div>
-    <div class="slug-pill-weekday">Mon</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Monday, July 20</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
+    function availabilityReady() {
+      return availabilityState === 'ready';
+    }
 
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Renewal</div>
-  </div>
-  <div class="slug-pill-actions">
+    function isMobileLayout() {
+      return window.matchMedia('(max-width: 820px)').matches;
+    }
 
-    <a class="button small primary" href="/classes/13673191.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673191">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673192" data-start="2026-07-21T14:00:00-04:00" data-end="2026-07-21T18:00:00-04:00" data-session-start="2026-07-21T14:00:00-04:00" data-row-href="/classes/13673192.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">21</div>
-    <div class="slug-pill-weekday">Tue</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Tuesday, July 21</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
+    function normalizeDeepLink(value) {
+      return String(value || '').trim().toLowerCase().replace(/^#/, '');
+    }
 
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Renewal</div>
-  </div>
-  <div class="slug-pill-actions">
+    function publicDeliveryBucket(value) {
+      const normalized = normalizeDeepLink(value).replace(/[\s_]+/g, '-').replace(/\+/g, '-');
+      if (!normalized) {
+        return '';
+      }
+      if (normalized === 'in-person' || normalized === 'inperson' || normalized === 'classroom') {
+        return 'in-person';
+      }
+      if ([
+        'blended',
+        'heartcode',
+        'skills-session',
+        'skills',
+        'online-skills',
+        'online-learning-skills',
+        'online-in-person-skills',
+        'online-plus-skills',
+        'online-and-skills',
+        'online-hands-on-skills',
+        'online-learning-in-person-skills'
+      ].includes(normalized) || (normalized.includes('online') && normalized.includes('skills'))) {
+        return 'online-skills';
+      }
+      return normalized;
+    }
 
-    <a class="button small primary" href="/classes/13673192.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673192">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673193" data-start="2026-07-24T14:00:00-04:00" data-end="2026-07-24T18:00:00-04:00" data-session-start="2026-07-24T14:00:00-04:00" data-row-href="/classes/13673193.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">24</div>
-    <div class="slug-pill-weekday">Fri</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Friday, July 24</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
+    function courseIdFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return '';
+      }
+      const matched = courseOptions.find(course =>
+        course.courseId === requested ||
+        normalizeDeepLink(course.variant) === requested ||
+        (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested)
+      );
+      return matched?.courseId || '';
+    }
 
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Renewal</div>
-  </div>
-  <div class="slug-pill-actions">
+    function requestOptionFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return null;
+      }
+      return unsupportedOptions.find(option =>
+        normalizeDeepLink(option.fragment) === requested ||
+        (option.deep_link_aliases || []).some(alias => normalizeDeepLink(alias) === requested)
+      ) || null;
+    }
 
-    <a class="button small primary" href="/classes/13673193.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673193">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673194" data-start="2026-07-29T14:00:00-04:00" data-end="2026-07-29T18:00:00-04:00" data-session-start="2026-07-29T14:00:00-04:00" data-row-href="/classes/13673194.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">29</div>
-    <div class="slug-pill-weekday">Wed</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Wednesday, July 29</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
+    function focusDeepLinkedElement() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return;
+      }
+      const requestOption = requestOptionFromDeepLink();
+      const courseOption = courseOptions.find(course =>
+        course.courseId === selectedCourseId &&
+        (normalizeDeepLink(course.variant) === requested || (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested))
+      );
+      const target = requestOption
+        ? document.querySelector(`[data-request-fragment="${CSS.escape(requestOption.fragment)}"]`)
+        : courseOption
+          ? document.querySelector(`[data-course-id="${CSS.escape(courseOption.courseId)}"]`)
+          : null;
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.focus({ preventScroll: true });
+      }
+    }
 
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Renewal</div>
-  </div>
-  <div class="slug-pill-actions">
+    function showAllFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      return ['1', 'true', 'yes'].includes(normalizeDeepLink(params.get('showAll')));
+    }
 
-    <a class="button small primary" href="/classes/13673194.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673194">Book This Class</a>
-  </div>
-</article>
-<article class="slug-pill js-session-item" data-session-id="13673195" data-start="2026-07-30T14:00:00-04:00" data-end="2026-07-30T18:00:00-04:00" data-session-start="2026-07-30T14:00:00-04:00" data-row-href="/classes/13673195.html#ForwardToEnrollware" data-certifying-body="aha" data-certifying-logo="images/0aha.png">
-  <div class="slug-pill-date">
-    <div class="slug-pill-month">JUL</div>
-    <div class="slug-pill-day">30</div>
-    <div class="slug-pill-weekday">Thu</div>
-  </div>
-  <div class="slug-pill-main">
-    <div class="slug-pill-title">Thursday, July 30</div>
-    <div class="slug-pill-meta-row">
-      <span class="slug-pill-chip">2:00 PM</span>
-      <span class="slug-pill-chip slug-pill-chip-location">Wilmington; Shipyard Blvd - B</span>
+    function deliveryLabel(value) {
+      const bucket = publicDeliveryBucket(value);
+      if (bucket === 'in-person') {
+        return 'In-person';
+      }
+      if (bucket === 'online-skills') {
+        return 'Online + Skills';
+      }
+      return 'All';
+    }
 
-    </div>
-    <div class="slug-pill-subtitle">AHA PALS Renewal</div>
-  </div>
-  <div class="slug-pill-actions">
+    function selectedDateLabel() {
+      const day = filteredDates().find(item => item.date === selectedDate);
+      return day?.displayDate || '';
+    }
 
-    <a class="button small primary" href="/classes/13673195.html#ForwardToEnrollware" data-original-href="https://coastalcprtraining.enrollware.com/enroll?id=13673195">Book This Class</a>
-  </div>
-</article>
-  </div>
-</section>
-  </div>
-</section><section class="tab-panel" id="pals-heartcode" data-banner="{&quot;url&quot;: &quot;/pals-schedule.html&quot;, &quot;label&quot;: &quot;See full PALS HeartCode schedule&quot;}" data-keep-empty-tab="true">
-  <div class="slug-panel-card">
-    <div class="slug-panel-head">
-      <div>
-        <div class="slug-panel-kicker">Start here, more dates available</div>
-        <h2>PALS HeartCode</h2>
-        <p class="slug-panel-copy">Self-paced online HeartCode plus an in-person skills session for providers who prefer a blended-learning path.</p>
-      </div>
-    </div>
-    <div class='slug-empty'><strong>No selected times showing here, but you still have options.</strong><p>View the full schedule for additional dates, request a class time, or ask about on-site training for your team.</p><div class='slug-empty-actions'><a class='button primary' href='/request_group_session.html?program=HeartCode%20PALS%20Skills'>Ask About Dates</a><a class='button secondary' href='tel:9103955193'>Call 910-395-5193</a></div></div>
-  </div>
-</section>
-  </section>
+    function selectedCourseLabel() {
+      const course = courseOptions.find(item => item.courseId === selectedCourseId);
+      return course?.courseName || '';
+    }
 
+    function visibleCourseOptions() {
+      return courseOptions.filter(course => showAllOptions || course.recommended !== false);
+    }
 
-  <section class="top-trust below-inventory-trust" aria-label="910CPR trust and reviews">
-    <div class="top-trust-copy">
-      <div class="home-status-label">Serving North And South Carolina</div>
-      <p>From the mountains to the coast, 910CPR helps healthcare teams, dental offices, schools, workplaces, and students meet real certification requirements with clear, organized classes.</p>
-    </div>
-    <a class="google-review-card" href="https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403" target="_blank" rel="noopener noreferrer" aria-label="Open 910CPR Google reviews in a new tab">
-      <span class="review-stars review-stars-large" aria-hidden="true">★★★★★</span>
-      <strong>Trusted by 496 5-star reviews on Google</strong>
-      <em>As of May 5, 2026</em>
-      <span>Read 910CPR reviews on Google</span>
-    </a>
-    <div class="review-snippets" aria-label="Common student review themes"><div class="review-theme-label">What students mention</div>
-          <article class="review-snippet">
-            <p>Students often mention knowledgeable instructors who keep CPR, BLS, ACLS, and PALS requirements clear.</p>
-          </article>
-          <article class="review-snippet">
-            <p>Renewing providers regularly describe the classes as organized, direct, and respectful of their time.</p>
-          </article>
-          <article class="review-snippet">
-            <p>Reviewers commonly point to clear explanations, hands-on practice, and a class experience that feels manageable.</p>
-          </article></div>
-  </section>
+    function syncCourseSelection() {
+      const visibleOptions = visibleCourseOptions();
+      if (!visibleOptions.length) {
+        selectedCourseId = '';
+        return;
+      }
+      if (!visibleOptions.some(course => course.courseId === selectedCourseId)) {
+        selectedCourseId = visibleOptions[0].courseId;
+      }
+    }
 
-  <section class="group-training-push" aria-label="On-site group training">
-    <div class="group-training-copy">
-      <div class="home-status-label">Group Training</div>
-      <h2>Training for your team? We come to you.</h2>
-      <p>No travel. No scheduling headaches. Your team already knows where to go.</p>
-    </div>
-    <div class="group-training-actions">
-      <a class="button primary group-training-primary" href="/request_group_session.html?program=AHA%20PALS%20Provider">Schedule On-Site Training</a>
-      <div class="group-training-individual">
-        <p>Just need a seat for yourself? Scroll down. We’ve got you covered.</p>
-        <a class="button secondary" href="#slug-tabs-pals">View Upcoming Classes</a>
-      </div>
-    </div>
-  </section>
+    function activeCourseIds() {
+      syncCourseSelection();
+      const selected = courseOptions.find(course => course.courseId === selectedCourseId);
+      if (!selected) {
+        return new Set();
+      }
+      if (compareMode) {
+        const group = Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId));
+        const groupIds = group?.courseIds || optionGroups[selected.family]?.courseIds || [selectedCourseId];
+        return new Set(groupIds.filter(courseId => {
+          const course = courseOptions.find(option => option.courseId === courseId);
+          return Boolean(course);
+        }));
+      }
+      return new Set([selectedCourseId]);
+    }
 
-</div>
+    function filteredCourses(slot) {
+      const ids = activeCourseIds();
+      return slot.courses.filter(course => ids.has(course.courseId));
+    }
 
-  </div>
-</div>
-<script src="assets/hub-ui.js?v=20260511-hash-tabs"></script>
-<script src="assets/live-sessions.js"></script>
-<script src="assets/session-expiry.js"></script>
-<script src="assets/hybrid-inventory.js"></script>
-<div class="build-stamp">Build: 2026-07-11 22:48</div>
+    const scheduleTimezone = 'America/New_York';
+
+    function businessNow() {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: scheduleTimezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).formatToParts(new Date()).reduce((values, part) => {
+        values[part.type] = part.value;
+        return values;
+      }, {});
+      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
+      return {
+        dateKey: `${parts.year}-${parts.month}-${parts.day}`,
+        minutes: (hour * 60) + Number(parts.minute)
+      };
+    }
+
+    function startMinutes(startTime) {
+      const [hour, minute] = String(startTime || '').split(':').map(Number);
+      return (hour * 60) + minute;
+    }
+
+    function isPastStart(day, slot, now = businessNow()) {
+      if (!day || !slot) {
+        return true;
+      }
+      if (day.date < now.dateKey) {
+        return true;
+      }
+      if (day.date > now.dateKey) {
+        return false;
+      }
+      return startMinutes(slot.startTime) <= now.minutes;
+    }
+
+    function selectableStartTimes(day, now = businessNow()) {
+      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+    }
+
+    function isSelectableDate(day, now = businessNow()) {
+      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
+    }
+
+    function filteredDates() {
+      if (!availabilityReady()) {
+        return [];
+      }
+      return scheduleDates.map(day => {
+        const startTimes = day.startTimes.map(slot => ({
+          ...slot,
+          courses: filteredCourses(slot)
+        })).filter(slot => slot.courses.length);
+        return { ...day, startTimes };
+      }).filter(day => day.startTimes.length);
+    }
+
+    function syncSelection() {
+      const days = filteredDates();
+      const now = businessNow();
+      const selectableDays = days.filter(day => isSelectableDate(day, now));
+      if (!days.length) {
+        selectedDate = '';
+        selectedStart = '';
+        return days;
+      }
+      if (!selectableDays.length) {
+        selectedDate = '';
+        selectedStart = '';
+        return days;
+      }
+      if (!selectableDays.some(day => day.date === selectedDate)) {
+        selectedDate = selectableDays[0].date;
+        mobileMonthIndex = Math.max(0, [...new Set(days.map(day => day.date.slice(0, 7)))].indexOf(selectedDate.slice(0, 7)));
+      }
+      const day = days.find(item => item.date === selectedDate);
+      const starts = selectableStartTimes(day, now);
+      if (!starts.some(slot => slot.startTime === selectedStart)) {
+        selectedStart = starts[0]?.startTime || '';
+      }
+      return days;
+    }
+
+    function renderCourseOptions() {
+      const host = byId('course-option-list');
+      host.innerHTML = '';
+      visibleCourseOptions().forEach(course => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'course-card';
+        button.dataset.courseId = course.courseId;
+        button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
+        const icon = document.createElement('span');
+        icon.className = 'course-icon';
+        icon.textContent = course.iconLabel || course.family;
+        icon.setAttribute('aria-hidden', 'true');
+        const copy = document.createElement('span');
+        copy.className = 'course-copy';
+        const title = document.createElement('span');
+        title.className = 'course-title';
+        title.textContent = course.courseName;
+        const delivery = document.createElement('span');
+        delivery.className = 'course-delivery';
+        delivery.textContent = deliveryLabel(course.deliveryMode);
+        const help = document.createElement('span');
+        help.className = 'course-help';
+        help.textContent = course.clarification || '';
+        copy.append(title, delivery, help);
+        button.append(icon, copy);
+        const details = course.details || {};
+        if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length) {
+          const detailBox = document.createElement('details');
+          detailBox.className = 'course-details';
+          const summary = document.createElement('summary');
+          summary.textContent = 'Course details';
+          const body = document.createElement('div');
+          body.className = 'course-details-body';
+          if (details.short_description) {
+            const short = document.createElement('div');
+            short.textContent = details.short_description;
+            body.appendChild(short);
+          }
+          if (details.who_this_is_for) {
+            const audience = document.createElement('div');
+            audience.textContent = details.who_this_is_for;
+            body.appendChild(audience);
+          }
+          if ((details.topics_covered || []).length) {
+            const topics = document.createElement('ul');
+            details.topics_covered.slice(0, 5).forEach(topic => {
+              const item = document.createElement('li');
+              item.textContent = topic;
+              topics.appendChild(item);
+            });
+            body.appendChild(topics);
+          }
+          if (details.certification_issued) {
+            const cert = document.createElement('div');
+            cert.textContent = details.certification_issued;
+            body.appendChild(cert);
+          }
+          detailBox.append(summary, body);
+          button.appendChild(detailBox);
+        }
+        button.addEventListener('click', () => {
+          selectedCourseId = course.courseId;
+          renderAll();
+        });
+        host.appendChild(button);
+      });
+      if (!host.children.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+      }
+      const showAllToggle = byId('show-all-toggle');
+      if (showAllToggle) {
+        showAllToggle.checked = showAllOptions;
+      }
+      const compareToggle = byId('compare-toggle');
+      if (compareToggle) {
+        compareToggle.checked = compareMode;
+      }
+    }
+
+    function renderDates() {
+      const host = byId('date-list');
+      host.innerHTML = '';
+      if (!availabilityReady()) {
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      const days = syncSelection();
+      const now = businessNow();
+      if (!days.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        return;
+      }
+      const availableByDate = new Map(days.map(day => [day.date, day]));
+      const monthKeys = [];
+      days.forEach(day => {
+        const monthKey = day.date.slice(0, 7);
+        if (!monthKeys.includes(monthKey)) {
+          monthKeys.push(monthKey);
+        }
+      });
+      if (mobileMonthIndex >= monthKeys.length) {
+        mobileMonthIndex = Math.max(0, monthKeys.length - 1);
+      }
+      const activeMonthKey = isMobileLayout() ? monthKeys[mobileMonthIndex] : (selectedDate ? selectedDate.slice(0, 7) : monthKeys[mobileMonthIndex]);
+      const activeMonthIndex = monthKeys.includes(activeMonthKey) ? monthKeys.indexOf(activeMonthKey) : mobileMonthIndex;
+      if (isMobileLayout()) {
+        mobileMonthIndex = activeMonthIndex;
+        const nav = document.createElement('div');
+        nav.className = 'month-nav';
+        const previous = document.createElement('button');
+        previous.type = 'button';
+        previous.textContent = 'Previous';
+        previous.disabled = mobileMonthIndex <= 0;
+        previous.addEventListener('click', () => {
+          mobileMonthIndex = Math.max(0, mobileMonthIndex - 1);
+          renderDates();
+        });
+        const navTitle = document.createElement('div');
+        navTitle.className = 'month-nav-title';
+        const [activeYear, activeMonth] = monthKeys[mobileMonthIndex].split('-').map(Number);
+        navTitle.textContent = new Date(activeYear, activeMonth - 1, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.textContent = 'Next';
+        next.disabled = mobileMonthIndex >= monthKeys.length - 1;
+        next.addEventListener('click', () => {
+          mobileMonthIndex = Math.min(monthKeys.length - 1, mobileMonthIndex + 1);
+          renderDates();
+        });
+        nav.append(previous, navTitle, next);
+        host.appendChild(nav);
+      }
+      const renderedMonthKeys = isMobileLayout() ? [monthKeys[mobileMonthIndex]] : monthKeys.slice(0, 3);
+      renderedMonthKeys.forEach(monthKey => {
+        const [year, month] = monthKey.split('-').map(Number);
+        const first = new Date(year, month - 1, 1);
+        const last = new Date(year, month, 0);
+        const section = document.createElement('section');
+        section.className = 'month';
+        section.dataset.mobileVisible = String(monthKey === monthKeys[mobileMonthIndex]);
+        const title = document.createElement('h3');
+        title.className = 'month-title';
+        title.textContent = first.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+        const grid = document.createElement('div');
+        grid.className = 'calendar-grid';
+        ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(label => {
+          const item = document.createElement('div');
+          item.className = 'weekday';
+          item.textContent = label;
+          grid.appendChild(item);
+        });
+        for (let i = 0; i < first.getDay(); i += 1) {
+          const pad = document.createElement('div');
+          pad.className = 'calendar-pad';
+          grid.appendChild(pad);
+        }
+        for (let dayNum = 1; dayNum <= last.getDate(); dayNum += 1) {
+          const dateKey = `${monthKey}-${String(dayNum).padStart(2, '0')}`;
+          const available = availableByDate.get(dateKey);
+          if (available) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'day-button';
+            button.textContent = String(dayNum);
+            const disabled = !isSelectableDate(available, now);
+            if (disabled) {
+              button.classList.add('is-past');
+            }
+            button.disabled = disabled;
+            button.setAttribute('aria-disabled', String(disabled));
+            button.setAttribute('aria-label', available.displayDate + ' ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times' : 'available'));
+            button.setAttribute('aria-pressed', String(available.date === selectedDate));
+            button.addEventListener('click', () => {
+              if (!isSelectableDate(available)) {
+                return;
+              }
+              selectedDate = available.date;
+              mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
+              selectedStart = selectableStartTimes(available)[0]?.startTime || '';
+              renderAll();
+            });
+            grid.appendChild(button);
+          } else {
+            const pad = document.createElement('div');
+            pad.className = 'calendar-pad';
+            pad.textContent = String(dayNum);
+            grid.appendChild(pad);
+          }
+        }
+        section.append(title, grid);
+        host.appendChild(section);
+      });
+    }
+
+    function renderStarts() {
+      const host = byId('start-list');
+      host.innerHTML = '';
+      if (!availabilityReady()) {
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      const day = filteredDates().find(item => item.date === selectedDate);
+      if (!day || !day.startTimes.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        return;
+      }
+      const groups = new Map();
+      day.startTimes.forEach(slot => {
+        const [hourText] = slot.startTime.split(':');
+        const hour = Number.parseInt(hourText, 10);
+        const label = hour < 12 ? 'AM' : 'PM';
+        if (!groups.has(label)) {
+          groups.set(label, []);
+        }
+        groups.get(label).push(slot);
+      });
+      groups.forEach((slots, label) => {
+        const group = document.createElement('div');
+        group.className = 'start-group';
+        const groupLabel = document.createElement('div');
+        groupLabel.className = 'start-group-label';
+        groupLabel.textContent = label;
+        const grid = document.createElement('div');
+        grid.className = 'start-grid';
+        slots.forEach(slot => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = slot.displayStartTime;
+        const disabled = isPastStart(day, slot);
+        if (disabled) {
+          button.classList.add('is-past');
+        }
+        button.disabled = disabled;
+        button.setAttribute('aria-disabled', String(disabled));
+        button.setAttribute('aria-label', slot.displayStartTime + ' ' + (disabled ? 'not bookable; past ' + scheduleTimezone + ' start time' : 'available'));
+        button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
+        button.addEventListener('click', () => {
+          if (isPastStart(day, slot)) {
+            return;
+          }
+          selectedStart = slot.startTime;
+          renderAll();
+        });
+          grid.appendChild(button);
+        });
+        group.append(groupLabel, grid);
+        host.appendChild(group);
+      });
+    }
+
+    function renderCourses() {
+      const host = byId('course-list');
+      host.innerHTML = '';
+      if (!availabilityReady()) {
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      const day = filteredDates().find(item => item.date === selectedDate);
+      const slot = day?.startTimes.find(item => item.startTime === selectedStart);
+      if (!slot || isPastStart(day, slot) || !slot.courses.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        return;
+      }
+      slot.courses.forEach(course => {
+        const item = document.createElement('article');
+        item.className = 'course';
+        const summary = document.createElement('div');
+        summary.className = 'selected-summary';
+        const title = document.createElement('h3');
+        title.textContent = course.courseName;
+        const dateRow = document.createElement('div');
+        dateRow.className = 'selected-summary-row';
+        dateRow.textContent = selectedDateLabel();
+        const timeRow = document.createElement('div');
+        timeRow.className = 'selected-summary-row';
+        timeRow.textContent = course.displayStartTime;
+        const locationRow = document.createElement('div');
+        locationRow.className = 'selected-summary-row';
+        locationRow.textContent = course.location;
+        summary.append(title, dateRow, timeRow, locationRow);
+        const badge = document.createElement('div');
+        badge.className = 'delivery-badge';
+        badge.textContent = deliveryLabel(course.deliveryMode);
+        const link = document.createElement('a');
+        link.className = 'register-link';
+        link.href = course.appointmentUrl;
+        link.textContent = 'Register';
+        item.append(summary, badge, link);
+        host.appendChild(item);
+      });
+    }
+
+    function renderAll() {
+      syncCourseSelection();
+      if (!availabilityReady()) {
+        renderCourseOptions();
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      syncSelection();
+      renderCourseOptions();
+      renderDates();
+      renderStarts();
+      renderCourses();
+    }
+
+    const compareToggle = byId('compare-toggle');
+    if (compareToggle) {
+      compareToggle.addEventListener('change', event => {
+        compareMode = event.target.checked;
+        renderAll();
+      });
+    }
+
+    const showAllToggle = byId('show-all-toggle');
+    if (showAllToggle) {
+      showAllToggle.addEventListener('change', event => {
+        showAllOptions = event.target.checked;
+        renderAll();
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      if (availabilityReady()) {
+        renderDates();
+        renderStarts();
+      }
+    });
+
+    showAllOptions = showAllFromDeepLink();
+    selectedCourseId = courseIdFromDeepLink() || selectedCourseId;
+    renderAll();
+    setTimeout(focusDeepLinkedElement, 0);
+
+    window.addEventListener('hashchange', () => {
+      const requestedCourse = courseIdFromDeepLink();
+      if (requestedCourse) {
+        selectedCourseId = requestedCourse;
+      }
+      renderAll();
+      setTimeout(focusDeepLinkedElement, 0);
+    });
+
+    async function loadResolvedAvailability() {
+      availabilityState = 'checking';
+      setAvailabilityMessage('Checking current class times…');
+      renderAll();
+      try {
+        const response = await fetch(availabilityUrl, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`availability fetch failed: ${response.status}`);
+        }
+        const payload = await response.json();
+        if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {
+          throw new Error('availability payload has an unexpected shape');
+        }
+        resolvedAvailability = payload;
+        scheduleDates = payload.dates;
+        availabilityState = 'ready';
+        setAvailabilityMessage('');
+        renderAll();
+      } catch (error) {
+        console.error(error);
+        resolvedAvailability = null;
+        scheduleDates = [];
+        availabilityState = 'failed';
+        setAvailabilityMessage('Current class times are temporarily unavailable. Please retry in a moment or contact 910CPR.');
+        renderAll();
+      }
+    }
+
+    loadResolvedAvailability();
+  </script>
 </body>
 </html>

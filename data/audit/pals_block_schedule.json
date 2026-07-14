@@ -9,7 +9,8 @@
     "title": "PALS Schedule",
     "meta_description": "Select an AHA PALS course, date, and public start time.",
     "intro": "Select the PALS course format first, then choose a public date and start time.",
-    "output_path": "docs/pals-schedule.html",
+    "output_path": "docs/pals.html",
+    "legacy_schedule_path": "docs/pals-schedule.html",
     "include_seated_classes": true,
     "report_json_path": "data/audit/pals_block_schedule.json",
     "report_md_path": "data/audit/pals_block_schedule_report.md",
@@ -72,7 +73,7 @@
     ]
   },
   "readOnlyDataBuild": true,
-  "publicPage": "docs/pals-schedule.html",
+  "publicPage": "docs/pals.html",
   "asOfDate": "2026-07-02",
   "availability_source_used": "live_availability_snapshot",
   "availability_fallback_used": false,

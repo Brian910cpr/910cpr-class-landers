@@ -9,7 +9,8 @@
       "title": "BLS Schedule Pilot",
       "meta_description": "Select an AHA BLS course, date, and public start time.",
       "intro": "Select the BLS course format first, then choose a public date and start time.",
-      "output_path": "docs/bls-schedule.html",
+      "output_path": "docs/bls.html",
+      "legacy_schedule_path": "docs/bls-schedule.html",
       "report_json_path": "data/audit/bls_block_schedule_pilot.json",
       "report_md_path": "data/audit/bls_block_schedule_pilot_report.md",
       "show_all_label": "Show all certification options",
@@ -72,7 +73,8 @@
       "title": "ACLS Schedule",
       "meta_description": "Select an AHA ACLS course, date, and public start time.",
       "intro": "Select the ACLS course format first, then choose a public date and start time.",
-      "output_path": "docs/acls-schedule.html",
+      "output_path": "docs/acls.html",
+      "legacy_schedule_path": "docs/acls-schedule.html",
       "include_seated_classes": true,
       "report_json_path": "data/audit/acls_block_schedule.json",
       "report_md_path": "data/audit/acls_block_schedule_report.md",
@@ -136,7 +138,8 @@
       "title": "PALS Schedule",
       "meta_description": "Select an AHA PALS course, date, and public start time.",
       "intro": "Select the PALS course format first, then choose a public date and start time.",
-      "output_path": "docs/pals-schedule.html",
+      "output_path": "docs/pals.html",
+      "legacy_schedule_path": "docs/pals-schedule.html",
       "include_seated_classes": true,
       "report_json_path": "data/audit/pals_block_schedule.json",
       "report_md_path": "data/audit/pals_block_schedule_report.md",
@@ -200,7 +203,8 @@
       "title": "Heartsaver Schedule",
       "meta_description": "Select an AHA Heartsaver course, date, and public start time.",
       "intro": "Select the Heartsaver course format first, then choose a public date and start time.",
-      "output_path": "docs/heartsaver-schedule.html",
+      "output_path": "docs/heartsaver.html",
+      "legacy_schedule_path": "docs/heartsaver-schedule.html",
       "show_all_label": "Show all course options",
       "compare_mode": {
         "enabled": false,
@@ -375,7 +379,8 @@
       "title": "HSI Schedule",
       "meta_description": "HSI block-schedule readiness placeholder.",
       "intro": "HSI schedule readiness is audited before public page generation.",
-      "output_path": "docs/hsi-schedule.html",
+      "output_path": "docs/hsi.html",
+      "legacy_schedule_path": "docs/hsi-schedule.html",
       "compare_mode": {
         "enabled": true,
         "label": "Need HSI ASAP? Show all HSI options",
@@ -415,6 +420,22 @@
             "hsi-bls-fa",
             "hsi-bls-first-aid"
           ]
+        }
+      ],
+      "unsupported_options": [
+        {
+          "fragment": "first-aid-cpr-aed",
+          "display_label": "HSI First Aid / CPR / AED",
+          "clarification": "This HSI option is not yet connected to validated public dynamic scheduling.",
+          "action_label": "Request HSI First Aid / CPR / AED",
+          "action_href": "/request_group_session.html?program=HSI%20First%20Aid%20CPR%20AED&request_type=public_course"
+        },
+        {
+          "fragment": "cpr-aed",
+          "display_label": "HSI CPR / AED",
+          "clarification": "This HSI option is not yet connected to validated public dynamic scheduling.",
+          "action_label": "Request HSI CPR / AED",
+          "action_href": "/request_group_session.html?program=HSI%20CPR%20AED&request_type=public_course"
         }
       ]
     },

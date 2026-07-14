@@ -405,6 +405,7 @@
       </div>
       <p class="muted">The blended option is online learning plus an in-person skills session, so students still attend the scheduled skills session.</p>
     </section>
+    
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
@@ -441,6 +442,7 @@
     const availabilityUrl = "/data/block-selector-availability/uscg_first_aid_cpr_aed.json?v=2026-07-02T15%3A53%3A19.009792";
     const courseOptions = [{"courseId": "209809", "courseName": "In-person AHA Heartsaver First Aid CPR AED", "family": "Heartsaver", "variant": "in-person", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["in-person", "classroom", "uscg-in-person", "first-aid-cpr-aed"], "iconLabel": "FA", "clarification": "Classroom AHA Heartsaver First Aid CPR AED Total path for USCG/AMERHA-216 documentation.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed", "title": "AHA Heartsaver First Aid CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "First Aid, CPR, and AED training for workplace, school, and professional requirements.", "who_this_is_for": "Students who need a combined first aid, CPR, and AED certification for work, school, licensing, or general preparedness.", "topics_covered": ["First aid basics", "CPR and AED use", "Choking response", "Opioid emergency awareness", "Stroke warning signs", "Seizures", "Asthma support", "Heat illness", "Burns and common injuries"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use this path when your requirement specifically includes first aid plus CPR/AED."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "329495", "courseName": "Online learning + in-person skills session", "family": "Heartsaver", "variant": "online-learning-skills", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["online-learning-skills", "blended", "uscg-blended", "first-aid-cpr-aed-blended"], "iconLabel": "BL", "clarification": "Blended AHA Heartsaver First Aid CPR AED Total path for USCG/AMERHA-216 documentation.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed_blended", "title": "AHA Heartsaver First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended First Aid/CPR/AED option with online coursework and an in-person skills session.", "who_this_is_for": "Students whose requirement accepts blended Heartsaver First Aid CPR AED.", "topics_covered": ["Online first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA Heartsaver First Aid CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}];
     const optionGroups = {"USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED": {"family": "USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED", "label": "AHA Heartsaver First Aid CPR AED Total options", "courseIds": ["209809", "329495"]}};
+    const unsupportedOptions = [];
     let scheduleDates = embeddedScheduleDates;
     let availabilityState = 'checking';
     let availabilityMessage = 'Checking current class times…';
@@ -524,6 +526,40 @@
         (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested)
       );
       return matched?.courseId || '';
+    }
+
+    function requestOptionFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return null;
+      }
+      return unsupportedOptions.find(option =>
+        normalizeDeepLink(option.fragment) === requested ||
+        (option.deep_link_aliases || []).some(alias => normalizeDeepLink(alias) === requested)
+      ) || null;
+    }
+
+    function focusDeepLinkedElement() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return;
+      }
+      const requestOption = requestOptionFromDeepLink();
+      const courseOption = courseOptions.find(course =>
+        course.courseId === selectedCourseId &&
+        (normalizeDeepLink(course.variant) === requested || (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested))
+      );
+      const target = requestOption
+        ? document.querySelector(`[data-request-fragment="${CSS.escape(requestOption.fragment)}"]`)
+        : courseOption
+          ? document.querySelector(`[data-course-id="${CSS.escape(courseOption.courseId)}"]`)
+          : null;
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.focus({ preventScroll: true });
+      }
     }
 
     function showAllFromDeepLink() {
@@ -683,6 +719,7 @@
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'course-card';
+        button.dataset.courseId = course.courseId;
         button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
         const icon = document.createElement('span');
         icon.className = 'course-icon';
@@ -702,7 +739,7 @@
         copy.append(title, delivery, help);
         button.append(icon, copy);
         const details = course.details || {};
-        if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length || details.full_course_page) {
+        if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length) {
           const detailBox = document.createElement('details');
           detailBox.className = 'course-details';
           const summary = document.createElement('summary');
@@ -732,13 +769,6 @@
             const cert = document.createElement('div');
             cert.textContent = details.certification_issued;
             body.appendChild(cert);
-          }
-          if (details.full_course_page) {
-            const link = document.createElement('a');
-            link.className = 'course-page-link';
-            link.href = details.full_course_page;
-            link.textContent = 'Full course page';
-            body.appendChild(link);
           }
           detailBox.append(summary, body);
           button.appendChild(detailBox);
@@ -1015,6 +1045,16 @@
     showAllOptions = showAllFromDeepLink();
     selectedCourseId = courseIdFromDeepLink() || selectedCourseId;
     renderAll();
+    setTimeout(focusDeepLinkedElement, 0);
+
+    window.addEventListener('hashchange', () => {
+      const requestedCourse = courseIdFromDeepLink();
+      if (requestedCourse) {
+        selectedCourseId = requestedCourse;
+      }
+      renderAll();
+      setTimeout(focusDeepLinkedElement, 0);
+    });
 
     async function loadResolvedAvailability() {
       availabilityState = 'checking';

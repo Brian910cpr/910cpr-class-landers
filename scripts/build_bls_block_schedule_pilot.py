@@ -633,6 +633,12 @@ def render_html(payload: dict[str, Any]) -> str:
     course_options_json = json.dumps(course_options, ensure_ascii=False)
     option_groups_json = json.dumps(option_groups, ensure_ascii=False)
     availability_url_json = json.dumps(availability_url)
+    unsupported_options = [
+        option
+        for option in page_config.get("unsupported_options", [])
+        if isinstance(option, dict) and option.get("fragment") and option.get("display_label")
+    ]
+    unsupported_options_json = json.dumps(unsupported_options, ensure_ascii=False)
     counts = payload["counts"]
     first_course = course_options[0]["courseId"] if course_options else ""
     title = html.escape(str(page_config.get("title") or "Block Schedule"))
@@ -685,6 +691,29 @@ def render_html(payload: dict[str, Any]) -> str:
             <input id="compare-toggle" type="checkbox">
             <span>{compare_label}</span>
           </label>"""
+    unsupported_html = ""
+    if unsupported_options:
+        cards = []
+        for option in unsupported_options:
+            fragment = html.escape(str(option.get("fragment") or ""), quote=True)
+            label = html.escape(str(option.get("display_label") or "Request option"))
+            clarification = html.escape(str(option.get("clarification") or "Contact 910CPR for scheduling."))
+            action_label = html.escape(str(option.get("action_label") or "Request scheduling"))
+            action_href = html.escape(str(option.get("action_href") or "/request_group_session.html"), quote=True)
+            aliases = html.escape(" ".join(str(alias) for alias in option.get("deep_link_aliases", []) if alias), quote=True)
+            cards.append(f"""
+        <article id="{fragment}" class="request-option-card" tabindex="-1" data-request-fragment="{fragment}" data-request-aliases="{aliases}">
+          <h3>{label}</h3>
+          <p>{clarification}</p>
+          <a class="request-option-link" href="{action_href}">{action_label}</a>
+        </article>""")
+        unsupported_html = f"""
+    <section class="request-options" aria-label="Request additional options">
+      <h2>Other options</h2>
+      <p class="muted">These options are not currently connected to validated public instant booking. Use the request action so an instructor can confirm the right path.</p>
+      <div class="request-option-grid">{''.join(cards)}
+      </div>
+    </section>"""
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -702,6 +731,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </header>
   <main>
     {context_html}
+    {unsupported_html}
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
@@ -738,6 +768,7 @@ def render_html(payload: dict[str, Any]) -> str:
     const availabilityUrl = {availability_url_json};
     const courseOptions = {course_options_json};
     const optionGroups = {option_groups_json};
+    const unsupportedOptions = {unsupported_options_json};
     let scheduleDates = embeddedScheduleDates;
     let availabilityState = 'checking';
     let availabilityMessage = 'Checking current class times…';
@@ -821,6 +852,40 @@ def render_html(payload: dict[str, Any]) -> str:
         (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested)
       );
       return matched?.courseId || '';
+    }}
+
+    function requestOptionFromDeepLink() {{
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {{
+        return null;
+      }}
+      return unsupportedOptions.find(option =>
+        normalizeDeepLink(option.fragment) === requested ||
+        (option.deep_link_aliases || []).some(alias => normalizeDeepLink(alias) === requested)
+      ) || null;
+    }}
+
+    function focusDeepLinkedElement() {{
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {{
+        return;
+      }}
+      const requestOption = requestOptionFromDeepLink();
+      const courseOption = courseOptions.find(course =>
+        course.courseId === selectedCourseId &&
+        (normalizeDeepLink(course.variant) === requested || (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested))
+      );
+      const target = requestOption
+        ? document.querySelector(`[data-request-fragment="${{CSS.escape(requestOption.fragment)}}"]`)
+        : courseOption
+          ? document.querySelector(`[data-course-id="${{CSS.escape(courseOption.courseId)}}"]`)
+          : null;
+      if (target) {{
+        target.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+        target.focus({{ preventScroll: true }});
+      }}
     }}
 
     function showAllFromDeepLink() {{
@@ -980,6 +1045,7 @@ def render_html(payload: dict[str, Any]) -> str:
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'course-card';
+        button.dataset.courseId = course.courseId;
         button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
         const icon = document.createElement('span');
         icon.className = 'course-icon';
@@ -999,7 +1065,7 @@ def render_html(payload: dict[str, Any]) -> str:
         copy.append(title, delivery, help);
         button.append(icon, copy);
         const details = course.details || {{}};
-        if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length || details.full_course_page) {{
+        if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length) {{
           const detailBox = document.createElement('details');
           detailBox.className = 'course-details';
           const summary = document.createElement('summary');
@@ -1029,13 +1095,6 @@ def render_html(payload: dict[str, Any]) -> str:
             const cert = document.createElement('div');
             cert.textContent = details.certification_issued;
             body.appendChild(cert);
-          }}
-          if (details.full_course_page) {{
-            const link = document.createElement('a');
-            link.className = 'course-page-link';
-            link.href = details.full_course_page;
-            link.textContent = 'Full course page';
-            body.appendChild(link);
           }}
           detailBox.append(summary, body);
           button.appendChild(detailBox);
@@ -1312,6 +1371,16 @@ def render_html(payload: dict[str, Any]) -> str:
     showAllOptions = showAllFromDeepLink();
     selectedCourseId = courseIdFromDeepLink() || selectedCourseId;
     renderAll();
+    setTimeout(focusDeepLinkedElement, 0);
+
+    window.addEventListener('hashchange', () => {{
+      const requestedCourse = courseIdFromDeepLink();
+      if (requestedCourse) {{
+        selectedCourseId = requestedCourse;
+      }}
+      renderAll();
+      setTimeout(focusDeepLinkedElement, 0);
+    }});
 
     async function loadResolvedAvailability() {{
       availabilityState = 'checking';
@@ -1355,6 +1424,7 @@ def run() -> dict[str, Any]:
 
 def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_md_path: Path, html_path: Path) -> dict[str, Any]:
     payload = apply_final_live_availability_guard(payload)
+    page_config = payload.get("pageConfig", {})
     availability_path = selector_availability_path(str(payload.get("pageKey") or "selector"))
     report_json_path.parent.mkdir(parents=True, exist_ok=True)
     report_md_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1367,14 +1437,49 @@ def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_m
         encoding="utf-8",
     )
     html_path.write_text(render_html(payload), encoding="utf-8")
+    output_paths = [report_json_path, report_md_path, availability_path, html_path]
+    legacy_schedule_path = page_config.get("legacy_schedule_path")
+    if legacy_schedule_path:
+        legacy_path = ROOT / str(legacy_schedule_path)
+        legacy_path.parent.mkdir(parents=True, exist_ok=True)
+        legacy_path.write_text(render_redirect_html(legacy_path, html_path, str(page_config.get("title") or "Schedule")), encoding="utf-8")
+        output_paths.append(legacy_path)
     return {
         "counts": payload["counts"],
         "availability_source_used": payload["availability_source_used"],
         "availability_fallback_used": payload["availability_fallback_used"],
         "horizon_days": payload["horizonDays"],
         "top_rejection_reasons": dict(Counter(payload.get("rejectionReasonCounts", {})).most_common(10)),
-        "output_paths": [report_json_path, report_md_path, availability_path, html_path],
+        "output_paths": output_paths,
     }
+
+
+def render_redirect_html(source_path: Path, target_path: Path, title: str) -> str:
+    relative_target = "/" + target_path.relative_to(ROOT / "docs").as_posix()
+    escaped_title = html.escape(title)
+    escaped_target = html.escape(relative_target, quote=True)
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url={escaped_target}">
+  <title>{escaped_title} moved | 910CPR</title>
+  <script>
+    (function() {{
+      var target = {json.dumps(relative_target)};
+      var query = window.location.search || "";
+      var hash = window.location.hash || "";
+      window.location.replace(target + query + hash);
+    }}());
+  </script>
+</head>
+<body>
+  <p>This schedule moved to <a href="{escaped_target}">{escaped_target}</a>.</p>
+</body>
+</html>
+"""
 
 
 def run_page(page_key: str) -> dict[str, Any]:
