@@ -6,9 +6,9 @@
     "page_key": "pals",
     "family": "PALS",
     "certifying_body": "AHA",
-    "title": "PALS Schedule",
-    "meta_description": "Select an AHA PALS course, date, and public start time.",
-    "intro": "Select the PALS course format first, then choose a public date and start time.",
+    "title": "PALS Certification Classes",
+    "meta_description": "AHA PALS courses for clinicians who respond to pediatric emergencies.",
+    "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
     "output_path": "docs/pals.html",
     "legacy_schedule_path": "docs/pals-schedule.html",
     "include_seated_classes": true,
@@ -34,36 +34,58 @@
         "course_id": "209805",
         "display_label": "AHA PALS Provider",
         "icon_label": "PALS",
-        "clarification": "Initial PALS Provider classroom option.",
+        "clarification": "Full classroom PALS Provider certification for pediatric emergency response roles.",
         "delivery_mode": "in-person",
         "variant": "initial",
         "deep_link_aliases": [
           "provider",
           "pals-provider"
-        ]
+        ],
+        "image_url": "/images/pals_general.png",
+        "image_alt": "AHA PALS Provider course option",
+        "delivery_badge": "IN-PERSON"
       },
       {
         "course_id": "251496",
         "display_label": "AHA PALS Renewal",
         "icon_label": "RN",
-        "clarification": "Renewal classroom option for PALS providers.",
+        "clarification": "Renewal path for providers with prior PALS training.",
         "delivery_mode": "in-person",
         "variant": "renewal",
         "deep_link_aliases": [
           "provider-renewal",
           "pals-renewal"
-        ]
+        ],
+        "image_url": "/images/pals_general.png",
+        "image_alt": "AHA PALS Renewal course option",
+        "delivery_badge": "IN-PERSON"
       },
       {
         "course_id": "209812",
         "display_label": "AHA PALS HeartCode",
         "icon_label": "HC",
-        "clarification": "Skills session for online HeartCode PALS.",
+        "clarification": "Complete HeartCode PALS online first, then attend an in-person skills session.",
         "delivery_mode": "skills-session",
         "variant": "heartcode",
         "deep_link_aliases": [
           "heartcode-pals"
-        ]
+        ],
+        "image_url": "/images/hc_pals.png",
+        "image_alt": "AHA PALS HeartCode course option",
+        "delivery_badge": "ONLINE + SKILLS"
+      }
+    ],
+    "back_link_label": "Back to All Courses",
+    "back_link_href": "/index.html#courses",
+    "delivery_help_title": "Course format guide",
+    "delivery_help": [
+      {
+        "label": "INSTRUCTOR-LED",
+        "text": "Initial and Renewal PALS classes are completed in person with an instructor."
+      },
+      {
+        "label": "HEARTCODE",
+        "text": "HeartCode PALS begins online and is completed with an in-person skills session."
       }
     ],
     "allowed_course_ids": [

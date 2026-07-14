@@ -68,7 +68,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_rendered_html_loads_shell_without_actionable_static_times(self):
         html = build_bls_block_schedule_pilot.render_html(self.payload)
-        self.assertIn("BLS Schedule Pilot", html)
+        self.assertIn("BLS Certification Classes", html)
         self.assertIn("Register", html)
         self.assertIn("Checking current class times…", html)
         self.assertIn("const embeddedScheduleDates = []", html)
@@ -94,6 +94,18 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("showAllOptions", html)
         self.assertIn("Show all certification options", html)
         self.assertIn("function activeCourseIds()", html)
+        self.assertIn("Back to All Courses", html)
+        self.assertIn("Instructor-led classes are completed entirely in person.", html)
+        self.assertIn("HeartCode BLS begins online and is completed with an in-person skills session.", html)
+        self.assertIn('aria-label="Previous course options"', html)
+        self.assertIn('aria-label="More course options"', html)
+        self.assertIn("function updateCourseRailControls()", html)
+        self.assertIn("function scrollCourseRail(direction)", html)
+        self.assertIn("rail.classList.toggle('has-overflow', hasOverflow)", html)
+        self.assertIn("previous.disabled = !hasOverflow", html)
+        self.assertIn("next.disabled = !hasOverflow", html)
+        self.assertIn("course.imageUrl", html)
+        self.assertIn("deliveryBadge", html)
         self.assertNotIn("12:00 AM-6:00 PM", html)
         self.assertNotIn("12:00 AM\u20136:00 PM", html)
         self.assertNotIn("Calendy", html)
@@ -206,7 +218,10 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         course_ids = {offer["courseId"] for offer in payload["offers"]}
         self.assertLessEqual(course_ids, {"344085", "209808", "209809", "329495", "351632", "251545"})
         html = build_bls_block_schedule_pilot.render_html(payload)
-        self.assertIn("Heartsaver Schedule", html)
+        self.assertIn("Heartsaver CPR, AED &amp; First Aid Classes", html)
+        self.assertIn("Choose the class that fits your needs, then select a date and time.", html)
+        self.assertIn("In-person classes are completed entirely at our Wilmington training center.", html)
+        self.assertIn("Online + Skills classes begin with an online course, followed by a shorter in-person skills session.", html)
         self.assertNotIn("Need First Aid or CPR ASAP? Show all AHA Heartsaver options", html)
         self.assertNotIn('id="compare-toggle"', html)
         self.assertIn('"variant": "cpr-aed"', html)
@@ -232,6 +247,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("Show all course options", html)
         self.assertIn('"deliveryMode": "in-person"', html)
         self.assertIn('"deliveryMode": "blended"', html)
+        self.assertIn('"imageUrl": "/images/HS-CPR-AED.jpeg"', html)
         self.assertIn('"recommended": false', html)
         self.assertIn('"209808"', html)
         self.assertIn('"329495"', html)
@@ -363,6 +379,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("window.addEventListener('hashchange'", html)
         self.assertIn("Checking current class times…", html)
         self.assertIn("fetch(availabilityUrl, { cache: 'no-store' })", html)
+        self.assertIn("HSI CPR, First Aid &amp; BLS Classes", html)
+        self.assertIn("Contact us for HSI First Aid / CPR / AED scheduling.", html)
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         offers = artifact_offers(artifact)
         self.assertGreater(len(offers), 0)
@@ -376,6 +394,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("slug-appointment-option", html)
         self.assertNotIn("appointmentDayId=", html)
         self.assertIn("Checking current class times…", html)
+        self.assertNotIn("Schedule Pilot", html)
+        self.assertNotIn("public-selectable offers", html.lower())
 
     def test_blocked_calendar_interval_occupancy_rejects_hsi_overlap_boundaries(self):
         live_payload = {
@@ -483,6 +503,9 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                     self.assertIn("Checking current class times…", canonical)
                     self.assertNotIn("Browse upcoming class times here", canonical)
                     self.assertNotIn("appointmentDayId=", canonical)
+                    self.assertIn("Back to All Courses", canonical)
+                    self.assertNotIn("Pilot", canonical)
+                    self.assertNotIn("public-selectable offers", canonical.lower())
                 self.assertIn(f'var target = "{target}";', redirect)
                 self.assertIn("window.location.replace(target + query + hash)", redirect)
                 self.assertIn('name="robots" content="noindex"', redirect)
@@ -524,6 +547,38 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         if payload["offers"]:
             self.assertIn("courseId=209809", artifact_json)
             self.assertIn("courseId=329495", artifact_json)
+
+    def test_canonical_family_pages_use_customer_facing_selector_template(self):
+        pages = ["bls", "acls", "pals", "hsi", "heartsaver"]
+        for slug in pages:
+            with self.subTest(slug=slug):
+                html = (ROOT / "docs" / f"{slug}.html").read_text(encoding="utf-8")
+                self.assertIn("Back to All Courses", html)
+                self.assertIn('aria-label="Previous course options"', html)
+                self.assertIn('aria-label="More course options"', html)
+                self.assertIn("function updateCourseRailControls()", html)
+                self.assertIn("function scrollCourseRail(direction)", html)
+                self.assertIn("rail.classList.toggle('has-overflow', hasOverflow)", html)
+                self.assertIn("course.imageUrl", html)
+                self.assertNotIn("Schedule Pilot", html)
+                self.assertNotIn("Pilot proof", html)
+                self.assertNotIn("whole availability blocks", html)
+                self.assertNotIn("public-selectable offers", html.lower())
+                self.assertNotIn("Public-selectable offers", html)
+                self.assertNotIn("offer count", html.lower())
+                self.assertNotIn("schedule authority", html.lower())
+                self.assertNotIn("artifact", html.lower())
+
+    def test_course_rail_controls_have_accessible_labels_and_overflow_logic(self):
+        html = build_bls_block_schedule_pilot.render_html(self.payload)
+        self.assertIn('data-course-rail-prev aria-label="Previous course options"', html)
+        self.assertIn('data-course-rail-next aria-label="More course options"', html)
+        self.assertIn("courseRailList.addEventListener('scroll', updateCourseRailControls", html)
+        self.assertIn("rail.classList.toggle('has-overflow', hasOverflow)", html)
+        self.assertIn("previous.disabled = !hasOverflow || list.scrollLeft <= 4", html)
+        self.assertIn("next.disabled = !hasOverflow || list.scrollLeft >= maxScroll - 4", html)
+        self.assertIn(".course-rail:not(.has-overflow) .rail-arrow", html)
+        self.assertIn("scrollBy({ left: direction * (cardWidth + gap), behavior: 'smooth' })", html)
 
     def test_final_live_guard_suppresses_july_4_stale_offer_without_live_block(self):
         stale_payload = {

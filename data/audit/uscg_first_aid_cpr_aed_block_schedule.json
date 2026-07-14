@@ -44,27 +44,33 @@
         "course_id": "209809",
         "display_label": "In-person AHA Heartsaver First Aid CPR AED",
         "icon_label": "FA",
-        "clarification": "Classroom AHA Heartsaver First Aid CPR AED Total path for USCG/AMERHA-216 documentation.",
+        "clarification": "First Aid, CPR, and AED training completed entirely in person.",
         "delivery_mode": "in-person",
         "variant": "in-person",
         "deep_link_aliases": [
           "classroom",
           "uscg-in-person",
           "first-aid-cpr-aed"
-        ]
+        ],
+        "image_url": "/images/maritime-first-aid.svg",
+        "image_alt": "In-person AHA Heartsaver First Aid CPR AED maritime first aid course option",
+        "delivery_badge": "IN-PERSON"
       },
       {
         "course_id": "329495",
         "display_label": "Online learning + in-person skills session",
         "icon_label": "BL",
-        "clarification": "Blended AHA Heartsaver First Aid CPR AED Total path for USCG/AMERHA-216 documentation.",
+        "clarification": "Complete assigned online coursework before the scheduled skills/classroom session.",
         "delivery_mode": "blended",
         "variant": "online-learning-skills",
         "deep_link_aliases": [
           "blended",
           "uscg-blended",
           "first-aid-cpr-aed-blended"
-        ]
+        ],
+        "image_url": "/images/maritime-first-aid.svg",
+        "image_alt": "Online learning + in-person skills session maritime first aid course option",
+        "delivery_badge": "BLENDED"
       }
     ],
     "course_id_notes": {
@@ -72,6 +78,19 @@
       "329495": "Routine public AHA Heartsaver First Aid CPR AED blended course used for the USCG/AMERHA-216 cover page.",
       "460465": "Reserved for Fire Department/public-safety partner programs only. Do not use for this public USCG cover page."
     },
+    "back_link_label": "Back to All Courses",
+    "back_link_href": "/index.html#courses",
+    "delivery_help_title": "Course format guide",
+    "delivery_help": [
+      {
+        "label": "IN-PERSON",
+        "text": "Complete the full Heartsaver First Aid CPR AED course at our Wilmington training center."
+      },
+      {
+        "label": "BLENDED",
+        "text": "Complete assigned online coursework first, then attend the scheduled in-person session."
+      }
+    ],
     "allowed_course_ids": [
       "209809",
       "329495"

@@ -1,4 +1,4 @@
-# PALS Schedule
+# PALS Certification Classes
 
 Local build artifact for a customer-facing block schedule page. Enrollware was not called, course IDs were not changed, and appointment URL behavior uses the existing URL builder.
 

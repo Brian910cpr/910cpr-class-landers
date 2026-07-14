@@ -63,6 +63,43 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
     }
 
 
+DEFAULT_COURSE_IMAGES = {
+    "BLS": "/images/bls_general.png",
+    "ACLS": "/images/acls_general.png",
+    "PALS": "/images/pals_general.png",
+    "Heartsaver": "/images/heartsaver_general.png",
+    "HSI": "/images/Health_and_Safety_Institute_Logo.jpg",
+    "ARC": "/images/ARCLTP.png",
+}
+
+
+DELIVERY_HELP = {
+    "in-person": {
+        "label": "IN-PERSON",
+        "help": "Complete the entire course at our Wilmington training center.",
+    },
+    "skills-session": {
+        "label": "ONLINE + SKILLS",
+        "help": "Complete the online course first, then attend a shorter in-person skills session.",
+    },
+    "blended": {
+        "label": "BLENDED",
+        "help": "Complete assigned online coursework before the scheduled classroom session.",
+    },
+}
+
+
+def delivery_label_for_config(value: Any) -> str:
+    mode = str(value or "").strip().lower()
+    if mode == "in-person":
+        return "IN-PERSON"
+    if mode in {"skills-session", "online-skills"}:
+        return "ONLINE + SKILLS"
+    if mode == "blended":
+        return "BLENDED"
+    return "COURSE"
+
+
 def render_report(payload: dict[str, Any]) -> str:
     counts = payload["counts"]
     sample_offers = payload["offers"][:10]
@@ -150,6 +187,52 @@ def css() -> str:
       font-size: 1.12rem;
       font-weight: 800;
     }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+      color: var(--accent-dark);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .back-link:hover,
+    .back-link:focus {
+      text-decoration: underline;
+    }
+    .family-help {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--band);
+      padding: 14px;
+      margin: 14px 0 0;
+    }
+    .family-help-title {
+      margin-bottom: 8px;
+      font-weight: 800;
+      color: var(--accent-dark);
+    }
+    .delivery-help-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .delivery-help-item {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+    .delivery-help-label {
+      font-size: .78rem;
+      font-weight: 900;
+      color: var(--accent-dark);
+      letter-spacing: .02em;
+    }
+    .delivery-help-copy {
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.35;
+    }
     .page-context {
       display: grid;
       gap: 12px;
@@ -202,13 +285,53 @@ def css() -> str:
     .choice-list {
       display: grid;
       grid-auto-flow: column;
-      grid-auto-columns: minmax(250px, 1fr);
-      gap: 10px;
+      grid-auto-columns: minmax(260px, 1fr);
+      gap: 12px;
       overflow-x: auto;
       overscroll-behavior-inline: contain;
       scroll-snap-type: x proximity;
-      padding: 0 2px 8px;
+      padding: 0 52px 10px;
       margin-bottom: 0;
+      scrollbar-gutter: stable;
+    }
+    .course-rail {
+      position: relative;
+      min-width: 0;
+    }
+    .course-rail:not(.has-overflow) .rail-arrow {
+      display: none;
+    }
+    .rail-arrow {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      min-height: 52px;
+      padding: 0;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      border: 1px solid rgba(10, 102, 165, .22);
+      background: rgba(255, 255, 255, .95);
+      color: var(--accent-dark);
+      box-shadow: 0 8px 24px rgba(24, 33, 44, .16);
+      font-size: 1.5rem;
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+    }
+    .rail-arrow.previous {
+      left: 4px;
+    }
+    .rail-arrow.next {
+      right: 4px;
+    }
+    .rail-arrow:disabled {
+      opacity: .32;
+      cursor: not-allowed;
+      box-shadow: none;
     }
     .option-tools {
       display: flex;
@@ -258,27 +381,49 @@ def css() -> str:
     }
     .course-card {
       display: grid;
-      grid-template-columns: 36px 1fr;
-      gap: 10px;
+      grid-template-rows: 94px auto;
+      gap: 12px;
       width: 100%;
-      padding: 12px;
-      min-height: 118px;
+      padding: 0;
+      min-height: 235px;
       align-content: start;
       scroll-snap-align: start;
+      overflow: hidden;
     }
     .course-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 94px;
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(135deg, #e8f2f8, #f8fbfd);
+      overflow: hidden;
+    }
+    .course-icon img {
+      display: block;
+      width: 100%;
+      height: 94px;
+      object-fit: contain;
+      padding: 12px;
+    }
+    .course-icon-fallback {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 6px;
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
       background: #e8f2f8;
       color: var(--accent-dark);
-      font-weight: 700;
-      font-size: .82rem;
+      font-weight: 800;
+      font-size: .92rem;
     }
-    .course-copy { display: grid; gap: 3px; }
+    .course-copy {
+      display: grid;
+      gap: 6px;
+      padding: 0 12px 12px;
+    }
     .course-title { font-weight: 700; }
     .course-help {
       color: var(--muted);
@@ -293,9 +438,9 @@ def css() -> str:
       letter-spacing: 0;
     }
     .course-details {
-      grid-column: 2;
       color: var(--muted);
       font-size: .84rem;
+      padding: 0 12px 12px;
     }
     .course-details summary {
       cursor: pointer;
@@ -467,10 +612,19 @@ def css() -> str:
       }
       .choice-list {
         grid-auto-columns: minmax(238px, 82%);
+        padding-left: 44px;
+        padding-right: 44px;
         scroll-snap-type: x mandatory;
       }
+      .rail-arrow {
+        width: 38px;
+        min-height: 48px;
+      }
       .course-card {
-        min-height: 112px;
+        min-height: 228px;
+      }
+      .delivery-help-list {
+        grid-template-columns: 1fr;
       }
       .course-help {
         display: -webkit-box;
@@ -524,6 +678,9 @@ def render_html(payload: dict[str, Any]) -> str:
                 if alias
             ],
             "iconLabel": option.get("icon_label") or page_family,
+            "imageUrl": option.get("image_url") or DEFAULT_COURSE_IMAGES.get(page_family, "/images/logo.png"),
+            "imageAlt": option.get("image_alt") or f"{option.get('display_label') or page_family} course option",
+            "deliveryBadge": option.get("delivery_badge") or delivery_label_for_config(option.get("delivery_mode")),
             "clarification": option.get("clarification") or "",
             "details": course_descriptions.get(course_id, {}),
         }
@@ -583,6 +740,9 @@ def render_html(payload: dict[str, Any]) -> str:
                         if alias
                     ],
                     "iconLabel": configured_options.get(course["courseId"], {}).get("icon_label") or family,
+                    "imageUrl": configured_options.get(course["courseId"], {}).get("image_url") or DEFAULT_COURSE_IMAGES.get(family, "/images/logo.png"),
+                    "imageAlt": configured_options.get(course["courseId"], {}).get("image_alt") or f"{configured_options.get(course['courseId'], {}).get('display_label') or course['courseName']} course option",
+                    "deliveryBadge": configured_options.get(course["courseId"], {}).get("delivery_badge") or delivery_label_for_config(configured_options.get(course["courseId"], {}).get("delivery_mode") or course.get("deliveryMode")),
                     "clarification": configured_options.get(course["courseId"], {}).get("clarification") or "",
                     "details": course_descriptions.get(course["courseId"], {}),
                 })
@@ -673,6 +833,44 @@ def render_html(payload: dict[str, Any]) -> str:
       {note_html}
       {student_html}
     </section>"""
+    back_href = html.escape(str(page_config.get("back_link_href") or "/index.html#courses"), quote=True)
+    back_label = html.escape(str(page_config.get("back_link_label") or "Back to All Courses"))
+    delivery_help_items = page_config.get("delivery_help")
+    if not isinstance(delivery_help_items, list) or not delivery_help_items:
+        seen_delivery_modes = []
+        for option in page_config.get("course_options", []):
+            mode = str(option.get("delivery_mode") or "")
+            if mode and mode not in seen_delivery_modes and mode in DELIVERY_HELP:
+                seen_delivery_modes.append(mode)
+        delivery_help_items = [
+            {
+                "label": DELIVERY_HELP[mode]["label"],
+                "text": DELIVERY_HELP[mode]["help"],
+            }
+            for mode in seen_delivery_modes
+        ]
+    delivery_help_html = ""
+    if delivery_help_items:
+        items = []
+        for item in delivery_help_items:
+            if not isinstance(item, dict):
+                continue
+            label = html.escape(str(item.get("label") or "Course option"))
+            text = html.escape(str(item.get("text") or ""))
+            if label and text:
+                items.append(f"""
+          <div class="delivery-help-item">
+            <div class="delivery-help-label">{label}</div>
+            <div class="delivery-help-copy">{text}</div>
+          </div>""")
+        if items:
+            delivery_help_title = html.escape(str(page_config.get("delivery_help_title") or "Course format guide"))
+            delivery_help_html = f"""
+    <div class="family-help" aria-label="{delivery_help_title}">
+      <div class="family-help-title">{delivery_help_title}</div>
+      <div class="delivery-help-list">{''.join(items)}
+      </div>
+    </div>"""
     compare_label = html.escape(str(page_config.get("compare_mode", {}).get("label") or "Show all options"))
     compare_enabled = page_config.get("compare_mode", {}).get("enabled") is True
     show_all_label = html.escape(str(page_config.get("show_all_label") or "Show all course options"))
@@ -724,10 +922,11 @@ def render_html(payload: dict[str, Any]) -> str:
 </head>
 <body>
   <header>
+    <a class="back-link" href="{back_href}">← {back_label}</a>
     <h1>{title}</h1>
     {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
     <p class="muted">{intro}</p>
-    <p class="muted">Pilot proof: whole availability blocks are not shown as class times. Public-selectable offers: {counts['publicSelectableOfferCount']}.</p>
+    {delivery_help_html}
   </header>
   <main>
     {context_html}
@@ -744,7 +943,11 @@ def render_html(payload: dict[str, Any]) -> str:
             {compare_toggle_html}
           </div>
         </div>
-        <div id="course-option-list" class="choice-list"></div>
+        <div class="course-rail" data-course-rail>
+          <button type="button" class="rail-arrow previous" data-course-rail-prev aria-label="Previous course options">‹</button>
+          <div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
+          <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
+        </div>
       </div>
       <div class="selector-grid">
         <div class="panel">
@@ -896,12 +1099,44 @@ def render_html(payload: dict[str, Any]) -> str:
     function deliveryLabel(value) {{
       const bucket = publicDeliveryBucket(value);
       if (bucket === 'in-person') {{
-        return 'In-person';
+        return 'IN-PERSON';
       }}
       if (bucket === 'online-skills') {{
-        return 'Online + Skills';
+        return 'ONLINE + SKILLS';
+      }}
+      if (bucket === 'blended') {{
+        return 'BLENDED';
       }}
       return 'All';
+    }}
+
+    function updateCourseRailControls() {{
+      const rail = document.querySelector('[data-course-rail]');
+      const list = byId('course-option-list');
+      const previous = document.querySelector('[data-course-rail-prev]');
+      const next = document.querySelector('[data-course-rail-next]');
+      if (!rail || !list || !previous || !next) {{
+        return;
+      }}
+      const maxScroll = Math.max(0, list.scrollWidth - list.clientWidth);
+      const hasOverflow = maxScroll > 4;
+      rail.classList.toggle('has-overflow', hasOverflow);
+      previous.disabled = !hasOverflow || list.scrollLeft <= 4;
+      next.disabled = !hasOverflow || list.scrollLeft >= maxScroll - 4;
+      previous.setAttribute('aria-disabled', String(previous.disabled));
+      next.setAttribute('aria-disabled', String(next.disabled));
+    }}
+
+    function scrollCourseRail(direction) {{
+      const list = byId('course-option-list');
+      if (!list) {{
+        return;
+      }}
+      const firstCard = list.querySelector('.course-card');
+      const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : Math.max(240, list.clientWidth * 0.75);
+      const gap = 12;
+      list.scrollBy({{ left: direction * (cardWidth + gap), behavior: 'smooth' }});
+      window.setTimeout(updateCourseRailControls, 260);
     }}
 
     function selectedDateLabel() {{
@@ -1049,8 +1284,19 @@ def render_html(payload: dict[str, Any]) -> str:
         button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
         const icon = document.createElement('span');
         icon.className = 'course-icon';
-        icon.textContent = course.iconLabel || course.family;
-        icon.setAttribute('aria-hidden', 'true');
+        if (course.imageUrl) {{
+          const image = document.createElement('img');
+          image.src = course.imageUrl;
+          image.alt = course.imageAlt || course.courseName;
+          image.loading = 'lazy';
+          icon.appendChild(image);
+        }} else {{
+          const fallback = document.createElement('span');
+          fallback.className = 'course-icon-fallback';
+          fallback.textContent = course.iconLabel || course.family;
+          fallback.setAttribute('aria-hidden', 'true');
+          icon.appendChild(fallback);
+        }}
         const copy = document.createElement('span');
         copy.className = 'course-copy';
         const title = document.createElement('span');
@@ -1058,7 +1304,7 @@ def render_html(payload: dict[str, Any]) -> str:
         title.textContent = course.courseName;
         const delivery = document.createElement('span');
         delivery.className = 'course-delivery';
-        delivery.textContent = deliveryLabel(course.deliveryMode);
+        delivery.textContent = course.deliveryBadge || deliveryLabel(course.deliveryMode);
         const help = document.createElement('span');
         help.className = 'course-help';
         help.textContent = course.clarification || '';
@@ -1108,6 +1354,7 @@ def render_html(payload: dict[str, Any]) -> str:
       if (!host.children.length) {{
         host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
       }}
+      updateCourseRailControls();
       const showAllToggle = byId('show-all-toggle');
       if (showAllToggle) {{
         showAllToggle.checked = showAllOptions;
@@ -1361,11 +1608,25 @@ def render_html(payload: dict[str, Any]) -> str:
       }});
     }}
 
+    const courseRailList = byId('course-option-list');
+    const courseRailPrevious = document.querySelector('[data-course-rail-prev]');
+    const courseRailNext = document.querySelector('[data-course-rail-next]');
+    if (courseRailList) {{
+      courseRailList.addEventListener('scroll', updateCourseRailControls, {{ passive: true }});
+    }}
+    if (courseRailPrevious) {{
+      courseRailPrevious.addEventListener('click', () => scrollCourseRail(-1));
+    }}
+    if (courseRailNext) {{
+      courseRailNext.addEventListener('click', () => scrollCourseRail(1));
+    }}
+
     window.addEventListener('resize', () => {{
       if (availabilityReady()) {{
         renderDates();
         renderStarts();
       }}
+      updateCourseRailControls();
     }});
 
     showAllOptions = showAllFromDeepLink();

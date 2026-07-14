@@ -6,9 +6,9 @@
     "page_key": "acls",
     "family": "ACLS",
     "certifying_body": "AHA",
-    "title": "ACLS Schedule",
-    "meta_description": "Select an AHA ACLS course, date, and public start time.",
-    "intro": "Select the ACLS course format first, then choose a public date and start time.",
+    "title": "ACLS Certification Classes",
+    "meta_description": "AHA ACLS courses for clinicians who manage adult cardiovascular emergencies.",
+    "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
     "output_path": "docs/acls.html",
     "legacy_schedule_path": "docs/acls-schedule.html",
     "include_seated_classes": true,
@@ -34,36 +34,58 @@
         "course_id": "241108",
         "display_label": "AHA ACLS Provider (Initial)",
         "icon_label": "ACLS",
-        "clarification": "Initial ACLS Provider classroom option.",
+        "clarification": "Full classroom ACLS Provider certification for first-time or returning ACLS students.",
         "delivery_mode": "in-person",
         "variant": "initial",
         "deep_link_aliases": [
           "provider",
           "acls-provider"
-        ]
+        ],
+        "image_url": "/images/acls_general.png",
+        "image_alt": "AHA ACLS Provider (Initial) course option",
+        "delivery_badge": "IN-PERSON"
       },
       {
         "course_id": "209818",
         "display_label": "AHA ACLS Provider (Renewal)",
         "icon_label": "RN",
-        "clarification": "Renewal classroom option for ACLS providers.",
+        "clarification": "Shorter ACLS renewal path for providers with prior ACLS training.",
         "delivery_mode": "in-person",
         "variant": "renewal",
         "deep_link_aliases": [
           "provider-renewal",
           "acls-renewal"
-        ]
+        ],
+        "image_url": "/images/acls_general.png",
+        "image_alt": "AHA ACLS Provider (Renewal) course option",
+        "delivery_badge": "IN-PERSON"
       },
       {
         "course_id": "209811",
         "display_label": "AHA ACLS HeartCode",
         "icon_label": "HC",
-        "clarification": "Skills session for online HeartCode ACLS.",
+        "clarification": "Complete HeartCode ACLS online first, then attend an in-person skills session.",
         "delivery_mode": "skills-session",
         "variant": "heartcode",
         "deep_link_aliases": [
           "heartcode-acls"
-        ]
+        ],
+        "image_url": "/images/hc_acls.png",
+        "image_alt": "AHA ACLS HeartCode course option",
+        "delivery_badge": "ONLINE + SKILLS"
+      }
+    ],
+    "back_link_label": "Back to All Courses",
+    "back_link_href": "/index.html#courses",
+    "delivery_help_title": "Course format guide",
+    "delivery_help": [
+      {
+        "label": "INSTRUCTOR-LED",
+        "text": "Initial and Renewal ACLS classes are completed in person with an instructor."
+      },
+      {
+        "label": "HEARTCODE",
+        "text": "HeartCode ACLS begins online and is completed with an in-person skills session."
       }
     ],
     "allowed_course_ids": [

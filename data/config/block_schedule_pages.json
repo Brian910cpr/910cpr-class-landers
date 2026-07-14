@@ -6,9 +6,9 @@
       "page_key": "bls",
       "family": "BLS",
       "certifying_body": "AHA",
-      "title": "BLS Schedule Pilot",
-      "meta_description": "Select an AHA BLS course, date, and public start time.",
-      "intro": "Select the BLS course format first, then choose a public date and start time.",
+      "title": "BLS Certification Classes",
+      "meta_description": "AHA BLS courses for healthcare professionals and students who need Basic Life Support certification.",
+      "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
       "output_path": "docs/bls.html",
       "legacy_schedule_path": "docs/bls-schedule.html",
       "report_json_path": "data/audit/bls_block_schedule_pilot.json",
@@ -33,36 +33,58 @@
           "course_id": "209806",
           "display_label": "AHA BLS Provider",
           "icon_label": "BLS",
-          "clarification": "Full BLS Provider classroom option.",
+          "clarification": "Full classroom BLS certification for healthcare providers and clinical students.",
           "delivery_mode": "in-person",
           "variant": "initial",
           "deep_link_aliases": [
             "provider",
             "bls-provider"
-          ]
+          ],
+          "image_url": "/images/bls_general.png",
+          "image_alt": "AHA BLS Provider course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "359474",
           "display_label": "AHA BLS Provider Renewal",
           "icon_label": "RN",
-          "clarification": "For current or recently expired BLS cards.",
+          "clarification": "Renewal path for providers who already hold current or recently expired BLS.",
           "delivery_mode": "in-person",
           "variant": "renewal",
           "deep_link_aliases": [
             "provider-renewal",
             "bls-renewal"
-          ]
+          ],
+          "image_url": "/images/bls_general.png",
+          "image_alt": "AHA BLS Provider Renewal course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "210549",
           "display_label": "AHA HeartCode BLS",
           "icon_label": "HC",
-          "clarification": "Skills session for online HeartCode BLS.",
+          "clarification": "Complete HeartCode BLS online first, then attend an in-person skills session.",
           "delivery_mode": "skills-session",
           "variant": "heartcode",
           "deep_link_aliases": [
             "heartcode-bls"
-          ]
+          ],
+          "image_url": "/images/hc_b.png",
+          "image_alt": "AHA HeartCode BLS course option",
+          "delivery_badge": "ONLINE + SKILLS"
+        }
+      ],
+      "back_link_label": "Back to All Courses",
+      "back_link_href": "/index.html#courses",
+      "delivery_help_title": "Course format guide",
+      "delivery_help": [
+        {
+          "label": "INSTRUCTOR-LED",
+          "text": "Instructor-led classes are completed entirely in person."
+        },
+        {
+          "label": "HEARTCODE",
+          "text": "HeartCode BLS begins online and is completed with an in-person skills session."
         }
       ]
     },
@@ -70,9 +92,9 @@
       "page_key": "acls",
       "family": "ACLS",
       "certifying_body": "AHA",
-      "title": "ACLS Schedule",
-      "meta_description": "Select an AHA ACLS course, date, and public start time.",
-      "intro": "Select the ACLS course format first, then choose a public date and start time.",
+      "title": "ACLS Certification Classes",
+      "meta_description": "AHA ACLS courses for clinicians who manage adult cardiovascular emergencies.",
+      "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
       "output_path": "docs/acls.html",
       "legacy_schedule_path": "docs/acls-schedule.html",
       "include_seated_classes": true,
@@ -98,36 +120,58 @@
           "course_id": "241108",
           "display_label": "AHA ACLS Provider (Initial)",
           "icon_label": "ACLS",
-          "clarification": "Initial ACLS Provider classroom option.",
+          "clarification": "Full classroom ACLS Provider certification for first-time or returning ACLS students.",
           "delivery_mode": "in-person",
           "variant": "initial",
           "deep_link_aliases": [
             "provider",
             "acls-provider"
-          ]
+          ],
+          "image_url": "/images/acls_general.png",
+          "image_alt": "AHA ACLS Provider (Initial) course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "209818",
           "display_label": "AHA ACLS Provider (Renewal)",
           "icon_label": "RN",
-          "clarification": "Renewal classroom option for ACLS providers.",
+          "clarification": "Shorter ACLS renewal path for providers with prior ACLS training.",
           "delivery_mode": "in-person",
           "variant": "renewal",
           "deep_link_aliases": [
             "provider-renewal",
             "acls-renewal"
-          ]
+          ],
+          "image_url": "/images/acls_general.png",
+          "image_alt": "AHA ACLS Provider (Renewal) course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "209811",
           "display_label": "AHA ACLS HeartCode",
           "icon_label": "HC",
-          "clarification": "Skills session for online HeartCode ACLS.",
+          "clarification": "Complete HeartCode ACLS online first, then attend an in-person skills session.",
           "delivery_mode": "skills-session",
           "variant": "heartcode",
           "deep_link_aliases": [
             "heartcode-acls"
-          ]
+          ],
+          "image_url": "/images/hc_acls.png",
+          "image_alt": "AHA ACLS HeartCode course option",
+          "delivery_badge": "ONLINE + SKILLS"
+        }
+      ],
+      "back_link_label": "Back to All Courses",
+      "back_link_href": "/index.html#courses",
+      "delivery_help_title": "Course format guide",
+      "delivery_help": [
+        {
+          "label": "INSTRUCTOR-LED",
+          "text": "Initial and Renewal ACLS classes are completed in person with an instructor."
+        },
+        {
+          "label": "HEARTCODE",
+          "text": "HeartCode ACLS begins online and is completed with an in-person skills session."
         }
       ]
     },
@@ -135,9 +179,9 @@
       "page_key": "pals",
       "family": "PALS",
       "certifying_body": "AHA",
-      "title": "PALS Schedule",
-      "meta_description": "Select an AHA PALS course, date, and public start time.",
-      "intro": "Select the PALS course format first, then choose a public date and start time.",
+      "title": "PALS Certification Classes",
+      "meta_description": "AHA PALS courses for clinicians who respond to pediatric emergencies.",
+      "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
       "output_path": "docs/pals.html",
       "legacy_schedule_path": "docs/pals-schedule.html",
       "include_seated_classes": true,
@@ -163,36 +207,58 @@
           "course_id": "209805",
           "display_label": "AHA PALS Provider",
           "icon_label": "PALS",
-          "clarification": "Initial PALS Provider classroom option.",
+          "clarification": "Full classroom PALS Provider certification for pediatric emergency response roles.",
           "delivery_mode": "in-person",
           "variant": "initial",
           "deep_link_aliases": [
             "provider",
             "pals-provider"
-          ]
+          ],
+          "image_url": "/images/pals_general.png",
+          "image_alt": "AHA PALS Provider course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "251496",
           "display_label": "AHA PALS Renewal",
           "icon_label": "RN",
-          "clarification": "Renewal classroom option for PALS providers.",
+          "clarification": "Renewal path for providers with prior PALS training.",
           "delivery_mode": "in-person",
           "variant": "renewal",
           "deep_link_aliases": [
             "provider-renewal",
             "pals-renewal"
-          ]
+          ],
+          "image_url": "/images/pals_general.png",
+          "image_alt": "AHA PALS Renewal course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "209812",
           "display_label": "AHA PALS HeartCode",
           "icon_label": "HC",
-          "clarification": "Skills session for online HeartCode PALS.",
+          "clarification": "Complete HeartCode PALS online first, then attend an in-person skills session.",
           "delivery_mode": "skills-session",
           "variant": "heartcode",
           "deep_link_aliases": [
             "heartcode-pals"
-          ]
+          ],
+          "image_url": "/images/hc_pals.png",
+          "image_alt": "AHA PALS HeartCode course option",
+          "delivery_badge": "ONLINE + SKILLS"
+        }
+      ],
+      "back_link_label": "Back to All Courses",
+      "back_link_href": "/index.html#courses",
+      "delivery_help_title": "Course format guide",
+      "delivery_help": [
+        {
+          "label": "INSTRUCTOR-LED",
+          "text": "Initial and Renewal PALS classes are completed in person with an instructor."
+        },
+        {
+          "label": "HEARTCODE",
+          "text": "HeartCode PALS begins online and is completed with an in-person skills session."
         }
       ]
     },
@@ -200,9 +266,9 @@
       "page_key": "heartsaver",
       "family": "Heartsaver",
       "certifying_body": "AHA",
-      "title": "Heartsaver Schedule",
-      "meta_description": "Select an AHA Heartsaver course, date, and public start time.",
-      "intro": "Select the Heartsaver course format first, then choose a public date and start time.",
+      "title": "Heartsaver CPR, AED & First Aid Classes",
+      "meta_description": "AHA Heartsaver options for workplace, school, childcare, and general CPR/First Aid requirements.",
+      "intro": "Choose the class that fits your needs, then select a date and time.",
       "output_path": "docs/heartsaver.html",
       "legacy_schedule_path": "docs/heartsaver-schedule.html",
       "show_all_label": "Show all course options",
@@ -228,25 +294,31 @@
           "course_id": "344085",
           "display_label": "AHA Heartsaver CPR AED",
           "icon_label": "CPR",
-          "clarification": "CPR and AED classroom option.",
+          "clarification": "CPR and AED training completed entirely in person.",
           "delivery_mode": "in-person",
           "variant": "cpr-aed",
           "deep_link_aliases": [
             "cpr-aed"
-          ]
+          ],
+          "image_url": "/images/HS-CPR-AED.jpeg",
+          "image_alt": "AHA Heartsaver CPR AED course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "209808",
           "display_label": "AHA Heartsaver CPR AED Online",
           "icon_label": "CPR",
-          "clarification": "Online portion plus scheduled skills check where rules allow.",
+          "clarification": "Complete the online CPR/AED course first, then attend a skills session.",
           "delivery_mode": "blended",
           "variant": "cpr-aed-online",
           "deep_link_aliases": [
             "cpr-aed-online",
             "heartcode-first-aid-cpr-aed"
           ],
-          "recommended": false
+          "recommended": false,
+          "image_url": "/images/hc_A_ss_click.png",
+          "image_alt": "AHA Heartsaver CPR AED Online course option",
+          "delivery_badge": "BLENDED"
         },
         {
           "course_id": "209809",
@@ -257,7 +329,10 @@
           "variant": "first-aid-cpr-aed",
           "deep_link_aliases": [
             "first-aid-cpr-aed"
-          ]
+          ],
+          "image_url": "/images/heartsaver_general.png",
+          "image_alt": "AHA Heartsaver First Aid CPR AED course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "329495",
@@ -269,44 +344,70 @@
           "deep_link_aliases": [
             "first-aid-cpr-aed-blended"
           ],
-          "recommended": false
+          "recommended": false,
+          "image_url": "/images/heartsaver_general.png",
+          "image_alt": "AHA Heartsaver First Aid CPR AED - Blended course option",
+          "delivery_badge": "BLENDED"
         },
         {
           "course_id": "351632",
           "display_label": "AHA Heartsaver Pediatric First Aid / CPR / AED",
           "icon_label": "PED",
-          "clarification": "In-person pediatric First Aid, CPR, and AED option.",
+          "clarification": "Pediatric First Aid, CPR, and AED training completed in person.",
           "delivery_mode": "in-person",
           "variant": "pediatric-first-aid-cpr-aed-in-person",
           "deep_link_aliases": [
             "pediatric-first-aid-cpr-aed-in-person"
           ],
-          "recommended": false
+          "recommended": false,
+          "image_url": "/images/HS-PEDI-FA-CPR-AED.jpeg",
+          "image_alt": "AHA Heartsaver Pediatric First Aid / CPR / AED course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "251545",
           "display_label": "AHA Heartsaver Pediatric First Aid CPR AED Online",
           "icon_label": "PED",
-          "clarification": "Pediatric First Aid/CPR/AED option where scheduling rules allow.",
+          "clarification": "Complete the pediatric online course first, then attend a skills session.",
           "delivery_mode": "blended",
           "variant": "pediatric",
           "deep_link_aliases": [
             "pediatric-first-aid-cpr-aed"
-          ]
+          ],
+          "image_url": "/images/HS-PEDI-FA-CPR-AED.jpeg",
+          "image_alt": "AHA Heartsaver Pediatric First Aid CPR AED Online course option",
+          "delivery_badge": "BLENDED"
         }
       ],
       "course_id_notes": {
         "344085": "Routine public AHA Heartsaver CPR AED in-person course. Use for public in-person CPR/AED scheduler routing.",
         "209808": "Routine public AHA Heartsaver CPR AED blended/online plus skills course. Use for public blended CPR/AED scheduler routing.",
         "460465": "Reserved for Fire Department/public-safety partner programs only ($0 class with optional public participant card fee). Do not use for routine public Heartsaver CPR AED routing."
-      }
+      },
+      "back_link_label": "Back to All Courses",
+      "back_link_href": "/index.html#courses",
+      "delivery_help_title": "Course format guide",
+      "delivery_help": [
+        {
+          "label": "IN-PERSON",
+          "text": "In-person classes are completed entirely at our Wilmington training center."
+        },
+        {
+          "label": "ONLINE + SKILLS",
+          "text": "Online + Skills classes begin with an online course, followed by a shorter in-person skills session."
+        },
+        {
+          "label": "BLENDED",
+          "text": "Complete assigned online coursework before the scheduled classroom session."
+        }
+      ]
     },
     "uscg-first-aid-cpr-aed": {
       "page_key": "uscg-first-aid-cpr-aed",
       "family": "Heartsaver",
       "certifying_body": "AHA",
       "title": "USCG-Approved First Aid / CPR / AED",
-      "subtitle": "AHA Heartsaver First Aid CPR AED Total \u2014 AMERHA-216",
+      "subtitle": "AHA Heartsaver First Aid CPR AED Total — AMERHA-216",
       "meta_description": "AHA Heartsaver First Aid CPR AED Total options for captain's license, OUPV, Master, and Merchant Mariner Credential applicants who need AMERHA-216 USCG documentation.",
       "intro": "Select the AHA Heartsaver First Aid CPR AED format, then choose a public date and start time.",
       "explanation": "This page is a local cover page for mariners and captain's license applicants. It uses the same real AHA Heartsaver First Aid CPR AED classes already available through 910CPR; it does not create separate USCG classroom inventory.",
@@ -343,42 +444,61 @@
           "course_id": "209809",
           "display_label": "In-person AHA Heartsaver First Aid CPR AED",
           "icon_label": "FA",
-          "clarification": "Classroom AHA Heartsaver First Aid CPR AED Total path for USCG/AMERHA-216 documentation.",
+          "clarification": "First Aid, CPR, and AED training completed entirely in person.",
           "delivery_mode": "in-person",
           "variant": "in-person",
           "deep_link_aliases": [
             "classroom",
             "uscg-in-person",
             "first-aid-cpr-aed"
-          ]
+          ],
+          "image_url": "/images/maritime-first-aid.svg",
+          "image_alt": "In-person AHA Heartsaver First Aid CPR AED maritime first aid course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "329495",
           "display_label": "Online learning + in-person skills session",
           "icon_label": "BL",
-          "clarification": "Blended AHA Heartsaver First Aid CPR AED Total path for USCG/AMERHA-216 documentation.",
+          "clarification": "Complete assigned online coursework before the scheduled skills/classroom session.",
           "delivery_mode": "blended",
           "variant": "online-learning-skills",
           "deep_link_aliases": [
             "blended",
             "uscg-blended",
             "first-aid-cpr-aed-blended"
-          ]
+          ],
+          "image_url": "/images/maritime-first-aid.svg",
+          "image_alt": "Online learning + in-person skills session maritime first aid course option",
+          "delivery_badge": "BLENDED"
         }
       ],
       "course_id_notes": {
         "209809": "Routine public AHA Heartsaver First Aid CPR AED in-person course used for the USCG/AMERHA-216 cover page.",
         "329495": "Routine public AHA Heartsaver First Aid CPR AED blended course used for the USCG/AMERHA-216 cover page.",
         "460465": "Reserved for Fire Department/public-safety partner programs only. Do not use for this public USCG cover page."
-      }
+      },
+      "back_link_label": "Back to All Courses",
+      "back_link_href": "/index.html#courses",
+      "delivery_help_title": "Course format guide",
+      "delivery_help": [
+        {
+          "label": "IN-PERSON",
+          "text": "Complete the full Heartsaver First Aid CPR AED course at our Wilmington training center."
+        },
+        {
+          "label": "BLENDED",
+          "text": "Complete assigned online coursework first, then attend the scheduled in-person session."
+        }
+      ]
     },
     "hsi": {
       "page_key": "hsi",
       "family": "HSI",
       "certifying_body": "HSI",
-      "title": "HSI Schedule",
-      "meta_description": "HSI block-schedule readiness placeholder.",
-      "intro": "HSI schedule readiness is audited before public page generation.",
+      "title": "HSI CPR, First Aid & BLS Classes",
+      "meta_description": "HSI options for BLS, CPR, AED, and First Aid requirements.",
+      "intro": "Choose the HSI class that fits your requirement, then select a date and time or request help for unsupported formats.",
       "output_path": "docs/hsi.html",
       "legacy_schedule_path": "docs/hsi-schedule.html",
       "compare_mode": {
@@ -399,43 +519,62 @@
           "course_id": "463743",
           "display_label": "HSI BLS Challenge",
           "icon_label": "HSI",
-          "clarification": "HSI BLS challenge option.",
+          "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.",
           "delivery_mode": "in-person",
           "variant": "challenge",
           "deep_link_aliases": [
             "challenge",
             "hsi-bls",
             "bls"
-          ]
+          ],
+          "image_url": "/images/Health_and_Safety_Institute_Logo.jpg",
+          "image_alt": "HSI BLS Challenge course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "445670",
           "display_label": "HSI BLS + Adult First Aid",
           "icon_label": "FA",
-          "clarification": "HSI BLS plus Adult First Aid option.",
+          "clarification": "Combined HSI BLS and Adult First Aid option completed in person.",
           "delivery_mode": "in-person",
           "variant": "bls-first-aid",
           "deep_link_aliases": [
             "bls-first-aid",
             "hsi-bls-fa",
             "hsi-bls-first-aid"
-          ]
+          ],
+          "image_url": "/images/Health_and_Safety_Institute_Logo.jpg",
+          "image_alt": "HSI BLS + Adult First Aid course option",
+          "delivery_badge": "IN-PERSON"
         }
       ],
       "unsupported_options": [
         {
           "fragment": "first-aid-cpr-aed",
           "display_label": "HSI First Aid / CPR / AED",
-          "clarification": "This HSI option is not yet connected to validated public dynamic scheduling.",
+          "clarification": "Contact us for HSI First Aid / CPR / AED scheduling. This option is not connected to instant online booking yet.",
           "action_label": "Request HSI First Aid / CPR / AED",
           "action_href": "/request_group_session.html?program=HSI%20First%20Aid%20CPR%20AED&request_type=public_course"
         },
         {
           "fragment": "cpr-aed",
           "display_label": "HSI CPR / AED",
-          "clarification": "This HSI option is not yet connected to validated public dynamic scheduling.",
+          "clarification": "Contact us for HSI CPR / AED scheduling. This option is not connected to instant online booking yet.",
           "action_label": "Request HSI CPR / AED",
           "action_href": "/request_group_session.html?program=HSI%20CPR%20AED&request_type=public_course"
+        }
+      ],
+      "back_link_label": "Back to All Courses",
+      "back_link_href": "/index.html#courses",
+      "delivery_help_title": "Course format guide",
+      "delivery_help": [
+        {
+          "label": "IN-PERSON",
+          "text": "HSI class options shown here are completed at our Wilmington training center."
+        },
+        {
+          "label": "REQUEST OPTIONS",
+          "text": "HSI formats not connected to instant booking can be requested for instructor review."
         }
       ]
     },
@@ -443,9 +582,9 @@
       "page_key": "arc",
       "family": "ARC",
       "certifying_body": "ARC",
-      "title": "Red Cross Schedule",
-      "meta_description": "Red Cross block-schedule readiness placeholder.",
-      "intro": "Red Cross schedule readiness is audited before public page generation.",
+      "title": "Red Cross CPR & BLS Classes",
+      "meta_description": "American Red Cross options are informational until public instant scheduling is validated.",
+      "intro": "Review Red Cross options and contact us for scheduling help.",
       "output_path": "docs/arc-schedule.html",
       "compare_mode": {
         "enabled": true,
@@ -467,7 +606,10 @@
           "icon_label": "ARC",
           "clarification": "Red Cross BLS classroom option.",
           "delivery_mode": "in-person",
-          "variant": "bls"
+          "variant": "bls",
+          "image_url": "/images/ARCLTP.png",
+          "image_alt": "American Red Cross Basic Life Support course option",
+          "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "248287",
@@ -475,9 +617,15 @@
           "icon_label": "BL",
           "clarification": "Red Cross BLS blended learning option.",
           "delivery_mode": "blended",
-          "variant": "bls-blended"
+          "variant": "bls-blended",
+          "image_url": "/images/ARCLTP.png",
+          "image_alt": "American Red Cross Basic Life Support - Blended Learning course option",
+          "delivery_badge": "BLENDED"
         }
-      ]
+      ],
+      "back_link_label": "Back to All Courses",
+      "back_link_href": "/index.html#courses",
+      "delivery_help_title": "Course format guide"
     }
   }
 }
