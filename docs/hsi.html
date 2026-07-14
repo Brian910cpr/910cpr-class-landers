@@ -514,18 +514,18 @@
     <a class="back-link" href="/index.html#courses">← Back to All Courses</a>
     <h1>HSI CPR, First Aid &amp; BLS Classes</h1>
     
-    <p class="muted">Choose the HSI class that fits your requirement, then select a date and time or request help for unsupported formats.</p>
+    <p class="muted">Choose the HSI class that fits your requirement, then select a date and time.</p>
     
     <div class="family-help" aria-label="Course format guide">
       <div class="family-help-title">Course format guide</div>
       <div class="delivery-help-list">
           <div class="delivery-help-item">
             <div class="delivery-help-label">IN-PERSON</div>
-            <div class="delivery-help-copy">HSI class options shown here are completed at our Wilmington training center.</div>
+            <div class="delivery-help-copy">Complete the course at our Wilmington training center.</div>
           </div>
           <div class="delivery-help-item">
-            <div class="delivery-help-label">REQUEST OPTIONS</div>
-            <div class="delivery-help-copy">HSI formats not connected to instant booking can be requested for instructor review.</div>
+            <div class="delivery-help-label">BLENDED LEARNING</div>
+            <div class="delivery-help-copy">Complete the assigned online coursework first, then attend the in-person skills session.</div>
           </div>
       </div>
     </div>
@@ -538,22 +538,6 @@
       
     </section>
     
-    <section class="request-options" aria-label="Request additional options">
-      <h2>Other options</h2>
-      <p class="muted">These options are not currently connected to validated public instant booking. Use the request action so an instructor can confirm the right path.</p>
-      <div class="request-option-grid">
-        <article id="first-aid-cpr-aed" class="request-option-card" tabindex="-1" data-request-fragment="first-aid-cpr-aed" data-request-aliases="">
-          <h3>HSI First Aid / CPR / AED</h3>
-          <p>Contact us for HSI First Aid / CPR / AED scheduling. This option is not connected to instant online booking yet.</p>
-          <a class="request-option-link" href="/request_group_session.html?program=HSI%20First%20Aid%20CPR%20AED&amp;request_type=public_course">Request HSI First Aid / CPR / AED</a>
-        </article>
-        <article id="cpr-aed" class="request-option-card" tabindex="-1" data-request-fragment="cpr-aed" data-request-aliases="">
-          <h3>HSI CPR / AED</h3>
-          <p>Contact us for HSI CPR / AED scheduling. This option is not connected to instant online booking yet.</p>
-          <a class="request-option-link" href="/request_group_session.html?program=HSI%20CPR%20AED&amp;request_type=public_course">Request HSI CPR / AED</a>
-        </article>
-      </div>
-    </section>
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
@@ -600,9 +584,9 @@
   <script>
     const embeddedScheduleDates = [];
     const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-07-02T15%3A53%3A19.009792";
-    const courseOptions = [{"courseId": "463743", "courseName": "HSI BLS Challenge", "family": "HSI", "variant": "challenge", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["challenge", "challenge", "hsi-bls", "bls"], "iconLabel": "HSI", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageAlt": "HSI BLS Challenge course option", "deliveryBadge": "IN-PERSON", "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.", "details": {"course_key": "hsi_bls_challenge", "title": "HSI BLS Challenge", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.", "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."], "certification_issued": "HSI certification issued after successful completion.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."], "full_course_page": "/hsi.html"}}, {"courseId": "445670", "courseName": "HSI BLS + Adult First Aid", "family": "HSI", "variant": "bls-first-aid", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["bls-first-aid", "bls-first-aid", "hsi-bls-fa", "hsi-bls-first-aid"], "iconLabel": "FA", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageAlt": "HSI BLS + Adult First Aid course option", "deliveryBadge": "IN-PERSON", "clarification": "Combined HSI BLS and Adult First Aid option completed in person.", "details": {"course_key": "hsi_bls_adult_first_aid", "title": "HSI BLS + Adult First Aid", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI blended option combining Basic Life Support with Adult First Aid/CPR/AED.", "who_this_is_for": "Workplaces, healthcare-adjacent teams, dental offices, ABA providers, and organizations that accept HSI and need both BLS and first aid coverage.", "topics_covered": ["HSI BLS", "Adult first aid", "CPR and AED", "Online coursework", "In-person skills verification"], "required_materials": ["Completed assigned HSI online coursework before the skills session."], "certification_issued": "HSI certification issued after successful completion and valid for two years.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."], "full_course_page": "/hsi.html"}}];
+    const courseOptions = [{"courseId": "463743", "courseName": "HSI BLS Challenge", "family": "HSI", "variant": "challenge", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["challenge", "challenge", "hsi-bls", "bls"], "iconLabel": "HSI", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageAlt": "HSI BLS Challenge course option", "deliveryBadge": "IN-PERSON", "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.", "details": {"course_key": "hsi_bls_challenge", "title": "HSI BLS Challenge", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.", "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."], "certification_issued": "HSI certification issued after successful completion.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."], "full_course_page": "/hsi.html"}}, {"courseId": "445670", "courseName": "HSI BLS + Adult First Aid", "family": "HSI", "variant": "bls-first-aid", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["bls-first-aid", "bls-first-aid", "hsi-bls-fa", "hsi-bls-first-aid"], "iconLabel": "FA", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageAlt": "HSI BLS + Adult First Aid course option", "deliveryBadge": "BLENDED", "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.", "details": {"course_key": "hsi_bls_adult_first_aid", "title": "HSI BLS + Adult First Aid", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI blended option combining Basic Life Support with Adult First Aid/CPR/AED.", "who_this_is_for": "Workplaces, healthcare-adjacent teams, dental offices, ABA providers, and organizations that accept HSI and need both BLS and first aid coverage.", "topics_covered": ["HSI BLS", "Adult first aid", "CPR and AED", "Online coursework", "In-person skills verification"], "required_materials": ["Completed assigned HSI online coursework before the skills session."], "certification_issued": "HSI certification issued after successful completion and valid for two years.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."], "full_course_page": "/hsi.html"}}];
     const optionGroups = {"HSI": {"family": "HSI", "label": "All HSI options", "courseIds": ["463743", "445670"]}};
-    const unsupportedOptions = [{"fragment": "first-aid-cpr-aed", "display_label": "HSI First Aid / CPR / AED", "clarification": "Contact us for HSI First Aid / CPR / AED scheduling. This option is not connected to instant online booking yet.", "action_label": "Request HSI First Aid / CPR / AED", "action_href": "/request_group_session.html?program=HSI%20First%20Aid%20CPR%20AED&request_type=public_course"}, {"fragment": "cpr-aed", "display_label": "HSI CPR / AED", "clarification": "Contact us for HSI CPR / AED scheduling. This option is not connected to instant online booking yet.", "action_label": "Request HSI CPR / AED", "action_href": "/request_group_session.html?program=HSI%20CPR%20AED&request_type=public_course"}];
+    const unsupportedOptions = [];
     let scheduleDates = embeddedScheduleDates;
     let availabilityState = 'checking';
     let availabilityMessage = 'Checking current class times…';

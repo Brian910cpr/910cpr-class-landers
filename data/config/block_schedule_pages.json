@@ -498,7 +498,7 @@
       "certifying_body": "HSI",
       "title": "HSI CPR, First Aid & BLS Classes",
       "meta_description": "HSI options for BLS, CPR, AED, and First Aid requirements.",
-      "intro": "Choose the HSI class that fits your requirement, then select a date and time or request help for unsupported formats.",
+      "intro": "Choose the HSI class that fits your requirement, then select a date and time.",
       "output_path": "docs/hsi.html",
       "legacy_schedule_path": "docs/hsi-schedule.html",
       "compare_mode": {
@@ -535,8 +535,8 @@
           "course_id": "445670",
           "display_label": "HSI BLS + Adult First Aid",
           "icon_label": "FA",
-          "clarification": "Combined HSI BLS and Adult First Aid option completed in person.",
-          "delivery_mode": "in-person",
+          "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.",
+          "delivery_mode": "blended",
           "variant": "bls-first-aid",
           "deep_link_aliases": [
             "bls-first-aid",
@@ -545,23 +545,7 @@
           ],
           "image_url": "/images/Health_and_Safety_Institute_Logo.jpg",
           "image_alt": "HSI BLS + Adult First Aid course option",
-          "delivery_badge": "IN-PERSON"
-        }
-      ],
-      "unsupported_options": [
-        {
-          "fragment": "first-aid-cpr-aed",
-          "display_label": "HSI First Aid / CPR / AED",
-          "clarification": "Contact us for HSI First Aid / CPR / AED scheduling. This option is not connected to instant online booking yet.",
-          "action_label": "Request HSI First Aid / CPR / AED",
-          "action_href": "/request_group_session.html?program=HSI%20First%20Aid%20CPR%20AED&request_type=public_course"
-        },
-        {
-          "fragment": "cpr-aed",
-          "display_label": "HSI CPR / AED",
-          "clarification": "Contact us for HSI CPR / AED scheduling. This option is not connected to instant online booking yet.",
-          "action_label": "Request HSI CPR / AED",
-          "action_href": "/request_group_session.html?program=HSI%20CPR%20AED&request_type=public_course"
+          "delivery_badge": "BLENDED"
         }
       ],
       "back_link_label": "Back to All Courses",
@@ -570,11 +554,11 @@
       "delivery_help": [
         {
           "label": "IN-PERSON",
-          "text": "HSI class options shown here are completed at our Wilmington training center."
+          "text": "Complete the course at our Wilmington training center."
         },
         {
-          "label": "REQUEST OPTIONS",
-          "text": "HSI formats not connected to instant booking can be requested for instructor review."
+          "label": "BLENDED LEARNING",
+          "text": "Complete the assigned online coursework first, then attend the in-person skills session."
         }
       ]
     },
