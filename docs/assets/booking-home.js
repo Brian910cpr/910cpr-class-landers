@@ -47,8 +47,8 @@
     },
     {
       title: "Family & Friends CPR",
-      href: "/courses/aha-family-friends-cpr.html",
-      image: "/images/confused-frustrated.png",
+      href: "/family-cpr.html",
+      image: "/images/FF-CPR-2.jpg",
     },
   ];
 
