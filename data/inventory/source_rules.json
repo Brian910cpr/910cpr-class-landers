@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "landerware.inventory-source-rules.v1",
+  "sources": [
+    {
+      "sourceId": "gmail_arch_onlineoversight_orders",
+      "enabled": true,
+      "sourceType": "gmail_order_confirmation",
+      "displayName": "Arch / AED Superstore order confirmations",
+      "match": {
+        "from": "admin@onlineoversight.com",
+        "subjectContains": "Thank You for Your Order"
+      },
+      "extract": {
+        "orderNumberPatterns": ["Order: {value}", "Order #: {value}"],
+        "orderTotalLabels": ["Order Grand Total", "Total for this Order"],
+        "shippingMethodLabels": ["Shipping Method"],
+        "lineItemPattern": "{quantity} {product_name} ; ${line_total}",
+        "productResolution": "inventory_catalog_alias_match"
+      },
+      "ledgerBehavior": {
+        "eventType": "receipt",
+        "dedupeKey": "sourceId+orderNumber+itemId",
+        "quantitySign": 1,
+        "unknownProductBehavior": "quarantine_for_review"
+      }
+    }
+  ],
+  "futureSourceContract": {
+    "required": ["sourceId", "sourceType", "match", "extract", "ledgerBehavior"],
+    "supportedEventTypes": ["receipt", "consumption", "adjustment", "reservation", "release"],
+    "notes": "Add future vendors or program-specific feeds as new source rules. Do not hard-code vendor names into the inventory ledger."
+  }
+}
