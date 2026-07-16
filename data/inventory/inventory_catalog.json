@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "landerware.inventory-catalog.v1",
+  "items": [
+    {
+      "itemId": "aha_ecard_bls_provider",
+      "label": "AHA BLS Provider eCard",
+      "category": "ecard",
+      "unit": "card",
+      "credentialKey": "aha_bls_provider",
+      "aliases": ["BLS Provider eCard", "BLS eCard", "AHA BLS Provider"],
+      "forecast": {"enabled": true, "safetyStock": 10, "lookaheadDays": 14}
+    },
+    {
+      "itemId": "aha_ecard_acls_provider",
+      "label": "AHA ACLS Provider eCard",
+      "category": "ecard",
+      "unit": "card",
+      "credentialKey": "aha_acls_provider",
+      "aliases": ["ACLS Provider eCard", "ACLS eCard", "AHA ACLS Provider"],
+      "forecast": {"enabled": true, "safetyStock": 5, "lookaheadDays": 14}
+    },
+    {
+      "itemId": "aha_ecard_pals_provider",
+      "label": "AHA PALS Provider eCard",
+      "category": "ecard",
+      "unit": "card",
+      "credentialKey": "aha_pals_provider",
+      "aliases": ["PALS Provider eCard", "PALS eCard", "AHA PALS Provider"],
+      "forecast": {"enabled": true, "safetyStock": 5, "lookaheadDays": 14}
+    },
+    {
+      "itemId": "aha_ecard_heartsaver_fa_cpr_aed",
+      "label": "AHA Heartsaver First Aid CPR AED eCard",
+      "category": "ecard",
+      "unit": "card",
+      "credentialKey": "aha_heartsaver_first_aid_cpr_aed",
+      "aliases": ["Heartsaver First Aid CPR AED eCard", "Heartsaver FA CPR AED eCard", "Heartsaver First Aid CPR AED"],
+      "forecast": {"enabled": true, "safetyStock": 10, "lookaheadDays": 14}
+    },
+    {
+      "itemId": "aha_ecard_heartsaver_pediatric_fa_cpr_aed",
+      "label": "AHA Heartsaver Pediatric First Aid CPR AED eCard",
+      "category": "ecard",
+      "unit": "card",
+      "credentialKey": "aha_heartsaver_pediatric_first_aid_cpr_aed",
+      "aliases": ["Pediatric First Aid CPR AED eCard", "Heartsaver Pediatric First Aid CPR AED"],
+      "forecast": {"enabled": true, "safetyStock": 5, "lookaheadDays": 14}
+    },
+    {
+      "itemId": "aha_ecard_heartsaver_cpr_aed",
+      "label": "AHA Heartsaver CPR AED eCard",
+      "category": "ecard",
+      "unit": "card",
+      "credentialKey": "aha_heartsaver_cpr_aed",
+      "aliases": ["Heartsaver CPR AED eCard", "CPR AED eCard"],
+      "forecast": {"enabled": true, "safetyStock": 5, "lookaheadDays": 14}
+    },
+    {
+      "itemId": "aha_ecard_heartsaver_first_aid",
+      "label": "AHA Heartsaver First Aid eCard",
+      "category": "ecard",
+      "unit": "card",
+      "credentialKey": "aha_heartsaver_first_aid",
+      "aliases": ["Heartsaver First Aid eCard", "First Aid eCard"],
+      "forecast": {"enabled": true, "safetyStock": 5, "lookaheadDays": 14}
+    }
+  ],
+  "extensionPolicy": {
+    "unknownProducts": "quarantine_for_review",
+    "newPrograms": "add_catalog_item_and_aliases_without_changing_ledger_schema",
+    "newVendors": "add_source_rule_without_changing_inventory_item_schema"
+  }
+}
