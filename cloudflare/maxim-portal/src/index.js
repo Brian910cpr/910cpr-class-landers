@@ -6,6 +6,7 @@ const COURSE_MAP = {
   'hs-in-person': { courseId: '209809', credentialKey: 'aha_heartsaver_fa_cpr_aed' },
   'hs-online-skills': { courseId: '329495', credentialKey: 'aha_heartsaver_fa_cpr_aed' }
 };
+const COURSE_ID_TO_OFFER = Object.fromEntries(Object.entries(COURSE_MAP).map(([offerKey, value]) => [value.courseId, { offerKey, ...value }]));
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: JSON_HEADERS });
@@ -20,6 +21,80 @@ function token() {
 }
 async function body(request) {
   try { return await request.json(); } catch { return null; }
+}
+
+function normalizePerson(data) {
+  const firstName = String(data?.firstName || '').trim();
+  const lastName = String(data?.lastName || '').trim();
+  if (!firstName || !lastName) return null;
+  return {
+    personId: String(data.personId || `maxim_${firstName}_${lastName}`.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')).slice(0, 80),
+    firstName,
+    lastName,
+    email: String(data.email || '').trim() || null,
+    phone: String(data.phone || '').trim() || null
+  };
+}
+
+function rowMatchesAvailability(row, data, offer) {
+  return String(row?.session_id) === String(data.classId)
+    && String(row?.course_id) === String(offer.courseId)
+    && String(row?.start_at || row?.start || row?.start_datetime) === String(data.startsAt)
+    && String(row?.registration_status || 'open').toLowerCase() === 'open'
+    && row?.public_direct_booking !== false
+    && Boolean(row?.registration_url);
+}
+
+async function authoritativeAvailabilityRow(data, offer, env) {
+  if (env.AVAILABILITY?.check) return env.AVAILABILITY.check(data, offer);
+  if (env.SCHEDULE_FUTURE_JSON) {
+    const payload = typeof env.SCHEDULE_FUTURE_JSON === 'string' ? JSON.parse(env.SCHEDULE_FUTURE_JSON) : env.SCHEDULE_FUTURE_JSON;
+    return (payload.sessions || []).find((row) => rowMatchesAvailability(row, data, offer)) || null;
+  }
+  const origin = env.PUBLIC_ORIGIN || 'https://www.910cpr.com';
+  const response = await fetch(`${origin}/data/schedule_future.json`, { cf: { cacheTtl: 0 } });
+  if (!response.ok) return null;
+  const payload = await response.json();
+  return (payload.sessions || []).find((row) => rowMatchesAvailability(row, data, offer)) || null;
+}
+
+async function d1CreateRegistration(env, data, person, offer, availabilityRow) {
+  const existing = await env.DB.prepare(`SELECT * FROM registrations WHERE person_id=? AND corporate_customer=? AND credential_key=? AND status='registered' AND superseded_by IS NULL ORDER BY created_at DESC LIMIT 1`)
+    .bind(person.personId, data.corporateCustomer || 'MAXIM', offer.credentialKey).first();
+  if (existing && !data.moveFromRegistrationId) return { error: 'duplicate_active_registration', existingRegistration: existing, status: 409 };
+  if (data.moveFromRegistrationId && existing && existing.registration_id !== data.moveFromRegistrationId) return { error: 'duplicate_active_registration', existingRegistration: existing, status: 409 };
+
+  const registrationId = id('reg');
+  const sourceRenewalRef = data.renewalId || data.sourceRenewalId || null;
+  const sourcePersonRef = data.sourcePersonReference || null;
+  const renewal = sourceRenewalRef
+    ? await env.DB.prepare(`SELECT renewal_id FROM renewal_cycles WHERE renewal_id=?`).bind(sourceRenewalRef).first()
+    : null;
+  const renewalId = renewal?.renewal_id || null;
+  await env.DB.batch([
+    env.DB.prepare(`INSERT INTO people(person_id,first_name,last_name,email,phone) VALUES(?,?,?,?,?) ON CONFLICT(person_id) DO UPDATE SET first_name=excluded.first_name,last_name=excluded.last_name,email=excluded.email,phone=excluded.phone,updated_at=CURRENT_TIMESTAMP`)
+      .bind(person.personId, person.firstName, person.lastName, person.email, person.phone),
+    env.DB.prepare(`INSERT INTO corporate_profiles(person_id,corporate_customer,billing_account,active) VALUES(?,?,?,1) ON CONFLICT(person_id,corporate_customer) DO UPDATE SET billing_account=excluded.billing_account,active=1,updated_at=CURRENT_TIMESTAMP`)
+      .bind(person.personId, data.corporateCustomer || 'MAXIM', data.billingAccount || null),
+    data.moveFromRegistrationId ? env.DB.prepare(`UPDATE registrations SET status='superseded',superseded_by=?,updated_at=CURRENT_TIMESTAMP WHERE registration_id=? AND person_id=? AND status='registered'`).bind(registrationId, data.moveFromRegistrationId, person.personId) : env.DB.prepare(`SELECT 1`),
+    env.DB.prepare(`INSERT INTO registrations(registration_id,person_id,renewal_id,source_renewal_ref,source_person_ref,corporate_customer,billing_account,course_id,credential_key,class_id,registration_url,starts_at,status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?, 'registered')`)
+      .bind(registrationId, person.personId, renewalId, sourceRenewalRef, sourcePersonRef, data.corporateCustomer || 'MAXIM', data.billingAccount || null, offer.courseId, offer.credentialKey, data.classId, availabilityRow.registration_url, data.startsAt),
+    renewalId ? env.DB.prepare(`UPDATE renewal_cycles SET status='registered',updated_at=CURRENT_TIMESTAMP WHERE renewal_id=?`).bind(renewalId) : env.DB.prepare(`SELECT 1`),
+    renewalId ? env.DB.prepare(`UPDATE go_tokens SET state='consumed',consumed_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP WHERE renewal_id=? AND state='active'`).bind(renewalId) : env.DB.prepare(`SELECT 1`),
+    env.DB.prepare(`INSERT INTO portal_events(event_id,person_id,renewal_id,registration_id,event_type,actor_type,payload_json) VALUES(?,?,?,?,?,?,?)`)
+      .bind(id('evt'), person.personId, renewalId, registrationId, data.moveFromRegistrationId ? 'registration_moved' : 'registration_created', data.actorType || 'corporate_user', JSON.stringify({ offerKey: data.offerKey, courseId: offer.courseId, startsAt: data.startsAt, classId: data.classId, moveFromRegistrationId: data.moveFromRegistrationId || null }))
+  ]);
+  return { ok: true, registrationId, personId: person.personId };
+}
+
+async function createRegistrationRecord(env, data) {
+  const offer = COURSE_MAP[data?.offerKey] || COURSE_ID_TO_OFFER[String(data?.courseId || '')];
+  const person = normalizePerson(data?.person || data);
+  if (!person || !offer || !data?.startsAt || !data?.classId) return { error: 'person, offer/course, startsAt and classId are required', status: 400 };
+  const availabilityRow = await authoritativeAvailabilityRow(data, offer, env);
+  if (!availabilityRow) return { error: 'stale_slot_rejected', status: 409 };
+  if (env.STORE?.createRegistration) return env.STORE.createRegistration(data, person, offer, availabilityRow);
+  return d1CreateRegistration(env, data, person, offer, availabilityRow);
 }
 
 async function createGoToken(request, env) {
@@ -72,22 +147,17 @@ async function history(env, personId) {
   return json({ registrations: registrations.results, renewals: renewals.results, events: events.results });
 }
 
+async function listRegistrations(env) {
+  if (env.STORE?.listRegistrations) return json({ registrations: await env.STORE.listRegistrations() });
+  const registrations = await env.DB.prepare(`SELECT r.*, p.first_name, p.last_name, p.email, p.phone FROM registrations r JOIN people p ON p.person_id=r.person_id WHERE r.status='registered' AND r.superseded_by IS NULL ORDER BY r.starts_at ASC`).all();
+  return json({ registrations: registrations.results });
+}
+
 async function createRegistration(request, env) {
   const data = await body(request);
-  const offer = COURSE_MAP[data?.offerKey];
-  if (!data?.personId || !offer || !data?.startsAt) return json({ error: 'personId, offerKey and startsAt are required' }, 400);
-  // This endpoint intentionally requires the caller to supply a verified availability proof once the shared availability service is exposed.
-  if (!data.availabilityProof) return json({ error: 'Authoritative availability proof required; booking not written.' }, 409);
-  const registrationId = id('reg');
-  await env.DB.batch([
-    env.DB.prepare(`INSERT INTO registrations(registration_id,person_id,renewal_id,corporate_customer,billing_account,course_id,credential_key,class_id,starts_at,status) VALUES(?,?,?,?,?,?,?,?,?,'registered')`)
-      .bind(registrationId,data.personId,data.renewalId||null,data.corporateCustomer||'MAXIM',data.billingAccount||null,offer.courseId,offer.credentialKey,data.classId||null,data.startsAt),
-    data.renewalId ? env.DB.prepare(`UPDATE renewal_cycles SET status='registered',updated_at=CURRENT_TIMESTAMP WHERE renewal_id=?`).bind(data.renewalId) : env.DB.prepare(`SELECT 1`),
-    data.renewalId ? env.DB.prepare(`UPDATE go_tokens SET state='consumed',consumed_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP WHERE renewal_id=? AND state='active'`).bind(data.renewalId) : env.DB.prepare(`SELECT 1`),
-    env.DB.prepare(`INSERT INTO portal_events(event_id,person_id,renewal_id,registration_id,event_type,actor_type,payload_json) VALUES(?,?,?,?,?,?,?)`)
-      .bind(id('evt'),data.personId,data.renewalId||null,registrationId,'registration_created',data.actorType||'corporate_user',JSON.stringify({ offerKey:data.offerKey, startsAt:data.startsAt }))
-  ]);
-  return json({ ok: true, registrationId });
+  const result = await createRegistrationRecord(env, data);
+  if (!result.ok) return json({ error: result.error, existingRegistration: result.existingRegistration }, result.status || 500);
+  return json(result);
 }
 
 export default {
@@ -99,6 +169,7 @@ export default {
     else if (request.method === 'GET' && url.pathname.startsWith('/api/go/')) response = await resolveGoToken(url.pathname.split('/').pop(), env);
     else if (request.method === 'POST' && /^\/api\/corp\/maxim\/renewals\/[^/]+\/skip$/.test(url.pathname)) response = await skipRenewal(request, env, url.pathname.split('/')[5]);
     else if (request.method === 'GET' && /^\/api\/corp\/maxim\/people\/[^/]+\/history$/.test(url.pathname)) response = await history(env, url.pathname.split('/')[5]);
+    else if (request.method === 'GET' && url.pathname === '/api/corp/maxim/registrations') response = await listRegistrations(env);
     else if (request.method === 'POST' && url.pathname === '/api/corp/maxim/registrations') response = await createRegistration(request, env);
     else if (request.method === 'GET' && url.pathname.startsWith('/go/')) {
       const code = url.pathname.split('/').pop();
@@ -110,3 +181,5 @@ export default {
     return new Response(response.body, { status: response.status, headers });
   }
 };
+
+export { createRegistrationRecord };

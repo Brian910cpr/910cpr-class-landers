@@ -44,11 +44,14 @@ CREATE TABLE IF NOT EXISTS registrations (
   registration_id TEXT PRIMARY KEY,
   person_id TEXT NOT NULL,
   renewal_id TEXT,
+  source_renewal_ref TEXT,
+  source_person_ref TEXT,
   corporate_customer TEXT NOT NULL,
   billing_account TEXT,
   course_id TEXT NOT NULL,
   credential_key TEXT NOT NULL,
   class_id TEXT,
+  registration_url TEXT,
   starts_at TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'registered',
   superseded_by TEXT,
@@ -61,6 +64,10 @@ CREATE TABLE IF NOT EXISTS registrations (
   FOREIGN KEY (person_id) REFERENCES people(person_id),
   FOREIGN KEY (renewal_id) REFERENCES renewal_cycles(renewal_id)
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_one_active_registration
+ON registrations(person_id, corporate_customer, credential_key)
+WHERE status='registered' AND superseded_by IS NULL;
 
 CREATE TABLE IF NOT EXISTS go_tokens (
   token TEXT PRIMARY KEY,
