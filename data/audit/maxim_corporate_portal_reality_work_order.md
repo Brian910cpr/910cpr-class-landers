@@ -112,6 +112,118 @@ The employee chooses only what is still needed, primarily date/time and confirma
 
 When the employee self-schedules, the MAXIM dashboard should automatically move that credential from **Scheduling Link Sent** to **Registered** and display the chosen date/time.
 
+### Cloudflare implementation model
+
+Use Cloudflare for the `/go/` resolution layer, but do **not** create one Worker route per personalized link.
+
+Use one wildcard Worker route:
+
+`910cpr.com/go/*`
+
+That single route handles all personalized and future short links by resolving the path token at request time.
+
+The number of personalized links must not consume Cloudflare Worker routes one-for-one.
+
+### D1 as the authoritative link store
+
+Use Cloudflare D1 for personalized corporate scheduling links because these links have durable state and relationships.
+
+Do not model the corporate renewal system as a pile of disconnected KV-only redirect entries.
+
+Each token record should support at minimum:
+
+- `token_id`
+- `token_hash` or other non-plaintext lookup representation where practical
+- `person_id`
+- `corporate_customer`
+- `billing_account`
+- `credential_type`
+- `course_family`
+- `source_credential_id`
+- `renewal_cycle_id`
+- `state`
+- `created_at`
+- `sent_at`
+- `last_opened_at`
+- `consumed_at`
+- `revoked_at`
+- `expires_at`
+- `replacement_token_id` when rotated or superseded
+- `registration_id` after successful scheduling
+
+The D1 record should point into the same person/renewal/registration model used by the MAXIM dashboard. It should not become a second competing source of truth.
+
+### Link lifecycle
+
+Personalized scheduling links should have explicit states such as:
+
+- `active`
+- `consumed`
+- `expired`
+- `revoked`
+- `superseded`
+
+Normal behavior:
+
+- **Active** — employee has not completed scheduling yet.
+- **Consumed** — a registration was successfully created from the link.
+- **Expired** — the renewal action is no longer valid or has aged out.
+- **Revoked** — manually invalidated.
+- **Superseded** — a replacement token or newer renewal cycle exists.
+
+Repeated sends should normally reuse the same active renewal intent or rotate the access token while preserving the same renewal cycle.
+
+Do not create duplicate renewal cycles merely because the link was resent.
+
+### Expiration and cleanup policy
+
+The system should prevent personalized links from becoming permanent clutter without destroying historical business records.
+
+Recommended behavior:
+
+1. Active renewal links should remain valid long enough to be useful for normal corporate follow-up.
+2. Once a registration is created, mark the token `consumed` immediately.
+3. If a newer link replaces an older one, mark the older token `superseded`.
+4. If an admin invalidates a link, mark it `revoked`.
+5. Old inactive token rows may be purged after a long retention window such as 24–36 months, provided their important event history is preserved on the person/renewal audit trail.
+6. Never purge the actual person, credential, registration, invoice, or renewal history merely because a `/go/` token is removed.
+
+An expired, consumed, revoked, or superseded URL should fail gracefully rather than returning a generic 404.
+
+Examples:
+
+- `This scheduling request has already been completed.`
+- `This scheduling link is no longer active.`
+- `A newer scheduling request is available.`
+
+Where appropriate, offer the correct next action or contact path without exposing private data.
+
+### Capacity and Cloudflare limits
+
+The architecture must be designed so the practical number of personalized links is governed by database/storage and request limits, not by the count of Worker routes.
+
+One wildcard Worker route should support the entire `/go/` namespace.
+
+Do not create one Cloudflare route per token.
+
+The personalized-link design should therefore remain viable as MAXIM and future corporate customers grow from hundreds to many thousands of links.
+
+### Future compatibility
+
+The same `/go/` resolution layer should support future link types without changing the public URL structure.
+
+Examples:
+
+- corporate renewal scheduling
+- direct class invitations
+- reschedule links
+- private group scheduling
+- employee-specific course offers
+- short public deep links
+- payment-free corporate registration links
+
+Each link should resolve through a typed intent record so new programs can be added without redesigning the Worker route.
+
 ---
 
 ## “Schedule for them” behavior
@@ -349,6 +461,8 @@ The current interface is considered strong enough to serve as the Beta+ interact
 - authoritative final availability check
 - native registration persistence
 - persistent `/go/` token service
+- Cloudflare Worker `/go/*` resolver
+- D1 token lifecycle and intent records
 - data-backed status tabs
 - historical Enrollware/eCard/Stripe reconciliation
 - renewal surfacing engine
@@ -365,14 +479,17 @@ Do not describe these as live until they are actually wired and verified.
 2. Add refresh-on-interaction and final authoritative confirmation checks.
 3. Add a native corporate registration store/API.
 4. Make Schedule for them and Move write real registrations.
-5. Implement persistent opaque `/go/` renewal scheduling tokens.
-6. Build MAXIM identity/history import from Enrollware.
-7. Reconcile Assigned eCard spreadsheets against people and registrations.
-8. Link Stripe invoice history where confidence is sufficient.
-9. Populate status tabs from real records.
-10. Add renewal surfacing by end-of-month two-year expiration logic.
-11. Add hidden correction controls and audit events.
-12. Verify the complete self-service loop:
+5. Implement the Cloudflare Worker wildcard route for `/go/*`.
+6. Add D1 schema for typed link intents, lifecycle state, renewal linkage, and registration linkage.
+7. Implement persistent opaque `/go/` renewal scheduling tokens.
+8. Add graceful consumed/expired/revoked/superseded link handling.
+9. Build MAXIM identity/history import from Enrollware.
+10. Reconcile Assigned eCard spreadsheets against people and registrations.
+11. Link Stripe invoice history where confidence is sufficient.
+12. Populate status tabs from real records.
+13. Add renewal surfacing by end-of-month two-year expiration logic.
+14. Add hidden correction controls and audit events.
+15. Verify the complete self-service loop:
     - Coming Due
     - Send Link
     - employee schedules
@@ -394,6 +511,10 @@ A release candidate is not complete until all of the following are true:
 - A real corporate registration can be created without Enrollware checkout.
 - A person can be scheduled by MAXIM staff.
 - A personalized `/go/` link can be created and used by an employee.
+- One wildcard Worker route handles the complete `/go/` namespace.
+- Personalized links are stored as D1-backed typed intent records rather than one route per link.
+- Link lifecycle states are persisted and verified.
+- Consumed/expired/revoked/superseded links fail gracefully.
 - Employee self-scheduling immediately appears as Registered on the MAXIM dashboard.
 - Move replaces the active registration while preserving the old registration in history.
 - Renewal dates show the full year and use end-of-month two-year expiration logic.
