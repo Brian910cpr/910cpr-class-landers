@@ -2,7 +2,7 @@
   "page": "/corp/maxim.html",
   "build_date": "2026-07-16",
   "build_time_zone": "America/New_York",
-  "stage": "Beta+ interaction prototype",
+  "stage": "Authoritative availability integration with INTEGRATION-only backend actions",
   "source_commit_before_stamp": "ee0264af8815c1be21a161c484b3e4b31ae4b52b",
-  "notes": "Build dates must be carried forward on every materially changed MAXIM portal version so screenshots and feedback can be tied to the exact build under review. This build remains a prototype: live availability, persistent registrations, persistent /go/ links, Skip, and View history are not yet fully wired."
+  "notes": "Build dates must be carried forward on every materially changed MAXIM portal version so screenshots and feedback can be tied to the exact build under review. The MAXIM course/date selector now reads docs/data/schedule_future.json and filters by the same public open/direct-booking rules used by the public scheduler. Persistent registrations, persistent /go/ links, Skip, and View history remain INTEGRATION-only and are not live."
 }
