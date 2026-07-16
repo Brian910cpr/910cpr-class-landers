@@ -23,6 +23,17 @@ async function body(request) {
   try { return await request.json(); } catch { return null; }
 }
 
+function authFailure(request, env) {
+  const requireAuth = env.REQUIRE_MAXIM_PORTAL_AUTH === 'true' || Boolean(env.MAXIM_PORTAL_AUTH_TOKEN);
+  if (!requireAuth) return null;
+  if (!env.MAXIM_PORTAL_AUTH_TOKEN) return json({ error: 'MAXIM portal auth token is not configured.' }, 503);
+  const authorization = request.headers.get('authorization') || '';
+  const bearer = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+  const tokenHeader = request.headers.get('x-maxim-portal-token') || '';
+  if (bearer === env.MAXIM_PORTAL_AUTH_TOKEN || tokenHeader === env.MAXIM_PORTAL_AUTH_TOKEN) return null;
+  return json({ error: 'Unauthorized' }, 401);
+}
+
 function normalizePerson(data) {
   const firstName = String(data?.firstName || '').trim();
   const lastName = String(data?.lastName || '').trim();
@@ -163,9 +174,12 @@ async function createRegistration(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { 'access-control-allow-origin': env.PUBLIC_ORIGIN, 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type' } });
+    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { 'access-control-allow-origin': env.PUBLIC_ORIGIN, 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type,authorization,x-maxim-portal-token' } });
     let response;
-    if (request.method === 'POST' && url.pathname === '/api/corp/maxim/go-links') response = await createGoToken(request, env);
+    const corporateApi = url.pathname.startsWith('/api/corp/maxim/');
+    const authError = corporateApi ? authFailure(request, env) : null;
+    if (authError) response = authError;
+    else if (request.method === 'POST' && url.pathname === '/api/corp/maxim/go-links') response = await createGoToken(request, env);
     else if (request.method === 'GET' && url.pathname.startsWith('/api/go/')) response = await resolveGoToken(url.pathname.split('/').pop(), env);
     else if (request.method === 'POST' && /^\/api\/corp\/maxim\/renewals\/[^/]+\/skip$/.test(url.pathname)) response = await skipRenewal(request, env, url.pathname.split('/')[5]);
     else if (request.method === 'GET' && /^\/api\/corp\/maxim\/people\/[^/]+\/history$/.test(url.pathname)) response = await history(env, url.pathname.split('/')[5]);

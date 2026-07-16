@@ -1,6 +1,7 @@
 name = "910cpr-maxim-portal"
 main = "src/index.js"
 compatibility_date = "2026-07-16"
+workers_dev = false
 
 [[d1_databases]]
 binding = "DB"
@@ -10,3 +11,19 @@ database_id = "REPLACE_WITH_D1_DATABASE_ID"
 [vars]
 PUBLIC_ORIGIN = "https://www.910cpr.com"
 PORTAL_PATH = "/corp/maxim.html"
+REQUIRE_MAXIM_PORTAL_AUTH = "true"
+
+[env.integration]
+name = "910cpr-maxim-portal-integration"
+workers_dev = true
+
+[[env.integration.d1_databases]]
+binding = "DB"
+database_name = "910cpr-maxim-portal-integration"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[env.integration.vars]
+PUBLIC_ORIGIN = "https://www.910cpr.com"
+PORTAL_PATH = "/corp/maxim.html"
+REQUIRE_MAXIM_PORTAL_AUTH = "true"
+MAXIM_PORTAL_API_BASE = "https://910cpr-maxim-portal-integration.REPLACE_WITH_WORKERS_SUBDOMAIN.workers.dev/api/corp/maxim"

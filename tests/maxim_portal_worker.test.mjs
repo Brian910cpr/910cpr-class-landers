@@ -82,12 +82,13 @@ class Store {
   }
 }
 
-function env(store = new Store(), scheduleFuture = schedule) {
+function env(store = new Store(), scheduleFuture = schedule, overrides = {}) {
   return {
     STORE: store,
     SCHEDULE_FUTURE_JSON: scheduleFuture,
     PUBLIC_ORIGIN: 'https://www.910cpr.com',
-    PORTAL_PATH: '/corp/maxim.html'
+    PORTAL_PATH: '/corp/maxim.html',
+    ...overrides
   };
 }
 
@@ -117,6 +118,14 @@ async function postRegistration(environment, payload) {
   return worker.fetch(new Request('https://www.910cpr.com/api/corp/maxim/registrations', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(payload)
+  }), environment);
+}
+
+async function postRegistrationWithHeaders(environment, payload, headers) {
+  return worker.fetch(new Request('https://www.910cpr.com/api/corp/maxim/registrations', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', ...headers },
     body: JSON.stringify(payload)
   }), environment);
 }
@@ -188,4 +197,18 @@ test('registration survives API reread with same store', async () => {
   const firstRead = await readRegistrations(environment);
   const secondRead = await readRegistrations(environment);
   assert.deepEqual(secondRead.registrations, firstRead.registrations);
+});
+
+test('deployed auth guard rejects unauthenticated corporate writes', async () => {
+  const environment = env(new Store(), schedule, {
+    REQUIRE_MAXIM_PORTAL_AUTH: 'true',
+    MAXIM_PORTAL_AUTH_TOKEN: 'test-secret'
+  });
+  const rejected = await postRegistration(environment, registrationPayload());
+  assert.equal(rejected.status, 401);
+
+  const accepted = await postRegistrationWithHeaders(environment, registrationPayload(), {
+    authorization: 'Bearer test-secret'
+  });
+  assert.equal(accepted.status, 200);
 });
