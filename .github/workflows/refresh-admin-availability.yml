@@ -11,6 +11,9 @@ on:
       - 'scripts/build_schedule_future.py'
       - 'scripts/export_calendar_snapshots.py'
       - 'scripts/publish_admin_availability.py'
+      - 'scripts/publish_admin_reference_data.py'
+      - 'data/config/people_catalog.json'
+      - 'data/config/location_resource_map.json'
 
 permissions:
   contents: write
@@ -46,6 +49,9 @@ jobs:
       - name: Publish sanitized dashboard availability feed
         run: python scripts/publish_admin_availability.py
 
+      - name: Publish instructor and location reference feeds
+        run: python scripts/publish_admin_reference_data.py
+
       - name: Commit changed dashboard data
         run: |
           git config user.name "910CPR Availability Bot"
@@ -59,11 +65,13 @@ jobs:
             data/audit/calendar_snapshot_export_report.md \
             docs/data/schedule_future.json \
             docs/data/admin_availability.json \
+            docs/data/admin_people.json \
+            docs/data/admin_locations.json \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json
           if git diff --cached --quiet; then
-            echo "No schedule or availability changes to commit."
+            echo "No schedule or admin reference changes to commit."
             exit 0
           fi
-          git commit -m "Refresh admin schedule and availability"
+          git commit -m "Refresh admin schedule and reference data"
           git push
