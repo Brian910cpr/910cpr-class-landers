@@ -1,0 +1,42 @@
+name: Refresh admin availability
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install python-dateutil
+
+      - name: Refresh read-only calendar snapshots
+        run: python scripts/export_calendar_snapshots.py
+
+      - name: Publish sanitized dashboard feed
+        run: python scripts/publish_admin_availability.py
+
+      - name: Commit changed availability data
+        run: |
+          git config user.name "910CPR Availability Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/runtime/calendar_snapshots data/audit/calendar_snapshot_export_summary.json data/audit/calendar_snapshot_export_report.md docs/data/admin_availability.json
+          if git diff --cached --quiet; then
+            echo "No availability changes to commit."
+            exit 0
+          fi
+          git commit -m "Refresh admin availability snapshot"
+          git push
