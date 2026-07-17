@@ -4,6 +4,13 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '*/30 * * * *'
+  push:
+    paths:
+      - '.github/workflows/refresh-admin-availability.yml'
+      - 'scripts/build_sessions_current.py'
+      - 'scripts/build_schedule_future.py'
+      - 'scripts/export_calendar_snapshots.py'
+      - 'scripts/publish_admin_availability.py'
 
 permissions:
   contents: write
