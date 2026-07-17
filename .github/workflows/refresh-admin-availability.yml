@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: refresh-admin-availability
+  cancel-in-progress: true
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -21,22 +25,38 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install python-dateutil
+        run: pip install python-dateutil openpyxl
+
+      - name: Refresh Enrollware seated and committed class source
+        run: python scripts/build_sessions_current.py --source enrollware_ical
+
+      - name: Rebuild future seated schedule
+        run: python scripts/build_schedule_future.py
 
       - name: Refresh read-only calendar snapshots
         run: python scripts/export_calendar_snapshots.py
 
-      - name: Publish sanitized dashboard feed
+      - name: Publish sanitized dashboard availability feed
         run: python scripts/publish_admin_availability.py
 
-      - name: Commit changed availability data
+      - name: Commit changed dashboard data
         run: |
           git config user.name "910CPR Availability Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/runtime/calendar_snapshots data/audit/calendar_snapshot_export_summary.json data/audit/calendar_snapshot_export_report.md docs/data/admin_availability.json
+          git add \
+            data/sessions_current.json \
+            data/runtime/calendar_snapshots \
+            data/audit/enrollware_ical_import_summary.json \
+            data/audit/enrollware_ical_import_report.md \
+            data/audit/calendar_snapshot_export_summary.json \
+            data/audit/calendar_snapshot_export_report.md \
+            docs/data/schedule_future.json \
+            docs/data/admin_availability.json \
+            debug/status/build_sessions_current.json \
+            debug/status/build_schedule_future.json
           if git diff --cached --quiet; then
-            echo "No availability changes to commit."
+            echo "No schedule or availability changes to commit."
             exit 0
           fi
-          git commit -m "Refresh admin availability snapshot"
+          git commit -m "Refresh admin schedule and availability"
           git push
