@@ -609,7 +609,8 @@
           "clarification": "Red Cross BLS classroom option.",
           "delivery_mode": "in-person",
           "variant": "bls",
-          "image_url": "/images/ARCLTP.png",
+          "image_url": "/images/arc-in-person-training.png",
+          "image_fit": "cover",
           "image_alt": "American Red Cross Basic Life Support course option",
           "delivery_badge": "IN-PERSON"
         },
@@ -620,7 +621,8 @@
           "clarification": "Red Cross Adult CPR/AED skills option.",
           "delivery_mode": "skills-session",
           "variant": "cpr-aed",
-          "image_url": "/images/ARCLTP.png",
+          "image_url": "/images/arc-blended-training.png",
+          "image_fit": "cover",
           "image_alt": "American Red Cross Adult CPR AED course option",
           "delivery_badge": "ONLINE + SKILLS"
         },
@@ -631,7 +633,8 @@
           "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.",
           "delivery_mode": "in-person",
           "variant": "first-aid-cpr-aed",
-          "image_url": "/images/ARCLTP.png",
+          "image_url": "/images/arc-in-person-training.png",
+          "image_fit": "cover",
           "image_alt": "American Red Cross First Aid CPR AED course option",
           "delivery_badge": "IN-PERSON"
         }
