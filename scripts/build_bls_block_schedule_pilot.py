@@ -806,7 +806,13 @@ def render_html(payload: dict[str, Any]) -> str:
     ]
     unsupported_options_json = json.dumps(unsupported_options, ensure_ascii=False)
     counts = payload["counts"]
-    first_course = course_options[0]["courseId"] if course_options else ""
+    configured_default_course = str(page_config.get("default_course_id") or "").strip()
+    available_course_ids = {str(option.get("courseId") or "") for option in course_options}
+    first_course = (
+        configured_default_course
+        if configured_default_course in available_course_ids
+        else (course_options[0]["courseId"] if course_options else "")
+    )
     title = html.escape(str(page_config.get("title") or "Block Schedule"))
     subtitle = html.escape(str(page_config.get("subtitle") or ""))
     intro = html.escape(str(page_config.get("intro") or "Select a course, date, and start time."))
