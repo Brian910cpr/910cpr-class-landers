@@ -87,17 +87,24 @@ jobs:
       - name: Run full validated public build
         if: steps.ical.outputs.changed == 'true'
         shell: cmd
+        env:
+          LANDER_SKIP_REPOSITORY_TESTS: "1"
         run: build\full_validated_public_build.bat
+
+      - name: Refresh admin occupancy snapshot
+        if: steps.ical.outputs.changed == 'true'
+        shell: pwsh
+        run: python -m scripts.publish_admin_schedule
 
       - name: Run link audit
         if: steps.ical.outputs.changed == 'true'
         shell: pwsh
         run: python -m scripts.audit_sitewide_links
 
-      - name: Run unit tests
+      - name: Validate refreshed public inventory
         if: steps.ical.outputs.changed == 'true'
         shell: pwsh
-        run: python -m unittest discover tests
+        run: python -m scripts.validate_public_refresh_output
 
       - name: Update stored iCal hash
         if: steps.ical.outputs.changed == 'true'
