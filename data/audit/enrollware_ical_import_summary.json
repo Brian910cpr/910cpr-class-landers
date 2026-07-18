@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-18T08:39:31.497677-04:00",
+  "generated_at": "2026-07-18T08:51:11.246747-04:00",
   "source": "enrollware_ical",
   "ical_events_read": 446,
   "public_sessions_created": 446,
@@ -11,5 +11,9 @@
   "classes_removed_compared_with_prior_source": 0,
   "stale_zapier_sheet_sessions_excluded": 0,
   "stale_manual_class_report_sessions_excluded": 0,
+  "student_snapshot_classes": 17,
+  "student_snapshot_matches": 17,
+  "seated_students_matched": 19,
+  "covered_classes_without_students": 50,
   "removed_examples": []
 }
