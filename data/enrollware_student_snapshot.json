@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
-  "source": "student_report_latest.xlsx",
-  "source_modified_at": "2026-07-18T08:40:17.093250-04:00",
+  "source": "student_report_latest.xlsx + manual class corrections",
+  "source_modified_at": "2026-07-18T10:21:57.1921783-04:00",
   "privacy": "Class-level counts only; student PII intentionally excluded.",
   "counts": {
-    "student_rows": 19,
-    "classes_with_students": 17
+    "student_rows": 20,
+    "classes_with_students": 18
   },
   "class_date_coverage": {
     "start": "2026-07-18",
@@ -130,6 +130,25 @@
       "seated_count": 1,
       "status_counts": {
         "Pending": 1
+      }
+    },
+    {
+      "class_id": null,
+      "class_ids": [],
+      "start_at": "2026-07-23T08:30:00-04:00",
+      "course_key": "aha_bls_heartcode",
+      "course_name": "AHA BLS HeartCode®",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+      "instructor_name": "Brian Ennis",
+      "seated_count": 1,
+      "status_counts": {
+        "Manual correction": 1
+      },
+      "manual_correction": {
+        "recorded_at": "2026-07-18T10:21:57.1921783-04:00",
+        "replaces_session_id": "12776702",
+        "previous_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
+        "reason": "Class changed in Enrollware; targeted correction supplied by Brian."
       }
     },
     {
