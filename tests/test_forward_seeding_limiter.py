@@ -16,9 +16,9 @@ class ForwardSeedingLimiterTraceTest(unittest.TestCase):
         self.assertIn("materialized", self.summary["limiter"]["specific_behavior"])
         self.assertEqual("resolved_after_rrule_expansion", self.summary["first_divergence"]["file"])
 
-    def test_sixty_day_export_reaches_august_and_rows_now_reach_august(self) -> None:
+    def test_ninety_day_export_matches_brian_planning_horizon(self) -> None:
         path_b = self.summary["path_b_live_snapshot"]
-        self.assertEqual(60, path_b["runtime_snapshot_declared_days"])
+        self.assertEqual(90, path_b["runtime_snapshot_declared_days"])
         self.assertIn("2026-08", path_b["runtime_snapshot_declared_end"])
         self.assertGreaterEqual(path_b["runtime_event_date_range"]["end"], "2026-08-01")
         self.assertGreater(path_b["runtime_expanded_rrule_event_count"], 0)

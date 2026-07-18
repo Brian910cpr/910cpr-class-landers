@@ -12,6 +12,7 @@ on:
       - 'scripts/export_calendar_snapshots.py'
       - 'scripts/build_live_availability_snapshot.py'
       - 'scripts/publish_admin_availability.py'
+      - 'scripts/publish_admin_schedule.py'
       - 'scripts/publish_admin_reference_data.py'
       - 'scripts/block_start_time_selector.py'
       - 'scripts/build_bls_block_schedule_pilot.py'
@@ -43,19 +44,22 @@ jobs:
         run: pip install python-dateutil openpyxl
 
       - name: Refresh Enrollware seated and committed class source
-        run: python scripts/build_sessions_current.py --source enrollware_ical
+        run: python -m scripts.build_sessions_current --source enrollware_ical
 
       - name: Rebuild future seated schedule
-        run: python scripts/build_schedule_future.py
+        run: python -m scripts.build_schedule_future
+
+      - name: Publish complete admin occupancy schedule
+        run: python -m scripts.publish_admin_schedule
 
       - name: Refresh read-only calendar snapshots
-        run: python scripts/export_calendar_snapshots.py
+        run: python -m scripts.export_calendar_snapshots
 
       - name: Build current live availability from calendar snapshots
         run: python -m scripts.build_live_availability_snapshot
 
       - name: Publish sanitized dashboard availability feed
-        run: python scripts/publish_admin_availability.py
+        run: python -m scripts.publish_admin_availability
 
       - name: Rebuild selector availability feeds without rewriting public pages
         run: |
@@ -86,10 +90,10 @@ jobs:
           PY
 
       - name: Publish instructor and location reference feeds
-        run: python scripts/publish_admin_reference_data.py
+        run: python -m scripts.publish_admin_reference_data
 
       - name: Ensure dashboard refresh controls are present
-        run: python scripts/ensure_dashboard_refresh_controls.py
+        run: python -m scripts.ensure_dashboard_refresh_controls
 
       - name: Commit changed dashboard data
         run: |
@@ -105,6 +109,7 @@ jobs:
             data/audit/live_availability_snapshot_preview.json \
             data/audit/live_availability_snapshot_report.md \
             docs/data/schedule_future.json \
+            docs/data/admin_schedule.json \
             docs/data/admin_availability.json \
             docs/data/admin_people.json \
             docs/data/admin_locations.json \

@@ -24,7 +24,10 @@ AUDIT_DIR = ROOT / "data" / "audit"
 SUMMARY_PATH = AUDIT_DIR / "calendar_snapshot_export_summary.json"
 REPORT_PATH = AUDIT_DIR / "calendar_snapshot_export_report.md"
 
-EXPORT_DAYS = 60
+# This must cover the longest active inverse-blocking source horizon. Brian's
+# production planning horizon is 90 days; a shorter export silently truncates
+# both calendar blocking and the public selector even when its config says 90.
+EXPORT_DAYS = 90
 UNKNOWN = "UNKNOWN"
 LOCAL_TZ = ZoneInfo("America/New_York")
 
