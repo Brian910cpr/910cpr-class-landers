@@ -579,6 +579,13 @@
       "shared_cooldown_days_after_booking": 6,
       "shared_cooldown_minimum_enrollment": 1,
       "default_course_id": "372258",
+      "header_credential": {
+        "image_url": "/images/ARCLTP.png",
+        "image_alt": "American Red Cross Licensed Training Provider",
+        "eyebrow": "Proudly recognized",
+        "title": "American Red Cross Licensed Training Provider",
+        "body": "910CPR is an American Red Cross Licensed Training Provider serving Wilmington and Coastal North Carolina."
+      },
       "show_all_label": "Show all Red Cross course options",
       "compare_mode": {
         "enabled": false,

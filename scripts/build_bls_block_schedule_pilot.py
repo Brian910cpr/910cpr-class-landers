@@ -200,6 +200,50 @@ def css() -> str:
     .back-link:focus {
       text-decoration: underline;
     }
+    .page-heading-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+      gap: 24px;
+      align-items: center;
+    }
+    .header-credential {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 2px solid #d71920;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #fff 0%, #fff7f7 100%);
+      box-shadow: 0 10px 24px rgba(120, 18, 22, .12);
+    }
+    .header-credential img {
+      display: block;
+      width: 92px;
+      max-height: 108px;
+      object-fit: contain;
+    }
+    .header-credential strong {
+      display: block;
+      color: #9d1118;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+    .header-credential p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.35;
+    }
+    .header-credential-eyebrow {
+      display: block;
+      margin-bottom: 3px;
+      color: #d71920;
+      font-size: .7rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
     .family-help {
       border: 1px solid var(--line);
       border-radius: 10px;
@@ -598,6 +642,9 @@ def css() -> str:
       background: var(--band);
     }
     @media (max-width: 820px) {
+      .page-heading-row { grid-template-columns: 1fr; }
+      .header-credential { grid-template-columns: 76px minmax(0, 1fr); }
+      .header-credential img { width: 76px; max-height: 92px; }
       .selector-grid { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
@@ -847,6 +894,23 @@ def render_html(payload: dict[str, Any]) -> str:
     </section>"""
     back_href = html.escape(str(page_config.get("back_link_href") or "/index.html#courses"), quote=True)
     back_label = html.escape(str(page_config.get("back_link_label") or "Back to All Courses"))
+    header_credential = page_config.get("header_credential")
+    header_credential_html = ""
+    if isinstance(header_credential, dict) and header_credential.get("image_url") and header_credential.get("title"):
+        credential_image = html.escape(str(header_credential["image_url"]), quote=True)
+        credential_alt = html.escape(str(header_credential.get("image_alt") or header_credential["title"]), quote=True)
+        credential_eyebrow = html.escape(str(header_credential.get("eyebrow") or "Credential"))
+        credential_title = html.escape(str(header_credential["title"]))
+        credential_body = html.escape(str(header_credential.get("body") or ""))
+        header_credential_html = f"""
+      <aside class="header-credential" aria-label="{credential_title}">
+        <img src="{credential_image}" alt="{credential_alt}" loading="eager">
+        <div>
+          <span class="header-credential-eyebrow">{credential_eyebrow}</span>
+          <strong>{credential_title}</strong>
+          {f'<p>{credential_body}</p>' if credential_body else ''}
+        </div>
+      </aside>"""
     delivery_help_items = page_config.get("delivery_help")
     if not isinstance(delivery_help_items, list) or not delivery_help_items:
         seen_delivery_modes = []
@@ -935,9 +999,14 @@ def render_html(payload: dict[str, Any]) -> str:
 <body>
   <header>
     <a class="back-link" href="{back_href}">← {back_label}</a>
-    <h1>{title}</h1>
-    {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
-    <p class="muted">{intro}</p>
+    <div class="page-heading-row">
+      <div>
+        <h1>{title}</h1>
+        {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
+        <p class="muted">{intro}</p>
+      </div>
+      {header_credential_html}
+    </div>
     {delivery_help_html}
   </header>
   <main>

@@ -154,6 +154,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertEqual(["248288", "372258", "369209"], config["allowed_course_ids"])
         self.assertEqual(6, config["shared_cooldown_days_after_booking"])
         self.assertEqual("372258", config["default_course_id"])
+        self.assertEqual("/images/ARCLTP.png", config["header_credential"]["image_url"])
+        self.assertEqual("American Red Cross Licensed Training Provider", config["header_credential"]["title"])
         self.assertIs(config["include_seated_classes"], True)
 
     def test_uses_live_availability_when_present(self):
