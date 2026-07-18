@@ -802,6 +802,24 @@ def matching_same_day_anchor(
     return min(matches, key=lambda item: item["startTime"]) if matches else None
 
 
+def matching_shared_cooldown_anchor(
+    anchors: list[dict[str, Any]],
+    *,
+    day: date,
+    cooldown_days: int,
+) -> dict[str, Any] | None:
+    """Return a booked board course that suppresses dynamic offers through day + cooldown_days."""
+    if cooldown_days < 0:
+        return None
+    matches = []
+    for anchor in anchors:
+        anchor_day = date.fromisoformat(anchor["date"])
+        days_after_booking = (day - anchor_day).days
+        if 0 <= days_after_booking <= cooldown_days:
+            matches.append(anchor)
+    return max(matches, key=lambda item: (item["date"], item["startTime"])) if matches else None
+
+
 def seated_class_selector_offers(
     *,
     schedule_future_payload: Any,
@@ -962,6 +980,13 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         minimum_enrollment=anchor_minimum_enrollment,
         location_resource_map=loaded["location_resource_map"],
     ) if page_config.get("consolidate_after_seated_family_anchor") is True else []
+    shared_cooldown_days = int(page_config.get("shared_cooldown_days_after_booking") or 0)
+    shared_cooldown_anchors = seated_family_anchors(
+        schedule_future_payload=loaded.get("schedule_future"),
+        selected_course_ids=set(allowed_course_ids),
+        minimum_enrollment=max(1, int(page_config.get("shared_cooldown_minimum_enrollment") or 1)),
+        location_resource_map=loaded["location_resource_map"],
+    ) if shared_cooldown_days > 0 else []
 
     selected_courses: list[dict[str, Any]] = []
     config_course_options = {
@@ -1051,6 +1076,13 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 )
                 if same_day_anchor:
                     reasons.append("same_day_family_anchor_already_seated")
+                shared_cooldown_anchor = matching_shared_cooldown_anchor(
+                    shared_cooldown_anchors,
+                    day=start.date(),
+                    cooldown_days=shared_cooldown_days,
+                )
+                if shared_cooldown_anchor:
+                    reasons.append("shared_board_course_booked_within_cooldown")
                 appointment_day_id, container_id, url, url_blocker = find_url(
                     window,
                     start,
@@ -1075,6 +1107,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                         "reasons": reasons + public_reasons,
                         "conflictReason": conflict_reason,
                         "sameDayFamilyAnchor": same_day_anchor,
+                        "sharedCooldownAnchor": shared_cooldown_anchor,
                     })
                     continue
                 offers.append({

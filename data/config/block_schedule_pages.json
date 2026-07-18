@@ -571,18 +571,24 @@
       "family": "ARC",
       "certifying_body": "ARC",
       "title": "Red Cross CPR & BLS Classes",
-      "meta_description": "American Red Cross options are informational until public instant scheduling is validated.",
-      "intro": "Review Red Cross options and contact us for scheduling help.",
-      "output_path": "docs/arc-schedule.html",
+      "meta_description": "Choose American Red Cross BLS, CPR/AED, or First Aid/CPR/AED, then select an available Wilmington date and time.",
+      "intro": "Choose the Red Cross course your requirement names, then select any time with enough room for the complete class.",
+      "output_path": "docs/arc.html",
+      "include_seated_classes": true,
+      "seated_class_minimum_enrollment": 1,
+      "shared_cooldown_days_after_booking": 6,
+      "shared_cooldown_minimum_enrollment": 1,
+      "show_all_label": "Show all Red Cross course options",
       "compare_mode": {
-        "enabled": true,
-        "label": "Need Red Cross ASAP? Show all Red Cross options",
+        "enabled": false,
+        "label": "All Red Cross options",
         "groups": {
           "ARC": {
             "label": "All Red Cross options",
             "course_ids": [
               "248288",
-              "248287"
+              "372258",
+              "369209"
             ]
           }
         }
@@ -600,15 +606,26 @@
           "delivery_badge": "IN-PERSON"
         },
         {
-          "course_id": "248287",
-          "display_label": "American Red Cross Basic Life Support - Blended Learning",
-          "icon_label": "BL",
-          "clarification": "Red Cross BLS blended learning option.",
-          "delivery_mode": "blended",
-          "variant": "bls-blended",
+          "course_id": "372258",
+          "display_label": "American Red Cross Adult CPR/AED",
+          "icon_label": "CPR",
+          "clarification": "Red Cross Adult CPR/AED skills option.",
+          "delivery_mode": "skills-session",
+          "variant": "cpr-aed",
           "image_url": "/images/ARCLTP.png",
-          "image_alt": "American Red Cross Basic Life Support - Blended Learning course option",
-          "delivery_badge": "BLENDED"
+          "image_alt": "American Red Cross Adult CPR AED course option",
+          "delivery_badge": "ONLINE + SKILLS"
+        },
+        {
+          "course_id": "369209",
+          "display_label": "American Red Cross First Aid/CPR/AED",
+          "icon_label": "FA",
+          "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.",
+          "delivery_mode": "in-person",
+          "variant": "first-aid-cpr-aed",
+          "image_url": "/images/ARCLTP.png",
+          "image_alt": "American Red Cross First Aid CPR AED course option",
+          "delivery_badge": "IN-PERSON"
         }
       ],
       "back_link_label": "Back to All Courses",

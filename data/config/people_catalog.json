@@ -828,16 +828,26 @@
           "source_row": 16,
           "observed_value": "✓"
         },
-        {
-          "certification_code": "HSI_INSTRUCTOR",
+      {
+        "certification_code": "HSI_INSTRUCTOR",
           "provider": "HSI",
           "family": "HSI",
           "expiration_date": "UNKNOWN",
           "source": "Brian confirmed in Codex thread",
           "source_column": "manual_confirmation",
           "source_row": "UNKNOWN",
-          "observed_value": "Brian is an HSI Instructor"
-        }
+        "observed_value": "Brian is an HSI Instructor"
+      },
+      {
+        "certification_code": "ARC_BLS_INSTRUCTOR",
+        "provider": "ARC",
+        "family": "ARC",
+        "expiration_date": "UNKNOWN",
+        "source": "Brian confirmed ARC public scheduling in Codex thread",
+        "source_column": "manual_confirmation",
+        "source_row": "UNKNOWN",
+        "observed_value": "Brian approved recurring ARC BLS, CPR/AED, and First Aid/CPR/AED offerings"
+      }
       ],
       "source": {
         "workbook": "D:\\Users\\ten77\\Downloads\\910CPR Instructor Roster - Allied 100 Transfer.xlsx",
