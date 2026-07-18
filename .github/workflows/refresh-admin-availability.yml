@@ -10,10 +10,14 @@ on:
       - 'scripts/build_sessions_current.py'
       - 'scripts/build_schedule_future.py'
       - 'scripts/export_calendar_snapshots.py'
+      - 'scripts/build_live_availability_snapshot.py'
       - 'scripts/publish_admin_availability.py'
       - 'scripts/publish_admin_reference_data.py'
+      - 'scripts/block_start_time_selector.py'
+      - 'scripts/build_bls_block_schedule_pilot.py'
       - 'data/config/people_catalog.json'
       - 'data/config/location_resource_map.json'
+      - 'data/config/block_schedule_pages.json'
 
 permissions:
   contents: write
@@ -46,8 +50,34 @@ jobs:
       - name: Refresh read-only calendar snapshots
         run: python scripts/export_calendar_snapshots.py
 
+      - name: Build current live availability from calendar snapshots
+        run: python -m scripts.build_live_availability_snapshot
+
       - name: Publish sanitized dashboard availability feed
         run: python scripts/publish_admin_availability.py
+
+      - name: Rebuild selector availability feeds without rewriting public pages
+        run: |
+          python - <<'PY'
+          import json
+          from scripts.block_start_time_selector import build_block_schedule_page, load_block_schedule_page_configs
+          from scripts.build_bls_block_schedule_pilot import (
+              apply_final_live_availability_guard,
+              public_selector_availability_payload,
+              selector_availability_path,
+          )
+
+          configs = load_block_schedule_page_configs()
+          for page_key, page_config in configs.items():
+              payload = apply_final_live_availability_guard(build_block_schedule_page(page_config))
+              output = selector_availability_path(page_key)
+              output.parent.mkdir(parents=True, exist_ok=True)
+              output.write_text(
+                  json.dumps(public_selector_availability_payload(payload), separators=(",", ":"), ensure_ascii=False) + "\n",
+                  encoding="utf-8",
+              )
+              print(f"Published {page_key}: {payload.get('counts', {}).get('publicSelectableStartTimeCount', 0)} selectable starts -> {output}")
+          PY
 
       - name: Publish instructor and location reference feeds
         run: python scripts/publish_admin_reference_data.py
@@ -63,15 +93,18 @@ jobs:
             data/audit/enrollware_ical_import_report.md \
             data/audit/calendar_snapshot_export_summary.json \
             data/audit/calendar_snapshot_export_report.md \
+            data/audit/live_availability_snapshot_preview.json \
+            data/audit/live_availability_snapshot_report.md \
             docs/data/schedule_future.json \
             docs/data/admin_availability.json \
             docs/data/admin_people.json \
             docs/data/admin_locations.json \
+            docs/data/block-selector-availability \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json
           if git diff --cached --quiet; then
-            echo "No schedule or admin reference changes to commit."
+            echo "No schedule, availability, selector, or admin reference changes to commit."
             exit 0
           fi
-          git commit -m "Refresh admin schedule and reference data"
+          git commit -m "Refresh admin schedule and live availability feeds"
           git push
