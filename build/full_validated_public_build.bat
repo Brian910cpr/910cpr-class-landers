@@ -66,7 +66,13 @@ python -m scripts.ensure_analytics_tags || goto :fail
 
 echo.
 echo === Run unit tests ===
+if /I "%LANDER_SKIP_REPOSITORY_TESTS%"=="1" (
+    echo Repository-wide tests are deferred to the caller.
+    goto :tests_complete
+)
 python -m unittest discover tests || goto :fail
+
+:tests_complete
 
 echo.
 echo ========================================
