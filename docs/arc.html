@@ -1,216 +1,1299 @@
-<!-- BUILD_CODE: 2026-07-18 17:15 | scripts/build_slug_hubs.py | slug hub rebuild from docs/data/schedule_future.json -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta name="build-date" content="2026-07-18T17:15:53-04:00">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>American Red Cross CPR Classes | 910CPR</title>
-<meta name="description" content="American Red Cross BLS, CPR/AED, and First Aid/CPR/AED options from 910CPR for students whose employer, school, or program requires ARC certification.">
-<meta name="robots" content="index,follow">
-<link rel="canonical" href="https://www.910cpr.com/arc.html">
-<link rel="icon" type="image/png" href="images/logo.png">
-<link rel="shortcut icon" href="images/logo.png">
-<link rel="apple-touch-icon" href="images/logo.png">
-<link rel="stylesheet" href="css/lander.css">
-<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH');
-</script>
-<!-- End Google Tag Manager -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Red Cross CPR &amp; BLS Classes | 910CPR</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18212c;
+      --muted: #647285;
+      --line: #d8dee8;
+      --surface: #ffffff;
+      --band: #f5f7fa;
+      --accent: #0a66a5;
+      --accent-dark: #074f80;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--surface);
+      line-height: 1.45;
+    }
+    header, main { max-width: 1120px; margin: 0 auto; padding: 24px; }
+    header { border-bottom: 1px solid var(--line); }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 1.25rem; letter-spacing: 0; }
+    h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: 0; }
+    p { margin: 0 0 12px; }
+    .muted { color: var(--muted); }
+    .page-subtitle {
+      margin: 0 0 8px;
+      color: var(--accent-dark);
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+      color: var(--accent-dark);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .back-link:hover,
+    .back-link:focus {
+      text-decoration: underline;
+    }
+    .family-help {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--band);
+      padding: 14px;
+      margin: 14px 0 0;
+    }
+    .family-help-title {
+      margin-bottom: 8px;
+      font-weight: 800;
+      color: var(--accent-dark);
+    }
+    .delivery-help-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .delivery-help-item {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+    .delivery-help-label {
+      font-size: .78rem;
+      font-weight: 900;
+      color: var(--accent-dark);
+      letter-spacing: .02em;
+    }
+    .delivery-help-copy {
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.35;
+    }
+    .page-context {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 18px;
+    }
+    .page-note {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: var(--band);
+      padding: 14px;
+    }
+    .page-note h2 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+    .page-note ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+    .selector-shell {
+      display: grid;
+      gap: 16px;
+    }
+    .course-selector-panel {
+      display: grid;
+      gap: 14px;
+    }
+    .course-selector-top {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .selector-grid {
+      display: grid;
+      grid-template-columns: minmax(340px, 1.35fr) minmax(210px, .8fr) minmax(280px, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 16px;
+      min-width: 0;
+    }
+    .button-list { display: grid; gap: 8px; }
+    .choice-list {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(260px, 1fr);
+      gap: 12px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: x proximity;
+      padding: 0 0 10px;
+      margin-bottom: 0;
+    }
+    .course-rail {
+      position: relative;
+      min-width: 0;
+      padding: 0 52px;
+    }
+    .course-rail:not(.has-overflow) .rail-arrow {
+      display: none;
+    }
+    .rail-arrow {
+      position: absolute;
+      top: 56px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      min-height: 52px;
+      padding: 0;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      border: 1px solid rgba(10, 102, 165, .22);
+      background: rgba(255, 255, 255, .95);
+      color: var(--accent-dark);
+      box-shadow: 0 8px 24px rgba(24, 33, 44, .16);
+      font-size: 1.5rem;
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+    }
+    .rail-arrow.previous {
+      left: 4px;
+    }
+    .rail-arrow.next {
+      right: 4px;
+    }
+    .rail-arrow:disabled {
+      opacity: .32;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .option-tools {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .disclosure-toggle {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .disclosure-toggle input {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+    }
+    .compare-toggle {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .compare-toggle input {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+    }
+    button, .register-link {
+      min-height: 42px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      padding: 9px 11px;
+      cursor: pointer;
+    }
+    button[aria-pressed="true"] {
+      border-color: var(--accent);
+      box-shadow: inset 3px 0 0 var(--accent);
+      background: #eef7fc;
+    }
+    .course-card {
+      display: grid;
+      grid-template-rows: 118px auto;
+      gap: 12px;
+      width: 100%;
+      padding: 0;
+      min-height: 258px;
+      align-content: start;
+      scroll-snap-align: start;
+      overflow: hidden;
+    }
+    .course-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 118px;
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(135deg, #e8f2f8, #f8fbfd);
+      overflow: hidden;
+    }
+    .course-icon img {
+      display: block;
+      width: 100%;
+      height: 118px;
+      object-fit: contain;
+      object-position: center;
+      padding: 6px;
+    }
+    .course-icon-fallback {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: #e8f2f8;
+      color: var(--accent-dark);
+      font-weight: 800;
+      font-size: .92rem;
+    }
+    .course-copy {
+      display: grid;
+      gap: 6px;
+      padding: 0 12px 12px;
+    }
+    .course-title { font-weight: 700; }
+    .course-help {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.3;
+    }
+    .course-delivery {
+      color: var(--accent-dark);
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    .course-details {
+      color: var(--muted);
+      font-size: .84rem;
+      padding: 0 12px 12px;
+    }
+    .course-details summary {
+      cursor: pointer;
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+    .course-details-body {
+      display: grid;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .course-details-body ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .course-page-link {
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+    .month-stack { display: grid; gap: 14px; }
+    .month-nav {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .month-nav button {
+      min-height: 40px;
+      padding: 8px 11px;
+      text-align: center;
+    }
+    .month-nav-title {
+      font-weight: 800;
+      text-align: center;
+    }
+    .month-title {
+      margin: 0 0 8px;
+      font-size: .95rem;
+      font-weight: 700;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+    }
+    .weekday, .calendar-pad {
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: .75rem;
+    }
+    .day-button {
+      min-height: 34px;
+      padding: 0;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+    }
+    .day-button.is-past,
+    .start-grid button.is-past {
+      color: #6b7280;
+      border-color: #d1d5db;
+      background: #f3f4f6;
+      cursor: not-allowed;
+      opacity: .72;
+    }
+    .day-button.is-past[aria-pressed="true"],
+    .start-grid button.is-past[aria-pressed="true"] {
+      border-color: #d1d5db;
+      box-shadow: none;
+      background: #f3f4f6;
+    }
+    .course-list { display: grid; gap: 12px; }
+    .start-group {
+      display: grid;
+      gap: 8px;
+    }
+    .start-group + .start-group { margin-top: 12px; }
+    .start-group-label {
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .start-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .start-grid button {
+      min-width: 76px;
+      text-align: center;
+      justify-content: center;
+    }
+    .course {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--band);
+    }
+    .selected-summary {
+      display: grid;
+      gap: 6px;
+    }
+    .selected-summary-row {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .course-meta {
+      color: var(--muted);
+      font-size: .92rem;
+      margin: 3px 0 12px;
+    }
+    .delivery-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--accent-dark);
+      background: #eef7fc;
+      font-size: .78rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .register-note {
+      color: var(--muted);
+      font-size: .88rem;
+      margin-bottom: 12px;
+    }
+    .register-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .register-link:hover { background: var(--accent-dark); }
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      color: var(--muted);
+      background: var(--band);
+    }
+    @media (max-width: 820px) {
+      .selector-grid { grid-template-columns: 1fr; }
+      .selector-grid > *,
+      .selector-shell > * { min-width: 0; }
+      header, main { padding: 18px; }
+      .panel { padding: 14px; }
+      .course-selector-top {
+        display: grid;
+        gap: 12px;
+      }
+      .option-tools {
+        display: grid;
+        gap: 10px;
+      }
+      .choice-list {
+        grid-auto-columns: minmax(238px, 82%);
+        padding-left: 0;
+        padding-right: 0;
+        scroll-snap-type: x mandatory;
+      }
+      .course-rail {
+        padding-left: 44px;
+        padding-right: 44px;
+      }
+      .rail-arrow {
+        width: 38px;
+        min-height: 48px;
+        top: 58px;
+      }
+      .course-card {
+        min-height: 252px;
+      }
+      .delivery-help-list {
+        grid-template-columns: 1fr;
+      }
+      .course-help {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .month-stack { gap: 0; }
+      .month-nav { display: flex; }
+      .month:not([data-mobile-visible="true"]) { display: none; }
+      .calendar-grid { gap: 6px; }
+      .weekday,
+      .calendar-pad,
+      .day-button {
+        min-height: 42px;
+      }
+      .button-list {
+        display: block;
+      }
+      .start-grid button {
+        min-height: 42px;
+        flex: 1 0 72px;
+      }
+      .register-link {
+        width: 100%;
+      }
+    }
+    </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <header>
+    <a class="back-link" href="/index.html#courses">← Back to All Courses</a>
+    <h1>Red Cross CPR &amp; BLS Classes</h1>
 
-<div class="wrap">
-  <div class="page-shell">
+    <p class="muted">Choose the Red Cross course your requirement names, then select any time with enough room for the complete class.</p>
 
-<div class="card slug-hub-shell ecosystem-hub ecosystem-arc">
-  <header class="site-brand-bar">
-  <a class="site-brand-link" href="index.html" aria-label="910CPR home">
-    <img class="site-brand-logo" src="images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='images/910CPR_wave.jpg';this.onerror=null;">
-    <span class="site-brand-wordmark">910CPR</span>
-  </a>
-</header>
-  <section class="hero slug-hero home-hero ecosystem-hero">
-    <div class="hero-main">
-      <div class="eyebrow">American Red Cross Training</div>
-      <h1>Red Cross CPR And BLS Options</h1>
-      <p class="subhead">Use this hub when your employer, school, or program specifically asks for American Red Cross certification, including practical CPR/AED and first aid recognition topics aligned to current first aid guidance.</p>
-      <div class="hero-actions">
-        <a class="button primary" href="#ecosystem-categories">Compare Red Cross options</a>
-        <a class="button secondary" href="/request_group_session.html?program=Red%20Cross%20CPR%20And%20BLS%20Options">Request ARC group training</a>
-      </div>
-    </div>
-    <div class="hero-side">
-      <div class="slug-hero-image-wrap"><img class="slug-hero-image" src="images/0arc.png" alt="American Red Cross training logo" loading="lazy" onerror="this.parentElement.hidden=true"></div>
-      <div class="trust-badge ecosystem-trust-badge">
-        <strong>Red Cross training, routed clearly</strong>
-        <span>Use this permanent hub for renewal emails, QR codes, scheduling help, and future Red Cross class inventory.</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="home-jumps ecosystem-jumps" aria-label="Red Cross CPR And BLS Options quick links">
-    <a class="jump-chip" href="#arc-bls">ARC BLS</a><a class="jump-chip" href="#arc-cpr-aed">ARC CPR/AED</a><a class="jump-chip" href="#arc-first-aid-cpr-aed">ARC First Aid/CPR/AED</a>
-  </section>
-  <section class="home-finder ecosystem-categories" id="ecosystem-categories">
-    <div class="section-heading">
-      <div>
-        <div class="eyebrow">Red Cross Course Categories</div>
-        <h2>Choose the ARC path your requirement names</h2>
-      </div>
-      <p class="section-copy">ARC categories remain available here even while new public dates are being added, with routing for CPR/AED, first aid, BLS, and workplace emergency recognition needs.</p>
-    </div>
-    <div class="finder-grid">
-
-      <section class="finder-card ecosystem-card" id="arc-bls">
-        <div class="finder-card-head ecosystem-card-head">
-          <div>
-            <div class="home-status-label">Scheduling assistance available</div>
-            <h3>ARC BLS</h3>
-            <p class="finder-card-copy">American Red Cross BLS options for healthcare providers and students who need ARC specifically.</p>
-            <div class="finder-pill-tags"><span class="finder-pill-tag">Healthcare</span><span class="finder-pill-tag finder-pill-tag-format">Healthcare</span><span class="finder-pill-tag finder-pill-tag-format">Red Cross</span></div>
+    <div class="family-help" aria-label="Course format guide">
+      <div class="family-help-title">Course format guide</div>
+      <div class="delivery-help-list">
+          <div class="delivery-help-item">
+            <div class="delivery-help-label">IN-PERSON</div>
+            <div class="delivery-help-copy">Complete the entire course at our Wilmington training center.</div>
           </div>
-          <img class="class-card-course-image ecosystem-card-logo" src="images/0arc.png" alt="ARC BLS" loading="lazy" onerror="this.style.display='none'">
-        </div>
-        <ul class="ecosystem-points"><li>For healthcare-provider level BLS requirements that name American Red Cross.</li><li>Useful for students, clinical staff, responders, and employer-specific renewal routing.</li><li>Public dates appear here automatically when matching sessions are available.</li></ul>
-        <div class="finder-pills ecosystem-session-list">
-
-        <div class="finder-empty ecosystem-empty">
-          <strong>Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance.</strong>
-          <p>For help choosing a class path, call or text 910-395-5193.</p>
-        </div>
-        </div>
-        <div class="finder-card-actions ecosystem-card-actions">
-          <a class="button primary" href="#arc-bls">See ARC BLS details</a>
-          <a class="button secondary" href="/request_group_session.html?program=ARC%20BLS">Ask about ARC BLS dates</a>
-        </div>
-      </section>
-      <section class="finder-card ecosystem-card" id="arc-cpr-aed">
-        <div class="finder-card-head ecosystem-card-head">
-          <div>
-            <div class="home-status-label">Scheduling assistance available</div>
-            <h3>ARC CPR/AED</h3>
-            <p class="finder-card-copy">Red Cross CPR/AED training for workplace and general certification needs when first aid is not required, including CPR, AED use, and choking response.</p>
-            <div class="finder-pill-tags"><span class="finder-pill-tag">CPR + AED</span><span class="finder-pill-tag finder-pill-tag-format">CPR/AED</span><span class="finder-pill-tag finder-pill-tag-format">Lay responder</span></div>
+          <div class="delivery-help-item">
+            <div class="delivery-help-label">ONLINE + SKILLS</div>
+            <div class="delivery-help-copy">Complete the online course first, then attend a shorter in-person skills session.</div>
           </div>
-          <img class="class-card-course-image ecosystem-card-logo" src="images/0arc.png" alt="ARC CPR/AED" loading="lazy" onerror="this.style.display='none'">
-        </div>
-        <ul class="ecosystem-points"><li>For requirements that name Red Cross Adult CPR/AED or ARC CPR/AED.</li><li>Best when first aid is not part of the requested credential but CPR, AED, and choking response are still needed.</li><li>Public dates and appointment routing can be added without changing this stable URL.</li></ul>
-        <div class="finder-pills ecosystem-session-list">
-
-        <div class="finder-empty ecosystem-empty">
-          <strong>Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance.</strong>
-          <p>For help choosing a class path, call or text 910-395-5193.</p>
-        </div>
-        </div>
-        <div class="finder-card-actions ecosystem-card-actions">
-          <a class="button primary" href="#arc-cpr-aed">See ARC CPR/AED details</a>
-          <a class="button secondary" href="/request_group_session.html?program=ARC%20CPR/AED">Ask about ARC CPR/AED dates</a>
-        </div>
-      </section>
-      <section class="finder-card ecosystem-card" id="arc-first-aid-cpr-aed">
-        <div class="finder-card-head ecosystem-card-head">
-          <div>
-            <div class="home-status-label">Scheduling assistance available</div>
-            <h3>ARC First Aid/CPR/AED</h3>
-            <p class="finder-card-copy">Red Cross First Aid/CPR/AED for workplaces, schools, and programs that require ARC certification and practical first aid recognition.</p>
-            <div class="finder-pill-tags"><span class="finder-pill-tag">First Aid</span><span class="finder-pill-tag finder-pill-tag-format">First Aid</span><span class="finder-pill-tag finder-pill-tag-format">CPR/AED</span></div>
-          </div>
-          <img class="class-card-course-image ecosystem-card-logo" src="images/0arc.png" alt="ARC First Aid/CPR/AED" loading="lazy" onerror="this.style.display='none'">
-        </div>
-        <ul class="ecosystem-points"><li>For workplace, school, and program requirements that need Red Cross first aid with CPR/AED.</li><li>Useful when a non-AHA certifying body is required and students need practical topics such as naloxone awareness, FAST stroke recognition, seizures, asthma, burns, heat illness, stings, ticks, and poison plant exposure.</li><li>If no public date is listed, scheduling support can route the request.</li></ul>
-        <div class="finder-pills ecosystem-session-list">
-
-        <div class="finder-empty ecosystem-empty">
-          <strong>Upcoming dates are being added. Call/text 910-395-5193 for scheduling assistance.</strong>
-          <p>For help choosing a class path, call or text 910-395-5193.</p>
-        </div>
-        </div>
-        <div class="finder-card-actions ecosystem-card-actions">
-          <a class="button primary" href="#arc-first-aid-cpr-aed">See ARC First Aid/CPR/AED details</a>
-          <a class="button secondary" href="/request_group_session.html?program=ARC%20First%20Aid/CPR/AED">Ask about ARC First Aid dates</a>
-        </div>
-      </section>
-    </div>
-  </section>
-
-  <section class="slug-training-options ecosystem-future-options">
-    <div class="slug-banner-copy">
-      <div class="slug-banner-eyebrow">Additional Paths</div>
-      <h2>Future Red Cross paths can be coordinated</h2>
-    </div>
-    <div class="training-option-grid">
-      <article class="training-option-card">
-  <h3>ARC ALS</h3>
-  <p>Advanced Life Support may be coordinated when a clinical team or employer specifically needs Red Cross ALS.</p>
-  <a class="text-link strong-link" href="/request_group_session.html?program=ARC%20ALS">Ask about ARC ALS</a>
-</article><article class="training-option-card">
-  <h3>ARC Instructor Courses</h3>
-  <p>Instructor-level Red Cross requests should be routed through scheduling support so prerequisites and availability can be confirmed.</p>
-  <a class="text-link strong-link" href="/request_group_session.html?program=ARC%20Instructor%20Course">Ask about instructor training</a>
-</article><article class="training-option-card">
-  <h3>ARC Babysitting / Layperson</h3>
-  <p>Layperson and babysitting-focused Red Cross tracks may be coordinated for groups, schools, and community programs.</p>
-  <a class="text-link strong-link" href="/request_group_session.html?program=ARC%20Babysitting%20Layperson">Ask about layperson tracks</a>
-</article>
-    </div>
-  </section>
-
-  <section class="top-trust below-inventory-trust" aria-label="910CPR trust and reviews">
-    <div class="top-trust-copy">
-      <div class="home-status-label">Serving North And South Carolina</div>
-      <p>From the mountains to the coast, 910CPR helps healthcare teams, dental offices, schools, workplaces, and students meet real certification requirements with clear, organized classes.</p>
-    </div>
-    <a class="google-review-card" href="https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403" target="_blank" rel="noopener noreferrer" aria-label="Open 910CPR Google reviews in a new tab">
-      <span class="review-stars review-stars-large" aria-hidden="true">★★★★★</span>
-      <strong>Trusted by 496 5-star reviews on Google</strong>
-      <em>As of May 5, 2026</em>
-      <span>Read 910CPR reviews on Google</span>
-    </a>
-    <div class="review-snippets" aria-label="Common student review themes"><div class="review-theme-label">What students mention</div>
-          <article class="review-snippet">
-            <p>Students often mention knowledgeable instructors who keep CPR, BLS, ACLS, and PALS requirements clear.</p>
-          </article>
-          <article class="review-snippet">
-            <p>Renewing providers regularly describe the classes as organized, direct, and respectful of their time.</p>
-          </article>
-          <article class="review-snippet">
-            <p>Reviewers commonly point to clear explanations, hands-on practice, and a class experience that feels manageable.</p>
-          </article></div>
-  </section>
-
-  <section class="group-training-push" aria-label="On-site group training">
-    <div class="group-training-copy">
-      <div class="home-status-label">Group Training</div>
-      <h2>Training for your team? We come to you.</h2>
-      <p>No travel. No scheduling headaches. Your team already knows where to go.</p>
-    </div>
-    <div class="group-training-actions">
-      <a class="button primary group-training-primary" href="/request_group_session.html?program=ARC%20BLS">Schedule On-Site Training</a>
-      <div class="group-training-individual">
-        <p>Just need a seat for yourself? Scroll down. We’ve got you covered.</p>
-        <a class="button secondary" href="#ecosystem-categories">View Upcoming Classes</a>
       </div>
     </div>
-  </section>
+  </header>
+  <main>
 
-</div>
+    <section class="page-context" aria-label="Course context">
 
-  </div>
-</div>
-<script src="assets/hub-ui.js?v=20260511-hash-tabs"></script>
-<script src="assets/live-sessions.js"></script>
-<script src="assets/session-expiry.js"></script>
-<script src="assets/hybrid-inventory.js"></script>
-<div class="build-stamp">Build: 2026-07-18 17:15</div>
+
+
+    </section>
+
+    <section class="selector-shell" aria-label="Block-based schedule selector">
+      <div class="panel course-selector-panel">
+        <div class="course-selector-top">
+          <div>
+            <h2>Course</h2>
+            <p class="muted">Choose the course or delivery format first.</p>
+          </div>
+          <div class="option-tools">
+
+          <label class="disclosure-toggle">
+            <input id="show-all-toggle" type="checkbox">
+            <span>Show all Red Cross course options</span>
+          </label>
+
+          </div>
+        </div>
+        <div class="course-rail" data-course-rail>
+          <button type="button" class="rail-arrow previous" data-course-rail-prev aria-label="Previous course options">‹</button>
+          <div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
+          <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
+        </div>
+      </div>
+      <div class="selector-grid">
+        <div class="panel">
+          <h2>Calendar</h2>
+          <div id="date-list" class="month-stack"></div>
+        </div>
+        <div class="panel">
+          <h2>Start Times</h2>
+          <div id="start-list" class="button-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Register</h2>
+          <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
+          <div id="course-list" class="course-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const embeddedScheduleDates = [];
+    const availabilityUrl = "/data/block-selector-availability/arc.json?v=2026-07-18T17%3A38%3A51.199491";
+    const courseOptions = [{"courseId": "248288", "courseName": "American Red Cross Basic Life Support", "family": "ARC", "variant": "bls", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["bls"], "iconLabel": "ARC", "imageUrl": "/images/ARCLTP.png", "imageAlt": "American Red Cross Basic Life Support course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross BLS classroom option.", "details": {"course_key": "arc_bls", "title": "American Red Cross Basic Life Support", "certifying_body": "ARC", "family": "BLS", "short_description": "Red Cross BLS option for healthcare students and providers whose requirement specifically accepts ARC.", "who_this_is_for": "Students whose employer, school, or program asks for American Red Cross BLS.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Course materials as assigned for the selected Red Cross class format."], "certification_issued": "American Red Cross certificate after successful completion.", "compliance_acceptance_notes": ["Use ARC only when your requirement accepts or requests Red Cross certification."], "full_course_page": "/arc.html"}}, {"courseId": "372258", "courseName": "American Red Cross Adult CPR/AED", "family": "ARC", "variant": "cpr-aed", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["cpr-aed"], "iconLabel": "CPR", "imageUrl": "/images/ARCLTP.png", "imageAlt": "American Red Cross Adult CPR AED course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Red Cross Adult CPR/AED skills option.", "details": {}}, {"courseId": "369209", "courseName": "American Red Cross First Aid/CPR/AED", "family": "ARC", "variant": "first-aid-cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/ARCLTP.png", "imageAlt": "American Red Cross First Aid CPR AED course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "details": {}}];
+    const optionGroups = {"ARC": {"family": "ARC", "label": "All Red Cross options", "courseIds": ["248288", "372258", "369209"]}};
+    const unsupportedOptions = [];
+    let scheduleDates = embeddedScheduleDates;
+    let availabilityState = 'checking';
+    let availabilityMessage = 'Checking current class times…';
+    let resolvedAvailability = null;
+    let selectedCourseId = "248288";
+    let showAllOptions = false;
+    let compareMode = false;
+    let selectedDate = '';
+    let selectedStart = '';
+    let mobileMonthIndex = 0;
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function setAvailabilityMessage(message) {
+      availabilityMessage = message || 'Checking current class times…';
+    }
+
+    function renderAvailabilityPlaceholder(message = availabilityMessage) {
+      ['date-list', 'start-list', 'course-list'].forEach(id => {
+        const host = byId(id);
+        if (host) {
+          host.innerHTML = '';
+          const box = document.createElement('div');
+          box.className = 'empty';
+          box.setAttribute('role', id === 'start-list' ? 'status' : 'note');
+          box.textContent = message;
+          host.appendChild(box);
+        }
+      });
+    }
+
+    function availabilityReady() {
+      return availabilityState === 'ready';
+    }
+
+    function isMobileLayout() {
+      return window.matchMedia('(max-width: 820px)').matches;
+    }
+
+    function normalizeDeepLink(value) {
+      return String(value || '').trim().toLowerCase().replace(/^#/, '');
+    }
+
+    function publicDeliveryBucket(value) {
+      const normalized = normalizeDeepLink(value).replace(/[\s_]+/g, '-').replace(/\+/g, '-');
+      if (!normalized) {
+        return '';
+      }
+      if (normalized === 'in-person' || normalized === 'inperson' || normalized === 'classroom') {
+        return 'in-person';
+      }
+      if ([
+        'blended',
+        'heartcode',
+        'skills-session',
+        'skills',
+        'online-skills',
+        'online-learning-skills',
+        'online-in-person-skills',
+        'online-plus-skills',
+        'online-and-skills',
+        'online-hands-on-skills',
+        'online-learning-in-person-skills'
+      ].includes(normalized) || (normalized.includes('online') && normalized.includes('skills'))) {
+        return 'online-skills';
+      }
+      return normalized;
+    }
+
+    function courseIdFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return '';
+      }
+      const matched = courseOptions.find(course =>
+        course.courseId === requested ||
+        normalizeDeepLink(course.variant) === requested ||
+        (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested)
+      );
+      return matched?.courseId || '';
+    }
+
+    function requestOptionFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return null;
+      }
+      return unsupportedOptions.find(option =>
+        normalizeDeepLink(option.fragment) === requested ||
+        (option.deep_link_aliases || []).some(alias => normalizeDeepLink(alias) === requested)
+      ) || null;
+    }
+
+    function focusDeepLinkedElement() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = normalizeDeepLink(params.get('course')) || normalizeDeepLink(window.location.hash);
+      if (!requested) {
+        return;
+      }
+      const requestOption = requestOptionFromDeepLink();
+      const courseOption = courseOptions.find(course =>
+        course.courseId === selectedCourseId &&
+        (normalizeDeepLink(course.variant) === requested || (course.deepLinkAliases || []).some(alias => normalizeDeepLink(alias) === requested))
+      );
+      const target = requestOption
+        ? document.querySelector(`[data-request-fragment="${CSS.escape(requestOption.fragment)}"]`)
+        : courseOption
+          ? document.querySelector(`[data-course-id="${CSS.escape(courseOption.courseId)}"]`)
+          : null;
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.focus({ preventScroll: true });
+      }
+    }
+
+    function showAllFromDeepLink() {
+      const params = new URLSearchParams(window.location.search);
+      return ['1', 'true', 'yes'].includes(normalizeDeepLink(params.get('showAll')));
+    }
+
+    function deliveryLabel(value) {
+      const bucket = publicDeliveryBucket(value);
+      if (bucket === 'in-person') {
+        return 'IN-PERSON';
+      }
+      if (bucket === 'online-skills') {
+        return 'ONLINE + SKILLS';
+      }
+      if (bucket === 'blended') {
+        return 'BLENDED';
+      }
+      return 'All';
+    }
+
+    function updateCourseRailControls() {
+      const rail = document.querySelector('[data-course-rail]');
+      const list = byId('course-option-list');
+      const previous = document.querySelector('[data-course-rail-prev]');
+      const next = document.querySelector('[data-course-rail-next]');
+      if (!rail || !list || !previous || !next) {
+        return;
+      }
+      const tolerance = 4;
+      const maxScroll = Math.max(0, list.scrollWidth - list.clientWidth);
+      const endTolerance = Math.max(tolerance, Math.min(24, list.clientWidth * 0.06));
+      const hasOverflow = maxScroll > tolerance;
+      const atStart = list.scrollLeft <= tolerance;
+      const atEnd = list.scrollLeft >= maxScroll - endTolerance;
+      rail.classList.toggle('has-overflow', hasOverflow);
+      previous.disabled = !hasOverflow || atStart;
+      next.disabled = !hasOverflow || atEnd;
+      previous.setAttribute('aria-disabled', String(previous.disabled));
+      next.setAttribute('aria-disabled', String(next.disabled));
+    }
+
+    function scheduleCourseRailUpdate() {
+      updateCourseRailControls();
+      window.requestAnimationFrame(updateCourseRailControls);
+    }
+
+    function scrollCourseRail(direction) {
+      const list = byId('course-option-list');
+      if (!list) {
+        return;
+      }
+      const firstCard = list.querySelector('.course-card');
+      const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : Math.max(240, list.clientWidth * 0.75);
+      const gap = 12;
+      const maxScroll = Math.max(0, list.scrollWidth - list.clientWidth);
+      const target = Math.max(0, Math.min(maxScroll, list.scrollLeft + (direction * (cardWidth + gap))));
+      list.scrollTo({ left: target, behavior: 'smooth' });
+      window.setTimeout(updateCourseRailControls, 260);
+    }
+
+    function selectedDateLabel() {
+      const day = filteredDates().find(item => item.date === selectedDate);
+      return day?.displayDate || '';
+    }
+
+    function selectedCourseLabel() {
+      const course = courseOptions.find(item => item.courseId === selectedCourseId);
+      return course?.courseName || '';
+    }
+
+    function visibleCourseOptions() {
+      return courseOptions.filter(course => showAllOptions || course.recommended !== false);
+    }
+
+    function syncCourseSelection() {
+      const visibleOptions = visibleCourseOptions();
+      if (!visibleOptions.length) {
+        selectedCourseId = '';
+        return;
+      }
+      if (!visibleOptions.some(course => course.courseId === selectedCourseId)) {
+        selectedCourseId = visibleOptions[0].courseId;
+      }
+    }
+
+    function activeCourseIds() {
+      syncCourseSelection();
+      const selected = courseOptions.find(course => course.courseId === selectedCourseId);
+      if (!selected) {
+        return new Set();
+      }
+      if (compareMode) {
+        const group = Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId));
+        const groupIds = group?.courseIds || optionGroups[selected.family]?.courseIds || [selectedCourseId];
+        return new Set(groupIds.filter(courseId => {
+          const course = courseOptions.find(option => option.courseId === courseId);
+          return Boolean(course);
+        }));
+      }
+      return new Set([selectedCourseId]);
+    }
+
+    function filteredCourses(slot) {
+      const ids = activeCourseIds();
+      return slot.courses.filter(course => ids.has(course.courseId));
+    }
+
+    const scheduleTimezone = 'America/New_York';
+
+    function businessNow() {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: scheduleTimezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).formatToParts(new Date()).reduce((values, part) => {
+        values[part.type] = part.value;
+        return values;
+      }, {});
+      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
+      return {
+        dateKey: `${parts.year}-${parts.month}-${parts.day}`,
+        minutes: (hour * 60) + Number(parts.minute)
+      };
+    }
+
+    function startMinutes(startTime) {
+      const [hour, minute] = String(startTime || '').split(':').map(Number);
+      return (hour * 60) + minute;
+    }
+
+    function isPastStart(day, slot, now = businessNow()) {
+      if (!day || !slot) {
+        return true;
+      }
+      if (day.date < now.dateKey) {
+        return true;
+      }
+      if (day.date > now.dateKey) {
+        return false;
+      }
+      return startMinutes(slot.startTime) <= now.minutes;
+    }
+
+    function selectableStartTimes(day, now = businessNow()) {
+      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+    }
+
+    function isSelectableDate(day, now = businessNow()) {
+      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
+    }
+
+    function filteredDates() {
+      if (!availabilityReady()) {
+        return [];
+      }
+      return scheduleDates.map(day => {
+        const startTimes = day.startTimes.map(slot => ({
+          ...slot,
+          courses: filteredCourses(slot)
+        })).filter(slot => slot.courses.length);
+        return { ...day, startTimes };
+      }).filter(day => day.startTimes.length);
+    }
+
+    function syncSelection() {
+      const days = filteredDates();
+      const now = businessNow();
+      const selectableDays = days.filter(day => isSelectableDate(day, now));
+      if (!days.length) {
+        selectedDate = '';
+        selectedStart = '';
+        return days;
+      }
+      if (!selectableDays.length) {
+        selectedDate = '';
+        selectedStart = '';
+        return days;
+      }
+      if (!selectableDays.some(day => day.date === selectedDate)) {
+        selectedDate = selectableDays[0].date;
+        mobileMonthIndex = Math.max(0, [...new Set(days.map(day => day.date.slice(0, 7)))].indexOf(selectedDate.slice(0, 7)));
+      }
+      const day = days.find(item => item.date === selectedDate);
+      const starts = selectableStartTimes(day, now);
+      if (!starts.some(slot => slot.startTime === selectedStart)) {
+        selectedStart = starts[0]?.startTime || '';
+      }
+      return days;
+    }
+
+    function renderCourseOptions() {
+      const host = byId('course-option-list');
+      host.innerHTML = '';
+      visibleCourseOptions().forEach(course => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'course-card';
+        button.dataset.courseId = course.courseId;
+        button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
+        const icon = document.createElement('span');
+        icon.className = 'course-icon';
+        if (course.imageUrl) {
+          const image = document.createElement('img');
+          image.src = course.imageUrl;
+          image.alt = course.imageAlt || course.courseName;
+          image.loading = 'lazy';
+          icon.appendChild(image);
+        } else {
+          const fallback = document.createElement('span');
+          fallback.className = 'course-icon-fallback';
+          fallback.textContent = course.iconLabel || course.family;
+          fallback.setAttribute('aria-hidden', 'true');
+          icon.appendChild(fallback);
+        }
+        const copy = document.createElement('span');
+        copy.className = 'course-copy';
+        const title = document.createElement('span');
+        title.className = 'course-title';
+        title.textContent = course.courseName;
+        const delivery = document.createElement('span');
+        delivery.className = 'course-delivery';
+        delivery.textContent = course.deliveryBadge || deliveryLabel(course.deliveryMode);
+        const help = document.createElement('span');
+        help.className = 'course-help';
+        help.textContent = course.clarification || '';
+        copy.append(title, delivery, help);
+        button.append(icon, copy);
+        const details = course.details || {};
+        if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length) {
+          const detailBox = document.createElement('details');
+          detailBox.className = 'course-details';
+          const summary = document.createElement('summary');
+          summary.textContent = 'Course details';
+          const body = document.createElement('div');
+          body.className = 'course-details-body';
+          if (details.short_description) {
+            const short = document.createElement('div');
+            short.textContent = details.short_description;
+            body.appendChild(short);
+          }
+          if (details.who_this_is_for) {
+            const audience = document.createElement('div');
+            audience.textContent = details.who_this_is_for;
+            body.appendChild(audience);
+          }
+          if ((details.topics_covered || []).length) {
+            const topics = document.createElement('ul');
+            details.topics_covered.slice(0, 5).forEach(topic => {
+              const item = document.createElement('li');
+              item.textContent = topic;
+              topics.appendChild(item);
+            });
+            body.appendChild(topics);
+          }
+          if (details.certification_issued) {
+            const cert = document.createElement('div');
+            cert.textContent = details.certification_issued;
+            body.appendChild(cert);
+          }
+          detailBox.append(summary, body);
+          button.appendChild(detailBox);
+        }
+        button.addEventListener('click', () => {
+          selectedCourseId = course.courseId;
+          renderAll();
+        });
+        host.appendChild(button);
+      });
+      if (!host.children.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+      }
+      scheduleCourseRailUpdate();
+      const showAllToggle = byId('show-all-toggle');
+      if (showAllToggle) {
+        showAllToggle.checked = showAllOptions;
+      }
+      const compareToggle = byId('compare-toggle');
+      if (compareToggle) {
+        compareToggle.checked = compareMode;
+      }
+    }
+
+    function renderDates() {
+      const host = byId('date-list');
+      host.innerHTML = '';
+      if (!availabilityReady()) {
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      const days = syncSelection();
+      const now = businessNow();
+      if (!days.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        return;
+      }
+      const availableByDate = new Map(days.map(day => [day.date, day]));
+      const monthKeys = [];
+      days.forEach(day => {
+        const monthKey = day.date.slice(0, 7);
+        if (!monthKeys.includes(monthKey)) {
+          monthKeys.push(monthKey);
+        }
+      });
+      if (mobileMonthIndex >= monthKeys.length) {
+        mobileMonthIndex = Math.max(0, monthKeys.length - 1);
+      }
+      const activeMonthKey = isMobileLayout() ? monthKeys[mobileMonthIndex] : (selectedDate ? selectedDate.slice(0, 7) : monthKeys[mobileMonthIndex]);
+      const activeMonthIndex = monthKeys.includes(activeMonthKey) ? monthKeys.indexOf(activeMonthKey) : mobileMonthIndex;
+      if (isMobileLayout()) {
+        mobileMonthIndex = activeMonthIndex;
+        const nav = document.createElement('div');
+        nav.className = 'month-nav';
+        const previous = document.createElement('button');
+        previous.type = 'button';
+        previous.textContent = 'Previous';
+        previous.disabled = mobileMonthIndex <= 0;
+        previous.addEventListener('click', () => {
+          mobileMonthIndex = Math.max(0, mobileMonthIndex - 1);
+          renderDates();
+        });
+        const navTitle = document.createElement('div');
+        navTitle.className = 'month-nav-title';
+        const [activeYear, activeMonth] = monthKeys[mobileMonthIndex].split('-').map(Number);
+        navTitle.textContent = new Date(activeYear, activeMonth - 1, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.textContent = 'Next';
+        next.disabled = mobileMonthIndex >= monthKeys.length - 1;
+        next.addEventListener('click', () => {
+          mobileMonthIndex = Math.min(monthKeys.length - 1, mobileMonthIndex + 1);
+          renderDates();
+        });
+        nav.append(previous, navTitle, next);
+        host.appendChild(nav);
+      }
+      const renderedMonthKeys = isMobileLayout() ? [monthKeys[mobileMonthIndex]] : monthKeys.slice(0, 3);
+      renderedMonthKeys.forEach(monthKey => {
+        const [year, month] = monthKey.split('-').map(Number);
+        const first = new Date(year, month - 1, 1);
+        const last = new Date(year, month, 0);
+        const section = document.createElement('section');
+        section.className = 'month';
+        section.dataset.mobileVisible = String(monthKey === monthKeys[mobileMonthIndex]);
+        const title = document.createElement('h3');
+        title.className = 'month-title';
+        title.textContent = first.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+        const grid = document.createElement('div');
+        grid.className = 'calendar-grid';
+        ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(label => {
+          const item = document.createElement('div');
+          item.className = 'weekday';
+          item.textContent = label;
+          grid.appendChild(item);
+        });
+        for (let i = 0; i < first.getDay(); i += 1) {
+          const pad = document.createElement('div');
+          pad.className = 'calendar-pad';
+          grid.appendChild(pad);
+        }
+        for (let dayNum = 1; dayNum <= last.getDate(); dayNum += 1) {
+          const dateKey = `${monthKey}-${String(dayNum).padStart(2, '0')}`;
+          const available = availableByDate.get(dateKey);
+          if (available) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'day-button';
+            button.textContent = String(dayNum);
+            const disabled = !isSelectableDate(available, now);
+            if (disabled) {
+              button.classList.add('is-past');
+            }
+            button.disabled = disabled;
+            button.setAttribute('aria-disabled', String(disabled));
+            button.setAttribute('aria-label', available.displayDate + ' ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times' : 'available'));
+            button.setAttribute('aria-pressed', String(available.date === selectedDate));
+            button.addEventListener('click', () => {
+              if (!isSelectableDate(available)) {
+                return;
+              }
+              selectedDate = available.date;
+              mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
+              selectedStart = selectableStartTimes(available)[0]?.startTime || '';
+              renderAll();
+            });
+            grid.appendChild(button);
+          } else {
+            const pad = document.createElement('div');
+            pad.className = 'calendar-pad';
+            pad.textContent = String(dayNum);
+            grid.appendChild(pad);
+          }
+        }
+        section.append(title, grid);
+        host.appendChild(section);
+      });
+    }
+
+    function renderStarts() {
+      const host = byId('start-list');
+      host.innerHTML = '';
+      if (!availabilityReady()) {
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      const day = filteredDates().find(item => item.date === selectedDate);
+      if (!day || !day.startTimes.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        return;
+      }
+      const groups = new Map();
+      day.startTimes.forEach(slot => {
+        const [hourText] = slot.startTime.split(':');
+        const hour = Number.parseInt(hourText, 10);
+        const label = hour < 12 ? 'AM' : 'PM';
+        if (!groups.has(label)) {
+          groups.set(label, []);
+        }
+        groups.get(label).push(slot);
+      });
+      groups.forEach((slots, label) => {
+        const group = document.createElement('div');
+        group.className = 'start-group';
+        const groupLabel = document.createElement('div');
+        groupLabel.className = 'start-group-label';
+        groupLabel.textContent = label;
+        const grid = document.createElement('div');
+        grid.className = 'start-grid';
+        slots.forEach(slot => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = slot.displayStartTime;
+        const disabled = isPastStart(day, slot);
+        if (disabled) {
+          button.classList.add('is-past');
+        }
+        button.disabled = disabled;
+        button.setAttribute('aria-disabled', String(disabled));
+        button.setAttribute('aria-label', slot.displayStartTime + ' ' + (disabled ? 'not bookable; past ' + scheduleTimezone + ' start time' : 'available'));
+        button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
+        button.addEventListener('click', () => {
+          if (isPastStart(day, slot)) {
+            return;
+          }
+          selectedStart = slot.startTime;
+          renderAll();
+        });
+          grid.appendChild(button);
+        });
+        group.append(groupLabel, grid);
+        host.appendChild(group);
+      });
+    }
+
+    function renderCourses() {
+      const host = byId('course-list');
+      host.innerHTML = '';
+      if (!availabilityReady()) {
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      const day = filteredDates().find(item => item.date === selectedDate);
+      const slot = day?.startTimes.find(item => item.startTime === selectedStart);
+      if (!slot || isPastStart(day, slot) || !slot.courses.length) {
+        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        return;
+      }
+      slot.courses.forEach(course => {
+        const item = document.createElement('article');
+        item.className = 'course';
+        const summary = document.createElement('div');
+        summary.className = 'selected-summary';
+        const title = document.createElement('h3');
+        title.textContent = course.courseName;
+        const dateRow = document.createElement('div');
+        dateRow.className = 'selected-summary-row';
+        dateRow.textContent = selectedDateLabel();
+        const timeRow = document.createElement('div');
+        timeRow.className = 'selected-summary-row';
+        timeRow.textContent = course.displayStartTime;
+        const locationRow = document.createElement('div');
+        locationRow.className = 'selected-summary-row';
+        locationRow.textContent = course.location;
+        summary.append(title, dateRow, timeRow, locationRow);
+        const badge = document.createElement('div');
+        badge.className = 'delivery-badge';
+        badge.textContent = deliveryLabel(course.deliveryMode);
+        const link = document.createElement('a');
+        link.className = 'register-link';
+        link.href = course.appointmentUrl;
+        link.textContent = 'Register';
+        item.append(summary, badge, link);
+        host.appendChild(item);
+      });
+    }
+
+    function renderAll() {
+      syncCourseSelection();
+      if (!availabilityReady()) {
+        renderCourseOptions();
+        renderAvailabilityPlaceholder();
+        return;
+      }
+      syncSelection();
+      renderCourseOptions();
+      renderDates();
+      renderStarts();
+      renderCourses();
+    }
+
+    const compareToggle = byId('compare-toggle');
+    if (compareToggle) {
+      compareToggle.addEventListener('change', event => {
+        compareMode = event.target.checked;
+        renderAll();
+      });
+    }
+
+    const showAllToggle = byId('show-all-toggle');
+    if (showAllToggle) {
+      showAllToggle.addEventListener('change', event => {
+        showAllOptions = event.target.checked;
+        renderAll();
+      });
+    }
+
+    const courseRailList = byId('course-option-list');
+    const courseRailPrevious = document.querySelector('[data-course-rail-prev]');
+    const courseRailNext = document.querySelector('[data-course-rail-next]');
+    if (courseRailList) {
+      courseRailList.addEventListener('scroll', updateCourseRailControls, { passive: true });
+    }
+    if (courseRailPrevious) {
+      courseRailPrevious.addEventListener('click', () => scrollCourseRail(-1));
+    }
+    if (courseRailNext) {
+      courseRailNext.addEventListener('click', () => scrollCourseRail(1));
+    }
+
+    window.addEventListener('resize', () => {
+      if (availabilityReady()) {
+        renderDates();
+        renderStarts();
+      }
+      updateCourseRailControls();
+    });
+
+    showAllOptions = showAllFromDeepLink();
+    selectedCourseId = courseIdFromDeepLink() || selectedCourseId;
+    renderAll();
+    setTimeout(focusDeepLinkedElement, 0);
+
+    window.addEventListener('hashchange', () => {
+      const requestedCourse = courseIdFromDeepLink();
+      if (requestedCourse) {
+        selectedCourseId = requestedCourse;
+      }
+      renderAll();
+      setTimeout(focusDeepLinkedElement, 0);
+    });
+
+    async function loadResolvedAvailability() {
+      availabilityState = 'checking';
+      setAvailabilityMessage('Checking current class times…');
+      renderAll();
+      try {
+        const response = await fetch(availabilityUrl, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`availability fetch failed: ${response.status}`);
+        }
+        const payload = await response.json();
+        if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {
+          throw new Error('availability payload has an unexpected shape');
+        }
+        resolvedAvailability = payload;
+        scheduleDates = payload.dates;
+        availabilityState = 'ready';
+        setAvailabilityMessage('');
+        renderAll();
+      } catch (error) {
+        console.error(error);
+        resolvedAvailability = null;
+        scheduleDates = [];
+        availabilityState = 'failed';
+        setAvailabilityMessage('Current class times are temporarily unavailable. Please retry in a moment or contact 910CPR.');
+        renderAll();
+      }
+    }
+
+    loadResolvedAvailability();
+  </script>
 </body>
 </html>

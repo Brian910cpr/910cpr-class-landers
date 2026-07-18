@@ -132,6 +132,29 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIs(config["include_seated_classes"], True)
         self.assertEqual(1, config["seated_class_minimum_enrollment"])
 
+    def test_shared_board_cooldown_suppresses_booking_day_and_following_six_days(self):
+        anchors = [{"date": "2026-07-20", "startTime": "09:00", "sessionId": "arc-booking"}]
+        for offset in range(7):
+            match = block_start_time_selector.matching_shared_cooldown_anchor(
+                anchors,
+                day=datetime(2026, 7, 20).date() + timedelta(days=offset),
+                cooldown_days=6,
+            )
+            self.assertEqual("arc-booking", match["sessionId"])
+        self.assertIsNone(
+            block_start_time_selector.matching_shared_cooldown_anchor(
+                anchors,
+                day=datetime(2026, 7, 27).date(),
+                cooldown_days=6,
+            )
+        )
+
+    def test_arc_config_uses_one_board_for_three_courses_with_six_day_cooldown(self):
+        config = block_start_time_selector.load_block_schedule_page_configs()["arc"]
+        self.assertEqual(["248288", "372258", "369209"], config["allowed_course_ids"])
+        self.assertEqual(6, config["shared_cooldown_days_after_booking"])
+        self.assertIs(config["include_seated_classes"], True)
+
     def test_uses_live_availability_when_present(self):
         self.assertEqual(self.payload["availability_source_used"], "live_availability_snapshot")
         self.assertFalse(self.payload["availability_fallback_used"])

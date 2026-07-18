@@ -13,6 +13,10 @@
     "329495",
     "351632",
     "251545"
+    ,
+    "248288",
+    "372258",
+    "369209"
   ],
   "disabled_course_ids": [],
   "enabled_course_families": [
@@ -20,9 +24,10 @@
     "Heartsaver",
     "ACLS",
     "PALS"
+    ,
+    "ARC"
   ],
   "disabled_course_families": [
-    "ARC",
     "HSI",
     "USCG"
   ],
@@ -53,5 +58,5 @@
   "hide_manual_only": true,
   "hide_low_capacity_offers": false,
   "require_confirmed_appointment_container": true,
-  "notes": "Initial conservative public-sellability policy. ARC, HSI, and USCG are hidden until Brian explicitly approves public dynamic offers for those families."
+  "notes": "ARC dynamic offers are approved only for course IDs 248288, 372258, and 369209 on the shared ARC selector board. HSI and USCG remain disabled unless Brian explicitly approves them."
 }
