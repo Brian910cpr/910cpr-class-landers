@@ -23,6 +23,67 @@ def artifact_offers(artifact):
 
 
 class BlockStartTimeSelectorTests(unittest.TestCase):
+    def test_live_enrollware_calendar_suppresses_disappeared_appointment_offer(self):
+        payload = {
+            "offers": [
+                {
+                    "date": "2026-07-19",
+                    "displayDate": "Sunday, July 19, 2026",
+                    "startTime": "08:00",
+                    "displayStartTime": "8:00 AM",
+                    "courseId": "210549",
+                    "courseName": "AHA HeartCode BLS",
+                    "appointmentDayId": 260698,
+                    "matchedContainerId": "shipyard_brian_continuous_20260621_20270430",
+                    "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260698&startTime=8%3A00%20AM&courseId=210549",
+                    "offerType": "appointment",
+                }
+            ],
+            "dates": [],
+            "counts": {},
+        }
+
+        guarded = block_start_time_selector.apply_final_enrollware_appointment_guard(
+            payload,
+            fetch_urls=lambda **_kwargs: set(),
+        )
+
+        self.assertEqual([], guarded["offers"])
+        self.assertEqual(1, guarded["counts"]["suppressedByEnrollwareAppointmentCalendarCount"])
+        self.assertEqual(
+            "not_advertised_by_live_enrollware_appointment_calendar",
+            guarded["enrollwareAppointmentGuard"]["suppressedOffers"][0]["reason"],
+        )
+
+    def test_live_enrollware_calendar_retains_advertised_appointment_offer(self):
+        url = "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260698&startTime=8%3A00%20AM&courseId=210549"
+        payload = {
+            "offers": [
+                {
+                    "date": "2026-07-19",
+                    "displayDate": "Sunday, July 19, 2026",
+                    "startTime": "08:00",
+                    "displayStartTime": "8:00 AM",
+                    "courseId": "210549",
+                    "courseName": "AHA HeartCode BLS",
+                    "appointmentDayId": 260698,
+                    "matchedContainerId": "shipyard_brian_continuous_20260621_20270430",
+                    "appointmentUrl": url,
+                    "offerType": "appointment",
+                }
+            ],
+            "dates": [],
+            "counts": {},
+        }
+
+        guarded = block_start_time_selector.apply_final_enrollware_appointment_guard(
+            payload,
+            fetch_urls=lambda **_kwargs: {url},
+        )
+
+        self.assertEqual(1, len(guarded["offers"]))
+        self.assertEqual(0, guarded["counts"]["suppressedByEnrollwareAppointmentCalendarCount"])
+
     @classmethod
     def setUpClass(cls):
         cls.payload = json.loads(PILOT_REPORT_PATH.read_text(encoding="utf-8"))

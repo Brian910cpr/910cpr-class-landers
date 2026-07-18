@@ -1,12 +1,17 @@
 from __future__ import annotations
 
 import json
+import html
 import re
+import ssl
 import sys
 from collections import Counter
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from typing import Any
+import urllib.error
+import urllib.parse
+import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -40,6 +45,9 @@ START_STEP_MINUTES = 30
 AS_OF_DATE = date(2026, 7, 2)
 UNKNOWN = "UNKNOWN"
 APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS = {"brian_do_not_schedule"}
+ENROLLWARE_APPOINTMENT_TIMES_ENDPOINT = (
+    "https://coastalcprtraining.enrollware.com/reg/appointment.aspx/GetAvailableAppointmentTimes"
+)
 
 
 class BlockSelectorInputError(RuntimeError):
@@ -345,6 +353,121 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
         "availabilityWindowsThatGeneratedOffers": sorted({offer["availabilityWindow"] for offer in kept}),
     }
     return payload
+
+
+def fetch_enrollware_appointment_urls(*, date_token: str, location_id: str, course_id: str) -> set[str]:
+    """Return the appointment URLs Enrollware currently advertises for one course/day."""
+    body = json.dumps({"date": date_token, "locationId": location_id, "courseId": course_id}).encode("utf-8")
+    request = urllib.request.Request(
+        ENROLLWARE_APPOINTMENT_TIMES_ENDPOINT,
+        data=body,
+        headers={
+            "User-Agent": "910CPR-Lander-Build/1.0 (+https://www.910cpr.com)",
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        method="POST",
+    )
+    try:
+        response = urllib.request.urlopen(request, timeout=30)
+    except urllib.error.URLError as exc:
+        # Enrollware's tenant certificate has intermittently presented an expired
+        # chain while the browser endpoint remains usable. Match the existing iCal
+        # importer's narrow SSL-only fallback; do not bypass other network errors.
+        if not isinstance(getattr(exc, "reason", None), ssl.SSLError):
+            raise
+        response = urllib.request.urlopen(request, timeout=30, context=ssl._create_unverified_context())
+    with response:
+        decoded = json.loads(response.read().decode("utf-8", errors="replace"))
+    html_blob = html.unescape(str(decoded.get("d") or ""))
+    return {
+        html.unescape(url)
+        for url in re.findall(
+            r"href=['\"](https://coastalcprtraining\.enrollware\.com/enroll\?appointmentDayId[^'\"]+)['\"]",
+            html_blob,
+        )
+    }
+
+
+def appointment_offer_tuple(url: str) -> tuple[str, str, str]:
+    query = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+    return (
+        clean_text((query.get("appointmentDayId") or [""])[0]),
+        clean_text((query.get("startTime") or [""])[0]).upper(),
+        clean_text((query.get("courseId") or [""])[0]),
+    )
+
+
+def apply_final_enrollware_appointment_guard(
+    payload: dict[str, Any],
+    *,
+    fetch_urls=fetch_enrollware_appointment_urls,
+) -> dict[str, Any]:
+    """Suppress dynamic offers that are absent from Enrollware's live highlighted calendar."""
+    containers = {
+        clean_text(item.get("container_id")): item
+        for item in active_containers(read_required_json(APPOINTMENT_CONTAINERS_PATH))
+    }
+    dynamic = [offer for offer in payload.get("offers", []) if clean_text(offer.get("offerType")) != "seated_class"]
+    available: dict[tuple[str, str, str], set[tuple[str, str, str]]] = {}
+    probes: list[dict[str, Any]] = []
+    for offer in dynamic:
+        container = containers.get(clean_text(offer.get("matchedContainerId")))
+        location_id = clean_text((container or {}).get("location_id"))
+        course_id = clean_text(offer.get("courseId"))
+        day = date.fromisoformat(str(offer.get("date")))
+        key = (day.strftime("%m%d%y"), location_id, course_id)
+        if key in available:
+            continue
+        if not location_id:
+            raise BlockSelectorInputError(
+                f"Offer container is missing Enrollware location_id: {offer.get('matchedContainerId')}"
+            )
+        urls = fetch_urls(date_token=key[0], location_id=location_id, course_id=course_id)
+        available[key] = {appointment_offer_tuple(url) for url in urls}
+        probes.append({
+            "date": day.isoformat(),
+            "locationId": location_id,
+            "courseId": course_id,
+            "availableAppointmentCount": len(urls),
+        })
+
+    kept: list[dict[str, Any]] = []
+    suppressed: list[dict[str, Any]] = []
+    for offer in payload.get("offers", []):
+        if clean_text(offer.get("offerType")) == "seated_class":
+            kept.append(offer)
+            continue
+        container = containers[clean_text(offer.get("matchedContainerId"))]
+        day = date.fromisoformat(str(offer.get("date")))
+        key = (day.strftime("%m%d%y"), clean_text(container.get("location_id")), clean_text(offer.get("courseId")))
+        offer_tuple = appointment_offer_tuple(clean_text(offer.get("appointmentUrl")))
+        if offer_tuple in available[key]:
+            kept.append(offer)
+        else:
+            suppressed.append({
+                "date": offer.get("date"),
+                "startTime": offer.get("startTime"),
+                "courseId": offer.get("courseId"),
+                "appointmentDayId": offer.get("appointmentDayId"),
+                "reason": "not_advertised_by_live_enrollware_appointment_calendar",
+            })
+
+    guarded = {**payload, "offers": kept}
+    guarded["dates"] = rebuild_payload_dates(guarded)
+    counts = {**guarded.get("counts", {})}
+    counts["publicSelectableOfferCount"] = len(kept)
+    counts["publicSelectableDateCount"] = len(guarded["dates"])
+    counts["publicSelectableStartTimeCount"] = sum(len(item["startTimes"]) for item in guarded["dates"])
+    counts["suppressedByEnrollwareAppointmentCalendarCount"] = len(suppressed)
+    guarded["counts"] = counts
+    guarded["enrollwareAppointmentGuard"] = {
+        "enabled": True,
+        "endpoint": ENROLLWARE_APPOINTMENT_TIMES_ENDPOINT,
+        "probes": probes,
+        "suppressedOffers": suppressed[:1000],
+        "suppressedDates": sorted({str(item["date"]) for item in suppressed}),
+    }
+    return guarded
 
 
 def window_datetimes(window: dict[str, Any]) -> tuple[datetime, datetime]:
