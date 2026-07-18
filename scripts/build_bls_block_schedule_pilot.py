@@ -452,6 +452,10 @@ def css() -> str:
       object-position: center;
       padding: 6px;
     }
+    .course-icon img.course-image-cover {
+      object-fit: cover;
+      padding: 0;
+    }
     .course-icon-fallback {
       display: inline-flex;
       align-items: center;
@@ -732,6 +736,7 @@ def render_html(payload: dict[str, Any]) -> str:
             ],
             "iconLabel": option.get("icon_label") or page_family,
             "imageUrl": option.get("image_url") or DEFAULT_COURSE_IMAGES.get(page_family, "/images/logo.png"),
+            "imageFit": option.get("image_fit") or "contain",
             "imageAlt": option.get("image_alt") or f"{option.get('display_label') or page_family} course option",
             "deliveryBadge": option.get("delivery_badge") or delivery_label_for_config(option.get("delivery_mode")),
             "clarification": option.get("clarification") or "",
@@ -794,6 +799,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     ],
                     "iconLabel": configured_options.get(course["courseId"], {}).get("icon_label") or family,
                     "imageUrl": configured_options.get(course["courseId"], {}).get("image_url") or DEFAULT_COURSE_IMAGES.get(family, "/images/logo.png"),
+                    "imageFit": configured_options.get(course["courseId"], {}).get("image_fit") or "contain",
                     "imageAlt": configured_options.get(course["courseId"], {}).get("image_alt") or f"{configured_options.get(course['courseId'], {}).get('display_label') or course['courseName']} course option",
                     "deliveryBadge": configured_options.get(course["courseId"], {}).get("delivery_badge") or delivery_label_for_config(configured_options.get(course["courseId"], {}).get("delivery_mode") or course.get("deliveryMode")),
                     "clarification": configured_options.get(course["courseId"], {}).get("clarification") or "",
@@ -1381,6 +1387,7 @@ def render_html(payload: dict[str, Any]) -> str:
           image.src = course.imageUrl;
           image.alt = course.imageAlt || course.courseName;
           image.loading = 'lazy';
+          if (course.imageFit === 'cover') image.className = 'course-image-cover';
           icon.appendChild(image);
         }} else {{
           const fallback = document.createElement('span');
