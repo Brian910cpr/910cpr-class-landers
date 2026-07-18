@@ -27,6 +27,50 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
     def setUpClass(cls):
         cls.payload = json.loads(PILOT_REPORT_PATH.read_text(encoding="utf-8"))
 
+    def test_enrolled_bls_session_becomes_same_day_consolidation_anchor(self):
+        schedule = {"sessions": [
+            {
+                "session_id": "51221",
+                "course_id": "210549",
+                "start_at": "2026-07-18T08:00:00-04:00",
+                "lead_instructor_name": "Brian Ennis",
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "enrolled_count": 1,
+            },
+            {
+                "session_id": "empty-class",
+                "course_id": "209806",
+                "start_at": "2026-07-18T14:30:00-04:00",
+                "lead_instructor_name": "Brian Ennis",
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "enrolled_count": 0,
+            },
+        ]}
+        anchors = block_start_time_selector.seated_family_anchors(
+            schedule_future_payload=schedule,
+            selected_course_ids=set(block_start_time_selector.BLS_PILOT_COURSE_IDS),
+            minimum_enrollment=1,
+            location_resource_map={},
+        )
+
+        self.assertEqual(["51221"], [anchor["sessionId"] for anchor in anchors])
+        match = block_start_time_selector.matching_same_day_anchor(
+            anchors,
+            day=datetime(2026, 7, 18).date(),
+            instructor="Brian Ennis",
+            location=":: Wilmington; Shipyard Blvd - B",
+            location_resource_map={},
+        )
+        self.assertIsNotNone(match)
+        self.assertEqual("08:00", match["startTime"])
+
+    def test_bls_config_hides_open_times_after_anchor_and_shows_only_enrolled_classes(self):
+        config = block_start_time_selector.load_block_schedule_page_configs()["bls"]
+        self.assertIs(config["consolidate_after_seated_family_anchor"], True)
+        self.assertEqual(1, config["same_day_anchor_minimum_enrollment"])
+        self.assertIs(config["include_seated_classes"], True)
+        self.assertEqual(1, config["seated_class_minimum_enrollment"])
+
     def test_uses_live_availability_when_present(self):
         self.assertEqual(self.payload["availability_source_used"], "live_availability_snapshot")
         self.assertFalse(self.payload["availability_fallback_used"])
