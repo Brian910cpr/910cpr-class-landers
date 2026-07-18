@@ -1852,7 +1852,7 @@ def render_homepage() -> str:
         </div>
         <div class="hero-side">
           <a class="arc-ltp-feature" href="/arc.html" aria-label="Explore American Red Cross classes from a Licensed Training Provider">
-            <img src="/images/ARCLTP.png" alt="American Red Cross Licensed Training Provider" loading="eager">
+            <img src="/images/Logo_Vertical-Red-Cross-LTP.jpg" alt="American Red Cross Licensed Training Provider" loading="eager">
             <span class="arc-ltp-feature-copy">
               <span class="arc-ltp-feature-eyebrow">Proudly recognized</span>
               <strong>American Red Cross Licensed Training Provider</strong>
