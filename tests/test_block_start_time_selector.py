@@ -153,6 +153,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         config = block_start_time_selector.load_block_schedule_page_configs()["arc"]
         self.assertEqual(["248288", "372258", "369209"], config["allowed_course_ids"])
         self.assertEqual(6, config["shared_cooldown_days_after_booking"])
+        self.assertEqual("372258", config["default_course_id"])
         self.assertIs(config["include_seated_classes"], True)
 
     def test_uses_live_availability_when_present(self):

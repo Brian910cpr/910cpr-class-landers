@@ -578,6 +578,7 @@
       "seated_class_minimum_enrollment": 1,
       "shared_cooldown_days_after_booking": 6,
       "shared_cooldown_minimum_enrollment": 1,
+      "default_course_id": "372258",
       "show_all_label": "Show all Red Cross course options",
       "compare_mode": {
         "enabled": false,
