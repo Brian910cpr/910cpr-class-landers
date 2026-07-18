@@ -100,7 +100,6 @@ jobs:
           git config user.name "910CPR Availability Bot"
           git config user.email "actions@users.noreply.github.com"
           git add \
-            data/sessions_current.json \
             data/runtime/calendar_snapshots \
             data/audit/enrollware_ical_import_summary.json \
             data/audit/enrollware_ical_import_report.md \
