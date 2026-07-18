@@ -15,6 +15,7 @@ on:
       - 'scripts/publish_admin_reference_data.py'
       - 'scripts/block_start_time_selector.py'
       - 'scripts/build_bls_block_schedule_pilot.py'
+      - 'scripts/ensure_dashboard_refresh_controls.py'
       - 'data/config/people_catalog.json'
       - 'data/config/location_resource_map.json'
       - 'data/config/block_schedule_pages.json'
@@ -82,6 +83,9 @@ jobs:
       - name: Publish instructor and location reference feeds
         run: python scripts/publish_admin_reference_data.py
 
+      - name: Ensure dashboard refresh controls are present
+        run: python scripts/ensure_dashboard_refresh_controls.py
+
       - name: Commit changed dashboard data
         run: |
           git config user.name "910CPR Availability Bot"
@@ -100,6 +104,7 @@ jobs:
             docs/data/admin_people.json \
             docs/data/admin_locations.json \
             docs/data/block-selector-availability \
+            docs/admin/dashboard.html \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json
           if git diff --cached --quiet; then
