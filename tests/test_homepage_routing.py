@@ -83,7 +83,7 @@ class HomepageRoutingTests(unittest.TestCase):
     def test_homepage_prominently_displays_arc_ltp_credential(self) -> None:
         html = read(INDEX)
         self.assertIn('class="arc-ltp-feature"', html)
-        self.assertIn('src="/images/ARCLTP.png"', html)
+        self.assertIn('src="/images/Logo_Vertical-Red-Cross-LTP.jpg"', html)
         self.assertIn("American Red Cross Licensed Training Provider", html)
         self.assertIn('href="/arc.html"', html)
 
