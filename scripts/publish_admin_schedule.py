@@ -11,6 +11,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SESSIONS_CURRENT = ROOT / "data" / "sessions_current.json"
 OUTPUT = ROOT / "docs" / "data" / "admin_schedule.json"
+STUDENT_SNAPSHOT = ROOT / "data" / "enrollware_student_snapshot.json"
 
 
 def read_json(path: Path) -> Any:
@@ -67,7 +68,12 @@ def normalize_session(session: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
-def build_admin_schedule(payload: Any, *, now: datetime | None = None) -> dict[str, Any]:
+def apply_student_snapshot(rows: list[dict[str, Any]], snapshot: Any) -> dict[str, int]:
+    from scripts.import_enrollware_student_report import apply_snapshot_to_sessions
+    return apply_snapshot_to_sessions(rows, snapshot)
+
+
+def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_snapshot: Any = None) -> dict[str, Any]:
     rows = payload.get("sessions", []) if isinstance(payload, dict) else []
     normalized = [row for session in rows if isinstance(session, dict) for row in [normalize_session(session)] if row]
     reference = now or datetime.now().astimezone()
@@ -77,6 +83,7 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None) -> dict[s
         if datetime.fromisoformat(str(row["start_at"]).replace("Z", "+00:00")).date() >= today
     ]
     normalized.sort(key=lambda row: (str(row.get("start_at")), str(row.get("session_id"))))
+    enrollment_counts = apply_student_snapshot(normalized, student_snapshot)
     brian_rows = [
         row for row in normalized
         if str(row.get("lead_instructor_name") or "").strip().lower() in {"brian", "brian ennis", "b. ennis"}
@@ -88,13 +95,15 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None) -> dict[s
         "counts": {
             "sessions": len(normalized),
             "brian_resource_blocks": len(brian_rows),
+            **enrollment_counts,
         },
         "sessions": normalized,
     }
 
 
 def main() -> int:
-    payload = build_admin_schedule(read_json(SESSIONS_CURRENT))
+    snapshot = read_json(STUDENT_SNAPSHOT) if STUDENT_SNAPSHOT.exists() else None
+    payload = build_admin_schedule(read_json(SESSIONS_CURRENT), student_snapshot=snapshot)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Published {payload['counts']['sessions']} admin schedule sessions to {OUTPUT}")

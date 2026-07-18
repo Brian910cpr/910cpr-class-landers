@@ -13,6 +13,7 @@ on:
       - 'scripts/build_live_availability_snapshot.py'
       - 'scripts/publish_admin_availability.py'
       - 'scripts/publish_admin_schedule.py'
+      - 'scripts/import_enrollware_student_report.py'
       - 'scripts/publish_admin_reference_data.py'
       - 'scripts/block_start_time_selector.py'
       - 'scripts/build_bls_block_schedule_pilot.py'
@@ -20,6 +21,7 @@ on:
       - 'data/config/people_catalog.json'
       - 'data/config/location_resource_map.json'
       - 'data/config/travel_time_rules.json'
+      - 'data/enrollware_student_snapshot.json'
       - 'data/config/block_schedule_pages.json'
 
 permissions:

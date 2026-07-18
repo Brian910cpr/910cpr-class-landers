@@ -661,6 +661,14 @@ def build_sessions_from_enrollware_ical(
             )
 
     sessions.sort(key=lambda item: (item.get("timing", {}).get("start_at") or "", item.get("session_id") or ""))
+    enrollment_counts = {"student_snapshot_classes": 0, "student_snapshot_matches": 0, "seated_students_matched": 0}
+    student_snapshot_path = repo_root / "data" / "enrollware_student_snapshot.json"
+    if student_snapshot_path.exists():
+        from scripts.import_enrollware_student_report import apply_snapshot_to_sessions
+        enrollment_counts = apply_snapshot_to_sessions(
+            sessions,
+            json.loads(student_snapshot_path.read_text(encoding="utf-8")),
+        )
     current_ids = {str(session.get("session_id")) for session in sessions if session.get("session_id") is not None}
     prior_ids = set(previous_by_id)
     removed_ids = sorted(prior_ids - current_ids)
@@ -687,6 +695,7 @@ def build_sessions_from_enrollware_ical(
                 "sessions_added_compared_with_prior_source": len(added_ids),
                 "classes_removed_compared_with_prior_source": len(removed_ids),
                 "stale_sheet_or_class_report_sessions_excluded": len(removed_ids),
+                **enrollment_counts,
             },
         },
         "sessions": sessions,
@@ -718,6 +727,7 @@ def build_sessions_from_enrollware_ical(
         "classes_removed_compared_with_prior_source": len(removed_ids),
         "stale_zapier_sheet_sessions_excluded": 0,
         "stale_manual_class_report_sessions_excluded": len(removed_ids),
+        **enrollment_counts,
         "removed_examples": removed_examples,
     }
     (audit_dir / "enrollware_ical_import_summary.json").write_text(
