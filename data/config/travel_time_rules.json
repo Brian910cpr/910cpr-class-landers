@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "person_id": "instructor_24057895173",
+  "person_name": "Brian Ennis",
+  "base_location_key": "shipyard",
+  "same_venue_minutes": 0,
+  "unknown_offsite_minutes": 90,
+  "rules": [
+    {
+      "location_key": "shipyard",
+      "match_any": ["shipyard", "4018 shipyard blvd", "910cpr's office"],
+      "minutes_each_way": 0
+    },
+    {
+      "location_key": "freya_haus",
+      "match_any": ["freya's haus", "freya’s haus", "scotts hill loop"],
+      "minutes_each_way": 60
+    },
+    {
+      "location_key": "brunswick_maxillofacial",
+      "match_any": ["brunswick oral", "maxillofacial", "medical center dr", "medical cntr sw"],
+      "minutes_each_way": 90
+    },
+    {
+      "location_key": "adr_riegelwood",
+      "match_any": ["adr shift", "adr f/r shift", "acme-delco-riegelwood", "john riegel rd"],
+      "minutes_each_way": 60
+    }
+  ]
+}

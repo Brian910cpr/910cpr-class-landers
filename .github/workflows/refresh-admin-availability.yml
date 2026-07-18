@@ -19,6 +19,7 @@ on:
       - 'scripts/ensure_dashboard_refresh_controls.py'
       - 'data/config/people_catalog.json'
       - 'data/config/location_resource_map.json'
+      - 'data/config/travel_time_rules.json'
       - 'data/config/block_schedule_pages.json'
 
 permissions:

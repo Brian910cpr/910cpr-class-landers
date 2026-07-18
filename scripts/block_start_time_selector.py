@@ -31,6 +31,7 @@ COURSE_RULES_PATH = ROOT / "data" / "inventory" / "course_consumption_rules.json
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
 PEOPLE_CATALOG_PATH = ROOT / "data" / "config" / "people_catalog.json"
 LOCATION_RESOURCE_MAP_PATH = ROOT / "data" / "config" / "location_resource_map.json"
+TRAVEL_TIME_RULES_PATH = ROOT / "data" / "config" / "travel_time_rules.json"
 APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 PUBLIC_LOCATION_POLICY_PATH = ROOT / "data" / "config" / "public_location_policy.json"
 PUBLIC_OFFER_POLICY_PATH = ROOT / "data" / "config" / "public_offer_policy.json"
@@ -670,6 +671,7 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
     )
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"))
     occupancy = sessions_current + schedule_future + calendar_blocks
+    travel_rules = loaded.get("travel_time_rules") or {}
     for block in occupancy:
         canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
             block.get("location"),
@@ -681,7 +683,43 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             block["location"] = canonical
             block["resource"] = resource
             block["location_resolution"] = "location_resource_map"
+        apply_travel_time_rule(block, travel_rules)
     return occupancy
+
+
+def apply_travel_time_rule(block: dict[str, Any], payload: Any) -> None:
+    """Expand Brian's instructor conflict interval when an event is away from Shipyard."""
+    if not isinstance(payload, dict):
+        return
+    instructor = normalize_key(block.get("instructor"))
+    target_person = normalize_key(payload.get("person_name") or "Brian Ennis")
+    if instructor not in {target_person, normalize_key(str(payload.get("person_name") or "").split(" ")[0])}:
+        return
+    haystack = clean_text(f"{block.get('location', '')} {block.get('raw_location', '')} {block.get('course_title', '')}").lower()
+    minutes: int | None = None
+    rule_key = ""
+    for rule in payload.get("rules", []):
+        if not isinstance(rule, dict):
+            continue
+        if any(clean_text(alias).lower() in haystack for alias in rule.get("match_any", []) if clean_text(alias)):
+            candidate_minutes = int(rule.get("minutes_each_way") or 0)
+            if minutes is None or candidate_minutes > minutes:
+                minutes = candidate_minutes
+                rule_key = clean_text(rule.get("location_key"))
+    if minutes is None and clean_text(block.get("location")) not in {"", UNKNOWN}:
+        minutes = int(payload.get("unknown_offsite_minutes") or 0)
+        rule_key = "unknown_offsite"
+    if not minutes:
+        return
+    start, end = block.get("start"), block.get("end")
+    if not start or not end:
+        return
+    block["instructor_conflict_start"] = start - timedelta(minutes=minutes)
+    block["instructor_conflict_end"] = end + timedelta(minutes=minutes)
+    block["travel_before_minutes"] = minutes
+    block["travel_after_minutes"] = minutes
+    block["travel_rule_key"] = rule_key
+    block["travel_rule_source"] = str(TRAVEL_TIME_RULES_PATH)
 
 
 def public_direct_bookable_session(session: dict[str, Any]) -> bool:
@@ -898,6 +936,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     loaded = {
         "live_availability_snapshot": live_availability_snapshot,
         "location_resource_map": read_required_json(LOCATION_RESOURCE_MAP_PATH),
+        "travel_time_rules": read_required_json(TRAVEL_TIME_RULES_PATH),
         "course_catalog": read_required_json(COURSE_CATALOG_PATH),
         "people_catalog": read_required_json(PEOPLE_CATALOG_PATH),
         "appointment_containers": read_required_json(APPOINTMENT_CONTAINERS_PATH),
@@ -998,7 +1037,11 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     person or {},
                 )
                 if conflict:
-                    reasons.append("conflicts_with_existing_enrollware_occupancy")
+                    reasons.append(
+                        "conflicts_with_brian_travel_buffer"
+                        if "travel buffer" in clean_text(conflict_reason).lower()
+                        else "conflicts_with_existing_enrollware_occupancy"
+                    )
                 same_day_anchor = matching_same_day_anchor(
                     same_day_anchors,
                     day=start.date(),

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -669,6 +669,50 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertTrue(conflict(18, 15, 19, 45))
         self.assertTrue(conflict(20, 45, 21, 15))
         self.assertFalse(conflict(21, 0, 22, 30))
+
+    def test_brian_travel_rules_expand_offsite_instructor_conflicts_only(self):
+        rules = block_start_time_selector.read_required_json(block_start_time_selector.TRAVEL_TIME_RULES_PATH)
+        cases = [
+            ("ADR Shift — Unavailable", "", 60),
+            ("AHA Family & Friends CPR", "Freya's Haus, Scotts Hill Loop Rd", 60),
+            ("AHA BLS Provider", "Brunswick Oral & Maxillofacial Surgery", 90),
+            ("AHA HeartCode BLS", "4018 Shipyard Blvd; Room B @ 910CPR's Office", 0),
+        ]
+        for title, location, expected in cases:
+            with self.subTest(title=title):
+                block = {
+                    "start": datetime(2026, 8, 16, 14, 0),
+                    "end": datetime(2026, 8, 16, 16, 0),
+                    "instructor": "Brian Ennis",
+                    "location": location,
+                    "course_title": title,
+                }
+                block_start_time_selector.apply_travel_time_rule(block, rules)
+                self.assertEqual(expected, block.get("travel_before_minutes", 0))
+                self.assertEqual(expected, block.get("travel_after_minutes", 0))
+                if expected:
+                    self.assertEqual(datetime(2026, 8, 16, 14, 0) - timedelta(minutes=expected), block["instructor_conflict_start"])
+                    self.assertEqual(datetime(2026, 8, 16, 16, 0) + timedelta(minutes=expected), block["instructor_conflict_end"])
+
+    def test_travel_buffer_blocks_brian_but_not_shipyard_room_for_another_instructor(self):
+        block = {
+            "start": datetime(2026, 8, 16, 14, 0),
+            "end": datetime(2026, 8, 16, 16, 0),
+            "instructor_conflict_start": datetime(2026, 8, 16, 13, 0),
+            "instructor_conflict_end": datetime(2026, 8, 16, 17, 0),
+            "instructor": "Brian Ennis",
+            "location": "Freya's Haus",
+            "course_title": "Family & Friends CPR",
+            "source_file": "data/sessions_current.json",
+        }
+        start = datetime(2026, 8, 16, 16, 30)
+        end = datetime(2026, 8, 16, 17, 0)
+        self.assertTrue(block_start_time_selector.generate_dynamic_offers.has_conflict(
+            start, end, [block], ":: Wilmington; Shipyard Blvd", {"display_name": "Brian Ennis"}
+        )[0])
+        self.assertFalse(block_start_time_selector.generate_dynamic_offers.has_conflict(
+            start, end, [block], ":: Wilmington; Shipyard Blvd", {"display_name": "Nick Tripp"}
+        )[0])
 
     def test_closed_full_classes_remain_occupancy_but_not_direct_selector_offers(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()

@@ -347,6 +347,7 @@ def make_blocking_event_block(source: dict[str, Any], event: dict[str, Any], per
         "allowed_course_families": [],
         "source_calendar_id": source.get("calendar_source_key", UNKNOWN),
         "source_event_id": event.get("id") or event.get("event_id") or UNKNOWN,
+        "summary": clean_text(event.get("summary") or event.get("title") or UNKNOWN),
         "source_type": source_type(source),
         "reasons": [
             "read_only_preview",
@@ -586,6 +587,7 @@ def normalize_event_block(source: dict[str, Any], event: dict[str, Any], person:
         "allowed_course_families": [] if blocking else allowed_families_for_person(person, course_catalog),
         "source_calendar_id": source.get("calendar_source_key", UNKNOWN),
         "source_event_id": event.get("id") or event.get("event_id") or UNKNOWN,
+        "summary": clean_text(event.get("summary") or event.get("title") or UNKNOWN),
         "source_type": stype,
         "reasons": [
             "read_only_preview",

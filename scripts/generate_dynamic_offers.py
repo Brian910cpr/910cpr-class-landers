@@ -426,7 +426,16 @@ def has_conflict(start: datetime, end: datetime, occupancy: list[dict[str, Any]]
             continue
         same_location = location and normalize_key(block.get("location")) == normalize_key(location)
         same_instructor = normalize_key(block.get("instructor")) in person_names
-        if (same_location or same_instructor) and intervals_overlap(start, end, block_start, block_end):
+        location_overlap = same_location and intervals_overlap(start, end, block_start, block_end)
+        instructor_start = block.get("instructor_conflict_start") or block_start
+        instructor_end = block.get("instructor_conflict_end") or block_end
+        instructor_overlap = same_instructor and intervals_overlap(start, end, instructor_start, instructor_end)
+        if location_overlap or instructor_overlap:
+            if instructor_overlap and not intervals_overlap(start, end, block_start, block_end):
+                return True, (
+                    f"conflicts with Brian travel buffer ({block.get('travel_rule_key')}) around "
+                    f"{block.get('course_title')} from {block.get('source_file')}"
+                )
             return True, f"conflicts with {block.get('course_title')} from {block.get('source_file')}"
     return False, None
 
@@ -438,8 +447,8 @@ def occupancy_by_date(occupancy: list[dict[str, Any]]) -> dict[str, list[dict[st
         block_end = block.get("end")
         if not block_start or not block_end:
             continue
-        cursor = block_start.date()
-        last = block_end.date()
+        cursor = (block.get("instructor_conflict_start") or block_start).date()
+        last = (block.get("instructor_conflict_end") or block_end).date()
         while cursor <= last:
             indexed.setdefault(cursor.isoformat(), []).append(block)
             cursor += timedelta(days=1)
