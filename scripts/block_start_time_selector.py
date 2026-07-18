@@ -565,12 +565,89 @@ def public_direct_bookable_session(session: dict[str, Any]) -> bool:
     return session.get("public_direct_booking") is not False and clean_text(session.get("registration_status") or "open").lower() not in {"closed", "full"}
 
 
+def session_enrollment_count(session: dict[str, Any]) -> int:
+    for key in ("enrolled_count", "registered_count", "enrolled", "registered"):
+        value = session.get(key)
+        if value is None or isinstance(value, bool):
+            continue
+        try:
+            return max(0, int(value))
+        except (TypeError, ValueError):
+            continue
+    return 0
+
+
+def seated_family_anchors(
+    *,
+    schedule_future_payload: Any,
+    selected_course_ids: set[str],
+    minimum_enrollment: int,
+    location_resource_map: Any,
+) -> list[dict[str, Any]]:
+    """Return real, enrolled same-family sessions that should consolidate a day."""
+    if not isinstance(schedule_future_payload, dict) or not isinstance(schedule_future_payload.get("sessions"), list):
+        return []
+    anchors: list[dict[str, Any]] = []
+    for session in schedule_future_payload["sessions"]:
+        if not isinstance(session, dict):
+            continue
+        if clean_text(session.get("course_id")) not in selected_course_ids:
+            continue
+        if session_enrollment_count(session) < minimum_enrollment:
+            continue
+        start = parse_dt(session.get("start_at"))
+        if not start:
+            continue
+        instructor = clean_text(session.get("lead_instructor_name") or session.get("instructor"))
+        location = clean_text(session.get("location_name") or session.get("location_display"))
+        canonical_location, _resource, _normalized = generate_dynamic_offers.normalize_location_resource(
+            location,
+            location,
+            location_resource_map,
+        )
+        anchors.append({
+            "date": start.date().isoformat(),
+            "startTime": start.strftime("%H:%M"),
+            "sessionId": clean_text(session.get("session_id")),
+            "courseId": clean_text(session.get("course_id")),
+            "instructorKey": normalize_key(instructor),
+            "locationKey": normalize_key(canonical_location or location),
+            "enrollmentCount": session_enrollment_count(session),
+        })
+    return anchors
+
+
+def matching_same_day_anchor(
+    anchors: list[dict[str, Any]],
+    *,
+    day: date,
+    instructor: str,
+    location: str,
+    location_resource_map: Any,
+) -> dict[str, Any] | None:
+    canonical_location, _resource, _normalized = generate_dynamic_offers.normalize_location_resource(
+        location,
+        location,
+        location_resource_map,
+    )
+    instructor_key = normalize_key(instructor)
+    location_key = normalize_key(canonical_location or location)
+    matches = [
+        anchor for anchor in anchors
+        if anchor["date"] == day.isoformat()
+        and anchor["instructorKey"] == instructor_key
+        and anchor["locationKey"] == location_key
+    ]
+    return min(matches, key=lambda item: item["startTime"]) if matches else None
+
+
 def seated_class_selector_offers(
     *,
     schedule_future_payload: Any,
     selected_courses: list[dict[str, Any]],
     selected_course_ids: set[str],
     course_rules: dict[str, dict[str, Any]],
+    minimum_enrollment: int = 0,
 ) -> list[dict[str, Any]]:
     if not isinstance(schedule_future_payload, dict) or not isinstance(schedule_future_payload.get("sessions"), list):
         return []
@@ -581,6 +658,8 @@ def seated_class_selector_offers(
             continue
         course_id = clean_text(session.get("course_id"))
         if course_id not in selected_course_ids or not public_direct_bookable_session(session):
+            continue
+        if session_enrollment_count(session) < minimum_enrollment:
             continue
         start = parse_dt(session.get("start_at"))
         end = parse_dt(session.get("end_at"))
@@ -714,6 +793,13 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     occupancy = build_occupancy(loaded, course_rules)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy)
     reference_now = selector_reference_datetime()
+    anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
+    same_day_anchors = seated_family_anchors(
+        schedule_future_payload=loaded.get("schedule_future"),
+        selected_course_ids=set(allowed_course_ids),
+        minimum_enrollment=anchor_minimum_enrollment,
+        location_resource_map=loaded["location_resource_map"],
+    ) if page_config.get("consolidate_after_seated_family_anchor") is True else []
 
     selected_courses: list[dict[str, Any]] = []
     config_course_options = {
@@ -790,6 +876,15 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 )
                 if conflict:
                     reasons.append("conflicts_with_existing_enrollware_occupancy")
+                same_day_anchor = matching_same_day_anchor(
+                    same_day_anchors,
+                    day=start.date(),
+                    instructor=instructor_name,
+                    location=location,
+                    location_resource_map=loaded["location_resource_map"],
+                )
+                if same_day_anchor:
+                    reasons.append("same_day_family_anchor_already_seated")
                 appointment_day_id, container_id, url, url_blocker = find_url(
                     window,
                     start,
@@ -813,6 +908,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                         "appointmentDayId": appointment_day_id,
                         "reasons": reasons + public_reasons,
                         "conflictReason": conflict_reason,
+                        "sameDayFamilyAnchor": same_day_anchor,
                     })
                     continue
                 offers.append({
@@ -839,6 +935,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 selected_courses=selected_courses,
                 selected_course_ids=set(allowed_course_ids),
                 course_rules=course_rules,
+                minimum_enrollment=int(page_config.get("seated_class_minimum_enrollment") or 0),
             )
         )
 
