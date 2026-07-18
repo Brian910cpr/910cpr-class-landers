@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Force Availability Refresh | LanderWare</title>
+<style>
+:root{--ink:#172133;--muted:#687386;--line:#d9e0e8;--blue:#0a66a5;--green:#167654;--amber:#a96700}*{box-sizing:border-box}body{margin:0;background:#edf2f6;color:var(--ink);font:15px/1.45 Arial,Helvetica,sans-serif}.wrap{max-width:760px;margin:40px auto;padding:18px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 4px 16px rgba(20,32,51,.06)}h1{margin:0 0 6px}.muted{color:var(--muted)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.btn{display:inline-block;border:1px solid var(--line);background:#fff;color:var(--ink);text-decoration:none;border-radius:9px;padding:10px 14px;cursor:pointer}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}.status{margin-top:16px;padding:12px;border-radius:10px;background:#f6f8fa;border:1px solid var(--line)}.status.good{background:#e9f6ef;color:#145c3d}.status.wait{background:#fff5df;color:#8b5a00}.small{font-size:12px}</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+<h1>Force Availability Refresh</h1>
+<p class="muted">Use this when you just changed Brian's inverse-availability calendar and do not want to wait for the normal 5-minute rebuild.</p>
+<div class="actions">
+<a class="btn primary" id="runWorkflow" href="https://github.com/Brian910cpr/910cpr-class-landers/actions/workflows/refresh-admin-availability.yml" target="_blank" rel="noopener">Open Force Refresh</a>
+<button class="btn" id="reloadPublished">Reload Published Data</button>
+<a class="btn" href="/admin/dashboard.html">Back to Dashboard</a>
+</div>
+<div id="status" class="status">Checking the current published availability timestamp…</div>
+<p class="small muted">On the GitHub Actions page, click <b>Run workflow</b>. This page will keep checking the published availability feed and will show when a newer build appears.</p>
+</div></div>
+<script>
+const FEED='/data/admin_availability.json';
+const statusEl=document.getElementById('status');
+let baseline=null;
+function stampOf(data){return data&&data.generated_at?new Date(data.generated_at):null}
+function fmt(d){return d&& !isNaN(d)?d.toLocaleString():'unknown'}
+async function check(){
+  try{
+    const r=await fetch(`${FEED}?t=${Date.now()}`,{cache:'no-store'});
+    if(!r.ok)throw new Error(String(r.status));
+    const data=await r.json();
+    const stamp=stampOf(data);
+    if(!baseline){baseline=stamp;statusEl.className='status';statusEl.innerHTML=`Current published availability: <b>${fmt(stamp)}</b>`;return}
+    if(stamp&&baseline&&stamp>baseline){statusEl.className='status good';statusEl.innerHTML=`✓ Availability refresh published: <b>${fmt(stamp)}</b><br><span class="small">The dashboard and public selector feeds can now reload the new data.</span>`;baseline=stamp;return}
+    statusEl.className='status wait';statusEl.innerHTML=`Waiting for a newer published build…<br><span class="small">Current: ${fmt(stamp)} · started from ${fmt(baseline)}</span>`;
+  }catch(e){statusEl.className='status wait';statusEl.textContent='Could not read the published availability feed yet. Retrying…'}
+}
+document.getElementById('runWorkflow').addEventListener('click',()=>{statusEl.className='status wait';statusEl.innerHTML='GitHub Actions opened. Click <b>Run workflow</b>; this page will detect the new published timestamp.'});
+document.getElementById('reloadPublished').addEventListener('click',()=>{location.href='/admin/dashboard.html?refresh='+Date.now()});
+check();setInterval(check,10000);
+</script>
+</body>
+</html>
