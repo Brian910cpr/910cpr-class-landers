@@ -69,7 +69,6 @@ jobs:
           python - <<'PY'
           import json
           from scripts.block_start_time_selector import (
-              apply_final_enrollware_appointment_guard,
               build_block_schedule_page,
               load_block_schedule_page_configs,
           )
@@ -82,7 +81,6 @@ jobs:
           configs = load_block_schedule_page_configs()
           for page_key, page_config in configs.items():
               payload = apply_final_live_availability_guard(build_block_schedule_page(page_config))
-              payload = apply_final_enrollware_appointment_guard(payload)
               output = selector_availability_path(page_key)
               output.parent.mkdir(parents=True, exist_ok=True)
               output.write_text(
