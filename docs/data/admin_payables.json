@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "generated_at": null,
+  "payables": [],
+  "payment_description_format": "{course} | {class_date} {class_time} | {location} | {client}",
+  "statuses": [
+    "draft",
+    "ready_for_review",
+    "approved",
+    "ready_to_pay",
+    "paid",
+    "void"
+  ]
+}
