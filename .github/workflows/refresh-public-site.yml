@@ -79,35 +79,35 @@ jobs:
           $script | python -
 
       - name: Skip unchanged iCal feed
-        if: steps.ical.outputs.changed == 'false'
+        if: steps.ical.outputs.changed == 'false' && github.event_name != 'workflow_dispatch'
         shell: pwsh
         run: |
           Write-Host "Enrollware iCal hash unchanged. Skipping public build and commit."
 
       - name: Run full validated public build
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         shell: cmd
         run: build\full_validated_public_build.bat
 
       - name: Run link audit
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         shell: pwsh
         run: python -m scripts.audit_sitewide_links
 
       - name: Run unit tests
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         shell: pwsh
         run: python -m unittest discover tests
 
       - name: Update stored iCal hash
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force data/state_public | Out-Null
           Set-Content -Path data/state_public/enrollware_ical_hash.txt -Value "${{ steps.ical.outputs.current_hash }}" -NoNewline -Encoding utf8
 
       - name: Commit approved public output
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
