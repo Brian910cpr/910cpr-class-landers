@@ -803,18 +803,20 @@ def intervals_overlap(a_start: Any, a_end: Any, b_start: Any, b_end: Any) -> boo
 
 def build_appointment_url_offers(
     seed_preview_payload: Any,
+    real_session_starts: dict[str, list[datetime]],
     course_catalog: dict[str, dict[str, Any]],
     course_map: dict[str, dict[str, Any]],
     hubs: dict[str, list[dict[str, str]]],
     visibility_policy: Any,
     policy: dict[str, Any],
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     offers: list[dict[str, Any]] = []
     rejections: list[dict[str, Any]] = []
     previews = seed_preview_payload.get("previews", []) if isinstance(seed_preview_payload, dict) else []
-    for preview in previews:
-        if not isinstance(preview, dict):
-            continue
+    for preview in sorted(
+        [item for item in previews if isinstance(item, dict)],
+        key=lambda item: parse_dt(item.get("scheduler_consumption_start") or item.get("appointment_display_start")) or datetime.max,
+    ):
         course_id = clean_text(preview.get("course_id"))
         course = course_catalog.get(course_id)
         course_map_record = course_map.get(course_id)
@@ -846,6 +848,14 @@ def build_appointment_url_offers(
         block_id = clean_text(preview.get("source_availability_window")) or clean_text(preview.get("source_offer_id")) or clean_text(preview.get("seed_id"))
         course_key_value = course_key(course, course_map_record)
         start_dt = parse_dt(preview.get("scheduler_consumption_start") or preview.get("appointment_display_start"))
+        cooldown_hours = cooldown_hours_for_course(course, course_map_record, policy)
+        if start_dt and course_recently_visible(course_id, start_dt, real_session_starts, offers, cooldown_hours):
+            rejections.append({
+                **context,
+                "reason_code": "offer_again_cooldown_window",
+                "detail": f"{cooldown_hours}_hours",
+            })
+            continue
         first_public_at, first_public_lead_hours = first_public_at_for_candidate(
             start_dt or datetime.now(),
             course_family(course, course_map_record),
@@ -1017,7 +1027,7 @@ def build_request_block_offers(
             rejections.append({**context, "reason_code": "max_request_block_offers_per_course"})
             continue
         cooldown_hours = cooldown_hours_for_course(course, course_map_record, policy)
-        if course_recently_visible(course_id, start_dt, real_session_starts, appointment_offers, cooldown_hours):
+        if course_recently_visible(course_id, start_dt, real_session_starts, [*appointment_offers, *built], cooldown_hours):
             rejections.append({**context, "reason_code": "offer_again_cooldown_window", "detail": f"{cooldown_hours}_hours"})
             continue
         week_key = f"{start_dt.isocalendar().year}-W{start_dt.isocalendar().week:02d}"
@@ -1491,6 +1501,7 @@ def build_inventory(loaded: dict[str, Any]) -> dict[str, Any]:
     real_starts = real_session_starts_by_course(loaded.get("schedule_future"))
     appointment_offers, appointment_rejections = build_appointment_url_offers(
         loaded.get("seed_appointment_url_preview"),
+        real_starts,
         course_catalog,
         course_map,
         hubs,

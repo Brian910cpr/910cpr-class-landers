@@ -24,7 +24,7 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                         "appointment_display_end": future.replace(hour=18, minute=45, second=0, microsecond=0).isoformat(),
                         "scheduler_consumption_start": future.replace(hour=18, minute=0, second=0, microsecond=0).isoformat(),
                         "scheduler_consumption_end": future.replace(hour=19, minute=30, second=0, microsecond=0).isoformat(),
-                        "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+                        "location": ":: Wilmington; Shipyard Blvd - B",
                         "instructor_display_name": "Brian Ennis",
                         "source_availability_window": "test-block",
                     }
@@ -98,6 +98,9 @@ class UniversalOfferInventoryTests(unittest.TestCase):
                 "max_request_block_offers_per_course_per_week": 2,
                 "max_total_request_block_offers_per_hub": 12,
                 "max_start_times_per_block_per_page": 3,
+                "default_offer_again_cooldown_hours": 24,
+                "offer_again_cooldown_hours_by_family": {},
+                "offer_again_cooldown_hours_by_course_id": {},
                 "preferred_start_minutes": ["00", "30", "15", "45"],
                 "request_only_families": ["Heartsaver"],
                 "stacking_compatibility_groups": {
@@ -181,9 +184,69 @@ class UniversalOfferInventoryTests(unittest.TestCase):
 
         payload = engine.build_inventory(loaded)
 
-        self.assertEqual(2, payload["summary"]["request_only_block_offers_generated"])
-        self.assertIn("max_start_times_per_block_per_page", payload["summary"]["rejections_by_reason"])
+        self.assertEqual(1, payload["summary"]["request_only_block_offers_generated"])
+        self.assertIn("offer_again_cooldown_window", payload["summary"]["rejections_by_reason"])
         self.assertEqual(1, payload["summary"]["stack_groups_created"])
+
+    def test_repeat_exact_course_is_separated_by_24_hours(self) -> None:
+        loaded = self.base_loaded()
+        base = (datetime.now() + timedelta(days=7)).replace(hour=10, minute=0, second=0, microsecond=0)
+        loaded["dynamic_offers_preview"]["offers"] = [
+            {
+                **loaded["dynamic_offers_preview"]["offers"][0],
+                "offer_id": f"offer-{index}",
+                "date": start.date().isoformat(),
+                "start_time": start.strftime("%H:%M"),
+                "appointment_display_start": start.isoformat(),
+                "appointment_display_end": (start + timedelta(minutes=45)).isoformat(),
+                "scheduler_consumption_start": start.isoformat(),
+                "scheduler_consumption_end": (start + timedelta(minutes=90)).isoformat(),
+            }
+            for index, start in enumerate([base, base + timedelta(hours=2)], start=1)
+        ]
+        loaded["universal_offer_policy"]["minimum_visible_offers_per_course"] = 10
+
+        payload = engine.build_inventory(loaded)
+
+        request_offers = [offer for offer in payload["offers"] if offer["offer_type"] == "request_only_block"]
+        self.assertEqual(1, len(request_offers))
+        self.assertEqual("209808", request_offers[0]["course_id"])
+        self.assertIn("offer_again_cooldown_window", payload["summary"]["rejections_by_reason"])
+
+    def test_different_exact_courses_are_not_separated_by_cooldown(self) -> None:
+        loaded = self.base_loaded()
+        base = (datetime.now() + timedelta(days=7)).replace(hour=10, minute=0, second=0, microsecond=0)
+        first = loaded["dynamic_offers_preview"]["offers"][0]
+        loaded["dynamic_offers_preview"]["offers"] = [
+            {
+                **first,
+                "offer_id": "offer-1",
+                "date": base.date().isoformat(),
+                "start_time": base.strftime("%H:%M"),
+                "appointment_display_start": base.isoformat(),
+                "appointment_display_end": (base + timedelta(minutes=45)).isoformat(),
+                "scheduler_consumption_start": base.isoformat(),
+                "scheduler_consumption_end": (base + timedelta(minutes=90)).isoformat(),
+            },
+            {
+                **first,
+                "offer_id": "offer-2",
+                "course_id": "329495",
+                "course_title": "AHA Heartsaver First Aid CPR AED - Blended",
+                "date": base.date().isoformat(),
+                "start_time": (base + timedelta(hours=2)).strftime("%H:%M"),
+                "appointment_display_start": (base + timedelta(hours=2)).isoformat(),
+                "appointment_display_end": (base + timedelta(hours=2, minutes=45)).isoformat(),
+                "scheduler_consumption_start": (base + timedelta(hours=2)).isoformat(),
+                "scheduler_consumption_end": (base + timedelta(hours=3, minutes=30)).isoformat(),
+            },
+        ]
+        loaded["universal_offer_policy"]["minimum_visible_offers_per_course"] = 10
+
+        payload = engine.build_inventory(loaded)
+
+        request_offers = [offer for offer in payload["offers"] if offer["offer_type"] == "request_only_block"]
+        self.assertEqual({"209808", "329495"}, {offer["course_id"] for offer in request_offers})
 
     def test_inside_lead_time_becomes_planned_visibility_candidate(self) -> None:
         loaded = self.base_loaded()

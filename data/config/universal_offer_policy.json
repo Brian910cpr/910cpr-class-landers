@@ -16,7 +16,7 @@
   "max_request_block_offers_per_course_per_week": 2,
   "max_total_request_block_offers_per_hub": 12,
   "max_start_times_per_block_per_page": 3,
-  "default_offer_again_cooldown_hours": 0,
+  "default_offer_again_cooldown_hours": 24,
   "offer_again_cooldown_hours_by_family": {},
   "offer_again_cooldown_hours_by_course_id": {},
   "preferred_start_minutes": [
