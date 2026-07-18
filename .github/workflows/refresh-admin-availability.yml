@@ -2,8 +2,6 @@ name: Refresh admin availability
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/5 * * * *'
   push:
     paths:
       - '.github/workflows/refresh-admin-availability.yml'
