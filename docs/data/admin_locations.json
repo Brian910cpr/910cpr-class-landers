@@ -1,0 +1,54 @@
+{
+  "generated_at": "2026-07-18T11:41:06.577346+00:00",
+  "locations": [
+    {
+      "location_key": "shipyard",
+      "canonical_public_location": ":: Wilmington; Shipyard Blvd",
+      "public_display_name": "910CPR Shipyard Office",
+      "aliases": [
+        "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+        ":: Wilmington; Shipyard Blvd",
+        "Wilmington; Shipyard Blvd",
+        "Shipyard Office"
+      ],
+      "internal_resources": [
+        {
+          "resource_name": ":: Wilmington; Shipyard Blvd - A",
+          "aliases": [
+            "NC - Wilmington: 4018 Shipyard Blvd; Room A @ 910CPR's Office"
+          ],
+          "confirmed_appointment_container": false,
+          "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+        },
+        {
+          "resource_name": ":: Wilmington; Shipyard Blvd - B",
+          "aliases": [
+            "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+          ],
+          "confirmed_appointment_container": false,
+          "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+        },
+        {
+          "resource_name": ":: Wilmington; Shipyard Blvd - C",
+          "aliases": [],
+          "confirmed_appointment_container": false,
+          "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+        },
+        {
+          "resource_name": ":: Wilmington; Shipyard Blvd - C (Other)",
+          "aliases": [
+            "NC - Wilmington: 4018 Shipyard Blvd; Room C @ 910CPR's Office"
+          ],
+          "confirmed_appointment_container": false,
+          "notes": "Internal resource alias only until Brian/Enrollware confirms a deterministic appointment container."
+        },
+        {
+          "resource_name": "Shipyard Office",
+          "aliases": [],
+          "confirmed_appointment_container": true,
+          "notes": "Matches the currently confirmed Brian Shipyard appointment container resource label."
+        }
+      ]
+    }
+  ]
+}

@@ -2,43 +2,25 @@
   "phase_name": "build_sessions_current",
   "worker": "build_sessions_current",
   "script": "scripts/build_sessions_current.py",
-  "status": "done",
-  "last_run": "2026-06-20T16:10:18.050302-04:00",
-  "current_count": 224,
-  "total_count": 224,
-  "percent_complete": 100.0,
-  "last_output_file": "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
-  "timestamp": "2026-06-20T16:10:18.050302-04:00",
+  "status": "waiting",
+  "last_run": "2026-07-18T07:39:05.306388-04:00",
+  "current_count": 0,
+  "total_count": 0,
+  "percent_complete": null,
+  "last_output_file": null,
+  "timestamp": "2026-07-18T07:39:05.306388-04:00",
   "last_successful_run": "2026-06-20T16:10:18.050302-04:00",
   "inputs": [
-    "E:\\GitHub\\910cpr-class-landers\\data\\private\\enrollware\\Class Report.xlsx",
-    "E:\\GitHub\\910cpr-class-landers\\data\\raw\\classes_raw_live.csv",
-    "E:\\GitHub\\910cpr-class-landers\\data\\raw\\students_raw_live.csv",
-    "E:\\GitHub\\910cpr-class-landers\\data\\config\\course_map.json"
+    "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/config/course_map.json"
   ],
   "outputs": [
-    "E:\\GitHub\\910cpr-class-landers\\data\\sessions_current.json",
-    "E:\\GitHub\\910cpr-class-landers\\data\\audit\\unmapped_courses.json",
-    "E:\\GitHub\\910cpr-class-landers\\data\\audit\\course_map_conflicts.json",
-    "E:\\GitHub\\910cpr-class-landers\\data\\audit\\missing_descriptions.json",
-    "E:\\GitHub\\910cpr-class-landers\\data\\audit\\missing_descriptions_report.md",
-    "E:\\GitHub\\910cpr-class-landers\\data\\audit\\name_dependency_report.md"
+    "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/sessions_current.json",
+    "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/audit/enrollware_ical_import_summary.json",
+    "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/audit/enrollware_ical_import_report.md"
   ],
-  "counts": {
-    "sessions_written": 224,
-    "class_report_rows": 224,
-    "unmapped_sessions": 3,
-    "mapping_conflicts": 0,
-    "courses_needing_description_review": 12
-  },
+  "counts": {},
   "pages_generated": null,
-  "warnings": [
-    "3 unmapped sessions need course mapping.",
-    "12 mapped courses need description review."
-  ],
+  "warnings": [],
   "errors": [],
-  "files_needing_review": [
-    "E:\\GitHub\\910cpr-class-landers\\data\\audit\\unmapped_courses.json",
-    "E:\\GitHub\\910cpr-class-landers\\data\\audit\\missing_descriptions.json"
-  ]
+  "files_needing_review": []
 }
