@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LanderWare Payments</title>
+<style>
+:root{--ink:#172133;--muted:#687386;--line:#d9e0e8;--blue:#0a66a5;--green:#167654;--amber:#a96700}*{box-sizing:border-box}body{margin:0;background:#edf2f6;color:var(--ink);font:14px/1.4 Arial,Helvetica,sans-serif}header{padding:15px 22px;background:#13263a;color:#fff;display:flex;justify-content:space-between;align-items:center}header h1{margin:0;font-size:24px}.wrap{max-width:1300px;margin:auto;padding:16px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:0 4px 16px rgba(20,32,51,.05);margin-bottom:14px}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.muted{color:var(--muted)}.queue{display:grid;gap:9px;margin-top:12px}.payable{display:grid;grid-template-columns:minmax(180px,.8fr) minmax(280px,1.7fr) auto auto;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:10px}.amount{font-size:20px;font-weight:800}.desc{font-weight:700}.meta{font-size:12px;color:var(--muted);margin-top:3px}.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef4f8;font-size:11px;font-weight:700}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.empty{padding:35px 10px;text-align:center;color:var(--muted)}@media(max-width:800px){.payable{grid-template-columns:1fr}.amount{font-size:18px}}
+</style>
+</head>
+<body>
+<header><div><h1>Payments Ready</h1><div style="opacity:.8">LanderWare staged payables</div></div><a href="/admin/dashboard.html" style="color:white">Dashboard</a></header>
+<div class="wrap">
+<section class="panel">
+  <div class="toolbar"><div><h2 style="margin:0">Ready to Pay</h2><div class="muted">Every payment keeps the class or event description attached to it.</div></div><span id="summary" class="badge">Loading…</span></div>
+  <div id="queue" class="queue"></div>
+</section>
+</div>
+<script>
+const PAYABLES_URL='/data/admin_payables.json';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n||0));
+function description(p){return p.description||[p.course,p.class_date&&p.class_time?`${p.class_date} ${p.class_time}`:p.class_date,p.location,p.client].filter(Boolean).join(' | ')||'Class or event payment';}
+async function load(){const q=document.getElementById('queue'),s=document.getElementById('summary');try{const r=await fetch(PAYABLES_URL,{cache:'no-store'});if(!r.ok)throw Error(r.status);const data=await r.json();const rows=(data.payables||[]).filter(p=>['approved','ready_to_pay'].includes(String(p.status||'').toLowerCase()));s.textContent=`${rows.length} payment${rows.length===1?'':'s'} ready`;
+if(!rows.length){q.innerHTML='<div class="empty"><b>Nothing waiting for payment.</b><br>LanderWare will place approved instructor and subcontractor payments here.</div>';return}
+q.innerHTML=rows.map(p=>`<div class="payable"><div><b>${esc(p.payee_name||'Payee')}</b><div class="amount">${money(p.amount)}</div></div><div><div class="desc">${esc(description(p))}</div><div class="meta">${esc(p.memo||'')}</div></div><div><span class="badge">${esc(p.status||'ready_to_pay')}</span></div><div><a class="btn primary" href="${esc(p.payment_url||'#')}" ${p.payment_url?'':'aria-disabled="true" onclick="return false"'}>${p.payment_url?'Review / Pay':'Payment link pending'}</a></div></div>`).join('');}catch(e){s.textContent='Feed unavailable';q.innerHTML='<div class="empty">Could not load the staged payables feed.</div>'}}
+load();
+</script>
+</body>
+</html>
