@@ -76,7 +76,7 @@
       "all_day_means_available": false,
       "allow_non_standard_time_increment": false,
       "inverse_expansion_enabled": true,
-      "inverse_expansion_horizon_days": 120,
+      "inverse_expansion_horizon_days": 90,
       "inverse_expansion_day_start_time": "00:00",
       "inverse_expansion_day_end_time": "24:00",
       "inverse_expansion_min_gap_minutes": 90,
