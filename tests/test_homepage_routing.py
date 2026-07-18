@@ -80,6 +80,13 @@ def local_path_for_href(href: str) -> Path | None:
 
 
 class HomepageRoutingTests(unittest.TestCase):
+    def test_homepage_prominently_displays_arc_ltp_credential(self) -> None:
+        html = read(INDEX)
+        self.assertIn('class="arc-ltp-feature"', html)
+        self.assertIn('src="/images/ARCLTP.png"', html)
+        self.assertIn("American Red Cross Licensed Training Provider", html)
+        self.assertIn('href="/arc.html"', html)
+
     def test_runtime_course_cards_use_canonical_destinations_and_images(self) -> None:
         js = read(BOOKING_HOME)
         for label, (href, image) in CANONICAL_RUNTIME_CARDS.items():

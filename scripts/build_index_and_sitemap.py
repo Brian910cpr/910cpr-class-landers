@@ -1824,7 +1824,7 @@ def render_homepage() -> str:
   "@id": f"{SITE_BASE}/#organization",
   "name": "910CPR",
   "url": f"{SITE_BASE}/",
-  "description": "Authorized American Heart Association Training Site providing CPR, BLS, ACLS, PALS & Heartsaver courses throughout Coastal North Carolina.",
+  "description": "American Heart Association Training Site and American Red Cross Licensed Training Provider offering CPR, BLS, ACLS, PALS, First Aid, and Heartsaver courses throughout Coastal North Carolina.",
   "areaServed": ["Wilmington NC", "Holly Ridge NC", "Jacksonville NC", "Burgaw NC", "Leland NC", "Coastal North Carolina"],
 }, indent=2)}
 </script>
@@ -1851,10 +1851,15 @@ def render_homepage() -> str:
           </div>
         </div>
         <div class="hero-side">
-          <div class="trust-badge">
-            <strong>Not sure what they meant?</strong>
-            <span>Use the exact wording from your email, form, or job requirement. If it says BLS, ACLS, PALS, First Aid, Red Cross, HSI, or USCG, start below.</span>
-          </div>
+          <a class="arc-ltp-feature" href="/arc.html" aria-label="Explore American Red Cross classes from a Licensed Training Provider">
+            <img src="/images/ARCLTP.png" alt="American Red Cross Licensed Training Provider" loading="eager">
+            <span class="arc-ltp-feature-copy">
+              <span class="arc-ltp-feature-eyebrow">Proudly recognized</span>
+              <strong>American Red Cross Licensed Training Provider</strong>
+              <span>Choose Red Cross BLS, CPR/AED, and First Aid training.</span>
+              <b>Explore Red Cross classes →</b>
+            </span>
+          </a>
         </div>
       </section>
 
