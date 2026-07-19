@@ -606,12 +606,12 @@
           "course_id": "248288",
           "display_label": "American Red Cross Basic Life Support",
           "icon_label": "ARC",
-          "clarification": "Red Cross BLS classroom option.",
+          "clarification": "Red Cross BLS classroom training for healthcare and medical professionals.",
           "delivery_mode": "in-person",
           "variant": "bls",
-          "image_url": "/images/arc-in-person-training.png",
+          "image_url": "/images/arc-bls-medical-training.jpg",
           "image_fit": "cover",
-          "image_alt": "American Red Cross Basic Life Support course option",
+          "image_alt": "Medical professionals practicing CPR during American Red Cross Basic Life Support training",
           "delivery_badge": "IN-PERSON"
         },
         {

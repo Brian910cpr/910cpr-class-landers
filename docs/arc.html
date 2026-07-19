@@ -566,10 +566,10 @@
     <div class="page-heading-row">
       <div>
         <h1>Red Cross CPR &amp; BLS Classes</h1>
-
+        
         <p class="muted">Choose the Red Cross course your requirement names, then select any time with enough room for the complete class.</p>
       </div>
-
+      
       <aside class="header-credential" aria-label="American Red Cross Licensed Training Provider">
         <img src="/images/Logo_Vertical-Red-Cross-LTP.jpg" alt="American Red Cross Licensed Training Provider" loading="eager">
         <div>
@@ -579,7 +579,7 @@
         </div>
       </aside>
     </div>
-
+    
     <div class="family-help" aria-label="Course format guide">
       <div class="family-help-title">Course format guide</div>
       <div class="delivery-help-list">
@@ -595,13 +595,13 @@
     </div>
   </header>
   <main>
-
+    
     <section class="page-context" aria-label="Course context">
-
-
-
+      
+      
+      
     </section>
-
+    
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
@@ -610,12 +610,12 @@
             <p class="muted">Choose the course or delivery format first.</p>
           </div>
           <div class="option-tools">
-
+            
           <label class="disclosure-toggle">
             <input id="show-all-toggle" type="checkbox">
             <span>Show all Red Cross course options</span>
           </label>
-
+            
           </div>
         </div>
         <div class="course-rail" data-course-rail>
@@ -644,7 +644,7 @@
   <script>
     const embeddedScheduleDates = [];
     const availabilityUrl = "/data/block-selector-availability/arc.json?v=2026-07-18T17%3A38%3A51.199491";
-    const courseOptions = [{"courseId": "248288", "courseName": "American Red Cross Basic Life Support", "family": "ARC", "variant": "bls", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["bls"], "iconLabel": "ARC", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Basic Life Support course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross BLS classroom option.", "details": {"course_key": "arc_bls", "title": "American Red Cross Basic Life Support", "certifying_body": "ARC", "family": "BLS", "short_description": "Red Cross BLS option for healthcare students and providers whose requirement specifically accepts ARC.", "who_this_is_for": "Students whose employer, school, or program asks for American Red Cross BLS.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Course materials as assigned for the selected Red Cross class format."], "certification_issued": "American Red Cross certificate after successful completion.", "compliance_acceptance_notes": ["Use ARC only when your requirement accepts or requests Red Cross certification."], "full_course_page": "/arc.html"}}, {"courseId": "372258", "courseName": "American Red Cross Adult CPR/AED", "family": "ARC", "variant": "cpr-aed", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["cpr-aed"], "iconLabel": "CPR", "imageUrl": "/images/arc-blended-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Adult CPR AED course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Red Cross Adult CPR/AED skills option.", "details": {}}, {"courseId": "369209", "courseName": "American Red Cross First Aid/CPR/AED", "family": "ARC", "variant": "first-aid-cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross First Aid CPR AED course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "details": {}}];
+    const courseOptions = [{"courseId": "248288", "courseName": "American Red Cross Basic Life Support", "family": "ARC", "variant": "bls", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["bls"], "iconLabel": "ARC", "imageUrl": "/images/arc-bls-medical-training.jpg", "imageFit": "cover", "imageAlt": "Medical professionals practicing CPR during American Red Cross Basic Life Support training", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross BLS classroom training for healthcare and medical professionals.", "details": {"course_key": "arc_bls", "title": "American Red Cross Basic Life Support", "certifying_body": "ARC", "family": "BLS", "short_description": "Red Cross BLS option for healthcare students and providers whose requirement specifically accepts ARC.", "who_this_is_for": "Students whose employer, school, or program asks for American Red Cross BLS.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Course materials as assigned for the selected Red Cross class format."], "certification_issued": "American Red Cross certificate after successful completion.", "compliance_acceptance_notes": ["Use ARC only when your requirement accepts or requests Red Cross certification."], "full_course_page": "/arc.html"}}, {"courseId": "372258", "courseName": "American Red Cross Adult CPR/AED", "family": "ARC", "variant": "cpr-aed", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["cpr-aed"], "iconLabel": "CPR", "imageUrl": "/images/arc-blended-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Adult CPR AED course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Red Cross Adult CPR/AED skills option.", "details": {}}, {"courseId": "369209", "courseName": "American Red Cross First Aid/CPR/AED", "family": "ARC", "variant": "first-aid-cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross First Aid CPR AED course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "details": {}}];
     const optionGroups = {"ARC": {"family": "ARC", "label": "All Red Cross options", "courseIds": ["248288", "372258", "369209"]}};
     const unsupportedOptions = [];
     let scheduleDates = embeddedScheduleDates;

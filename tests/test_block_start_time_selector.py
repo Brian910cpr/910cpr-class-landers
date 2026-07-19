@@ -157,7 +157,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertEqual("/images/Logo_Vertical-Red-Cross-LTP.jpg", config["header_credential"]["image_url"])
         self.assertEqual("American Red Cross Licensed Training Provider", config["header_credential"]["title"])
         images = {option["course_id"]: option["image_url"] for option in config["course_options"]}
-        self.assertEqual("/images/arc-in-person-training.png", images["248288"])
+        self.assertEqual("/images/arc-bls-medical-training.jpg", images["248288"])
         self.assertEqual("/images/arc-blended-training.png", images["372258"])
         self.assertEqual("/images/arc-in-person-training.png", images["369209"])
         self.assertTrue(all(option["image_fit"] == "cover" for option in config["course_options"]))
