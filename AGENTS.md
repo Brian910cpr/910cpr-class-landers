@@ -265,4 +265,38 @@ Priorities:
 Prefer practical operational improvements over theoretical perfection.
 
 
+\## Enrollware and Public Inventory Safety
+
+\* Preserve Enrollware-driven class data and existing course IDs unless explicitly changing them.
+\* Never guess Enrollware course IDs.
+\* Treat public class visibility, lead-time rules, timezone handling, instructor availability, appointment URLs, and availability filtering as high-risk logic.
+\* Existing Enrollware classes and occupied scheduler windows must block conflicting dynamic offers.
+\* Public dynamic appointment-seed offers must be traceable from final rendered HTML back to source availability, course ID, appointmentDayId, startTime, location, and course mapping.
+\* Do not treat backend or generated data as proof that the customer-facing site works. Verify rendered pages and links.
+\* When changing schedule or class-generation logic, report the input data used, availability blocks found, offers generated, offers filtered out, top rejection reasons, and final public offer count.
+
+
+\## Narrow-Change Gate
+
+\* Do not run the complete build chain for CSS, copy, link, header, footer, or isolated JavaScript repairs.
+\* Before running any generator, report the exact command, expected output directories, and estimated file count.
+\* A generator affecting more than 10 unexpected files is a stop condition. Do not continue, stage, or deploy until the scope is reviewed.
+\* In a dirty worktree, emergency repairs may proceed only by staging explicit files. Never stage unrelated generated pages, audits, caches, or runtime artifacts.
+
+
+\## Public Deployment Completion
+
+\* A public repair is not complete when it exists only locally.
+\* When Brian requests the public site fixed, commit only the intended files, push, merge, wait for the production GitHub Pages deployment, and verify the live page and every changed CSS or JavaScript asset.
+\* Cloudflare preview failure is not proof of production failure when GitHub Pages is the production host; report the two statuses separately.
+\* Version changed CSS and JavaScript references so customer browsers cannot combine new HTML with stale assets.
+
+
+\## Owner Page Diagnostics
+
+\* Generated public pages should include machine-readable page ID, Git commit/build ID, deployment timestamp, and CSS/JavaScript asset versions without secrets or private data.
+\* Provide an unobtrusive owner-friendly control that copies the current URL and those diagnostic values for pasting into Codex or ChatGPT.
+\* Do not hide diagnostics inside visible words, microscopic text, or invisible Unicode characters.
+
+
 
