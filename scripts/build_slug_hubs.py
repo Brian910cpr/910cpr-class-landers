@@ -3491,7 +3491,7 @@ def render_ecosystem_page(
 <link rel="icon" type="image/png" href="images/logo.png">
 <link rel="shortcut icon" href="images/logo.png">
 <link rel="apple-touch-icon" href="images/logo.png">
-<link rel="stylesheet" href="css/lander.css">
+<link rel="stylesheet" href="/css/lander.css">
 </head>
 <body>
 <div class="wrap">
@@ -3660,7 +3660,7 @@ def render_page(
 <link rel="icon" type="image/png" href="images/logo.png">
 <link rel="shortcut icon" href="images/logo.png">
 <link rel="apple-touch-icon" href="images/logo.png">
-<link rel="stylesheet" href="css/lander.css">
+<link rel="stylesheet" href="/css/lander.css">
 </head>
 <body>
 <div class="wrap">
