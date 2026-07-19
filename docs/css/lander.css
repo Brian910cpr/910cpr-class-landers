@@ -70,6 +70,8 @@ a {
 .site-brand-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 18px;
   padding: 14px 18px 4px;
 }
 
@@ -1025,6 +1027,48 @@ a {
   grid-template-columns: minmax(0, 1fr) 370px;
   gap: 18px;
   padding: 28px 28px 14px;
+}
+
+.site-header-phone {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  color: var(--heading);
+  font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1;
+  font-weight: 850;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.site-header-phone:hover,
+.site-header-phone:focus-visible {
+  color: var(--accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 520px) {
+  .site-brand-bar {
+    gap: 10px;
+    padding-inline: 10px;
+  }
+
+  .site-brand-link {
+    gap: 7px;
+  }
+
+  .site-brand-logo {
+    height: 38px;
+  }
+
+  .site-brand-wordmark {
+    font-size: 18px;
+  }
+
+  .site-header-phone {
+    font-size: 17px;
+  }
 }
 
 .home-hero .hero-side {
