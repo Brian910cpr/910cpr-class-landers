@@ -49,6 +49,50 @@
     .back-link:focus {
       text-decoration: underline;
     }
+    .page-heading-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+      gap: 24px;
+      align-items: center;
+    }
+    .header-credential {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 2px solid #d71920;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #fff 0%, #fff7f7 100%);
+      box-shadow: 0 10px 24px rgba(120, 18, 22, .12);
+    }
+    .header-credential img {
+      display: block;
+      width: 92px;
+      max-height: 108px;
+      object-fit: contain;
+    }
+    .header-credential strong {
+      display: block;
+      color: #9d1118;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+    .header-credential p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.35;
+    }
+    .header-credential-eyebrow {
+      display: block;
+      margin-bottom: 3px;
+      color: #d71920;
+      font-size: .7rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
     .family-help {
       border: 1px solid var(--line);
       border-radius: 10px;
@@ -257,6 +301,10 @@
       object-position: center;
       padding: 6px;
     }
+    .course-icon img.course-image-cover {
+      object-fit: cover;
+      padding: 0;
+    }
     .course-icon-fallback {
       display: inline-flex;
       align-items: center;
@@ -447,6 +495,9 @@
       background: var(--band);
     }
     @media (max-width: 820px) {
+      .page-heading-row { grid-template-columns: 1fr; }
+      .header-credential { grid-template-columns: 76px minmax(0, 1fr); }
+      .header-credential img { width: 76px; max-height: 92px; }
       .selector-grid { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
@@ -526,9 +577,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <header>
     <a class="back-link" href="/index.html#courses">← Back to All Courses</a>
-    <h1>HSI CPR, First Aid &amp; BLS Classes</h1>
-    
-    <p class="muted">Choose the HSI class that fits your requirement, then select a date and time.</p>
+    <div class="page-heading-row">
+      <div>
+        <h1>HSI CPR, First Aid &amp; BLS Classes</h1>
+        
+        <p class="muted">Choose the HSI class that fits your requirement, then select a date and time.</p>
+      </div>
+      
+    </div>
     
     <div class="family-help" aria-label="Course format guide">
       <div class="family-help-title">Course format guide</div>
@@ -597,8 +653,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-07-18T12%3A52%3A14.158218";
-    const courseOptions = [{"courseId": "463743", "courseName": "HSI BLS Challenge", "family": "HSI", "variant": "challenge", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["challenge", "challenge", "hsi-bls", "bls"], "iconLabel": "HSI", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageAlt": "HSI BLS Challenge course option", "deliveryBadge": "IN-PERSON", "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.", "details": {"course_key": "hsi_bls_challenge", "title": "HSI BLS Challenge", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.", "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."], "certification_issued": "HSI certification issued after successful completion.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."], "full_course_page": "/hsi.html"}}, {"courseId": "445670", "courseName": "HSI BLS + Adult First Aid", "family": "HSI", "variant": "bls-first-aid", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["bls-first-aid", "bls-first-aid", "hsi-bls-fa", "hsi-bls-first-aid"], "iconLabel": "FA", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageAlt": "HSI BLS + Adult First Aid course option", "deliveryBadge": "BLENDED", "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.", "details": {"course_key": "hsi_bls_adult_first_aid", "title": "HSI BLS + Adult First Aid", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI blended option combining Basic Life Support with Adult First Aid/CPR/AED.", "who_this_is_for": "Workplaces, healthcare-adjacent teams, dental offices, ABA providers, and organizations that accept HSI and need both BLS and first aid coverage.", "topics_covered": ["HSI BLS", "Adult first aid", "CPR and AED", "Online coursework", "In-person skills verification"], "required_materials": ["Completed assigned HSI online coursework before the skills session."], "certification_issued": "HSI certification issued after successful completion and valid for two years.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."], "full_course_page": "/hsi.html"}}];
+    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-07-18T17%3A38%3A51.199491";
+    const courseOptions = [{"courseId": "463743", "courseName": "HSI BLS Challenge", "family": "HSI", "variant": "challenge", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["challenge", "challenge", "hsi-bls", "bls"], "iconLabel": "HSI", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS Challenge course option", "deliveryBadge": "IN-PERSON", "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.", "details": {"course_key": "hsi_bls_challenge", "title": "HSI BLS Challenge", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.", "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."], "certification_issued": "HSI certification issued after successful completion.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."], "full_course_page": "/hsi.html"}}, {"courseId": "445670", "courseName": "HSI BLS + Adult First Aid", "family": "HSI", "variant": "bls-first-aid", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["bls-first-aid", "bls-first-aid", "hsi-bls-fa", "hsi-bls-first-aid"], "iconLabel": "FA", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS + Adult First Aid course option", "deliveryBadge": "BLENDED", "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.", "details": {"course_key": "hsi_bls_adult_first_aid", "title": "HSI BLS + Adult First Aid", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI blended option combining Basic Life Support with Adult First Aid/CPR/AED.", "who_this_is_for": "Workplaces, healthcare-adjacent teams, dental offices, ABA providers, and organizations that accept HSI and need both BLS and first aid coverage.", "topics_covered": ["HSI BLS", "Adult first aid", "CPR and AED", "Online coursework", "In-person skills verification"], "required_materials": ["Completed assigned HSI online coursework before the skills session."], "certification_issued": "HSI certification issued after successful completion and valid for two years.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."], "full_course_page": "/hsi.html"}}];
     const optionGroups = {"HSI": {"family": "HSI", "label": "All HSI options", "courseIds": ["463743", "445670"]}};
     const unsupportedOptions = [];
     let scheduleDates = embeddedScheduleDates;
@@ -929,6 +985,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           image.src = course.imageUrl;
           image.alt = course.imageAlt || course.courseName;
           image.loading = 'lazy';
+          if (course.imageFit === 'cover') image.className = 'course-image-cover';
           icon.appendChild(image);
         } else {
           const fallback = document.createElement('span');
