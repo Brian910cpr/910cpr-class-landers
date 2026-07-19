@@ -533,6 +533,13 @@
       "intro": "Choose the HSI class that fits your requirement, then select a date and time.",
       "output_path": "docs/hsi.html",
       "legacy_schedule_path": "docs/hsi-schedule.html",
+      "header_credential": {
+        "image_url": "/images/HSI.png",
+        "image_alt": "HSI Approved Training Center",
+        "eyebrow": "Approved training",
+        "title": "HSI Approved Training Center",
+        "body": "HSI BLS, CPR, AED, and First Aid training at 910CPR."
+      },
       "compare_mode": {
         "enabled": true,
         "label": "Need HSI ASAP? Show all HSI options",
