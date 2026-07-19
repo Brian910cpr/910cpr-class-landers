@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 INDEX = DOCS / "index.html"
 BOOKING_HOME = DOCS / "assets" / "booking-home.js"
+SELECTOR_GENERATOR = ROOT / "scripts" / "build_bls_block_schedule_pilot.py"
 
 
 CANONICAL_RUNTIME_CARDS = {
@@ -82,17 +83,20 @@ def local_path_for_href(href: str) -> Path | None:
 class HomepageRoutingTests(unittest.TestCase):
     def test_homepage_displays_unified_training_affiliations(self) -> None:
         html = read(INDEX)
-        self.assertIn('class="affiliation-cluster"', html)
+        self.assertIn('class="home-authority affiliation-cluster"', html)
         self.assertIn('class="affiliation-cluster-grid"', html)
         self.assertIn('src="/images/Logo_circle_AHA-Training-Site.webp"', html)
         self.assertIn('src="/images/Logo_Vertical-Red-Cross-LTP.jpg"', html)
         self.assertIn('src="/images/HSI.png"', html)
+        self.assertIn('src="/images/maritime-first-aid.svg"', html)
         self.assertIn("American Heart Association Authorized Training Site", html)
         self.assertIn("American Red Cross Licensed Training Provider", html)
         self.assertIn("HSI Approved Training Center", html)
+        self.assertIn("USCG / Maritime", html)
         self.assertIn('href="/bls.html"', html)
         self.assertIn('href="/arc.html"', html)
         self.assertIn('href="/hsi.html"', html)
+        self.assertIn('href="/uscg-elementary-first-aid-cpr.html"', html)
         for name in ["Logo_circle_AHA-Training-Site.webp", "Logo_Vertical-Red-Cross-LTP.jpg", "HSI.png"]:
             with self.subTest(name=name):
                 self.assertTrue((DOCS / "images" / name).exists())
@@ -100,7 +104,9 @@ class HomepageRoutingTests(unittest.TestCase):
     def test_affiliations_stay_together_on_mobile(self) -> None:
         css = read(DOCS / "css" / "lander.css")
         self.assertIn(".affiliation-cluster-grid", css)
-        self.assertGreaterEqual(css.count("grid-template-columns: repeat(3, minmax(0, 1fr))"), 2)
+        self.assertIn("grid-template-columns: repeat(4, minmax(0, 1fr))", css)
+        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", css)
+        self.assertIn(".home-authority .affiliation-cluster-grid", css)
 
     def test_runtime_course_cards_use_canonical_destinations_and_images(self) -> None:
         js = read(BOOKING_HOME)
@@ -210,6 +216,42 @@ class HomepageRoutingTests(unittest.TestCase):
         self.assertIn('<a class="home-course-tile"', js)
         self.assertIn('<img src="${escapeAttribute(course.image)}"', js)
         self.assertIn('<strong>${escapeHtml(course.title)}</strong>', js)
+
+    def test_homepage_starts_with_real_choices_not_filter_or_fragment_ctas(self) -> None:
+        html = read(INDEX)
+        self.assertNotIn('href="#class-finder">Choose your class</a>', html)
+        self.assertNotIn('href="/classes/">See upcoming classes</a>', html)
+        self.assertIn('id="class-finder"', html)
+        self.assertLess(html.index('id="class-finder"'), html.index('class="top-trust"'))
+
+    def test_homepage_advertises_local_service_area(self) -> None:
+        html = read(INDEX)
+        self.assertIn('class="home-locality"', html)
+        for place in ["Wilmington", "Leland", "Burgaw", "Holly Ridge", "Jacksonville", "Coastal North Carolina"]:
+            with self.subTest(place=place):
+                self.assertIn(place, html)
+
+    def test_primary_selectors_show_brand_phone_and_safe_home_return(self) -> None:
+        pages = [
+            "bls.html", "acls.html", "pals.html", "heartsaver.html", "arc.html", "hsi.html",
+            "uscg-elementary-first-aid-cpr.html", "courses/uscg-first-aid-cpr-aed.html",
+        ]
+        for relative in pages:
+            with self.subTest(page=relative):
+                html = read(DOCS / relative)
+                self.assertIn("910CPR logo", html)
+                self.assertIn("910-395-5193", html)
+                self.assertIn('href="/index.html">← Back to Find Your Class</a>', html)
+                self.assertNotIn("/index.html#courses", html)
+        source = read(SELECTOR_GENERATOR)
+        self.assertIn("selector-header-phone", source)
+        self.assertIn("Back to Find Your Class", source)
+
+    def test_recent_student_payment_link_resolves_to_local_payment_page(self) -> None:
+        html = read(DOCS / "next" / "index.html")
+        self.assertIn('href="/pay/">Make Payment</a>', html)
+        self.assertNotIn("/go/pay", html)
+        self.assertTrue((DOCS / "pay" / "index.html").exists())
 
 
 if __name__ == "__main__":

@@ -78,8 +78,8 @@
           "delivery_badge": "ONLINE + SKILLS"
         }
       ],
-      "back_link_label": "Back to All Courses",
-      "back_link_href": "/index.html#courses",
+      "back_link_label": "Back to Find Your Class",
+      "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
       "delivery_help": [
         {
@@ -165,8 +165,8 @@
           "delivery_badge": "ONLINE + SKILLS"
         }
       ],
-      "back_link_label": "Back to All Courses",
-      "back_link_href": "/index.html#courses",
+      "back_link_label": "Back to Find Your Class",
+      "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
       "delivery_help": [
         {
@@ -252,8 +252,8 @@
           "delivery_badge": "ONLINE + SKILLS"
         }
       ],
-      "back_link_label": "Back to All Courses",
-      "back_link_href": "/index.html#courses",
+      "back_link_label": "Back to Find Your Class",
+      "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
       "delivery_help": [
         {
@@ -388,8 +388,8 @@
         "209808": "Routine public AHA Heartsaver CPR AED blended/online plus skills course. Use for public blended CPR/AED scheduler routing.",
         "460465": "Reserved for Fire Department/public-safety partner programs only ($0 class with optional public participant card fee). Do not use for routine public Heartsaver CPR AED routing."
       },
-      "back_link_label": "Back to All Courses",
-      "back_link_href": "/index.html#courses",
+      "back_link_label": "Back to Find Your Class",
+      "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
       "delivery_help": [
         {
@@ -482,8 +482,8 @@
         "329495": "Routine public AHA Heartsaver First Aid CPR AED blended course used for the USCG/AMERHA-216 cover page.",
         "460465": "Reserved for Fire Department/public-safety partner programs only. Do not use for this public USCG cover page."
       },
-      "back_link_label": "Back to All Courses",
-      "back_link_href": "/index.html#courses",
+      "back_link_label": "Back to Find Your Class",
+      "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
       "delivery_help": [
         {
@@ -552,8 +552,8 @@
           "delivery_badge": "BLENDED"
         }
       ],
-      "back_link_label": "Back to All Courses",
-      "back_link_href": "/index.html#courses",
+      "back_link_label": "Back to Find Your Class",
+      "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
       "delivery_help": [
         {
@@ -639,8 +639,8 @@
           "delivery_badge": "IN-PERSON"
         }
       ],
-      "back_link_label": "Back to All Courses",
-      "back_link_href": "/index.html#courses",
+      "back_link_label": "Back to Find Your Class",
+      "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide"
     },
     "family_cpr": {
@@ -686,8 +686,8 @@
           "delivery_badge": "IN-PERSON"
         }
       ],
-      "back_link_label": "Back to All Courses",
-      "back_link_href": "/index.html#courses",
+      "back_link_label": "Back to Find Your Class",
+      "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
       "delivery_help": [
         {

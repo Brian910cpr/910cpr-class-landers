@@ -25,7 +25,11 @@
     }
     header, main { max-width: 1120px; margin: 0 auto; padding: 24px; }
     header { border-bottom: 1px solid var(--line); }
-    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
+    .selector-brand-bar { max-width:1120px; margin:0 auto; padding:18px 24px 8px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+    .selector-brand-link { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-size:1.35rem; font-weight:800; text-decoration:none; }
+    .selector-brand-link img { width:auto; height:44px; object-fit:contain; }
+    .selector-header-phone { color:var(--accent-dark); font-size:clamp(1.1rem,2.3vw,1.55rem); font-weight:850; text-decoration:none; white-space:nowrap; }
+    .selector-header-phone:hover,.selector-header-phone:focus { text-decoration:underline; text-underline-offset:4px; }    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
     h2 { margin: 0 0 12px; font-size: 1.25rem; letter-spacing: 0; }
     h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: 0; }
     p { margin: 0 0 12px; }
@@ -519,13 +523,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
+  <div class="selector-brand-bar">
+    <a class="selector-brand-link" href="/index.html" aria-label="910CPR home"><img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;"><span>910CPR</span></a>
+    <a class="selector-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
+  </div><!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
   <header>
-    <a class="back-link" href="/index.html#courses">← Back to All Courses</a>
+    <a class="back-link" href="/index.html">← Back to Find Your Class</a>
     <h1>Heartsaver CPR, AED &amp; First Aid Classes</h1>
     
     <p class="muted">Choose the class that fits your needs, then select a date and time.</p>
@@ -574,7 +581,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="course-rail" data-course-rail>
           <button type="button" class="rail-arrow previous" data-course-rail-prev aria-label="Previous course options">‹</button>
-          <div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
+          <span id="cpr-aed" class="deep-link-anchor" aria-hidden="true"></span><span id="first-aid-cpr-aed" class="deep-link-anchor" aria-hidden="true"></span><span id="pediatric-first-aid-cpr-aed" class="deep-link-anchor" aria-hidden="true"></span><div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
       </div>

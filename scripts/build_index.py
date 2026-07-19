@@ -51,6 +51,9 @@ TOPIC_PRIMARY_DESTINATIONS = {
     "pals": "/pals.html",
     "heartsaver": "/heartsaver.html",
     "first-aid": "/heartsaver.html",
+    "hsi": "/hsi.html",
+    "red-cross": "/arc.html",
+    "family-friends": "/family-cpr.html",
     "uscg": "/uscg-elementary-first-aid-cpr.html",
 }
 
