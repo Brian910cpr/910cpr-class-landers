@@ -27,7 +27,7 @@ def infer_current_public_destination(context: Any) -> str:
         return "/pals.html"
     if "bls" in text or "basic life support" in text:
         return "/bls.html"
-    if any(term in text for term in ("heartsaver", "cpr aed", "cpr/aed", "first aid cpr", "pediatric")):
+    if any(term in text for term in ("heartsaver", "cpr aed", "cpr/aed", "first aid", "pediatric")):
         return "/heartsaver.html"
     if any(term in text for term in ("group", "onsite", "on-site", "workplace", "company training")):
         return "/group-training.html"

@@ -43,7 +43,7 @@
     {
       title: "USCG / Maritime",
       href: "/courses/uscg-first-aid-cpr-aed.html",
-      image: "/images/stripes.png",
+      image: "/images/maritime-first-aid.svg",
     },
     {
       title: "Family & Friends CPR",
@@ -71,7 +71,7 @@
     <section class="home-help-panel" aria-label="Help choosing a class">
       <div>
         <h3>Need help choosing the right class?</h3>
-        <p>Tell us what your employer, school, license, or personal goal requires, and we’ll point you to the right course.</p>
+        <p>If you have exact wording from an employer, school, clinical program, or licensing board, use it. We’ll help first-time students and experienced providers reach the correct credential without oversimplifying the requirement.</p>
       </div>
       <div class="home-help-actions">
         <button class="button primary" type="button" data-course-chooser-toggle aria-expanded="false" aria-controls="guided-course-chooser">Help Me Choose the Right Class</button>

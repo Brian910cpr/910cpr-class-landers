@@ -76,6 +76,10 @@ def build():
 
         body = f"""
 <div class='card request-shell'>
+  <header class='site-brand-bar'>
+    <a class='site-brand-link' href='/index.html' aria-label='910CPR home'><img class='site-brand-logo' src='/images/logo.png' alt='910CPR logo' onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;"><span class='site-brand-wordmark'>910CPR</span></a>
+    <a class='site-header-phone' href='tel:+19103955193' aria-label='Call 910CPR at 910-395-5193'>910-395-5193</a>
+  </header>
   <section class='hero request-hero'>
     <div class='hero-main'>
       <div class='eyebrow'>Private Team Training</div>
@@ -83,7 +87,7 @@ def build():
       <p class='subhead'>Tell us what your team needs, where you need it, and when you’d like it. We’ll help match the right training option and scheduling path for your group.</p>
       <div class='request-hero-actions'>
         <a class='button primary' href='#request-form'>Start your request</a>
-        <a class='button secondary' href='/index.html'>See individual seat schedule</a>
+        <a class='button secondary' href='/index.html'>Find an individual class</a>
       </div>
     </div>
     <div class='hero-side'>

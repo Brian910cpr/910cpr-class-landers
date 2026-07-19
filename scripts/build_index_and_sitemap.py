@@ -47,6 +47,9 @@ STALE_CLASS_INDEX_DIRS = (
     CLASSES_DIR / "course-at-city",
     CLASSES_DIR / "months",
     CLASSES_DIR / "industries",
+    DOCS_DIR / "course-at-city",
+    DOCS_DIR / "topics",
+    DOCS_DIR / "topics-year",
 )
 STALE_CLASS_INDEX_FILES = (
     DOCS_DIR / "topics" / "misc.html",
@@ -679,7 +682,7 @@ def render_classes_finder_index(
             "description": "For nurses, EMTs, dental teams, clinical staff, healthcare students, and providers who need BLS, ACLS, or PALS.",
             "image": "/images/nurse%20doing%20CPR.jpg",
             "href": "/bls.html",
-            "action": "Find BLS, ACLS, or PALS",
+            "action": "Start with BLS",
             "label": "Common requirements",
             "common": [
                 {"label": "BLS", "href": "/bls.html"},
@@ -700,15 +703,15 @@ def render_classes_finder_index(
             "common": [
                 {"label": "AHA Heartsaver First Aid CPR AED", "href": "/courses/heartsaver-first-aid-cpr-aed.html"},
                 {"label": "AHA Heartsaver CPR AED", "href": "/courses/heartsaver-cpr-aed.html"},
-                {"label": "Pediatric First Aid", "href": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html"},
-                {"label": "Family & Friends", "href": "/courses/aha-family-friends-cpr.html"},
+                {"label": "Pediatric First Aid CPR AED", "href": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html"},
+                {"label": "Family & Friends", "href": "/family-cpr.html"},
             ],
             "link_label": "Choose your class",
             "links": [
                 ("AHA Heartsaver First Aid CPR AED", "/courses/heartsaver-first-aid-cpr-aed.html"),
                 ("AHA Heartsaver CPR AED", "/courses/heartsaver-cpr-aed.html"),
                 ("Pediatric First Aid CPR AED", "/courses/heartsaver-pediatric-first-aid-cpr-aed.html"),
-                ("Family & Friends CPR", "/courses/aha-family-friends-cpr.html"),
+                ("Family & Friends CPR", "/family-cpr.html"),
             ],
         },
         {
@@ -1423,7 +1426,7 @@ def render_heartsaver_bridge_course_page(*, title: str, description: str, canoni
     <p class="course-description">{html_escape(description)}</p>
     <div class="course-cta-row">
       <a class="course-primary-cta" href="{html_escape(primary_anchor)}">See dates and options</a>
-      <a class="course-secondary-cta" href="/classes/">Browse all classes</a>
+      <a class="course-secondary-cta" href="/heartsaver.html">Compare Heartsaver options</a>
     </div>
   </div>
 </section>
@@ -1770,6 +1773,7 @@ ul {{
         <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
         <span class="site-brand-wordmark">910CPR</span>
       </a>
+      <a class="site-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
     </div>
     <div class="nav small" style="margin-top:8px;">
       <a href="/index.html">Home</a>
@@ -1808,7 +1812,7 @@ def render_homepage() -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Find the Right CPR or Medical Training Class | 910CPR</title>
+<title>Find the Right CPR Class | 910CPR</title>
 <meta name="description" content="Find the right CPR, First Aid, BLS, ACLS, PALS, Red Cross, HSI, or USCG training class for your job, school, employer, licensing board, or agency.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="{SITE_BASE}/">
@@ -1824,7 +1828,7 @@ def render_homepage() -> str:
   "@id": f"{SITE_BASE}/#organization",
   "name": "910CPR",
   "url": f"{SITE_BASE}/",
-  "description": "American Heart Association Training Site and American Red Cross Licensed Training Provider offering CPR, BLS, ACLS, PALS, First Aid, and Heartsaver courses throughout Coastal North Carolina.",
+  "description": "910CPR provides American Heart Association, American Red Cross, and HSI training options for CPR, BLS, ACLS, PALS, and First Aid throughout Coastal North Carolina.",
   "areaServed": ["Wilmington NC", "Holly Ridge NC", "Jacksonville NC", "Burgaw NC", "Leland NC", "Coastal North Carolina"],
 }, indent=2)}
 </script>
@@ -1839,27 +1843,33 @@ def render_homepage() -> str:
           <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
           <span class="site-brand-wordmark">910CPR</span>
         </a>
+        <a class="site-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
       </header>
+      <section class="home-authority affiliation-cluster" aria-labelledby="home-authority-title">
+        <div class="home-authority-heading">
+          <span>Three trusted training organizations</span>
+          <strong id="home-authority-title">AHA, American Red Cross, and HSI courses—all in one place</strong>
+        </div>
+        <div class="affiliation-cluster-grid">
+          <a class="affiliation-item affiliation-item-aha" href="/bls.html" aria-label="Explore American Heart Association classes">
+            <img src="/images/Logo_circle_AHA-Training-Site.webp" alt="American Heart Association Authorized Training Site" loading="eager">
+            <span><strong>AHA</strong> Training Site</span>
+          </a>
+          <a class="affiliation-item affiliation-item-arc" href="/arc.html" aria-label="Explore American Red Cross classes">
+            <img src="/images/Logo_Vertical-Red-Cross-LTP.jpg" alt="American Red Cross Licensed Training Provider" loading="eager">
+            <span><strong>Red Cross</strong> Licensed Training Provider</span>
+          </a>
+          <a class="affiliation-item affiliation-item-hsi" href="/hsi.html" aria-label="Explore HSI classes">
+            <img src="/images/HSI.png" alt="HSI Approved Training Center" loading="eager">
+            <span><strong>HSI</strong> Training Center</span>
+          </a>
+        </div>
+      </section>
       <section class="hero home-hero">
         <div class="hero-main">
-          <div class="eyebrow home-hero-links" aria-label="Quick course links"><a href="/heartsaver.html">CPR</a><span aria-hidden="true">•</span><a href="/heartsaver.html">First Aid</a><span aria-hidden="true">•</span><a href="/bls.html">BLS</a><span aria-hidden="true">•</span><a href="/acls.html">ACLS</a><span aria-hidden="true">•</span><a href="/pals.html">PALS</a></div>
-          <h1>Find the right CPR or medical training class</h1>
-          <p class="subhead">Tell us what your job, school, employer, or licensing board asked for. We'll help you find the right class and the next available dates.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#class-finder">Choose your class</a>
-            <a class="button secondary" href="/classes/">See upcoming classes</a>
-          </div>
-        </div>
-        <div class="hero-side">
-          <a class="arc-ltp-feature" href="/arc.html" aria-label="Explore American Red Cross classes from a Licensed Training Provider">
-            <img src="/images/Logo_Vertical-Red-Cross-LTP.jpg" alt="American Red Cross Licensed Training Provider" loading="eager">
-            <span class="arc-ltp-feature-copy">
-              <span class="arc-ltp-feature-eyebrow">Proudly recognized</span>
-              <strong>American Red Cross Licensed Training Provider</strong>
-              <span>Choose Red Cross BLS, CPR/AED, and First Aid training.</span>
-              <b>Explore Red Cross classes →</b>
-            </span>
-          </a>
+          <div class="eyebrow home-hero-links" aria-label="Local service area">Wilmington · Jacksonville · Holly Ridge · Leland · Coastal North Carolina</div>
+          <h1>Find the right CPR class—without guessing</h1>
+          <p class="subhead">New to certification? Start with the wording from your employer or school. Already know exactly what you need? Go straight to BLS, ACLS, PALS, First Aid, CPR/AED, Red Cross, HSI, or maritime options below.</p>
         </div>
       </section>
 
@@ -1868,7 +1878,7 @@ def render_homepage() -> str:
           <div>
             <h2>Choose your class to see dates</h2>
           </div>
-          <p class="section-copy">Pick the course name you were told to take. Each option opens the matching course page with delivery options and upcoming dates.</p>
+          <p class="section-copy">Choose the credential name you were given. You’ll see the appropriate classroom, renewal, or online-plus-skills options before selecting a date.</p>
         </div>
 
         <div class="finder-grid" data-home-sections>
@@ -1883,6 +1893,19 @@ def render_homepage() -> str:
         </div>
       </section>
 {render_google_trust_block()}
+      <footer class="home-locality" aria-labelledby="home-locality-title">
+        <div>
+          <div class="eyebrow">Local training, clearly routed</div>
+          <h2 id="home-locality-title">CPR and certification classes serving Coastal North Carolina</h2>
+          <p>910CPR is based at 4018 Shipyard Boulevard in Wilmington and serves students, healthcare professionals, workplaces, schools, and maritime crews throughout Wilmington, Leland, Burgaw, Holly Ridge, Jacksonville, and surrounding communities.</p>
+        </div>
+        <div class="home-locality-links" aria-label="Popular local class paths">
+          <a href="/bls.html">BLS in Wilmington</a>
+          <a href="/heartsaver.html">CPR &amp; First Aid</a>
+          <a href="/group-training.html">Workplace &amp; group training</a>
+          <a href="tel:+19103955193">Call 910-395-5193</a>
+        </div>
+      </footer>
     </main>
   </div>
 </div>
@@ -1892,7 +1915,7 @@ def render_homepage() -> str:
     <div class="card home-noscript">
       <h2>Quick class links</h2>
       <p>Course links could not load in this browser. You can still choose a class below.</p>
-      <p><a class="button primary" href="/bls.html">AHA BLS</a> <a class="button secondary" href="/acls.html">AHA ACLS</a> <a class="button secondary" href="/pals.html">AHA PALS</a> <a class="button secondary" href="/courses/heartsaver-first-aid-cpr-aed.html">AHA Heartsaver First Aid CPR AED</a> <a class="button secondary" href="/courses/heartsaver-cpr-aed.html">AHA Heartsaver CPR AED</a> <a class="button secondary" href="/arc.html">ARC Programs</a> <a class="button secondary" href="/hsi.html">HSI Programs</a> <a class="button secondary" href="/uscg-elementary-first-aid-cpr.html">USCG / Maritime</a> <a class="button secondary" href="/courses/aha-family-friends-cpr.html">Family & Friends CPR</a></p>
+      <p><a class="button primary" href="/bls.html">AHA BLS</a> <a class="button secondary" href="/acls.html">AHA ACLS</a> <a class="button secondary" href="/pals.html">AHA PALS</a> <a class="button secondary" href="/heartsaver.html#first-aid-cpr-aed">AHA Heartsaver First Aid CPR AED</a> <a class="button secondary" href="/heartsaver.html#cpr-aed">AHA Heartsaver CPR AED</a> <a class="button secondary" href="/arc.html">ARC Programs</a> <a class="button secondary" href="/hsi.html">HSI Programs</a> <a class="button secondary" href="/courses/uscg-first-aid-cpr-aed.html">USCG / Maritime</a> <a class="button secondary" href="/family-cpr.html">Family & Friends CPR</a></p>
     </div>
   </div>
 </noscript>

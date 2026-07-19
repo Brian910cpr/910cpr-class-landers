@@ -174,8 +174,34 @@ def css() -> str:
       background: var(--surface);
       line-height: 1.45;
     }
-    header, main { max-width: 1120px; margin: 0 auto; padding: 24px; }
+    header, main, .selector-brand-bar { max-width: 1120px; margin: 0 auto; padding: 24px; }
     header { border-bottom: 1px solid var(--line); }
+    .selector-brand-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 8px;
+    }
+    .selector-brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .selector-brand-link img { width: auto; height: 44px; object-fit: contain; }
+    .selector-header-phone {
+      color: var(--accent-dark);
+      font-size: clamp(1.1rem, 2.3vw, 1.55rem);
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .selector-header-phone:hover, .selector-header-phone:focus { text-decoration: underline; text-underline-offset: 4px; }
+    .deep-link-anchor { position: relative; top: -8px; display: block; width: 0; height: 0; overflow: hidden; }
     h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
     h2 { margin: 0 0 12px; font-size: 1.25rem; letter-spacing: 0; }
     h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: 0; }
@@ -652,7 +678,10 @@ def css() -> str:
       .selector-grid { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
-      header, main { padding: 18px; }
+      header, main, .selector-brand-bar { padding: 18px; }
+      .selector-brand-link img { height: 38px; }
+      .selector-brand-link { font-size: 1.05rem; }
+      .selector-header-phone { font-size: 1.05rem; }
       .panel { padding: 14px; }
       .course-selector-top {
         display: grid;
@@ -898,8 +927,18 @@ def render_html(payload: dict[str, Any]) -> str:
       {note_html}
       {student_html}
     </section>"""
-    back_href = html.escape(str(page_config.get("back_link_href") or "/index.html#courses"), quote=True)
-    back_label = html.escape(str(page_config.get("back_link_label") or "Back to All Courses"))
+    back_href = html.escape(str(page_config.get("back_link_href") or "/index.html"), quote=True)
+    back_label = html.escape(str(page_config.get("back_link_label") or "Back to Find Your Class"))
+    course_aliases = sorted({
+        str(alias).strip()
+        for option in course_options
+        for alias in (option.get("deepLinkAliases") or [])
+        if str(alias).strip()
+    })
+    course_alias_anchor_html = "".join(
+        f'<span id="{html.escape(alias, quote=True)}" class="deep-link-anchor" aria-hidden="true"></span>'
+        for alias in course_aliases
+    )
     header_credential = page_config.get("header_credential")
     header_credential_html = ""
     if isinstance(header_credential, dict) and header_credential.get("image_url") and header_credential.get("title"):
@@ -1003,6 +1042,13 @@ def render_html(payload: dict[str, Any]) -> str:
   <style>{css()}</style>
 </head>
 <body>
+  <div class="selector-brand-bar">
+    <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
+      <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+      <span>910CPR</span>
+    </a>
+    <a class="selector-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
+  </div>
   <header>
     <a class="back-link" href="{back_href}">← {back_label}</a>
     <div class="page-heading-row">
@@ -1032,6 +1078,7 @@ def render_html(payload: dict[str, Any]) -> str:
         </div>
         <div class="course-rail" data-course-rail>
           <button type="button" class="rail-arrow previous" data-course-rail-prev aria-label="Previous course options">‹</button>
+          {course_alias_anchor_html}
           <div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>

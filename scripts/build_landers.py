@@ -1434,6 +1434,7 @@ def render_retained_course_lander_page(
         <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
         <span class="site-brand-wordmark">910CPR</span>
       </a>
+      <a class="site-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
     </header>
 
     <div class="notice">You came here for this course. Current available options are shown below.</div>
@@ -2088,6 +2089,7 @@ TEMPLATE = """<!DOCTYPE html>
         <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
         <span class="site-brand-wordmark">910CPR</span>
       </a>
+      <a class="site-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
     </header>
 
     {state_notice}

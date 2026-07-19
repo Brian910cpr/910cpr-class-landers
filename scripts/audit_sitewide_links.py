@@ -19,6 +19,17 @@ MD_PATH = DEBUG_DIR / "sitewide_link_button_audit.md"
 PUBLIC_HOSTS = {"910cpr.com", "www.910cpr.com", "brian910cpr.github.io"}
 ENROLLWARE_HOSTS = {"coastalcprtraining.enrollware.com", "www.enrollware.com", "enrollware.com"}
 SKIP_SCHEMES = {"data", "javascript"}
+NON_PUBLIC_DIRECTORIES = {"admin", "control-center"}
+
+
+def public_html_files() -> list[Path]:
+    return [
+        path
+        for path in sorted(DOCS_DIR.rglob("*.html"))
+        if not NON_PUBLIC_DIRECTORIES.intersection(path.relative_to(DOCS_DIR).parts)
+        and "REVERT TO THIS" not in path.name
+        and "LONGLIST" not in path.name
+    ]
 
 
 @dataclass
@@ -96,6 +107,9 @@ def expected_file_for_public_path(path: str) -> Path:
     target = DOCS_DIR / clean.lstrip("/")
     if target.suffix:
         return target
+    html_target = target.with_suffix(".html")
+    if html_target.exists():
+        return html_target
     return target / "index.html"
 
 
@@ -125,7 +139,7 @@ def classify_destination(href: str, source_file: Path) -> tuple[str, str, Path |
 
     if scheme in SKIP_SCHEMES:
         return "suspicious", href, None, ""
-    if scheme == "tel":
+    if scheme in {"tel", "sms"}:
         return "phone", href, None, ""
     if scheme == "mailto":
         return "external", href, None, ""
@@ -217,9 +231,9 @@ def label_keywords(text: str) -> set[str]:
         "pals": ["pals"],
         "heartsaver": ["heartsaver"],
         "first_aid": ["first aid"],
-        "cpr_aed": ["cpr aed", "cpr/aed", "cpr + aed"],
+        "cpr_aed": ["cpr aed", "cpr/aed", "cpr / aed", "cpr + aed"],
         "pediatric": ["pediatric", "childcare", "children"],
-        "red_cross": ["red cross", "arc"],
+        "red_cross": ["red cross"],
         "hsi": ["hsi", "ashi"],
         "uscg": ["uscg", "maritime"],
         "group": ["group", "workplace", "on-site", "onsite"],
@@ -228,6 +242,8 @@ def label_keywords(text: str) -> set[str]:
     for key, values in mapping.items():
         if any(value in low for value in values):
             out.add(key)
+    if re.search(r"\barc\b", low):
+        out.add("red_cross")
     return out
 
 
@@ -269,6 +285,8 @@ def classify_row(
     notes: list[str] = []
 
     if dest_type == "missing_or_empty":
+        if source_context.startswith("BUTTON_CONTROL |"):
+            return "MEDIUM", "REVIEW", "button control requires browser interaction verification"
         return "LOW", "BROKEN", "empty href"
     if dest_type == "suspicious":
         return "LOW", "SUSPICIOUS", "javascript/data link or otherwise non-navigable href"
@@ -340,7 +358,7 @@ def extract_elements(path: Path, soup: BeautifulSoup) -> list:
 
 
 def audit() -> list[AuditRow]:
-    html_files = sorted(DOCS_DIR.rglob("*.html"))
+    html_files = public_html_files()
     anchor_index = load_anchor_index(html_files)
     rows: list[AuditRow] = []
     for path in html_files:
@@ -360,6 +378,8 @@ def audit() -> list[AuditRow]:
             visible_text = clean_text(element.get_text(" ", strip=True))
             dest_type, normalized, target_file, fragment = classify_destination(href, path)
             source_ctx = infer_source_context(element, soup, path)
+            if element.name == "button" and not href:
+                source_ctx = "BUTTON_CONTROL | " + source_ctx
             dest_ctx = infer_destination_context(dest_type, href, normalized)
             confidence, status, notes = classify_row(
                 dest_type,
@@ -462,7 +482,7 @@ def write_markdown(rows: list[AuditRow]) -> None:
         "",
         "## 1. Summary Counts",
         "",
-        f"- HTML files scanned: {len(list(DOCS_DIR.rglob('*.html')))}",
+        f"- Public HTML files scanned: {len(public_html_files())}",
         f"- Links/buttons scanned: {len(rows)}",
         f"- Broken: {counts.get('BROKEN', 0)}",
         f"- Suspicious: {counts.get('SUSPICIOUS', 0)}",
@@ -524,7 +544,7 @@ def main() -> int:
     write_markdown(rows)
     counts = Counter(row.status for row in rows)
     low_confidence = sum(1 for row in rows if row.confidence == "LOW" and row.status != "OK")
-    print(f"Files scanned: {len(list(DOCS_DIR.rglob('*.html')))}")
+    print(f"Public files scanned: {len(public_html_files())}")
     print(f"Links/buttons scanned: {len(rows)}")
     print(f"Broken: {counts.get('BROKEN', 0)}")
     print(f"Suspicious: {counts.get('SUSPICIOUS', 0)}")
