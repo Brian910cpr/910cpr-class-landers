@@ -1828,7 +1828,7 @@ def render_homepage() -> str:
   "@id": f"{SITE_BASE}/#organization",
   "name": "910CPR",
   "url": f"{SITE_BASE}/",
-  "description": "American Heart Association Training Site and American Red Cross Licensed Training Provider offering CPR, BLS, ACLS, PALS, First Aid, and Heartsaver courses throughout Coastal North Carolina.",
+  "description": "910CPR provides American Heart Association, American Red Cross, and HSI training options for CPR, BLS, ACLS, PALS, and First Aid throughout Coastal North Carolina.",
   "areaServed": ["Wilmington NC", "Holly Ridge NC", "Jacksonville NC", "Burgaw NC", "Leland NC", "Coastal North Carolina"],
 }, indent=2)}
 </script>
@@ -1847,8 +1847,8 @@ def render_homepage() -> str:
       </header>
       <section class="home-authority affiliation-cluster" aria-labelledby="home-authority-title">
         <div class="home-authority-heading">
-          <span>Trusted training authority</span>
-          <strong id="home-authority-title">Choose the organization your employer, school, or license requires</strong>
+          <span>Three trusted training organizations</span>
+          <strong id="home-authority-title">AHA, American Red Cross, and HSI courses—all in one place</strong>
         </div>
         <div class="affiliation-cluster-grid">
           <a class="affiliation-item affiliation-item-aha" href="/bls.html" aria-label="Explore American Heart Association classes">
@@ -1862,10 +1862,6 @@ def render_homepage() -> str:
           <a class="affiliation-item affiliation-item-hsi" href="/hsi.html" aria-label="Explore HSI classes">
             <img src="/images/HSI.png" alt="HSI Approved Training Center" loading="eager">
             <span><strong>HSI</strong> Training Center</span>
-          </a>
-          <a class="affiliation-item affiliation-item-uscg" href="/uscg-elementary-first-aid-cpr.html" aria-label="Explore maritime and US Coast Guard accepted training options">
-            <img src="/images/maritime-first-aid.svg" alt="Maritime first aid and CPR training" loading="eager">
-            <span><strong>USCG / Maritime</strong> Accepted course options</span>
           </a>
         </div>
       </section>

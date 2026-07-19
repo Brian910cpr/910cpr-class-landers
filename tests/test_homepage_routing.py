@@ -88,15 +88,15 @@ class HomepageRoutingTests(unittest.TestCase):
         self.assertIn('src="/images/Logo_circle_AHA-Training-Site.webp"', html)
         self.assertIn('src="/images/Logo_Vertical-Red-Cross-LTP.jpg"', html)
         self.assertIn('src="/images/HSI.png"', html)
-        self.assertIn('src="/images/maritime-first-aid.svg"', html)
+        authority = html[html.index('class="home-authority affiliation-cluster"'):html.index('<section class="hero home-hero">')]
         self.assertIn("American Heart Association Authorized Training Site", html)
         self.assertIn("American Red Cross Licensed Training Provider", html)
         self.assertIn("HSI Approved Training Center", html)
-        self.assertIn("USCG / Maritime", html)
+        self.assertNotIn("USCG / Maritime", authority)
+        self.assertIn("AHA, American Red Cross, and HSI courses—all in one place", authority)
         self.assertIn('href="/bls.html"', html)
         self.assertIn('href="/arc.html"', html)
         self.assertIn('href="/hsi.html"', html)
-        self.assertIn('href="/uscg-elementary-first-aid-cpr.html"', html)
         for name in ["Logo_circle_AHA-Training-Site.webp", "Logo_Vertical-Red-Cross-LTP.jpg", "HSI.png"]:
             with self.subTest(name=name):
                 self.assertTrue((DOCS / "images" / name).exists())
@@ -104,8 +104,7 @@ class HomepageRoutingTests(unittest.TestCase):
     def test_affiliations_stay_together_on_mobile(self) -> None:
         css = read(DOCS / "css" / "lander.css")
         self.assertIn(".affiliation-cluster-grid", css)
-        self.assertIn("grid-template-columns: repeat(4, minmax(0, 1fr))", css)
-        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", css)
+        self.assertIn("grid-template-columns: repeat(3, minmax(0, 1fr))", css)
         self.assertIn(".home-authority .affiliation-cluster-grid", css)
 
     def test_runtime_course_cards_use_canonical_destinations_and_images(self) -> None:
@@ -181,7 +180,6 @@ class HomepageRoutingTests(unittest.TestCase):
         combined = read(INDEX) + "\n" + read(BOOKING_HOME)
         self.assertIn('href: "/courses/uscg-first-aid-cpr-aed.html"', combined)
         self.assertIn('image: "/images/maritime-first-aid.svg"', combined)
-        self.assertIn('src="/images/maritime-first-aid.svg"', combined)
         self.assertTrue((DOCS / "images" / "maritime-first-aid.svg").exists())
 
     def test_homepage_styles_prevent_mobile_horizontal_overflow(self) -> None:
