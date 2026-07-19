@@ -1819,7 +1819,7 @@ def render_homepage() -> str:
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="shortcut icon" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="stylesheet" href="/css/lander.css">
+<link rel="stylesheet" href="/css/lander.css?v=20260719-home-authority">
 {render_gtm_head()}
 <script type="application/ld+json">
 {json.dumps({
