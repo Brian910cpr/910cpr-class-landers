@@ -261,6 +261,15 @@ class HomepageRoutingTests(unittest.TestCase):
         self.assertIn('src="/images/HSI.png"', heading)
         self.assertIn("HSI Approved Training Center", heading)
 
+    def test_heartsaver_total_blended_card_uses_matching_program_image(self) -> None:
+        image_path = DOCS / "images" / "Heartsaver-TOTAL-Online.webp"
+        self.assertTrue(image_path.exists())
+        for relative in ("uscg-elementary-first-aid-cpr.html", "courses/uscg-first-aid-cpr-aed.html"):
+            with self.subTest(page=relative):
+                html = read(DOCS / relative)
+                self.assertIn('"courseId": "329495"', html)
+                self.assertIn('"imageUrl": "/images/Heartsaver-TOTAL-Online.webp"', html)
+
     def test_recent_student_payment_link_resolves_to_local_payment_page(self) -> None:
         html = read(DOCS / "next" / "index.html")
         self.assertIn('href="/pay/">Make Payment</a>', html)
