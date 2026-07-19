@@ -112,6 +112,22 @@ class FamilyCprPageTests(unittest.TestCase):
         self.assertIn("No certification. No test. Just learn what to do.", html)
         self.assertIn("does not include a certification card", html)
 
+    def test_aha_authority_is_prominent_and_precise(self) -> None:
+        html = family_html()
+        authority = html.index('class="section-box family-cpr-authority"')
+        scheduling = html.index("<h2>Scheduling</h2>")
+        self.assertLess(authority, scheduling)
+        self.assertIn("910CPR is an American Heart Association Authorized Training Site.", html)
+        self.assertIn("Family &amp; Friends CPR is an AHA educational course", html)
+        self.assertIn("Skills training - not a certification course. No course completion card.", html)
+        self.assertIn("AHA EDUCATIONAL COURSE", html)
+
+    def test_aha_authorized_training_site_mark_exists(self) -> None:
+        parser = parsed_family()
+        asset = "/images/111 aha-authorized-training-site.png"
+        self.assertIn(asset, parser.images)
+        self.assertTrue((DOCS / asset.lstrip("/")).exists())
+
     def test_compact_highlights_precede_scheduling_and_details_follow_it(self) -> None:
         html = family_html()
         highlights = html.index('class="section-box family-cpr-strip"')
