@@ -108,7 +108,19 @@ class FamilyCprPageTests(unittest.TestCase):
         self.assertNotIn("pals", html)
 
     def test_no_certification_card_statement_is_clear(self) -> None:
-        self.assertIn("does not include a certification card", family_html())
+        html = family_html()
+        self.assertIn("No certification. No test. Just learn what to do.", html)
+        self.assertIn("does not include a certification card", html)
+
+    def test_compact_highlights_precede_scheduling_and_details_follow_it(self) -> None:
+        html = family_html()
+        highlights = html.index('class="section-box family-cpr-strip"')
+        scheduling = html.index("<h2>Scheduling</h2>")
+        details = html.index("<h2>Relaxed, practical CPR practice</h2>")
+        self.assertLess(highlights, scheduling)
+        self.assertLess(scheduling, details)
+        self.assertNotIn("<h2>What the course covers</h2>", html)
+        self.assertNotIn("<h2>Good for</h2>", html)
 
     def test_actions_are_correct(self) -> None:
         links = parsed_family().links
