@@ -84,6 +84,16 @@ class FamilyCprPageTests(unittest.TestCase):
         self.assertIn("/images/FF-CPR-2.jpg", parser.images)
         self.assertTrue((DOCS / "images" / "FF-CPR-2.jpg").exists())
 
+    def test_aha_training_site_credential_is_prominent(self) -> None:
+        html = family_html()
+        credential = html.index('class="family-cpr-credential"')
+        scheduling = html.index("<h2>Scheduling</h2>")
+        self.assertLess(credential, scheduling)
+        self.assertIn("American Heart Association Authorized Training Site", html)
+        asset = "/images/Logo_circle_AHA-Training-Site.webp"
+        self.assertIn(asset, parsed_family().images)
+        self.assertTrue((DOCS / asset.lstrip("/")).exists())
+
     def test_forbidden_generated_or_internal_copy_absent(self) -> None:
         html = family_html()
         forbidden = [

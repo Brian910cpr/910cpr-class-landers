@@ -163,6 +163,17 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertTrue(all(option["image_fit"] == "cover" for option in config["course_options"]))
         self.assertIs(config["include_seated_classes"], True)
 
+    def test_aha_selector_pages_share_training_site_credential(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        for page_key in ["bls", "acls", "pals", "heartsaver", "uscg_first_aid_cpr_aed"]:
+            with self.subTest(page_key=page_key):
+                credential = configs[page_key]["header_credential"]
+                self.assertEqual("/images/Logo_circle_AHA-Training-Site.webp", credential["image_url"])
+                self.assertEqual("American Heart Association Authorized Training Site", credential["title"])
+                rendered = (ROOT / configs[page_key]["output_path"]).read_text(encoding="utf-8")
+                self.assertIn("/images/Logo_circle_AHA-Training-Site.webp", rendered)
+        self.assertTrue((ROOT / "docs" / "images" / "Logo_circle_AHA-Training-Site.webp").exists())
+
     def test_uses_live_availability_when_present(self):
         self.assertEqual(self.payload["availability_source_used"], "live_availability_snapshot")
         self.assertFalse(self.payload["availability_fallback_used"])

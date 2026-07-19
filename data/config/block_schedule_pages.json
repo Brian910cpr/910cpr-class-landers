@@ -10,6 +10,13 @@
       "meta_description": "AHA BLS courses for healthcare professionals and students who need Basic Life Support certification.",
       "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
       "output_path": "docs/bls.html",
+      "header_credential": {
+        "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
+        "image_alt": "American Heart Association Authorized Training Site",
+        "eyebrow": "Proudly recognized",
+        "title": "American Heart Association Authorized Training Site",
+        "body": "910CPR is an American Heart Association Authorized Training Site serving Wilmington and Coastal North Carolina."
+      },
       "legacy_schedule_path": "docs/bls-schedule.html",
       "include_seated_classes": true,
       "seated_class_minimum_enrollment": 1,
@@ -100,6 +107,13 @@
       "meta_description": "AHA ACLS courses for clinicians who manage adult cardiovascular emergencies.",
       "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
       "output_path": "docs/acls.html",
+      "header_credential": {
+        "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
+        "image_alt": "American Heart Association Authorized Training Site",
+        "eyebrow": "Proudly recognized",
+        "title": "American Heart Association Authorized Training Site",
+        "body": "910CPR is an American Heart Association Authorized Training Site serving Wilmington and Coastal North Carolina."
+      },
       "legacy_schedule_path": "docs/acls-schedule.html",
       "include_seated_classes": true,
       "report_json_path": "data/audit/acls_block_schedule.json",
@@ -187,6 +201,13 @@
       "meta_description": "AHA PALS courses for clinicians who respond to pediatric emergencies.",
       "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
       "output_path": "docs/pals.html",
+      "header_credential": {
+        "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
+        "image_alt": "American Heart Association Authorized Training Site",
+        "eyebrow": "Proudly recognized",
+        "title": "American Heart Association Authorized Training Site",
+        "body": "910CPR is an American Heart Association Authorized Training Site serving Wilmington and Coastal North Carolina."
+      },
       "legacy_schedule_path": "docs/pals-schedule.html",
       "include_seated_classes": true,
       "report_json_path": "data/audit/pals_block_schedule.json",
@@ -274,6 +295,13 @@
       "meta_description": "AHA Heartsaver options for workplace, school, childcare, and general CPR/First Aid requirements.",
       "intro": "Choose the class that fits your needs, then select a date and time.",
       "output_path": "docs/heartsaver.html",
+      "header_credential": {
+        "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
+        "image_alt": "American Heart Association Authorized Training Site",
+        "eyebrow": "Proudly recognized",
+        "title": "American Heart Association Authorized Training Site",
+        "body": "910CPR is an American Heart Association Authorized Training Site serving Wilmington and Coastal North Carolina."
+      },
       "legacy_schedule_path": "docs/heartsaver-schedule.html",
       "show_all_label": "Show all course options",
       "compare_mode": {
@@ -426,6 +454,13 @@
       },
       "student_note": "The blended option is online learning plus an in-person skills session, so students still attend the scheduled skills session.",
       "output_path": "docs/courses/uscg-first-aid-cpr-aed.html",
+      "header_credential": {
+        "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
+        "image_alt": "American Heart Association Authorized Training Site",
+        "eyebrow": "Proudly recognized",
+        "title": "American Heart Association Authorized Training Site",
+        "body": "910CPR is an American Heart Association Authorized Training Site serving Wilmington and Coastal North Carolina."
+      },
       "report_json_path": "data/audit/uscg_first_aid_cpr_aed_block_schedule.json",
       "report_md_path": "data/audit/uscg_first_aid_cpr_aed_block_schedule_report.md",
       "show_all_label": "Show all delivery options",
