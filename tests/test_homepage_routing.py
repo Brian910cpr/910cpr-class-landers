@@ -245,6 +245,15 @@ class HomepageRoutingTests(unittest.TestCase):
         self.assertIn("selector-header-phone", source)
         self.assertIn("Back to Find Your Class", source)
 
+    def test_aha_selectors_show_training_site_credential_at_top_right(self) -> None:
+        for relative in ("bls.html", "acls.html", "pals.html", "heartsaver.html"):
+            with self.subTest(page=relative):
+                html = read(DOCS / relative)
+                heading = html[html.index('class="page-heading-row"'):html.index('class="family-help"')]
+                self.assertIn('class="header-credential"', heading)
+                self.assertIn('src="/images/Logo_circle_AHA-Training-Site.webp"', heading)
+                self.assertIn("American Heart Association Training Site", heading)
+
     def test_recent_student_payment_link_resolves_to_local_payment_page(self) -> None:
         html = read(DOCS / "next" / "index.html")
         self.assertIn('href="/pay/">Make Payment</a>', html)

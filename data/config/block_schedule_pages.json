@@ -11,6 +11,13 @@
       "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
       "output_path": "docs/bls.html",
       "legacy_schedule_path": "docs/bls-schedule.html",
+      "header_credential": {
+        "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
+        "image_alt": "American Heart Association Authorized Training Site",
+        "eyebrow": "Authorized training",
+        "title": "American Heart Association Training Site",
+        "body": "AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR."
+      },
       "include_seated_classes": true,
       "seated_class_minimum_enrollment": 1,
       "consolidate_after_seated_family_anchor": true,
@@ -101,6 +108,13 @@
       "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
       "output_path": "docs/acls.html",
       "legacy_schedule_path": "docs/acls-schedule.html",
+      "header_credential": {
+        "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
+        "image_alt": "American Heart Association Authorized Training Site",
+        "eyebrow": "Authorized training",
+        "title": "American Heart Association Training Site",
+        "body": "AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR."
+      },
       "include_seated_classes": true,
       "report_json_path": "data/audit/acls_block_schedule.json",
       "report_md_path": "data/audit/acls_block_schedule_report.md",
@@ -188,6 +202,13 @@
       "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
       "output_path": "docs/pals.html",
       "legacy_schedule_path": "docs/pals-schedule.html",
+      "header_credential": {
+        "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
+        "image_alt": "American Heart Association Authorized Training Site",
+        "eyebrow": "Authorized training",
+        "title": "American Heart Association Training Site",
+        "body": "AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR."
+      },
       "include_seated_classes": true,
       "report_json_path": "data/audit/pals_block_schedule.json",
       "report_md_path": "data/audit/pals_block_schedule_report.md",
@@ -275,6 +296,13 @@
       "intro": "Choose the class that fits your needs, then select a date and time.",
       "output_path": "docs/heartsaver.html",
       "legacy_schedule_path": "docs/heartsaver-schedule.html",
+      "header_credential": {
+        "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
+        "image_alt": "American Heart Association Authorized Training Site",
+        "eyebrow": "Authorized training",
+        "title": "American Heart Association Training Site",
+        "body": "AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR."
+      },
       "show_all_label": "Show all course options",
       "compare_mode": {
         "enabled": false,
