@@ -200,6 +200,30 @@ def css() -> str:
     .back-link:focus {
       text-decoration: underline;
     }
+    .page-heading-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+      gap: 24px;
+      align-items: center;
+    }
+    .header-stripes {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 132px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .header-stripes img {
+      display: block;
+      width: 100%;
+      max-width: 348px;
+      height: 108px;
+      object-fit: contain;
+    }
     .family-help {
       border: 1px solid var(--line);
       border-radius: 10px;
@@ -598,6 +622,9 @@ def css() -> str:
       background: var(--band);
     }
     @media (max-width: 820px) {
+      .page-heading-row { grid-template-columns: 1fr; }
+      .header-stripes { min-height: 104px; }
+      .header-stripes img { height: 92px; }
       .selector-grid { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
@@ -810,6 +837,23 @@ def render_html(payload: dict[str, Any]) -> str:
     title = html.escape(str(page_config.get("title") or "Block Schedule"))
     subtitle = html.escape(str(page_config.get("subtitle") or ""))
     intro = html.escape(str(page_config.get("intro") or "Select a course, date, and start time."))
+    header_image_url = html.escape(str(page_config.get("header_image_url") or ""), quote=True)
+    header_image_alt = html.escape(str(page_config.get("header_image_alt") or ""), quote=True)
+    heading_copy_html = f"""
+      <div>
+        <h1>{title}</h1>
+        {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
+        <p class="muted">{intro}</p>
+      </div>"""
+    heading_html = heading_copy_html
+    if header_image_url:
+        heading_html = f"""
+    <div class="page-heading-row">
+{heading_copy_html}
+      <div class="header-stripes" aria-label="{header_image_alt}">
+        <img src="{header_image_url}" alt="{header_image_alt}" loading="eager">
+      </div>
+    </div>"""
     explanation = html.escape(str(page_config.get("explanation") or ""))
     documentation_note = page_config.get("documentation_note", {})
     student_note = html.escape(str(page_config.get("student_note") or ""))
@@ -929,9 +973,7 @@ def render_html(payload: dict[str, Any]) -> str:
 <body>
   <header>
     <a class="back-link" href="{back_href}">← {back_label}</a>
-    <h1>{title}</h1>
-    {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
-    <p class="muted">{intro}</p>
+{heading_html}
     {delivery_help_html}
   </header>
   <main>
