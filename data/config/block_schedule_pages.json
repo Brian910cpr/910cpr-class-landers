@@ -652,7 +652,7 @@
           "delivery_mode": "in-person",
           "variant": "bls",
           "image_url": "/images/arc-in-person-training.png",
-          "image_fit": "contain",
+          "image_fit": "cover",
           "image_alt": "American Red Cross Basic Life Support course option",
           "delivery_badge": "IN-PERSON"
         },
