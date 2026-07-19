@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-06-30T13:51:59.987396-04:00",
+  "generated_at": "2026-07-19T10:36:51.812866-04:00",
   "authoritative": false,
   "source_files": [
     "data/config/course_catalog.json",
@@ -53,7 +53,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -159,7 +159,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -265,7 +265,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -330,6 +330,104 @@
       ]
     },
     {
+      "course_key": "arc_adult_cpr_aed_online",
+      "enrollware_course_id": "372258",
+      "enrollware_name": "American Red Cross Adult CPR/AED Online",
+      "internal_title": "American Red Cross Adult CPR/AED Online",
+      "public_short_title": "American Red Cross Adult CPR/AED",
+      "public_long_title": "American Red Cross Adult CPR/AED Online",
+      "course_family": "ARC",
+      "course_family_type": "CPR + AED",
+      "provider": "ARC",
+      "discipline": "unknown",
+      "format": "BL",
+      "audience": "unknown",
+      "status": "active",
+      "public_visibility": "active_public",
+      "slug_page": "unknown",
+      "hub_tab": [],
+      "sort_priority": 55,
+      "cta_text": "Check this date/time",
+      "description_short": "Online Red Cross CPR/AED coursework followed by an in-person skills session.",
+      "description_long": "unknown",
+      "prerequisites": [
+        "Complete the assigned Red Cross online coursework before the skills session."
+      ],
+      "what_is_included": [
+        "A focused in-person CPR and AED skills session after the online course is complete."
+      ],
+      "what_to_bring": [],
+      "classroom_duration_minutes": 45,
+      "skills_duration_minutes": 45,
+      "online_component_required": true,
+      "scheduler_display_duration_minutes": 45,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 0,
+      "scheduler_consumption_minutes": 45,
+      "minimum_lead_time_hours": 24,
+      "maximum_lookahead_days": 180,
+      "allowed_days_of_week": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+      ],
+      "allowed_start_time_min": "08:00",
+      "allowed_start_time_max": "19:00",
+      "dynamic_offer_allowed": true,
+      "appointment_seed_allowed": true,
+      "requires_instructor_availability": true,
+      "requires_existing_enrollware_class": false,
+      "can_stack_with_same_course": false,
+      "minimum_gap_minutes": 45,
+      "max_students_default": 5,
+      "min_students_default": 1,
+      "registration_backend": "enrollware",
+      "enrollware_course_url": "https://coastalcprtraining.enrollware.com/schedule#ct372258",
+      "appointment_course_id": "372258",
+      "appointment_allowed": true,
+      "appointment_day_id_strategy": "owned_container",
+      "appointment_location_strategy": "location_resource_map",
+      "allows_unscheduled_students": false,
+      "base_price": null,
+      "shipping_price": null,
+      "add_ons": [],
+      "add_on_policy": "unknown",
+      "manual_required": false,
+      "manual_included": false,
+      "discount_eligible": false,
+      "certification_type": "unknown",
+      "certification_validity_months": null,
+      "card_type": "unknown",
+      "secondary_card_type": "not_applicable",
+      "ecard_code": "unknown",
+      "keycode_bank": "unknown",
+      "allowed_instructor_ids": [
+        "ARC_BLS_INSTRUCTOR"
+      ],
+      "allowed_location_ids": [],
+      "required_equipment": [
+        "UNKNOWN"
+      ],
+      "room_requirements": [],
+      "notes_internal": "Generated from course_catalog.json; not authoritative for production behavior yet.",
+      "source_files": [
+        "data/config/course_catalog.json",
+        "data/config/course_map.json",
+        "data/inventory/course_consumption_rules.json"
+      ],
+      "data_quality_status": "needs_review",
+      "missing_required_fields": [
+        "slug_page",
+        "hub_tab",
+        "base_price",
+        "card_type"
+      ]
+    },
+    {
       "course_key": "arc_adult_pediatric_first_aid_cpr_aed",
       "enrollware_course_id": "369209",
       "enrollware_name": "American Red Cross Adult and Pediatric First Aid/CPR/AED",
@@ -346,7 +444,7 @@
       "public_visibility": "active_public",
       "slug_page": "unknown",
       "hub_tab": [],
-      "sort_priority": null,
+      "sort_priority": 55,
       "cta_text": "Check this date/time",
       "description_short": "Practical first aid, CPR, and AED training with updated emergency recognition topics.",
       "description_long": "unknown",
@@ -375,7 +473,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -392,7 +490,7 @@
       "requires_instructor_availability": true,
       "requires_existing_enrollware_class": false,
       "can_stack_with_same_course": false,
-      "minimum_gap_minutes": null,
+      "minimum_gap_minutes": 150,
       "max_students_default": 12,
       "min_students_default": 1,
       "registration_backend": "enrollware",
@@ -426,7 +524,8 @@
       "notes_internal": "Generated from course_catalog.json; not authoritative for production behavior yet. Dynamic offers blocked until duration/setup/cleanup are reviewed.",
       "source_files": [
         "data/config/course_catalog.json",
-        "data/config/course_map.json"
+        "data/config/course_map.json",
+        "data/inventory/course_consumption_rules.json"
       ],
       "data_quality_status": "needs_review",
       "missing_required_fields": [
@@ -485,7 +584,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -595,7 +694,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -705,7 +804,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -816,7 +915,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -921,7 +1020,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1026,7 +1125,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1130,7 +1229,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1231,7 +1330,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1341,7 +1440,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1451,7 +1550,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1561,7 +1660,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1664,7 +1763,7 @@
       "cleanup_buffer_minutes": 30,
       "scheduler_consumption_minutes": 90,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1769,9 +1868,9 @@
       "scheduler_display_duration_minutes": 45,
       "setup_buffer_minutes": null,
       "cleanup_buffer_minutes": null,
-      "scheduler_consumption_minutes": 60,
+      "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1783,8 +1882,8 @@
       ],
       "allowed_start_time_min": "08:00",
       "allowed_start_time_max": "19:00",
-      "dynamic_offer_allowed": true,
-      "appointment_seed_allowed": true,
+      "dynamic_offer_allowed": false,
+      "appointment_seed_allowed": false,
       "requires_instructor_availability": true,
       "requires_existing_enrollware_class": false,
       "can_stack_with_same_course": false,
@@ -1819,7 +1918,7 @@
         "UNKNOWN"
       ],
       "room_requirements": [],
-      "notes_internal": "HSI BLS Challenge is dynamically allowed. The 45-minute classroom/display duration is informational; scheduling uses a 60-minute operational consumption window.",
+      "notes_internal": "Generated from course_catalog.json; not authoritative for production behavior yet. Dynamic offers blocked until duration/setup/cleanup are reviewed.",
       "source_files": [
         "data/config/course_catalog.json",
         "data/config/course_map.json",
@@ -1831,6 +1930,7 @@
         "hub_tab",
         "setup_buffer_minutes",
         "cleanup_buffer_minutes",
+        "scheduler_consumption_minutes",
         "base_price",
         "card_type"
       ]
@@ -1881,7 +1981,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -1991,7 +2091,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -2056,6 +2156,102 @@
       ]
     },
     {
+      "course_key": "aha_family_friends_cpr",
+      "enrollware_course_id": "252737",
+      "enrollware_name": "AHA Family & Friends CPR",
+      "internal_title": "AHA Family & Friends CPR",
+      "public_short_title": "AHA Family & Friends CPR",
+      "public_long_title": "AHA Family & Friends CPR",
+      "course_family": "Heartsaver",
+      "course_family_type": "Family & Friends CPR",
+      "provider": "AHA",
+      "discipline": "unknown",
+      "format": "IP",
+      "audience": "unknown",
+      "status": "active",
+      "public_visibility": "active_public",
+      "slug_page": "unknown",
+      "hub_tab": [],
+      "sort_priority": 58,
+      "cta_text": "Check this date/time",
+      "description_short": "unknown",
+      "description_long": "unknown",
+      "prerequisites": [],
+      "what_is_included": [],
+      "what_to_bring": [],
+      "classroom_duration_minutes": 120,
+      "skills_duration_minutes": null,
+      "online_component_required": false,
+      "scheduler_display_duration_minutes": 120,
+      "setup_buffer_minutes": null,
+      "cleanup_buffer_minutes": null,
+      "scheduler_consumption_minutes": null,
+      "minimum_lead_time_hours": 24,
+      "maximum_lookahead_days": 180,
+      "allowed_days_of_week": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+      ],
+      "allowed_start_time_min": "08:00",
+      "allowed_start_time_max": "19:00",
+      "dynamic_offer_allowed": false,
+      "appointment_seed_allowed": false,
+      "requires_instructor_availability": true,
+      "requires_existing_enrollware_class": false,
+      "can_stack_with_same_course": false,
+      "minimum_gap_minutes": 120,
+      "max_students_default": 10,
+      "min_students_default": 1,
+      "registration_backend": "enrollware",
+      "enrollware_course_url": "https://coastalcprtraining.enrollware.com/schedule#ct252737",
+      "appointment_course_id": "252737",
+      "appointment_allowed": true,
+      "appointment_day_id_strategy": "owned_container",
+      "appointment_location_strategy": "location_resource_map",
+      "allows_unscheduled_students": false,
+      "base_price": null,
+      "shipping_price": null,
+      "add_ons": [],
+      "add_on_policy": "unknown",
+      "manual_required": false,
+      "manual_included": false,
+      "discount_eligible": false,
+      "certification_type": "unknown",
+      "certification_validity_months": 24,
+      "card_type": "unknown",
+      "secondary_card_type": "not_applicable",
+      "ecard_code": "unknown",
+      "keycode_bank": "unknown",
+      "allowed_instructor_ids": [
+        "AHA_BLS_INSTRUCTOR"
+      ],
+      "allowed_location_ids": [],
+      "required_equipment": [
+        "UNKNOWN"
+      ],
+      "room_requirements": [],
+      "notes_internal": "Generated from course_catalog.json; not authoritative for production behavior yet. Dynamic offers blocked until duration/setup/cleanup are reviewed.",
+      "source_files": [
+        "data/config/course_catalog.json",
+        "data/inventory/course_consumption_rules.json"
+      ],
+      "data_quality_status": "needs_review",
+      "missing_required_fields": [
+        "slug_page",
+        "hub_tab",
+        "setup_buffer_minutes",
+        "cleanup_buffer_minutes",
+        "scheduler_consumption_minutes",
+        "base_price",
+        "card_type"
+      ]
+    },
+    {
       "course_key": "aha_heartsaver_cpr_aed",
       "enrollware_course_id": "344085",
       "enrollware_name": "AHA - Heartsaver® CPR AED - In-person",
@@ -2104,7 +2300,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -2171,124 +2367,6 @@
       ]
     },
     {
-      "course_key": "aha_family_friends_cpr",
-      "enrollware_course_id": "252737",
-      "enrollware_name": "AHA - Family & Friends® CPR",
-      "internal_title": "AHA Family & Friends CPR",
-      "public_short_title": "Family & Friends CPR",
-      "public_long_title": "AHA Family & Friends CPR",
-      "course_family": "Heartsaver",
-      "course_family_type": "Family & Friends CPR",
-      "provider": "AHA",
-      "discipline": "AHA Heartsaver",
-      "format": "IP",
-      "audience": "Parents, grandparents, babysitters, caregivers, community groups, and anyone who wants practical CPR skills without a certification card.",
-      "status": "active",
-      "public_visibility": "active_public",
-      "slug_page": "docs/family-cpr.html",
-      "hub_tab": [
-        "family-cpr"
-      ],
-      "sort_priority": 58,
-      "cta_text": "Check Family & Friends CPR times",
-      "description_short": "Practical CPR skills for adults, children, and infants in a relaxed, hands-on class. No certification card is included.",
-      "description_long": "Family & Friends CPR is an educational American Heart Association course for parents, grandparents, babysitters, caregivers, community groups, and anyone who wants to be better prepared for an emergency. It does not include a certification card.",
-      "prerequisites": [],
-      "what_is_included": [
-        "Hands-on practice plus practical recognition topics such as choking",
-        "opioid emergencies and naloxone access",
-        "FAST stroke recognition",
-        "seizures",
-        "asthma inhaler assistance with spacer preference",
-        "severe heat illness cooling",
-        "safe rewarming",
-        "burns",
-        "eye injuries",
-        "ticks",
-        "stings",
-        "poison ivy/oak",
-        "and pulse oximetry limitations."
-      ],
-      "what_to_bring": [],
-      "classroom_duration_minutes": 120,
-      "skills_duration_minutes": null,
-      "online_component_required": false,
-      "scheduler_display_duration_minutes": 120,
-      "setup_buffer_minutes": null,
-      "cleanup_buffer_minutes": null,
-      "scheduler_consumption_minutes": 120,
-      "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 180,
-      "allowed_days_of_week": [
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-        "sunday"
-      ],
-      "allowed_start_time_min": "08:00",
-      "allowed_start_time_max": "19:00",
-      "dynamic_offer_allowed": true,
-      "appointment_seed_allowed": true,
-      "requires_instructor_availability": true,
-      "requires_existing_enrollware_class": false,
-      "can_stack_with_same_course": false,
-      "minimum_gap_minutes": 120,
-      "max_students_default": 10,
-      "min_students_default": 1,
-      "registration_backend": "enrollware",
-      "enrollware_course_url": "/family-cpr.html",
-      "appointment_course_id": "252737",
-      "appointment_allowed": true,
-      "appointment_day_id_strategy": "owned_container",
-      "appointment_location_strategy": "location_resource_map",
-      "allows_unscheduled_students": false,
-      "base_price": 45.0,
-      "shipping_price": 0.0,
-      "add_ons": [
-        "MANUAL: OTHER SOURCE",
-        "MANUAL: AHA BOOKSTORE"
-      ],
-      "add_on_policy": "from_enrollware_export",
-      "manual_required": true,
-      "manual_included": false,
-      "discount_eligible": false,
-      "certification_type": "Heartsaver CPR AED",
-      "certification_validity_months": 24,
-      "card_type": "Heartsaver CPR AED",
-      "secondary_card_type": "not_applicable",
-      "ecard_code": "25-3004",
-      "keycode_bank": "unknown",
-      "allowed_instructor_ids": [
-        "AHA_BLS_INSTRUCTOR"
-      ],
-      "allowed_location_ids": [],
-      "required_equipment": [
-        "UNKNOWN"
-      ],
-      "room_requirements": [],
-      "notes_internal": "Generated from course_catalog.json; not authoritative for production behavior yet. Dynamic offers blocked until duration/setup/cleanup are reviewed.",
-      "source_files": [
-        "data/config/course_catalog.json",
-        "data/config/course_map.json",
-        "data/raw/course-export.xlsx",
-        "data/inventory/course_consumption_rules.json",
-        "data/config/slug_hubs.json"
-      ],
-      "data_quality_status": "needs_review",
-      "missing_required_fields": [
-        "setup_buffer_minutes",
-        "cleanup_buffer_minutes",
-        "scheduler_consumption_minutes"
-      ],
-      "public_schedule_eligible": true,
-      "structured_data_type": "Course",
-      "last_reviewed": "2026-07-14",
-      "notes": "Approved fallback: normal validated public offer rotation. Barnacle-without-anchor suppression is not active in the current selector path, so this course may temporarily produce standalone offers."
-    },
-    {
       "course_key": "aha_heartsaver_cpr_aed_online",
       "enrollware_course_id": "209808",
       "enrollware_name": "AHA Heartsaver CPR AED Online",
@@ -2307,7 +2385,7 @@
       "hub_tab": [
         "hs-cpr-aed-bl"
       ],
-      "sort_priority": null,
+      "sort_priority": 60,
       "cta_text": "Check this date/time",
       "description_short": "Practical first aid, CPR, and AED training with updated emergency recognition topics.",
       "description_long": "unknown",
@@ -2336,7 +2414,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -2353,7 +2431,7 @@
       "requires_instructor_availability": true,
       "requires_existing_enrollware_class": false,
       "can_stack_with_same_course": false,
-      "minimum_gap_minutes": null,
+      "minimum_gap_minutes": 120,
       "max_students_default": 2,
       "min_students_default": 1,
       "registration_backend": "enrollware",
@@ -2388,6 +2466,7 @@
       "source_files": [
         "data/config/course_catalog.json",
         "data/config/course_map.json",
+        "data/inventory/course_consumption_rules.json",
         "data/config/slug_hubs.json"
       ],
       "data_quality_status": "needs_review",
@@ -2448,7 +2527,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -2532,7 +2611,7 @@
         "group-heartsaver",
         "hs-fa-cpr-aed-bl"
       ],
-      "sort_priority": null,
+      "sort_priority": 63,
       "cta_text": "Check this date/time",
       "description_short": "Practical first aid, CPR, and AED training with updated emergency recognition topics.",
       "description_long": "unknown",
@@ -2561,7 +2640,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -2578,7 +2657,7 @@
       "requires_instructor_availability": true,
       "requires_existing_enrollware_class": false,
       "can_stack_with_same_course": false,
-      "minimum_gap_minutes": null,
+      "minimum_gap_minutes": 120,
       "max_students_default": 2,
       "min_students_default": 1,
       "registration_backend": "enrollware",
@@ -2613,6 +2692,7 @@
       "source_files": [
         "data/config/course_catalog.json",
         "data/config/course_map.json",
+        "data/inventory/course_consumption_rules.json",
         "data/config/slug_hubs.json"
       ],
       "data_quality_status": "needs_review",
@@ -2643,7 +2723,7 @@
       "hub_tab": [
         "hs-pediatric-ip"
       ],
-      "sort_priority": null,
+      "sort_priority": 63,
       "cta_text": "Check this date/time",
       "description_short": "Practical first aid, CPR, and AED training with updated emergency recognition topics.",
       "description_long": "unknown",
@@ -2672,7 +2752,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -2689,7 +2769,7 @@
       "requires_instructor_availability": true,
       "requires_existing_enrollware_class": false,
       "can_stack_with_same_course": false,
-      "minimum_gap_minutes": null,
+      "minimum_gap_minutes": 150,
       "max_students_default": 12,
       "min_students_default": 1,
       "registration_backend": "enrollware",
@@ -2724,6 +2804,7 @@
       "source_files": [
         "data/config/course_catalog.json",
         "data/config/course_map.json",
+        "data/inventory/course_consumption_rules.json",
         "data/config/slug_hubs.json"
       ],
       "data_quality_status": "needs_review",
@@ -2783,7 +2864,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -2887,7 +2968,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -2991,7 +3072,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -3095,7 +3176,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -3199,7 +3280,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",
@@ -3304,7 +3385,7 @@
       "cleanup_buffer_minutes": null,
       "scheduler_consumption_minutes": null,
       "minimum_lead_time_hours": 24,
-      "maximum_lookahead_days": 60,
+      "maximum_lookahead_days": 180,
       "allowed_days_of_week": [
         "monday",
         "tuesday",

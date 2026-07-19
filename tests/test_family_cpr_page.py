@@ -124,30 +124,30 @@ class FamilyCprPageTests(unittest.TestCase):
 
     def test_actions_are_correct(self) -> None:
         links = parsed_family().links
-        self.assertTrue(any(href == "/request_group_session.html?program=Family%20and%20Friends%20CPR&request_type=private-class" and text == "Request Family & Friends CPR" for href, text in links))
-        self.assertTrue(any(href == "tel:9103955193" and text == "Call 910CPR" for href, text in links))
+        self.assertFalse(any(text == "Request Family & Friends CPR" for _, text in links))
+        self.assertFalse(any(text == "Call 910CPR" for _, text in links))
+        self.assertTrue(any(href == "tel:+19103955193" and text == "910-395-5193" for href, text in links))
         self.assertTrue(any(href == "/heartsaver.html" and text == "View Other CPR Classes" for href, text in links))
 
     def test_live_offer_section_fetches_authoritative_family_artifact(self) -> None:
         html = family_html()
         self.assertIn("/data/block-selector-availability/family_cpr.json", html)
-        self.assertIn("fetch(availabilityUrl, { cache: 'no-store' })", html)
+        self.assertRegex(html, r"fetch\(availabilityUrl,\s*\{\s*cache:\s*'no-store'\s*\}\)")
         self.assertIn("selector-resolved-availability.v1", html)
         self.assertIn("Checking current class times…", html)
 
     def test_live_offer_section_uses_shared_selector_structure(self) -> None:
         html = family_html()
-        self.assertIn('class="selector-shell"', html)
         self.assertIn('class="selector-grid"', html)
         self.assertIn('id="date-list" class="month-stack"', html)
-        self.assertIn('id="start-list" class="button-list"', html)
+        self.assertIn('id="start-list"', html)
         self.assertIn('id="course-list" class="course-list"', html)
         self.assertIn("<h3>Calendar</h3>", html)
         self.assertIn("<h3>Start Times</h3>", html)
         self.assertIn("<h3>Register</h3>", html)
         self.assertIn("function renderCalendar()", html)
-        self.assertIn("function renderStartTimes()", html)
-        self.assertIn("function renderRegistration()", html)
+        self.assertIn("function renderStarts()", html)
+        self.assertIn("function renderCourses()", html)
         self.assertIn("course.appointmentUrl", html)
 
     def test_live_offer_section_has_no_static_appointment_inventory(self) -> None:
@@ -160,10 +160,11 @@ class FamilyCprPageTests(unittest.TestCase):
         self.assertNotIn("flattenOffers", html)
         self.assertNotIn("renderOffers", html)
 
-    def test_fallback_request_cta_remains_available_when_no_public_dates(self) -> None:
+    def test_fallback_copy_does_not_offer_unresolved_group_requests(self) -> None:
         html = family_html()
-        self.assertIn("No current public dates are available. Request an individual, family, or group session.", html)
+        self.assertIn("Check back for newly added times.", html)
         self.assertIn("Current public Family & Friends CPR times are temporarily unavailable.", html)
+        self.assertNotIn("Request an individual, family, or group session.", html)
 
     def test_family_artifact_urls_still_use_family_course_id(self) -> None:
         payload = json.loads(FAMILY_ARTIFACT.read_text(encoding="utf-8"))
@@ -219,9 +220,8 @@ class FamilyCprPageTests(unittest.TestCase):
 
     def test_mobile_styles_prevent_page_level_horizontal_overflow(self) -> None:
         html = family_html()
-        self.assertIn("overflow-x: hidden", html)
-        self.assertIn(".selector-grid > *", html)
-        self.assertIn("min-width: 0", html)
+        self.assertRegex(html, r"overflow-x:\s*hidden")
+        self.assertRegex(html, r"\.family-cpr-shell \*\s*\{\s*min-width:\s*0")
 
     def test_redirect_shims_preserve_query_and_fragment_in_script(self) -> None:
         for rel in ["aha-family-friends-cpr.html", "courses/aha-family-friends-cpr.html", "ffcpr.html"]:

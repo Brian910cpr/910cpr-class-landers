@@ -11,9 +11,9 @@ Generated inventory/schema report. Course Master is not authoritative for produc
 
 ## Counts
 
-- Course records created: `30`
+- Course records created: `32`
 - Complete: `0`
-- Needs review: `30`
+- Needs review: `32`
 - Incomplete: `0`
 - Inactive: `0`
 
@@ -27,19 +27,19 @@ Generated inventory/schema report. Course Master is not authoritative for produc
 ## Audit Answers
 
 - Every public sellable dynamic offer resolves to Course Master: `True`
-- Courses used by public sellable offers: `209806, 209808, 209809, 210549, 251545, 329495, 344085, 351632, 359474, 445670`
+- Courses used by public sellable offers: ``
 - Public sellable dynamic offers missing Course Master data: `none`
-- Courses lacking duration/scheduler consumption: `209811, 241108, 209818, 369209, 410694, 444919, 248288, 248287, 209806, 359474, 210549, 440431, 374378, 422270, 371954, 463743, 448630, 449422, 344085, 209808, 209809, 329495, 351632, 251545, 209812, 209805, 251496, 253768, 359827`
-- Courses lacking public page/tab mapping: `369209, 410694, 444919, 248288, 248287, 440431, 374378, 422270, 371954, 463743, 448630, 449422, 253768, 359827`
+- Courses lacking duration/scheduler consumption: `209811, 241108, 209818, 369209, 410694, 444919, 248288, 248287, 209806, 359474, 210549, 440431, 374378, 422270, 371954, 463743, 448630, 449422, 252737, 344085, 209808, 209809, 329495, 351632, 251545, 209812, 209805, 251496, 253768, 359827`
+- Courses lacking public page/tab mapping: `372258, 369209, 410694, 444919, 248288, 248287, 440431, 374378, 422270, 371954, 463743, 448630, 449422, 252737, 253768, 359827`
 - Courses lacking Enrollware courseId: `none`
 - Manual review fields before authoritative: `base_price, card_type, cleanup_buffer_minutes, hub_tab, scheduler_consumption_minutes, setup_buffer_minutes, slug_page`
 
 ## Most Common Missing Fields
 
-- `setup_buffer_minutes`: `29`
-- `cleanup_buffer_minutes`: `29`
-- `scheduler_consumption_minutes`: `29`
-- `base_price`: `28`
-- `card_type`: `28`
-- `slug_page`: `14`
-- `hub_tab`: `14`
+- `setup_buffer_minutes`: `30`
+- `cleanup_buffer_minutes`: `30`
+- `scheduler_consumption_minutes`: `30`
+- `base_price`: `30`
+- `card_type`: `30`
+- `slug_page`: `16`
+- `hub_tab`: `16`

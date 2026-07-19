@@ -23,13 +23,35 @@
       background: var(--surface);
       line-height: 1.45;
     }
-    header, main { max-width: 1120px; margin: 0 auto; padding: 24px; }
+    header, main, .selector-brand-bar { max-width: 1120px; margin: 0 auto; padding: 24px; }
     header { border-bottom: 1px solid var(--line); }
-    .selector-brand-bar { max-width:1120px; margin:0 auto; padding:18px 24px 8px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
-    .selector-brand-link { display:inline-flex; align-items:center; gap:10px; color:var(--ink); font-size:1.35rem; font-weight:800; text-decoration:none; }
-    .selector-brand-link img { width:auto; height:44px; object-fit:contain; }
-    .selector-header-phone { color:var(--accent-dark); font-size:clamp(1.1rem,2.3vw,1.55rem); font-weight:850; text-decoration:none; white-space:nowrap; }
-    .selector-header-phone:hover,.selector-header-phone:focus { text-decoration:underline; text-underline-offset:4px; }    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
+    .selector-brand-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 8px;
+    }
+    .selector-brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .selector-brand-link img { width: auto; height: 44px; object-fit: contain; }
+    .selector-header-phone {
+      color: var(--accent-dark);
+      font-size: clamp(1.1rem, 2.3vw, 1.55rem);
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .selector-header-phone:hover, .selector-header-phone:focus { text-decoration: underline; text-underline-offset: 4px; }
+    .deep-link-anchor { position: relative; top: -8px; display: block; width: 0; height: 0; overflow: hidden; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
     h2 { margin: 0 0 12px; font-size: 1.25rem; letter-spacing: 0; }
     h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: 0; }
     p { margin: 0 0 12px; }
@@ -52,6 +74,50 @@
     .back-link:hover,
     .back-link:focus {
       text-decoration: underline;
+    }
+    .page-heading-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+      gap: 24px;
+      align-items: center;
+    }
+    .header-credential {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 2px solid #d71920;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #fff 0%, #fff7f7 100%);
+      box-shadow: 0 10px 24px rgba(120, 18, 22, .12);
+    }
+    .header-credential img {
+      display: block;
+      width: 92px;
+      max-height: 108px;
+      object-fit: contain;
+    }
+    .header-credential strong {
+      display: block;
+      color: #9d1118;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+    .header-credential p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.35;
+    }
+    .header-credential-eyebrow {
+      display: block;
+      margin-bottom: 3px;
+      color: #d71920;
+      font-size: .7rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
     .family-help {
       border: 1px solid var(--line);
@@ -261,6 +327,10 @@
       object-position: center;
       padding: 6px;
     }
+    .course-icon img.course-image-cover {
+      object-fit: cover;
+      padding: 0;
+    }
     .course-icon-fallback {
       display: inline-flex;
       align-items: center;
@@ -451,10 +521,16 @@
       background: var(--band);
     }
     @media (max-width: 820px) {
+      .page-heading-row { grid-template-columns: 1fr; }
+      .header-credential { grid-template-columns: 76px minmax(0, 1fr); }
+      .header-credential img { width: 76px; max-height: 92px; }
       .selector-grid { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
-      header, main { padding: 18px; }
+      header, main, .selector-brand-bar { padding: 18px; }
+      .selector-brand-link img { height: 38px; }
+      .selector-brand-link { font-size: 1.05rem; }
+      .selector-header-phone { font-size: 1.05rem; }
       .panel { padding: 14px; }
       .course-selector-top {
         display: grid;
@@ -512,30 +588,25 @@
       }
     }
     </style>
-<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH');
-</script>
-<!-- End Google Tag Manager -->
 </head>
 <body>
   <div class="selector-brand-bar">
-    <a class="selector-brand-link" href="/index.html" aria-label="910CPR home"><img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;"><span>910CPR</span></a>
+    <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
+      <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+      <span>910CPR</span>
+    </a>
     <a class="selector-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
-  </div><!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
+  </div>
   <header>
     <a class="back-link" href="/index.html">← Back to Find Your Class</a>
-    <h1>ACLS Certification Classes</h1>
-    
-    <p class="muted">Choose Initial, Renewal, or HeartCode, then select a date and time.</p>
+    <div class="page-heading-row">
+      <div>
+        <h1>ACLS Certification Classes</h1>
+        
+        <p class="muted">Choose Initial, Renewal, or HeartCode, then select a date and time.</p>
+      </div>
+      
+    </div>
     
     <div class="family-help" aria-label="Course format guide">
       <div class="family-help-title">Course format guide</div>
@@ -581,6 +652,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="course-rail" data-course-rail>
           <button type="button" class="rail-arrow previous" data-course-rail-prev aria-label="Previous course options">‹</button>
+          <span id="acls-provider" class="deep-link-anchor" aria-hidden="true"></span><span id="acls-renewal" class="deep-link-anchor" aria-hidden="true"></span><span id="heartcode" class="deep-link-anchor" aria-hidden="true"></span><span id="heartcode-acls" class="deep-link-anchor" aria-hidden="true"></span><span id="initial" class="deep-link-anchor" aria-hidden="true"></span><span id="provider" class="deep-link-anchor" aria-hidden="true"></span><span id="provider-renewal" class="deep-link-anchor" aria-hidden="true"></span><span id="renewal" class="deep-link-anchor" aria-hidden="true"></span>
           <div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
@@ -604,8 +676,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/acls.json?v=2026-07-18T12%3A52%3A14.158218";
-    const courseOptions = [{"courseId": "241108", "courseName": "AHA ACLS Provider (Initial)", "family": "ACLS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "acls-provider"], "iconLabel": "ACLS", "imageUrl": "/images/acls_general.png", "imageAlt": "AHA ACLS Provider (Initial) course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom ACLS Provider certification for first-time or returning ACLS students.", "details": {"course_key": "aha_acls_provider_initial", "title": "AHA ACLS Provider", "certifying_body": "AHA", "family": "ACLS", "short_description": "Advanced cardiovascular life support for clinicians who manage adult cardiac emergencies.", "who_this_is_for": "Healthcare professionals involved in adult cardiac arrest, peri-arrest, stroke, or advanced cardiovascular response.", "topics_covered": ["Systematic ACLS assessment", "High-performance teams", "Airway and ventilation concepts", "Rhythm recognition", "ACLS algorithms"], "required_materials": ["Current AHA ACLS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association ACLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm prerequisites with your employer, school, or licensing program."], "full_course_page": "/acls.html"}}, {"courseId": "209818", "courseName": "AHA ACLS Provider (Renewal)", "family": "ACLS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "acls-renewal"], "iconLabel": "RN", "imageUrl": "/images/acls_general.png", "imageAlt": "AHA ACLS Provider (Renewal) course option", "deliveryBadge": "IN-PERSON", "clarification": "Shorter ACLS renewal path for providers with prior ACLS training.", "details": {"course_key": "aha_acls_provider_renewal", "title": "AHA ACLS Renewal", "certifying_body": "AHA", "family": "ACLS", "short_description": "ACLS renewal for current providers who need a focused recertification path.", "who_this_is_for": "Current ACLS providers renewing an existing AHA ACLS Provider card.", "topics_covered": ["ACLS algorithm review", "Scenario-based team response", "Airway and rhythm review", "Post-arrest and stroke concepts"], "required_materials": ["Current AHA ACLS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association ACLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose ACLS Provider if you need a full initial class."], "full_course_page": "/acls.html"}}, {"courseId": "209811", "courseName": "AHA ACLS HeartCode", "family": "ACLS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-acls"], "iconLabel": "HC", "imageUrl": "/images/hc_acls.png", "imageAlt": "AHA ACLS HeartCode course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Complete HeartCode ACLS online first, then attend an in-person skills session.", "details": {"course_key": "aha_heartcode_acls", "title": "AHA ACLS HeartCode", "certifying_body": "AHA", "family": "ACLS", "short_description": "ACLS skills session for students who completed the official AHA HeartCode ACLS online course.", "who_this_is_for": "Clinicians completing the blended HeartCode ACLS path.", "topics_covered": ["ACLS skills verification", "Team response scenarios", "Airway, rhythm, and algorithm application"], "required_materials": ["Completed AHA HeartCode ACLS certificate of completion before the skills session."], "certification_issued": "American Heart Association ACLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills portion, not the online HeartCode course purchase."], "full_course_page": "/courses/heartcode-acls.html"}}];
+    const availabilityUrl = "/data/block-selector-availability/acls.json?v=2026-07-18T17%3A38%3A51.199491";
+    const courseOptions = [{"courseId": "241108", "courseName": "AHA ACLS Provider (Initial)", "family": "ACLS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "acls-provider"], "iconLabel": "ACLS", "imageUrl": "/images/acls_general.png", "imageFit": "contain", "imageAlt": "AHA ACLS Provider (Initial) course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom ACLS Provider certification for first-time or returning ACLS students.", "details": {"course_key": "aha_acls_provider_initial", "title": "AHA ACLS Provider", "certifying_body": "AHA", "family": "ACLS", "short_description": "Advanced cardiovascular life support for clinicians who manage adult cardiac emergencies.", "who_this_is_for": "Healthcare professionals involved in adult cardiac arrest, peri-arrest, stroke, or advanced cardiovascular response.", "topics_covered": ["Systematic ACLS assessment", "High-performance teams", "Airway and ventilation concepts", "Rhythm recognition", "ACLS algorithms"], "required_materials": ["Current AHA ACLS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association ACLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm prerequisites with your employer, school, or licensing program."], "full_course_page": "/acls.html"}}, {"courseId": "209818", "courseName": "AHA ACLS Provider (Renewal)", "family": "ACLS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "acls-renewal"], "iconLabel": "RN", "imageUrl": "/images/acls_general.png", "imageFit": "contain", "imageAlt": "AHA ACLS Provider (Renewal) course option", "deliveryBadge": "IN-PERSON", "clarification": "Shorter ACLS renewal path for providers with prior ACLS training.", "details": {"course_key": "aha_acls_provider_renewal", "title": "AHA ACLS Renewal", "certifying_body": "AHA", "family": "ACLS", "short_description": "ACLS renewal for current providers who need a focused recertification path.", "who_this_is_for": "Current ACLS providers renewing an existing AHA ACLS Provider card.", "topics_covered": ["ACLS algorithm review", "Scenario-based team response", "Airway and rhythm review", "Post-arrest and stroke concepts"], "required_materials": ["Current AHA ACLS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association ACLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose ACLS Provider if you need a full initial class."], "full_course_page": "/acls.html"}}, {"courseId": "209811", "courseName": "AHA ACLS HeartCode", "family": "ACLS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-acls"], "iconLabel": "HC", "imageUrl": "/images/hc_acls.png", "imageFit": "contain", "imageAlt": "AHA ACLS HeartCode course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Complete HeartCode ACLS online first, then attend an in-person skills session.", "details": {"course_key": "aha_heartcode_acls", "title": "AHA ACLS HeartCode", "certifying_body": "AHA", "family": "ACLS", "short_description": "ACLS skills session for students who completed the official AHA HeartCode ACLS online course.", "who_this_is_for": "Clinicians completing the blended HeartCode ACLS path.", "topics_covered": ["ACLS skills verification", "Team response scenarios", "Airway, rhythm, and algorithm application"], "required_materials": ["Completed AHA HeartCode ACLS certificate of completion before the skills session."], "certification_issued": "American Heart Association ACLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills portion, not the online HeartCode course purchase."], "full_course_page": "/courses/heartcode-acls.html"}}];
     const optionGroups = {"ACLS": {"family": "ACLS", "label": "All AHA ACLS options", "courseIds": ["241108", "209818", "209811"]}};
     const unsupportedOptions = [];
     let scheduleDates = embeddedScheduleDates;
@@ -936,6 +1008,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           image.src = course.imageUrl;
           image.alt = course.imageAlt || course.courseName;
           image.loading = 'lazy';
+          if (course.imageFit === 'cover') image.className = 'course-image-cover';
           icon.appendChild(image);
         } else {
           const fallback = document.createElement('span');

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30T13:51:59.987396-04:00",
+  "generated_at": "2026-07-19T10:36:51.812866-04:00",
   "recommendation": {
     "course_catalog_should_be_promoted_or_renamed": false,
     "course_master_should_be_generated_from_course_catalog_plus_enrollware_export": true,
@@ -7,9 +7,9 @@
     "summary": "Use course_catalog.json as the preferred seed and current scheduler source, generate course_master.json as the normalized review layer, then promote after missing scheduler/rendering/export gaps are resolved."
   },
   "counts": {
-    "course_records_created": 30,
+    "course_records_created": 32,
     "complete": 0,
-    "needs_review": 30,
+    "needs_review": 32,
     "incomplete": 0,
     "inactive": 0
   },
@@ -112,13 +112,13 @@
   },
   "audit_answers": {
     "most_common_missing_fields": {
-      "setup_buffer_minutes": 29,
-      "cleanup_buffer_minutes": 29,
-      "scheduler_consumption_minutes": 29,
-      "base_price": 28,
-      "card_type": 28,
-      "slug_page": 14,
-      "hub_tab": 14
+      "setup_buffer_minutes": 30,
+      "cleanup_buffer_minutes": 30,
+      "scheduler_consumption_minutes": 30,
+      "base_price": 30,
+      "card_type": 30,
+      "slug_page": 16,
+      "hub_tab": 16
     },
     "courses_lacking_duration_or_scheduler_consumption": [
       "209811",
@@ -139,6 +139,7 @@
       "463743",
       "448630",
       "449422",
+      "252737",
       "344085",
       "209808",
       "209809",
@@ -152,6 +153,7 @@
       "359827"
     ],
     "courses_lacking_public_page_tab_mapping": [
+      "372258",
       "369209",
       "410694",
       "444919",
@@ -164,22 +166,12 @@
       "463743",
       "448630",
       "449422",
+      "252737",
       "253768",
       "359827"
     ],
     "courses_lacking_enrollware_course_id": [],
-    "courses_used_by_public_sellable_offers": [
-      "209806",
-      "209808",
-      "209809",
-      "210549",
-      "251545",
-      "329495",
-      "344085",
-      "351632",
-      "359474",
-      "445670"
-    ],
+    "courses_used_by_public_sellable_offers": [],
     "public_sellable_dynamic_offers_missing_course_master_data": [],
     "every_public_sellable_dynamic_offer_resolves_to_course_master": true,
     "manual_review_fields_before_authoritative": [

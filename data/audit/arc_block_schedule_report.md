@@ -9,10 +9,10 @@ Local build artifact for a customer-facing block schedule page. Enrollware was n
 - Horizon days: `180`
 - Minimum lead hours: `24`
 - Whole block presented as class: `False`
-- Public-selectable offers: `2673`
+- Public-selectable offers: `2641`
 - Public-selectable dates: `85`
-- Public-selectable start times: `981`
-- Rejected course/start evaluations: `7800`
+- Public-selectable start times: `970`
+- Rejected course/start evaluations: `7832`
 - Suppressed stale/orphaned offers: `0`
 
 ## Sample Public-Selectable URLs
@@ -35,8 +35,9 @@ Local build artifact for a customer-facing block schedule page. Enrollware was n
 - `outside_public_dynamic_hours`: 5718
 - `conflicts_with_brian_travel_buffer`: 1623
 - `does_not_fit_inside_availability_after_duration_and_buffers`: 1452
-- `conflicts_with_existing_enrollware_occupancy`: 1358
-- `inside_minimum_lead_time`: 147
+- `conflicts_with_existing_enrollware_occupancy`: 1379
+- `starts_before_current_time`: 105
+- `inside_minimum_lead_time`: 57
 
 ## Final Live Availability Guard
 
@@ -48,13 +49,13 @@ Local build artifact for a customer-facing block schedule page. Enrollware was n
 
 ## Source Files
 
-- `liveAvailabilitySnapshot`: `E:\GitHub\910cpr-class-landers_arc_selector\data\audit\live_availability_snapshot_preview.json`
-- `courseConsumptionRules`: `E:\GitHub\910cpr-class-landers_arc_selector\data\inventory\course_consumption_rules.json`
-- `courseCatalog`: `E:\GitHub\910cpr-class-landers_arc_selector\data\config\course_catalog.json`
-- `peopleCatalog`: `E:\GitHub\910cpr-class-landers_arc_selector\data\config\people_catalog.json`
-- `publicOfferPolicy`: `E:\GitHub\910cpr-class-landers_arc_selector\data\config\public_offer_policy.json`
-- `publicLocationPolicy`: `E:\GitHub\910cpr-class-landers_arc_selector\data\config\public_location_policy.json`
-- `appointmentContainers`: `E:\GitHub\910cpr-class-landers_arc_selector\data\inventory\appointment_containers.json`
-- `sessionsCurrent`: `E:\GitHub\910cpr-class-landers_arc_selector\data\sessions_current.json`
-- `scheduleFuture`: `E:\GitHub\910cpr-class-landers_arc_selector\docs\data\schedule_future.json`
-- `blockSchedulePages`: `E:\GitHub\910cpr-class-landers_arc_selector\data\config\block_schedule_pages.json`
+- `liveAvailabilitySnapshot`: `E:\GitHub\910cpr-class-landers_family_ctas\data\audit\live_availability_snapshot_preview.json`
+- `courseConsumptionRules`: `E:\GitHub\910cpr-class-landers_family_ctas\data\inventory\course_consumption_rules.json`
+- `courseCatalog`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\course_catalog.json`
+- `peopleCatalog`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\people_catalog.json`
+- `publicOfferPolicy`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\public_offer_policy.json`
+- `publicLocationPolicy`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\public_location_policy.json`
+- `appointmentContainers`: `E:\GitHub\910cpr-class-landers_family_ctas\data\inventory\appointment_containers.json`
+- `sessionsCurrent`: `E:\GitHub\910cpr-class-landers_family_ctas\data\sessions_current.json`
+- `scheduleFuture`: `E:\GitHub\910cpr-class-landers_family_ctas\docs\data\schedule_future.json`
+- `blockSchedulePages`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\block_schedule_pages.json`
