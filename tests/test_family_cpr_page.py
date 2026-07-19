@@ -124,8 +124,9 @@ class FamilyCprPageTests(unittest.TestCase):
 
     def test_actions_are_correct(self) -> None:
         links = parsed_family().links
-        self.assertTrue(any(href == "/request_group_session.html?program=Family%20and%20Friends%20CPR&request_type=private-class" and text == "Request Family & Friends CPR" for href, text in links))
-        self.assertTrue(any(href == "tel:9103955193" and text == "Call 910CPR" for href, text in links))
+        self.assertFalse(any(text == "Request Family & Friends CPR" for _, text in links))
+        self.assertFalse(any(text == "Call 910CPR" for _, text in links))
+        self.assertFalse(any(href.startswith("tel:") for href, _ in links))
         self.assertTrue(any(href == "/heartsaver.html" and text == "View Other CPR Classes" for href, text in links))
 
     def test_live_offer_section_fetches_authoritative_family_artifact(self) -> None:
@@ -160,10 +161,11 @@ class FamilyCprPageTests(unittest.TestCase):
         self.assertNotIn("flattenOffers", html)
         self.assertNotIn("renderOffers", html)
 
-    def test_fallback_request_cta_remains_available_when_no_public_dates(self) -> None:
+    def test_fallback_copy_does_not_offer_unresolved_group_requests(self) -> None:
         html = family_html()
-        self.assertIn("No current public dates are available. Request an individual, family, or group session.", html)
+        self.assertIn("Check back for newly added times.", html)
         self.assertIn("Current public Family & Friends CPR times are temporarily unavailable.", html)
+        self.assertNotIn("Request an individual, family, or group session.", html)
 
     def test_family_artifact_urls_still_use_family_course_id(self) -> None:
         payload = json.loads(FAMILY_ARTIFACT.read_text(encoding="utf-8"))
