@@ -80,12 +80,27 @@ def local_path_for_href(href: str) -> Path | None:
 
 
 class HomepageRoutingTests(unittest.TestCase):
-    def test_homepage_prominently_displays_arc_ltp_credential(self) -> None:
+    def test_homepage_displays_unified_training_affiliations(self) -> None:
         html = read(INDEX)
-        self.assertIn('class="arc-ltp-feature"', html)
+        self.assertIn('class="affiliation-cluster"', html)
+        self.assertIn('class="affiliation-cluster-grid"', html)
+        self.assertIn('src="/images/Logo_circle_AHA-Training-Site.webp"', html)
         self.assertIn('src="/images/Logo_Vertical-Red-Cross-LTP.jpg"', html)
+        self.assertIn('src="/images/HSI.png"', html)
+        self.assertIn("American Heart Association Authorized Training Site", html)
         self.assertIn("American Red Cross Licensed Training Provider", html)
+        self.assertIn("HSI Approved Training Center", html)
+        self.assertIn('href="/bls.html"', html)
         self.assertIn('href="/arc.html"', html)
+        self.assertIn('href="/hsi.html"', html)
+        for name in ["Logo_circle_AHA-Training-Site.webp", "Logo_Vertical-Red-Cross-LTP.jpg", "HSI.png"]:
+            with self.subTest(name=name):
+                self.assertTrue((DOCS / "images" / name).exists())
+
+    def test_affiliations_stay_together_on_mobile(self) -> None:
+        css = read(DOCS / "css" / "lander.css")
+        self.assertIn(".affiliation-cluster-grid", css)
+        self.assertGreaterEqual(css.count("grid-template-columns: repeat(3, minmax(0, 1fr))"), 2)
 
     def test_runtime_course_cards_use_canonical_destinations_and_images(self) -> None:
         js = read(BOOKING_HOME)
