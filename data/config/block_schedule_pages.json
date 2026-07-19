@@ -442,6 +442,13 @@
       "subtitle": "AHA Heartsaver First Aid CPR AED Total — AMERHA-216",
       "meta_description": "AHA Heartsaver First Aid CPR AED Total options for captain's license, OUPV, Master, and Merchant Mariner Credential applicants who need AMERHA-216 USCG documentation.",
       "intro": "Select the AHA Heartsaver First Aid CPR AED format, then choose a public date and start time.",
+      "header_credential": {
+        "image": "/images/stripes.png",
+        "image_alt": "USCG maritime training",
+        "eyebrow": "Maritime training",
+        "title": "USCG / Maritime",
+        "body": "First Aid, CPR, and AED training for mariners who need the AMERHA-216 documentation path."
+      },
       "explanation": "This page is a local cover page for mariners and captain's license applicants. It uses the same real AHA Heartsaver First Aid CPR AED classes already available through 910CPR; it does not create separate USCG classroom inventory.",
       "documentation_note": {
         "title": "USCG documentation path",
@@ -484,8 +491,8 @@
             "uscg-in-person",
             "first-aid-cpr-aed"
           ],
-          "image_url": "/images/maritime-first-aid.svg",
-          "image_alt": "In-person AHA Heartsaver First Aid CPR AED maritime first aid course option",
+          "image_url": "/images/heartsaver-total-course-images-2.jpg",
+          "image_alt": "AHA Heartsaver First Aid CPR AED course training",
           "delivery_badge": "IN-PERSON"
         },
         {
