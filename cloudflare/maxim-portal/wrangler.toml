@@ -1,12 +1,22 @@
 name = "910cpr-maxim-portal"
 main = "src/index.js"
-compatibility_date = "2026-07-16"
+compatibility_date = "2026-07-17"
+compatibility_flags = ["nodejs_compat"]
 
 [[d1_databases]]
 binding = "DB"
 database_name = "910cpr-landerware"
 database_id = "REPLACE_WITH_D1_DATABASE_ID"
 
+[[r2_buckets]]
+binding = "DOCUMENTS"
+bucket_name = "910cpr-landerware-documents"
+
 [vars]
 PUBLIC_ORIGIN = "https://www.910cpr.com"
 PORTAL_PATH = "/corp/maxim.html"
+MAX_FILE_BYTES = "26214400"
+
+[observability]
+enabled = true
+head_sampling_rate = 1
