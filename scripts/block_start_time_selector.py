@@ -1,12 +1,17 @@
 from __future__ import annotations
 
 import json
+import html
 import re
+import ssl
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from typing import Any
+import urllib.error
+import urllib.parse
+import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -26,6 +31,7 @@ COURSE_RULES_PATH = ROOT / "data" / "inventory" / "course_consumption_rules.json
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
 PEOPLE_CATALOG_PATH = ROOT / "data" / "config" / "people_catalog.json"
 LOCATION_RESOURCE_MAP_PATH = ROOT / "data" / "config" / "location_resource_map.json"
+TRAVEL_TIME_RULES_PATH = ROOT / "data" / "config" / "travel_time_rules.json"
 APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 PUBLIC_LOCATION_POLICY_PATH = ROOT / "data" / "config" / "public_location_policy.json"
 PUBLIC_OFFER_POLICY_PATH = ROOT / "data" / "config" / "public_offer_policy.json"
@@ -40,6 +46,9 @@ START_STEP_MINUTES = 30
 AS_OF_DATE = date(2026, 7, 2)
 UNKNOWN = "UNKNOWN"
 APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS = {"brian_do_not_schedule"}
+ENROLLWARE_APPOINTMENT_TIMES_ENDPOINT = (
+    "https://coastalcprtraining.enrollware.com/reg/appointment.aspx/GetAvailableAppointmentTimes"
+)
 
 
 class BlockSelectorInputError(RuntimeError):
@@ -347,6 +356,121 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
     return payload
 
 
+def fetch_enrollware_appointment_urls(*, date_token: str, location_id: str, course_id: str) -> set[str]:
+    """Return the appointment URLs Enrollware currently advertises for one course/day."""
+    body = json.dumps({"date": date_token, "locationId": location_id, "courseId": course_id}).encode("utf-8")
+    request = urllib.request.Request(
+        ENROLLWARE_APPOINTMENT_TIMES_ENDPOINT,
+        data=body,
+        headers={
+            "User-Agent": "910CPR-Lander-Build/1.0 (+https://www.910cpr.com)",
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        method="POST",
+    )
+    try:
+        response = urllib.request.urlopen(request, timeout=30)
+    except urllib.error.URLError as exc:
+        # Enrollware's tenant certificate has intermittently presented an expired
+        # chain while the browser endpoint remains usable. Match the existing iCal
+        # importer's narrow SSL-only fallback; do not bypass other network errors.
+        if not isinstance(getattr(exc, "reason", None), ssl.SSLError):
+            raise
+        response = urllib.request.urlopen(request, timeout=30, context=ssl._create_unverified_context())
+    with response:
+        decoded = json.loads(response.read().decode("utf-8", errors="replace"))
+    html_blob = html.unescape(str(decoded.get("d") or ""))
+    return {
+        html.unescape(url)
+        for url in re.findall(
+            r"href=['\"](https://coastalcprtraining\.enrollware\.com/enroll\?appointmentDayId[^'\"]+)['\"]",
+            html_blob,
+        )
+    }
+
+
+def appointment_offer_tuple(url: str) -> tuple[str, str, str]:
+    query = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+    return (
+        clean_text((query.get("appointmentDayId") or [""])[0]),
+        clean_text((query.get("startTime") or [""])[0]).upper(),
+        clean_text((query.get("courseId") or [""])[0]),
+    )
+
+
+def apply_final_enrollware_appointment_guard(
+    payload: dict[str, Any],
+    *,
+    fetch_urls=fetch_enrollware_appointment_urls,
+) -> dict[str, Any]:
+    """Suppress dynamic offers that are absent from Enrollware's live highlighted calendar."""
+    containers = {
+        clean_text(item.get("container_id")): item
+        for item in active_containers(read_required_json(APPOINTMENT_CONTAINERS_PATH))
+    }
+    dynamic = [offer for offer in payload.get("offers", []) if clean_text(offer.get("offerType")) != "seated_class"]
+    available: dict[tuple[str, str, str], set[tuple[str, str, str]]] = {}
+    probes: list[dict[str, Any]] = []
+    for offer in dynamic:
+        container = containers.get(clean_text(offer.get("matchedContainerId")))
+        location_id = clean_text((container or {}).get("location_id"))
+        course_id = clean_text(offer.get("courseId"))
+        day = date.fromisoformat(str(offer.get("date")))
+        key = (day.strftime("%m%d%y"), location_id, course_id)
+        if key in available:
+            continue
+        if not location_id:
+            raise BlockSelectorInputError(
+                f"Offer container is missing Enrollware location_id: {offer.get('matchedContainerId')}"
+            )
+        urls = fetch_urls(date_token=key[0], location_id=location_id, course_id=course_id)
+        available[key] = {appointment_offer_tuple(url) for url in urls}
+        probes.append({
+            "date": day.isoformat(),
+            "locationId": location_id,
+            "courseId": course_id,
+            "availableAppointmentCount": len(urls),
+        })
+
+    kept: list[dict[str, Any]] = []
+    suppressed: list[dict[str, Any]] = []
+    for offer in payload.get("offers", []):
+        if clean_text(offer.get("offerType")) == "seated_class":
+            kept.append(offer)
+            continue
+        container = containers[clean_text(offer.get("matchedContainerId"))]
+        day = date.fromisoformat(str(offer.get("date")))
+        key = (day.strftime("%m%d%y"), clean_text(container.get("location_id")), clean_text(offer.get("courseId")))
+        offer_tuple = appointment_offer_tuple(clean_text(offer.get("appointmentUrl")))
+        if offer_tuple in available[key]:
+            kept.append(offer)
+        else:
+            suppressed.append({
+                "date": offer.get("date"),
+                "startTime": offer.get("startTime"),
+                "courseId": offer.get("courseId"),
+                "appointmentDayId": offer.get("appointmentDayId"),
+                "reason": "not_advertised_by_live_enrollware_appointment_calendar",
+            })
+
+    guarded = {**payload, "offers": kept}
+    guarded["dates"] = rebuild_payload_dates(guarded)
+    counts = {**guarded.get("counts", {})}
+    counts["publicSelectableOfferCount"] = len(kept)
+    counts["publicSelectableDateCount"] = len(guarded["dates"])
+    counts["publicSelectableStartTimeCount"] = sum(len(item["startTimes"]) for item in guarded["dates"])
+    counts["suppressedByEnrollwareAppointmentCalendarCount"] = len(suppressed)
+    guarded["counts"] = counts
+    guarded["enrollwareAppointmentGuard"] = {
+        "enabled": True,
+        "endpoint": ENROLLWARE_APPOINTMENT_TIMES_ENDPOINT,
+        "probes": probes,
+        "suppressedOffers": suppressed[:1000],
+        "suppressedDates": sorted({str(item["date"]) for item in suppressed}),
+    }
+    return guarded
+
+
 def window_datetimes(window: dict[str, Any]) -> tuple[datetime, datetime]:
     start, end, _source = generate_dynamic_offers.availability_window_datetimes(window)
     if not start or not end or end <= start:
@@ -401,6 +525,64 @@ def public_policy_reasons(
     if maximum_days_out and start.date() > reference.date() + timedelta(days=maximum_days_out):
         reasons.append("outside_maximum_days_out")
     return reasons
+
+
+def apply_selector_offer_limits(
+    offers: list[dict[str, Any]],
+    policy: dict[str, Any],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Apply public caps while spreading limited offers across distinct dates first."""
+    max_per_course_day = int(policy.get("max_offers_per_course_per_day") or 0)
+    max_per_course_week = int(policy.get("max_offers_per_course_per_week") or 0)
+    max_total_day = int(policy.get("max_total_offers_per_day") or 0)
+    per_course_day: Counter[tuple[str, str]] = Counter()
+    per_course_week: Counter[tuple[str, str]] = Counter()
+    per_day: Counter[str] = Counter()
+    grouped: dict[tuple[str, str], dict[str, list[dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
+    for offer in offers:
+        target_date = date.fromisoformat(str(offer["date"]))
+        week_key = f"{target_date.isocalendar().year}-W{target_date.isocalendar().week:02d}"
+        grouped[(str(offer["courseId"]), week_key)][str(offer["date"])].append(offer)
+
+    ordered: list[dict[str, Any]] = []
+    for course_week in sorted(grouped):
+        by_date = grouped[course_week]
+        for rows in by_date.values():
+            rows.sort(key=lambda item: (str(item["startTime"]), str(item.get("appointmentDayId") or "")))
+        depth = 0
+        while True:
+            added = False
+            for target_date in sorted(by_date):
+                if depth < len(by_date[target_date]):
+                    ordered.append(by_date[target_date][depth])
+                    added = True
+            if not added:
+                break
+            depth += 1
+
+    kept: list[dict[str, Any]] = []
+    hidden: list[dict[str, Any]] = []
+    for offer in ordered:
+        target_date = str(offer["date"])
+        course_id = str(offer["courseId"])
+        parsed = date.fromisoformat(target_date)
+        week_key = f"{parsed.isocalendar().year}-W{parsed.isocalendar().week:02d}"
+        reason = ""
+        if max_total_day and per_day[target_date] >= max_total_day:
+            reason = "max_total_offers_per_day_exceeded"
+        elif max_per_course_day and per_course_day[(target_date, course_id)] >= max_per_course_day:
+            reason = "max_offers_per_course_per_day_exceeded"
+        elif max_per_course_week and per_course_week[(week_key, course_id)] >= max_per_course_week:
+            reason = "max_offers_per_course_per_week_exceeded"
+        if reason:
+            hidden.append({"offer": offer, "reason": reason})
+            continue
+        kept.append(offer)
+        per_day[target_date] += 1
+        per_course_day[(target_date, course_id)] += 1
+        per_course_week[(week_key, course_id)] += 1
+    kept.sort(key=lambda item: (str(item["date"]), str(item["startTime"]), str(item["courseId"])))
+    return kept, hidden
 
 
 def candidate_starts(start: datetime, end: datetime) -> list[datetime]:
@@ -547,6 +729,7 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
     )
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"))
     occupancy = sessions_current + schedule_future + calendar_blocks
+    travel_rules = loaded.get("travel_time_rules") or {}
     for block in occupancy:
         canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
             block.get("location"),
@@ -558,11 +741,141 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             block["location"] = canonical
             block["resource"] = resource
             block["location_resolution"] = "location_resource_map"
+        apply_travel_time_rule(block, travel_rules)
     return occupancy
+
+
+def apply_travel_time_rule(block: dict[str, Any], payload: Any) -> None:
+    """Expand Brian's instructor conflict interval when an event is away from Shipyard."""
+    if not isinstance(payload, dict):
+        return
+    instructor = normalize_key(block.get("instructor"))
+    target_person = normalize_key(payload.get("person_name") or "Brian Ennis")
+    if instructor not in {target_person, normalize_key(str(payload.get("person_name") or "").split(" ")[0])}:
+        return
+    haystack = clean_text(f"{block.get('location', '')} {block.get('raw_location', '')} {block.get('course_title', '')}").lower()
+    minutes: int | None = None
+    rule_key = ""
+    for rule in payload.get("rules", []):
+        if not isinstance(rule, dict):
+            continue
+        if any(clean_text(alias).lower() in haystack for alias in rule.get("match_any", []) if clean_text(alias)):
+            candidate_minutes = int(rule.get("minutes_each_way") or 0)
+            if minutes is None or candidate_minutes > minutes:
+                minutes = candidate_minutes
+                rule_key = clean_text(rule.get("location_key"))
+    if minutes is None and clean_text(block.get("location")) not in {"", UNKNOWN}:
+        minutes = int(payload.get("unknown_offsite_minutes") or 0)
+        rule_key = "unknown_offsite"
+    if not minutes:
+        return
+    start, end = block.get("start"), block.get("end")
+    if not start or not end:
+        return
+    block["instructor_conflict_start"] = start - timedelta(minutes=minutes)
+    block["instructor_conflict_end"] = end + timedelta(minutes=minutes)
+    block["travel_before_minutes"] = minutes
+    block["travel_after_minutes"] = minutes
+    block["travel_rule_key"] = rule_key
+    block["travel_rule_source"] = str(TRAVEL_TIME_RULES_PATH)
 
 
 def public_direct_bookable_session(session: dict[str, Any]) -> bool:
     return session.get("public_direct_booking") is not False and clean_text(session.get("registration_status") or "open").lower() not in {"closed", "full"}
+
+
+def session_enrollment_count(session: dict[str, Any]) -> int:
+    for key in ("enrolled_count", "registered_count", "enrolled", "registered"):
+        value = session.get(key)
+        if value is None or isinstance(value, bool):
+            continue
+        try:
+            return max(0, int(value))
+        except (TypeError, ValueError):
+            continue
+    return 0
+
+
+def seated_family_anchors(
+    *,
+    schedule_future_payload: Any,
+    selected_course_ids: set[str],
+    minimum_enrollment: int,
+    location_resource_map: Any,
+) -> list[dict[str, Any]]:
+    """Return real, enrolled same-family sessions that should consolidate a day."""
+    if not isinstance(schedule_future_payload, dict) or not isinstance(schedule_future_payload.get("sessions"), list):
+        return []
+    anchors: list[dict[str, Any]] = []
+    for session in schedule_future_payload["sessions"]:
+        if not isinstance(session, dict):
+            continue
+        if clean_text(session.get("course_id")) not in selected_course_ids:
+            continue
+        if session_enrollment_count(session) < minimum_enrollment:
+            continue
+        start = parse_dt(session.get("start_at"))
+        if not start:
+            continue
+        instructor = clean_text(session.get("lead_instructor_name") or session.get("instructor"))
+        location = clean_text(session.get("location_name") or session.get("location_display"))
+        canonical_location, _resource, _normalized = generate_dynamic_offers.normalize_location_resource(
+            location,
+            location,
+            location_resource_map,
+        )
+        anchors.append({
+            "date": start.date().isoformat(),
+            "startTime": start.strftime("%H:%M"),
+            "sessionId": clean_text(session.get("session_id")),
+            "courseId": clean_text(session.get("course_id")),
+            "instructorKey": normalize_key(instructor),
+            "locationKey": normalize_key(canonical_location or location),
+            "enrollmentCount": session_enrollment_count(session),
+        })
+    return anchors
+
+
+def matching_same_day_anchor(
+    anchors: list[dict[str, Any]],
+    *,
+    day: date,
+    instructor: str,
+    location: str,
+    location_resource_map: Any,
+) -> dict[str, Any] | None:
+    canonical_location, _resource, _normalized = generate_dynamic_offers.normalize_location_resource(
+        location,
+        location,
+        location_resource_map,
+    )
+    instructor_key = normalize_key(instructor)
+    location_key = normalize_key(canonical_location or location)
+    matches = [
+        anchor for anchor in anchors
+        if anchor["date"] == day.isoformat()
+        and anchor["instructorKey"] == instructor_key
+        and anchor["locationKey"] == location_key
+    ]
+    return min(matches, key=lambda item: item["startTime"]) if matches else None
+
+
+def matching_shared_cooldown_anchor(
+    anchors: list[dict[str, Any]],
+    *,
+    day: date,
+    cooldown_days: int,
+) -> dict[str, Any] | None:
+    """Return a booked board course that suppresses dynamic offers through day + cooldown_days."""
+    if cooldown_days < 0:
+        return None
+    matches = []
+    for anchor in anchors:
+        anchor_day = date.fromisoformat(anchor["date"])
+        days_after_booking = (day - anchor_day).days
+        if 0 <= days_after_booking <= cooldown_days:
+            matches.append(anchor)
+    return max(matches, key=lambda item: (item["date"], item["startTime"])) if matches else None
 
 
 def seated_class_selector_offers(
@@ -571,6 +884,7 @@ def seated_class_selector_offers(
     selected_courses: list[dict[str, Any]],
     selected_course_ids: set[str],
     course_rules: dict[str, dict[str, Any]],
+    minimum_enrollment: int = 0,
 ) -> list[dict[str, Any]]:
     if not isinstance(schedule_future_payload, dict) or not isinstance(schedule_future_payload.get("sessions"), list):
         return []
@@ -581,6 +895,8 @@ def seated_class_selector_offers(
             continue
         course_id = clean_text(session.get("course_id"))
         if course_id not in selected_course_ids or not public_direct_bookable_session(session):
+            continue
+        if session_enrollment_count(session) < minimum_enrollment:
             continue
         start = parse_dt(session.get("start_at"))
         end = parse_dt(session.get("end_at"))
@@ -696,6 +1012,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     loaded = {
         "live_availability_snapshot": live_availability_snapshot,
         "location_resource_map": read_required_json(LOCATION_RESOURCE_MAP_PATH),
+        "travel_time_rules": read_required_json(TRAVEL_TIME_RULES_PATH),
         "course_catalog": read_required_json(COURSE_CATALOG_PATH),
         "people_catalog": read_required_json(PEOPLE_CATALOG_PATH),
         "appointment_containers": read_required_json(APPOINTMENT_CONTAINERS_PATH),
@@ -714,6 +1031,20 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     occupancy = build_occupancy(loaded, course_rules)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy)
     reference_now = selector_reference_datetime()
+    anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
+    same_day_anchors = seated_family_anchors(
+        schedule_future_payload=loaded.get("schedule_future"),
+        selected_course_ids=set(allowed_course_ids),
+        minimum_enrollment=anchor_minimum_enrollment,
+        location_resource_map=loaded["location_resource_map"],
+    ) if page_config.get("consolidate_after_seated_family_anchor") is True else []
+    shared_cooldown_days = int(page_config.get("shared_cooldown_days_after_booking") or 0)
+    shared_cooldown_anchors = seated_family_anchors(
+        schedule_future_payload=loaded.get("schedule_future"),
+        selected_course_ids=set(allowed_course_ids),
+        minimum_enrollment=max(1, int(page_config.get("shared_cooldown_minimum_enrollment") or 1)),
+        location_resource_map=loaded["location_resource_map"],
+    ) if shared_cooldown_days > 0 else []
 
     selected_courses: list[dict[str, Any]] = []
     config_course_options = {
@@ -733,6 +1064,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         })
 
     rejections: list[dict[str, Any]] = []
+    rejection_counts_by_date: dict[str, Counter[str]] = defaultdict(Counter)
+    evaluated_counts_by_date: Counter[str] = Counter()
     blocks_seen = 0
     public_blocks_seen = 0
     offers: list[dict[str, Any]] = []
@@ -769,6 +1102,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "location": location,
                 }
                 reasons: list[str] = []
+                evaluated_counts_by_date[context["date"]] += 1
                 if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
                     reasons.append("course_not_appointment_eligible")
                 if allowed_families and course_family not in allowed_families:
@@ -789,7 +1123,27 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     person or {},
                 )
                 if conflict:
-                    reasons.append("conflicts_with_existing_enrollware_occupancy")
+                    reasons.append(
+                        "conflicts_with_brian_travel_buffer"
+                        if "travel buffer" in clean_text(conflict_reason).lower()
+                        else "conflicts_with_existing_enrollware_occupancy"
+                    )
+                same_day_anchor = matching_same_day_anchor(
+                    same_day_anchors,
+                    day=start.date(),
+                    instructor=instructor_name,
+                    location=location,
+                    location_resource_map=loaded["location_resource_map"],
+                )
+                if same_day_anchor:
+                    reasons.append("same_day_family_anchor_already_seated")
+                shared_cooldown_anchor = matching_shared_cooldown_anchor(
+                    shared_cooldown_anchors,
+                    day=start.date(),
+                    cooldown_days=shared_cooldown_days,
+                )
+                if shared_cooldown_anchor:
+                    reasons.append("shared_board_course_booked_within_cooldown")
                 appointment_day_id, container_id, url, url_blocker = find_url(
                     window,
                     start,
@@ -808,11 +1162,14 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     reference_now=reference_now,
                 )
                 if reasons or public_reasons:
+                    rejection_counts_by_date[context["date"]].update(reasons + public_reasons)
                     rejections.append({
                         **context,
                         "appointmentDayId": appointment_day_id,
                         "reasons": reasons + public_reasons,
                         "conflictReason": conflict_reason,
+                        "sameDayFamilyAnchor": same_day_anchor,
+                        "sharedCooldownAnchor": shared_cooldown_anchor,
                     })
                     continue
                 offers.append({
@@ -832,6 +1189,20 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "publicSelectable": True,
                 })
 
+    offers, cap_suppressions = apply_selector_offer_limits(offers, public_offer_policy)
+    for item in cap_suppressions:
+        offer = item["offer"]
+        reason = item["reason"]
+        rejection_counts_by_date[str(offer["date"])][reason] += 1
+        rejections.append({
+            "date": offer["date"],
+            "startTime": offer["startTime"],
+            "courseId": offer["courseId"],
+            "courseName": offer["courseName"],
+            "appointmentDayId": offer.get("appointmentDayId"),
+            "reasons": [reason],
+        })
+
     if page_config.get("include_seated_classes") is True:
         offers.extend(
             seated_class_selector_offers(
@@ -839,6 +1210,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 selected_courses=selected_courses,
                 selected_course_ids=set(allowed_course_ids),
                 course_rules=course_rules,
+                minimum_enrollment=int(page_config.get("seated_class_minimum_enrollment") or 0),
             )
         )
 
@@ -865,6 +1237,16 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     dates.sort(key=lambda item: item["date"])
 
     rejected_counts = Counter(reason for item in rejections for reason in item["reasons"])
+    offer_counts_by_date = Counter(offer["date"] for offer in offers)
+    rejection_audit_by_date = [
+        {
+            "date": target_date,
+            "evaluatedCandidateCourseStarts": evaluated_counts_by_date[target_date],
+            "publicSelectableOffers": offer_counts_by_date[target_date],
+            "rejectionReasonCounts": dict(rejection_counts_by_date[target_date].most_common()),
+        }
+        for target_date in sorted(evaluated_counts_by_date)
+    ]
     block_windows = {offer["availabilityWindow"] for offer in offers}
     source_generated_at = live_snapshot_generated_at(live_availability_snapshot)
     payload = {
@@ -934,5 +1316,12 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "offers": offers,
         "rejectedCourseStartTimes": rejections[:500],
         "rejectionReasonCounts": dict(rejected_counts.most_common()),
+        "rejectionAuditByDate": rejection_audit_by_date,
+        "publicationLimitAudit": {
+            "enabled": True,
+            "dateDiverseSelection": True,
+            "suppressedOfferCount": len(cap_suppressions),
+            "suppressedByReason": dict(Counter(item["reason"] for item in cap_suppressions).most_common()),
+        },
     }
     return payload

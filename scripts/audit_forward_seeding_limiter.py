@@ -175,7 +175,7 @@ def summarize() -> dict[str, Any]:
         "plain_answer": (
             "The prior live snapshot stopped at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events recorded RRULE text without expanding recurring VEVENT instances. That limiter is now fixed: runtime snapshots contain expanded recurring instances into August, live_availability_snapshot_preview.json contains August blocks, and dynamic_offers_preview.json contains August offers."
             if rrule_fixed
-            else "The live snapshot stops at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events records RRULE text but does not expand recurring VEVENT instances; the runtime Brian snapshot requested a 60-day window through 2026-08-18, but only explicit VEVENT master DTSTART rows through 2026-07-04 were exported, and scripts/build_live_availability_snapshot.py then built availability only from those exported runtime events."
+            else f"The live snapshot stops early because scripts/export_calendar_snapshots.py::parse_ics_events records RRULE text but does not expand recurring VEVENT instances; the runtime Brian snapshot requested a {export_calendar_snapshots.EXPORT_DAYS}-day window, but only explicit VEVENT master DTSTART rows were exported, and scripts/build_live_availability_snapshot.py then built availability only from those exported runtime events."
         ),
         "rrule_expansion_fixed": rrule_fixed,
         "limiter": {
@@ -188,7 +188,7 @@ def summarize() -> dict[str, Any]:
                 else "VEVENT is appended only when DTSTART is inside window; RRULE/RDATE/EXDATE are stored in recurrence but no future occurrences are materialized."
             ),
             "export_days_constant": export_calendar_snapshots.EXPORT_DAYS,
-            "export_days_line": next(row["line"] for row in horizon_candidates() if row["file"] == "scripts/export_calendar_snapshots.py" and "EXPORT_DAYS = 60" in row["text"]),
+            "export_days_line": next(row["line"] for row in horizon_candidates() if row["file"] == "scripts/export_calendar_snapshots.py" and "EXPORT_DAYS" in row["text"]),
             "not_caused_by": [
                 "14-day seed selection window",
                 "appointmentDayId range",
@@ -332,7 +332,7 @@ def render_codepath(summary: dict[str, Any]) -> str:
         "",
         "## Path B: Active Live Snapshot",
         "",
-        "1. `scripts/export_calendar_snapshots.py::export_calendar_snapshots` fetches ICS data and sets a 60-day export window.",
+        f"1. `scripts/export_calendar_snapshots.py::export_calendar_snapshots` fetches ICS data and sets a {export_calendar_snapshots.EXPORT_DAYS}-day export window.",
         "2. `scripts/export_calendar_snapshots.py::parse_ics_events` keeps VEVENT records whose master `DTSTART` falls inside the window.",
         "3. `parse_ics_events` expands `RRULE`, `RDATE`, and `EXDATE` into concrete occurrences inside the export window.",
         f"4. `data/runtime/calendar_snapshots/brian_do_not_schedule.json` now contains runtime rows through {b['runtime_event_date_range']['end']}.",
@@ -357,11 +357,11 @@ def render_minimum_fix(summary: dict[str, Any]) -> str:
         "",
         "Add RRULE/RDATE expansion to `scripts/export_calendar_snapshots.py::parse_ics_events` for occurrences inside the existing `EXPORT_DAYS` window, then regenerate runtime calendar snapshots and `live_availability_snapshot_preview.json`.",
         "",
-        "Do not solve this by changing Course Master, public sellable filters, or appointment URL generation. The active path already declares a 60-day window; the missing piece is materializing recurring event occurrences before the live snapshot builder reads runtime events.",
+        f"Do not solve this by changing Course Master, public sellable filters, or appointment URL generation. The active path declares a {export_calendar_snapshots.EXPORT_DAYS}-day window; the missing piece is materializing recurring event occurrences before the live snapshot builder reads runtime events.",
         "",
         "## Horizon",
         "",
-        "The current runtime export horizon is `EXPORT_DAYS = 60`. That is enough to reach mid-August from the June 19 snapshot generation date and is not the July 4 limiter. If the approved business forward-seeding horizon is longer than 60 days, make that a named config value rather than another hardcoded constant.",
+        f"The current runtime export horizon is `EXPORT_DAYS = {export_calendar_snapshots.EXPORT_DAYS}`. The live public window remains rolling from build time and is separate from report-only candidate horizons.",
         "",
         "## Guardrail",
         "",

@@ -1,12 +1,12 @@
 {
-  "august_bls_count": 4366,
-  "august_count": 20901,
-  "bls_count": 8752,
+  "august_bls_count": 9270,
+  "august_count": 44670,
+  "bls_count": 28194,
   "full_preview_path": "data/runtime/audit_previews/dynamic_offers_preview.json",
-  "full_preview_size_bytes": 103483773,
-  "generated_at": "2026-06-30T13:49:34",
+  "full_preview_size_bytes": 299686284,
+  "generated_at": "2026-07-14T15:00:02",
   "kind": "dynamic_offers_preview",
   "selected_seed_count": 0,
   "top_rejection_or_hidden_reasons": [],
-  "total_count": 42993
+  "total_count": 137361
 }

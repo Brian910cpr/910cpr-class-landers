@@ -10,13 +10,13 @@
 
 ## Path B: Active Live Snapshot
 
-1. `scripts/export_calendar_snapshots.py::export_calendar_snapshots` fetches ICS data and sets a 60-day export window.
+1. `scripts/export_calendar_snapshots.py::export_calendar_snapshots` fetches ICS data and sets a 120-day export window.
 2. `scripts/export_calendar_snapshots.py::parse_ics_events` keeps VEVENT records whose master `DTSTART` falls inside the window.
 3. `parse_ics_events` expands `RRULE`, `RDATE`, and `EXDATE` into concrete occurrences inside the export window.
-4. `data/runtime/calendar_snapshots/brian_do_not_schedule.json` now contains runtime rows through 2026-08-28.
+4. `data/runtime/calendar_snapshots/brian_do_not_schedule.json` now contains runtime rows through 2026-11-11.
 5. `scripts/build_live_availability_snapshot.py::load_runtime_snapshots` prefers `data/runtime/calendar_snapshots/*.json`.
 6. `scripts/build_live_availability_snapshot.py::build_snapshot` and `expand_inverse_availability` can only subtract/expand from the event rows available in that runtime snapshot.
-7. Resulting live snapshot range: 2026-06-29 through 2026-08-28.
+7. Resulting live snapshot range: 2026-07-14 through 2026-11-11.
 
 ## First Divergence
 

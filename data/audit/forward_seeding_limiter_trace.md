@@ -10,15 +10,15 @@ The prior live snapshot stopped at July 4 because scripts/export_calendar_snapsh
 
 - File: `scripts/export_calendar_snapshots.py`
 - Function: `parse_ics_events` starting near line 347
-- Constant: `EXPORT_DAYS = 60` near line 27
+- Constant: `EXPORT_DAYS = 120` near line 27
 - Behavior: RRULE/RDATE/EXDATE occurrences are now materialized inside the export window before the live snapshot builder reads runtime events.
 
 ## Why July 4
 
-- Runtime Brian snapshot declared range: 2026-06-29T15:37:34.470018-04:00 through 2026-08-28T15:37:34.470018-04:00 (60 days)
-- Runtime event rows actually exported: 2026-06-29 through 2026-08-28
-- Live availability snapshot built from runtime events: 2026-06-29 through 2026-08-28
-- Dynamic offers built from live snapshot: 2026-06-29 through 2026-08-13
+- Runtime Brian snapshot declared range: 2026-07-14T14:58:52.228925-04:00 through 2026-11-11T14:58:52.228925-04:00 (120 days)
+- Runtime event rows actually exported: 2026-07-15 through 2026-11-11
+- Live availability snapshot built from runtime events: 2026-07-14 through 2026-11-11
+- Dynamic offers built from live snapshot: 2026-07-02 through 2026-08-16
 
 July 4 was the latest explicit exported runtime event before RRULE expansion. It is no longer the live snapshot stop date.
 
@@ -38,9 +38,9 @@ July 4 was the latest explicit exported runtime event before RRULE expansion. It
 - Runtime snapshot file: `data/runtime/calendar_snapshots/brian_do_not_schedule.json`
 - Live snapshot script: `scripts/build_live_availability_snapshot.py`
 - Live inverse horizon function: `inverse_expansion_horizon` near line 389
-- `calendar_sources.json` `inverse_expansion_horizon_days`: `45`
-- Live snapshot August rows: 29
-- Dynamic August offers: 20901
+- `calendar_sources.json` `inverse_expansion_horizon_days`: `120`
+- Live snapshot August rows: 67
+- Dynamic August offers: 25888
 
 ## Not The Limiter
 

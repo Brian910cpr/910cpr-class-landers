@@ -24,7 +24,7 @@ AUDIT_DIR = ROOT / "data" / "audit"
 SUMMARY_PATH = AUDIT_DIR / "calendar_snapshot_export_summary.json"
 REPORT_PATH = AUDIT_DIR / "calendar_snapshot_export_report.md"
 
-EXPORT_DAYS = 60
+EXPORT_DAYS = 120
 UNKNOWN = "UNKNOWN"
 LOCAL_TZ = ZoneInfo("America/New_York")
 

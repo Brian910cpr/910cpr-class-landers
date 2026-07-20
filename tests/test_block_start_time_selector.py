@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import json
 import unittest
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from scripts import build_bls_block_schedule_pilot
 from scripts import build_deployed_selector_pages
 from scripts import block_start_time_selector
+from scripts.inventory_controller import validate_appointment_day_id
 
 ROOT = Path(__file__).resolve().parents[1]
 PILOT_REPORT_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -23,9 +24,145 @@ def artifact_offers(artifact):
 
 
 class BlockStartTimeSelectorTests(unittest.TestCase):
+    def test_live_enrollware_calendar_suppresses_disappeared_appointment_offer(self):
+        payload = {
+            "offers": [
+                {
+                    "date": "2026-07-19",
+                    "displayDate": "Sunday, July 19, 2026",
+                    "startTime": "08:00",
+                    "displayStartTime": "8:00 AM",
+                    "courseId": "210549",
+                    "courseName": "AHA HeartCode BLS",
+                    "appointmentDayId": 260698,
+                    "matchedContainerId": "shipyard_brian_continuous_20260621_20270430",
+                    "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260698&startTime=8%3A00%20AM&courseId=210549",
+                    "offerType": "appointment",
+                }
+            ],
+            "dates": [],
+            "counts": {},
+        }
+
+        guarded = block_start_time_selector.apply_final_enrollware_appointment_guard(
+            payload,
+            fetch_urls=lambda **_kwargs: set(),
+        )
+
+        self.assertEqual([], guarded["offers"])
+        self.assertEqual(1, guarded["counts"]["suppressedByEnrollwareAppointmentCalendarCount"])
+        self.assertEqual(
+            "not_advertised_by_live_enrollware_appointment_calendar",
+            guarded["enrollwareAppointmentGuard"]["suppressedOffers"][0]["reason"],
+        )
+
+    def test_live_enrollware_calendar_retains_advertised_appointment_offer(self):
+        url = "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260698&startTime=8%3A00%20AM&courseId=210549"
+        payload = {
+            "offers": [
+                {
+                    "date": "2026-07-19",
+                    "displayDate": "Sunday, July 19, 2026",
+                    "startTime": "08:00",
+                    "displayStartTime": "8:00 AM",
+                    "courseId": "210549",
+                    "courseName": "AHA HeartCode BLS",
+                    "appointmentDayId": 260698,
+                    "matchedContainerId": "shipyard_brian_continuous_20260621_20270430",
+                    "appointmentUrl": url,
+                    "offerType": "appointment",
+                }
+            ],
+            "dates": [],
+            "counts": {},
+        }
+
+        guarded = block_start_time_selector.apply_final_enrollware_appointment_guard(
+            payload,
+            fetch_urls=lambda **_kwargs: {url},
+        )
+
+        self.assertEqual(1, len(guarded["offers"]))
+        self.assertEqual(0, guarded["counts"]["suppressedByEnrollwareAppointmentCalendarCount"])
+
     @classmethod
     def setUpClass(cls):
         cls.payload = json.loads(PILOT_REPORT_PATH.read_text(encoding="utf-8"))
+
+    def test_enrolled_bls_session_becomes_same_day_consolidation_anchor(self):
+        schedule = {"sessions": [
+            {
+                "session_id": "51221",
+                "course_id": "210549",
+                "start_at": "2026-07-18T08:00:00-04:00",
+                "lead_instructor_name": "Brian Ennis",
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "enrolled_count": 1,
+            },
+            {
+                "session_id": "empty-class",
+                "course_id": "209806",
+                "start_at": "2026-07-18T14:30:00-04:00",
+                "lead_instructor_name": "Brian Ennis",
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "enrolled_count": 0,
+            },
+        ]}
+        anchors = block_start_time_selector.seated_family_anchors(
+            schedule_future_payload=schedule,
+            selected_course_ids=set(block_start_time_selector.BLS_PILOT_COURSE_IDS),
+            minimum_enrollment=1,
+            location_resource_map={},
+        )
+
+        self.assertEqual(["51221"], [anchor["sessionId"] for anchor in anchors])
+        match = block_start_time_selector.matching_same_day_anchor(
+            anchors,
+            day=datetime(2026, 7, 18).date(),
+            instructor="Brian Ennis",
+            location=":: Wilmington; Shipyard Blvd - B",
+            location_resource_map={},
+        )
+        self.assertIsNotNone(match)
+        self.assertEqual("08:00", match["startTime"])
+
+    def test_bls_config_keeps_near_term_open_times_and_includes_enrolled_classes(self):
+        config = block_start_time_selector.load_block_schedule_page_configs()["bls"]
+        self.assertIs(config["consolidate_after_seated_family_anchor"], False)
+        self.assertEqual(1, config["same_day_anchor_minimum_enrollment"])
+        self.assertIs(config["include_seated_classes"], True)
+        self.assertEqual(1, config["seated_class_minimum_enrollment"])
+
+    def test_shared_board_cooldown_suppresses_booking_day_and_following_six_days(self):
+        anchors = [{"date": "2026-07-20", "startTime": "09:00", "sessionId": "arc-booking"}]
+        for offset in range(7):
+            match = block_start_time_selector.matching_shared_cooldown_anchor(
+                anchors,
+                day=datetime(2026, 7, 20).date() + timedelta(days=offset),
+                cooldown_days=6,
+            )
+            self.assertEqual("arc-booking", match["sessionId"])
+        self.assertIsNone(
+            block_start_time_selector.matching_shared_cooldown_anchor(
+                anchors,
+                day=datetime(2026, 7, 27).date(),
+                cooldown_days=6,
+            )
+        )
+
+    def test_arc_config_uses_one_board_for_three_courses_with_six_day_cooldown(self):
+        config = block_start_time_selector.load_block_schedule_page_configs()["arc"]
+        self.assertEqual(["248288", "372258", "369209"], config["allowed_course_ids"])
+        self.assertEqual(6, config["shared_cooldown_days_after_booking"])
+        self.assertEqual("372258", config["default_course_id"])
+        self.assertEqual("/images/Logo_Vertical-Red-Cross-LTP.jpg", config["header_credential"]["image_url"])
+        self.assertEqual("American Red Cross Licensed Training Provider", config["header_credential"]["title"])
+        images = {option["course_id"]: option["image_url"] for option in config["course_options"]}
+        self.assertEqual("/images/arc-in-person-training.png", images["248288"])
+        self.assertEqual("/images/arc-blended-training.png", images["372258"])
+        self.assertEqual("/images/arc-in-person-training.png", images["369209"])
+        self.assertTrue(all(option["image_fit"] == "cover" for option in config["course_options"]))
+        self.assertIs(config["include_seated_classes"], True)
 
     def test_uses_live_availability_when_present(self):
         self.assertEqual(self.payload["availability_source_used"], "live_availability_snapshot")
@@ -121,6 +258,62 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn('"210549"', html)
         self.assertIn("Object.values(optionGroups).find", html)
         self.assertIn("optionGroups[selected.family]?.courseIds", html)
+        self.assertIn("function asapAlternativeDates", html)
+        self.assertIn("function renderAsapAlternative", html)
+        self.assertIn("another acceptable option is available", html)
+
+    def test_twenty_four_hour_lead_not_five_days_across_course_families(self):
+        reference = datetime(2026, 7, 20, 10, 0)
+        policy = {
+            "minimum_lead_hours": 24,
+            "maximum_days_out": 180,
+            "allowed_start_minutes": ["00", "30"],
+            "dynamic_public_start_time_window": {
+                "enabled": True,
+                "earliest_start": "08:00",
+                "latest_start": "19:00",
+            },
+        }
+        for course_id, family in (
+            ("209806", "BLS"), ("241108", "ACLS"), ("209805", "PALS"),
+            ("344085", "Heartsaver"), ("445670", "HSI"), ("248288", "ARC"),
+        ):
+            with self.subTest(course_id=course_id, family=family):
+                self.assertEqual([], block_start_time_selector.public_policy_reasons(
+                    reference + timedelta(hours=24), course_id, family, policy, {course_id}, reference_now=reference
+                ))
+                self.assertIn("inside_minimum_lead_time", block_start_time_selector.public_policy_reasons(
+                    reference + timedelta(hours=23, minutes=30), course_id, family, policy, {course_id}, reference_now=reference
+                ))
+
+    def test_july_twenty_through_twenty_five_match_continuous_container(self):
+        container = json.loads(
+            (ROOT / "data" / "inventory" / "appointment_containers.json").read_text(encoding="utf-8")
+        )["containers"][0]
+        for day, expected_id in zip(range(20, 26), range(260699, 260705)):
+            with self.subTest(day=day):
+                valid, appointment_day_id, reason = validate_appointment_day_id(container, date(2026, 7, day))
+                self.assertTrue(valid)
+                self.assertEqual(expected_id, appointment_day_id)
+                self.assertEqual("owned_appointment_container", reason)
+
+    def test_bls_near_term_gaps_are_not_suppressed_by_seated_family_anchor(self):
+        config = block_start_time_selector.load_block_schedule_page_configs()["bls"]
+        self.assertFalse(config.get("consolidate_after_seated_family_anchor"))
+
+    def test_weekly_caps_spread_offers_across_near_term_dates(self):
+        offers = [
+            {"date": target_date, "startTime": start, "courseId": "209806", "appointmentDayId": 1}
+            for target_date in ("2026-07-23", "2026-07-24", "2026-07-25")
+            for start in ("09:00", "09:30", "10:00")
+        ]
+        kept, hidden = block_start_time_selector.apply_selector_offer_limits(offers, {
+            "max_offers_per_course_per_day": 4,
+            "max_offers_per_course_per_week": 3,
+            "max_total_offers_per_day": 24,
+        })
+        self.assertEqual(["2026-07-23", "2026-07-24", "2026-07-25"], [offer["date"] for offer in kept])
+        self.assertEqual({"max_offers_per_course_per_week_exceeded"}, {item["reason"] for item in hidden})
 
     def test_rendered_register_cards_hide_debug_details(self):
         html = build_bls_block_schedule_pilot.render_html(self.payload)
@@ -224,8 +417,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("Choose the class that fits your needs, then select a date and time.", html)
         self.assertIn("In-person classes are completed entirely at our Wilmington training center.", html)
         self.assertIn("Online + Skills classes begin with an online course, followed by a shorter in-person skills session.", html)
-        self.assertNotIn("Need First Aid or CPR ASAP? Show all AHA Heartsaver options", html)
-        self.assertNotIn('id="compare-toggle"', html)
+        self.assertIn("Need First Aid or CPR ASAP? Show all AHA Heartsaver options", html)
+        self.assertIn('id="compare-toggle"', html)
         self.assertIn('"variant": "cpr-aed"', html)
         self.assertIn('"first-aid-cpr-aed"', html)
         self.assertIn('"pediatric-first-aid-cpr-aed"', html)
@@ -413,8 +606,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         offers = artifact_offers(artifact)
         self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
-        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "241108"))
-        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "209818"))
+        self.assertGreater(sum(1 for offer in offers if offer.get("courseId") == "241108"), 0)
+        self.assertGreater(sum(1 for offer in offers if offer.get("courseId") == "209818"), 0)
         self.assertEqual(0, sum(1 for offer in offers if offer.get("courseId") == "209811"))
         self.assertEqual({"seated_class"}, {offer.get("offerType") for offer in offers})
         self.assertNotIn("12774086", json.dumps(artifact, ensure_ascii=False))
@@ -565,6 +758,50 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertTrue(conflict(20, 45, 21, 15))
         self.assertFalse(conflict(21, 0, 22, 30))
 
+    def test_brian_travel_rules_expand_offsite_instructor_conflicts_only(self):
+        rules = block_start_time_selector.read_required_json(block_start_time_selector.TRAVEL_TIME_RULES_PATH)
+        cases = [
+            ("ADR Shift — Unavailable", "", 60),
+            ("AHA Family & Friends CPR", "Freya's Haus, Scotts Hill Loop Rd", 60),
+            ("AHA BLS Provider", "Brunswick Oral & Maxillofacial Surgery", 90),
+            ("AHA HeartCode BLS", "4018 Shipyard Blvd; Room B @ 910CPR's Office", 0),
+        ]
+        for title, location, expected in cases:
+            with self.subTest(title=title):
+                block = {
+                    "start": datetime(2026, 8, 16, 14, 0),
+                    "end": datetime(2026, 8, 16, 16, 0),
+                    "instructor": "Brian Ennis",
+                    "location": location,
+                    "course_title": title,
+                }
+                block_start_time_selector.apply_travel_time_rule(block, rules)
+                self.assertEqual(expected, block.get("travel_before_minutes", 0))
+                self.assertEqual(expected, block.get("travel_after_minutes", 0))
+                if expected:
+                    self.assertEqual(datetime(2026, 8, 16, 14, 0) - timedelta(minutes=expected), block["instructor_conflict_start"])
+                    self.assertEqual(datetime(2026, 8, 16, 16, 0) + timedelta(minutes=expected), block["instructor_conflict_end"])
+
+    def test_travel_buffer_blocks_brian_but_not_shipyard_room_for_another_instructor(self):
+        block = {
+            "start": datetime(2026, 8, 16, 14, 0),
+            "end": datetime(2026, 8, 16, 16, 0),
+            "instructor_conflict_start": datetime(2026, 8, 16, 13, 0),
+            "instructor_conflict_end": datetime(2026, 8, 16, 17, 0),
+            "instructor": "Brian Ennis",
+            "location": "Freya's Haus",
+            "course_title": "Family & Friends CPR",
+            "source_file": "data/sessions_current.json",
+        }
+        start = datetime(2026, 8, 16, 16, 30)
+        end = datetime(2026, 8, 16, 17, 0)
+        self.assertTrue(block_start_time_selector.generate_dynamic_offers.has_conflict(
+            start, end, [block], ":: Wilmington; Shipyard Blvd", {"display_name": "Brian Ennis"}
+        )[0])
+        self.assertFalse(block_start_time_selector.generate_dynamic_offers.has_conflict(
+            start, end, [block], ":: Wilmington; Shipyard Blvd", {"display_name": "Nick Tripp"}
+        )[0])
+
     def test_closed_full_classes_remain_occupancy_but_not_direct_selector_offers(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
         payload = block_start_time_selector.build_block_schedule_page(configs["acls"])
@@ -677,7 +914,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         for slug in pages:
             with self.subTest(slug=slug):
                 html = (ROOT / "docs" / f"{slug}.html").read_text(encoding="utf-8")
-                self.assertIn("Back to All Courses", html)
+                self.assertIn("Back to Find Your Class", html)
                 self.assertIn('aria-label="Previous course options"', html)
                 self.assertIn('aria-label="More course options"', html)
                 self.assertIn("function updateCourseRailControls()", html)

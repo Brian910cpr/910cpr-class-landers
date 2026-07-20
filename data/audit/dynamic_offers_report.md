@@ -12,59 +12,58 @@ This is a read-only V0 dynamic offer generator. It did not modify public pages, 
 - `people_catalog`
 - `schedule_future`
 - `seed_strategy_policy`
+- `sessions_current`
 
 ## Files Missing Or Unreadable
 
-- `sessions_current`: missing
+- None
 
 ## Summary
 
 - Availability source used: live_availability_snapshot
 - Availability fallback used: False
-- Available blocks read from selected source: 68
+- Available blocks read from selected source: 250
 - Availability source reason: valid_live_available_blocks_found
-- Availability windows read: 68
+- Availability windows read: 250
 - Scheduler-enabled instructors considered: 2
 - Courses considered: 30
-- Local occupancy blocks read: 208
-- Offers generated: 42993
+- Local occupancy blocks read: 632
+- Offers generated: 137361
 
 ## Offers Rejected By Reason
 
-- `conflicts_with_existing_occupancy`: 17588
-- `course_family_not_allowed_by_window`: 748
-- `course_does_not_fit_window`: 9
+- `conflicts_with_existing_occupancy`: 9328
+- `course_family_not_allowed_by_window`: 2750
 
 ## Top 20 Example Offers
 
 | Date | Time | Course | Instructor | Location |
 | --- | --- | --- | --- | --- |
-| 2026-06-29 | 15:45-16:45 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:00-17:00 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:15-17:15 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 15:45-16:30 | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:00-16:45 | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:15-17:00 | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:30-17:15 | HSI Adult First Aid | CPR AED - Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 15:45-16:30 | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:00-16:45 | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:15-17:00 | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:30-17:15 | HSI BLS Challenge | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 15:45-16:30 | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:00-16:45 | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:15-17:00 | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:30-17:15 | HSI BLS and Adult First Aid | Blended Learning | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 15:45-16:30 | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:00-16:45 | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:15-17:00 | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 16:30-17:15 | HSI Pediatric First Aid | CPR AED - Blended | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
-| 2026-06-29 | 15:45-17:15 | AHA Heartsaver CPR AED | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 20:15-22:15 | AHA BLS Provider | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 20:30-22:30 | AHA BLS Provider | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 20:45-22:45 | AHA BLS Provider | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 21:00-23:00 | AHA BLS Provider | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 21:15-23:15 | AHA BLS Provider | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 20:15-22:15 | AHA BLS Provider Renewal | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 20:30-22:30 | AHA BLS Provider Renewal | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 20:45-22:45 | AHA BLS Provider Renewal | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 21:00-23:00 | AHA BLS Provider Renewal | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 21:15-23:15 | AHA BLS Provider Renewal | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 15:15-16:15 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 15:30-16:30 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 15:45-16:45 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 20:15-21:15 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 20:30-21:30 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 20:45-21:45 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 21:00-22:00 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 21:15-22:15 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 21:30-22:30 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
+| 2026-07-14 | 21:45-22:45 | AHA HeartCode BLS | Brian Ennis | NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office |
 
 ## Blockers Preventing More Offers
 
-- `conflicts_with_existing_occupancy`: 17588
-- `course_family_not_allowed_by_window`: 748
-- `course_does_not_fit_window`: 9
+- `conflicts_with_existing_occupancy`: 9328
+- `course_family_not_allowed_by_window`: 2750
 
 ## Next Safest Step
 

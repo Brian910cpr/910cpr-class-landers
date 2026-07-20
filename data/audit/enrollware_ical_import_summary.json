@@ -1,14 +1,316 @@
 {
-  "generated_at": "2026-07-09T20:44:58.297585-04:00",
+  "generated_at": "2026-07-20T11:51:28.433709-04:00",
   "source": "enrollware_ical",
-  "ical_events_read": 497,
-  "public_sessions_created": 497,
+  "ical_events_read": 389,
+  "public_sessions_created": 389,
   "skipped_events": 0,
-  "unmapped_sessions": 35,
-  "prior_sessions_read": 497,
-  "sessions_added_compared_with_prior_source": 0,
-  "classes_removed_compared_with_prior_source": 0,
+  "registration_unavailable_sessions_marked_not_direct_bookable": 359,
+  "unmapped_sessions": 30,
+  "prior_sessions_read": 489,
+  "sessions_added_compared_with_prior_source": 14,
+  "classes_removed_compared_with_prior_source": 114,
   "stale_zapier_sheet_sessions_excluded": 0,
-  "stale_manual_class_report_sessions_excluded": 0,
-  "removed_examples": []
+  "stale_manual_class_report_sessions_excluded": 114,
+  "removed_examples": [
+    {
+      "session_id": "12774059",
+      "course_name": "AHA ACLS HeartCode",
+      "start_at": "2026-04-13T08:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774069",
+      "course_name": "AHA ACLS HeartCode",
+      "start_at": "2026-04-18T08:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774096",
+      "course_name": "AHA ACLS HeartCode",
+      "start_at": "2026-07-20T08:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774297",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-04-13T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774298",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-04-20T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774301",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-04-15T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774307",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-04-17T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774337",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-07-20T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774338",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-07-27T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774347",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-07-24T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774348",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-07-31T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774519",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-04-14T18:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774526",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-04-18T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774527",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-04-17T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774586",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-07-25T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774590",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-07-24T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774591",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-07-31T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774595",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-07-22T18:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12774599",
+      "course_name": "AHA BLS Provider (Initial)",
+      "start_at": "2026-07-27T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775262",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-04-14T18:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775269",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-04-17T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775270",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-04-18T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775311",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-07-27T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775315",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-07-22T18:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775316",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-07-29T18:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775323",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-07-25T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775324",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-07-24T18:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775490",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-04-13T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775491",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-04-20T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775495",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-04-15T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775502",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-04-17T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775503",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-04-18T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775543",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-07-20T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775544",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-07-27T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775554",
+      "course_name": "AHA BLS Provider (Renewal)",
+      "start_at": "2026-07-31T12:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775747",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-04-17T17:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775748",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-04-18T17:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775789",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-07-27T17:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775800",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-07-24T17:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775801",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-07-25T17:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775803",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-07-31T17:30:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775951",
+      "course_name": "AHA Heartsaver® First Aid CPR AED",
+      "start_at": "2026-04-21T09:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775960",
+      "course_name": "AHA Heartsaver® First Aid CPR AED",
+      "start_at": "2026-04-18T09:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12775978",
+      "course_name": "AHA Heartsaver® First Aid CPR AED",
+      "start_at": "2026-07-25T09:15:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12776114",
+      "course_name": "AHA Heartsaver First Aid CPR AED In-person training for workplace, OSHA, and general public certification",
+      "start_at": "2026-04-13T11:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12776115",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-04-20T11:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12776124",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-04-17T11:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12776153",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-07-13T11:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12776154",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-07-27T11:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    },
+    {
+      "session_id": "12776155",
+      "course_name": "AHA Heartsaver® First Aid CPR AED – Blended",
+      "start_at": "2026-07-20T11:45:00-04:00",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"
+    }
+  ]
 }

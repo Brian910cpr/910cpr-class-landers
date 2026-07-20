@@ -13,17 +13,17 @@ Status: read-only trace. No deploy was performed.
 ## Date Ranges
 
 - Seed simulation: 2026-08-03 to 2026-09-14
-- Runtime calendar snapshots: 2026-06-29 to 2026-08-28
-- Live availability snapshot: 2026-06-29 to 2026-08-28
-- Dynamic offers: 2026-06-29 to 2026-08-13
+- Runtime calendar snapshots: 2026-07-15 to 2026-11-11
+- Live availability snapshot: 2026-07-14 to 2026-11-11
+- Dynamic offers: 2026-07-02 to 2026-08-16
 
 ## August Counts
 
 - Seed simulation August BLS blocks/proposals: 8
-- Runtime August events: 16
+- Runtime August events: 18
 - Runtime events with August RRULE not expanded: 0
-- Live snapshot August blocks: 29
-- Dynamic August offers: 20901
+- Live snapshot August blocks: 67
+- Dynamic August offers: 25888
 
 ## First Divergence
 

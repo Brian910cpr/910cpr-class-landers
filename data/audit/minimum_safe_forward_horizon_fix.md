@@ -6,11 +6,11 @@ Do not deploy from this branch.
 
 Add RRULE/RDATE expansion to `scripts/export_calendar_snapshots.py::parse_ics_events` for occurrences inside the existing `EXPORT_DAYS` window, then regenerate runtime calendar snapshots and `live_availability_snapshot_preview.json`.
 
-Do not solve this by changing Course Master, public sellable filters, or appointment URL generation. The active path already declares a 60-day window; the missing piece is materializing recurring event occurrences before the live snapshot builder reads runtime events.
+Do not solve this by changing Course Master, public sellable filters, or appointment URL generation. The active path declares a 120-day window; the missing piece is materializing recurring event occurrences before the live snapshot builder reads runtime events.
 
 ## Horizon
 
-The current runtime export horizon is `EXPORT_DAYS = 60`. That is enough to reach mid-August from the June 19 snapshot generation date and is not the July 4 limiter. If the approved business forward-seeding horizon is longer than 60 days, make that a named config value rather than another hardcoded constant.
+The current runtime export horizon is `EXPORT_DAYS = 120`. The live public window remains rolling from build time and is separate from report-only candidate horizons.
 
 ## Guardrail
 

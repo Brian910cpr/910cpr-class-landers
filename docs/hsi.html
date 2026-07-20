@@ -23,8 +23,34 @@
       background: var(--surface);
       line-height: 1.45;
     }
-    header, main { max-width: 1120px; margin: 0 auto; padding: 24px; }
+    header, main, .selector-brand-bar { max-width: 1120px; margin: 0 auto; padding: 24px; }
     header { border-bottom: 1px solid var(--line); }
+    .selector-brand-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 8px;
+    }
+    .selector-brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .selector-brand-link img { width: auto; height: 44px; object-fit: contain; }
+    .selector-header-phone {
+      color: var(--accent-dark);
+      font-size: clamp(1.1rem, 2.3vw, 1.55rem);
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .selector-header-phone:hover, .selector-header-phone:focus { text-decoration: underline; text-underline-offset: 4px; }
+    .deep-link-anchor { position: relative; top: -8px; display: block; width: 0; height: 0; overflow: hidden; }
     h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
     h2 { margin: 0 0 12px; font-size: 1.25rem; letter-spacing: 0; }
     h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: 0; }
@@ -48,6 +74,50 @@
     .back-link:hover,
     .back-link:focus {
       text-decoration: underline;
+    }
+    .page-heading-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+      gap: 24px;
+      align-items: center;
+    }
+    .header-credential {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 2px solid #d71920;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #fff 0%, #fff7f7 100%);
+      box-shadow: 0 10px 24px rgba(120, 18, 22, .12);
+    }
+    .header-credential img {
+      display: block;
+      width: 92px;
+      max-height: 108px;
+      object-fit: contain;
+    }
+    .header-credential strong {
+      display: block;
+      color: #9d1118;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+    .header-credential p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.35;
+    }
+    .header-credential-eyebrow {
+      display: block;
+      margin-bottom: 3px;
+      color: #d71920;
+      font-size: .7rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
     .family-help {
       border: 1px solid var(--line);
@@ -257,6 +327,10 @@
       object-position: center;
       padding: 6px;
     }
+    .course-icon img.course-image-cover {
+      object-fit: cover;
+      padding: 0;
+    }
     .course-icon-fallback {
       display: inline-flex;
       align-items: center;
@@ -447,10 +521,16 @@
       background: var(--band);
     }
     @media (max-width: 820px) {
+      .page-heading-row { grid-template-columns: 1fr; }
+      .header-credential { grid-template-columns: 76px minmax(0, 1fr); }
+      .header-credential img { width: 76px; max-height: 92px; }
       .selector-grid { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
-      header, main { padding: 18px; }
+      header, main, .selector-brand-bar { padding: 18px; }
+      .selector-brand-link img { height: 38px; }
+      .selector-brand-link { font-size: 1.05rem; }
+      .selector-header-phone { font-size: 1.05rem; }
       .panel { padding: 14px; }
       .course-selector-top {
         display: grid;
@@ -510,11 +590,31 @@
     </style>
 </head>
 <body>
+  <div class="selector-brand-bar">
+    <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
+      <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+      <span>910CPR</span>
+    </a>
+    <a class="selector-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
+  </div>
   <header>
-    <a class="back-link" href="/index.html#courses">← Back to All Courses</a>
-    <h1>HSI CPR, First Aid &amp; BLS Classes</h1>
-    
-    <p class="muted">Choose the HSI class that fits your requirement, then select a date and time.</p>
+    <a class="back-link" href="/index.html">← Back to Find Your Class</a>
+    <div class="page-heading-row">
+      <div>
+        <h1>HSI CPR, First Aid &amp; BLS Classes</h1>
+        
+        <p class="muted">Choose the HSI class that fits your requirement, then select a date and time.</p>
+      </div>
+      
+      <aside class="header-credential" aria-label="HSI Approved Training Center">
+        <img src="/images/HSI.png" alt="HSI Approved Training Center" loading="eager">
+        <div>
+          <span class="header-credential-eyebrow">Approved training</span>
+          <strong>HSI Approved Training Center</strong>
+          <p>HSI BLS, CPR, AED, and First Aid training at 910CPR.</p>
+        </div>
+      </aside>
+    </div>
     
     <div class="family-help" aria-label="Course format guide">
       <div class="family-help-title">Course format guide</div>
@@ -560,6 +660,7 @@
         </div>
         <div class="course-rail" data-course-rail>
           <button type="button" class="rail-arrow previous" data-course-rail-prev aria-label="Previous course options">‹</button>
+          <span id="bls" class="deep-link-anchor" aria-hidden="true"></span><span id="bls-first-aid" class="deep-link-anchor" aria-hidden="true"></span><span id="challenge" class="deep-link-anchor" aria-hidden="true"></span><span id="hsi-bls" class="deep-link-anchor" aria-hidden="true"></span><span id="hsi-bls-fa" class="deep-link-anchor" aria-hidden="true"></span><span id="hsi-bls-first-aid" class="deep-link-anchor" aria-hidden="true"></span>
           <div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
@@ -583,9 +684,10 @@
   </main>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-07-02T15%3A53%3A19.009792";
-    const courseOptions = [{"courseId": "463743", "courseName": "HSI BLS Challenge", "family": "HSI", "variant": "challenge", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["challenge", "challenge", "hsi-bls", "bls"], "iconLabel": "HSI", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageAlt": "HSI BLS Challenge course option", "deliveryBadge": "IN-PERSON", "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.", "details": {"course_key": "hsi_bls_challenge", "title": "HSI BLS Challenge", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.", "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."], "certification_issued": "HSI certification issued after successful completion.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."], "full_course_page": "/hsi.html"}}, {"courseId": "445670", "courseName": "HSI BLS + Adult First Aid", "family": "HSI", "variant": "bls-first-aid", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["bls-first-aid", "bls-first-aid", "hsi-bls-fa", "hsi-bls-first-aid"], "iconLabel": "FA", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageAlt": "HSI BLS + Adult First Aid course option", "deliveryBadge": "BLENDED", "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.", "details": {"course_key": "hsi_bls_adult_first_aid", "title": "HSI BLS + Adult First Aid", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI blended option combining Basic Life Support with Adult First Aid/CPR/AED.", "who_this_is_for": "Workplaces, healthcare-adjacent teams, dental offices, ABA providers, and organizations that accept HSI and need both BLS and first aid coverage.", "topics_covered": ["HSI BLS", "Adult first aid", "CPR and AED", "Online coursework", "In-person skills verification"], "required_materials": ["Completed assigned HSI online coursework before the skills session."], "certification_issued": "HSI certification issued after successful completion and valid for two years.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."], "full_course_page": "/hsi.html"}}];
+    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-07-20T11%3A53%3A55.429281";
+    const courseOptions = [{"courseId": "463743", "courseName": "HSI BLS Challenge", "family": "HSI", "variant": "challenge", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["challenge", "challenge", "hsi-bls", "bls"], "iconLabel": "HSI", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS Challenge course option", "deliveryBadge": "IN-PERSON", "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.", "details": {"course_key": "hsi_bls_challenge", "title": "HSI BLS Challenge", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.", "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."], "certification_issued": "HSI certification issued after successful completion.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."], "full_course_page": "/hsi.html"}}, {"courseId": "445670", "courseName": "HSI BLS + Adult First Aid", "family": "HSI", "variant": "bls-first-aid", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["bls-first-aid", "bls-first-aid", "hsi-bls-fa", "hsi-bls-first-aid"], "iconLabel": "FA", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS + Adult First Aid course option", "deliveryBadge": "BLENDED", "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.", "details": {"course_key": "hsi_bls_adult_first_aid", "title": "HSI BLS + Adult First Aid", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI blended option combining Basic Life Support with Adult First Aid/CPR/AED.", "who_this_is_for": "Workplaces, healthcare-adjacent teams, dental offices, ABA providers, and organizations that accept HSI and need both BLS and first aid coverage.", "topics_covered": ["HSI BLS", "Adult first aid", "CPR and AED", "Online coursework", "In-person skills verification"], "required_materials": ["Completed assigned HSI online coursework before the skills session."], "certification_issued": "HSI certification issued after successful completion and valid for two years.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."], "full_course_page": "/hsi.html"}}];
     const optionGroups = {"HSI": {"family": "HSI", "label": "All HSI options", "courseIds": ["463743", "445670"]}};
+    const asapOptionLabel = "Need HSI ASAP? Show all HSI options";
     const unsupportedOptions = [];
     let scheduleDates = embeddedScheduleDates;
     let availabilityState = 'checking';
@@ -873,6 +975,41 @@
       }).filter(day => day.startTimes.length);
     }
 
+    function asapAlternativeDates(now = businessNow()) {
+      if (compareMode) return [];
+      const selected = courseOptions.find(course => course.courseId === selectedCourseId);
+      const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
+      const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
+      if (!alternativeIds.size) return [];
+      return scheduleDates.filter(day =>
+        isSelectableDate(day, now) && day.startTimes.some(slot =>
+          !isPastStart(day, slot, now) && slot.courses.some(course => alternativeIds.has(course.courseId))
+        )
+      );
+    }
+
+    function renderAsapAlternative(host) {
+      if (!host || !asapAlternativeDates().length) return false;
+      const box = document.createElement('div');
+      box.className = 'empty asap-alternative';
+      const message = document.createElement('p');
+      message.textContent = `${selectedCourseLabel()} has no matching near-term result, but another acceptable option is available.`;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'asap-alternative-button';
+      button.textContent = asapOptionLabel;
+      button.addEventListener('click', () => {
+        compareMode = true;
+        const toggle = byId('compare-toggle');
+        if (toggle) toggle.checked = true;
+        renderAll();
+      });
+      box.append(message, button);
+      host.innerHTML = '';
+      host.appendChild(box);
+      return true;
+    }
+
     function syncSelection() {
       const days = filteredDates();
       const now = businessNow();
@@ -915,6 +1052,7 @@
           image.src = course.imageUrl;
           image.alt = course.imageAlt || course.courseName;
           image.loading = 'lazy';
+          if (course.imageFit === 'cover') image.className = 'course-image-cover';
           icon.appendChild(image);
         } else {
           const fallback = document.createElement('span');
@@ -1001,7 +1139,9 @@
       const days = syncSelection();
       const now = businessNow();
       if (!days.length) {
-        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        if (!renderAsapAlternative(host)) {
+          host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        }
         return;
       }
       const availableByDate = new Map(days.map(day => [day.date, day]));

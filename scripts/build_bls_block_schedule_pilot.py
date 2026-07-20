@@ -174,8 +174,34 @@ def css() -> str:
       background: var(--surface);
       line-height: 1.45;
     }
-    header, main { max-width: 1120px; margin: 0 auto; padding: 24px; }
+    header, main, .selector-brand-bar { max-width: 1120px; margin: 0 auto; padding: 24px; }
     header { border-bottom: 1px solid var(--line); }
+    .selector-brand-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 8px;
+    }
+    .selector-brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .selector-brand-link img { width: auto; height: 44px; object-fit: contain; }
+    .selector-header-phone {
+      color: var(--accent-dark);
+      font-size: clamp(1.1rem, 2.3vw, 1.55rem);
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .selector-header-phone:hover, .selector-header-phone:focus { text-decoration: underline; text-underline-offset: 4px; }
+    .deep-link-anchor { position: relative; top: -8px; display: block; width: 0; height: 0; overflow: hidden; }
     h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: 0; }
     h2 { margin: 0 0 12px; font-size: 1.25rem; letter-spacing: 0; }
     h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: 0; }
@@ -206,23 +232,43 @@ def css() -> str:
       gap: 24px;
       align-items: center;
     }
-    .header-stripes {
-      display: flex;
+    .header-credential {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 14px;
       align-items: center;
-      justify-content: center;
-      min-height: 132px;
       padding: 14px 16px;
-      border: 1px solid var(--line);
+      border: 2px solid #d71920;
       border-radius: 14px;
-      background: #fff;
-      overflow: hidden;
+      background: linear-gradient(135deg, #fff 0%, #fff7f7 100%);
+      box-shadow: 0 10px 24px rgba(120, 18, 22, .12);
     }
-    .header-stripes img {
+    .header-credential img {
       display: block;
-      width: 100%;
-      max-width: 348px;
-      height: 108px;
+      width: 92px;
+      max-height: 108px;
       object-fit: contain;
+    }
+    .header-credential strong {
+      display: block;
+      color: #9d1118;
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+    .header-credential p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.35;
+    }
+    .header-credential-eyebrow {
+      display: block;
+      margin-bottom: 3px;
+      color: #d71920;
+      font-size: .7rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
     .family-help {
       border: 1px solid var(--line);
@@ -432,6 +478,10 @@ def css() -> str:
       object-position: center;
       padding: 6px;
     }
+    .course-icon img.course-image-cover {
+      object-fit: cover;
+      padding: 0;
+    }
     .course-icon-fallback {
       display: inline-flex;
       align-items: center;
@@ -623,12 +673,15 @@ def css() -> str:
     }
     @media (max-width: 820px) {
       .page-heading-row { grid-template-columns: 1fr; }
-      .header-stripes { min-height: 104px; }
-      .header-stripes img { height: 92px; }
+      .header-credential { grid-template-columns: 76px minmax(0, 1fr); }
+      .header-credential img { width: 76px; max-height: 92px; }
       .selector-grid { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
-      header, main { padding: 18px; }
+      header, main, .selector-brand-bar { padding: 18px; }
+      .selector-brand-link img { height: 38px; }
+      .selector-brand-link { font-size: 1.05rem; }
+      .selector-header-phone { font-size: 1.05rem; }
       .panel { padding: 14px; }
       .course-selector-top {
         display: grid;
@@ -712,6 +765,7 @@ def render_html(payload: dict[str, Any]) -> str:
             ],
             "iconLabel": option.get("icon_label") or page_family,
             "imageUrl": option.get("image_url") or DEFAULT_COURSE_IMAGES.get(page_family, "/images/logo.png"),
+            "imageFit": option.get("image_fit") or "contain",
             "imageAlt": option.get("image_alt") or f"{option.get('display_label') or page_family} course option",
             "deliveryBadge": option.get("delivery_badge") or delivery_label_for_config(option.get("delivery_mode")),
             "clarification": option.get("clarification") or "",
@@ -774,6 +828,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     ],
                     "iconLabel": configured_options.get(course["courseId"], {}).get("icon_label") or family,
                     "imageUrl": configured_options.get(course["courseId"], {}).get("image_url") or DEFAULT_COURSE_IMAGES.get(family, "/images/logo.png"),
+                    "imageFit": configured_options.get(course["courseId"], {}).get("image_fit") or "contain",
                     "imageAlt": configured_options.get(course["courseId"], {}).get("image_alt") or f"{configured_options.get(course['courseId'], {}).get('display_label') or course['courseName']} course option",
                     "deliveryBadge": configured_options.get(course["courseId"], {}).get("delivery_badge") or delivery_label_for_config(configured_options.get(course["courseId"], {}).get("delivery_mode") or course.get("deliveryMode")),
                     "clarification": configured_options.get(course["courseId"], {}).get("clarification") or "",
@@ -825,6 +880,7 @@ def render_html(payload: dict[str, Any]) -> str:
     ]
     course_options_json = json.dumps(course_options, ensure_ascii=False)
     option_groups_json = json.dumps(option_groups, ensure_ascii=False)
+    compare_label_json = json.dumps(str(page_config.get("compare_mode", {}).get("label") or "Show all options"), ensure_ascii=False)
     availability_url_json = json.dumps(availability_url)
     unsupported_options = [
         option
@@ -833,27 +889,16 @@ def render_html(payload: dict[str, Any]) -> str:
     ]
     unsupported_options_json = json.dumps(unsupported_options, ensure_ascii=False)
     counts = payload["counts"]
-    first_course = course_options[0]["courseId"] if course_options else ""
+    configured_default_course = str(page_config.get("default_course_id") or "").strip()
+    available_course_ids = {str(option.get("courseId") or "") for option in course_options}
+    first_course = (
+        configured_default_course
+        if configured_default_course in available_course_ids
+        else (course_options[0]["courseId"] if course_options else "")
+    )
     title = html.escape(str(page_config.get("title") or "Block Schedule"))
     subtitle = html.escape(str(page_config.get("subtitle") or ""))
     intro = html.escape(str(page_config.get("intro") or "Select a course, date, and start time."))
-    header_image_url = html.escape(str(page_config.get("header_image_url") or ""), quote=True)
-    header_image_alt = html.escape(str(page_config.get("header_image_alt") or ""), quote=True)
-    heading_copy_html = f"""
-      <div>
-        <h1>{title}</h1>
-        {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
-        <p class="muted">{intro}</p>
-      </div>"""
-    heading_html = heading_copy_html
-    if header_image_url:
-        heading_html = f"""
-    <div class="page-heading-row">
-{heading_copy_html}
-      <div class="header-stripes" aria-label="{header_image_alt}">
-        <img src="{header_image_url}" alt="{header_image_alt}" loading="eager">
-      </div>
-    </div>"""
     explanation = html.escape(str(page_config.get("explanation") or ""))
     documentation_note = page_config.get("documentation_note", {})
     student_note = html.escape(str(page_config.get("student_note") or ""))
@@ -883,8 +928,35 @@ def render_html(payload: dict[str, Any]) -> str:
       {note_html}
       {student_html}
     </section>"""
-    back_href = html.escape(str(page_config.get("back_link_href") or "/index.html#courses"), quote=True)
-    back_label = html.escape(str(page_config.get("back_link_label") or "Back to All Courses"))
+    back_href = html.escape(str(page_config.get("back_link_href") or "/index.html"), quote=True)
+    back_label = html.escape(str(page_config.get("back_link_label") or "Back to Find Your Class"))
+    course_aliases = sorted({
+        str(alias).strip()
+        for option in course_options
+        for alias in (option.get("deepLinkAliases") or [])
+        if str(alias).strip()
+    })
+    course_alias_anchor_html = "".join(
+        f'<span id="{html.escape(alias, quote=True)}" class="deep-link-anchor" aria-hidden="true"></span>'
+        for alias in course_aliases
+    )
+    header_credential = page_config.get("header_credential")
+    header_credential_html = ""
+    if isinstance(header_credential, dict) and header_credential.get("image_url") and header_credential.get("title"):
+        credential_image = html.escape(str(header_credential["image_url"]), quote=True)
+        credential_alt = html.escape(str(header_credential.get("image_alt") or header_credential["title"]), quote=True)
+        credential_eyebrow = html.escape(str(header_credential.get("eyebrow") or "Credential"))
+        credential_title = html.escape(str(header_credential["title"]))
+        credential_body = html.escape(str(header_credential.get("body") or ""))
+        header_credential_html = f"""
+      <aside class="header-credential" aria-label="{credential_title}">
+        <img src="{credential_image}" alt="{credential_alt}" loading="eager">
+        <div>
+          <span class="header-credential-eyebrow">{credential_eyebrow}</span>
+          <strong>{credential_title}</strong>
+          {f'<p>{credential_body}</p>' if credential_body else ''}
+        </div>
+      </aside>"""
     delivery_help_items = page_config.get("delivery_help")
     if not isinstance(delivery_help_items, list) or not delivery_help_items:
         seen_delivery_modes = []
@@ -971,9 +1043,23 @@ def render_html(payload: dict[str, Any]) -> str:
   <style>{css()}</style>
 </head>
 <body>
+  <div class="selector-brand-bar">
+    <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
+      <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+      <span>910CPR</span>
+    </a>
+    <a class="selector-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
+  </div>
   <header>
     <a class="back-link" href="{back_href}">← {back_label}</a>
-{heading_html}
+    <div class="page-heading-row">
+      <div>
+        <h1>{title}</h1>
+        {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
+        <p class="muted">{intro}</p>
+      </div>
+      {header_credential_html}
+    </div>
     {delivery_help_html}
   </header>
   <main>
@@ -993,6 +1079,7 @@ def render_html(payload: dict[str, Any]) -> str:
         </div>
         <div class="course-rail" data-course-rail>
           <button type="button" class="rail-arrow previous" data-course-rail-prev aria-label="Previous course options">‹</button>
+          {course_alias_anchor_html}
           <div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
@@ -1019,6 +1106,7 @@ def render_html(payload: dict[str, Any]) -> str:
     const availabilityUrl = {availability_url_json};
     const courseOptions = {course_options_json};
     const optionGroups = {option_groups_json};
+    const asapOptionLabel = {compare_label_json};
     const unsupportedOptions = {unsupported_options_json};
     let scheduleDates = embeddedScheduleDates;
     let availabilityState = 'checking';
@@ -1306,6 +1394,41 @@ def render_html(payload: dict[str, Any]) -> str:
       }}).filter(day => day.startTimes.length);
     }}
 
+    function asapAlternativeDates(now = businessNow()) {{
+      if (compareMode) return [];
+      const selected = courseOptions.find(course => course.courseId === selectedCourseId);
+      const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
+      const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
+      if (!alternativeIds.size) return [];
+      return scheduleDates.filter(day =>
+        isSelectableDate(day, now) && day.startTimes.some(slot =>
+          !isPastStart(day, slot, now) && slot.courses.some(course => alternativeIds.has(course.courseId))
+        )
+      );
+    }}
+
+    function renderAsapAlternative(host) {{
+      if (!host || !asapAlternativeDates().length) return false;
+      const box = document.createElement('div');
+      box.className = 'empty asap-alternative';
+      const message = document.createElement('p');
+      message.textContent = `${{selectedCourseLabel()}} has no matching near-term result, but another acceptable option is available.`;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'asap-alternative-button';
+      button.textContent = asapOptionLabel;
+      button.addEventListener('click', () => {{
+        compareMode = true;
+        const toggle = byId('compare-toggle');
+        if (toggle) toggle.checked = true;
+        renderAll();
+      }});
+      box.append(message, button);
+      host.innerHTML = '';
+      host.appendChild(box);
+      return true;
+    }}
+
     function syncSelection() {{
       const days = filteredDates();
       const now = businessNow();
@@ -1348,6 +1471,7 @@ def render_html(payload: dict[str, Any]) -> str:
           image.src = course.imageUrl;
           image.alt = course.imageAlt || course.courseName;
           image.loading = 'lazy';
+          if (course.imageFit === 'cover') image.className = 'course-image-cover';
           icon.appendChild(image);
         }} else {{
           const fallback = document.createElement('span');
@@ -1434,7 +1558,9 @@ def render_html(payload: dict[str, Any]) -> str:
       const days = syncSelection();
       const now = businessNow();
       if (!days.length) {{
-        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        if (!renderAsapAlternative(host)) {{
+          host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        }}
         return;
       }}
       const availableByDate = new Map(days.map(day => [day.date, day]));

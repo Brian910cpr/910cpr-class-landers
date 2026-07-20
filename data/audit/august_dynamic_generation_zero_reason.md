@@ -4,7 +4,7 @@ Active dynamic generation no longer produces zero August offers. RRULE expansion
 
 - Dynamic availability source: `live_availability_snapshot`
 - Dynamic availability reason: `valid_live_available_blocks_found`
-- Live snapshot range: 2026-06-29 to 2026-08-28
+- Live snapshot range: 2026-07-14 to 2026-11-11
 - Seed simulation range: 2026-08-03 to 2026-09-14
 
 Checked causes:

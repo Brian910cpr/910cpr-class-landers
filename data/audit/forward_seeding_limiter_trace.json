@@ -1,6 +1,6 @@
 {
   "summary": {
-    "generated_at": "2026-06-30T13:52:02",
+    "generated_at": "2026-07-14T14:59:17",
     "read_only": true,
     "deployed": false,
     "plain_answer": "The prior live snapshot stopped at July 4 because scripts/export_calendar_snapshots.py::parse_ics_events recorded RRULE text without expanding recurring VEVENT instances. That limiter is now fixed: runtime snapshots contain expanded recurring instances into August, live_availability_snapshot_preview.json contains August blocks, and dynamic_offers_preview.json contains August offers.",
@@ -10,7 +10,7 @@
       "function": "parse_ics_events",
       "function_line": 347,
       "specific_behavior": "RRULE/RDATE/EXDATE occurrences are now materialized inside the export window before the live snapshot builder reads runtime events.",
-      "export_days_constant": 60,
+      "export_days_constant": 120,
       "export_days_line": 27,
       "not_caused_by": [
         "14-day seed selection window",
@@ -38,30 +38,30 @@
       "runtime_export_function": "export_calendar_snapshots",
       "runtime_parse_function": "parse_ics_events",
       "runtime_snapshot_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-      "runtime_snapshot_declared_start": "2026-06-29T15:37:34.470018-04:00",
-      "runtime_snapshot_declared_end": "2026-08-28T15:37:34.470018-04:00",
-      "runtime_snapshot_declared_days": 60,
+      "runtime_snapshot_declared_start": "2026-07-14T14:58:52.228925-04:00",
+      "runtime_snapshot_declared_end": "2026-11-11T14:58:52.228925-04:00",
+      "runtime_snapshot_declared_days": 120,
       "runtime_event_date_range": {
-        "start": "2026-06-29",
-        "end": "2026-08-28"
+        "start": "2026-07-15",
+        "end": "2026-11-11"
       },
-      "runtime_rrule_event_count": 40,
-      "runtime_expanded_rrule_event_count": 40,
+      "runtime_rrule_event_count": 134,
+      "runtime_expanded_rrule_event_count": 134,
       "live_snapshot_script": "scripts/build_live_availability_snapshot.py",
       "live_snapshot_function": "build_snapshot",
       "live_inverse_horizon_function": "inverse_expansion_horizon",
       "live_inverse_horizon_line": 389,
-      "calendar_source_inverse_expansion_horizon_days": 45,
+      "calendar_source_inverse_expansion_horizon_days": 120,
       "date_range": {
-        "start": "2026-06-29",
-        "end": "2026-08-28"
+        "start": "2026-07-14",
+        "end": "2026-11-11"
       },
-      "august_rows": 29,
+      "august_rows": 67,
       "dynamic_offer_date_range": {
-        "start": "2026-06-29",
-        "end": "2026-08-13"
+        "start": "2026-07-02",
+        "end": "2026-08-16"
       },
-      "dynamic_august_offers": 20901
+      "dynamic_august_offers": 25888
     },
     "first_divergence": {
       "file": "resolved_after_rrule_expansion",
@@ -70,233 +70,13 @@
     },
     "counts": {
       "runtime_events_by_source": {
-        "brian_do_not_schedule": 49
+        "brian_do_not_schedule": 144
       },
-      "runtime_rrule_events": 40,
-      "live_snapshot_blocks": 116,
-      "dynamic_offers": 42993
+      "runtime_rrule_events": 134,
+      "live_snapshot_blocks": 394,
+      "dynamic_offers": 57333
     },
     "rrule_rows": [
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260630T0600000400",
-        "date": "2026-06-30",
-        "start": "2026-06-30T06:00:00-04:00",
-        "end": "2026-06-30T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260701T0600000400",
-        "date": "2026-07-01",
-        "start": "2026-07-01T06:00:00-04:00",
-        "end": "2026-07-01T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260702T0600000400",
-        "date": "2026-07-02",
-        "start": "2026-07-02T06:00:00-04:00",
-        "end": "2026-07-02T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260703T0600000400",
-        "date": "2026-07-03",
-        "start": "2026-07-03T06:00:00-04:00",
-        "end": "2026-07-03T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260706T0600000400",
-        "date": "2026-07-06",
-        "start": "2026-07-06T06:00:00-04:00",
-        "end": "2026-07-06T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260707T0600000400",
-        "date": "2026-07-07",
-        "start": "2026-07-07T06:00:00-04:00",
-        "end": "2026-07-07T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260708T0600000400",
-        "date": "2026-07-08",
-        "start": "2026-07-08T06:00:00-04:00",
-        "end": "2026-07-08T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260709T0600000400",
-        "date": "2026-07-09",
-        "start": "2026-07-09T06:00:00-04:00",
-        "end": "2026-07-09T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260710T0600000400",
-        "date": "2026-07-10",
-        "start": "2026-07-10T06:00:00-04:00",
-        "end": "2026-07-10T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260713T0600000400",
-        "date": "2026-07-13",
-        "start": "2026-07-13T06:00:00-04:00",
-        "end": "2026-07-13T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
-      {
-        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
-        "calendar_source_id": "brian_do_not_schedule",
-        "event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260714T0600000400",
-        "date": "2026-07-14",
-        "start": "2026-07-14T06:00:00-04:00",
-        "end": "2026-07-14T08:30:00-04:00",
-        "summary": "Jonah to LaCrosse",
-        "recurrence": [
-          {
-            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE"
-          },
-          {
-            "exdate": "20260622T060000"
-          }
-        ],
-        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "generated_from_rrule": true,
-        "recurrence_source": "recurring_expanded_instance"
-      },
       {
         "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
         "calendar_source_id": "brian_do_not_schedule",
@@ -311,6 +91,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -331,6 +120,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -351,6 +149,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -371,6 +178,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -391,6 +207,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -411,6 +236,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -431,6 +265,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -451,6 +294,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -471,6 +323,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -491,6 +352,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -511,6 +381,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -531,6 +410,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -551,6 +439,15 @@
           },
           {
             "exdate": "20260622T060000"
+          },
+          {
+            "exdate": "20260709T060000"
+          },
+          {
+            "exdate": "20260710T060000"
+          },
+          {
+            "exdate": "20260716T060000"
           }
         ],
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20260801T035959Z;BYDAY=FR,MO,TH,TU,WE",
@@ -828,6 +725,1791 @@
         "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
         "generated_from_rrule": true,
         "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260831T0630000400",
+        "date": "2026-08-31",
+        "start": "2026-08-31T06:30:00-04:00",
+        "end": "2026-08-31T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260831T1500000400",
+        "date": "2026-08-31",
+        "start": "2026-08-31T15:00:00-04:00",
+        "end": "2026-08-31T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260901T0630000400",
+        "date": "2026-09-01",
+        "start": "2026-09-01T06:30:00-04:00",
+        "end": "2026-09-01T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260901T1500000400",
+        "date": "2026-09-01",
+        "start": "2026-09-01T15:00:00-04:00",
+        "end": "2026-09-01T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260902T0630000400",
+        "date": "2026-09-02",
+        "start": "2026-09-02T06:30:00-04:00",
+        "end": "2026-09-02T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260902T1500000400",
+        "date": "2026-09-02",
+        "start": "2026-09-02T15:00:00-04:00",
+        "end": "2026-09-02T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260903T0630000400",
+        "date": "2026-09-03",
+        "start": "2026-09-03T06:30:00-04:00",
+        "end": "2026-09-03T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260903T1500000400",
+        "date": "2026-09-03",
+        "start": "2026-09-03T15:00:00-04:00",
+        "end": "2026-09-03T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260904T0630000400",
+        "date": "2026-09-04",
+        "start": "2026-09-04T06:30:00-04:00",
+        "end": "2026-09-04T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260904T1500000400",
+        "date": "2026-09-04",
+        "start": "2026-09-04T15:00:00-04:00",
+        "end": "2026-09-04T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260907T0630000400",
+        "date": "2026-09-07",
+        "start": "2026-09-07T06:30:00-04:00",
+        "end": "2026-09-07T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260907T1500000400",
+        "date": "2026-09-07",
+        "start": "2026-09-07T15:00:00-04:00",
+        "end": "2026-09-07T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260908T0630000400",
+        "date": "2026-09-08",
+        "start": "2026-09-08T06:30:00-04:00",
+        "end": "2026-09-08T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260908T1500000400",
+        "date": "2026-09-08",
+        "start": "2026-09-08T15:00:00-04:00",
+        "end": "2026-09-08T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260909T0630000400",
+        "date": "2026-09-09",
+        "start": "2026-09-09T06:30:00-04:00",
+        "end": "2026-09-09T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260909T1500000400",
+        "date": "2026-09-09",
+        "start": "2026-09-09T15:00:00-04:00",
+        "end": "2026-09-09T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260910T0630000400",
+        "date": "2026-09-10",
+        "start": "2026-09-10T06:30:00-04:00",
+        "end": "2026-09-10T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260910T1500000400",
+        "date": "2026-09-10",
+        "start": "2026-09-10T15:00:00-04:00",
+        "end": "2026-09-10T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260911T0630000400",
+        "date": "2026-09-11",
+        "start": "2026-09-11T06:30:00-04:00",
+        "end": "2026-09-11T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260911T1500000400",
+        "date": "2026-09-11",
+        "start": "2026-09-11T15:00:00-04:00",
+        "end": "2026-09-11T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260914T0630000400",
+        "date": "2026-09-14",
+        "start": "2026-09-14T06:30:00-04:00",
+        "end": "2026-09-14T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260914T1500000400",
+        "date": "2026-09-14",
+        "start": "2026-09-14T15:00:00-04:00",
+        "end": "2026-09-14T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260915T0630000400",
+        "date": "2026-09-15",
+        "start": "2026-09-15T06:30:00-04:00",
+        "end": "2026-09-15T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260915T1500000400",
+        "date": "2026-09-15",
+        "start": "2026-09-15T15:00:00-04:00",
+        "end": "2026-09-15T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260916T0630000400",
+        "date": "2026-09-16",
+        "start": "2026-09-16T06:30:00-04:00",
+        "end": "2026-09-16T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260916T1500000400",
+        "date": "2026-09-16",
+        "start": "2026-09-16T15:00:00-04:00",
+        "end": "2026-09-16T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260917T0630000400",
+        "date": "2026-09-17",
+        "start": "2026-09-17T06:30:00-04:00",
+        "end": "2026-09-17T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260917T1500000400",
+        "date": "2026-09-17",
+        "start": "2026-09-17T15:00:00-04:00",
+        "end": "2026-09-17T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260918T0630000400",
+        "date": "2026-09-18",
+        "start": "2026-09-18T06:30:00-04:00",
+        "end": "2026-09-18T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260918T1500000400",
+        "date": "2026-09-18",
+        "start": "2026-09-18T15:00:00-04:00",
+        "end": "2026-09-18T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260921T0630000400",
+        "date": "2026-09-21",
+        "start": "2026-09-21T06:30:00-04:00",
+        "end": "2026-09-21T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260921T1500000400",
+        "date": "2026-09-21",
+        "start": "2026-09-21T15:00:00-04:00",
+        "end": "2026-09-21T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260922T0630000400",
+        "date": "2026-09-22",
+        "start": "2026-09-22T06:30:00-04:00",
+        "end": "2026-09-22T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260922T1500000400",
+        "date": "2026-09-22",
+        "start": "2026-09-22T15:00:00-04:00",
+        "end": "2026-09-22T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260923T0630000400",
+        "date": "2026-09-23",
+        "start": "2026-09-23T06:30:00-04:00",
+        "end": "2026-09-23T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260923T1500000400",
+        "date": "2026-09-23",
+        "start": "2026-09-23T15:00:00-04:00",
+        "end": "2026-09-23T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260924T0630000400",
+        "date": "2026-09-24",
+        "start": "2026-09-24T06:30:00-04:00",
+        "end": "2026-09-24T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260924T1500000400",
+        "date": "2026-09-24",
+        "start": "2026-09-24T15:00:00-04:00",
+        "end": "2026-09-24T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260925T0630000400",
+        "date": "2026-09-25",
+        "start": "2026-09-25T06:30:00-04:00",
+        "end": "2026-09-25T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260925T1500000400",
+        "date": "2026-09-25",
+        "start": "2026-09-25T15:00:00-04:00",
+        "end": "2026-09-25T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260928T0630000400",
+        "date": "2026-09-28",
+        "start": "2026-09-28T06:30:00-04:00",
+        "end": "2026-09-28T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260928T1500000400",
+        "date": "2026-09-28",
+        "start": "2026-09-28T15:00:00-04:00",
+        "end": "2026-09-28T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260929T0630000400",
+        "date": "2026-09-29",
+        "start": "2026-09-29T06:30:00-04:00",
+        "end": "2026-09-29T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260929T1500000400",
+        "date": "2026-09-29",
+        "start": "2026-09-29T15:00:00-04:00",
+        "end": "2026-09-29T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20260930T0630000400",
+        "date": "2026-09-30",
+        "start": "2026-09-30T06:30:00-04:00",
+        "end": "2026-09-30T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20260930T1500000400",
+        "date": "2026-09-30",
+        "start": "2026-09-30T15:00:00-04:00",
+        "end": "2026-09-30T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261001T0630000400",
+        "date": "2026-10-01",
+        "start": "2026-10-01T06:30:00-04:00",
+        "end": "2026-10-01T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261001T1500000400",
+        "date": "2026-10-01",
+        "start": "2026-10-01T15:00:00-04:00",
+        "end": "2026-10-01T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261002T0630000400",
+        "date": "2026-10-02",
+        "start": "2026-10-02T06:30:00-04:00",
+        "end": "2026-10-02T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261002T1500000400",
+        "date": "2026-10-02",
+        "start": "2026-10-02T15:00:00-04:00",
+        "end": "2026-10-02T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261005T0630000400",
+        "date": "2026-10-05",
+        "start": "2026-10-05T06:30:00-04:00",
+        "end": "2026-10-05T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261005T1500000400",
+        "date": "2026-10-05",
+        "start": "2026-10-05T15:00:00-04:00",
+        "end": "2026-10-05T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261006T0630000400",
+        "date": "2026-10-06",
+        "start": "2026-10-06T06:30:00-04:00",
+        "end": "2026-10-06T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261006T1500000400",
+        "date": "2026-10-06",
+        "start": "2026-10-06T15:00:00-04:00",
+        "end": "2026-10-06T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261007T0630000400",
+        "date": "2026-10-07",
+        "start": "2026-10-07T06:30:00-04:00",
+        "end": "2026-10-07T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261007T1500000400",
+        "date": "2026-10-07",
+        "start": "2026-10-07T15:00:00-04:00",
+        "end": "2026-10-07T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261008T0630000400",
+        "date": "2026-10-08",
+        "start": "2026-10-08T06:30:00-04:00",
+        "end": "2026-10-08T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261008T1500000400",
+        "date": "2026-10-08",
+        "start": "2026-10-08T15:00:00-04:00",
+        "end": "2026-10-08T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261009T0630000400",
+        "date": "2026-10-09",
+        "start": "2026-10-09T06:30:00-04:00",
+        "end": "2026-10-09T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261009T1500000400",
+        "date": "2026-10-09",
+        "start": "2026-10-09T15:00:00-04:00",
+        "end": "2026-10-09T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261012T0630000400",
+        "date": "2026-10-12",
+        "start": "2026-10-12T06:30:00-04:00",
+        "end": "2026-10-12T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261012T1500000400",
+        "date": "2026-10-12",
+        "start": "2026-10-12T15:00:00-04:00",
+        "end": "2026-10-12T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261013T0630000400",
+        "date": "2026-10-13",
+        "start": "2026-10-13T06:30:00-04:00",
+        "end": "2026-10-13T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261013T1500000400",
+        "date": "2026-10-13",
+        "start": "2026-10-13T15:00:00-04:00",
+        "end": "2026-10-13T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261014T0630000400",
+        "date": "2026-10-14",
+        "start": "2026-10-14T06:30:00-04:00",
+        "end": "2026-10-14T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261014T1500000400",
+        "date": "2026-10-14",
+        "start": "2026-10-14T15:00:00-04:00",
+        "end": "2026-10-14T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261015T0630000400",
+        "date": "2026-10-15",
+        "start": "2026-10-15T06:30:00-04:00",
+        "end": "2026-10-15T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261015T1500000400",
+        "date": "2026-10-15",
+        "start": "2026-10-15T15:00:00-04:00",
+        "end": "2026-10-15T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261016T0630000400",
+        "date": "2026-10-16",
+        "start": "2026-10-16T06:30:00-04:00",
+        "end": "2026-10-16T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261016T1500000400",
+        "date": "2026-10-16",
+        "start": "2026-10-16T15:00:00-04:00",
+        "end": "2026-10-16T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400",
+        "date": "2026-10-19",
+        "start": "2026-10-19T06:30:00-04:00",
+        "end": "2026-10-19T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261019T1500000400",
+        "date": "2026-10-19",
+        "start": "2026-10-19T15:00:00-04:00",
+        "end": "2026-10-19T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400",
+        "date": "2026-10-20",
+        "start": "2026-10-20T06:30:00-04:00",
+        "end": "2026-10-20T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261020T1500000400",
+        "date": "2026-10-20",
+        "start": "2026-10-20T15:00:00-04:00",
+        "end": "2026-10-20T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261021T0630000400",
+        "date": "2026-10-21",
+        "start": "2026-10-21T06:30:00-04:00",
+        "end": "2026-10-21T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261021T1500000400",
+        "date": "2026-10-21",
+        "start": "2026-10-21T15:00:00-04:00",
+        "end": "2026-10-21T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261022T0630000400",
+        "date": "2026-10-22",
+        "start": "2026-10-22T06:30:00-04:00",
+        "end": "2026-10-22T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261022T1500000400",
+        "date": "2026-10-22",
+        "start": "2026-10-22T15:00:00-04:00",
+        "end": "2026-10-22T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261023T0630000400",
+        "date": "2026-10-23",
+        "start": "2026-10-23T06:30:00-04:00",
+        "end": "2026-10-23T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261023T1500000400",
+        "date": "2026-10-23",
+        "start": "2026-10-23T15:00:00-04:00",
+        "end": "2026-10-23T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261026T0630000400",
+        "date": "2026-10-26",
+        "start": "2026-10-26T06:30:00-04:00",
+        "end": "2026-10-26T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261026T1500000400",
+        "date": "2026-10-26",
+        "start": "2026-10-26T15:00:00-04:00",
+        "end": "2026-10-26T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261027T0630000400",
+        "date": "2026-10-27",
+        "start": "2026-10-27T06:30:00-04:00",
+        "end": "2026-10-27T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261027T1500000400",
+        "date": "2026-10-27",
+        "start": "2026-10-27T15:00:00-04:00",
+        "end": "2026-10-27T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261028T0630000400",
+        "date": "2026-10-28",
+        "start": "2026-10-28T06:30:00-04:00",
+        "end": "2026-10-28T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261028T1500000400",
+        "date": "2026-10-28",
+        "start": "2026-10-28T15:00:00-04:00",
+        "end": "2026-10-28T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261029T0630000400",
+        "date": "2026-10-29",
+        "start": "2026-10-29T06:30:00-04:00",
+        "end": "2026-10-29T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261029T1500000400",
+        "date": "2026-10-29",
+        "start": "2026-10-29T15:00:00-04:00",
+        "end": "2026-10-29T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261030T0630000400",
+        "date": "2026-10-30",
+        "start": "2026-10-30T06:30:00-04:00",
+        "end": "2026-10-30T08:30:00-04:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261030T1500000400",
+        "date": "2026-10-30",
+        "start": "2026-10-30T15:00:00-04:00",
+        "end": "2026-10-30T17:30:00-04:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261102T0630000500",
+        "date": "2026-11-02",
+        "start": "2026-11-02T06:30:00-05:00",
+        "end": "2026-11-02T08:30:00-05:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261102T1500000500",
+        "date": "2026-11-02",
+        "start": "2026-11-02T15:00:00-05:00",
+        "end": "2026-11-02T17:30:00-05:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261103T0630000500",
+        "date": "2026-11-03",
+        "start": "2026-11-03T06:30:00-05:00",
+        "end": "2026-11-03T08:30:00-05:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261103T1500000500",
+        "date": "2026-11-03",
+        "start": "2026-11-03T15:00:00-05:00",
+        "end": "2026-11-03T17:30:00-05:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261104T0630000500",
+        "date": "2026-11-04",
+        "start": "2026-11-04T06:30:00-05:00",
+        "end": "2026-11-04T08:30:00-05:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261104T1500000500",
+        "date": "2026-11-04",
+        "start": "2026-11-04T15:00:00-05:00",
+        "end": "2026-11-04T17:30:00-05:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261105T0630000500",
+        "date": "2026-11-05",
+        "start": "2026-11-05T06:30:00-05:00",
+        "end": "2026-11-05T08:30:00-05:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261105T1500000500",
+        "date": "2026-11-05",
+        "start": "2026-11-05T15:00:00-05:00",
+        "end": "2026-11-05T17:30:00-05:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261106T0630000500",
+        "date": "2026-11-06",
+        "start": "2026-11-06T06:30:00-05:00",
+        "end": "2026-11-06T08:30:00-05:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261106T1500000500",
+        "date": "2026-11-06",
+        "start": "2026-11-06T15:00:00-05:00",
+        "end": "2026-11-06T17:30:00-05:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261109T0630000500",
+        "date": "2026-11-09",
+        "start": "2026-11-09T06:30:00-05:00",
+        "end": "2026-11-09T08:30:00-05:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261109T1500000500",
+        "date": "2026-11-09",
+        "start": "2026-11-09T15:00:00-05:00",
+        "end": "2026-11-09T17:30:00-05:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261110T0630000500",
+        "date": "2026-11-10",
+        "start": "2026-11-10T06:30:00-05:00",
+        "end": "2026-11-10T08:30:00-05:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261110T1500000500",
+        "date": "2026-11-10",
+        "start": "2026-11-10T15:00:00-05:00",
+        "end": "2026-11-10T17:30:00-05:00",
+        "summary": "CFA Pickup",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
+      },
+      {
+        "source_file": "data/runtime/calendar_snapshots/brian_do_not_schedule.json",
+        "calendar_source_id": "brian_do_not_schedule",
+        "event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261111T0630000500",
+        "date": "2026-11-11",
+        "start": "2026-11-11T06:30:00-05:00",
+        "end": "2026-11-11T08:30:00-05:00",
+        "summary": "CFA Drop Off",
+        "recurrence": [
+          {
+            "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE"
+          }
+        ],
+        "raw_rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
+        "generated_from_rrule": true,
+        "recurrence_source": "recurring_expanded_instance"
       }
     ]
   },
@@ -905,8 +2587,8 @@
     {
       "file": "data/config/calendar_sources.json",
       "line": 79,
-      "term_matches": "horizon",
-      "text": "\"inverse_expansion_horizon_days\": 45,",
+      "term_matches": "horizon;120",
+      "text": "\"inverse_expansion_horizon_days\": 120,",
       "relevance": "live_snapshot_inverse_gap_horizon_after_runtime_events_loaded"
     },
     {
@@ -933,8 +2615,8 @@
     {
       "file": "data/config/public_offer_policy.json",
       "line": 41,
-      "term_matches": "days_out;60",
-      "text": "\"maximum_days_out\": 60,",
+      "term_matches": "days_out",
+      "text": "\"maximum_days_out\": 180,",
       "relevance": "public_filter_downstream_not_snapshot_limiter"
     },
     {
@@ -968,8 +2650,8 @@
     {
       "file": "scripts/export_calendar_snapshots.py",
       "line": 27,
-      "term_matches": "60",
-      "text": "EXPORT_DAYS = 60",
+      "term_matches": "120",
+      "text": "EXPORT_DAYS = 120",
       "relevance": "active_runtime_snapshot_export_window"
     },
     {
