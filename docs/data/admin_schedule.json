@@ -1,74 +1,16 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-19T19:05:20.516618+00:00",
+  "generated_at": "2026-07-20T11:25:22.498136+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
-    "sessions": 76,
-    "brian_resource_blocks": 59,
+    "sessions": 75,
+    "brian_resource_blocks": 58,
     "student_snapshot_classes": 17,
-    "student_snapshot_matches": 13,
-    "seated_students_matched": 13,
-    "covered_classes_without_students": 38
+    "student_snapshot_matches": 11,
+    "seated_students_matched": 11,
+    "covered_classes_without_students": 39
   },
   "sessions": [
-    {
-      "session_id": "13770449",
-      "course_name": "AHA BLS Provider Renewal",
-      "start_at": "2026-07-19T08:00:00-04:00",
-      "end_at": "2026-07-19T10:00:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 1,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13770449",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "instructor:brian_ennis",
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ],
-      "capacity": {
-        "registered_count": 1,
-        "students_count_raw": 1
-      },
-      "enrolled_count": 1,
-      "enrollment_evidence": {
-        "source": "enrollware_student_snapshot",
-        "status": "student_rows_present",
-        "class_id": "51218",
-        "as_of": "2026-07-18T08:40:17.093250-04:00",
-        "status_counts": {
-          "Pending": 1
-        }
-      }
-    },
-    {
-      "session_id": "13782611",
-      "course_name": "AHA Heartsaver First Aid CPR AED",
-      "start_at": "2026-07-19T15:30:00-04:00",
-      "end_at": "2026-07-19T18:00:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 1,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13782611",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "instructor:brian_ennis",
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ],
-      "capacity": {
-        "registered_count": 1,
-        "students_count_raw": 1
-      },
-      "enrolled_count": 1,
-      "enrollment_evidence": {
-        "source": "enrollware_student_snapshot",
-        "status": "student_rows_present",
-        "class_id": "51225",
-        "as_of": "2026-07-18T08:40:17.093250-04:00",
-        "status_counts": {
-          "Pending": 1
-        }
-      }
-    },
     {
       "session_id": "13652932",
       "course_name": "AHA BLS Provider",
@@ -1168,6 +1110,31 @@
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776432",
+      "source": "enrollware_ical",
+      "blocking_resources": [
+        "instructor:brian_ennis",
+        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
+      ],
+      "capacity": {
+        "registered_count": 0,
+        "students_count_raw": 0
+      },
+      "enrolled_count": 0,
+      "enrollment_evidence": {
+        "source": "enrollware_student_snapshot",
+        "status": "no_student_row_in_snapshot",
+        "as_of": "2026-07-18T08:40:17.093250-04:00"
+      }
+    },
+    {
+      "session_id": "13787445",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-07-28T12:30:00-04:00",
+      "end_at": "2026-07-28T14:30:00-04:00",
+      "lead_instructor_name": "Brian Ennis",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+      "registered_count": 0,
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13787445",
       "source": "enrollware_ical",
       "blocking_resources": [
         "instructor:brian_ennis",
