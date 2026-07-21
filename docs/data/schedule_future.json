@@ -1,6 +1,6 @@
 {
   "build": {
-    "generated_at": "2026-07-21T15:17:35.584582-04:00",
+    "generated_at": "2026-07-21T16:46:08.638840-04:00",
     "source_file": "data\\sessions_current.json",
     "counts": {
       "sessions_input": 386,
@@ -108,10 +108,10 @@
       "is_full": null,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652945",
       "session_status": "active",
-      "registration_status": "open",
-      "public_direct_booking": true,
-      "registration_status_source": null,
-      "registration_status_reason": null,
+      "registration_status": "full",
+      "public_direct_booking": false,
+      "registration_status_source": "enrollware_registration_page",
+      "registration_status_reason": "enrollware_class_full",
       "mapped_family": "BLS",
       "mapped_subtype": "Renewal",
       "mapped_certifying_body": "AHA",
