@@ -1,14 +1,14 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-21T14:37:38.832264+00:00",
+  "generated_at": "2026-07-21T16:25:47.182223+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
-    "sessions": 29,
-    "brian_resource_blocks": 15,
+    "sessions": 30,
+    "brian_resource_blocks": 16,
     "student_snapshot_classes": 17,
     "student_snapshot_matches": 10,
     "seated_students_matched": 10,
-    "covered_classes_without_students": 7
+    "covered_classes_without_students": 8
   },
   "sessions": [
     {
@@ -146,6 +146,31 @@
         "status_counts": {
           "Pending": 1
         }
+      }
+    },
+    {
+      "session_id": "13801197",
+      "course_name": "AHA Heartsaver First Aid CPR AED",
+      "start_at": "2026-07-24T10:00:00-04:00",
+      "end_at": "2026-07-24T12:30:00-04:00",
+      "lead_instructor_name": "Brian Ennis",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+      "registered_count": 0,
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13801197",
+      "source": "enrollware_ical",
+      "blocking_resources": [
+        "instructor:brian_ennis",
+        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
+      ],
+      "capacity": {
+        "registered_count": 0,
+        "students_count_raw": 0
+      },
+      "enrolled_count": 0,
+      "enrollment_evidence": {
+        "source": "enrollware_student_snapshot",
+        "status": "no_student_row_in_snapshot",
+        "as_of": "2026-07-18T08:40:17.093250-04:00"
       }
     },
     {
