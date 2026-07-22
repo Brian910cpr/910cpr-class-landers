@@ -1,70 +1,16 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-21T20:48:09.282721+00:00",
+  "generated_at": "2026-07-22T13:46:29.509395+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
-    "sessions": 30,
+    "sessions": 29,
     "brian_resource_blocks": 16,
     "student_snapshot_classes": 17,
-    "student_snapshot_matches": 10,
-    "seated_students_matched": 10,
+    "student_snapshot_matches": 9,
+    "seated_students_matched": 9,
     "covered_classes_without_students": 8
   },
   "sessions": [
-    {
-      "session_id": "13623366",
-      "course_name": "AHA Heartsaver First Aid CPR AED",
-      "start_at": "2026-07-21T09:00:00-04:00",
-      "end_at": "2026-07-21T23:30:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
-      "location_name": "NHCS Technology & Digital Learning Division - Carolina Beach Rd",
-      "registered_count": 0,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13623366",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "instructor:brian_ennis",
-        "location:nhcs technology & digital learning division - carolina beach rd"
-      ],
-      "capacity": {
-        "registered_count": 0,
-        "students_count_raw": 0
-      },
-      "enrolled_count": 0,
-      "enrollment_evidence": {
-        "source": "enrollware_student_snapshot",
-        "status": "no_student_row_in_snapshot",
-        "as_of": "2026-07-18T08:40:17.093250-04:00"
-      }
-    },
-    {
-      "session_id": "13773648",
-      "course_name": "AHA ACLS HeartCode",
-      "start_at": "2026-07-21T13:00:00-04:00",
-      "end_at": "2026-07-21T13:45:00-04:00",
-      "lead_instructor_name": "Nicholas Tripp",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 1,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13773648",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "instructor:nicholas_tripp",
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ],
-      "capacity": {
-        "registered_count": 1,
-        "students_count_raw": 1
-      },
-      "enrolled_count": 1,
-      "enrollment_evidence": {
-        "source": "enrollware_student_snapshot",
-        "status": "student_rows_present",
-        "class_id": "51220",
-        "as_of": "2026-07-18T08:40:17.093250-04:00",
-        "status_counts": {
-          "Pending": 1
-        }
-      }
-    },
     {
       "session_id": "12783385",
       "course_name": "AHA HeartCode BLS",
@@ -287,6 +233,31 @@
         "status_counts": {
           "Pending": 1
         }
+      }
+    },
+    {
+      "session_id": "13813298",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-07-27T16:30:00-04:00",
+      "end_at": "2026-07-27T18:30:00-04:00",
+      "lead_instructor_name": "Brian Ennis",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+      "registered_count": 0,
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13813298",
+      "source": "enrollware_ical",
+      "blocking_resources": [
+        "instructor:brian_ennis",
+        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
+      ],
+      "capacity": {
+        "registered_count": 0,
+        "students_count_raw": 0
+      },
+      "enrolled_count": 0,
+      "enrollment_evidence": {
+        "source": "enrollware_student_snapshot",
+        "status": "no_student_row_in_snapshot",
+        "as_of": "2026-07-18T08:40:17.093250-04:00"
       }
     },
     {
