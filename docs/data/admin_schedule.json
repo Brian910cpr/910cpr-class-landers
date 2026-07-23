@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-23T19:59:00.483752+00:00",
+  "generated_at": "2026-07-23T22:12:36.847615+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
     "sessions": 33,
-    "brian_resource_blocks": 18,
+    "brian_resource_blocks": 2,
     "student_snapshot_classes": 17,
     "student_snapshot_matches": 9,
     "seated_students_matched": 9,
@@ -70,13 +70,12 @@
       "course_name": "AHA HeartCode BLS",
       "start_at": "2026-07-23T11:45:00-04:00",
       "end_at": "2026-07-23T12:30:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 1,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=12776436",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -124,13 +123,12 @@
       "course_name": "AHA Heartsaver First Aid CPR AED",
       "start_at": "2026-07-24T10:00:00-04:00",
       "end_at": "2026-07-24T12:30:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13801197",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -149,13 +147,12 @@
       "course_name": "AHA BLS Provider Renewal",
       "start_at": "2026-07-24T12:30:00-04:00",
       "end_at": "2026-07-24T14:00:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 1,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775553",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -207,13 +204,12 @@
       "course_name": "AHA BLS Provider Renewal",
       "start_at": "2026-07-25T12:30:00-04:00",
       "end_at": "2026-07-25T14:00:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 1,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775558",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -236,13 +232,12 @@
       "course_name": "AHA Heartsaver First Aid CPR AED",
       "start_at": "2026-07-25T14:30:00-04:00",
       "end_at": "2026-07-25T17:00:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 1,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13782361",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -265,13 +260,12 @@
       "course_name": "AHA HeartCode BLS",
       "start_at": "2026-07-26T08:00:00-04:00",
       "end_at": "2026-07-26T09:00:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13817433",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -290,13 +284,12 @@
       "course_name": "AHA BLS Provider",
       "start_at": "2026-07-27T16:30:00-04:00",
       "end_at": "2026-07-27T18:30:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13813298",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -315,13 +308,12 @@
       "course_name": "AHA Heartsaver First Aid CPR AED",
       "start_at": "2026-07-28T09:15:00-04:00",
       "end_at": "2026-07-28T11:45:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 1,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775987",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -344,13 +336,12 @@
       "course_name": "AHA Heartsaver CPR AED",
       "start_at": "2026-07-28T09:15:00-04:00",
       "end_at": "2026-07-28T10:15:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 1,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13783043",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -373,13 +364,12 @@
       "course_name": "AHA BLS Provider",
       "start_at": "2026-07-28T12:30:00-04:00",
       "end_at": "2026-07-28T14:30:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13787445",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -498,13 +488,12 @@
       "course_name": "AHA BLS Provider",
       "start_at": "2026-07-29T18:45:00-04:00",
       "end_at": "2026-07-29T20:45:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 1,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=12774596",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -587,13 +576,12 @@
       "course_name": "AHA HeartCode BLS",
       "start_at": "2026-08-03T10:00:00-04:00",
       "end_at": "2026-08-03T11:00:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13782393",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ]
     },
@@ -602,13 +590,12 @@
       "course_name": "AHA HeartCode BLS",
       "start_at": "2026-08-05T13:00:00-04:00",
       "end_at": "2026-08-05T14:00:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13818252",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ]
     },
@@ -617,13 +604,12 @@
       "course_name": "AHA BLS Provider Renewal",
       "start_at": "2026-08-05T14:00:00-04:00",
       "end_at": "2026-08-05T16:00:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13787687",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ]
     },
@@ -632,13 +618,12 @@
       "course_name": "AHA BLS Provider Renewal",
       "start_at": "2026-08-07T13:00:00-04:00",
       "end_at": "2026-08-07T15:30:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775325",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ]
     },
@@ -707,13 +692,12 @@
       "course_name": "AHA BLS Provider Renewal",
       "start_at": "2026-08-20T08:00:00-04:00",
       "end_at": "2026-08-20T10:30:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": null,
       "location_name": "MedNorth @ 917 N 4th St",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13817196",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
         "location:mednorth @ 917 n 4th st"
       ]
     },
