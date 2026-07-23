@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-23T15:13:59.684935+00:00",
+  "generated_at": "2026-07-23T17:00:29.544296+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
-    "sessions": 32,
+    "sessions": 33,
     "brian_resource_blocks": 19,
     "student_snapshot_classes": 17,
     "student_snapshot_matches": 9,
@@ -41,13 +41,13 @@
       "course_name": "AHA BLS Provider Renewal",
       "start_at": "2026-07-23T09:15:00-04:00",
       "end_at": "2026-07-23T11:15:00-04:00",
-      "lead_instructor_name": "Brian Ennis",
+      "lead_instructor_name": "Jewel Lowe",
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 1,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13652945",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "instructor:brian_ennis",
+        "instructor:jewel_lowe",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ],
       "capacity": {
@@ -591,6 +591,21 @@
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13782393",
+      "source": "enrollware_ical",
+      "blocking_resources": [
+        "instructor:brian_ennis",
+        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
+      ]
+    },
+    {
+      "session_id": "13818252",
+      "course_name": "AHA HeartCode BLS",
+      "start_at": "2026-08-05T13:00:00-04:00",
+      "end_at": "2026-08-05T14:00:00-04:00",
+      "lead_instructor_name": "Brian Ennis",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+      "registered_count": 0,
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13818252",
       "source": "enrollware_ical",
       "blocking_resources": [
         "instructor:brian_ennis",
