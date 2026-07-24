@@ -316,7 +316,7 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
             '<h2>Additional available start times</h2><div class="time-grid">' + "".join(options) + "</div>"
             if options else ("" if full else '<p class="muted">No additional start times are currently available.</p>')
         )
-        schedule_html = f'<section class="schedule-card">{anchor_html}{option_html}</section>'
+        schedule_html = f'<section id="available-times" class="schedule-card">{anchor_html}{option_html}</section>'
     breadcrumbs = {
         "@type": "BreadcrumbList",
         "@id": canonical + "#breadcrumbs",
@@ -339,10 +339,19 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
     graph.extend(event_schema(s) for s in matched_anchor_sessions)
     schema = json.dumps({"@context": "https://schema.org", "@graph": graph}, separators=(",", ":"))
     primary = seated_offers[0] if seated_offers else open_appointments[0] if open_appointments else None
-    primary_cta = (
-        f'<a class="primary-cta" data-registration data-event="{"select_seated_class" if is_real_session(primary) else "select_appointment_time"}" href="{escape(str(primary.get("appointmentUrl") or primary.get("registrationUrl")))}">{"Join the scheduled class" if is_real_session(primary) else "Choose a start time"}</a>'
-        if primary and not expired else f'<a class="primary-cta" data-event="expired_date_recovery" href="#upcoming">View upcoming dates</a>'
-    )
+    if primary and not expired and is_real_session(primary):
+        primary_cta = (
+            f'<a class="primary-cta" data-registration data-event="select_seated_class" '
+            f'href="{escape(str(primary.get("appointmentUrl") or primary.get("registrationUrl")))}">'
+            "Join the scheduled class</a>"
+        )
+    elif primary and not expired:
+        primary_cta = (
+            f'<a class="primary-cta" data-event="view_course_options" href="{hub_path}">'
+            "Choose your course</a>"
+        )
+    else:
+        primary_cta = '<a class="primary-cta" data-event="expired_date_recovery" href="#upcoming">View upcoming dates</a>'
     return canonical_path, f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{escape(title)}</title><meta name="description" content="{escape(description)}"><meta name="robots" content="index,follow">
