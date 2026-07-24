@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-18T12:52:14.054034+00:00",
+  "generated_at": "2026-07-24T03:57:27.563775+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-07-18T12:52:13.528374+00:00",
+      "generated_at": "2026-07-24T03:57:27.011651+00:00",
       "event_count": 0
     },
     {
@@ -16,96 +16,19 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-07-18T12:52:14.054034+00:00",
-      "event_count": 113
+      "generated_at": "2026-07-24T03:57:27.563775+00:00",
+      "event_count": 115
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-07-18T12:52:13.761412+00:00",
+      "generated_at": "2026-07-24T03:57:27.243571+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR F/R Shift",
-      "start": "2026-07-19T22:00:00+00:00",
-      "end": "2026-07-20T10:00:00+00:00",
-      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Jonah to LaCrosse",
-      "start": "2026-07-20T06:00:00-04:00",
-      "end": "2026-07-20T08:30:00-04:00",
-      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Jonah to LaCrosse",
-      "start": "2026-07-21T06:00:00-04:00",
-      "end": "2026-07-21T08:30:00-04:00",
-      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR F/R Shift",
-      "start": "2026-07-21T22:00:00+00:00",
-      "end": "2026-07-22T10:00:00+00:00",
-      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Jonah to LaCrosse",
-      "start": "2026-07-22T06:00:00-04:00",
-      "end": "2026-07-22T08:30:00-04:00",
-      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR F/R Shift",
-      "start": "2026-07-22T10:00:00+00:00",
-      "end": "2026-07-22T22:00:00+00:00",
-      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Jonah to LaCrosse",
-      "start": "2026-07-23T06:00:00-04:00",
-      "end": "2026-07-23T08:30:00-04:00",
-      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
@@ -278,7 +201,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-08-19T06:30:00-04:00",
-      "end": "2026-08-19T08:30:00-04:00",
+      "end": "2026-08-19T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -298,11 +221,33 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
+      "title": "Browning Orthodon",
+      "start": "2026-08-19T18:30:00+00:00",
+      "end": "2026-08-19T19:15:00+00:00",
+      "location": "Browning Orthodontics\\, 604 Junction Creek Dr\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-08-20T06:30:00-04:00",
-      "end": "2026-08-20T08:30:00-04:00",
+      "end": "2026-08-20T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Busy",
+      "start": "2026-08-20T12:00:00+00:00",
+      "end": "2026-08-20T14:30:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -333,7 +278,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-08-21T06:30:00-04:00",
-      "end": "2026-08-21T08:30:00-04:00",
+      "end": "2026-08-21T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -366,7 +311,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-08-24T06:30:00-04:00",
-      "end": "2026-08-24T08:30:00-04:00",
+      "end": "2026-08-24T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -388,7 +333,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-08-25T06:30:00-04:00",
-      "end": "2026-08-25T08:30:00-04:00",
+      "end": "2026-08-25T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -421,7 +366,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-08-26T06:30:00-04:00",
-      "end": "2026-08-26T08:30:00-04:00",
+      "end": "2026-08-26T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -443,7 +388,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-08-27T06:30:00-04:00",
-      "end": "2026-08-27T08:30:00-04:00",
+      "end": "2026-08-27T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -465,7 +410,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-08-28T06:30:00-04:00",
-      "end": "2026-08-28T08:30:00-04:00",
+      "end": "2026-08-28T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -509,7 +454,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-08-31T06:30:00-04:00",
-      "end": "2026-08-31T08:30:00-04:00",
+      "end": "2026-08-31T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -542,7 +487,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-01T06:30:00-04:00",
-      "end": "2026-09-01T08:30:00-04:00",
+      "end": "2026-09-01T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -564,7 +509,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-02T06:30:00-04:00",
-      "end": "2026-09-02T08:30:00-04:00",
+      "end": "2026-09-02T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -586,7 +531,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-03T06:30:00-04:00",
-      "end": "2026-09-03T08:30:00-04:00",
+      "end": "2026-09-03T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -608,7 +553,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-04T06:30:00-04:00",
-      "end": "2026-09-04T08:30:00-04:00",
+      "end": "2026-09-04T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -630,7 +575,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-07T06:30:00-04:00",
-      "end": "2026-09-07T08:30:00-04:00",
+      "end": "2026-09-07T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -652,7 +597,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-08T06:30:00-04:00",
-      "end": "2026-09-08T08:30:00-04:00",
+      "end": "2026-09-08T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -674,7 +619,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-09T06:30:00-04:00",
-      "end": "2026-09-09T08:30:00-04:00",
+      "end": "2026-09-09T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -696,7 +641,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-10T06:30:00-04:00",
-      "end": "2026-09-10T08:30:00-04:00",
+      "end": "2026-09-10T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -718,7 +663,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-11T06:30:00-04:00",
-      "end": "2026-09-11T08:30:00-04:00",
+      "end": "2026-09-11T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -740,7 +685,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-14T06:30:00-04:00",
-      "end": "2026-09-14T08:30:00-04:00",
+      "end": "2026-09-14T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -762,7 +707,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-15T06:30:00-04:00",
-      "end": "2026-09-15T08:30:00-04:00",
+      "end": "2026-09-15T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -784,7 +729,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-16T06:30:00-04:00",
-      "end": "2026-09-16T08:30:00-04:00",
+      "end": "2026-09-16T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -806,7 +751,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-17T06:30:00-04:00",
-      "end": "2026-09-17T08:30:00-04:00",
+      "end": "2026-09-17T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -828,7 +773,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-18T06:30:00-04:00",
-      "end": "2026-09-18T08:30:00-04:00",
+      "end": "2026-09-18T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -850,7 +795,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-21T06:30:00-04:00",
-      "end": "2026-09-21T08:30:00-04:00",
+      "end": "2026-09-21T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -872,7 +817,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-22T06:30:00-04:00",
-      "end": "2026-09-22T08:30:00-04:00",
+      "end": "2026-09-22T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -894,7 +839,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-23T06:30:00-04:00",
-      "end": "2026-09-23T08:30:00-04:00",
+      "end": "2026-09-23T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -916,7 +861,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-24T06:30:00-04:00",
-      "end": "2026-09-24T08:30:00-04:00",
+      "end": "2026-09-24T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -938,7 +883,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-25T06:30:00-04:00",
-      "end": "2026-09-25T08:30:00-04:00",
+      "end": "2026-09-25T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -960,7 +905,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-28T06:30:00-04:00",
-      "end": "2026-09-28T08:30:00-04:00",
+      "end": "2026-09-28T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -982,7 +927,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-29T06:30:00-04:00",
-      "end": "2026-09-29T08:30:00-04:00",
+      "end": "2026-09-29T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1004,7 +949,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-09-30T06:30:00-04:00",
-      "end": "2026-09-30T08:30:00-04:00",
+      "end": "2026-09-30T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1026,7 +971,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-01T06:30:00-04:00",
-      "end": "2026-10-01T08:30:00-04:00",
+      "end": "2026-10-01T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1048,7 +993,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-02T06:30:00-04:00",
-      "end": "2026-10-02T08:30:00-04:00",
+      "end": "2026-10-02T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1070,7 +1015,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-05T06:30:00-04:00",
-      "end": "2026-10-05T08:30:00-04:00",
+      "end": "2026-10-05T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1092,7 +1037,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-06T06:30:00-04:00",
-      "end": "2026-10-06T08:30:00-04:00",
+      "end": "2026-10-06T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1114,7 +1059,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-07T06:30:00-04:00",
-      "end": "2026-10-07T08:30:00-04:00",
+      "end": "2026-10-07T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1136,7 +1081,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-08T06:30:00-04:00",
-      "end": "2026-10-08T08:30:00-04:00",
+      "end": "2026-10-08T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1158,7 +1103,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-09T06:30:00-04:00",
-      "end": "2026-10-09T08:30:00-04:00",
+      "end": "2026-10-09T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1180,7 +1125,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-12T06:30:00-04:00",
-      "end": "2026-10-12T08:30:00-04:00",
+      "end": "2026-10-12T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1202,7 +1147,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-13T06:30:00-04:00",
-      "end": "2026-10-13T08:30:00-04:00",
+      "end": "2026-10-13T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1224,7 +1169,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-14T06:30:00-04:00",
-      "end": "2026-10-14T08:30:00-04:00",
+      "end": "2026-10-14T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1246,7 +1191,7 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-15T06:30:00-04:00",
-      "end": "2026-10-15T08:30:00-04:00",
+      "end": "2026-10-15T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1268,7 +1213,84 @@
       "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-16T06:30:00-04:00",
-      "end": "2026-10-16T08:30:00-04:00",
+      "end": "2026-10-16T07:45:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Pickup",
+      "start": "2026-10-16T15:00:00-04:00",
+      "end": "2026-10-16T17:30:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Drop Off",
+      "start": "2026-10-19T06:30:00-04:00",
+      "end": "2026-10-19T07:45:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Pickup",
+      "start": "2026-10-19T15:00:00-04:00",
+      "end": "2026-10-19T17:30:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Drop Off",
+      "start": "2026-10-20T06:30:00-04:00",
+      "end": "2026-10-20T07:45:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Pickup",
+      "start": "2026-10-20T15:00:00-04:00",
+      "end": "2026-10-20T17:30:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Drop Off",
+      "start": "2026-10-21T06:30:00-04:00",
+      "end": "2026-10-21T07:45:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Pickup",
+      "start": "2026-10-21T15:00:00-04:00",
+      "end": "2026-10-21T17:30:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     }

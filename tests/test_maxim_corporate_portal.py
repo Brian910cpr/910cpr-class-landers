@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-import json
-import re
 import unittest
-from datetime import datetime
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 MAXIM_PAGE = ROOT / "docs" / "corp" / "maxim.html"
-SCHEDULE_FUTURE = ROOT / "docs" / "data" / "schedule_future.json"
+SHARED_AVAILABILITY = ROOT / "docs" / "assets" / "resolved-selector-availability.js"
+PUBLIC_SELECTOR_PAGES = [ROOT / "docs" / "bls.html", ROOT / "docs" / "heartsaver.html"]
+SELECTOR_GENERATOR = ROOT / "scripts" / "build_bls_block_schedule_pilot.py"
+MAXIM_EDGE_FUNCTION = ROOT / "supabase" / "functions" / "maxim-portal" / "index.ts"
 
 EXPECTED_VARIANTS = {
     "Initial": "209806",
@@ -24,35 +24,6 @@ def read_page() -> str:
     return MAXIM_PAGE.read_text(encoding="utf-8")
 
 
-def schedule_reference_now(payload: dict) -> datetime:
-    generated_at = payload.get("build", {}).get("generated_at")
-    if generated_at:
-        return datetime.fromisoformat(generated_at)
-    return datetime.now().astimezone()
-
-
-def parse_start(row: dict) -> datetime | None:
-    raw = row.get("start_at") or row.get("start") or row.get("start_datetime")
-    if not raw:
-        return None
-    return datetime.fromisoformat(raw)
-
-
-def is_public_valid_row(row: dict, course_id: str, now: datetime) -> bool:
-    start = parse_start(row)
-    if start is None:
-        return False
-    if start.tzinfo is None and now.tzinfo is not None:
-        start = start.replace(tzinfo=now.tzinfo)
-    return (
-        str(row.get("course_id")) == course_id
-        and start >= now
-        and str(row.get("registration_status") or "open").lower() == "open"
-        and row.get("public_direct_booking") is not False
-        and bool(row.get("registration_url"))
-    )
-
-
 class MaximCorporatePortalTests(unittest.TestCase):
     def test_maxim_course_pills_map_to_exact_authoritative_variants(self) -> None:
         html = read_page()
@@ -65,13 +36,34 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertNotIn("aug:[", html)
         self.assertNotIn("times:[", html)
 
-    def test_maxim_uses_schedule_future_with_public_scheduler_rules(self) -> None:
+    def test_maxim_consumes_exact_public_resolved_selector_artifacts(self) -> None:
         html = read_page()
-        self.assertIn("const SCHEDULE_FUTURE_URL='/data/schedule_future.json'", html)
-        self.assertIn("registration_status||'open'", html)
-        self.assertIn("row.public_direct_booking!==false", html)
-        self.assertIn("!!row.registration_url", html)
-        self.assertIn("start>=now", html)
+        self.assertIn("bls:'/data/block-selector-availability/bls.json'", html)
+        self.assertIn("hs:'/data/block-selector-availability/heartsaver.json'", html)
+        self.assertIn('src="/assets/resolved-selector-availability.js?v=20260723.1"', html)
+        self.assertIn("ResolvedSelectorAvailability.filterDatesByCourse", html)
+        self.assertIn("ResolvedSelectorAvailability.selectableStartTimes", html)
+        self.assertIn("ResolvedSelectorAvailability.isSelectableDate", html)
+        self.assertIn("payload.schemaVersion!==ResolvedSelectorAvailability.schemaVersion", html)
+        self.assertNotIn("/data/schedule_future.json", html)
+        self.assertNotIn("function isValidPublicRow", html)
+        self.assertNotIn("public_direct_booking", html)
+        self.assertNotIn("registration_status", html)
+
+    def test_public_pages_and_generator_use_the_same_shared_projection(self) -> None:
+        self.assertTrue(SHARED_AVAILABILITY.exists())
+        for path in [*PUBLIC_SELECTOR_PAGES, SELECTOR_GENERATOR]:
+            source = path.read_text(encoding="utf-8")
+            self.assertIn("ResolvedSelectorAvailability.filterDatesByCourse", source, path)
+            self.assertIn("ResolvedSelectorAvailability.selectableStartTimes", source, path)
+            self.assertIn("ResolvedSelectorAvailability.isSelectableDate", source, path)
+
+    def test_registration_revalidation_uses_canonical_selector_artifact(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("/data/block-selector-availability/${selector}.json", source)
+        self.assertIn('payload.schemaVersion !== "selector-resolved-availability.v1"', source)
+        self.assertIn("canonicalSlotKey(course)", source)
+        self.assertNotIn("schedule_future.json", source)
 
     def test_maxim_refreshes_availability_on_required_paths(self) -> None:
         html = read_page()
@@ -115,6 +107,19 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("history will be preserved", html)
         self.assertIn("scheduleEmployee", html)
 
+    def test_training_flow_uses_connected_stage_values_with_quiet_fallbacks(self) -> None:
+        html = read_page()
+        self.assertIn("function flowStageContent", html)
+        self.assertIn('Connected data not available yet', html)
+        self.assertIn("person.expirationDate", html)
+        self.assertIn("person.lastClassUrl", html)
+        self.assertIn("person.classDate||person.detail", html)
+        self.assertIn("person.eCardCode", html)
+        self.assertIn("person.eCardUrl", html)
+        self.assertIn("person.invoiceUrl", html)
+        self.assertIn("function lastNameOf", html)
+        self.assertIn(".sort((a,b)=>lastNameOf(a).localeCompare(lastNameOf(b)", html)
+
     def test_maxim_portal_uses_supabase_access_gate_and_persistent_employee_api(self) -> None:
         html = read_page()
         self.assertIn('id="accessGate"', html)
@@ -125,28 +130,11 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertNotIn("2106", html)
         self.assertNotIn("/api/corp/maxim", html)
 
-    def test_each_maxim_variant_resolves_independent_authoritative_rows(self) -> None:
-        payload = json.loads(SCHEDULE_FUTURE.read_text(encoding="utf-8"))
-        now = schedule_reference_now(payload)
-        sessions = payload.get("sessions", [])
-        counts = {
-            label: sum(1 for row in sessions if is_public_valid_row(row, course_id, now))
-            for label, course_id in EXPECTED_VARIANTS.items()
-        }
-
-        self.assertEqual(set(counts), set(EXPECTED_VARIANTS))
-        self.assertGreater(
-            sum(counts.values()),
-            0,
-            "The authoritative schedule resolved no valid Maxim rows",
-        )
+    def test_empty_canonical_course_projection_is_shown_without_fallback(self) -> None:
         self.assertIn(
             '<div class="empty">No current valid dates returned for ',
             read_page(),
         )
-
-        self.assertNotEqual(EXPECTED_VARIANTS["Initial"], EXPECTED_VARIANTS["Renewal"])
-        self.assertNotEqual(EXPECTED_VARIANTS["In Person"], EXPECTED_VARIANTS["Online + Skills"])
 
 
 if __name__ == "__main__":

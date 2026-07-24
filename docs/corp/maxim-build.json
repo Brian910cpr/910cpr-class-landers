@@ -2,7 +2,7 @@
   "page": "/corp/maxim.html",
   "build_date": "2026-07-23",
   "build_time_zone": "America/New_York",
-  "stage": "Supabase-backed private Maxim portal with live availability and participant management",
+  "stage": "Supabase-backed Maxim portal consuming canonical public resolved-selector availability",
   "source_commit_before_stamp": "ee0264af8815c1be21a161c484b3e4b31ae4b52b",
-  "notes": "The portal now authenticates through the Supabase maxim-portal Edge Function using a temporary shared access code exchanged for an eight-hour random session token. The access code is not present in the page or repository. Maxim employee records persist in Supabase behind RLS; edits and safe deactivation are live. The course/date selector continues to read the public schedule, and registration requests are revalidated against the live public schedule before Supabase persistence. Google Voice group chat remains a disabled shell."
+  "notes": "The portal authenticates through the Supabase maxim-portal Edge Function using a temporary shared access code exchanged for an eight-hour random session token. The access code is not present in the page or repository. BLS and Heartsaver selectors now consume the exact selector-resolved-availability.v1 artifacts and shared projection/time-selection library used by the production public scheduler; no independent resolver or schedule_future eligibility filtering remains in Maxim. Registration requests are revalidated against that same canonical selector artifact before Supabase persistence. Google Voice group chat remains a disabled shell."
 }
