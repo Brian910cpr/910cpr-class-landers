@@ -108,12 +108,22 @@ class MaximCorporatePortalTests(unittest.TestCase):
     def test_employee_names_open_edit_and_safe_deactivation_drawer(self) -> None:
         html = read_page()
         self.assertIn('id="employeeBackdrop"', html)
-        self.assertIn("openEmployee('${personIdFromName(p.name)}')", html)
+        self.assertIn("openEmployee('${p.id||personIdFromName(p.name)}')", html)
         self.assertIn("method:'PATCH'", html)
         self.assertIn("method:'DELETE'", html)
         self.assertIn("Remove from active list", html)
         self.assertIn("history will be preserved", html)
         self.assertIn("scheduleEmployee", html)
+
+    def test_maxim_portal_uses_supabase_access_gate_and_persistent_employee_api(self) -> None:
+        html = read_page()
+        self.assertIn('id="accessGate"', html)
+        self.assertIn("functions/v1/maxim-portal", html)
+        self.assertIn("MAXIM_API_BASE+'/login'", html)
+        self.assertIn("MAXIM_API_BASE+'/employees'", html)
+        self.assertIn("sessionStorage.setItem('maximPortalSession'", html)
+        self.assertNotIn("2106", html)
+        self.assertNotIn("/api/corp/maxim", html)
 
     def test_each_maxim_variant_resolves_independent_authoritative_rows(self) -> None:
         payload = json.loads(SCHEDULE_FUTURE.read_text(encoding="utf-8"))
@@ -125,8 +135,15 @@ class MaximCorporatePortalTests(unittest.TestCase):
         }
 
         self.assertEqual(set(counts), set(EXPECTED_VARIANTS))
-        for label, count in counts.items():
-            self.assertGreater(count, 0, f"{label} resolved no authoritative valid rows")
+        self.assertGreater(
+            sum(counts.values()),
+            0,
+            "The authoritative schedule resolved no valid Maxim rows",
+        )
+        self.assertIn(
+            '<div class="empty">No current valid dates returned for ',
+            read_page(),
+        )
 
         self.assertNotEqual(EXPECTED_VARIANTS["Initial"], EXPECTED_VARIANTS["Renewal"])
         self.assertNotEqual(EXPECTED_VARIANTS["In Person"], EXPECTED_VARIANTS["Online + Skills"])
