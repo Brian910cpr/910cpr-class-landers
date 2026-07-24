@@ -679,6 +679,7 @@ def css() -> str:
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
       header, main, .selector-brand-bar { padding: 18px; }
+      main { padding-bottom: calc(100vh - 120px); }
       .selector-brand-link img { height: 38px; }
       .selector-brand-link { font-size: 1.05rem; }
       .selector-header-phone { font-size: 1.05rem; }
@@ -1148,6 +1149,24 @@ def render_html(payload: dict[str, Any]) -> str:
       return window.matchMedia('(max-width: 820px)').matches;
     }}
 
+    function scrollToNextStep(targetId) {{
+      if (!isMobileLayout()) {{
+        return;
+      }}
+      const host = byId(targetId);
+      const target = host?.closest('.panel') || host;
+      if (!target) {{
+        return;
+      }}
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.setTimeout(() => {{
+        target.scrollIntoView({{
+          behavior: reducedMotion ? 'auto' : 'smooth',
+          block: 'start'
+        }});
+      }}, 60);
+    }}
+
     function normalizeDeepLink(value) {{
       return String(value || '').trim().toLowerCase().replace(/^#/, '');
     }}
@@ -1463,6 +1482,7 @@ def render_html(payload: dict[str, Any]) -> str:
         button.addEventListener('click', () => {{
           selectedCourseId = course.courseId;
           renderAll();
+          scrollToNextStep('date-list');
         }});
         host.appendChild(button);
       }});
@@ -1581,6 +1601,7 @@ def render_html(payload: dict[str, Any]) -> str:
               mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
               selectedStart = selectableStartTimes(available)[0]?.startTime || '';
               renderAll();
+              scrollToNextStep('start-list');
             }});
             grid.appendChild(button);
           }} else {{
@@ -1643,6 +1664,7 @@ def render_html(payload: dict[str, Any]) -> str:
           }}
           selectedStart = slot.startTime;
           renderAll();
+          scrollToNextStep('course-list');
         }});
           grid.appendChild(button);
         }});
