@@ -31,6 +31,7 @@ SCHEDULE_FUTURE_FILE = DOCS_DIR / "data" / "schedule_future.json"
 CANONICAL_CLASS_REPORT_FILE = DOCS_DIR / "data" / "canonical_schedule_from_class_report.json"
 REVIEWS_FILE = ROOT / "data" / "raw" / "reviews" / "reviews.json"
 COURSE_VISIBILITY_POLICY_FILE = ROOT / "data" / "config" / "course_visibility_policy.json"
+DATE_AVAILABILITY_MANIFEST_FILE = DOCS_DIR / "data" / "date_availability_manifest.json"
 
 SITE_BASE = "https://www.910cpr.com"
 GTM_ID = "GTM-PQS8DCBH"
@@ -2251,6 +2252,13 @@ def build():
 
     for location_name in location_groups.keys():
         urls.append(f"{SITE_BASE}/locations/{short_slug(location_name)}.html")
+
+    if DATE_AVAILABILITY_MANIFEST_FILE.exists():
+        date_manifest = json.loads(DATE_AVAILABILITY_MANIFEST_FILE.read_text(encoding="utf-8"))
+        for page in date_manifest.get("pages", []):
+            path = str(page.get("path") or "")
+            if path.startswith("/") and (DOCS_DIR / path.lstrip("/")).exists():
+                urls.append(f"{SITE_BASE}{path}")
 
     # Deduplicate while preserving order
     seen = set()
