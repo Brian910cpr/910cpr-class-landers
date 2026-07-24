@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-18T12:54:26.168570+00:00",
+  "generated_at": "2026-07-24T03:57:55.469446+00:00",
   "people": [
     {
       "person_id": "instructor_3200858342",
@@ -429,6 +429,12 @@
           "certification_code": "HSI_INSTRUCTOR",
           "provider": "HSI",
           "family": "HSI",
+          "expiration_date": "UNKNOWN"
+        },
+        {
+          "certification_code": "ARC_BLS_INSTRUCTOR",
+          "provider": "ARC",
+          "family": "ARC",
           "expiration_date": "UNKNOWN"
         }
       ]
