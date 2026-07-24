@@ -107,6 +107,19 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("history will be preserved", html)
         self.assertIn("scheduleEmployee", html)
 
+    def test_training_flow_uses_connected_stage_values_with_quiet_fallbacks(self) -> None:
+        html = read_page()
+        self.assertIn("function flowStageContent", html)
+        self.assertIn('Connected data not available yet', html)
+        self.assertIn("person.expirationDate", html)
+        self.assertIn("person.lastClassUrl", html)
+        self.assertIn("person.classDate||person.detail", html)
+        self.assertIn("person.eCardCode", html)
+        self.assertIn("person.eCardUrl", html)
+        self.assertIn("person.invoiceUrl", html)
+        self.assertIn("function lastNameOf", html)
+        self.assertIn(".sort((a,b)=>lastNameOf(a).localeCompare(lastNameOf(b)", html)
+
     def test_maxim_portal_uses_supabase_access_gate_and_persistent_employee_api(self) -> None:
         html = read_page()
         self.assertIn('id="accessGate"', html)
