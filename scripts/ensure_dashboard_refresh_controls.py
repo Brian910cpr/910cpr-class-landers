@@ -18,6 +18,18 @@ NEW_END = "document.getElementById('prevMonth').onclick=()=>{monthCursor=new Dat
 text = DASHBOARD.read_text(encoding="utf-8")
 original = text
 
+CURRENT_MARKERS = [
+    'id="calendarFreshness"',
+    'href="/admin/refresh-availability.html"',
+    'id="reloadAvailability"',
+    "document.getElementById('reloadAvailability').onclick=()=>load()",
+    "setInterval(()=>load(),60000)",
+]
+
+if all(marker in text for marker in CURRENT_MARKERS):
+    print("Dashboard refresh controls already current.")
+    raise SystemExit(0)
+
 for old, new in [
     (OLD_TOOLBAR, NEW_TOOLBAR),
     (OLD_LOAD, NEW_LOAD),
