@@ -692,9 +692,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </section>
   </main>
+  <script src="/assets/resolved-selector-availability.js?v=20260723.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/arc.json?v=2026-07-18T17%3A38%3A51.199491";
+    const availabilityUrl = "/data/block-selector-availability/arc.json?v=2026-07-24T04%3A02%3A10.683288";
     const courseOptions = [{"courseId": "248288", "courseName": "American Red Cross Basic Life Support", "family": "ARC", "variant": "bls", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["bls"], "iconLabel": "ARC", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Basic Life Support course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross BLS classroom option.", "details": {"course_key": "arc_bls", "title": "American Red Cross Basic Life Support", "certifying_body": "ARC", "family": "BLS", "short_description": "Red Cross BLS option for healthcare students and providers whose requirement specifically accepts ARC.", "who_this_is_for": "Students whose employer, school, or program asks for American Red Cross BLS.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Course materials as assigned for the selected Red Cross class format."], "certification_issued": "American Red Cross certificate after successful completion.", "compliance_acceptance_notes": ["Use ARC only when your requirement accepts or requests Red Cross certification."], "full_course_page": "/arc.html"}}, {"courseId": "372258", "courseName": "American Red Cross Adult CPR/AED", "family": "ARC", "variant": "cpr-aed", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["cpr-aed"], "iconLabel": "CPR", "imageUrl": "/images/arc-blended-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Adult CPR AED course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Red Cross Adult CPR/AED skills option.", "details": {}}, {"courseId": "369209", "courseName": "American Red Cross First Aid/CPR/AED", "family": "ARC", "variant": "first-aid-cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross First Aid CPR AED course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "details": {}}];
     const optionGroups = {"ARC": {"family": "ARC", "label": "All Red Cross options", "courseIds": ["248288", "372258", "369209"]}};
     const unsupportedOptions = [];
@@ -926,62 +927,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const scheduleTimezone = 'America/New_York';
 
     function businessNow() {
-      const parts = new Intl.DateTimeFormat('en-CA', {
-        timeZone: scheduleTimezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }).formatToParts(new Date()).reduce((values, part) => {
-        values[part.type] = part.value;
-        return values;
-      }, {});
-      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
-      return {
-        dateKey: `${parts.year}-${parts.month}-${parts.day}`,
-        minutes: (hour * 60) + Number(parts.minute)
-      };
+      return ResolvedSelectorAvailability.businessNow(scheduleTimezone);
     }
 
     function startMinutes(startTime) {
-      const [hour, minute] = String(startTime || '').split(':').map(Number);
-      return (hour * 60) + minute;
+      return ResolvedSelectorAvailability.startMinutes(startTime);
     }
 
     function isPastStart(day, slot, now = businessNow()) {
-      if (!day || !slot) {
-        return true;
-      }
-      if (day.date < now.dateKey) {
-        return true;
-      }
-      if (day.date > now.dateKey) {
-        return false;
-      }
-      return startMinutes(slot.startTime) <= now.minutes;
+      return ResolvedSelectorAvailability.isPastStart(day, slot, now);
     }
 
     function selectableStartTimes(day, now = businessNow()) {
-      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+      return ResolvedSelectorAvailability.selectableStartTimes(day, now);
     }
 
     function isSelectableDate(day, now = businessNow()) {
-      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
+      return ResolvedSelectorAvailability.isSelectableDate(day, now);
     }
 
     function filteredDates() {
       if (!availabilityReady()) {
         return [];
       }
-      return scheduleDates.map(day => {
-        const startTimes = day.startTimes.map(slot => ({
-          ...slot,
-          courses: filteredCourses(slot)
-        })).filter(slot => slot.courses.length);
-        return { ...day, startTimes };
-      }).filter(day => day.startTimes.length);
+      return ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds());
     }
 
     function syncSelection() {

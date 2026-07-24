@@ -685,9 +685,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </section>
   </main>
+  <script src="/assets/resolved-selector-availability.js?v=20260723.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/uscg_first_aid_cpr_aed.json?v=2026-07-18T17%3A38%3A51.199491";
+    const availabilityUrl = "/data/block-selector-availability/uscg_first_aid_cpr_aed.json?v=2026-07-24T04%3A02%3A10.683288";
     const courseOptions = [{"courseId": "209809", "courseName": "In-person AHA Heartsaver First Aid CPR AED", "family": "Heartsaver", "variant": "in-person", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["in-person", "classroom", "uscg-in-person", "first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/heartsaver-total-course-images-2.jpg", "imageFit": "contain", "imageAlt": "AHA Heartsaver First Aid CPR AED course training", "deliveryBadge": "IN-PERSON", "clarification": "First Aid, CPR, and AED training completed entirely in person.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed", "title": "AHA Heartsaver First Aid CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "First Aid, CPR, and AED training for workplace, school, and professional requirements.", "who_this_is_for": "Students who need a combined first aid, CPR, and AED certification for work, school, licensing, or general preparedness.", "topics_covered": ["First aid basics", "CPR and AED use", "Choking response", "Opioid emergency awareness", "Stroke warning signs", "Seizures", "Asthma support", "Heat illness", "Burns and common injuries"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use this path when your requirement specifically includes first aid plus CPR/AED."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "329495", "courseName": "Online learning + in-person skills session", "family": "Heartsaver", "variant": "online-learning-skills", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["online-learning-skills", "blended", "uscg-blended", "first-aid-cpr-aed-blended"], "iconLabel": "BL", "imageUrl": "/images/Heartsaver-TOTAL-Online.webp", "imageFit": "contain", "imageAlt": "AHA Heartsaver Total online learning course", "deliveryBadge": "BLENDED", "clarification": "Complete assigned online coursework before the scheduled skills/classroom session.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed_blended", "title": "AHA Heartsaver First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended First Aid/CPR/AED option with online coursework and an in-person skills session.", "who_this_is_for": "Students whose requirement accepts blended Heartsaver First Aid CPR AED.", "topics_covered": ["Online first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA Heartsaver First Aid CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}];
     const optionGroups = {"USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED": {"family": "USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED", "label": "AHA Heartsaver First Aid CPR AED Total options", "courseIds": ["209809", "329495"]}};
     const unsupportedOptions = [];
@@ -919,62 +920,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const scheduleTimezone = 'America/New_York';
 
     function businessNow() {
-      const parts = new Intl.DateTimeFormat('en-CA', {
-        timeZone: scheduleTimezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }).formatToParts(new Date()).reduce((values, part) => {
-        values[part.type] = part.value;
-        return values;
-      }, {});
-      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
-      return {
-        dateKey: `${parts.year}-${parts.month}-${parts.day}`,
-        minutes: (hour * 60) + Number(parts.minute)
-      };
+      return ResolvedSelectorAvailability.businessNow(scheduleTimezone);
     }
 
     function startMinutes(startTime) {
-      const [hour, minute] = String(startTime || '').split(':').map(Number);
-      return (hour * 60) + minute;
+      return ResolvedSelectorAvailability.startMinutes(startTime);
     }
 
     function isPastStart(day, slot, now = businessNow()) {
-      if (!day || !slot) {
-        return true;
-      }
-      if (day.date < now.dateKey) {
-        return true;
-      }
-      if (day.date > now.dateKey) {
-        return false;
-      }
-      return startMinutes(slot.startTime) <= now.minutes;
+      return ResolvedSelectorAvailability.isPastStart(day, slot, now);
     }
 
     function selectableStartTimes(day, now = businessNow()) {
-      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+      return ResolvedSelectorAvailability.selectableStartTimes(day, now);
     }
 
     function isSelectableDate(day, now = businessNow()) {
-      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
+      return ResolvedSelectorAvailability.isSelectableDate(day, now);
     }
 
     function filteredDates() {
       if (!availabilityReady()) {
         return [];
       }
-      return scheduleDates.map(day => {
-        const startTimes = day.startTimes.map(slot => ({
-          ...slot,
-          courses: filteredCourses(slot)
-        })).filter(slot => slot.courses.length);
-        return { ...day, startTimes };
-      }).filter(day => day.startTimes.length);
+      return ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds());
     }
 
     function syncSelection() {

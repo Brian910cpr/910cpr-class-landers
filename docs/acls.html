@@ -696,9 +696,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </section>
   </main>
+  <script src="/assets/resolved-selector-availability.js?v=20260723.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/acls.json?v=2026-07-18T17%3A38%3A51.199491";
+    const availabilityUrl = "/data/block-selector-availability/acls.json?v=2026-07-24T04%3A02%3A10.683288";
     const courseOptions = [{"courseId": "241108", "courseName": "AHA ACLS Provider (Initial)", "family": "ACLS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "acls-provider"], "iconLabel": "ACLS", "imageUrl": "/images/acls_general.png", "imageFit": "contain", "imageAlt": "AHA ACLS Provider (Initial) course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom ACLS Provider certification for first-time or returning ACLS students.", "details": {"course_key": "aha_acls_provider_initial", "title": "AHA ACLS Provider", "certifying_body": "AHA", "family": "ACLS", "short_description": "Advanced cardiovascular life support for clinicians who manage adult cardiac emergencies.", "who_this_is_for": "Healthcare professionals involved in adult cardiac arrest, peri-arrest, stroke, or advanced cardiovascular response.", "topics_covered": ["Systematic ACLS assessment", "High-performance teams", "Airway and ventilation concepts", "Rhythm recognition", "ACLS algorithms"], "required_materials": ["Current AHA ACLS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association ACLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm prerequisites with your employer, school, or licensing program."], "full_course_page": "/acls.html"}}, {"courseId": "209818", "courseName": "AHA ACLS Provider (Renewal)", "family": "ACLS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "acls-renewal"], "iconLabel": "RN", "imageUrl": "/images/acls_general.png", "imageFit": "contain", "imageAlt": "AHA ACLS Provider (Renewal) course option", "deliveryBadge": "IN-PERSON", "clarification": "Shorter ACLS renewal path for providers with prior ACLS training.", "details": {"course_key": "aha_acls_provider_renewal", "title": "AHA ACLS Renewal", "certifying_body": "AHA", "family": "ACLS", "short_description": "ACLS renewal for current providers who need a focused recertification path.", "who_this_is_for": "Current ACLS providers renewing an existing AHA ACLS Provider card.", "topics_covered": ["ACLS algorithm review", "Scenario-based team response", "Airway and rhythm review", "Post-arrest and stroke concepts"], "required_materials": ["Current AHA ACLS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association ACLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose ACLS Provider if you need a full initial class."], "full_course_page": "/acls.html"}}, {"courseId": "209811", "courseName": "AHA ACLS HeartCode", "family": "ACLS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-acls"], "iconLabel": "HC", "imageUrl": "/images/hc_acls.png", "imageFit": "contain", "imageAlt": "AHA ACLS HeartCode course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Complete HeartCode ACLS online first, then attend an in-person skills session.", "details": {"course_key": "aha_heartcode_acls", "title": "AHA ACLS HeartCode", "certifying_body": "AHA", "family": "ACLS", "short_description": "ACLS skills session for students who completed the official AHA HeartCode ACLS online course.", "who_this_is_for": "Clinicians completing the blended HeartCode ACLS path.", "topics_covered": ["ACLS skills verification", "Team response scenarios", "Airway, rhythm, and algorithm application"], "required_materials": ["Completed AHA HeartCode ACLS certificate of completion before the skills session."], "certification_issued": "American Heart Association ACLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills portion, not the online HeartCode course purchase."], "full_course_page": "/courses/heartcode-acls.html"}}];
     const optionGroups = {"ACLS": {"family": "ACLS", "label": "All AHA ACLS options", "courseIds": ["241108", "209818", "209811"]}};
     const unsupportedOptions = [];
@@ -930,62 +931,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const scheduleTimezone = 'America/New_York';
 
     function businessNow() {
-      const parts = new Intl.DateTimeFormat('en-CA', {
-        timeZone: scheduleTimezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }).formatToParts(new Date()).reduce((values, part) => {
-        values[part.type] = part.value;
-        return values;
-      }, {});
-      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
-      return {
-        dateKey: `${parts.year}-${parts.month}-${parts.day}`,
-        minutes: (hour * 60) + Number(parts.minute)
-      };
+      return ResolvedSelectorAvailability.businessNow(scheduleTimezone);
     }
 
     function startMinutes(startTime) {
-      const [hour, minute] = String(startTime || '').split(':').map(Number);
-      return (hour * 60) + minute;
+      return ResolvedSelectorAvailability.startMinutes(startTime);
     }
 
     function isPastStart(day, slot, now = businessNow()) {
-      if (!day || !slot) {
-        return true;
-      }
-      if (day.date < now.dateKey) {
-        return true;
-      }
-      if (day.date > now.dateKey) {
-        return false;
-      }
-      return startMinutes(slot.startTime) <= now.minutes;
+      return ResolvedSelectorAvailability.isPastStart(day, slot, now);
     }
 
     function selectableStartTimes(day, now = businessNow()) {
-      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+      return ResolvedSelectorAvailability.selectableStartTimes(day, now);
     }
 
     function isSelectableDate(day, now = businessNow()) {
-      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
+      return ResolvedSelectorAvailability.isSelectableDate(day, now);
     }
 
     function filteredDates() {
       if (!availabilityReady()) {
         return [];
       }
-      return scheduleDates.map(day => {
-        const startTimes = day.startTimes.map(slot => ({
-          ...slot,
-          courses: filteredCourses(slot)
-        })).filter(slot => slot.courses.length);
-        return { ...day, startTimes };
-      }).filter(day => day.startTimes.length);
+      return ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds());
     }
 
     function syncSelection() {

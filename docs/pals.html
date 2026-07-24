@@ -696,9 +696,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </section>
   </main>
+  <script src="/assets/resolved-selector-availability.js?v=20260723.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/pals.json?v=2026-07-18T17%3A38%3A51.199491";
+    const availabilityUrl = "/data/block-selector-availability/pals.json?v=2026-07-24T04%3A02%3A10.683288";
     const courseOptions = [{"courseId": "209805", "courseName": "AHA PALS Provider", "family": "PALS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "pals-provider"], "iconLabel": "PALS", "imageUrl": "/images/pals_general.png", "imageFit": "contain", "imageAlt": "AHA PALS Provider course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom PALS Provider certification for pediatric emergency response roles.", "details": {"course_key": "aha_pals_provider", "title": "AHA PALS Provider", "certifying_body": "AHA", "family": "PALS", "short_description": "Pediatric advanced life support for clinicians who care for infants and children in emergencies.", "who_this_is_for": "Healthcare professionals involved in pediatric respiratory, shock, cardiac arrest, or emergency response.", "topics_covered": ["Pediatric assessment", "Respiratory emergencies", "Shock recognition", "Pediatric cardiac arrest algorithms", "Team dynamics"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm pediatric advanced life support requirements with your employer or program."], "full_course_page": "/pals.html"}}, {"courseId": "251496", "courseName": "AHA PALS Renewal", "family": "PALS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "pals-renewal"], "iconLabel": "RN", "imageUrl": "/images/pals_general.png", "imageFit": "contain", "imageAlt": "AHA PALS Renewal course option", "deliveryBadge": "IN-PERSON", "clarification": "Renewal path for providers with prior PALS training.", "details": {"course_key": "aha_pals_renewal", "title": "AHA PALS Renewal", "certifying_body": "AHA", "family": "PALS", "short_description": "Focused PALS renewal for current pediatric advanced life support providers.", "who_this_is_for": "Current PALS providers renewing an existing AHA PALS Provider card.", "topics_covered": ["PALS algorithm review", "Respiratory and shock scenarios", "Pediatric team response", "Skills verification"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose PALS Provider if you need a full initial class."], "full_course_page": "/pals.html"}}, {"courseId": "209812", "courseName": "AHA PALS HeartCode", "family": "PALS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-pals"], "iconLabel": "HC", "imageUrl": "/images/hc_pals.png", "imageFit": "contain", "imageAlt": "AHA PALS HeartCode course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Complete HeartCode PALS online first, then attend an in-person skills session.", "details": {"course_key": "aha_heartcode_pals", "title": "AHA PALS HeartCode", "certifying_body": "AHA", "family": "PALS", "short_description": "PALS skills session for students who completed the official AHA HeartCode PALS online course.", "who_this_is_for": "Clinicians completing the blended HeartCode PALS pathway.", "topics_covered": ["PALS skills verification", "Pediatric respiratory and shock scenarios", "Team response application"], "required_materials": ["Completed AHA HeartCode PALS certificate of completion before the skills session."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills portion, not the online HeartCode course purchase."], "full_course_page": "/courses/heartcode-pals.html"}}];
     const optionGroups = {"PALS": {"family": "PALS", "label": "All AHA PALS options", "courseIds": ["209805", "251496", "209812"]}};
     const unsupportedOptions = [];
@@ -930,62 +931,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const scheduleTimezone = 'America/New_York';
 
     function businessNow() {
-      const parts = new Intl.DateTimeFormat('en-CA', {
-        timeZone: scheduleTimezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }).formatToParts(new Date()).reduce((values, part) => {
-        values[part.type] = part.value;
-        return values;
-      }, {});
-      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
-      return {
-        dateKey: `${parts.year}-${parts.month}-${parts.day}`,
-        minutes: (hour * 60) + Number(parts.minute)
-      };
+      return ResolvedSelectorAvailability.businessNow(scheduleTimezone);
     }
 
     function startMinutes(startTime) {
-      const [hour, minute] = String(startTime || '').split(':').map(Number);
-      return (hour * 60) + minute;
+      return ResolvedSelectorAvailability.startMinutes(startTime);
     }
 
     function isPastStart(day, slot, now = businessNow()) {
-      if (!day || !slot) {
-        return true;
-      }
-      if (day.date < now.dateKey) {
-        return true;
-      }
-      if (day.date > now.dateKey) {
-        return false;
-      }
-      return startMinutes(slot.startTime) <= now.minutes;
+      return ResolvedSelectorAvailability.isPastStart(day, slot, now);
     }
 
     function selectableStartTimes(day, now = businessNow()) {
-      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+      return ResolvedSelectorAvailability.selectableStartTimes(day, now);
     }
 
     function isSelectableDate(day, now = businessNow()) {
-      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
+      return ResolvedSelectorAvailability.isSelectableDate(day, now);
     }
 
     function filteredDates() {
       if (!availabilityReady()) {
         return [];
       }
-      return scheduleDates.map(day => {
-        const startTimes = day.startTimes.map(slot => ({
-          ...slot,
-          courses: filteredCourses(slot)
-        })).filter(slot => slot.courses.length);
-        return { ...day, startTimes };
-      }).filter(day => day.startTimes.length);
+      return ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds());
     }
 
     function syncSelection() {

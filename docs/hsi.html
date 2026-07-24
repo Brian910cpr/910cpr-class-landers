@@ -696,9 +696,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </section>
   </main>
+  <script src="/assets/resolved-selector-availability.js?v=20260723.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-07-18T17%3A38%3A51.199491";
+    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-07-24T04%3A02%3A10.683288";
     const courseOptions = [{"courseId": "463743", "courseName": "HSI BLS Challenge", "family": "HSI", "variant": "challenge", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["challenge", "challenge", "hsi-bls", "bls"], "iconLabel": "HSI", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS Challenge course option", "deliveryBadge": "IN-PERSON", "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.", "details": {"course_key": "hsi_bls_challenge", "title": "HSI BLS Challenge", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.", "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."], "certification_issued": "HSI certification issued after successful completion.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."], "full_course_page": "/hsi.html"}}, {"courseId": "445670", "courseName": "HSI BLS + Adult First Aid", "family": "HSI", "variant": "bls-first-aid", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["bls-first-aid", "bls-first-aid", "hsi-bls-fa", "hsi-bls-first-aid"], "iconLabel": "FA", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS + Adult First Aid course option", "deliveryBadge": "BLENDED", "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.", "details": {"course_key": "hsi_bls_adult_first_aid", "title": "HSI BLS + Adult First Aid", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI blended option combining Basic Life Support with Adult First Aid/CPR/AED.", "who_this_is_for": "Workplaces, healthcare-adjacent teams, dental offices, ABA providers, and organizations that accept HSI and need both BLS and first aid coverage.", "topics_covered": ["HSI BLS", "Adult first aid", "CPR and AED", "Online coursework", "In-person skills verification"], "required_materials": ["Completed assigned HSI online coursework before the skills session."], "certification_issued": "HSI certification issued after successful completion and valid for two years.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."], "full_course_page": "/hsi.html"}}];
     const optionGroups = {"HSI": {"family": "HSI", "label": "All HSI options", "courseIds": ["463743", "445670"]}};
     const unsupportedOptions = [];
@@ -930,62 +931,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const scheduleTimezone = 'America/New_York';
 
     function businessNow() {
-      const parts = new Intl.DateTimeFormat('en-CA', {
-        timeZone: scheduleTimezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }).formatToParts(new Date()).reduce((values, part) => {
-        values[part.type] = part.value;
-        return values;
-      }, {});
-      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
-      return {
-        dateKey: `${parts.year}-${parts.month}-${parts.day}`,
-        minutes: (hour * 60) + Number(parts.minute)
-      };
+      return ResolvedSelectorAvailability.businessNow(scheduleTimezone);
     }
 
     function startMinutes(startTime) {
-      const [hour, minute] = String(startTime || '').split(':').map(Number);
-      return (hour * 60) + minute;
+      return ResolvedSelectorAvailability.startMinutes(startTime);
     }
 
     function isPastStart(day, slot, now = businessNow()) {
-      if (!day || !slot) {
-        return true;
-      }
-      if (day.date < now.dateKey) {
-        return true;
-      }
-      if (day.date > now.dateKey) {
-        return false;
-      }
-      return startMinutes(slot.startTime) <= now.minutes;
+      return ResolvedSelectorAvailability.isPastStart(day, slot, now);
     }
 
     function selectableStartTimes(day, now = businessNow()) {
-      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+      return ResolvedSelectorAvailability.selectableStartTimes(day, now);
     }
 
     function isSelectableDate(day, now = businessNow()) {
-      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
+      return ResolvedSelectorAvailability.isSelectableDate(day, now);
     }
 
     function filteredDates() {
       if (!availabilityReady()) {
         return [];
       }
-      return scheduleDates.map(day => {
-        const startTimes = day.startTimes.map(slot => ({
-          ...slot,
-          courses: filteredCourses(slot)
-        })).filter(slot => slot.courses.length);
-        return { ...day, startTimes };
-      }).filter(day => day.startTimes.length);
+      return ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds());
     }
 
     function syncSelection() {

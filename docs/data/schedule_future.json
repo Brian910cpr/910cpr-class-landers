@@ -1,12 +1,12 @@
 {
   "build": {
-    "generated_at": "2026-07-24T00:02:08.161360-04:00",
-    "source_file": "data/sessions_current.json",
+    "generated_at": "2026-07-24T05:45:42.632630-04:00",
+    "source_file": "data\\sessions_current.json",
     "counts": {
-      "sessions_input": 381,
+      "sessions_input": 378,
       "sessions_output": 24,
       "skipped_missing_start": 0,
-      "skipped_past": 351,
+      "skipped_past": 348,
       "skipped_orphan": 0,
       "skipped_non_public_location": 6,
       "skipped_tbd_location": 0,
