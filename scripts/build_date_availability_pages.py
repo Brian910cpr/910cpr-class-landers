@@ -183,6 +183,23 @@ def course_schema(page: dict, canonical: str, location: str) -> list[dict]:
             "url": canonical,
             "location": {"@id": f"{SITE}/locations/{slug(page['city'])}.html#place"},
         })
+    if not schemas:
+        for session in page.get("real_sessions", []):
+            cid = str(session.get("course_id") or session.get("course_number") or "")
+            if cid in seen:
+                continue
+            seen.add(cid)
+            name = session.get("official_course_name") or session.get("course_name")
+            schemas.append({
+                "@type": "Course",
+                "@id": f"{SITE}/courses/{slug(name)}.html#course",
+                "name": name,
+                "description": session.get("mapped_short_description") or f"{name} training through 910CPR.",
+                "provider": {"@id": f"{SITE}/#organization"},
+                "courseMode": "Onsite",
+                "url": canonical,
+                "location": {"@id": f"{SITE}/locations/{slug(page['city'])}.html#place"},
+            })
     return schemas
 
 
