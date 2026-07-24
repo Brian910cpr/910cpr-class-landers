@@ -88,6 +88,14 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn('id="flowSearch"', html)
         self.assertIn('id="flowStage"', html)
         self.assertIn('id="flowAccount"', html)
+        self.assertIn('id="flowSort"', html)
+        self.assertIn('<option value="gantt" selected>Gantt order</option>', html)
+        self.assertIn('id="flowReset"', html)
+        self.assertIn("return (Number(a.stage)-Number(b.stage))||nameOrder()", html)
+        self.assertIn("flowSort.value='gantt'", html)
+        self.assertIn("flowSearch.value=''", html)
+        self.assertIn("flowStage.value='all'", html)
+        self.assertIn("flowAccount.value='all'", html)
         self.assertIn("registerBox.classList.remove('open')", html)
         self.assertIn("Register for ${activeVariant().label} at ${selectedTime}", html)
 
@@ -118,7 +126,8 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("person.eCardUrl", html)
         self.assertIn("person.invoiceUrl", html)
         self.assertIn("function lastNameOf", html)
-        self.assertIn(".sort((a,b)=>lastNameOf(a).localeCompare(lastNameOf(b)", html)
+        self.assertIn("function compareTrainingFlow", html)
+        self.assertIn(".sort(compareTrainingFlow)", html)
 
     def test_maxim_portal_uses_supabase_access_gate_and_persistent_employee_api(self) -> None:
         html = read_page()
