@@ -164,6 +164,37 @@ async function listRegistrations(env) {
   return json({ registrations: registrations.results });
 }
 
+async function updatePerson(request, env, personId) {
+  const data = await body(request);
+  const person = normalizePerson({ ...data, personId });
+  if (!person) return json({ error: 'firstName and lastName are required' }, 400);
+  if (env.STORE?.updatePerson) return json(await env.STORE.updatePerson(personId, data, person));
+  const existing = await env.DB.prepare(`SELECT person_id FROM people WHERE person_id=?`).bind(personId).first();
+  if (!existing) return json({ error: 'Employee not found' }, 404);
+  await env.DB.batch([
+    env.DB.prepare(`UPDATE people SET first_name=?,last_name=?,email=?,phone=?,updated_at=CURRENT_TIMESTAMP WHERE person_id=?`)
+      .bind(person.firstName, person.lastName, person.email, person.phone, personId),
+    env.DB.prepare(`UPDATE corporate_profiles SET billing_account=?,active=1,updated_at=CURRENT_TIMESTAMP WHERE person_id=? AND corporate_customer='MAXIM'`)
+      .bind(data.billingAccount || null, personId),
+    env.DB.prepare(`INSERT INTO portal_events(event_id,person_id,event_type,actor_type,payload_json) VALUES(?,?,?,?,?)`)
+      .bind(id('evt'), personId, 'employee_updated', 'corporate_user', JSON.stringify({ billingAccount: data.billingAccount || null, course: data.course || null }))
+  ]);
+  return json({ ok: true, personId });
+}
+
+async function deactivatePerson(env, personId) {
+  if (env.STORE?.deactivatePerson) return json(await env.STORE.deactivatePerson(personId));
+  const existing = await env.DB.prepare(`SELECT person_id FROM people WHERE person_id=?`).bind(personId).first();
+  if (!existing) return json({ error: 'Employee not found' }, 404);
+  await env.DB.batch([
+    env.DB.prepare(`UPDATE corporate_profiles SET active=0,updated_at=CURRENT_TIMESTAMP WHERE person_id=? AND corporate_customer='MAXIM'`).bind(personId),
+    env.DB.prepare(`UPDATE renewal_cycles SET status='inactive',updated_at=CURRENT_TIMESTAMP WHERE person_id=? AND corporate_customer='MAXIM' AND status IN ('coming_due','link_sent')`).bind(personId),
+    env.DB.prepare(`UPDATE go_tokens SET state='revoked',revoked_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP WHERE person_id=? AND corporate_customer='MAXIM' AND state='active'`).bind(personId),
+    env.DB.prepare(`INSERT INTO portal_events(event_id,person_id,event_type,actor_type) VALUES(?,?,?,?)`).bind(id('evt'), personId, 'employee_deactivated', 'corporate_user')
+  ]);
+  return json({ ok: true, personId, active: false });
+}
+
 async function createRegistration(request, env) {
   const data = await body(request);
   const result = await createRegistrationRecord(env, data);
@@ -174,7 +205,7 @@ async function createRegistration(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { 'access-control-allow-origin': env.PUBLIC_ORIGIN, 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type,authorization,x-maxim-portal-token' } });
+    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { 'access-control-allow-origin': env.PUBLIC_ORIGIN, 'access-control-allow-methods': 'GET,POST,PATCH,DELETE,OPTIONS', 'access-control-allow-headers': 'content-type,authorization,x-maxim-portal-token' } });
     let response;
     const corporateApi = url.pathname.startsWith('/api/corp/maxim/');
     const authError = corporateApi ? authFailure(request, env) : null;
@@ -185,6 +216,8 @@ export default {
     else if (request.method === 'GET' && /^\/api\/corp\/maxim\/people\/[^/]+\/history$/.test(url.pathname)) response = await history(env, url.pathname.split('/')[5]);
     else if (request.method === 'GET' && url.pathname === '/api/corp/maxim/registrations') response = await listRegistrations(env);
     else if (request.method === 'POST' && url.pathname === '/api/corp/maxim/registrations') response = await createRegistration(request, env);
+    else if (request.method === 'PATCH' && /^\/api\/corp\/maxim\/people\/[^/]+$/.test(url.pathname)) response = await updatePerson(request, env, decodeURIComponent(url.pathname.split('/').pop()));
+    else if (request.method === 'DELETE' && /^\/api\/corp\/maxim\/people\/[^/]+$/.test(url.pathname)) response = await deactivatePerson(env, decodeURIComponent(url.pathname.split('/').pop()));
     else if (request.method === 'GET' && url.pathname.startsWith('/go/')) {
       const code = url.pathname.split('/').pop();
       return Response.redirect(`${env.PUBLIC_ORIGIN}${env.PORTAL_PATH}?go=${encodeURIComponent(code)}`, 302);

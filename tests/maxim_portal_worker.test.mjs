@@ -80,6 +80,17 @@ class Store {
   async listRegistrations() {
     return this.registrations.filter((row) => row.status === 'registered' && !row.superseded_by);
   }
+
+  async updatePerson(personId, data, person) {
+    this.people.set(personId, { ...person, billingAccount: data.billingAccount || null, course: data.course || null, active: true });
+    return { ok: true, personId };
+  }
+
+  async deactivatePerson(personId) {
+    const person = this.people.get(personId);
+    if (person) this.people.set(personId, { ...person, active: false });
+    return { ok: true, personId, active: false };
+  }
 }
 
 function env(store = new Store(), scheduleFuture = schedule, overrides = {}) {
@@ -211,4 +222,28 @@ test('deployed auth guard rejects unauthenticated corporate writes', async () =>
     authorization: 'Bearer test-secret'
   });
   assert.equal(accepted.status, 200);
+});
+
+test('employee details can be edited without replacing identity', async () => {
+  const store = new Store();
+  const environment = env(store);
+  const response = await worker.fetch(new Request('https://www.910cpr.com/api/corp/maxim/people/maxim_jane_doe', {
+    method: 'PATCH',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ firstName: 'Jane', lastName: 'Doe', email: 'jane@maxim.example', phone: '910-555-0111', billingAccount: '#031', course: 'BLS' })
+  }), environment);
+  assert.equal(response.status, 200);
+  assert.equal(store.people.get('maxim_jane_doe').email, 'jane@maxim.example');
+  assert.equal(store.people.get('maxim_jane_doe').billingAccount, '#031');
+});
+
+test('removing an employee deactivates rather than erasing history', async () => {
+  const store = new Store();
+  store.people.set('maxim_jane_doe', { personId: 'maxim_jane_doe', active: true });
+  const response = await worker.fetch(new Request('https://www.910cpr.com/api/corp/maxim/people/maxim_jane_doe', {
+    method: 'DELETE'
+  }), env(store));
+  assert.equal(response.status, 200);
+  assert.equal(store.people.get('maxim_jane_doe').active, false);
+  assert.equal(store.people.has('maxim_jane_doe'), true);
 });

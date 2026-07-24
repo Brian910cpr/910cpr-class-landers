@@ -90,6 +90,31 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("Date.now()", html)
         self.assertIn("that class time is no longer available", html)
 
+    def test_maxim_has_gantt_filters_and_selection_aware_registration(self) -> None:
+        html = read_page()
+        self.assertIn('id="trainingGantt"', html)
+        self.assertIn('id="flowSearch"', html)
+        self.assertIn('id="flowStage"', html)
+        self.assertIn('id="flowAccount"', html)
+        self.assertIn("registerBox.classList.remove('open')", html)
+        self.assertIn("Register for ${activeVariant().label} at ${selectedTime}", html)
+
+    def test_google_voice_chat_is_an_explicit_nonfunctional_shell(self) -> None:
+        html = read_page()
+        self.assertIn("Google Voice not connected", html)
+        self.assertIn("no supported SMS API is available", html)
+        self.assertIn('placeholder="Message the Maxim group" disabled', html)
+
+    def test_employee_names_open_edit_and_safe_deactivation_drawer(self) -> None:
+        html = read_page()
+        self.assertIn('id="employeeBackdrop"', html)
+        self.assertIn("openEmployee('${personIdFromName(p.name)}')", html)
+        self.assertIn("method:'PATCH'", html)
+        self.assertIn("method:'DELETE'", html)
+        self.assertIn("Remove from active list", html)
+        self.assertIn("history will be preserved", html)
+        self.assertIn("scheduleEmployee", html)
+
     def test_each_maxim_variant_resolves_independent_authoritative_rows(self) -> None:
         payload = json.loads(SCHEDULE_FUTURE.read_text(encoding="utf-8"))
         now = schedule_reference_now(payload)
