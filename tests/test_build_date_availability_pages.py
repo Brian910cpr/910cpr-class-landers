@@ -71,6 +71,19 @@ class DateAvailabilityPagesTests(unittest.TestCase):
             self.assertNotIn('"student_email"', html)
             self.assertNotIn('"student_phone"', html)
 
+    def test_open_page_hero_routes_to_course_family_without_preselecting(self):
+        open_pages = [
+            path for path in self.pages
+            if 'data-page-state="open"' in path.read_text(encoding="utf-8")
+        ]
+        self.assertTrue(open_pages)
+        html = open_pages[0].read_text(encoding="utf-8")
+        hero = re.search(r'<section class="hero">(.*?)</section>', html, re.DOTALL).group(1)
+        self.assertIn('href="/arc.html"', hero)
+        self.assertIn("Choose your course", hero)
+        self.assertNotIn("data-registration", hero)
+        self.assertNotIn("appointmentDayId", hero)
+
     def test_full_and_expired_state_rendering(self):
         closed = {
             "page_key": "bls", "city": "Wilmington", "date": "2026-08-12",
