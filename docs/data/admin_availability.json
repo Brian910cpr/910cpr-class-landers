@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-24T04:02:10.583868+00:00",
+  "generated_at": "2026-07-24T23:33:02.898177+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-07-24T04:02:09.994610+00:00",
+      "generated_at": "2026-07-24T23:33:02.361726+00:00",
       "event_count": 0
     },
     {
@@ -16,30 +16,19 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-07-24T04:02:10.583868+00:00",
-      "event_count": 115
+      "generated_at": "2026-07-24T23:33:02.898177+00:00",
+      "event_count": 117
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-07-24T04:02:10.240664+00:00",
+      "generated_at": "2026-07-24T23:33:02.573122+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Jonah to LaCrosse",
-      "start": "2026-07-24T06:00:00-04:00",
-      "end": "2026-07-24T08:30:00-04:00",
-      "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
@@ -104,6 +93,17 @@
       "start": "2026-07-30T06:00:00-04:00",
       "end": "2026-07-30T08:30:00-04:00",
       "location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Busco Beach",
+      "start": "2026-07-31T04:00:00+00:00",
+      "end": "2026-08-01T03:30:00+00:00",
+      "location": "",
       "status": "CONFIRMED"
     },
     {
@@ -1291,6 +1291,28 @@
       "title": "CFA Pickup",
       "start": "2026-10-21T15:00:00-04:00",
       "end": "2026-10-21T17:30:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Drop Off",
+      "start": "2026-10-22T06:30:00-04:00",
+      "end": "2026-10-22T07:45:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Pickup",
+      "start": "2026-10-22T15:00:00-04:00",
+      "end": "2026-10-22T17:30:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     }
