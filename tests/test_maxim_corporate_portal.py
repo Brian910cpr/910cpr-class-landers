@@ -129,7 +129,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("person.invoiceUrl", html)
         self.assertIn("No eCard found yet", html)
         self.assertIn("Schedule for them", html)
-        self.assertIn("Return to Coming Due", html)
+        self.assertIn("returnToComingDue", html)
         self.assertIn("Wilmingtonoffice%40maxim.com", html)
         self.assertIn("https://www.910cpr.com/go/myecards", html)
         self.assertIn("function lastNameOf", html)
