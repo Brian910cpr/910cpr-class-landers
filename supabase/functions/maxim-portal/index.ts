@@ -101,21 +101,33 @@ async function login(req: Request) {
 
 async function listEmployees() {
   const rows = await rest(
-    "maxim_employee_profiles?active=eq.true&select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,link_sent_at,prior_class_date,expiration_date,prior_ecard_code,scheduled_class_date,enrollware_class_id,current_external_class_id,current_external_registration_id,customers(id,first_name,last_name,email,phone)&order=workflow_stage.asc,expiration_date.asc.nullslast,updated_at.desc",
+    "maxim_employee_profiles?select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,active,link_sent_at,prior_class_date,expiration_date,prior_ecard_code,ecard_detected_at,scheduled_class_date,enrollware_class_id,current_external_class_id,current_external_registration_id,updated_at,customers(id,first_name,last_name,email,phone)&order=updated_at.desc",
   );
   const requests = await rest(
-    "maxim_registration_requests?select=id,employee_profile_id,starts_at,registration_url,status,created_at&order=created_at.desc",
+    "maxim_registration_requests?select=id,employee_profile_id,external_course_id,starts_at,registration_url,status,location_key,supersedes_request_id,superseded_at,commitment_released_at,created_at&order=created_at.desc",
   );
   const latestRequest = new Map<string, any>();
   for (const request of requests) {
-    if (!latestRequest.has(request.employee_profile_id)) {
+    if (request.status === "requested" && !latestRequest.has(request.employee_profile_id)) {
       latestRequest.set(request.employee_profile_id, request);
     }
   }
-  return response({
-    employees: rows.map((row: any) => {
+  const now = Date.now();
+  const completedWindowMs = 30 * 24 * 60 * 60 * 1000;
+  const mapped = rows.map((row: any) => {
       const registration = latestRequest.get(row.id);
-      return ({
+      const completedAt = row.prior_ecard_code
+        ? row.ecard_detected_at || row.updated_at
+        : null;
+      const completedAge = completedAt
+        ? now - new Date(completedAt).getTime()
+        : null;
+      const bucket = row.prior_ecard_code
+        ? completedAge !== null && completedAge <= completedWindowMs
+          ? "recently_completed"
+          : "history"
+        : row.active ? "active" : "history";
+      return {
       id: row.id,
       sourceRef: row.source_ref,
       firstName: row.customers.first_name,
@@ -130,6 +142,8 @@ async function listEmployees() {
       priorClassDate: row.prior_class_date,
       expirationDate: row.expiration_date,
       eCardCode: row.prior_ecard_code,
+      eCardDetectedAt: completedAt,
+      bucket,
       enrollwareClassId: row.enrollware_class_id,
       externalClassId: row.current_external_class_id,
       externalRegistrationId: row.current_external_registration_id,
@@ -137,8 +151,24 @@ async function listEmployees() {
       registrationUrl: registration?.registration_url || null,
       registrationRequestedAt: registration?.created_at || null,
       registrationStatus: registration?.status || null,
-    });
-    }),
+      locationKey: registration?.location_key || null,
+    };
+  });
+  const recentCompleted = mapped
+    .filter((row: any) => row.bucket === "recently_completed")
+    .sort((a: any, b: any) =>
+      String(b.eCardDetectedAt).localeCompare(String(a.eCardDetectedAt))
+    )
+    .slice(0, 15);
+  return response({
+    employees: [
+      ...mapped.filter((row: any) => row.bucket === "active" && !row.eCardCode),
+      ...recentCompleted,
+    ],
+    history: mapped.filter((row: any) => row.bucket === "history"),
+    registrationHistory: requests.filter((request: any) =>
+      request.status !== "requested"
+    ),
   });
 }
 
@@ -208,17 +238,24 @@ async function returnEmployeeToComingDue(id: string) {
 
 async function markScheduleLinkSent(id: string) {
   const sentAt = new Date().toISOString();
+  const profiles = await rest(
+    `maxim_employee_profiles?select=current_external_registration_id,prior_ecard_code&id=eq.${id}&active=eq.true&limit=1`,
+  );
+  if (!profiles.length) return response({ error: "Employee not found." }, 404);
+  if (profiles[0].prior_ecard_code) {
+    return response({ error: "Scheduling is closed because this employee has an eCard." }, 409);
+  }
+  const workflowStage = profiles[0].current_external_registration_id ? 2 : 1;
   const rows = await rest(`maxim_employee_profiles?id=eq.${id}&active=eq.true`, {
     method: "PATCH",
     body: JSON.stringify({
-      workflow_stage: 1,
-      status_detail: "Scheduling link sent",
+      workflow_stage: workflowStage,
+      status_detail: workflowStage === 2 ? "Registered; another scheduling link sent" : "Scheduling link sent",
       link_sent_at: sentAt,
       updated_at: sentAt,
     }),
   });
-  if (!rows.length) return response({ error: "Employee not found." }, 404);
-  return response({ ok: true, id, linkSentDate: sentAt, workflowStage: 1 });
+  return response({ ok: true, id, linkSentDate: sentAt, workflowStage });
 }
 
 const selectorByCourse: Record<string, string> = {
@@ -266,6 +303,29 @@ function easternTimestamp(date: string, startTime: string) {
   return new Date(utcGuess.getTime() - offset).toISOString();
 }
 
+function locationKey(course: any) {
+  const value = String(
+    course.location || course.location_display || course.location_name ||
+      course.public_location || course.sourceAvailabilityBlock?.location || "",
+  ).toLowerCase();
+  if (value.includes("wilmington") || value.includes("shipyard")) return "wilmington";
+  if (
+    value.includes("holly ridge") || value.includes("jacksonville") ||
+    value.includes("onslow")
+  ) return "holly-ridge-jacksonville";
+  return "";
+}
+
+function approvedLocationKeys() {
+  return new Set(
+    (Deno.env.get("MAXIM_APPROVED_LOCATIONS") ||
+      "wilmington,holly-ridge-jacksonville")
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean),
+  );
+}
+
 async function canonicalCourseSlot(body: any) {
   const courseId = String(body.courseId || "");
   const selector = selectorByCourse[courseId];
@@ -287,7 +347,17 @@ async function canonicalCourseSlot(body: any) {
   );
   const course = slot?.courses?.find((item: any) => String(item.courseId) === courseId);
   if (!course || canonicalSlotKey(course) !== String(body.slotKey)) return null;
-  return { selector, day, slot, course };
+  const canonicalLocationKey = locationKey(course);
+  if (
+    !canonicalLocationKey ||
+    !approvedLocationKeys().has(canonicalLocationKey) ||
+    canonicalLocationKey !== String(body.locationKey || "")
+  ) return null;
+  if (
+    !body.adminOverrideExpiration && body.expirationDate &&
+    String(day.date) > String(body.expirationDate)
+  ) return null;
+  return { selector, day, slot, course, locationKey: canonicalLocationKey };
 }
 
 async function validateCanonicalSlot(req: Request) {
@@ -302,6 +372,7 @@ async function validateCanonicalSlot(req: Request) {
       date: canonical.day.date,
       startTime: canonical.slot.startTime,
       slotKey: canonicalSlotKey(canonical.course),
+      locationKey: canonical.locationKey,
     },
   });
 }
@@ -331,48 +402,33 @@ async function registerEmployee(req: Request) {
       existingRegistration: existing[0],
     }, 409);
   }
-  if (body.moveFromRegistrationId) {
-    await rest(`maxim_registration_requests?id=eq.${body.moveFromRegistrationId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ status: "superseded", updated_at: new Date().toISOString() }),
-    });
-  }
-
   const externalSessionId =
     `selector:${canonical.selector}:${canonical.day.date}:${canonical.slot.startTime}:${body.courseId}`;
   const startsAt = easternTimestamp(canonical.day.date, canonical.slot.startTime);
-  const inserted = await rest("maxim_registration_requests", {
+  const inserted = await rest("rpc/maxim_replace_registration", {
     method: "POST",
     body: JSON.stringify({
-      employee_profile_id: profiles[0].id,
-      external_session_id: externalSessionId,
-      external_course_id: String(body.courseId),
-      starts_at: startsAt,
-      registration_url: registrationUrl,
-      billing_account: body.billingAccount,
-      status: "requested",
-      supersedes_request_id: body.moveFromRegistrationId || null,
+      p_employee_profile_id: profiles[0].id,
+      p_external_session_id: externalSessionId,
+      p_external_course_id: String(body.courseId),
+      p_starts_at: startsAt,
+      p_registration_url: registrationUrl,
+      p_billing_account: body.billingAccount,
+      p_location_key: canonical.locationKey,
+      p_replace_request_id: body.moveFromRegistrationId || null,
     }),
   });
-  await rest(`maxim_employee_profiles?id=eq.${profiles[0].id}`, {
-    method: "PATCH",
-    body: JSON.stringify({
-      workflow_stage: 2,
-      status_detail: `Registration requested ${canonical.day.displayDate}`,
-      current_external_class_id: externalSessionId,
-      current_external_registration_id: inserted[0].id,
-      updated_at: new Date().toISOString(),
-    }),
-  });
+  const registration = Array.isArray(inserted) ? inserted[0] : inserted;
   return response({
     ok: true,
-    registrationId: inserted[0].id,
+    registrationId: registration.id,
     personId: sourceRef,
     canonicalSlot: {
       selector: canonical.selector,
       courseId: String(body.courseId),
       date: canonical.day.date,
       startTime: canonical.slot.startTime,
+      locationKey: canonical.locationKey,
     },
   });
 }
