@@ -156,6 +156,12 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn(".gantt-head{position:sticky;top:0", html)
         self.assertIn(".flow{position:static;height:auto;max-height:none}", html)
 
+    def test_participant_column_shows_searchable_clickable_email_state(self) -> None:
+        html = read_page()
+        self.assertIn("${p.name} ${p.email} ${p.course}", html)
+        self.assertIn('class="gantt-email" href="mailto:', html)
+        self.assertIn("Email unavailable", html)
+
     def test_link_sent_date_is_persisted_before_opening_email(self) -> None:
         html = read_page()
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
