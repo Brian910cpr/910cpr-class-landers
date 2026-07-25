@@ -201,6 +201,19 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("classDate: row.scheduled_class_date || registration?.starts_at", source)
         self.assertIn("const dueOrder=String(a.expirationDate||'9999-12-31')", html)
 
+    def test_employee_api_limits_due_and_retains_searchable_invoiced_people(self) -> None:
+        html = read_page()
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("function easternMonthBoundary", source)
+        self.assertIn("const afterNextMonth = easternMonthBoundary(2)", source)
+        self.assertIn("expiration_date.gte.${currentMonth}", source)
+        self.assertIn("expiration_date.lt.${afterNextMonth}", source)
+        self.assertIn("const invoicedRetentionStart = monthsAgoIso(22)", source)
+        self.assertIn("workflow_stage.eq.5,updated_at.gte.${invoicedRetentionStart}", source)
+        self.assertIn('invoiceLabel: row.workflow_stage === 5 ? "INVOICED"', source)
+        self.assertIn("${p.eCardCode||''}", html)
+        self.assertIn("const invoicedOrder=", html)
+
     def test_maxim_portal_uses_supabase_access_gate_and_persistent_employee_api(self) -> None:
         html = read_page()
         self.assertIn('id="accessGate"', html)
