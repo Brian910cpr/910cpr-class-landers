@@ -10,6 +10,12 @@ SHARED_AVAILABILITY = ROOT / "docs" / "assets" / "resolved-selector-availability
 PUBLIC_SELECTOR_PAGES = [ROOT / "docs" / "bls.html", ROOT / "docs" / "heartsaver.html"]
 SELECTOR_GENERATOR = ROOT / "scripts" / "build_bls_block_schedule_pilot.py"
 MAXIM_EDGE_FUNCTION = ROOT / "supabase" / "functions" / "maxim-portal" / "index.ts"
+MAXIM_MIGRATION = (
+    ROOT
+    / "supabase"
+    / "migrations"
+    / "20260725031000_maxim_atomic_registration_replacement.sql"
+)
 
 EXPECTED_VARIANTS = {
     "Initial": "209806",
@@ -119,13 +125,13 @@ class MaximCorporatePortalTests(unittest.TestCase):
     def test_training_flow_uses_compact_connected_workflow_cells(self) -> None:
         html = read_page()
         self.assertIn("function flowStageContent", html)
-        self.assertIn("<div>eCard #</div><div>Invoice #</div>", html)
+        self.assertIn("<div>eCard / expiration</div><div>Invoice</div>", html)
         self.assertIn("grid-template-columns:24% 14% 18% 18% 13% 13%", html)
         self.assertIn(".layout{grid-template-columns:minmax(360px,40fr) minmax(0,60fr)", html)
         self.assertIn(".gantt{min-width:0;width:100%}", html)
         self.assertIn(".gantt-pill{display:none!important}", html)
         self.assertIn("person.expirationDate", html)
-        self.assertIn("person.classDate||stage===2", html)
+        self.assertIn("if(index===2){if(person.classDate)", html)
         self.assertIn("person.eCardCode", html)
         self.assertIn("person.invoiceUrl", html)
         self.assertIn("No eCard found yet", html)
@@ -139,14 +145,14 @@ class MaximCorporatePortalTests(unittest.TestCase):
 
     def test_workflow_columns_have_the_requested_meaning_and_actions(self) -> None:
         html = read_page()
-        self.assertIn("<div>Participant</div><div>Coming Due</div><div>Link Sent</div>", html)
-        self.assertIn("<div>Registered</div><div>eCard #</div><div>Invoice #</div>", html)
-        self.assertIn("person.eCardCode?'eCard '+safeText(person.eCardCode):'Unknown'", html)
+        self.assertIn("<div>Participant</div><div>Coming Due / Link</div><div>Status</div>", html)
+        self.assertIn("<div>Class date / time</div><div>eCard / expiration</div>", html)
+        self.assertIn("completed=Boolean(person.eCardCode)", html)
         self.assertIn(">Send link</button>", html)
         self.assertIn(">Schedule</button>", html)
         self.assertIn(">Skip</button>", html)
         self.assertIn(">Reschedule</button>", html)
-        self.assertIn(">Delete</button>", html)
+        self.assertIn("returnToComingDue", html)
         self.assertIn("No eCard found yet", html)
         self.assertNotIn("person.invoiceLabel||'Not yet available'", html)
 
@@ -171,6 +177,9 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("link_sent_at: sentAt", source)
         self.assertIn("linkSentDate: row.link_sent_at", source)
         self.assertIn('route[2] === "link-sent"', source)
+        self.assertIn("person.stage=result.workflowStage", html)
+        self.assertIn("profiles[0].current_external_registration_id ? 2 : 1", source)
+        self.assertIn("Scheduling is closed because this employee has an eCard.", source)
 
     def test_return_to_due_is_a_persistent_authenticated_workflow_action(self) -> None:
         html = read_page()
@@ -228,9 +237,62 @@ class MaximCorporatePortalTests(unittest.TestCase):
 
     def test_empty_canonical_course_projection_is_shown_without_fallback(self) -> None:
         self.assertIn(
-            '<div class="empty">No current valid dates returned for ',
+            "No current valid dates are available at the approved location",
             read_page(),
         )
+
+    def test_atomic_reschedule_preserves_history_and_releases_after_insert(self) -> None:
+        sql = MAXIM_MIGRATION.read_text(encoding="utf-8")
+        insert_at = sql.index("insert into public.maxim_registration_requests")
+        release_at = sql.index("commitment_released_at = now()")
+        self.assertLess(insert_at, release_at)
+        self.assertIn("status = 'superseded'", sql)
+        self.assertIn("supersedes_request_id", sql)
+        self.assertIn("maxim_one_active_requirement", sql)
+        self.assertIn("pg_advisory_xact_lock", sql)
+
+    def test_reschedule_api_uses_atomic_database_rule(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("rpc/maxim_replace_registration", source)
+        self.assertNotIn(
+            'body: JSON.stringify({ status: "superseded", updated_at:',
+            source[source.index("async function registerEmployee"):],
+        )
+
+    def test_actions_continue_until_ecard_and_passed_date_stays_visible(self) -> None:
+        html = read_page()
+        self.assertIn("if(!completed)cell.push", html)
+        self.assertIn(">Send link</button>", html)
+        self.assertIn(">Reschedule</button>", html)
+        self.assertIn("Passed · awaiting eCard", html)
+        self.assertIn("if(index===2){if(person.classDate)", html)
+        self.assertIn("completed=Boolean(person.eCardCode)", html)
+
+    def test_recent_completion_and_history_windows_are_explicit(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        html = read_page()
+        self.assertIn("30 * 24 * 60 * 60 * 1000", source)
+        self.assertIn('.slice(0, 15)', source)
+        self.assertIn('"recently_completed"', source)
+        self.assertIn('"history"', source)
+        self.assertIn("p.bucket!=='history'||q", html)
+
+    def test_location_and_expiration_policies_are_enforced(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        html = read_page()
+        self.assertIn('id="locationChoice"', html)
+        self.assertIn("locationKeyForCourse", html)
+        self.assertIn("canUseDateForPerson", html)
+        self.assertIn("adminOverrideExpiration:true", html)
+        self.assertIn("MAXIM_APPROVED_LOCATIONS", source)
+        self.assertIn("!body.adminOverrideExpiration && body.expirationDate", source)
+        self.assertIn("canonicalLocationKey !== String(body.locationKey", source)
+
+    def test_maxim_registration_never_requests_payment(self) -> None:
+        html = read_page()
+        self.assertIn("No payment or promo code is needed.", html)
+        self.assertNotIn("PaymentIntent", html)
+        self.assertNotIn("checkout.session", html)
 
 
 if __name__ == "__main__":
