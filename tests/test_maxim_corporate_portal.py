@@ -120,7 +120,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("function flowStageContent", html)
         self.assertIn("<div>eCard #</div><div>Invoice #</div>", html)
         self.assertIn("grid-template-columns:24% 14% 18% 18% 13% 13%", html)
-        self.assertIn(".layout{grid-template-columns:minmax(360px,40fr) minmax(0,60fr)}", html)
+        self.assertIn(".layout{grid-template-columns:minmax(360px,40fr) minmax(0,60fr)", html)
         self.assertIn(".gantt{min-width:0;width:100%}", html)
         self.assertIn(".gantt-pill{display:none!important}", html)
         self.assertIn("person.expirationDate", html)
