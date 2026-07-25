@@ -99,9 +99,35 @@ async function login(req: Request) {
   return response({ token, expiresInSeconds: 28800 });
 }
 
+function easternMonthBoundary(offset: number) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "numeric",
+  }).formatToParts(new Date());
+  const year = Number(parts.find((part) => part.type === "year")?.value);
+  const month = Number(parts.find((part) => part.type === "month")?.value) - 1;
+  const boundary = new Date(Date.UTC(year, month + offset, 1));
+  return `${boundary.getUTCFullYear()}-${String(boundary.getUTCMonth() + 1).padStart(2, "0")}-01`;
+}
+
+function monthsAgoIso(months: number) {
+  const date = new Date();
+  date.setUTCMonth(date.getUTCMonth() - months);
+  return date.toISOString();
+}
+
+function ecardCodeFromStatus(value: unknown) {
+  return String(value || "").match(/\beCard\s+([A-Za-z0-9-]+)/i)?.[1] || null;
+}
+
 async function listEmployees() {
+  const currentMonth = easternMonthBoundary(0);
+  const afterNextMonth = easternMonthBoundary(2);
+  const invoicedRetentionStart = monthsAgoIso(22);
+  const eligibility = `or=(and(workflow_stage.eq.0,expiration_date.gte.${currentMonth},expiration_date.lt.${afterNextMonth}),workflow_stage.in.(1,2,3,4),and(workflow_stage.eq.5,updated_at.gte.${invoicedRetentionStart}))`;
   const rows = await rest(
-    "maxim_employee_profiles?active=eq.true&select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,link_sent_at,prior_class_date,expiration_date,prior_ecard_code,scheduled_class_date,enrollware_class_id,current_external_class_id,current_external_registration_id,customers(id,first_name,last_name,email,phone)&order=workflow_stage.asc,expiration_date.asc.nullslast,updated_at.desc",
+    `maxim_employee_profiles?active=eq.true&${eligibility}&select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,link_sent_at,prior_class_date,expiration_date,prior_ecard_code,scheduled_class_date,enrollware_class_id,current_external_class_id,current_external_registration_id,updated_at,customers(id,first_name,last_name,email,phone)&order=workflow_stage.asc,expiration_date.asc.nullslast,updated_at.desc`,
   );
   const requests = await rest(
     "maxim_registration_requests?select=id,employee_profile_id,starts_at,registration_url,status,created_at&order=created_at.desc",
@@ -129,7 +155,7 @@ async function listEmployees() {
       linkSentDate: row.link_sent_at,
       priorClassDate: row.prior_class_date,
       expirationDate: row.expiration_date,
-      eCardCode: row.prior_ecard_code,
+      eCardCode: row.prior_ecard_code || ecardCodeFromStatus(row.status_detail),
       enrollwareClassId: row.enrollware_class_id,
       externalClassId: row.current_external_class_id,
       externalRegistrationId: row.current_external_registration_id,
@@ -137,6 +163,8 @@ async function listEmployees() {
       registrationUrl: registration?.registration_url || null,
       registrationRequestedAt: registration?.created_at || null,
       registrationStatus: registration?.status || null,
+      invoiceLabel: row.workflow_stage === 5 ? "INVOICED" : null,
+      invoiceDate: row.workflow_stage === 5 ? row.updated_at : null,
     });
     }),
   });
