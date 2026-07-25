@@ -101,7 +101,7 @@ async function login(req: Request) {
 
 async function listEmployees() {
   const rows = await rest(
-    "maxim_employee_profiles?active=eq.true&select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,current_external_class_id,current_external_registration_id,customers(id,first_name,last_name,email,phone)&order=workflow_stage.asc,updated_at.desc",
+    "maxim_employee_profiles?active=eq.true&select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,link_sent_at,current_external_class_id,current_external_registration_id,customers(id,first_name,last_name,email,phone)&order=workflow_stage.asc,updated_at.desc",
   );
   const requests = await rest(
     "maxim_registration_requests?select=id,employee_profile_id,starts_at,registration_url,status,created_at&order=created_at.desc",
@@ -126,6 +126,7 @@ async function listEmployees() {
       requiredTraining: row.required_training,
       workflowStage: row.workflow_stage,
       statusDetail: row.status_detail,
+      linkSentDate: row.link_sent_at,
       externalClassId: row.current_external_class_id,
       externalRegistrationId: row.current_external_registration_id,
       classDate: registration?.starts_at || null,
@@ -199,6 +200,21 @@ async function returnEmployeeToComingDue(id: string) {
     }),
   });
   return response({ ok: true, id, workflowStage: 0 });
+}
+
+async function markScheduleLinkSent(id: string) {
+  const sentAt = new Date().toISOString();
+  const rows = await rest(`maxim_employee_profiles?id=eq.${id}&active=eq.true`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      workflow_stage: 1,
+      status_detail: "Scheduling link sent",
+      link_sent_at: sentAt,
+      updated_at: sentAt,
+    }),
+  });
+  if (!rows.length) return response({ error: "Employee not found." }, 404);
+  return response({ ok: true, id, linkSentDate: sentAt, workflowStage: 1 });
 }
 
 const selectorByCourse: Record<string, string> = {
@@ -377,6 +393,12 @@ Deno.serve(async (req) => {
       route[2] === "return-to-due"
     ) {
       return await returnEmployeeToComingDue(route[1]);
+    }
+    if (
+      req.method === "POST" && route[0] === "employees" && route[1] &&
+      route[2] === "link-sent"
+    ) {
+      return await markScheduleLinkSent(route[1]);
     }
     if (req.method === "POST" && route[0] === "validate-slot") {
       return await validateCanonicalSlot(req);
