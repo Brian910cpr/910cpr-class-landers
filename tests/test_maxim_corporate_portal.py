@@ -149,6 +149,13 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("No eCard found yet", html)
         self.assertNotIn("person.invoiceLabel||'Not yet available'", html)
 
+    def test_desktop_workflow_scrolls_inside_a_fixed_viewport_box(self) -> None:
+        html = read_page()
+        self.assertIn(".flow{position:sticky;top:12px;height:calc(100vh - 24px)", html)
+        self.assertIn(".gantt-wrap{flex:1 1 auto;min-height:0;overflow:auto", html)
+        self.assertIn(".gantt-head{position:sticky;top:0", html)
+        self.assertIn(".flow{position:static;height:auto;max-height:none}", html)
+
     def test_link_sent_date_is_persisted_before_opening_email(self) -> None:
         html = read_page()
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
