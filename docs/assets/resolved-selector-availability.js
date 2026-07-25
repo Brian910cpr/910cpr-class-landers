@@ -79,3 +79,50 @@
     slotKey,
   };
 });
+
+(function installMaximSupportChat() {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  if (!/^\/corp\/maxim(?:\.html)?\/?$/.test(window.location.pathname)) return;
+
+  function install() {
+    document.querySelector(".chat-shell")?.remove();
+
+    window._support = window._support || { ui: {}, user: {} };
+    const support = window._support;
+    support.account = "168a2136-bb03-4c4d-a39a-764bd189f30d";
+    support.ui.contactMode = "default";
+    support.ui.enableKb = "false";
+    support.ui.mailbox = "87557538";
+    support.ui.styles = { widgetColor: "#258544" };
+    support.ui.shoutboxFacesMode = "brand-avatar";
+    support.ui.widget = {
+      icon: "webChat",
+      allowBotProcessing: "true",
+      slug: "coastal-cpr-training-slash-910cpr-com",
+      label: {
+        text: "Let me know if you have any questions!",
+        mode: "notification",
+        delay: 10,
+        primary: "",
+        secondary: "",
+      },
+      position: "bottom-left",
+    };
+    support.ui.overrides = support.ui.overrides || {};
+    support.ui.overrides.confirmationMessage = "Thanks! Your message has been submitted. We'll get back to you here or via email.";
+    support.ui.user = { authpath: "/m/api/reamaze/v2/customers/auth?brand=4875169" };
+
+    if (!document.querySelector('script[src="https://cdn.reamaze.com/assets/reamaze-godaddy-loader.js"]')) {
+      const loader = document.createElement("script");
+      loader.async = true;
+      loader.src = "https://cdn.reamaze.com/assets/reamaze-godaddy-loader.js";
+      document.head.appendChild(loader);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", install, { once: true });
+  } else {
+    install();
+  }
+})();
