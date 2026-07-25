@@ -1,97 +1,16 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-24T23:34:57.126797+00:00",
+  "generated_at": "2026-07-25T00:10:50.770645+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
-    "sessions": 61,
+    "sessions": 58,
     "brian_resource_blocks": 2,
     "student_snapshot_classes": 17,
-    "student_snapshot_matches": 7,
-    "seated_students_matched": 7,
-    "covered_classes_without_students": 10
+    "student_snapshot_matches": 5,
+    "seated_students_matched": 5,
+    "covered_classes_without_students": 9
   },
   "sessions": [
-    {
-      "session_id": "13801197",
-      "course_name": "AHA Heartsaver First Aid CPR AED",
-      "start_at": "2026-07-24T10:00:00-04:00",
-      "end_at": "2026-07-24T12:30:00-04:00",
-      "lead_instructor_name": null,
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 0,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13801197",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ],
-      "capacity": {
-        "registered_count": 0,
-        "students_count_raw": 0
-      },
-      "enrolled_count": 0,
-      "enrollment_evidence": {
-        "source": "enrollware_student_snapshot",
-        "status": "no_student_row_in_snapshot",
-        "as_of": "2026-07-18T08:40:17.093250-04:00"
-      }
-    },
-    {
-      "session_id": "12775553",
-      "course_name": "AHA BLS Provider Renewal",
-      "start_at": "2026-07-24T12:30:00-04:00",
-      "end_at": "2026-07-24T14:00:00-04:00",
-      "lead_instructor_name": null,
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 1,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=12775553",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ],
-      "capacity": {
-        "registered_count": 1,
-        "students_count_raw": 1
-      },
-      "enrolled_count": 1,
-      "enrollment_evidence": {
-        "source": "enrollware_student_snapshot",
-        "status": "student_rows_present",
-        "class_id": "49475",
-        "as_of": "2026-07-18T08:40:17.093250-04:00",
-        "status_counts": {
-          "Pending": 1
-        }
-      }
-    },
-    {
-      "session_id": "13673173",
-      "course_name": "AHA ACLS Provider (Renewal)",
-      "start_at": "2026-07-24T14:00:00-04:00",
-      "end_at": "2026-07-24T18:00:00-04:00",
-      "lead_instructor_name": "Amy Arnold",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 1,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13673173",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "instructor:amy_arnold",
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ],
-      "capacity": {
-        "registered_count": 1,
-        "students_count_raw": 1
-      },
-      "enrolled_count": 1,
-      "enrollment_evidence": {
-        "source": "enrollware_student_snapshot",
-        "status": "student_rows_present",
-        "class_id": "51180",
-        "as_of": "2026-07-18T08:40:17.093250-04:00",
-        "status_counts": {
-          "Pending": 1
-        }
-      }
-    },
     {
       "session_id": "12775558",
       "course_name": "AHA BLS Provider Renewal",
