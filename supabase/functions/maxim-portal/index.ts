@@ -103,8 +103,19 @@ async function listEmployees() {
   const rows = await rest(
     "maxim_employee_profiles?active=eq.true&select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,current_external_class_id,current_external_registration_id,customers(id,first_name,last_name,email,phone)&order=workflow_stage.asc,updated_at.desc",
   );
+  const requests = await rest(
+    "maxim_registration_requests?select=id,employee_profile_id,starts_at,registration_url,status,created_at&order=created_at.desc",
+  );
+  const latestRequest = new Map<string, any>();
+  for (const request of requests) {
+    if (!latestRequest.has(request.employee_profile_id)) {
+      latestRequest.set(request.employee_profile_id, request);
+    }
+  }
   return response({
-    employees: rows.map((row: any) => ({
+    employees: rows.map((row: any) => {
+      const registration = latestRequest.get(row.id);
+      return ({
       id: row.id,
       sourceRef: row.source_ref,
       firstName: row.customers.first_name,
@@ -117,7 +128,12 @@ async function listEmployees() {
       statusDetail: row.status_detail,
       externalClassId: row.current_external_class_id,
       externalRegistrationId: row.current_external_registration_id,
-    })),
+      classDate: registration?.starts_at || null,
+      registrationUrl: registration?.registration_url || null,
+      registrationRequestedAt: registration?.created_at || null,
+      registrationStatus: registration?.status || null,
+    });
+    }),
   });
 }
 
@@ -158,6 +174,31 @@ async function deactivateEmployee(id: string) {
   });
   if (!rows.length) return response({ error: "Employee not found." }, 404);
   return response({ ok: true, id, active: false });
+}
+
+async function returnEmployeeToComingDue(id: string) {
+  const profiles = await rest(
+    `maxim_employee_profiles?id=eq.${id}&active=eq.true&select=id,current_external_registration_id`,
+  );
+  if (profiles.length !== 1) return response({ error: "Employee not found." }, 404);
+  const registrationId = profiles[0].current_external_registration_id;
+  if (registrationId) {
+    await rest(`maxim_registration_requests?id=eq.${registrationId}&status=eq.requested`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: "superseded", updated_at: new Date().toISOString() }),
+    });
+  }
+  await rest(`maxim_employee_profiles?id=eq.${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      workflow_stage: 0,
+      status_detail: "Returned to Coming Due",
+      current_external_class_id: null,
+      current_external_registration_id: null,
+      updated_at: new Date().toISOString(),
+    }),
+  });
+  return response({ ok: true, id, workflowStage: 0 });
 }
 
 const selectorByCourse: Record<string, string> = {
@@ -330,6 +371,12 @@ Deno.serve(async (req) => {
     }
     if (req.method === "DELETE" && route[0] === "employees" && route[1]) {
       return await deactivateEmployee(route[1]);
+    }
+    if (
+      req.method === "POST" && route[0] === "employees" && route[1] &&
+      route[2] === "return-to-due"
+    ) {
+      return await returnEmployeeToComingDue(route[1]);
     }
     if (req.method === "POST" && route[0] === "validate-slot") {
       return await validateCanonicalSlot(req);

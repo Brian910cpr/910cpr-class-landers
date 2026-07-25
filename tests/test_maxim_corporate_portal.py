@@ -115,19 +115,43 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("history will be preserved", html)
         self.assertIn("scheduleEmployee", html)
 
-    def test_training_flow_uses_connected_stage_values_with_quiet_fallbacks(self) -> None:
+    def test_training_flow_uses_compact_connected_workflow_cells(self) -> None:
         html = read_page()
         self.assertIn("function flowStageContent", html)
-        self.assertIn('Connected data not available yet', html)
+        self.assertIn("<div>eCard #</div><div>Invoice #</div>", html)
+        self.assertIn("repeat(5,minmax(125px,1fr))", html)
+        self.assertIn(".gantt-pill{display:none!important}", html)
         self.assertIn("person.expirationDate", html)
-        self.assertIn("person.lastClassUrl", html)
-        self.assertIn("person.classDate||person.detail", html)
+        self.assertIn("person.classDate||stage===2", html)
         self.assertIn("person.eCardCode", html)
-        self.assertIn("person.eCardUrl", html)
         self.assertIn("person.invoiceUrl", html)
+        self.assertIn("To be assigned", html)
+        self.assertIn("Not yet available", html)
+        self.assertIn("Schedule for them", html)
+        self.assertIn("Return to Coming Due", html)
+        self.assertIn("Wilmingtonoffice%40maxim.com", html)
+        self.assertIn("https://www.910cpr.com/go/myecards", html)
         self.assertIn("function lastNameOf", html)
         self.assertIn("function compareTrainingFlow", html)
         self.assertIn(".sort(compareTrainingFlow)", html)
+
+    def test_return_to_due_is_a_persistent_authenticated_workflow_action(self) -> None:
+        html = read_page()
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("/return-to-due", html)
+        self.assertIn("returnEmployeeToComingDue", source)
+        self.assertIn('workflow_stage: 0', source)
+        self.assertIn('status: "superseded"', source)
+        self.assertIn("current_external_registration_id: null", source)
+        self.assertIn('route[2] === "return-to-due"', source)
+
+    def test_employee_api_returns_real_registration_date_and_url(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("maxim_registration_requests?select=", source)
+        self.assertIn("starts_at", source)
+        self.assertIn("registration_url", source)
+        self.assertIn("classDate: registration?.starts_at", source)
+        self.assertIn("registrationUrl: registration?.registration_url", source)
 
     def test_maxim_portal_uses_supabase_access_gate_and_persistent_employee_api(self) -> None:
         html = read_page()
