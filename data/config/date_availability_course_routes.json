@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "date-availability-course-routes.v1",
+  "routes": [
+    {"family_key":"acls","course_id":"241108","route":"aha-acls-provider-initial","name":"AHA ACLS Provider — Initial","hub_path":"/acls.html"},
+    {"family_key":"acls","course_id":"209818","route":"aha-acls-provider-renewal","name":"AHA ACLS Provider — Renewal","hub_path":"/acls.html"},
+    {"family_key":"arc","course_id":"372258","route":"arc-adult-cpr-aed-blended","name":"American Red Cross Adult CPR/AED — Blended","hub_path":"/arc.html"},
+    {"family_key":"arc","course_id":"248288","route":"arc-basic-life-support","name":"American Red Cross Basic Life Support","hub_path":"/arc.html"},
+    {"family_key":"arc","course_id":"369209","route":"arc-first-aid-cpr-aed","name":"American Red Cross First Aid/CPR/AED","hub_path":"/arc.html"},
+    {"family_key":"bls","course_id":"210549","route":"aha-heartcode-bls","name":"AHA HeartCode BLS","hub_path":"/bls.html"},
+    {"family_key":"bls","course_id":"209806","route":"aha-bls-provider","name":"AHA BLS Provider","hub_path":"/bls.html"},
+    {"family_key":"bls","course_id":"359474","route":"aha-bls-provider-renewal","name":"AHA BLS Provider Renewal","hub_path":"/bls.html"},
+    {"family_key":"family_cpr","course_id":"252737","route":"family-friends-cpr","name":"AHA Family & Friends CPR","hub_path":"/family-cpr.html"},
+    {"family_key":"heartsaver","course_id":"209808","route":"aha-heartsaver-cpr-aed-blended","name":"AHA Heartsaver CPR AED — Blended","hub_path":"/heartsaver.html"},
+    {"family_key":"heartsaver","course_id":"251545","route":"aha-heartsaver-pediatric-first-aid-cpr-aed-blended","name":"AHA Heartsaver Pediatric First Aid CPR AED — Blended","hub_path":"/heartsaver.html"},
+    {"family_key":"heartsaver","course_id":"329495","route":"aha-heartsaver-first-aid-cpr-aed-blended","name":"AHA Heartsaver First Aid CPR AED — Blended","hub_path":"/heartsaver.html"},
+    {"family_key":"heartsaver","course_id":"344085","route":"aha-heartsaver-cpr-aed","name":"AHA Heartsaver CPR AED","hub_path":"/heartsaver.html"},
+    {"family_key":"heartsaver","course_id":"209809","route":"aha-heartsaver-first-aid-cpr-aed","name":"AHA Heartsaver First Aid CPR AED","hub_path":"/heartsaver.html"},
+    {"family_key":"heartsaver","course_id":"351632","route":"aha-heartsaver-pediatric-first-aid-cpr-aed","name":"AHA Heartsaver Pediatric First Aid CPR AED","hub_path":"/heartsaver.html"},
+    {"family_key":"hsi","course_id":"445670","route":"hsi-bls-adult-first-aid-blended","name":"HSI BLS + Adult First Aid — Blended","hub_path":"/hsi.html"},
+    {"family_key":"hsi","course_id":"463743","route":"hsi-bls-challenge","name":"HSI BLS Challenge","hub_path":"/hsi.html"},
+    {"family_key":"pals","course_id":"209805","route":"aha-pals-provider","name":"AHA PALS Provider","hub_path":"/pals.html"},
+    {"family_key":"pals","course_id":"251496","route":"aha-pals-renewal","name":"AHA PALS Renewal","hub_path":"/pals.html"},
+    {"family_key":"uscg_first_aid_cpr_aed","course_id":"329495","route":"uscg-first-aid-cpr-aed-blended","name":"USCG First Aid CPR AED — Blended","hub_path":"/uscg-elementary-first-aid-cpr.html"},
+    {"family_key":"uscg_first_aid_cpr_aed","course_id":"209809","route":"uscg-first-aid-cpr-aed-in-person","name":"USCG First Aid CPR AED — In person","hub_path":"/uscg-elementary-first-aid-cpr.html"}
+  ]
+}
