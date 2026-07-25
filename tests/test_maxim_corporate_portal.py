@@ -120,7 +120,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("function flowStageContent", html)
         self.assertIn("<div>eCard #</div><div>Invoice #</div>", html)
         self.assertIn("grid-template-columns:24% 14% 18% 18% 13% 13%", html)
-        self.assertIn(".layout{grid-template-columns:minmax(360px,40fr) minmax(0,60fr)}", html)
+        self.assertIn(".layout{grid-template-columns:minmax(360px,40fr) minmax(0,60fr)", html)
         self.assertIn(".gantt{min-width:0;width:100%}", html)
         self.assertIn(".gantt-pill{display:none!important}", html)
         self.assertIn("person.expirationDate", html)
@@ -148,6 +148,13 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn(">Delete</button>", html)
         self.assertIn("No eCard found yet", html)
         self.assertNotIn("person.invoiceLabel||'Not yet available'", html)
+
+    def test_desktop_workflow_scrolls_inside_a_fixed_viewport_box(self) -> None:
+        html = read_page()
+        self.assertIn(".flow{position:sticky;top:12px;height:calc(100vh - 24px)", html)
+        self.assertIn(".gantt-wrap{flex:1 1 auto;min-height:0;overflow:auto", html)
+        self.assertIn(".gantt-head{position:sticky;top:0", html)
+        self.assertIn(".flow{position:static;height:auto;max-height:none}", html)
 
     def test_link_sent_date_is_persisted_before_opening_email(self) -> None:
         html = read_page()
