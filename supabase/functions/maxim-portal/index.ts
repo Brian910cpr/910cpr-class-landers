@@ -117,6 +117,10 @@ function monthsAgoIso(months: number) {
   return date.toISOString();
 }
 
+function ecardCodeFromStatus(value: unknown) {
+  return String(value || "").match(/\beCard\s+([A-Za-z0-9-]+)/i)?.[1] || null;
+}
+
 async function listEmployees() {
   const currentMonth = easternMonthBoundary(0);
   const afterNextMonth = easternMonthBoundary(2);
@@ -151,7 +155,7 @@ async function listEmployees() {
       linkSentDate: row.link_sent_at,
       priorClassDate: row.prior_class_date,
       expirationDate: row.expiration_date,
-      eCardCode: row.prior_ecard_code,
+      eCardCode: row.prior_ecard_code || ecardCodeFromStatus(row.status_detail),
       enrollwareClassId: row.enrollware_class_id,
       externalClassId: row.current_external_class_id,
       externalRegistrationId: row.current_external_registration_id,

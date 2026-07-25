@@ -211,6 +211,8 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("const invoicedRetentionStart = monthsAgoIso(22)", source)
         self.assertIn("workflow_stage.eq.5,updated_at.gte.${invoicedRetentionStart}", source)
         self.assertIn('invoiceLabel: row.workflow_stage === 5 ? "INVOICED"', source)
+        self.assertIn("function ecardCodeFromStatus", source)
+        self.assertIn("row.prior_ecard_code || ecardCodeFromStatus(row.status_detail)", source)
         self.assertIn("${p.eCardCode||''}", html)
         self.assertIn("const invoicedOrder=", html)
 
