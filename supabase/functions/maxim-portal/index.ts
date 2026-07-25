@@ -144,16 +144,29 @@ async function listEmployees() {
       const registration = latestRequest.get(row.id);
       const eCardCode = row.prior_ecard_code || ecardCodeFromStatus(row.status_detail);
       const completedAt = eCardCode
-        ? row.ecard_detected_at || row.updated_at
+        ? row.prior_class_date || row.scheduled_class_date ||
+          registration?.starts_at || row.ecard_detected_at || row.updated_at
         : null;
       const completedAge = completedAt
         ? now - new Date(completedAt).getTime()
         : null;
-      const bucket = eCardCode
+      const expirationDate = row.expiration_date
+        ? String(row.expiration_date).slice(0, 10)
+        : null;
+      const renewalDueNow = Boolean(
+        expirationDate &&
+        expirationDate >= currentMonth &&
+        expirationDate < afterNextMonth,
+      );
+      const bucket = !row.active
+        ? "history"
+        : renewalDueNow
+        ? "active"
+        : eCardCode
         ? completedAge !== null && completedAge <= completedWindowMs
           ? "recently_completed"
           : "history"
-        : row.active ? "active" : "history";
+        : "active";
       return {
       id: row.id,
       sourceRef: row.source_ref,

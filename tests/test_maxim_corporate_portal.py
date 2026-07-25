@@ -225,6 +225,17 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("${p.eCardCode||''}", html)
         self.assertIn("const invoicedOrder=", html)
 
+    def test_completed_people_archive_after_one_month_until_renewal_window(self) -> None:
+        html = read_page()
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("expirationDate >= currentMonth", source)
+        self.assertIn("expirationDate < afterNextMonth", source)
+        self.assertIn("row.prior_class_date || row.scheduled_class_date", source)
+        self.assertIn("completedAge <= completedWindowMs", source)
+        self.assertIn("renewalDueNow", source)
+        self.assertIn("p.bucket!=='history'||q", html)
+        self.assertIn("completed?'INVOICE pending':'Invoice unresolved'", html)
+
     def test_maxim_portal_uses_supabase_access_gate_and_persistent_employee_api(self) -> None:
         html = read_page()
         self.assertIn('id="accessGate"', html)
