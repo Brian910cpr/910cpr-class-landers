@@ -101,7 +101,7 @@ async function login(req: Request) {
 
 async function listEmployees() {
   const rows = await rest(
-    "maxim_employee_profiles?active=eq.true&select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,link_sent_at,current_external_class_id,current_external_registration_id,customers(id,first_name,last_name,email,phone)&order=workflow_stage.asc,updated_at.desc",
+    "maxim_employee_profiles?active=eq.true&select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,link_sent_at,prior_class_date,expiration_date,prior_ecard_code,scheduled_class_date,enrollware_class_id,current_external_class_id,current_external_registration_id,customers(id,first_name,last_name,email,phone)&order=workflow_stage.asc,expiration_date.asc.nullslast,updated_at.desc",
   );
   const requests = await rest(
     "maxim_registration_requests?select=id,employee_profile_id,starts_at,registration_url,status,created_at&order=created_at.desc",
@@ -127,9 +127,13 @@ async function listEmployees() {
       workflowStage: row.workflow_stage,
       statusDetail: row.status_detail,
       linkSentDate: row.link_sent_at,
+      priorClassDate: row.prior_class_date,
+      expirationDate: row.expiration_date,
+      eCardCode: row.prior_ecard_code,
+      enrollwareClassId: row.enrollware_class_id,
       externalClassId: row.current_external_class_id,
       externalRegistrationId: row.current_external_registration_id,
-      classDate: registration?.starts_at || null,
+      classDate: row.scheduled_class_date || registration?.starts_at || null,
       registrationUrl: registration?.registration_url || null,
       registrationRequestedAt: registration?.created_at || null,
       registrationStatus: registration?.status || null,
