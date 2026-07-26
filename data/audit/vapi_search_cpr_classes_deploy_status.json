@@ -1,0 +1,42 @@
+{
+  "status": "blocked_before_production_deployment",
+  "branch": "codex/vapi-search-cpr-classes-api",
+  "implementation_commit": "83f13f2eb7c",
+  "endpoint": "GET /voice/search-cpr-classes",
+  "worker_route_expected": "https://schedule.910cpr.com/voice/search-cpr-classes",
+  "implemented": true,
+  "deployed": false,
+  "source": {
+    "kind": "published_generated_block_selector_availability_snapshots",
+    "base_url": "https://www.910cpr.com/data/block-selector-availability",
+    "files": ["bls.json", "acls.json", "pals.json", "heartsaver.json", "arc.json", "hsi.json"],
+    "observed_generated_at": "2026-07-24T23:34:58.664477",
+    "maximum_data_staleness": "Time since most recent successful resolver/build plus static-site deployment and CDN propagation."
+  },
+  "local_validation": {
+    "node_worker_tests": "passed",
+    "python_unittest_wrapper": "passed",
+    "wrangler_deploy_dry_run": "passed",
+    "real_source_authenticated_check": {
+      "status": 200,
+      "query": "/voice/search-cpr-classes?program=BLS&date_from=2026-08-01&date_to=2026-08-31&limit=3",
+      "total_matching": 1388,
+      "returned": 3,
+      "has_more": true
+    },
+    "real_source_unauthenticated_check": {
+      "status": 401
+    }
+  },
+  "deployment_blocker": {
+    "kind": "cloudflare_api_authentication",
+    "secret_management_error": "Authentication error [code: 10000]",
+    "account_access_error": "Cannot use the access token from location: 2600:1702:6bf0:940:5546:34ca:6688:8b6 [code: 9109]",
+    "impact": "VOICE_SEARCH_BEARER_TOKEN could not be stored as a Worker secret and production deployment was not performed."
+  },
+  "schema_mismatches": [
+    {"field": "price", "api_behavior": "null", "reason": "not present in generated snapshots"},
+    {"field": "seats_available", "api_behavior": "null", "reason": "not present in generated snapshots"},
+    {"field": "appointment_day_id", "api_behavior": "null for seated Enrollware rows", "reason": "seated rows use registrationUrl and do not have appointmentDayId"}
+  ]
+}
