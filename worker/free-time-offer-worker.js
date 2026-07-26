@@ -1,3 +1,5 @@
+import { handleAdminApi } from "./admin-api.js";
+
 const DEFAULT_CONFIG = {
   creationEnabled: false,
   dryRun: true,
@@ -23,6 +25,8 @@ export default {
 
 async function handleRequest(request, env, ctx) {
   const url = new URL(request.url);
+  const adminResponse = await handleAdminApi(request, env, url);
+  if (adminResponse) return adminResponse;
   if (request.method === "GET" && url.pathname.startsWith("/o/")) {
     return handleOfferSlug(request, env);
   }
@@ -347,12 +351,15 @@ async function createEnrollwareClass(offer, env) {
 
 async function writeHotSyncRecord(env, record) {
   if (env.HOT_SYNC_D1) {
+    const now = new Date().toISOString();
     await env.HOT_SYNC_D1.prepare(
       `insert into hot_sync_sessions
-       (source, status, course_key, course_display_name, start_time, end_time, location_name,
-        instructor, enrollware_class_id, enrollware_enroll_url, created_at, needs_class_report_absorption)
-       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       (id, source, status, visibility, course_key, course_display_name, start_time, end_time,
+        client_name, location_name, instructor, notes, enrollware_class_id, enrollware_enroll_url,
+        created_at, updated_at, created_by, needs_class_report_absorption)
+       values (?, ?, ?, 'hidden', ?, ?, ?, ?, '', ?, ?, '', ?, ?, ?, ?, 'offer_worker', ?)`
     ).bind(
+      `hs_${crypto.randomUUID().replace(/-/g, "")}`,
       record.source,
       record.status,
       record.course_key,
@@ -363,7 +370,8 @@ async function writeHotSyncRecord(env, record) {
       record.instructor,
       record.enrollware_class_id,
       record.enrollware_enroll_url,
-      record.created_at,
+      record.created_at || now,
+      now,
       record.needs_class_report_absorption ? 1 : 0
     ).run();
     return;
