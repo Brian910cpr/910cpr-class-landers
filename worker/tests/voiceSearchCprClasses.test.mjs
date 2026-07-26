@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { DAYPARTS, handleVoiceSearchCprClasses, normalizeSourcePayloads } from "../src/voiceSearchCprClasses.js";
+import { DAYPARTS, handleVoiceSearchCprClasses, handleVoiceSearchOptions, normalizeSourcePayloads } from "../src/voiceSearchCprClasses.js";
 
 const TOKEN = "unit-test-token";
 
@@ -176,6 +176,20 @@ test("requires bearer authentication", async () => {
   assert.equal((await request("/voice/search-cpr-classes", null)).response.status, 401);
   assert.equal((await request("/voice/search-cpr-classes", "wrong")).response.status, 401);
   assert.equal((await request("/voice/search-cpr-classes")).response.status, 200);
+});
+
+test("supports Vapi browser test CORS preflight and JSON CORS headers", async () => {
+  const options = handleVoiceSearchOptions();
+  assert.equal(options.status, 204);
+  assert.equal(options.headers.get("Access-Control-Allow-Origin"), "*");
+  assert.equal(options.headers.get("Access-Control-Allow-Methods"), "GET, OPTIONS");
+  assert.match(options.headers.get("Access-Control-Allow-Headers"), /Authorization/);
+
+  const unauthorized = (await request("/voice/search-cpr-classes", null)).response;
+  assert.equal(unauthorized.headers.get("Access-Control-Allow-Origin"), "*");
+
+  const authorized = (await request("/voice/search-cpr-classes")).response;
+  assert.equal(authorized.headers.get("Access-Control-Allow-Origin"), "*");
 });
 
 test("validates dates, daypart, delivery method, and limit", async () => {

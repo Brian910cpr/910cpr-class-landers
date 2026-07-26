@@ -1,4 +1,4 @@
-import { handleVoiceSearchCprClasses } from "./src/voiceSearchCprClasses.js";
+import { handleVoiceSearchCprClasses, handleVoiceSearchOptions } from "./src/voiceSearchCprClasses.js";
 
 const DEFAULT_CONFIG = {
   creationEnabled: false,
@@ -25,6 +25,9 @@ export default {
 
 async function handleRequest(request, env, ctx) {
   const url = new URL(request.url);
+  if (request.method === "OPTIONS" && url.pathname === "/voice/search-cpr-classes") {
+    return handleVoiceSearchOptions();
+  }
   if (request.method === "GET" && url.pathname === "/voice/search-cpr-classes") {
     return handleVoiceSearchCprClasses(request, env);
   }

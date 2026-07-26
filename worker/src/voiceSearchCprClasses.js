@@ -3,6 +3,12 @@ export const DEFAULT_LIMIT = 10;
 export const MAX_LIMIT = 25;
 export const DEFAULT_SOURCE_BASE_URL = "https://www.910cpr.com/data/block-selector-availability";
 export const SOURCE_FILES = ["bls", "acls", "pals", "heartsaver", "arc", "hsi"];
+export const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Authorization, Content-Type",
+  "Access-Control-Max-Age": "86400",
+};
 export const DAYPARTS = {
   morning: { start: "05:00", end: "11:59", timezone: TIMEZONE },
   afternoon: { start: "12:00", end: "16:59", timezone: TIMEZONE },
@@ -20,6 +26,13 @@ const FILTERS = new Set([
   "location",
   "limit",
 ]);
+
+export function handleVoiceSearchOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: CORS_HEADERS,
+  });
+}
 
 export async function handleVoiceSearchCprClasses(request, env = {}) {
   if (!isAuthorized(request, env)) {
@@ -420,6 +433,7 @@ function jsonResponse(payload, status = 200, extraHeaders = {}) {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
+      ...CORS_HEADERS,
       ...extraHeaders,
     },
   });
