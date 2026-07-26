@@ -8,3 +8,11 @@ ALLOW_PUBLIC_CREATION=false
 # For local slug lookup testing only. Populate in your shell instead of committing
 # live JSON here:
 # OFFER_DATA_JSON=<contents of docs/data/customer_facing_offers.json>
+
+# Required for GET /voice/search-cpr-classes. Set this with `wrangler secret put`
+# in production; do not commit the real token.
+# VOICE_SEARCH_BEARER_TOKEN=<local-test-token>
+
+# Optional override. Defaults to the published generated resolver snapshots:
+# https://www.910cpr.com/data/block-selector-availability
+# VOICE_SEARCH_SOURCE_BASE_URL=https://www.910cpr.com/data/block-selector-availability

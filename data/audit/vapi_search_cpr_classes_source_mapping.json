@@ -1,0 +1,68 @@
+{
+  "endpoint": "GET /voice/search-cpr-classes",
+  "timezone": "America/New_York",
+  "production_source_base_url": "https://www.910cpr.com/data/block-selector-availability",
+  "source_files": [
+    "bls.json",
+    "acls.json",
+    "pals.json",
+    "heartsaver.json",
+    "arc.json",
+    "hsi.json"
+  ],
+  "local_source_paths": [
+    "docs/data/block-selector-availability/bls.json",
+    "docs/data/block-selector-availability/acls.json",
+    "docs/data/block-selector-availability/pals.json",
+    "docs/data/block-selector-availability/heartsaver.json",
+    "docs/data/block-selector-availability/arc.json",
+    "docs/data/block-selector-availability/hsi.json"
+  ],
+  "source_nesting": "dates[] -> startTimes[] -> courses[]",
+  "source_generated_at_observed": "2026-07-24T23:34:58.664477",
+  "worker_sellability_boundary": "Only adapts rows already marked publicSelectable=true by generated block-selector availability snapshots.",
+  "field_mapping": {
+    "generated_at": {"source": "newest source generatedAt", "status": "present"},
+    "timezone": {"source": "project timezone", "status": "derived", "value": "America/New_York"},
+    "offer_id": {"source": "composite of program/date/start/location/course/source identity", "status": "derived_deterministic"},
+    "course_id": {"source": "course.courseId", "status": "present"},
+    "appointment_day_id": {"source": "course.appointmentDayId", "status": "present_for_appointment_rows_null_for_seated_rows"},
+    "program": {"source": "course.courseFamily", "status": "present"},
+    "course_type": {"source": "course.courseName", "status": "derived_or_null"},
+    "delivery_method": {"source": "course.deliveryMode and course.courseName", "status": "normalized"},
+    "date": {"source": "course.date", "status": "present"},
+    "start_time": {"source": "course.startTime", "status": "present"},
+    "display_time": {"source": "course.displayStartTime", "status": "present_or_derived"},
+    "display_date": {"source": "course.displayDate", "status": "present_or_derived"},
+    "location": {"source": "course.location", "status": "present_normalized"},
+    "seats_available": {"source": null, "status": "unavailable_returns_null"},
+    "price": {"source": null, "status": "unavailable_returns_null"},
+    "currency": {"source": "project default", "status": "derived", "value": "USD"},
+    "registration_status": {"source": "sourceAvailabilityBlock.registrationStatus or publicSelectable", "status": "present_or_derived_open"}
+  },
+  "safety_filters": [
+    "publicSelectable must be true",
+    "appointment rows must include appointmentDayId, startTime, and courseId",
+    "date must be YYYY-MM-DD",
+    "start_time must be HH:MM",
+    "source registrationStatus must be open when present"
+  ],
+  "schema_mismatches": [
+    {
+      "field": "price",
+      "mismatch": "Published snapshots and schedule_future do not expose reviewed prices.",
+      "api_behavior": "returns null"
+    },
+    {
+      "field": "seats_available",
+      "mismatch": "Published snapshots do not expose live available seats.",
+      "api_behavior": "returns null"
+    },
+    {
+      "field": "appointment_day_id",
+      "mismatch": "Seated real Enrollware rows use registrationUrl and do not have appointmentDayId.",
+      "api_behavior": "returns null for seated rows"
+    }
+  ],
+  "maximum_possible_data_staleness": "Time since most recent successful resolver/build plus static-site deployment and CDN propagation."
+}
