@@ -36,7 +36,13 @@ export function handleVoiceSearchOptions() {
 
 export async function handleVoiceSearchCprClasses(request, env = {}) {
   if (!isAuthorized(request, env)) {
-    return jsonResponse({ error: { code: "unauthorized", message: "Missing or invalid bearer token." } }, 401);
+    return jsonResponse({
+      error: {
+        code: "unauthorized",
+        message: "Missing or invalid bearer token.",
+        auth_diagnostic: authDiagnostic(request),
+      },
+    }, 401);
   }
 
   const url = new URL(request.url);
@@ -280,6 +286,18 @@ function isAuthorized(request, env) {
   const prefix = "Bearer ";
   if (!header.startsWith(prefix)) return false;
   return timingSafeEqual(header.slice(prefix.length), expected);
+}
+
+function authDiagnostic(request) {
+  const header = request.headers.get("Authorization") || "";
+  const [scheme = ""] = header.split(/\s+/, 1);
+  const token = header.startsWith("Bearer ") ? header.slice("Bearer ".length) : "";
+  return {
+    authorization_header_present: Boolean(header),
+    authorization_scheme: scheme || null,
+    bearer_token_present: Boolean(token),
+    bearer_token_length: token.length,
+  };
 }
 
 function timingSafeEqual(a, b) {

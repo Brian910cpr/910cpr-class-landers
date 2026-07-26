@@ -173,8 +173,23 @@ async function request(path, token = TOKEN) {
 }
 
 test("requires bearer authentication", async () => {
-  assert.equal((await request("/voice/search-cpr-classes", null)).response.status, 401);
-  assert.equal((await request("/voice/search-cpr-classes", "wrong")).response.status, 401);
+  const missing = await request("/voice/search-cpr-classes", null);
+  assert.equal(missing.response.status, 401);
+  assert.deepEqual(missing.body.error.auth_diagnostic, {
+    authorization_header_present: false,
+    authorization_scheme: null,
+    bearer_token_present: false,
+    bearer_token_length: 0,
+  });
+
+  const wrong = await request("/voice/search-cpr-classes", "wrong");
+  assert.equal(wrong.response.status, 401);
+  assert.deepEqual(wrong.body.error.auth_diagnostic, {
+    authorization_header_present: true,
+    authorization_scheme: "Bearer",
+    bearer_token_present: true,
+    bearer_token_length: 5,
+  });
   assert.equal((await request("/voice/search-cpr-classes")).response.status, 200);
 });
 
