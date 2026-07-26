@@ -3,11 +3,10 @@ main = "worker/free-time-offer-worker.js"
 compatibility_date = "2026-06-05"
 workers_dev = true
 
-# Cloudflare DNS requirement:
-# schedule.910cpr.com must exist in the 910cpr.com zone as a proxied DNS record.
-# Keep offer_click_target.enabled=false in the static site until this route is verified.
+# Worker Custom Domain. Cloudflare creates the DNS record and certificate for
+# this subdomain; the Worker remains responsible for path-level routing.
 routes = [
-  { pattern = "schedule.910cpr.com/*", zone_name = "910cpr.com" }
+  { pattern = "schedule.910cpr.com", zone_name = "910cpr.com", custom_domain = true }
 ]
 
 [vars]
