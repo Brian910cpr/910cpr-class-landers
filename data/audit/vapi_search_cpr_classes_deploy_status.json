@@ -1,11 +1,28 @@
 {
-  "status": "blocked_before_production_deployment",
+  "status": "deployed_and_verified",
   "branch": "codex/vapi-search-cpr-classes-api",
-  "implementation_commit": "83f13f2eb7c",
+  "implementation_commits": [
+    "83f13f2eb7c",
+    "71c20762609",
+    "390e356b348"
+  ],
   "endpoint": "GET /voice/search-cpr-classes",
-  "worker_route_expected": "https://schedule.910cpr.com/voice/search-cpr-classes",
-  "implemented": true,
-  "deployed": false,
+  "primary_endpoint_url": "https://schedule.910cpr.com/voice/search-cpr-classes",
+  "fallback_endpoint_url": "https://free-time-offer-worker.brian-9ac.workers.dev/voice/search-cpr-classes",
+  "deployed": true,
+  "deploy_method": "wrangler deploy",
+  "worker_name": "free-time-offer-worker",
+  "worker_version_id": "79c78076-339d-4cb7-8c30-c2d8208e2fb5",
+  "deployment_id": "76c66589-abba-4155-9fc6-13dc932e0c93",
+  "route_or_domain": "schedule.910cpr.com",
+  "route_type": "cloudflare_worker_custom_domain",
+  "authentication": {
+    "required_header": "Authorization: Bearer <secret>",
+    "secret_binding": "VOICE_SEARCH_BEARER_TOKEN",
+    "secret_stored_in_cloudflare": true,
+    "token_pasted_to_chat": false,
+    "local_token_path_for_owner": "C:\\Users\\ten77\\.910cpr-secrets\\voice_search_bearer_token.txt"
+  },
   "source": {
     "kind": "published_generated_block_selector_availability_snapshots",
     "base_url": "https://www.910cpr.com/data/block-selector-availability",
@@ -13,27 +30,54 @@
     "observed_generated_at": "2026-07-24T23:34:58.664477",
     "maximum_data_staleness": "Time since most recent successful resolver/build plus static-site deployment and CDN propagation."
   },
-  "local_validation": {
+  "validation": {
     "node_worker_tests": "passed",
     "python_unittest_wrapper": "passed",
     "wrangler_deploy_dry_run": "passed",
-    "real_source_authenticated_check": {
-      "status": 200,
-      "query": "/voice/search-cpr-classes?program=BLS&date_from=2026-08-01&date_to=2026-08-31&limit=3",
+    "production_workers_dev_authenticated_check": "passed",
+    "production_custom_domain_authenticated_check": "passed_with_cloudflare_dns_resolution",
+    "production_custom_domain_unauthenticated_check": {
+      "status": 401,
+      "error_code": "unauthorized"
+    },
+    "production_custom_domain_invalid_date_check": {
+      "status": 400,
+      "error_code": "invalid_parameters",
+      "first_detail": {
+        "parameter": "date",
+        "message": "Use YYYY-MM-DD."
+      }
+    },
+    "registration_url_fields_returned": false
+  },
+  "verified_example": {
+    "request": "GET /voice/search-cpr-classes?program=BLS&date_from=2026-08-01&date_to=2026-08-31&limit=3",
+    "authorization": "Bearer [redacted]",
+    "response_summary": {
+      "generated_at": "2026-07-24T23:34:58.664477",
       "total_matching": 1388,
       "returned": 3,
       "has_more": true
     },
-    "real_source_unauthenticated_check": {
-      "status": 401
+    "first_offer": {
+      "offer_id": "bls-hsi-20260801-0800-wilmington-shipyard-blvd-463743-brian-do-not-schedule-inverse-gap-11",
+      "course_id": 463743,
+      "appointment_day_id": "260711",
+      "program": "BLS",
+      "course_type": null,
+      "delivery_method": "In Person",
+      "date": "2026-08-01",
+      "start_time": "08:00",
+      "display_time": "8:00 AM",
+      "display_date": "Saturday, August 1, 2026",
+      "location": "Wilmington - Shipyard Blvd",
+      "seats_available": null,
+      "price": null,
+      "currency": "USD",
+      "registration_status": "open"
     }
   },
-  "deployment_blocker": {
-    "kind": "cloudflare_api_authentication",
-    "secret_management_error": "Authentication error [code: 10000]",
-    "account_access_error": "Cannot use the access token from location: 2600:1702:6bf0:940:5546:34ca:6688:8b6 [code: 9109]",
-    "impact": "VOICE_SEARCH_BEARER_TOKEN could not be stored as a Worker secret and production deployment was not performed."
-  },
+  "dns_note": "schedule.910cpr.com resolved through Cloudflare DNS 1.1.1.1 during verification; local OS resolver had a temporary negative cache immediately after custom-domain creation.",
   "schema_mismatches": [
     {"field": "price", "api_behavior": "null", "reason": "not present in generated snapshots"},
     {"field": "seats_available", "api_behavior": "null", "reason": "not present in generated snapshots"},
