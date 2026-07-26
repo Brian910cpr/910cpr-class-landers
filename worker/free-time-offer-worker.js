@@ -15,6 +15,10 @@ const DEFAULT_CONFIG = {
 export default {
   async fetch(request, env, ctx) {
     try {
+      const url = new URL(request.url);
+      if (request.method === "OPTIONS" && url.pathname === "/voice/search-cpr-classes") {
+        return handleVoiceSearchOptions();
+      }
       return await handleRequest(request, env, ctx);
     } catch (error) {
       console.error(JSON.stringify({ event: "worker_error", message: error && error.message }));
