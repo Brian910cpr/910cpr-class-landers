@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import unittest
+import json
+import subprocess
 from pathlib import Path
 
 
@@ -28,6 +30,25 @@ EXPECTED_VARIANTS = {
 
 def read_page() -> str:
     return MAXIM_PAGE.read_text(encoding="utf-8")
+
+def run_dashboard_eligibility(cases: list[dict[str, object]]) -> list[bool]:
+    script = r"""
+const fs=require('fs');
+const html=fs.readFileSync(process.argv[1],'utf8');
+const start=html.indexOf('function easternDateParts');
+const end=html.indexOf('async function loadEmployees',start);
+if(start<0||end<0)throw new Error('eligibility functions not found');
+eval(html.slice(start,end));
+const cases=JSON.parse(process.argv[2]);
+process.stdout.write(JSON.stringify(cases.map(item=>isDashboardEligible(item.person,new Date(item.viewedAt)))));
+"""
+    completed = subprocess.run(
+        ["node", "-e", script, str(MAXIM_PAGE), json.dumps(cases)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(completed.stdout)
 
 
 class MaximCorporatePortalTests(unittest.TestCase):
@@ -210,31 +231,47 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("classDate: row.scheduled_class_date || registration?.starts_at", source)
         self.assertIn("const dueOrder=String(a.expirationDate||'9999-12-31')", html)
 
-    def test_employee_api_limits_due_and_retains_searchable_invoiced_people(self) -> None:
+    def test_employee_api_limits_due_and_retains_searchable_history(self) -> None:
         html = read_page()
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
         self.assertIn("function easternMonthBoundary", source)
         self.assertIn("const afterNextMonth = easternMonthBoundary(2)", source)
-        self.assertIn("expiration_date.gte.${currentMonth}", source)
-        self.assertIn("expiration_date.lt.${afterNextMonth}", source)
-        self.assertIn("const invoicedRetentionStart = monthsAgoIso(22)", source)
-        self.assertIn("workflow_stage.eq.5,updated_at.gte.${invoicedRetentionStart}", source)
+        self.assertIn("expirationDate >= currentMonth", source)
+        self.assertIn("expirationDate < afterNextMonth", source)
+        self.assertIn('history: mapped.filter((row: any) => row.bucket === "history")', source)
         self.assertIn('invoiceLabel: row.workflow_stage === 5 ? "INVOICED"', source)
         self.assertIn("function ecardCodeFromStatus", source)
         self.assertIn("row.prior_ecard_code || ecardCodeFromStatus(row.status_detail)", source)
         self.assertIn("${p.eCardCode||''}", html)
         self.assertIn("const invoicedOrder=", html)
 
-    def test_completed_people_archive_after_one_month_until_renewal_window(self) -> None:
+    def test_completed_people_archive_after_fourteen_days_until_renewal_window(self) -> None:
         html = read_page()
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
         self.assertIn("expirationDate >= currentMonth", source)
         self.assertIn("expirationDate < afterNextMonth", source)
-        self.assertIn("row.prior_class_date || row.scheduled_class_date", source)
-        self.assertIn("completedAge <= completedWindowMs", source)
+        self.assertIn("row.scheduled_class_date || registration?.starts_at", source)
+        self.assertIn("completedAgeDays <= 14", source)
+        self.assertIn("completedAgeDays >= 0", source)
         self.assertIn("renewalDueNow", source)
-        self.assertIn("p.bucket!=='history'||q", html)
-        self.assertIn("completed?'INVOICE pending':'Invoice unresolved'", html)
+        self.assertIn("isDashboardEligible(p)", html)
+        self.assertIn("completed?'AWAITING INVOICE':'Invoice unresolved'", html)
+
+    def test_due_window_month_rollover_leap_year_and_completion_grace_boundaries(self) -> None:
+        active = {"bucket": "active"}
+        results = run_dashboard_eligibility(
+            [
+                {"viewedAt": "2026-07-31T16:00:00Z", "person": {**active, "expirationDate": "2026-07-01"}},
+                {"viewedAt": "2026-07-31T16:00:00Z", "person": {**active, "expirationDate": "2026-08-31"}},
+                {"viewedAt": "2026-07-31T16:00:00Z", "person": {**active, "expirationDate": "2026-09-01"}},
+                {"viewedAt": "2026-12-15T17:00:00Z", "person": {**active, "expirationDate": "2027-01-31"}},
+                {"viewedAt": "2024-02-29T17:00:00Z", "person": {**active, "expirationDate": "2024-03-31"}},
+                {"viewedAt": "2026-07-24T16:00:00Z", "person": {**active, "expirationDate": "2028-07-31", "eCardCode": "123", "completionDate": "2026-07-10"}},
+                {"viewedAt": "2026-07-25T16:00:00Z", "person": {**active, "expirationDate": "2028-07-31", "eCardCode": "123", "completionDate": "2026-07-10"}},
+                {"viewedAt": "2026-07-25T16:00:00Z", "person": {**active, "expirationDate": "2026-08-31", "eCardCode": "123", "completionDate": "2026-07-10"}},
+            ]
+        )
+        self.assertEqual(results, [True, True, False, True, True, True, False, True])
 
     def test_maxim_portal_uses_supabase_access_gate_and_persistent_employee_api(self) -> None:
         html = read_page()
@@ -282,11 +319,12 @@ class MaximCorporatePortalTests(unittest.TestCase):
     def test_recent_completion_and_history_windows_are_explicit(self) -> None:
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
         html = read_page()
-        self.assertIn("30 * 24 * 60 * 60 * 1000", source)
+        self.assertIn("calendarDayDifference", source)
+        self.assertIn("completedAgeDays <= 14", source)
         self.assertIn('.slice(0, 15)', source)
         self.assertIn('"recently_completed"', source)
         self.assertIn('"history"', source)
-        self.assertIn("p.bucket!=='history'||q", html)
+        self.assertIn("p.bucket==='history'&&q", html)
 
     def test_location_and_expiration_policies_are_enforced(self) -> None:
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")

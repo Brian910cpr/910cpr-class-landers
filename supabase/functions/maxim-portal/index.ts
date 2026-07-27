@@ -111,10 +111,22 @@ function easternMonthBoundary(offset: number) {
   return `${boundary.getUTCFullYear()}-${String(boundary.getUTCMonth() + 1).padStart(2, "0")}-01`;
 }
 
-function monthsAgoIso(months: number) {
-  const date = new Date();
-  date.setUTCMonth(date.getUTCMonth() - months);
-  return date.toISOString();
+function easternDateOnly(value = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(value);
+  const part = (type: string) =>
+    parts.find((item) => item.type === type)?.value || "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+function calendarDayDifference(startDate: string, endDate: string) {
+  const start = Date.parse(`${String(startDate).slice(0, 10)}T00:00:00Z`);
+  const end = Date.parse(`${String(endDate).slice(0, 10)}T00:00:00Z`);
+  return Math.floor((end - start) / (24 * 60 * 60 * 1000));
 }
 
 function ecardCodeFromStatus(value: unknown) {
@@ -124,8 +136,7 @@ function ecardCodeFromStatus(value: unknown) {
 async function listEmployees() {
   const currentMonth = easternMonthBoundary(0);
   const afterNextMonth = easternMonthBoundary(2);
-  const invoicedRetentionStart = monthsAgoIso(22);
-  const eligibility = `or=(and(workflow_stage.eq.0,expiration_date.gte.${currentMonth},expiration_date.lt.${afterNextMonth}),workflow_stage.in.(1,2,3,4),and(workflow_stage.eq.5,updated_at.gte.${invoicedRetentionStart}))`;
+  const today = easternDateOnly();
   const rows = await rest(
     "maxim_employee_profiles?select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,active,link_sent_at,prior_class_date,expiration_date,prior_ecard_code,ecard_detected_at,scheduled_class_date,enrollware_class_id,current_external_class_id,current_external_registration_id,updated_at,customers(id,first_name,last_name,email,phone)&order=updated_at.desc",
   );
@@ -138,17 +149,15 @@ async function listEmployees() {
       latestRequest.set(request.employee_profile_id, request);
     }
   }
-  const now = Date.now();
-  const completedWindowMs = 30 * 24 * 60 * 60 * 1000;
   const mapped = rows.map((row: any) => {
       const registration = latestRequest.get(row.id);
       const eCardCode = row.prior_ecard_code || ecardCodeFromStatus(row.status_detail);
       const completedAt = eCardCode
-        ? row.prior_class_date || row.scheduled_class_date ||
-          registration?.starts_at || row.ecard_detected_at || row.updated_at
+        ? row.scheduled_class_date || registration?.starts_at ||
+          row.ecard_detected_at || row.prior_class_date || row.updated_at
         : null;
-      const completedAge = completedAt
-        ? now - new Date(completedAt).getTime()
+      const completedAgeDays = completedAt
+        ? calendarDayDifference(String(completedAt), today)
         : null;
       const expirationDate = row.expiration_date
         ? String(row.expiration_date).slice(0, 10)
@@ -158,15 +167,19 @@ async function listEmployees() {
         expirationDate >= currentMonth &&
         expirationDate < afterNextMonth,
       );
+      const inCompletionGrace = Boolean(
+        eCardCode &&
+        completedAgeDays !== null &&
+        completedAgeDays >= 0 &&
+        completedAgeDays <= 14,
+      );
       const bucket = !row.active
         ? "history"
+        : inCompletionGrace
+        ? "recently_completed"
         : renewalDueNow
         ? "active"
-        : eCardCode
-        ? completedAge !== null && completedAge <= completedWindowMs
-          ? "recently_completed"
-          : "history"
-        : "active";
+        : "history";
       return {
       id: row.id,
       sourceRef: row.source_ref,
@@ -183,6 +196,7 @@ async function listEmployees() {
       expirationDate: row.expiration_date,
       eCardCode,
       eCardDetectedAt: completedAt,
+      completionDate: completedAt,
       bucket,
       enrollwareClassId: row.enrollware_class_id,
       externalClassId: row.current_external_class_id,
@@ -204,7 +218,7 @@ async function listEmployees() {
     .slice(0, 15);
   return response({
     employees: [
-      ...mapped.filter((row: any) => row.bucket === "active" && !row.eCardCode),
+      ...mapped.filter((row: any) => row.bucket === "active"),
       ...recentCompleted,
     ],
     history: mapped.filter((row: any) => row.bucket === "history"),
