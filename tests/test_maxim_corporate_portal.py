@@ -422,6 +422,11 @@ class MaximCorporatePortalTests(unittest.TestCase):
     def test_maxim_registration_never_requests_payment(self) -> None:
         html = read_page()
         self.assertIn("No payment or promo code is needed.", html)
+
+    def test_internal_landerware_explanation_is_not_shown_to_maxim(self) -> None:
+        html = read_page()
+        self.assertNotIn("Dates load from the authoritative public LanderWare schedule", html)
+        self.assertNotIn("eCard and invoice cells remain blank or awaiting", html)
         self.assertNotIn("PaymentIntent", html)
         self.assertNotIn("checkout.session", html)
 
