@@ -118,8 +118,8 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn('id="flowSort"', html)
         self.assertIn('<option value="gantt" selected>Gantt order</option>', html)
         self.assertIn('id="flowReset"', html)
-        self.assertIn("const stageOrder=Number(a.stage)-Number(b.stage)", html)
-        self.assertIn("return dueOrder||nameOrder()", html)
+        self.assertIn("const stageOrder=aStage-bStage", html)
+        self.assertIn("return milestoneOrder||nameOrder()", html)
         self.assertIn("flowSort.value='gantt'", html)
         self.assertIn("flowSearch.value=''", html)
         self.assertIn("flowStage.value='all'", html)
@@ -229,7 +229,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("scheduled_class_date", source)
         self.assertIn("expirationDate: row.expiration_date", source)
         self.assertIn("classDate: row.scheduled_class_date || registration?.starts_at", source)
-        self.assertIn("const dueOrder=String(a.expirationDate||'9999-12-31')", html)
+        self.assertIn("ganttMilestone(a,aStage)", html)
 
     def test_employee_api_limits_due_and_retains_searchable_history(self) -> None:
         html = read_page()
@@ -243,7 +243,18 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("function ecardCodeFromStatus", source)
         self.assertIn("row.prior_ecard_code || ecardCodeFromStatus(row.status_detail)", source)
         self.assertIn("${p.eCardCode||''}", html)
-        self.assertIn("const invoicedOrder=", html)
+        self.assertIn("invoicedOrder=(aStage===5?1:0)", html)
+
+    def test_gantt_order_uses_the_displayed_progression_not_stale_workflow_stage(self) -> None:
+        html = read_page()
+        self.assertIn("function ganttStage(person,viewedAt=new Date())", html)
+        self.assertIn("if(person.eCardCode)return 4", html)
+        self.assertIn("if(person.classDate&&new Date(person.classDate)<viewedAt)return 3", html)
+        self.assertIn("if(person.registrationId||person.classDate)return 2", html)
+        self.assertIn("if(person.linkSentDate)return 1", html)
+        self.assertIn("const stageOrder=aStage-bStage", html)
+        self.assertIn("String(ganttStage(p))===stage", html)
+        self.assertIn("const current=Math.min(ganttStage(p),4)", html)
 
     def test_completed_people_archive_after_fourteen_days_until_renewal_window(self) -> None:
         html = read_page()
