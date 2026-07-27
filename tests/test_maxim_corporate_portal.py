@@ -159,7 +159,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("Schedule for them", html)
         self.assertIn("returnToComingDue", html)
         self.assertIn("Wilmingtonoffice%40maxim.com", html)
-        self.assertIn("https://www.910cpr.com/go/myecards", html)
+        self.assertIn("https://ecards.heart.org/Student/MyeCards", html)
         self.assertIn("function lastNameOf", html)
         self.assertIn("function compareTrainingFlow", html)
         self.assertIn(".sort(compareTrainingFlow)", html)
@@ -255,6 +255,20 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("const stageOrder=aStage-bStage", html)
         self.assertIn("String(ganttStage(p))===stage", html)
         self.assertIn("const current=Math.min(ganttStage(p),4)", html)
+
+    def test_visible_ecards_copy_as_aha_batches_of_twenty(self) -> None:
+        html = read_page()
+        self.assertIn("function normalizeEcardCode(code)", html)
+        self.assertIn("replace(/[^A-Za-z0-9]/g,'')", html)
+        self.assertIn("visibleEcardCodes=[...new Set(rows.map", html)
+        self.assertIn("function copyVisibleEcardsAndOpen(clickedCode)", html)
+        self.assertIn("batchSize=20", html)
+        self.assertIn("batch.join('\\n')", html)
+        self.assertIn("Math.floor(clickedIndex/batchSize)", html)
+        self.assertIn("https://ecards.heart.org/Student/MyeCards", html)
+        self.assertIn("navigator.clipboard.writeText(text)", html)
+        self.assertIn("Copied batch ${batchIndex+1} of ${batchCount}", html)
+        self.assertNotIn("copyEcardAndOpen(", html)
 
     def test_completed_people_archive_after_fourteen_days_until_renewal_window(self) -> None:
         html = read_page()
