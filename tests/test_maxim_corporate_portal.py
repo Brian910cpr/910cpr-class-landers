@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import unittest
+import json
+import subprocess
 from pathlib import Path
 
 
@@ -10,6 +12,12 @@ SHARED_AVAILABILITY = ROOT / "docs" / "assets" / "resolved-selector-availability
 PUBLIC_SELECTOR_PAGES = [ROOT / "docs" / "bls.html", ROOT / "docs" / "heartsaver.html"]
 SELECTOR_GENERATOR = ROOT / "scripts" / "build_bls_block_schedule_pilot.py"
 MAXIM_EDGE_FUNCTION = ROOT / "supabase" / "functions" / "maxim-portal" / "index.ts"
+MAXIM_MIGRATION = (
+    ROOT
+    / "supabase"
+    / "migrations"
+    / "20260725031000_maxim_atomic_registration_replacement.sql"
+)
 
 EXPECTED_VARIANTS = {
     "Initial": "209806",
@@ -22,6 +30,25 @@ EXPECTED_VARIANTS = {
 
 def read_page() -> str:
     return MAXIM_PAGE.read_text(encoding="utf-8")
+
+def run_dashboard_eligibility(cases: list[dict[str, object]]) -> list[bool]:
+    script = r"""
+const fs=require('fs');
+const html=fs.readFileSync(process.argv[1],'utf8');
+const start=html.indexOf('function easternDateParts');
+const end=html.indexOf('async function loadEmployees',start);
+if(start<0||end<0)throw new Error('eligibility functions not found');
+eval(html.slice(start,end));
+const cases=JSON.parse(process.argv[2]);
+process.stdout.write(JSON.stringify(cases.map(item=>isDashboardEligible(item.person,new Date(item.viewedAt)))));
+"""
+    completed = subprocess.run(
+        ["node", "-e", script, str(MAXIM_PAGE), json.dumps(cases)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(completed.stdout)
 
 
 class MaximCorporatePortalTests(unittest.TestCase):
@@ -119,13 +146,13 @@ class MaximCorporatePortalTests(unittest.TestCase):
     def test_training_flow_uses_compact_connected_workflow_cells(self) -> None:
         html = read_page()
         self.assertIn("function flowStageContent", html)
-        self.assertIn("<div>eCard #</div><div>Invoice #</div>", html)
+        self.assertIn("<div>eCard / expiration</div><div>Invoice</div>", html)
         self.assertIn("grid-template-columns:24% 14% 18% 18% 13% 13%", html)
         self.assertIn(".layout{grid-template-columns:minmax(360px,40fr) minmax(0,60fr)", html)
         self.assertIn(".gantt{min-width:0;width:100%}", html)
         self.assertIn(".gantt-pill{display:none!important}", html)
         self.assertIn("person.expirationDate", html)
-        self.assertIn("person.classDate||stage===2", html)
+        self.assertIn("if(index===2){if(person.classDate)", html)
         self.assertIn("person.eCardCode", html)
         self.assertIn("person.invoiceUrl", html)
         self.assertIn("No eCard found yet", html)
@@ -139,14 +166,14 @@ class MaximCorporatePortalTests(unittest.TestCase):
 
     def test_workflow_columns_have_the_requested_meaning_and_actions(self) -> None:
         html = read_page()
-        self.assertIn("<div>Participant</div><div>Coming Due</div><div>Link Sent</div>", html)
-        self.assertIn("<div>Registered</div><div>eCard #</div><div>Invoice #</div>", html)
-        self.assertIn("person.eCardCode?'eCard '+safeText(person.eCardCode):'Unknown'", html)
+        self.assertIn("<div>Participant</div><div>Coming Due / Link</div><div>Status</div>", html)
+        self.assertIn("<div>Class date / time</div><div>eCard / expiration</div>", html)
+        self.assertIn("completed=Boolean(person.eCardCode)", html)
         self.assertIn(">Send link</button>", html)
         self.assertIn(">Schedule</button>", html)
         self.assertIn(">Skip</button>", html)
         self.assertIn(">Reschedule</button>", html)
-        self.assertIn(">Delete</button>", html)
+        self.assertIn("returnToComingDue", html)
         self.assertIn("No eCard found yet", html)
         self.assertNotIn("person.invoiceLabel||'Not yet available'", html)
 
@@ -171,6 +198,9 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("link_sent_at: sentAt", source)
         self.assertIn("linkSentDate: row.link_sent_at", source)
         self.assertIn('route[2] === "link-sent"', source)
+        self.assertIn("person.stage=result.workflowStage", html)
+        self.assertIn("profiles[0].current_external_registration_id ? 2 : 1", source)
+        self.assertIn("Scheduling is closed because this employee has an eCard.", source)
 
     def test_return_to_due_is_a_persistent_authenticated_workflow_action(self) -> None:
         html = read_page()
@@ -201,20 +231,47 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("classDate: row.scheduled_class_date || registration?.starts_at", source)
         self.assertIn("const dueOrder=String(a.expirationDate||'9999-12-31')", html)
 
-    def test_employee_api_limits_due_and_retains_searchable_invoiced_people(self) -> None:
+    def test_employee_api_limits_due_and_retains_searchable_history(self) -> None:
         html = read_page()
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
         self.assertIn("function easternMonthBoundary", source)
         self.assertIn("const afterNextMonth = easternMonthBoundary(2)", source)
-        self.assertIn("expiration_date.gte.${currentMonth}", source)
-        self.assertIn("expiration_date.lt.${afterNextMonth}", source)
-        self.assertIn("const invoicedRetentionStart = monthsAgoIso(22)", source)
-        self.assertIn("workflow_stage.eq.5,updated_at.gte.${invoicedRetentionStart}", source)
+        self.assertIn("expirationDate >= currentMonth", source)
+        self.assertIn("expirationDate < afterNextMonth", source)
+        self.assertIn('history: mapped.filter((row: any) => row.bucket === "history")', source)
         self.assertIn('invoiceLabel: row.workflow_stage === 5 ? "INVOICED"', source)
         self.assertIn("function ecardCodeFromStatus", source)
         self.assertIn("row.prior_ecard_code || ecardCodeFromStatus(row.status_detail)", source)
         self.assertIn("${p.eCardCode||''}", html)
         self.assertIn("const invoicedOrder=", html)
+
+    def test_completed_people_archive_after_fourteen_days_until_renewal_window(self) -> None:
+        html = read_page()
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("expirationDate >= currentMonth", source)
+        self.assertIn("expirationDate < afterNextMonth", source)
+        self.assertIn("row.scheduled_class_date || registration?.starts_at", source)
+        self.assertIn("completedAgeDays <= 14", source)
+        self.assertIn("completedAgeDays >= 0", source)
+        self.assertIn("renewalDueNow", source)
+        self.assertIn("isDashboardEligible(p)", html)
+        self.assertIn("completed?'AWAITING INVOICE':'Invoice unresolved'", html)
+
+    def test_due_window_month_rollover_leap_year_and_completion_grace_boundaries(self) -> None:
+        active = {"bucket": "active"}
+        results = run_dashboard_eligibility(
+            [
+                {"viewedAt": "2026-07-31T16:00:00Z", "person": {**active, "expirationDate": "2026-07-01"}},
+                {"viewedAt": "2026-07-31T16:00:00Z", "person": {**active, "expirationDate": "2026-08-31"}},
+                {"viewedAt": "2026-07-31T16:00:00Z", "person": {**active, "expirationDate": "2026-09-01"}},
+                {"viewedAt": "2026-12-15T17:00:00Z", "person": {**active, "expirationDate": "2027-01-31"}},
+                {"viewedAt": "2024-02-29T17:00:00Z", "person": {**active, "expirationDate": "2024-03-31"}},
+                {"viewedAt": "2026-07-24T16:00:00Z", "person": {**active, "expirationDate": "2028-07-31", "eCardCode": "123", "completionDate": "2026-07-10"}},
+                {"viewedAt": "2026-07-25T16:00:00Z", "person": {**active, "expirationDate": "2028-07-31", "eCardCode": "123", "completionDate": "2026-07-10"}},
+                {"viewedAt": "2026-07-25T16:00:00Z", "person": {**active, "expirationDate": "2026-08-31", "eCardCode": "123", "completionDate": "2026-07-10"}},
+            ]
+        )
+        self.assertEqual(results, [True, True, False, True, True, True, False, True])
 
     def test_maxim_portal_uses_supabase_access_gate_and_persistent_employee_api(self) -> None:
         html = read_page()
@@ -228,9 +285,63 @@ class MaximCorporatePortalTests(unittest.TestCase):
 
     def test_empty_canonical_course_projection_is_shown_without_fallback(self) -> None:
         self.assertIn(
-            '<div class="empty">No current valid dates returned for ',
+            "No current valid dates are available at the approved location",
             read_page(),
         )
+
+    def test_atomic_reschedule_preserves_history_and_releases_after_insert(self) -> None:
+        sql = MAXIM_MIGRATION.read_text(encoding="utf-8")
+        insert_at = sql.index("insert into public.maxim_registration_requests")
+        release_at = sql.index("commitment_released_at = now()")
+        self.assertLess(insert_at, release_at)
+        self.assertIn("status = 'superseded'", sql)
+        self.assertIn("supersedes_request_id", sql)
+        self.assertIn("maxim_one_active_requirement", sql)
+        self.assertIn("pg_advisory_xact_lock", sql)
+
+    def test_reschedule_api_uses_atomic_database_rule(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("rpc/maxim_replace_registration", source)
+        self.assertNotIn(
+            'body: JSON.stringify({ status: "superseded", updated_at:',
+            source[source.index("async function registerEmployee"):],
+        )
+
+    def test_actions_continue_until_ecard_and_passed_date_stays_visible(self) -> None:
+        html = read_page()
+        self.assertIn("if(!completed)cell.push", html)
+        self.assertIn(">Send link</button>", html)
+        self.assertIn(">Reschedule</button>", html)
+        self.assertIn("Passed · awaiting eCard", html)
+        self.assertIn("if(index===2){if(person.classDate)", html)
+        self.assertIn("completed=Boolean(person.eCardCode)", html)
+
+    def test_recent_completion_and_history_windows_are_explicit(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        html = read_page()
+        self.assertIn("calendarDayDifference", source)
+        self.assertIn("completedAgeDays <= 14", source)
+        self.assertIn('.slice(0, 15)', source)
+        self.assertIn('"recently_completed"', source)
+        self.assertIn('"history"', source)
+        self.assertIn("p.bucket==='history'&&q", html)
+
+    def test_location_and_expiration_policies_are_enforced(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        html = read_page()
+        self.assertIn('id="locationChoice"', html)
+        self.assertIn("locationKeyForCourse", html)
+        self.assertIn("canUseDateForPerson", html)
+        self.assertIn("adminOverrideExpiration:true", html)
+        self.assertIn("MAXIM_APPROVED_LOCATIONS", source)
+        self.assertIn("!body.adminOverrideExpiration && body.expirationDate", source)
+        self.assertIn("canonicalLocationKey !== String(body.locationKey", source)
+
+    def test_maxim_registration_never_requests_payment(self) -> None:
+        html = read_page()
+        self.assertIn("No payment or promo code is needed.", html)
+        self.assertNotIn("PaymentIntent", html)
+        self.assertNotIn("checkout.session", html)
 
 
 if __name__ == "__main__":
