@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T08:56:44.570637+00:00",
+  "generated_at": "2026-07-27T12:27:21.155064+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,51 +22,27 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 305,
-    "blocks_blocked": 6,
+    "blocks_generated": 304,
+    "blocks_blocked": 5,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 6
+      "inverse_gap_shorter_than_minimum_consumption": 5
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 6
+      "inverse_gap_shorter_than_minimum_consumption": 5
     },
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 118,
+      "blocked": 117,
       "available": 187
     },
     "inverse_generated_availability_blocks": 187,
-    "inverse_blocking_event_blocks": 118
+    "inverse_blocking_event_blocks": 117
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-27T06:00:00",
-      "end_datetime": "2026-07-27T08:30:00",
-      "date": "2026-07-27",
-      "end_date": "2026-07-27",
-      "start_time": "06:00",
-      "end_time": "08:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260727T0600000400",
-      "summary": "Jonah to LaCrosse",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -8645,11 +8621,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-25T00:00:00",
-      "end_datetime": "2026-10-25T05:00:00",
+      "end_datetime": "2026-10-25T08:30:00",
       "date": "2026-10-25",
       "end_date": "2026-10-25",
       "start_time": "00:00",
-      "end_time": "05:00",
+      "end_time": "08:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -8674,14 +8650,6 @@
     }
   ],
   "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-07-27T05:00:00",
-      "end_datetime": "2026-07-27T06:00:00"
-    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
