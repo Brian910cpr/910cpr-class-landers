@@ -274,6 +274,15 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("scheduleFlowPerson('${person.id}',true)", html)
         self.assertIn("if(index===4&&recentInvoiceClass)", html)
 
+    def test_scheduled_people_hide_due_date_and_move_actions_to_class_date(self) -> None:
+        html = read_page()
+        self.assertIn("if(index===0&&!person.classDate)", html)
+        self.assertIn("if(index===2){if(person.classDate)", html)
+        self.assertIn("emailScheduleLink('${person.id}')", html)
+        self.assertIn(">Reschedule</button>", html)
+        self.assertIn("month:'2-digit',day:'2-digit',year:'numeric'", html)
+        self.assertIn("`${match[2]}/${match[3]}/${match[1]}`", html)
+
     def test_participant_skip_remove_prevents_resurfacing_but_preserves_searchable_history(self) -> None:
         html = read_page()
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
