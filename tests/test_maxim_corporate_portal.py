@@ -217,7 +217,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("maxim_registration_requests?select=", source)
         self.assertIn("starts_at", source)
         self.assertIn("registration_url", source)
-        self.assertIn("classDate: row.scheduled_class_date || registration?.starts_at", source)
+        self.assertIn("classDate: registration?.starts_at || row.scheduled_class_date", source)
         self.assertIn("registrationUrl: registration?.registration_url", source)
 
     def test_employee_api_returns_imported_certification_baseline(self) -> None:
@@ -228,7 +228,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("prior_ecard_code", source)
         self.assertIn("scheduled_class_date", source)
         self.assertIn("expirationDate: row.expiration_date", source)
-        self.assertIn("classDate: row.scheduled_class_date || registration?.starts_at", source)
+        self.assertIn("classDate: registration?.starts_at || row.scheduled_class_date", source)
         self.assertIn("ganttMilestone(a,aStage)", html)
 
     def test_employee_api_limits_due_and_retains_searchable_history(self) -> None:
@@ -241,7 +241,8 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn('history: mapped.filter((row: any) => row.bucket === "history")', source)
         self.assertIn('invoiceLabel: row.workflow_stage === 5 ? "INVOICED"', source)
         self.assertIn("function ecardCodeFromStatus", source)
-        self.assertIn("row.prior_ecard_code || ecardCodeFromStatus(row.status_detail)", source)
+        self.assertIn("const priorECardCode = row.prior_ecard_code || null", source)
+        self.assertIn("Number(row.workflow_stage) >= 4", source)
         self.assertIn("${p.eCardCode||''}", html)
         self.assertIn("invoicedOrder=(aStage===5?1:0)", html)
 
@@ -255,6 +256,33 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("const stageOrder=aStage-bStage", html)
         self.assertIn("String(ganttStage(p))===stage", html)
         self.assertIn("const current=Math.min(ganttStage(p),4)", html)
+
+    def test_historical_certification_facts_do_not_advance_current_cycle(self) -> None:
+        html = read_page()
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("classDate:employee.classDate||null", html)
+        self.assertNotIn("classDate:employee.classDate||employee.priorClassDate", html)
+        self.assertIn("priorECardCode:employee.priorECardCode||null", html)
+        self.assertIn("(Number(row.workflow_stage) >= 4 ? row.prior_class_date : null)", source)
+        self.assertIn("Due ${safeText(displayDateOnly(person.expirationDate))}", html)
+
+    def test_current_class_location_reschedule_and_invoice_window_are_explicit(self) -> None:
+        html = read_page()
+        self.assertIn("function classWithinLastMonths(person,months,viewedAt=new Date())", html)
+        self.assertIn("recentInvoiceClass=classWithinLastMonths(person,12)", html)
+        self.assertIn("if(person.locationKey)cell.push", html)
+        self.assertIn("scheduleFlowPerson('${person.id}',true)", html)
+        self.assertIn("if(index===4&&recentInvoiceClass)", html)
+
+    def test_participant_skip_remove_prevents_resurfacing_but_preserves_searchable_history(self) -> None:
+        html = read_page()
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn(">Skip / Remove</button>", html)
+        self.assertIn("They will not resurface for future recertification", html)
+        self.assertIn("method:'DELETE'", html)
+        self.assertIn("active: false", source)
+        self.assertIn('history: mapped.filter((row: any) => row.bucket === "history")', source)
+        self.assertIn("p.bucket==='history'&&q", html)
 
     def test_visible_ecards_copy_as_aha_batches_of_twenty(self) -> None:
         html = read_page()
@@ -280,7 +308,8 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("completedAgeDays >= 0", source)
         self.assertIn("renewalDueNow", source)
         self.assertIn("isDashboardEligible(p)", html)
-        self.assertIn("completed?'AWAITING INVOICE':'Invoice unresolved'", html)
+        self.assertIn("if(index===4&&recentInvoiceClass)", html)
+        self.assertIn("Invoice unresolved", html)
 
     def test_due_window_month_rollover_leap_year_and_completion_grace_boundaries(self) -> None:
         active = {"bucket": "active"}
@@ -337,7 +366,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("if(!completed)cell.push", html)
         self.assertIn(">Send link</button>", html)
         self.assertIn(">Reschedule</button>", html)
-        self.assertIn("Passed · awaiting eCard", html)
+        self.assertIn("Class date passed / Awaiting eCard", html)
         self.assertIn("if(index===2){if(person.classDate)", html)
         self.assertIn("completed=Boolean(person.eCardCode)", html)
 
