@@ -156,13 +156,26 @@ async function listEmployees() {
         String(row.status_detail || ""),
       );
       const priorECardCode = row.prior_ecard_code || null;
-      const eCardCode = workflowStage >= 4
-        ? ecardCodeFromStatus(row.status_detail) || priorECardCode
+      const priorWorkflowClassDate = (workflowStage >= 3 || importedCompletion)
+        ? row.prior_class_date
+        : null;
+      const priorWorkflowClassAgeDays = priorWorkflowClassDate
+        ? calendarDayDifference(String(priorWorkflowClassDate), today)
+        : null;
+      const recentPriorWorkflowClassDate = (
+          priorWorkflowClassAgeDays !== null &&
+          priorWorkflowClassAgeDays >= 0 &&
+          priorWorkflowClassAgeDays <= 14
+        )
+        ? priorWorkflowClassDate
         : null;
       const currentClassDate = registration?.starts_at || row.scheduled_class_date ||
-        ((workflowStage >= 3 || importedCompletion) ? row.prior_class_date : null);
+        recentPriorWorkflowClassDate;
       const currentClassAgeDays = currentClassDate
         ? calendarDayDifference(String(currentClassDate), today)
+        : null;
+      const eCardCode = workflowStage >= 4 && currentClassDate
+        ? ecardCodeFromStatus(row.status_detail) || priorECardCode
         : null;
       const completedAt = (eCardCode || workflowStage === 3 || importedCompletion)
         ? currentClassDate || row.ecard_detected_at || row.updated_at
@@ -214,8 +227,8 @@ async function listEmployees() {
       registrationRequestedAt: registration?.created_at || null,
       registrationStatus: registration?.status || null,
       locationKey: registration?.location_key || null,
-      invoiceLabel: row.workflow_stage === 5 ? "INVOICED" : null,
-      invoiceDate: row.workflow_stage === 5 ? row.updated_at : null,
+      invoiceLabel: workflowStage === 5 && currentClassDate ? "INVOICED" : null,
+      invoiceDate: workflowStage === 5 && currentClassDate ? row.updated_at : null,
     };
   });
   const recentCompleted = mapped
