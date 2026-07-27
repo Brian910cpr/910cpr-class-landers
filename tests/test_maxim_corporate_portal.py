@@ -239,7 +239,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("expirationDate >= currentMonth", source)
         self.assertIn("expirationDate < afterNextMonth", source)
         self.assertIn('history: mapped.filter((row: any) => row.bucket === "history")', source)
-        self.assertIn('invoiceLabel: row.workflow_stage === 5 ? "INVOICED"', source)
+        self.assertIn('invoiceLabel: workflowStage === 5 && currentClassDate ? "INVOICED"', source)
         self.assertIn("function ecardCodeFromStatus", source)
         self.assertIn("const priorECardCode = row.prior_ecard_code || null", source)
         self.assertIn("workflowStage >= 4", source)
@@ -263,8 +263,18 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("classDate:employee.classDate||null", html)
         self.assertNotIn("classDate:employee.classDate||employee.priorClassDate", html)
         self.assertIn("priorECardCode:employee.priorECardCode||null", html)
-        self.assertIn("workflowStage >= 3 || importedCompletion", source)
+        self.assertIn("const priorWorkflowClassDate = (workflowStage >= 3 || importedCompletion)", source)
+        self.assertIn("priorWorkflowClassAgeDays >= 0", source)
+        self.assertIn("priorWorkflowClassAgeDays <= 14", source)
+        self.assertIn("const eCardCode = workflowStage >= 4 && currentClassDate", source)
         self.assertIn("Due ${safeText(displayDateOnly(person.expirationDate))}", html)
+
+    def test_old_stage_three_class_ecard_and_invoice_are_context_only(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("recentPriorWorkflowClassDate", source)
+        self.assertIn("registration?.starts_at || row.scheduled_class_date", source)
+        self.assertIn("invoiceLabel: workflowStage === 5 && currentClassDate", source)
+        self.assertIn("invoiceDate: workflowStage === 5 && currentClassDate", source)
 
     def test_current_class_location_reschedule_and_invoice_window_are_explicit(self) -> None:
         html = read_page()
