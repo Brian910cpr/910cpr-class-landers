@@ -151,7 +151,10 @@ async function listEmployees() {
   }
   const mapped = rows.map((row: any) => {
       const registration = latestRequest.get(row.id);
-      const eCardCode = row.prior_ecard_code || ecardCodeFromStatus(row.status_detail);
+      const priorECardCode = row.prior_ecard_code || null;
+      const eCardCode = Number(row.workflow_stage) >= 4
+        ? ecardCodeFromStatus(row.status_detail) || priorECardCode
+        : null;
       const completedAt = eCardCode
         ? row.scheduled_class_date || registration?.starts_at ||
           row.ecard_detected_at || row.prior_class_date || row.updated_at
@@ -194,6 +197,7 @@ async function listEmployees() {
       linkSentDate: row.link_sent_at,
       priorClassDate: row.prior_class_date,
       expirationDate: row.expiration_date,
+      priorECardCode,
       eCardCode,
       eCardDetectedAt: completedAt,
       completionDate: completedAt,
@@ -201,7 +205,8 @@ async function listEmployees() {
       enrollwareClassId: row.enrollware_class_id,
       externalClassId: row.current_external_class_id,
       externalRegistrationId: row.current_external_registration_id,
-      classDate: row.scheduled_class_date || registration?.starts_at || null,
+      classDate: registration?.starts_at || row.scheduled_class_date ||
+        (Number(row.workflow_stage) >= 4 ? row.prior_class_date : null),
       registrationUrl: registration?.registration_url || null,
       registrationRequestedAt: registration?.created_at || null,
       registrationStatus: registration?.status || null,
@@ -295,10 +300,13 @@ async function returnEmployeeToComingDue(id: string) {
 async function markScheduleLinkSent(id: string) {
   const sentAt = new Date().toISOString();
   const profiles = await rest(
-    `maxim_employee_profiles?select=current_external_registration_id,prior_ecard_code&id=eq.${id}&active=eq.true&limit=1`,
+    `maxim_employee_profiles?select=current_external_registration_id,workflow_stage,status_detail&id=eq.${id}&active=eq.true&limit=1`,
   );
   if (!profiles.length) return response({ error: "Employee not found." }, 404);
-  if (profiles[0].prior_ecard_code) {
+  if (
+    Number(profiles[0].workflow_stage || 0) >= 4 &&
+    ecardCodeFromStatus(profiles[0].status_detail)
+  ) {
     return response({ error: "Scheduling is closed because this employee has an eCard." }, 409);
   }
   const workflowStage = profiles[0].current_external_registration_id ? 2 : 1;
