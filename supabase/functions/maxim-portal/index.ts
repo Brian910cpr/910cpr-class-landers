@@ -151,16 +151,21 @@ async function listEmployees() {
   }
   const mapped = rows.map((row: any) => {
       const registration = latestRequest.get(row.id);
+      const workflowStage = Number(row.workflow_stage || 0);
+      const importedCompletion = /^Completed\s+\d{1,2}\/\d{1,2}\/\d{4}\b/i.test(
+        String(row.status_detail || ""),
+      );
       const priorECardCode = row.prior_ecard_code || null;
-      const eCardCode = Number(row.workflow_stage) >= 4
+      const eCardCode = workflowStage >= 4
         ? ecardCodeFromStatus(row.status_detail) || priorECardCode
         : null;
-      const completedAt = eCardCode
-        ? row.scheduled_class_date || registration?.starts_at ||
-          row.ecard_detected_at || row.prior_class_date || row.updated_at
+      const currentClassDate = registration?.starts_at || row.scheduled_class_date ||
+        ((workflowStage >= 3 || importedCompletion) ? row.prior_class_date : null);
+      const currentClassAgeDays = currentClassDate
+        ? calendarDayDifference(String(currentClassDate), today)
         : null;
-      const completedAgeDays = completedAt
-        ? calendarDayDifference(String(completedAt), today)
+      const completedAt = (eCardCode || workflowStage === 3 || importedCompletion)
+        ? currentClassDate || row.ecard_detected_at || row.updated_at
         : null;
       const expirationDate = row.expiration_date
         ? String(row.expiration_date).slice(0, 10)
@@ -170,15 +175,14 @@ async function listEmployees() {
         expirationDate >= currentMonth &&
         expirationDate < afterNextMonth,
       );
-      const inCompletionGrace = Boolean(
-        eCardCode &&
-        completedAgeDays !== null &&
-        completedAgeDays >= 0 &&
-        completedAgeDays <= 14,
+      const hasCurrentClassActivity = Boolean(
+        currentClassDate &&
+        currentClassAgeDays !== null &&
+        currentClassAgeDays <= 14,
       );
       const bucket = !row.active
         ? "history"
-        : inCompletionGrace
+        : hasCurrentClassActivity
         ? "recently_completed"
         : renewalDueNow
         ? "active"
@@ -205,8 +209,7 @@ async function listEmployees() {
       enrollwareClassId: row.enrollware_class_id,
       externalClassId: row.current_external_class_id,
       externalRegistrationId: row.current_external_registration_id,
-      classDate: registration?.starts_at || row.scheduled_class_date ||
-        (Number(row.workflow_stage) >= 4 ? row.prior_class_date : null),
+      classDate: currentClassDate,
       registrationUrl: registration?.registration_url || null,
       registrationRequestedAt: registration?.created_at || null,
       registrationStatus: registration?.status || null,
@@ -219,8 +222,7 @@ async function listEmployees() {
     .filter((row: any) => row.bucket === "recently_completed")
     .sort((a: any, b: any) =>
       String(b.eCardDetectedAt).localeCompare(String(a.eCardDetectedAt))
-    )
-    .slice(0, 15);
+    );
   return response({
     employees: [
       ...mapped.filter((row: any) => row.bucket === "active"),

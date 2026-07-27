@@ -217,7 +217,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("maxim_registration_requests?select=", source)
         self.assertIn("starts_at", source)
         self.assertIn("registration_url", source)
-        self.assertIn("classDate: registration?.starts_at || row.scheduled_class_date", source)
+        self.assertIn("const currentClassDate = registration?.starts_at || row.scheduled_class_date", source)
         self.assertIn("registrationUrl: registration?.registration_url", source)
 
     def test_employee_api_returns_imported_certification_baseline(self) -> None:
@@ -228,7 +228,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("prior_ecard_code", source)
         self.assertIn("scheduled_class_date", source)
         self.assertIn("expirationDate: row.expiration_date", source)
-        self.assertIn("classDate: registration?.starts_at || row.scheduled_class_date", source)
+        self.assertIn("classDate: currentClassDate", source)
         self.assertIn("ganttMilestone(a,aStage)", html)
 
     def test_employee_api_limits_due_and_retains_searchable_history(self) -> None:
@@ -242,7 +242,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn('invoiceLabel: row.workflow_stage === 5 ? "INVOICED"', source)
         self.assertIn("function ecardCodeFromStatus", source)
         self.assertIn("const priorECardCode = row.prior_ecard_code || null", source)
-        self.assertIn("Number(row.workflow_stage) >= 4", source)
+        self.assertIn("workflowStage >= 4", source)
         self.assertIn("${p.eCardCode||''}", html)
         self.assertIn("invoicedOrder=(aStage===5?1:0)", html)
 
@@ -263,7 +263,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("classDate:employee.classDate||null", html)
         self.assertNotIn("classDate:employee.classDate||employee.priorClassDate", html)
         self.assertIn("priorECardCode:employee.priorECardCode||null", html)
-        self.assertIn("(Number(row.workflow_stage) >= 4 ? row.prior_class_date : null)", source)
+        self.assertIn("workflowStage >= 3 || importedCompletion", source)
         self.assertIn("Due ${safeText(displayDateOnly(person.expirationDate))}", html)
 
     def test_current_class_location_reschedule_and_invoice_window_are_explicit(self) -> None:
@@ -303,9 +303,8 @@ class MaximCorporatePortalTests(unittest.TestCase):
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
         self.assertIn("expirationDate >= currentMonth", source)
         self.assertIn("expirationDate < afterNextMonth", source)
-        self.assertIn("row.scheduled_class_date || registration?.starts_at", source)
-        self.assertIn("completedAgeDays <= 14", source)
-        self.assertIn("completedAgeDays >= 0", source)
+        self.assertIn("registration?.starts_at || row.scheduled_class_date", source)
+        self.assertIn("currentClassAgeDays <= 14", source)
         self.assertIn("renewalDueNow", source)
         self.assertIn("isDashboardEligible(p)", html)
         self.assertIn("if(index===4&&recentInvoiceClass)", html)
@@ -320,9 +319,9 @@ class MaximCorporatePortalTests(unittest.TestCase):
                 {"viewedAt": "2026-07-31T16:00:00Z", "person": {**active, "expirationDate": "2026-09-01"}},
                 {"viewedAt": "2026-12-15T17:00:00Z", "person": {**active, "expirationDate": "2027-01-31"}},
                 {"viewedAt": "2024-02-29T17:00:00Z", "person": {**active, "expirationDate": "2024-03-31"}},
-                {"viewedAt": "2026-07-24T16:00:00Z", "person": {**active, "expirationDate": "2028-07-31", "eCardCode": "123", "completionDate": "2026-07-10"}},
-                {"viewedAt": "2026-07-25T16:00:00Z", "person": {**active, "expirationDate": "2028-07-31", "eCardCode": "123", "completionDate": "2026-07-10"}},
-                {"viewedAt": "2026-07-25T16:00:00Z", "person": {**active, "expirationDate": "2026-08-31", "eCardCode": "123", "completionDate": "2026-07-10"}},
+                {"viewedAt": "2026-07-24T16:00:00Z", "person": {**active, "expirationDate": "2028-07-31", "classDate": "2026-07-10"}},
+                {"viewedAt": "2026-07-25T16:00:00Z", "person": {**active, "expirationDate": "2028-07-31", "classDate": "2026-07-10"}},
+                {"viewedAt": "2026-07-25T16:00:00Z", "person": {**active, "expirationDate": "2026-08-31", "classDate": "2026-07-10"}},
             ]
         )
         self.assertEqual(results, [True, True, False, True, True, True, False, True])
@@ -370,12 +369,22 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("if(index===2){if(person.classDate)", html)
         self.assertIn("completed=Boolean(person.eCardCode)", html)
 
+    def test_recent_completed_class_without_ecard_remains_visible_for_fourteen_days(self) -> None:
+        html = read_page()
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("const importedCompletion = /^Completed", source)
+        self.assertIn("workflowStage >= 3 || importedCompletion", source)
+        self.assertIn("const hasCurrentClassActivity = Boolean(", source)
+        self.assertIn("currentClassAgeDays <= 14", source)
+        self.assertIn("if(person.classDate){const age=calendarDayDifference", html)
+        self.assertNotIn("if(person.eCardCode&&person.completionDate)", html)
+
     def test_recent_completion_and_history_windows_are_explicit(self) -> None:
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
         html = read_page()
         self.assertIn("calendarDayDifference", source)
-        self.assertIn("completedAgeDays <= 14", source)
-        self.assertIn('.slice(0, 15)', source)
+        self.assertIn("currentClassAgeDays <= 14", source)
+        self.assertNotIn('.slice(0, 15)', source)
         self.assertIn('"recently_completed"', source)
         self.assertIn('"history"', source)
         self.assertIn("p.bucket==='history'&&q", html)
