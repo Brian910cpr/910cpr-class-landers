@@ -118,7 +118,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn('id="flowSort"', html)
         self.assertIn('<option value="gantt" selected>Gantt order</option>', html)
         self.assertIn('id="flowReset"', html)
-        self.assertIn(".gantt-row{height:56px;min-height:56px}", html)
+        self.assertIn(".gantt-row{height:44px;min-height:44px}", html)
         self.assertIn('class="participant-icon"', html)
         self.assertIn('class="participant-meta"', html)
         self.assertIn(".gantt-head>div:first-child,.gantt-person{position:sticky", html)
