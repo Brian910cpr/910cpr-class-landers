@@ -2,6 +2,7 @@
   "use strict";
 
   const API_BASE = "https://schedule.910cpr.com/admin";
+  const PUBLIC_SITE_ORIGIN = root.location?.protocol === "file:" ? "https://www.910cpr.com" : "";
   const MAX_FILE_BYTES = 15 * 1024 * 1024;
   const ALLOWED_EXTENSIONS = new Set(["pdf", "xlsx", "xls", "csv", "docx", "png", "jpg", "jpeg"]);
 
@@ -73,7 +74,7 @@
 
   async function updateFreshness() {
     try {
-      const response = await fetch("/data/admin_availability.json", { cache: "no-store" });
+      const response = await fetch(`${PUBLIC_SITE_ORIGIN}/data/admin_availability.json`, { cache: "no-store" });
       if (!response.ok) throw new Error("availability unavailable");
       const payload = await response.json();
       const value = freshness(payload.generated_at);
