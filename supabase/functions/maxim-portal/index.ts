@@ -138,8 +138,11 @@ function easternDateTimeDisplay(value: unknown) {
 }
 
 function statusDetailClassDisplay(value: unknown) {
-  const match = String(value || "").match(/\bRegistered\s+(.+)$/i);
-  return match?.[1] || null;
+  const text = String(value || "");
+  const registeredMatch = text.match(/\bRegistered\s+(.+)$/i);
+  if (registeredMatch) return registeredMatch[1];
+  const importedClassMatch = text.match(/\bClass\s+(\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}\s+[AP]M)\b/i);
+  return importedClassMatch?.[1] || null;
 }
 
 function wallDateTimeDisplay(dateValue: unknown, startTimeValue: unknown) {

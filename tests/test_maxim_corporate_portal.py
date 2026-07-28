@@ -237,6 +237,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("function wallDateTimeDisplay", source)
         self.assertIn('timeZone: "America/New_York"', source)
         self.assertIn("statusDetailClassDisplay(row.status_detail)", source)
+        self.assertIn("Class\\s+(\\d{1,2}\\/\\d{1,2}\\/\\d{4}", source)
         self.assertIn("wallDateTimeDisplay(registration?.class_date, registration?.start_time)", source)
         self.assertIn("classDateDisplay: currentClassDateDisplay", source)
         self.assertIn("classDateDisplay:employee.classDateDisplay||null", html)
