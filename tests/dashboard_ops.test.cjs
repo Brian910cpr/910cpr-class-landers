@@ -1,5 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 const { freshness, validateUpload, MAX_FILE_BYTES } = require("../docs/admin/dashboard-ops.js");
 
 const NOW = Date.parse("2026-07-26T20:00:00Z");
@@ -42,4 +44,13 @@ test("upload validation accepts supported files and rejects unsafe inputs", () =
   assert.equal(validateUpload({ name: "../payload.exe", size: 20 }), "Unsupported file type.");
   assert.equal(validateUpload({ name: "roster.pdf", size: MAX_FILE_BYTES + 1 }), "File exceeds the 15 MB limit.");
   assert.equal(validateUpload({ name: "empty.csv", size: 0 }), "The file is empty.");
+});
+
+test("local file dashboard loads its live feeds from the public site", () => {
+  const html = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard.html"), "utf8");
+  const operations = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard-ops.js"), "utf8");
+  assert.match(html, /location\.protocol==='file:'\?'https:\/\/www\.910cpr\.com':''/);
+  assert.match(html, /PUBLIC_SITE_ORIGIN\+'\/data\/admin_schedule\.json'/);
+  assert.match(html, /PUBLIC_SITE_ORIGIN\+url/);
+  assert.match(operations, /root\.location\?\.protocol === "file:" \? "https:\/\/www\.910cpr\.com" : ""/);
 });
