@@ -123,6 +123,100 @@ function easternDateOnly(value = new Date()) {
   return `${part("year")}-${part("month")}-${part("day")}`;
 }
 
+function easternDateTimeDisplay(value: unknown) {
+  if (!value) return null;
+  const date = new Date(String(value));
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
+}
+
+function statusDetailClassDisplay(value: unknown) {
+  const match = String(value || "").match(/\bRegistered\s+(.+)$/i);
+  return match?.[1] || null;
+}
+
+function wallDateTimeDisplay(dateValue: unknown, startTimeValue: unknown) {
+  const dateMatch = String(dateValue || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  const timeMatch = String(startTimeValue || "").match(/^(\d{2}):(\d{2})/);
+  if (!dateMatch || !timeMatch) return null;
+  const hour = Number(timeMatch[1]);
+  const minute = timeMatch[2];
+  const suffix = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour % 12 || 12;
+  return `${dateMatch[2]}/${dateMatch[3]}/${dateMatch[1]}, ${displayHour}:${minute} ${suffix}`;
+}
+
+function courseNameForRegistration(course: any, courseId: string) {
+  const projectedName = course.courseName || course.course_name || course.title ||
+    course.label;
+  if (projectedName) return String(projectedName);
+  const knownNames: Record<string, string> = {
+    "209806": "AHA BLS Provider",
+    "359474": "AHA BLS Provider Renewal",
+    "210549": "AHA BLS HeartCode",
+    "209809": "AHA Heartsaver First Aid CPR AED",
+    "329495": "AHA Heartsaver Total",
+  };
+  return knownNames[courseId] || `Course ${courseId}`;
+}
+
+function locationLabelForRegistration(locationKeyValue: string) {
+  const labels: Record<string, string> = {
+    "wilmington": "Wilmington - Shipyard Blvd",
+    "holly-ridge-jacksonville": "Holly Ridge / Jacksonville",
+  };
+  return labels[locationKeyValue] || locationKeyValue;
+}
+
+function buildMaximSimulatedEmails(input: {
+  registrationId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  billingAccount: string;
+  courseName: string;
+  displayDateTime: string;
+  locationLabel: string;
+}) {
+  const studentName = [input.firstName, input.lastName].filter(Boolean).join(" ")
+    .trim() || "Maxim participant";
+  const firstName = input.firstName || studentName;
+  return [
+    {
+      template: "maxim_student_registration_confirmation",
+      sendMode: "simulated",
+      to: input.email ? [input.email] : [],
+      cc: [],
+      bcc: [],
+      subject: `Your ${input.courseName} training with 910CPR`,
+      body:
+        `Hi ${firstName},\n\nYou are scheduled for ${input.courseName} on ${input.displayDateTime} at ${input.locationLabel}.\n\nYour class is billed to ${input.billingAccount}; no payment or promo code is needed at registration.\n\nIf you need to change this class, contact 910CPR or your Maxim office.\n\nThank you,\n910CPR`,
+      registrationId: input.registrationId,
+      createdAt: new Date().toISOString(),
+    },
+    {
+      template: "maxim_internal_registration_notice",
+      sendMode: "simulated",
+      to: [Deno.env.get("MAXIM_INTERNAL_NOTIFY_EMAIL") || "office@910cpr.com"],
+      cc: [],
+      bcc: [],
+      subject: `Maxim scheduled: ${studentName} - ${input.courseName}`,
+      body:
+        `Maxim participant scheduled in Hot_sync.\n\nName: ${studentName}\nEmail: ${input.email || ""}\nPhone: ${input.phone || ""}\nCourse: ${input.courseName}\nClass: ${input.displayDateTime}\nLocation: ${input.locationLabel}\nBilling: ${input.billingAccount}\nRegistration ID: ${input.registrationId}\nSource: maxim_portal_hot_sync\nEmail mode: simulated`,
+      registrationId: input.registrationId,
+      createdAt: new Date().toISOString(),
+    },
+  ];
+}
+
 function calendarDayDifference(startDate: string, endDate: string) {
   const start = Date.parse(`${String(startDate).slice(0, 10)}T00:00:00Z`);
   const end = Date.parse(`${String(endDate).slice(0, 10)}T00:00:00Z`);
@@ -141,7 +235,7 @@ async function listEmployees() {
     "maxim_employee_profiles?select=id,source_ref,billing_account,required_training,workflow_stage,status_detail,active,link_sent_at,prior_class_date,expiration_date,prior_ecard_code,ecard_detected_at,scheduled_class_date,enrollware_class_id,current_external_class_id,current_external_registration_id,updated_at,customers(id,first_name,last_name,email,phone)&order=updated_at.desc",
   );
   const requests = await rest(
-    "maxim_registration_requests?select=id,employee_profile_id,external_course_id,starts_at,registration_url,status,location_key,supersedes_request_id,superseded_at,commitment_released_at,created_at&order=created_at.desc",
+    "maxim_registration_requests?select=id,employee_profile_id,external_course_id,starts_at,registration_url,status,location_key,supersedes_request_id,superseded_at,commitment_released_at,created_at,registration_source,source_booking_url,class_date,start_time,timezone,simulated_email_payloads,simulated_email_created_at&order=created_at.desc",
   );
   const latestRequest = new Map<string, any>();
   for (const request of requests) {
@@ -171,6 +265,9 @@ async function listEmployees() {
         : null;
       const currentClassDate = registration?.starts_at || row.scheduled_class_date ||
         recentPriorWorkflowClassDate;
+      const currentClassDateDisplay = statusDetailClassDisplay(row.status_detail) ||
+        wallDateTimeDisplay(registration?.class_date, registration?.start_time) ||
+        easternDateTimeDisplay(currentClassDate);
       const currentClassAgeDays = currentClassDate
         ? calendarDayDifference(String(currentClassDate), today)
         : null;
@@ -223,7 +320,15 @@ async function listEmployees() {
       externalClassId: row.current_external_class_id,
       externalRegistrationId: row.current_external_registration_id,
       classDate: currentClassDate,
+      classDateDisplay: currentClassDateDisplay,
       registrationUrl: registration?.registration_url || null,
+      registrationSource: registration?.registration_source || null,
+      sourceBookingUrl: registration?.source_booking_url || null,
+      classDateWall: registration?.class_date || null,
+      classStartTime: registration?.start_time || null,
+      timezone: registration?.timezone || "America/New_York",
+      simulatedEmails: registration?.simulated_email_payloads || [],
+      simulatedEmailCreatedAt: registration?.simulated_email_created_at || null,
       registrationRequestedAt: registration?.created_at || null,
       registrationStatus: registration?.status || null,
       locationKey: registration?.location_key || null,
@@ -468,9 +573,8 @@ async function registerEmployee(req: Request) {
 
   const canonical = await canonicalCourseSlot(body);
   if (!canonical) return response({ error: "stale_slot_rejected" }, 409);
-  const registrationUrl =
-    canonical.course.registrationUrl || canonical.course.appointmentUrl;
-  if (!registrationUrl) return response({ error: "canonical_slot_has_no_registration_url" }, 409);
+  const sourceBookingUrl =
+    canonical.course.registrationUrl || canonical.course.appointmentUrl || null;
 
   const existing = await rest(
     `maxim_registration_requests?employee_profile_id=eq.${profiles[0].id}&status=eq.requested&select=id`,
@@ -484,27 +588,56 @@ async function registerEmployee(req: Request) {
   const externalSessionId =
     `selector:${canonical.selector}:${canonical.day.date}:${canonical.slot.startTime}:${body.courseId}`;
   const startsAt = easternTimestamp(canonical.day.date, canonical.slot.startTime);
+  const courseId = String(body.courseId);
   const inserted = await rest("rpc/maxim_replace_registration", {
     method: "POST",
     body: JSON.stringify({
       p_employee_profile_id: profiles[0].id,
       p_external_session_id: externalSessionId,
-      p_external_course_id: String(body.courseId),
+      p_external_course_id: courseId,
       p_starts_at: startsAt,
-      p_registration_url: registrationUrl,
+      p_registration_url: null,
       p_billing_account: body.billingAccount,
       p_location_key: canonical.locationKey,
       p_replace_request_id: body.moveFromRegistrationId || null,
     }),
   });
   const registration = Array.isArray(inserted) ? inserted[0] : inserted;
+  const displayDateTime = easternDateTimeDisplay(startsAt) ||
+    `${canonical.day.date} ${canonical.slot.startTime}`;
+  const simulatedEmails = buildMaximSimulatedEmails({
+    registrationId: String(registration.id),
+    firstName: String(body?.person?.firstName || ""),
+    lastName: String(body?.person?.lastName || ""),
+    email: String(body?.person?.email || ""),
+    phone: String(body?.person?.phone || ""),
+    billingAccount: String(body.billingAccount || ""),
+    courseName: courseNameForRegistration(canonical.course, courseId),
+    displayDateTime,
+    locationLabel: locationLabelForRegistration(canonical.locationKey),
+  });
+  await rest(`maxim_registration_requests?id=eq.${registration.id}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      registration_source: "maxim_portal_hot_sync",
+      source_booking_url: sourceBookingUrl,
+      class_date: canonical.day.date,
+      start_time: canonical.slot.startTime,
+      timezone: "America/New_York",
+      simulated_email_payloads: simulatedEmails,
+      simulated_email_created_at: new Date().toISOString(),
+    }),
+  });
   return response({
     ok: true,
     registrationId: registration.id,
     personId: sourceRef,
+    registrationSource: "maxim_portal_hot_sync",
+    emailMode: "simulated",
+    simulatedEmails,
     canonicalSlot: {
       selector: canonical.selector,
-      courseId: String(body.courseId),
+      courseId,
       date: canonical.day.date,
       startTime: canonical.slot.startTime,
       locationKey: canonical.locationKey,

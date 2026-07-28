@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-07-28",
+  "branch": "codex/maxim-hotsync-direct-registration",
+  "deployed": false,
+  "timezone": {
+    "display_timezone": "America/New_York",
+    "issue": "Maxim UI could render raw timestamps through the browser timezone path; legacy/imported class timestamps can display the wrong wall time if stored as Eastern wall time in UTC form.",
+    "fix": "API now returns classDateDisplay and prioritizes explicit wall-time sources before timestamp interpretation: status_detail registered label, then Hot_sync class_date plus start_time, then raw timestamp formatted in America/New_York. docs/corp/maxim.html uses classDateDisplay before falling back to Eastern timestamp formatting.",
+    "direct_registration_storage": "easternTimestamp(date, startTime) still converts selected Eastern wall time to the correct UTC instant."
+  },
+  "direct_registration": {
+    "source_of_truth": "Existing canonicalCourseSlot resolver reading /data/block-selector-availability/{bls,heartsaver}.json",
+    "hot_sync_table": "public.maxim_registration_requests",
+    "rpc": "public.maxim_replace_registration",
+    "registration_source": "maxim_portal_hot_sync",
+    "registration_url_behavior": "Direct Maxim registrations write registration_url as null; source booking URLs are retained only in source_booking_url for audit context.",
+    "does_not_independently_decide_sellability": true
+  },
+  "simulated_emails": {
+    "real_email_sent": false,
+    "templates": [
+      "maxim_student_registration_confirmation",
+      "maxim_internal_registration_notice"
+    ],
+    "send_mode": "simulated",
+    "stored_in": "maxim_registration_requests.simulated_email_payloads"
+  },
+  "migration": "supabase/migrations/20260728093000_maxim_hotsync_direct_registration_simulated_emails.sql",
+  "standing_order": {
+    "accepted": true,
+    "scope": "Simulated Gmail-style/email drafts and reports only.",
+    "not_allowed_without_explicit_approval": [
+      "send email",
+      "archive email",
+      "label email",
+      "modify email",
+      "real Gmail or Postmark delivery"
+    ]
+  },
+  "validation": {
+    "targeted_maxim_tests": {
+      "command": "python -m unittest tests.test_maxim_corporate_portal",
+      "result": "passed",
+      "tests": 39
+    },
+    "maxim_inline_script_parse": {
+      "command": "node -e parse docs/corp/maxim.html inline scripts",
+      "result": "passed",
+      "scripts": 2
+    },
+    "public_offer_integrity": {
+      "command": "python -m scripts.public_offer_integrity_audit",
+      "result": "passed",
+      "audit_failed": false
+    },
+    "full_discovery": {
+      "command": "python -m unittest discover -s tests",
+      "result": "blocked_by_worktree_runtime_artifacts",
+      "notes": [
+        "Missing data/runtime/audit_previews/dynamic_offers_preview.json",
+        "Missing data/sessions_current.json",
+        "Existing unrelated public-generation baseline expectation failures"
+      ]
+    }
+  },
+  "deploy_readiness": {
+    "ready": false,
+    "reason": "Supabase migration and Edge Function changes require review and explicit production deployment approval."
+  }
+}

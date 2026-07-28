@@ -18,6 +18,12 @@ MAXIM_MIGRATION = (
     / "migrations"
     / "20260725031000_maxim_atomic_registration_replacement.sql"
 )
+MAXIM_DIRECT_REGISTRATION_MIGRATION = (
+    ROOT
+    / "supabase"
+    / "migrations"
+    / "20260728093000_maxim_hotsync_direct_registration_simulated_emails.sql"
+)
 
 EXPECTED_VARIANTS = {
     "Initial": "209806",
@@ -223,6 +229,44 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("registration_url", source)
         self.assertIn("const currentClassDate = registration?.starts_at || row.scheduled_class_date", source)
         self.assertIn("registrationUrl: registration?.registration_url", source)
+
+    def test_maxim_class_dates_are_displayed_as_eastern_business_time(self) -> None:
+        html = read_page()
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("function easternDateTimeDisplay", source)
+        self.assertIn("function wallDateTimeDisplay", source)
+        self.assertIn('timeZone: "America/New_York"', source)
+        self.assertIn("statusDetailClassDisplay(row.status_detail)", source)
+        self.assertIn("wallDateTimeDisplay(registration?.class_date, registration?.start_time)", source)
+        self.assertIn("classDateDisplay: currentClassDateDisplay", source)
+        self.assertIn("classDateDisplay:employee.classDateDisplay||null", html)
+        self.assertIn("timeZone:'America/New_York'", html)
+        self.assertIn("classDateLabel=person.classDateDisplay||displayDate(person.classDate)", html)
+
+    def test_maxim_direct_registration_uses_hot_sync_source_and_simulated_emails(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("buildMaximSimulatedEmails", source)
+        self.assertIn('sendMode: "simulated"', source)
+        self.assertIn('registration_source: "maxim_portal_hot_sync"', source)
+        self.assertIn("source_booking_url: sourceBookingUrl", source)
+        self.assertIn("p_registration_url: null", source)
+        self.assertIn("simulated_email_payloads: simulatedEmails", source)
+        self.assertIn('registrationSource: "maxim_portal_hot_sync"', source)
+        self.assertIn('emailMode: "simulated"', source)
+        self.assertNotIn("postmark", source.lower())
+        self.assertNotIn("gmail", source.lower())
+        self.assertNotIn("sendEmail(", source)
+
+    def test_maxim_hot_sync_registration_migration_records_wall_time_and_simulated_email_payloads(self) -> None:
+        sql = MAXIM_DIRECT_REGISTRATION_MIGRATION.read_text(encoding="utf-8")
+        self.assertIn("registration_source text not null default 'maxim_portal_hot_sync'", sql)
+        self.assertIn("source_booking_url text", sql)
+        self.assertIn("class_date date", sql)
+        self.assertIn("start_time text", sql)
+        self.assertIn("timezone text not null default 'America/New_York'", sql)
+        self.assertIn("simulated_email_payloads jsonb not null default '[]'::jsonb", sql)
+        self.assertIn("simulated_email_created_at timestamptz", sql)
+        self.assertIn("maxim_registration_requests_timezone_check", sql)
 
     def test_employee_api_returns_imported_certification_baseline(self) -> None:
         html = read_page()
