@@ -1,0 +1,18 @@
+name = "landerware-financial-worker"
+main = "worker/finance-worker.js"
+compatibility_date = "2026-06-24"
+workers_dev = true
+
+routes = [
+  { pattern = "schedule.910cpr.com/admin/finance/*", zone_name = "910cpr.com" }
+]
+
+# Required secrets:
+#   wrangler secret put HOT_SYNC_ADMIN_KEY --config wrangler.finance.toml
+#   wrangler secret put STRIPE_SECRET_KEY --config wrangler.finance.toml
+#
+# Required binding:
+#   Bind the existing LanderWare D1 database as HOT_SYNC_D1.
+# Optional variables:
+#   HOT_SYNC_ADMIN_ACTOR = "dashboard_admin"
+#   STRIPE_API_VERSION = "2026-06-24.dahlia"
