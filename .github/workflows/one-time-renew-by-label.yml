@@ -1,0 +1,45 @@
+name: One-time Renew By wording update
+
+on:
+  push:
+    paths:
+      - .github/workflows/one-time-renew-by-label.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-wording:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update Maxim renewal wording
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('docs/corp/maxim.html')
+          text = path.read_text(encoding='utf-8')
+
+          header_old = '<div>Coming Due / Link</div>'
+          header_new = '<div>Renew By</div>'
+          row_old = ":`Due ${safeText(displayDateOnly(person.expirationDate))}`"
+          row_new = ":`${safeText(displayDateOnly(person.expirationDate))}`"
+
+          assert text.count(header_old) == 1, 'Expected one Coming Due / Link header'
+          assert text.count(row_old) == 1, 'Expected one DUE row template'
+
+          text = text.replace(header_old, header_new)
+          text = text.replace(row_old, row_new)
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit update and remove one-time workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/one-time-renew-by-label.yml
+          git add docs/corp/maxim.html
+          git commit -m "Use Renew By wording in Maxim training flow"
+          git push
