@@ -118,6 +118,8 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn('id="flowSort"', html)
         self.assertIn('<option value="gantt" selected>Gantt order</option>', html)
         self.assertIn('id="flowReset"', html)
+        self.assertIn(".gantt-row{height:52px;min-height:52px}", html)
+        self.assertIn(".gantt-head>div:first-child,.gantt-person{position:sticky", html)
         self.assertIn("const stageOrder=aStage-bStage", html)
         self.assertIn("return milestoneOrder||nameOrder()", html)
         self.assertIn("flowSort.value='gantt'", html)
