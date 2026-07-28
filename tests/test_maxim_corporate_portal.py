@@ -108,7 +108,10 @@ class MaximCorporatePortalTests(unittest.TestCase):
     def test_employee_names_open_edit_and_safe_deactivation_drawer(self) -> None:
         html = read_page()
         self.assertIn('id="employeeBackdrop"', html)
-        self.assertIn("openEmployee('${p.id||personIdFromName(p.name)}')", html)
+        self.assertIn("function flowKey(p){return p.id||personIdFromName(p.name)}", html)
+        self.assertIn("openEmployee('${key}')", html)
+        self.assertIn("scheduleEmployeeByKey('${key}')", html)
+        self.assertIn("requestRemoveEmployee('${key}')", html)
         self.assertIn("method:'PATCH'", html)
         self.assertIn("method:'DELETE'", html)
         self.assertIn("Remove from active list", html)
