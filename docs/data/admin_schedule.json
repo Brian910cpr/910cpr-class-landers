@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-29T20:31:55.556963+00:00",
+  "generated_at": "2026-07-29T22:00:30.723695+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
-    "sessions": 49,
-    "brian_resource_blocks": 10,
+    "sessions": 50,
+    "brian_resource_blocks": 11,
     "student_snapshot_classes": 17,
     "student_snapshot_matches": 1,
     "seated_students_matched": 1,
@@ -107,6 +107,21 @@
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13848626",
+      "source": "enrollware_ical",
+      "blocking_resources": [
+        "instructor:brian_ennis",
+        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
+      ]
+    },
+    {
+      "session_id": "13849712",
+      "course_name": "AHA BLS Provider",
+      "start_at": "2026-08-02T10:30:00-04:00",
+      "end_at": "2026-08-02T12:30:00-04:00",
+      "lead_instructor_name": "Brian Ennis",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+      "registered_count": 0,
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13849712",
       "source": "enrollware_ical",
       "blocking_resources": [
         "instructor:brian_ennis",
