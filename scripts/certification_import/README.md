@@ -12,11 +12,13 @@ python -m scripts.import_assigned_ecards `
   --folder-id 1mAKk554dqD3l-ufLSMp07dh_T07Ih_8o `
   --customer MAXIM `
   --dry-run `
-  --output-report data/audit/certification_history_import
+  --output-report data/private/certification-import/certification_history_import
 ```
 
 The command always emits `.json`, `.md`, and `.html` reports. The HTML file is
-the human-readable audit dashboard.
+the human-readable audit dashboard. Reports contain participant names, email
+addresses, profile IDs, and certification details. Keep them under
+`data/private/` (already Git-ignored) or another access-controlled directory.
 
 Useful filters:
 
@@ -84,4 +86,3 @@ proposes a certification insert or employee-profile update.
 - A different, newer eCard may be preserved as a new history credential.
 - Older/equal expirations, older class dates, incompatible courses, and
   unproven replacement cards never overwrite the profile projection.
-

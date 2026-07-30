@@ -197,6 +197,26 @@ class ParserTests(unittest.TestCase):
             self.assertEqual(len(rows), 1)
             self.assertIn("missing_ecard_code", rows[0].validation_errors)
 
+    def test_expiration_row_without_ecard_is_reference_only(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "expiration-reference.csv"
+            path.write_text(
+                "eCard Code,First Name,Last Name,Class Date,Expiration Date\n"
+                ",Avery,Sample,7/1/2024,7/31/2026\n",
+                encoding="utf-8",
+            )
+            rows, _ = parse_file(source(path), path)
+            self.assertEqual(
+                rows[0].record_category, "historical_expiration_reference"
+            )
+            self.assertNotIn("missing_ecard_code", rows[0].validation_errors)
+            result = reconcile(
+                rows, {"profiles": [profile()], "history": []}
+            )[0]
+            self.assertEqual(result.match.status, "reference_only")
+            self.assertIsNone(result.proposed_history_insert)
+            self.assertIsNone(result.proposed_profile_update)
+
     def test_malformed_date_is_preserved_as_error(self) -> None:
         value, error = parse_date("not-a-date")
         self.assertIsNone(value)
@@ -218,6 +238,18 @@ class MatchingTests(unittest.TestCase):
             certification(email=None)
         )
         self.assertEqual(result.method, "exact_name_compatible_course_and_date")
+
+    def test_unique_exact_name_and_compatible_course_match(self) -> None:
+        candidate = profile(
+            email="different@example.test",
+            scheduled_class_date="2026-08-01T12:00:00Z",
+        )
+        result = DeterministicMatcher([candidate], []).match(
+            certification(email=None)
+        )
+        self.assertEqual(
+            result.method, "exact_name_unique_compatible_profile"
+        )
 
     def test_ambiguous_duplicate_names(self) -> None:
         rows = [profile("one"), profile("two")]

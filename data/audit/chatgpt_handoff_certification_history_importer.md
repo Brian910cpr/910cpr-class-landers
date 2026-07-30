@@ -76,6 +76,23 @@ Drive client implements full `nextPageToken` pagination, but a Drive
 read-only token/service-account credential is required to run that listing
 outside the connector session.
 
+## Complete production-backed read-only dry run
+
+The complete follow-up run is summarized in:
+
+`data/audit/certification_history_production_readonly_summary.md`
+
+It used three authenticated Drive metadata pages (1,069 files), a SELECT-only
+production snapshot (339 active profiles and 15 history rows), and a private
+local download cache. It produced 25 deterministic exact matches, 74
+ambiguous matches, 2,535 unmatched rows, 16 invalid rows, 24 proposed history
+inserts, 15 proposed occurrence reconciliations, and 19 proposed legacy profile
+projections. No production writes occurred.
+
+The importer is not ready for `--apply`: all proposed history inserts are
+currently labeled `current`, including records as old as 2022, while none has
+a source expiration date. Status/expiration policy needs review first.
+
 ## Important files
 
 - `scripts/import_assigned_ecards.py` — CLI and safety gate.
@@ -139,4 +156,3 @@ OK
 - No site build/publish.
 - No real participant fixtures in the repository.
 - No credentials or secret values in source or reports.
-

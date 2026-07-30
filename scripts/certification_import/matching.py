@@ -51,6 +51,11 @@ class DeterministicMatcher:
                 self.by_name[name].append(profile)
 
     def match(self, record: NormalizedCertification) -> MatchResult:
+        if record.record_category == "historical_expiration_reference":
+            return MatchResult(
+                status="reference_only",
+                method="historical_expiration_reference",
+            )
         if record.corporate_customer and record.corporate_customer.casefold() not in {
             "maxim", "maxim healthcare", "maxim bh", "maxim dsp",
         }:
@@ -85,13 +90,29 @@ class DeterministicMatcher:
             return MatchResult(
                 status="ambiguous",
                 method="existing_ecard_course_conflict",
-                evidence={"existing_profile_id": profile_id},
+                evidence={"candidates": [{
+                    "profile_id": profile_id,
+                    "source_course": record.normalized_course,
+                    "required_training": (
+                        profile.get("required_training") if profile else None
+                    ),
+                    "course_compatible": False,
+                    "date_compatible": (
+                        _date_compatible(record, profile) if profile else False
+                    ),
+                }]},
             )
         if len(history_profile_ids) > 1:
             return MatchResult(
                 status="ambiguous",
                 method="existing_ecard_multiple_profiles",
-                evidence={"profile_count": len(history_profile_ids)},
+                evidence={
+                    "profile_count": len(history_profile_ids),
+                    "candidates": [
+                        {"profile_id": profile_id}
+                        for profile_id in sorted(history_profile_ids)
+                    ],
+                },
             )
 
         if record.email:
@@ -111,13 +132,37 @@ class DeterministicMatcher:
                 return MatchResult(
                     status="ambiguous",
                     method="exact_email_multiple_profiles",
-                    evidence={"candidate_count": len(email_matches)},
+                    evidence={
+                        "candidate_count": len(email_matches),
+                        "candidates": [{
+                            "profile_id": row["id"],
+                            "source_course": record.normalized_course,
+                            "required_training": row.get("required_training"),
+                            "course_compatible": compatible_course(
+                                record.normalized_course,
+                                row.get("required_training", ""),
+                            ),
+                            "date_compatible": _date_compatible(record, row),
+                        } for row in email_matches],
+                    },
                 )
             if len(email_matches) == 1:
                 return MatchResult(
                     status="ambiguous",
                     method="exact_email_incompatible_or_unknown_course",
-                    evidence={"candidate_id": email_matches[0]["id"]},
+                    evidence={
+                        "candidates": [{
+                            "profile_id": email_matches[0]["id"],
+                            "source_course": record.normalized_course,
+                            "required_training": email_matches[0].get(
+                                "required_training"
+                            ),
+                            "course_compatible": False,
+                            "date_compatible": _date_compatible(
+                                record, email_matches[0]
+                            ),
+                        }]
+                    },
                 )
 
         name_matches = self.by_name.get(record.normalized_name, [])
@@ -145,11 +190,38 @@ class DeterministicMatcher:
                 method="exact_name_compatible_course_and_date",
                 confidence=1.0,
             )
+        compatible_name_matches = [
+            row for row in name_matches
+            if compatible_course(
+                record.normalized_course, row.get("required_training", "")
+            )
+        ]
+        if len(name_matches) == 1 and len(compatible_name_matches) == 1:
+            return MatchResult(
+                status="exact_match",
+                employee_profile_id=compatible_name_matches[0]["id"],
+                method="exact_name_unique_compatible_profile",
+                confidence=1.0,
+            )
         if len(name_matches) > 1 or len(date_course_matches) > 1:
             return MatchResult(
                 status="ambiguous",
                 method="exact_name_multiple_profiles",
-                evidence={"candidate_count": len(name_matches)},
+                evidence={
+                    "candidate_count": len(name_matches),
+                    "candidates": [
+                        {
+                            "profile_id": row["id"],
+                            "normalized_name": _profile_name(row),
+                            "course_compatible": compatible_course(
+                                record.normalized_course,
+                                row.get("required_training", ""),
+                            ),
+                            "date_compatible": _date_compatible(record, row),
+                        }
+                        for row in name_matches
+                    ],
+                },
             )
 
         suggestions: list[tuple[float, dict[str, Any]]] = []

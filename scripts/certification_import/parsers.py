@@ -112,6 +112,13 @@ def parse_file(source: SourceFile, path: Path) -> tuple[list[NormalizedCertifica
             ]
             if not normalized_name:
                 validation_errors.append("missing_participant_name")
+            record_category = "certification"
+            if not ecard_code and expiration_date and normalized_name:
+                record_category = "historical_expiration_reference"
+                validation_errors = [
+                    error for error in validation_errors
+                    if error != "missing_ecard_code"
+                ]
             record = NormalizedCertification(
                 source_file_id=source.id,
                 source_file_name=source.name,
@@ -134,6 +141,7 @@ def parse_file(source: SourceFile, path: Path) -> tuple[list[NormalizedCertifica
                     _value(row, mapping, "corporate_customer")
                 ) or None,
                 raw_record=raw,
+                record_category=record_category,
                 validation_errors=validation_errors,
             )
             assign_fingerprints(record)

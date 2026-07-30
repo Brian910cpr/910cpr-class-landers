@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -63,12 +64,38 @@ def main(argv: list[str] | None = None) -> int:
     unsupported = [row for row in selected if row not in supported]
     parsed = []
     inspected: list[SourceFile] = []
+    downloaded: list[SourceFile] = []
+    reused_from_cache: list[SourceFile] = []
+    byte_duplicate_files: list[dict[str, str]] = []
+    seen_file_hashes: dict[str, SourceFile] = {}
     file_errors: list[dict[str, str]] = []
     for source in supported:
         try:
-            path = Path(source.local_path) if source.local_path else download_file(
-                source, args.cache_dir
-            )
+            if source.local_path:
+                path = Path(source.local_path)
+            else:
+                cache_path = (
+                    args.cache_dir
+                    / f"{source.id}{Path(source.name).suffix.casefold()}"
+                )
+                was_cached = cache_path.exists()
+                path = download_file(source, args.cache_dir)
+                if not was_cached:
+                    downloaded.append(source)
+                else:
+                    reused_from_cache.append(source)
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            if digest in seen_file_hashes:
+                original = seen_file_hashes[digest]
+                byte_duplicate_files.append({
+                    "file_id": source.id,
+                    "file_name": source.name,
+                    "duplicate_of_file_id": original.id,
+                    "duplicate_of_file_name": original.name,
+                    "sha256": digest,
+                })
+                continue
+            seen_file_hashes[digest] = source
             records, errors = parse_file(source, path)
             parsed.extend(records)
             inspected.append(source)
@@ -95,6 +122,9 @@ def main(argv: list[str] | None = None) -> int:
         unsupported=unsupported,
         records=records,
         file_errors=file_errors,
+        downloaded=downloaded,
+        reused_from_cache=reused_from_cache,
+        byte_duplicate_files=byte_duplicate_files,
     )
     paths = write_reports(report, Path(args.output_report))
     print(json.dumps({

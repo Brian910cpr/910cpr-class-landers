@@ -36,6 +36,7 @@ class NormalizedCertification:
     expiration_date: str | None
     corporate_customer: str | None
     raw_record: dict[str, Any]
+    record_category: str = "certification"
     record_fingerprint: str = ""
     identity_fingerprint: str = ""
     validation_errors: list[str] = field(default_factory=list)
@@ -60,6 +61,7 @@ class ReconciledRecord:
     match: MatchResult
     duplicate_of: str | None = None
     proposed_history_insert: dict[str, Any] | None = None
+    proposed_history_reconciliation: dict[str, Any] | None = None
     proposed_profile_update: dict[str, Any] | None = None
     skip_reasons: list[str] = field(default_factory=list)
 
@@ -69,6 +71,7 @@ class ReconciledRecord:
             "match": asdict(self.match),
             "duplicate_of": self.duplicate_of,
             "proposed_history_insert": self.proposed_history_insert,
+            "proposed_history_reconciliation": self.proposed_history_reconciliation,
             "proposed_profile_update": self.proposed_profile_update,
             "skip_reasons": self.skip_reasons,
         }

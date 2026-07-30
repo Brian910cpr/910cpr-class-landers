@@ -57,7 +57,7 @@ class SupabaseClient:
                     "select": (
                         "id,employee_profile_id,ecard_number,course,issue_date,"
                         "expiration_date,certification_status,source_drive_file_id,"
-                        "source_filename"
+                        "source_filename,source_occurrences"
                     ),
                     "order": "issue_date.desc.nullslast,expiration_date.desc.nullslast",
                 }

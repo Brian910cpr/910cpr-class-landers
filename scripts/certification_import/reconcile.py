@@ -100,6 +100,11 @@ def reconcile(
         str(row.get("ecard_number") or "").replace("-", "").replace(" ", "").upper()
         for row in snapshot["history"]
     }
+    history_by_ecard = {
+        str(row.get("ecard_number") or "").replace("-", "").replace(" ", "").upper(): row
+        for row in snapshot["history"]
+        if row.get("ecard_number")
+    }
     seen: dict[str, str] = {}
     seen_ecards: dict[str, str] = {}
     output: list[ReconciledRecord] = []
@@ -138,10 +143,49 @@ def reconcile(
             seen_ecards[record.ecard_code] = source_identity
         match = matcher.match(record)
         result = ReconciledRecord(certification=record, match=match)
+        if match.status == "reference_only":
+            output.append(result)
+            continue
         if record.ecard_code in existing_ecards:
             result.skip_reasons.append("ecard_already_in_certification_history")
+            existing = history_by_ecard[record.ecard_code]
+            match.evidence["existing_history_state"] = {
+                "id": existing.get("id"),
+                "employee_profile_id": existing.get("employee_profile_id"),
+                "ecard_number": existing.get("ecard_number"),
+                "course": existing.get("course"),
+                "issue_date": existing.get("issue_date"),
+                "expiration_date": existing.get("expiration_date"),
+                "certification_status": existing.get("certification_status"),
+            }
+            occurrence = {
+                "file_id": record.source_file_id,
+                "sheet": record.source_sheet,
+                "row": record.source_row,
+                "record_fingerprint": record.record_fingerprint,
+            }
+            prior_occurrences = existing.get("source_occurrences") or []
+            if not any(
+                item.get("record_fingerprint") == record.record_fingerprint
+                for item in prior_occurrences
+                if isinstance(item, dict)
+            ):
+                result.proposed_history_reconciliation = {
+                    "history_id": existing.get("id"),
+                    "ecard_number": record.ecard_code,
+                    "append_source_occurrence": occurrence,
+                    "reason": "existing_ecard_new_source_occurrence",
+                }
         elif match.status == "exact_match" and match.employee_profile_id:
             profile = profiles_by_id[match.employee_profile_id]
+            match.evidence["existing_profile_state"] = {
+                "required_training": profile.get("required_training"),
+                "workflow_stage": profile.get("workflow_stage"),
+                "status_detail": profile.get("status_detail"),
+                "prior_class_date": profile.get("prior_class_date"),
+                "expiration_date": profile.get("expiration_date"),
+                "prior_ecard_code": profile.get("prior_ecard_code"),
+            }
             payload = _history_payload(record, profile)
             payload["match_method"] = match.method
             result.proposed_history_insert = payload
