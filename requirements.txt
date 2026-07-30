@@ -1,2 +1,4 @@
 Flask==3.0.3
 gunicorn==22.0.0
+google-auth[requests]==2.40.3
+python-calamine==0.8.2

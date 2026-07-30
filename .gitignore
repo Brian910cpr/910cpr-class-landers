@@ -25,3 +25,8 @@ data/audit/appointment_seed_registration_matches.json
 data/audit/zapier_registration_*review_bundle.md
 data/audit/enrollware_zapier_registration_event_bridge.md
 data/fixtures/enrollware_registration_*.csv
+
+# Python importer/test runtime artifacts.
+__pycache__/
+*.py[cod]
+.cache/certification-import/
