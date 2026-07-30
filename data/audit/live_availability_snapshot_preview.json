@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T19:31:40.054308+00:00",
+  "generated_at": "2026-07-30T21:14:12.996675+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -2902,11 +2902,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-30T15:45:00",
+      "start_datetime": "2026-07-30T17:15:00",
       "end_datetime": "2026-07-31T00:00:00",
       "date": "2026-07-30",
       "end_date": "2026-07-31",
-      "start_time": "15:45",
+      "start_time": "17:15",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
