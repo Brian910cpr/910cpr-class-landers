@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T08:31:32.043641+00:00",
+  "generated_at": "2026-07-30T11:10:32.521334+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -23,13 +23,13 @@
       }
     ],
     "blocks_generated": 306,
-    "blocks_blocked": 6,
+    "blocks_blocked": 5,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 6
+      "inverse_gap_shorter_than_minimum_consumption": 5
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 6
+      "inverse_gap_shorter_than_minimum_consumption": 5
     },
     "source_type_counts": {
       "google_calendar": 2,
@@ -43,30 +43,6 @@
     "inverse_blocking_event_blocks": 118
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-30T06:00:00",
-      "end_datetime": "2026-07-30T08:30:00",
-      "date": "2026-07-30",
-      "end_date": "2026-07-30",
-      "start_time": "06:00",
-      "end_time": "08:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "4045 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "5898hq9hprslca7itssau3tq3j@google.com:20260730T0600000400",
-      "summary": "Jonah to LaCrosse",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -2878,11 +2854,35 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-07-30T08:30:00",
+      "start_datetime": "2026-10-28T06:30:00",
+      "end_datetime": "2026-10-28T07:45:00",
+      "date": "2026-10-28",
+      "end_date": "2026-10-28",
+      "start_time": "06:30",
+      "end_time": "07:45",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261028T0630000400",
+      "summary": "CFA Drop Off",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-07-30T07:15:00",
       "end_datetime": "2026-07-31T00:00:00",
       "date": "2026-07-30",
       "end_date": "2026-07-31",
-      "start_time": "08:30",
+      "start_time": "07:15",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -8676,11 +8676,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-28T00:00:00",
-      "end_datetime": "2026-10-28T04:45:00",
+      "end_datetime": "2026-10-28T06:30:00",
       "date": "2026-10-28",
       "end_date": "2026-10-28",
       "start_time": "00:00",
-      "end_time": "04:45",
+      "end_time": "06:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -8705,14 +8705,6 @@
     }
   ],
   "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-07-30T04:45:00",
-      "end_datetime": "2026-07-30T06:00:00"
-    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
