@@ -333,6 +333,23 @@ class ReconcileTests(unittest.TestCase):
         self.assertIsNone(result.proposed_history_insert)
         self.assertIn("ecard_already_in_certification_history", result.skip_reasons)
 
+    def test_ambiguous_existing_ecard_never_proposes_reconciliation(self) -> None:
+        record = certification()
+        history = [{
+            "id": "history-1",
+            "employee_profile_id": "profile-1",
+            "ecard_number": record.ecard_code,
+            "course": "BLS",
+            "source_occurrences": [],
+        }]
+        result = reconcile(
+            [record],
+            {"profiles": [profile(course="HS Total")], "history": history},
+        )[0]
+        self.assertEqual(result.match.status, "ambiguous")
+        self.assertIsNone(result.proposed_history_reconciliation)
+        self.assertIsNone(result.proposed_profile_update)
+
     def test_unsupported_file_format_set(self) -> None:
         from scripts.certification_import.parsers import SUPPORTED_EXTENSIONS
         self.assertNotIn(".pdf", SUPPORTED_EXTENSIONS)

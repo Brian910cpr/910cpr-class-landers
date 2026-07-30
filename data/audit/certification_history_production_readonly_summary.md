@@ -33,7 +33,7 @@ occurred.
 | Unmatched rows | 2,535 |
 | Existing eCards | 15 |
 | Proposed history inserts | 24 |
-| Proposed history occurrence reconciliations | 15 |
+| Proposed history occurrence reconciliations | 1 |
 | Proposed legacy profile projections | 19 |
 | Proposed workflow-stage changes | 1 |
 | Skips due to older/unproven profile data | 5 |
@@ -51,7 +51,7 @@ Ambiguous methods:
 
 - `exact_email_incompatible_or_unknown_course`: 59
 - `exact_email_multiple_profiles`: 1
-- `existing_ecard_course_conflict`: 14
+- `existing_ecard_course_conflict`: 14 (review-only; no proposed write)
 
 Invalid reasons (a row can have more than one reason):
 
@@ -85,4 +85,3 @@ The detailed JSON/Markdown/HTML reports contain participant PII and are kept
 outside the repository under the task `outputs` directory. The Drive manifest,
 Supabase snapshot, and downloaded spreadsheets are private runtime artifacts
 under the task `work` directory and are not committed.
-

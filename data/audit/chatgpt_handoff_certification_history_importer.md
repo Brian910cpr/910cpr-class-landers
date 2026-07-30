@@ -86,7 +86,7 @@ It used three authenticated Drive metadata pages (1,069 files), a SELECT-only
 production snapshot (339 active profiles and 15 history rows), and a private
 local download cache. It produced 25 deterministic exact matches, 74
 ambiguous matches, 2,535 unmatched rows, 16 invalid rows, 24 proposed history
-inserts, 15 proposed occurrence reconciliations, and 19 proposed legacy profile
+inserts, 1 proposed occurrence reconciliation, and 19 proposed legacy profile
 projections. No production writes occurred.
 
 The importer is not ready for `--apply`: all proposed history inserts are

@@ -165,7 +165,7 @@ def reconcile(
                 "record_fingerprint": record.record_fingerprint,
             }
             prior_occurrences = existing.get("source_occurrences") or []
-            if not any(
+            if match.status == "exact_match" and not any(
                 item.get("record_fingerprint") == record.record_fingerprint
                 for item in prior_occurrences
                 if isinstance(item, dict)
