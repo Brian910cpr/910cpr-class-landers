@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-31T00:04:52.189654+00:00",
+  "generated_at": "2026-07-31T04:02:02.724367+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-07-31T00:04:51.813955+00:00",
+      "generated_at": "2026-07-31T04:02:02.083831+00:00",
       "event_count": 0
     },
     {
@@ -16,30 +16,19 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-07-31T00:04:52.189654+00:00",
-      "event_count": 119
+      "generated_at": "2026-07-31T04:02:02.724367+00:00",
+      "event_count": 118
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-07-31T00:04:51.982002+00:00",
+      "generated_at": "2026-07-31T04:02:02.345687+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Busco Beach",
-      "start": "2026-07-31T04:00:00+00:00",
-      "end": "2026-08-01T03:30:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
