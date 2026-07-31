@@ -4,6 +4,7 @@ import csv
 import tempfile
 import unittest
 import zipfile
+from datetime import date, datetime, timezone
 from pathlib import Path
 from xml.sax.saxutils import escape
 
@@ -15,6 +16,11 @@ from scripts.certification_import.normalize import (
     parse_date,
 )
 from scripts.certification_import.parsers import parse_file
+from scripts.certification_import.policy import (
+    AHA_MONTH_END_POLICY,
+    assess_certification,
+    two_years_through_end_of_month,
+)
 from scripts.certification_import.reconcile import reconcile
 
 
@@ -119,7 +125,7 @@ def certification(**overrides: object) -> NormalizedCertification:
         "ecard_code": "123456789012",
         "class_date": "2026-07-01",
         "issue_date": None,
-        "expiration_date": "2028-07-31",
+        "source_expiration_date": "2028-07-31",
         "corporate_customer": None,
         "raw_record": {"eCard Code": "123456789012"},
     }
@@ -346,13 +352,229 @@ class ReconcileTests(unittest.TestCase):
             [record],
             {"profiles": [profile(course="HS Total")], "history": history},
         )[0]
-        self.assertEqual(result.match.status, "ambiguous")
+        self.assertEqual(result.match.status, "conflict")
         self.assertIsNone(result.proposed_history_reconciliation)
         self.assertIsNone(result.proposed_profile_update)
 
     def test_unsupported_file_format_set(self) -> None:
         from scripts.certification_import.parsers import SUPPORTED_EXTENSIONS
         self.assertNotIn(".pdf", SUPPORTED_EXTENSIONS)
+
+
+class CertificationPolicyTests(unittest.TestCase):
+    TODAY = date(2026, 7, 30)
+    CALCULATED_AT = datetime(2026, 7, 30, 12, tzinfo=timezone.utc)
+
+    def assess(self, record: NormalizedCertification):
+        return assess_certification(
+            record,
+            profile(),
+            today=self.TODAY,
+            calculated_at=self.CALCULATED_AT,
+        )
+
+    def test_old_credential_without_expiration_is_historical_unknown(self) -> None:
+        decision = self.assess(certification(
+            normalized_course="UNKNOWN",
+            course_name_raw="Unverified Provider CPR",
+            class_date="2022-01-10",
+            source_expiration_date=None,
+        ))
+        self.assertEqual(decision.certification_status, "historical_unknown")
+        self.assertEqual(decision.expiration_source, "unknown")
+
+    def test_recent_without_verified_policy_is_historical_unknown(self) -> None:
+        decision = self.assess(certification(
+            normalized_course="UNKNOWN",
+            course_name_raw="Unverified Provider CPR",
+            class_date="2026-07-20",
+            source_expiration_date=None,
+        ))
+        self.assertEqual(decision.certification_status, "historical_unknown")
+
+    def test_explicit_future_expiration_is_current(self) -> None:
+        decision = self.assess(certification(
+            source_expiration_date="2027-01-01"
+        ))
+        self.assertEqual(decision.certification_status, "current")
+        self.assertEqual(decision.expiration_source, "source")
+        self.assertIsNone(decision.calculation_policy)
+
+    def test_explicit_past_expiration_is_expired(self) -> None:
+        decision = self.assess(certification(
+            source_expiration_date="2025-01-01"
+        ))
+        self.assertEqual(decision.certification_status, "expired")
+        self.assertEqual(decision.expiration_source, "source")
+
+    def test_verified_calculated_future_expiration_is_current(self) -> None:
+        decision = self.assess(certification(
+            class_date="2026-07-01",
+            source_expiration_date=None,
+        ))
+        self.assertEqual(decision.certification_status, "current")
+        self.assertEqual(decision.expiration_date, "2028-07-31")
+        self.assertEqual(decision.expiration_source, "calculated_policy")
+        self.assertEqual(decision.calculation_policy, AHA_MONTH_END_POLICY)
+        self.assertEqual(decision.calculated_from_date, "2026-07-01")
+
+    def test_verified_calculated_past_expiration_is_expired(self) -> None:
+        decision = self.assess(certification(
+            class_date="2022-07-01",
+            source_expiration_date=None,
+        ))
+        self.assertEqual(decision.certification_status, "expired")
+        self.assertEqual(decision.expiration_date, "2024-07-31")
+
+    def test_newer_compatible_credential_supersedes_older(self) -> None:
+        history = [{
+            "id": "old-history",
+            "employee_profile_id": "profile-1",
+            "ecard_number": "999999999999",
+            "course": "BLS",
+            "issue_date": "2024-06-01",
+            "certification_status": "current",
+        }]
+        result = reconcile(
+            [certification(
+                class_date="2026-07-01",
+                source_expiration_date=None,
+            )],
+            {"profiles": [profile()], "history": history},
+            today=self.TODAY,
+            calculated_at=self.CALCULATED_AT,
+        )[0]
+        self.assertEqual(
+            result.proposed_history_supersessions[0]["history_id"],
+            "old-history",
+        )
+
+    def test_unrelated_course_is_not_superseded(self) -> None:
+        history = [{
+            "id": "pals-history",
+            "employee_profile_id": "profile-1",
+            "ecard_number": "999999999999",
+            "course": "PALS",
+            "issue_date": "2024-06-01",
+            "certification_status": "current",
+        }]
+        result = reconcile(
+            [certification(
+                class_date="2026-07-01",
+                source_expiration_date=None,
+            )],
+            {"profiles": [profile()], "history": history},
+            today=self.TODAY,
+            calculated_at=self.CALCULATED_AT,
+        )[0]
+        self.assertEqual(result.proposed_history_supersessions, [])
+
+    def test_historical_unknown_does_not_project(self) -> None:
+        result = reconcile(
+            [certification(
+                class_date=None,
+                issue_date=None,
+                source_expiration_date=None,
+            )],
+            {"profiles": [profile()], "history": []},
+            today=self.TODAY,
+        )[0]
+        self.assertEqual(
+            result.proposed_history_insert["certification_status"],
+            "historical_unknown",
+        )
+        self.assertIsNone(result.proposed_profile_update)
+        self.assertNotIn(
+            "workflow_stage",
+            result.proposed_history_insert,
+        )
+
+    def test_expired_certification_does_not_change_workflow(self) -> None:
+        result = reconcile(
+            [certification(source_expiration_date="2025-01-01")],
+            {"profiles": [profile()], "history": []},
+            today=self.TODAY,
+        )[0]
+        self.assertIsNone(result.proposed_profile_update)
+        self.assertEqual(
+            result.proposed_history_insert["certification_status"], "expired"
+        )
+
+    def test_current_projects_only_when_newer_and_compatible(self) -> None:
+        result = reconcile(
+            [certification(source_expiration_date="2028-07-31")],
+            {"profiles": [profile(
+                expiration_date="2027-01-01",
+                prior_class_date="2025-01-01T12:00:00Z",
+            )], "history": []},
+            today=self.TODAY,
+        )[0]
+        self.assertEqual(
+            result.proposed_profile_update["expiration_date"], "2028-07-31"
+        )
+
+    def test_existing_ecard_conflicting_course_is_conflict_review(self) -> None:
+        record = certification()
+        history = [{
+            "id": "history-1",
+            "employee_profile_id": "profile-1",
+            "ecard_number": record.ecard_code,
+            "course": "BLS",
+            "source_occurrences": [],
+        }]
+        result = reconcile(
+            [record],
+            {"profiles": [profile(course="HS Total")], "history": history},
+            today=self.TODAY,
+        )[0]
+        self.assertEqual(result.match.status, "conflict")
+        self.assertIsNone(result.proposed_history_reconciliation)
+
+    def test_existing_ecard_conflicting_participant_is_conflict_review(self) -> None:
+        record = certification(
+            email="different@example.test",
+            normalized_name="different person",
+        )
+        history = [{
+            "id": "history-1",
+            "employee_profile_id": "profile-1",
+            "ecard_number": record.ecard_code,
+            "course": "BLS",
+            "source_occurrences": [],
+        }]
+        result = reconcile(
+            [record],
+            {"profiles": [profile()], "history": history},
+            today=self.TODAY,
+        )[0]
+        self.assertEqual(result.match.status, "conflict")
+        self.assertEqual(
+            result.match.method, "existing_ecard_identity_conflict"
+        )
+        self.assertIsNone(result.proposed_history_reconciliation)
+
+    def test_calculated_expiration_is_distinguishable_from_source(self) -> None:
+        calculated = self.assess(certification(
+            source_expiration_date=None
+        ))
+        sourced = self.assess(certification(
+            source_expiration_date="2028-07-31"
+        ))
+        self.assertEqual(calculated.expiration_source, "calculated_policy")
+        self.assertEqual(sourced.expiration_source, "source")
+        self.assertIsNotNone(calculated.calculation_version)
+        self.assertIsNone(sourced.calculation_version)
+
+    def test_month_end_boundaries_include_leap_years(self) -> None:
+        self.assertEqual(
+            two_years_through_end_of_month("2024-02-29"), "2026-02-28"
+        )
+        self.assertEqual(
+            two_years_through_end_of_month("2022-02-10"), "2024-02-29"
+        )
+        self.assertEqual(
+            two_years_through_end_of_month("2025-04-01"), "2027-04-30"
+        )
 
 
 if __name__ == "__main__":

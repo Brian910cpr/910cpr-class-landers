@@ -33,7 +33,7 @@ class NormalizedCertification:
     ecard_code: str
     class_date: str | None
     issue_date: str | None
-    expiration_date: str | None
+    source_expiration_date: str | None
     corporate_customer: str | None
     raw_record: dict[str, Any]
     record_category: str = "certification"
@@ -62,6 +62,9 @@ class ReconciledRecord:
     duplicate_of: str | None = None
     proposed_history_insert: dict[str, Any] | None = None
     proposed_history_reconciliation: dict[str, Any] | None = None
+    proposed_history_supersessions: list[dict[str, Any]] = field(
+        default_factory=list
+    )
     proposed_profile_update: dict[str, Any] | None = None
     skip_reasons: list[str] = field(default_factory=list)
 
@@ -72,6 +75,7 @@ class ReconciledRecord:
             "duplicate_of": self.duplicate_of,
             "proposed_history_insert": self.proposed_history_insert,
             "proposed_history_reconciliation": self.proposed_history_reconciliation,
+            "proposed_history_supersessions": self.proposed_history_supersessions,
             "proposed_profile_update": self.proposed_profile_update,
             "skip_reasons": self.skip_reasons,
         }

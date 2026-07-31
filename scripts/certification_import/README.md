@@ -74,6 +74,25 @@ similarity is evaluated only when course and date are compatible, and it is
 always labeled `probable_match` for human review. Fuzzy matching never
 proposes a certification insert or employee-profile update.
 
+## Status and expiration policy
+
+The parser preserves `class_date`, `issue_date`, and
+`source_expiration_date`; it never calculates expiration. Reconciliation uses
+the reviewed policy in `policy.py` and records calculation provenance.
+
+- AHA BLS, Heartsaver, ACLS, PALS, and identified Child/Infant CPR use
+  `aha_two_years_through_end_of_issue_month` version `1.0`.
+- HSI, ARC, and unknown/unrecognized families do not receive an automatic
+  expiration until their precise rule and provider/family normalization are
+  separately reviewed.
+- Only proven-current credentials can project onto legacy profile fields.
+- Expired, superseded, and historical-unknown history rows never change the
+  profile or workflow stage.
+- Existing-eCard identity or course conflicts are review-only.
+
+See `data/audit/certification_status_expiration_policy.md` for the complete
+policy and evidence.
+
 ## Duplicate protection
 
 - File IDs and modification metadata support incremental inspection.

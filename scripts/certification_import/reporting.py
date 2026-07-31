@@ -48,6 +48,17 @@ def build_report(
         item.match.method
         for item in records if item.match.status == "exact_match"
     )
+    proposed_history = [
+        item.proposed_history_insert
+        for item in records
+        if item.proposed_history_insert
+    ]
+    proposed_statuses = Counter(
+        row.get("certification_status") for row in proposed_history
+    )
+    expiration_sources = Counter(
+        row.get("expiration_source") for row in proposed_history
+    )
     duplicate_rows = sum(bool(item.duplicate_of) for item in records)
     report = {
         "summary": {
@@ -87,6 +98,9 @@ def build_report(
             "proposed_history_reconciliations": sum(
                 bool(item.proposed_history_reconciliation) for item in records
             ),
+            "proposed_history_supersessions": sum(
+                len(item.proposed_history_supersessions) for item in records
+            ),
             "proposed_employee_profile_updates": sum(
                 bool(item.proposed_profile_update) for item in records
             ),
@@ -121,6 +135,43 @@ def build_report(
                 and "workflow_stage" in item.proposed_profile_update
                 for item in records
             ),
+            "existing_ecard_conflicts": statuses["conflict"],
+            "records_blocked_by_course_uncertainty": sum(
+                item.match.method in {
+                    "existing_ecard_course_conflict",
+                    "exact_email_incompatible_or_unknown_course",
+                }
+                for item in records
+            ),
+            "records_blocked_by_date_uncertainty": sum(
+                bool(item.proposed_history_insert)
+                and item.proposed_history_insert.get(
+                    "certification_status"
+                ) == "historical_unknown"
+                and "missing_issue_or_class_date" in (
+                    item.proposed_history_insert.get(
+                        "status_evidence", {}
+                    ).get("evidence_missing") or []
+                )
+                for item in records
+            ),
+            "changed_from_prior_all_current_planner": sum(
+                row.get("certification_status") != "current"
+                for row in proposed_history
+            ),
+        },
+        "proposed_history_inserts_by_status": {
+            status: proposed_statuses[status]
+            for status in (
+                "current", "expired", "superseded", "historical_unknown"
+            )
+        },
+        "proposed_expiration_sources": {
+            source: expiration_sources[source]
+            for source in (
+                "source", "calculated_policy",
+                "existing_production", "unknown",
+            )
         },
         "exact_matches_by_method": dict(sorted(exact_methods.items())),
         "invalid_rows_by_reason": dict(sorted(invalid_reasons.items())),
@@ -135,11 +186,33 @@ def build_report(
             "errors": file_errors,
         },
         "records": [_safe_record(item) for item in records],
+        "classification_changes_from_prior_planner": [
+            {
+                "source_file_id": item.certification.source_file_id,
+                "source_file_name": item.certification.source_file_name,
+                "source_sheet": item.certification.source_sheet,
+                "source_row": item.certification.source_row,
+                "ecard_code": item.certification.ecard_code,
+                "prior_status": "current",
+                "revised_status": item.proposed_history_insert.get(
+                    "certification_status"
+                ),
+                "reason": item.proposed_history_insert.get(
+                    "status_evidence"
+                ),
+            }
+            for item in records
+            if item.proposed_history_insert
+            and item.proposed_history_insert.get(
+                "certification_status"
+            ) != "current"
+        ],
         "manual_review_files": sorted({
             item.certification.source_file_name
             for item in records
             if item.match.status in {
-                "probable_match", "ambiguous", "unmatched", "invalid"
+                "probable_match", "ambiguous", "conflict",
+                "unmatched", "invalid",
             }
         }),
     }
@@ -174,6 +247,24 @@ def write_reports(report: dict[str, Any], output_base: Path) -> dict[str, Path]:
         f"| `{method}` | {count} |"
         for method, count in report["exact_matches_by_method"].items()
     )
+    lines.extend([
+        "", "## Proposed history inserts by status", "",
+        "| Status | Count |", "|---|---:|",
+    ])
+    lines.extend(
+        f"| `{status}` | {count} |"
+        for status, count in report[
+            "proposed_history_inserts_by_status"
+        ].items()
+    )
+    lines.extend([
+        "", "## Proposed expiration sources", "",
+        "| Source | Count |", "|---|---:|",
+    ])
+    lines.extend(
+        f"| `{source}` | {count} |"
+        for source, count in report["proposed_expiration_sources"].items()
+    )
     lines.extend(["", "## Invalid rows by reason", "", "| Reason | Count |", "|---|---:|"])
     lines.extend(
         f"| `{reason}` | {count} |"
@@ -192,6 +283,7 @@ def write_reports(report: dict[str, Any], output_base: Path) -> dict[str, Path]:
         row for row in report["records"]
         if row["proposed_history_insert"]
         or row["proposed_history_reconciliation"]
+        or row["proposed_history_supersessions"]
         or row["proposed_profile_update"]
     ]
     if not updates:
@@ -210,6 +302,9 @@ def write_reports(report: dict[str, Any], output_base: Path) -> dict[str, Path]:
             "history": row["proposed_history_insert"]
             or row["proposed_history_reconciliation"],
             "legacy_profile_projection": row["proposed_profile_update"],
+            "history_supersessions": row[
+                "proposed_history_supersessions"
+            ],
         }
         lines.append(
             "| " + " | ".join(_md(value) for value in (
@@ -220,12 +315,94 @@ def write_reports(report: dict[str, Any], output_base: Path) -> dict[str, Path]:
                 cert["normalized_course"],
                 cert["ecard_code"],
                 cert["class_date"],
-                cert["expiration_date"],
+                (
+                    row["proposed_history_insert"] or {}
+                ).get("expiration_date")
+                or cert["source_expiration_date"],
                 row["match"]["method"],
                 cert["source_file_name"],
                 f"{cert['source_sheet']} row {cert['source_row']}",
                 "Deterministic exact match; compatible course; newer-data "
                 "guards passed for any legacy projection.",
+            )) + " |"
+        )
+    current_rows = [
+        row for row in report["records"]
+        if row["proposed_history_insert"]
+        and row["proposed_history_insert"].get(
+            "certification_status"
+        ) == "current"
+    ]
+    lines.extend([
+        "", "## Proposed current certifications", "",
+        "| Participant | Course | eCard | Class/issue date | Expiration | Expiration source | Policy | Profile | Why current is proven |",
+        "|---|---|---|---|---|---|---|---|---|",
+    ])
+    if not current_rows:
+        lines.append("| None | | | | | | | | |")
+    for row in current_rows:
+        cert = row["certification"]
+        proposed = row["proposed_history_insert"]
+        lines.append(
+            "| " + " | ".join(_md(value) for value in (
+                cert["participant_name_raw"],
+                cert["normalized_course"],
+                cert["ecard_code"],
+                cert["issue_date"] or cert["class_date"],
+                proposed["expiration_date"],
+                proposed["expiration_source"],
+                proposed.get("calculation_policy"),
+                row["match"]["employee_profile_id"],
+                "Expiration is on or after the run date and comes from "
+                "source, reviewed policy, or independent production data.",
+            )) + " |"
+        )
+    unknown_rows = [
+        row for row in report["records"]
+        if row["proposed_history_insert"]
+        and row["proposed_history_insert"].get(
+            "certification_status"
+        ) == "historical_unknown"
+    ]
+    lines.extend([
+        "", "## Historical unknown certifications", "",
+        "| Participant | Course | eCard | Source | Missing evidence |",
+        "|---|---|---|---|---|",
+    ])
+    if not unknown_rows:
+        lines.append("| None | | | | |")
+    for row in unknown_rows:
+        cert = row["certification"]
+        evidence = row["proposed_history_insert"].get(
+            "status_evidence", {}
+        )
+        lines.append(
+            "| " + " | ".join(_md(value) for value in (
+                cert["participant_name_raw"],
+                cert["normalized_course"],
+                cert["ecard_code"],
+                f"{cert['source_file_name']} / {cert['source_sheet']} "
+                f"row {cert['source_row']}",
+                ", ".join(evidence.get("evidence_missing") or []),
+            )) + " |"
+        )
+    lines.extend([
+        "", "## Classifications changed from the prior planner", "",
+        "| Source | eCard | Prior | Revised | Reason |",
+        "|---|---|---|---|---|",
+    ])
+    changes = report["classification_changes_from_prior_planner"]
+    if not changes:
+        lines.append("| None | | | | |")
+    for change in changes:
+        lines.append(
+            "| " + " | ".join(_md(value) for value in (
+                f"{change['source_file_name']} / "
+                f"{change['source_sheet']} row {change['source_row']}",
+                change["ecard_code"],
+                change["prior_status"],
+                change["revised_status"],
+                json.dumps(change["reason"], sort_keys=True),
             )) + " |"
         )
     lines.extend([
@@ -267,7 +444,7 @@ def write_reports(report: dict[str, Any], output_base: Path) -> dict[str, Path]:
         f"<td>{html.escape(row['certification']['normalized_course'])}</td>"
         f"<td>{html.escape(row['certification']['ecard_code'])}</td>"
         f"<td>{html.escape(str(row['certification']['class_date'] or ''))}</td>"
-        f"<td>{html.escape(str(row['certification']['expiration_date'] or ''))}</td>"
+        f"<td>{html.escape(str((row['proposed_history_insert'] or {}).get('expiration_date') or row['certification']['source_expiration_date'] or ''))}</td>"
         f"<td>{html.escape(str(row['match']['method'] or ''))}</td>"
         f"<td>{html.escape(row['certification']['source_file_name'])}:"
         f"{row['certification']['source_sheet']}:{row['certification']['source_row']}</td>"
@@ -275,6 +452,7 @@ def write_reports(report: dict[str, Any], output_base: Path) -> dict[str, Path]:
         for row in report["records"]
         if row["proposed_history_insert"]
         or row["proposed_history_reconciliation"]
+        or row["proposed_history_supersessions"]
         or row["proposed_profile_update"]
     ) or "<tr><td colspan=\"8\">None</td></tr>"
     ambiguous_rows = "".join(

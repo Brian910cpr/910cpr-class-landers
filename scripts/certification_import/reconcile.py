@@ -1,11 +1,18 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from dataclasses import replace
+from datetime import date, datetime, timezone
 from typing import Any
 
 from .matching import DeterministicMatcher
 from .models import MatchResult, NormalizedCertification, ReconciledRecord
 from .normalize import compatible_course
+from .policy import (
+    AHA_CALCULATED_FAMILIES,
+    CertificationAssessment,
+    assess_certification,
+    same_credential_family,
+)
 
 
 def _date_value(value: Any) -> str | None:
@@ -17,7 +24,9 @@ def _is_later(candidate: str | None, existing: str | None) -> bool:
 
 
 def _history_payload(
-    record: NormalizedCertification, profile: dict[str, Any]
+    record: NormalizedCertification,
+    profile: dict[str, Any],
+    assessment: CertificationAssessment,
 ) -> dict[str, Any]:
     return {
         "employee_profile_id": profile["id"],
@@ -25,10 +34,18 @@ def _history_payload(
         "course": record.normalized_course,
         "course_source": "drive_source",
         "issue_date": record.issue_date or record.class_date,
-        "expiration_date": record.expiration_date,
-        "expiration_source": "imported" if record.expiration_date else None,
-        "expiration_rule": None,
-        "training_provider": "AHA",
+        "expiration_date": assessment.expiration_date,
+        "expiration_source": assessment.expiration_source,
+        "expiration_rule": assessment.calculation_policy,
+        "calculation_policy": assessment.calculation_policy,
+        "calculation_version": assessment.calculation_version,
+        "calculated_from_date": assessment.calculated_from_date,
+        "calculated_at": assessment.calculated_at,
+        "training_provider": (
+            "AHA"
+            if record.normalized_course in AHA_CALCULATED_FAMILIES
+            else None
+        ),
         "source_drive_file_id": record.source_file_id,
         "source_filename": record.source_file_name,
         "source_occurrences": [{
@@ -38,15 +55,22 @@ def _history_payload(
             "record_fingerprint": record.record_fingerprint,
         }],
         "source_payload": record.raw_record,
-        "certification_status": "current",
+        "certification_status": assessment.certification_status,
         "match_method": "pending",
+        "status_evidence": assessment.as_dict(),
     }
 
 
 def _profile_projection(
-    record: NormalizedCertification, profile: dict[str, Any]
+    record: NormalizedCertification,
+    profile: dict[str, Any],
+    assessment: CertificationAssessment,
 ) -> tuple[dict[str, Any] | None, list[str]]:
     skips: list[str] = []
+    if assessment.certification_status != "current":
+        return None, [
+            f"certification_status_{assessment.certification_status}"
+        ]
     if not compatible_course(
         record.normalized_course, profile.get("required_training", "")
     ):
@@ -54,19 +78,31 @@ def _profile_projection(
     existing_expiration = _date_value(profile.get("expiration_date"))
     existing_class = _date_value(profile.get("prior_class_date"))
     existing_ecard = str(profile.get("prior_ecard_code") or "")
-    if record.expiration_date and not _is_later(
-        record.expiration_date, existing_expiration
+    if not assessment.expiration_date:
+        return None, ["current_status_without_expiration"]
+    if existing_expiration and not _is_later(
+        assessment.expiration_date, existing_expiration
     ):
         skips.append("earlier_or_equal_expiration")
     if record.class_date and existing_class and record.class_date < existing_class:
         skips.append("older_class_date")
     if existing_ecard and not (
-        _is_later(record.expiration_date, existing_expiration)
+        _is_later(assessment.expiration_date, existing_expiration)
         or _is_later(record.class_date, existing_class)
     ):
         skips.append("older_or_unproven_replacement_ecard")
     if skips:
         return None, skips
+
+    scheduled = _date_value(profile.get("scheduled_class_date"))
+    stage = int(profile.get("workflow_stage") or 0)
+    source_cycle_date = record.class_date or record.issue_date
+    if (
+        scheduled
+        and stage in (2, 3)
+        and source_cycle_date != scheduled
+    ):
+        return None, ["not_current_certification_cycle"]
 
     patch: dict[str, Any] = {
         "prior_ecard_code": record.ecard_code,
@@ -75,11 +111,8 @@ def _profile_projection(
     }
     if record.class_date:
         patch["prior_class_date"] = f"{record.class_date}T12:00:00Z"
-    if record.expiration_date:
-        patch["expiration_date"] = record.expiration_date
+    patch["expiration_date"] = assessment.expiration_date
 
-    scheduled = _date_value(profile.get("scheduled_class_date"))
-    stage = int(profile.get("workflow_stage") or 0)
     if scheduled and record.class_date == scheduled and stage in (2, 3):
         patch["workflow_stage"] = 4
         existing_detail = str(profile.get("status_detail") or "")
@@ -93,6 +126,9 @@ def _profile_projection(
 def reconcile(
     records: list[NormalizedCertification],
     snapshot: dict[str, list[dict[str, Any]]],
+    *,
+    today: date | None = None,
+    calculated_at: datetime | None = None,
 ) -> list[ReconciledRecord]:
     matcher = DeterministicMatcher(snapshot["profiles"], snapshot["history"])
     profiles_by_id = {row["id"]: row for row in snapshot["profiles"]}
@@ -105,6 +141,11 @@ def reconcile(
         for row in snapshot["history"]
         if row.get("ecard_number")
     }
+    history_by_profile: dict[str, list[dict[str, Any]]] = {}
+    for row in snapshot["history"]:
+        history_by_profile.setdefault(
+            str(row.get("employee_profile_id") or ""), []
+        ).append(row)
     seen: dict[str, str] = {}
     seen_ecards: dict[str, str] = {}
     output: list[ReconciledRecord] = []
@@ -186,10 +227,55 @@ def reconcile(
                 "expiration_date": profile.get("expiration_date"),
                 "prior_ecard_code": profile.get("prior_ecard_code"),
             }
-            payload = _history_payload(record, profile)
+            assessment = assess_certification(
+                record,
+                profile,
+                today=today,
+                calculated_at=calculated_at,
+            )
+            source_date = record.issue_date or record.class_date
+            compatible_history = [
+                row
+                for row in history_by_profile.get(match.employee_profile_id, [])
+                if same_credential_family(
+                    record.normalized_course, str(row.get("course") or "")
+                )
+            ]
+            newer_history = [
+                row
+                for row in compatible_history
+                if source_date
+                and _date_value(row.get("issue_date"))
+                and _date_value(row.get("issue_date")) > source_date
+            ]
+            if newer_history:
+                assessment = replace(
+                    assessment,
+                    certification_status="superseded",
+                    evidence_missing=(
+                        ["newer_compatible_certification_exists"]
+                    ),
+                )
+            payload = _history_payload(record, profile, assessment)
             payload["match_method"] = match.method
             result.proposed_history_insert = payload
-            result.proposed_profile_update, skips = _profile_projection(record, profile)
+            if assessment.certification_status == "current" and source_date:
+                result.proposed_history_supersessions = [
+                    {
+                        "history_id": row.get("id"),
+                        "ecard_number": row.get("ecard_number"),
+                        "existing_status": row.get("certification_status"),
+                        "proposed_status": "superseded",
+                        "reason": "newer_compatible_current_certification",
+                    }
+                    for row in compatible_history
+                    if _date_value(row.get("issue_date"))
+                    and _date_value(row.get("issue_date")) < source_date
+                    and row.get("certification_status") != "superseded"
+                ]
+            result.proposed_profile_update, skips = _profile_projection(
+                record, profile, assessment
+            )
             result.skip_reasons.extend(skips)
         output.append(result)
     return output

@@ -29,15 +29,22 @@ occurred.
 | Invalid rows | 16 |
 | Semantic/eCard duplicates | 369 |
 | Exact matches | 25 |
-| Ambiguous matches | 74 |
+| Ambiguous matches | 60 |
+| Existing-eCard conflicts | 14 |
 | Unmatched rows | 2,535 |
 | Existing eCards | 15 |
 | Proposed history inserts | 24 |
 | Proposed history occurrence reconciliations | 1 |
-| Proposed legacy profile projections | 19 |
+| Proposed legacy profile projections | 1 |
 | Proposed workflow-stage changes | 1 |
-| Skips due to older/unproven profile data | 5 |
-| Backward expiration skips | 0 |
+| Proposed current history inserts | 20 |
+| Proposed expired history inserts | 4 |
+| Proposed superseded history inserts | 0 |
+| Proposed historical-unknown history inserts | 0 |
+| Expiration from reviewed calculation | 24 |
+| Expiration directly from source | 0 |
+| Expiration from existing production | 0 |
+| Unknown expiration | 0 |
 | Parsing errors | 0 |
 
 Exact-match methods:
@@ -51,7 +58,8 @@ Ambiguous methods:
 
 - `exact_email_incompatible_or_unknown_course`: 59
 - `exact_email_multiple_profiles`: 1
-- `existing_ecard_course_conflict`: 14 (review-only; no proposed write)
+- `existing_ecard_course_conflict`: 13 (review-only; no proposed write)
+- `existing_ecard_identity_conflict`: 1 (review-only; no proposed write)
 
 Invalid reasons (a row can have more than one reason):
 
@@ -68,18 +76,16 @@ references.
 
 ## Safety assessment
 
-Parser classification and deterministic matching are suitable for continued
-migration review. Production apply is **not** ready:
+The revised policy separates parsed source expiration from calculated
+expiration. All 24 matched Heartsaver Total records use the reviewed AHA
+two-years-through-end-of-issue-month policy: 20 calculate as current and 4 as
+expired on the 2026-07-30 reconciliation date. The 4 expired records no longer
+project to employee profiles. Of the 20 current records, only one passes the
+newer-data and current-cycle projection gates.
 
-- all 24 proposed history inserts currently label
-  `certification_status = 'current'`;
-- their class dates range from 2022-09-07 through 2026-07-25;
-- none has a source expiration date.
-
-Before any apply implementation, certification status/expiration policy must
-be reviewed so an older credential is not labeled current merely because it
-is newly discovered. History inserts must also remain separable from legacy
-profile projections.
+Parser classification, deterministic matching, status planning, and
+projection gating are suitable for migration review. Production apply remains
+intentionally unimplemented.
 
 The detailed JSON/Markdown/HTML reports contain participant PII and are kept
 outside the repository under the task `outputs` directory. The Drive manifest,

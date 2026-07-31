@@ -84,14 +84,17 @@ The complete follow-up run is summarized in:
 
 It used three authenticated Drive metadata pages (1,069 files), a SELECT-only
 production snapshot (339 active profiles and 15 history rows), and a private
-local download cache. It produced 25 deterministic exact matches, 74
-ambiguous matches, 2,535 unmatched rows, 16 invalid rows, 24 proposed history
-inserts, 1 proposed occurrence reconciliation, and 19 proposed legacy profile
-projections. No production writes occurred.
+local download cache. It produced 25 deterministic exact matches, 60
+ambiguous matches, 14 existing-eCard conflicts, 2,535 unmatched rows, 16
+invalid rows, 24 proposed history inserts, 1 proposed occurrence
+reconciliation, and 1 proposed legacy profile projection. No production
+writes occurred.
 
-The importer is not ready for `--apply`: all proposed history inserts are
-currently labeled `current`, including records as old as 2022, while none has
-a source expiration date. Status/expiration policy needs review first.
+The status/expiration policy is documented in
+`data/audit/certification_status_expiration_policy.md`. The revised run
+classifies 20 proposed inserts as current and 4 as expired using the reviewed
+AHA month-end policy, and quarantines all 14 existing-eCard fact conflicts
+with zero writes. Production `--apply` remains intentionally unimplemented.
 
 ## Important files
 
@@ -125,9 +128,9 @@ Exit code: 0
 Tests:
 
 ```text
-..................
+....................................
 ----------------------------------------------------------------------
-Ran 18 tests in 0.054s
+Ran 36 tests in 0.058s
 
 OK
 ```

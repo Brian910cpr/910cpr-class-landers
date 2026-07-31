@@ -166,7 +166,7 @@ def assign_fingerprints(record: Any) -> None:
         "normalized_course": record.normalized_course,
         "class_date": record.class_date,
         "issue_date": record.issue_date,
-        "expiration_date": record.expiration_date,
+        "source_expiration_date": record.source_expiration_date,
         "raw": record.raw_record,
     }
     record.record_fingerprint = stable_hash({"v": 1, **semantic})

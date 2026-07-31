@@ -78,6 +78,31 @@ class DeterministicMatcher:
         if len(history_profile_ids) == 1:
             profile_id = next(iter(history_profile_ids))
             profile = self.profiles_by_id.get(profile_id)
+            identity_conflicts: list[str] = []
+            if profile:
+                profile_email = _profile_email(profile)
+                profile_name = _profile_name(profile)
+                if (
+                    record.email and profile_email
+                    and record.email != profile_email
+                ):
+                    identity_conflicts.append("email")
+                if (
+                    record.normalized_name and profile_name
+                    and record.normalized_name != profile_name
+                ):
+                    identity_conflicts.append("normalized_name")
+            if identity_conflicts:
+                return MatchResult(
+                    status="conflict",
+                    method="existing_ecard_identity_conflict",
+                    evidence={
+                        "candidates": [{
+                            "profile_id": profile_id,
+                            "conflicting_fields": identity_conflicts,
+                        }]
+                    },
+                )
             if profile and compatible_course(
                 record.normalized_course, profile.get("required_training", "")
             ):
@@ -88,7 +113,7 @@ class DeterministicMatcher:
                     confidence=1.0,
                 )
             return MatchResult(
-                status="ambiguous",
+                status="conflict",
                 method="existing_ecard_course_conflict",
                 evidence={"candidates": [{
                     "profile_id": profile_id,
@@ -104,7 +129,7 @@ class DeterministicMatcher:
             )
         if len(history_profile_ids) > 1:
             return MatchResult(
-                status="ambiguous",
+                status="conflict",
                 method="existing_ecard_multiple_profiles",
                 evidence={
                     "profile_count": len(history_profile_ids),

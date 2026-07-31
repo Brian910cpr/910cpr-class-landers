@@ -136,7 +136,7 @@ def parse_file(source: SourceFile, path: Path) -> tuple[list[NormalizedCertifica
                 ecard_code=ecard_code,
                 class_date=class_date,
                 issue_date=issue_date,
-                expiration_date=expiration_date,
+                source_expiration_date=expiration_date,
                 corporate_customer=clean_text(
                     _value(row, mapping, "corporate_customer")
                 ) or None,
