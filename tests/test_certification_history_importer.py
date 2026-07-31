@@ -8,6 +8,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from xml.sax.saxutils import escape
 
+from scripts.certification_import.apply import ApprovedCounts, validate_apply_plan
 from scripts.certification_import.matching import DeterministicMatcher
 from scripts.certification_import.models import NormalizedCertification, SourceFile
 from scripts.certification_import.normalize import (
@@ -22,6 +23,45 @@ from scripts.certification_import.policy import (
     two_years_through_end_of_month,
 )
 from scripts.certification_import.reconcile import reconcile
+
+
+class ApplyGateTests(unittest.TestCase):
+    def _report(self, *, status: str = "exact_match", method: str = "exact_email_compatible_course"):
+        return {
+            "files": {"inspected": [{"id": "file-1"}]},
+            "records": [{
+                "match": {
+                    "status": status,
+                    "method": method,
+                    "employee_profile_id": "profile-1",
+                    "evidence": {"existing_profile_state": {"workflow_stage": 2}},
+                },
+                "proposed_history_insert": {
+                    "certification_status": "current",
+                },
+                "proposed_history_reconciliation": None,
+                "proposed_profile_update": {"workflow_stage": 4},
+            }],
+        }
+
+    def test_apply_gate_accepts_only_exact_approved_counts(self):
+        plan = validate_apply_plan(
+            self._report(), ApprovedCounts(1, 0, 1, 1)
+        )
+        self.assertEqual(len(plan["history_inserts"]), 1)
+
+    def test_apply_gate_rejects_changed_counts(self):
+        with self.assertRaisesRegex(ValueError, "write counts changed"):
+            validate_apply_plan(
+                self._report(), ApprovedCounts(2, 0, 1, 1)
+            )
+
+    def test_apply_gate_rejects_fuzzy_or_ambiguous_write(self):
+        with self.assertRaisesRegex(ValueError, "non-exact"):
+            validate_apply_plan(
+                self._report(status="ambiguous", method="fuzzy_name_suggestion"),
+                ApprovedCounts(1, 0, 1, 1),
+            )
 
 
 def write_xlsx(path: Path, sheets: list[tuple[str, list[list[object]]]]) -> None:

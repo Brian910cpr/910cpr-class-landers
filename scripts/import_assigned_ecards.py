@@ -7,6 +7,11 @@ import sys
 from pathlib import Path
 
 from scripts.certification_import.drive import download_file, list_folder, load_manifest
+from scripts.certification_import.apply import (
+    APPLY_CONFIRMATION,
+    ApprovedCounts,
+    apply_plan,
+)
 from scripts.certification_import.models import SourceFile
 from scripts.certification_import.parsers import SUPPORTED_EXTENSIONS, parse_file
 from scripts.certification_import.reconcile import reconcile
@@ -31,6 +36,10 @@ def parser() -> argparse.ArgumentParser:
     mode.add_argument("--dry-run", action="store_true")
     mode.add_argument("--apply", action="store_true")
     command.add_argument("--confirm-apply")
+    command.add_argument("--expect-history-inserts", type=int)
+    command.add_argument("--expect-history-reconciliations", type=int)
+    command.add_argument("--expect-profile-updates", type=int)
+    command.add_argument("--expect-file-ledger-upserts", type=int)
     return command
 
 
@@ -51,9 +60,19 @@ def _select(files: list[SourceFile], args: argparse.Namespace) -> list[SourceFil
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
-    if args.apply and args.confirm_apply != "CERTIFICATION-HISTORY":
+    if args.apply and args.confirm_apply != APPLY_CONFIRMATION:
         raise SystemExit(
             "--apply requires --confirm-apply CERTIFICATION-HISTORY"
+        )
+    expected_values = (
+        args.expect_history_inserts,
+        args.expect_history_reconciliations,
+        args.expect_profile_updates,
+        args.expect_file_ledger_upserts,
+    )
+    if args.apply and any(value is None for value in expected_values):
+        raise SystemExit(
+            "--apply requires all four --expect-* write counts from the approved dry run"
         )
     files = load_manifest(args.manifest) if args.manifest else list_folder(args.folder_id)
     selected = _select(files, args)
@@ -133,9 +152,13 @@ def main(argv: list[str] | None = None) -> int:
         "reports": {key: str(value) for key, value in paths.items()},
     }, indent=2))
     if args.apply:
-        raise SystemExit(
-            "Production apply is intentionally not implemented until dry-run review approval."
+        result = apply_plan(
+            SupabaseClient(),
+            report,
+            args.folder_id,
+            ApprovedCounts(*expected_values),
         )
+        print(json.dumps({"apply_result": result}, indent=2))
     return 0
 
 

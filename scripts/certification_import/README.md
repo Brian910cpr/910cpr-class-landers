@@ -51,8 +51,13 @@ is required because the matching tables and proposed ledger are private.
 - No flag means dry-run behavior.
 - `--apply` additionally requires
   `--confirm-apply CERTIFICATION-HISTORY`.
-- Production apply intentionally remains unimplemented until the migration,
-  dry-run, and data-quality report are approved.
+- `--apply` also requires all four approved dry-run counts:
+  `--expect-history-inserts`, `--expect-history-reconciliations`,
+  `--expect-profile-updates`, and `--expect-file-ledger-upserts`.
+- Apply refuses non-exact matches, unapproved deterministic methods, profile
+  projections not backed by a proven-current credential, and changed counts.
+- History inserts and file-ledger upserts are idempotent. The profile update
+  uses an optimistic lock and stops if production changed after planning.
 - The migration is not run by this command.
 - No Edge Function redeployment is required; this is a standalone importer.
 - `/corp/maxim.html` reads Supabase at runtime, so approved database updates
