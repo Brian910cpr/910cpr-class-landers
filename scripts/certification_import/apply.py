@@ -12,8 +12,11 @@ PARSER_VERSION = "certification-history-importer/1.0"
 AUTOMATIC_MATCH_METHODS = {
     "exact_email_compatible_course",
     "existing_ecard_exact",
+    "existing_exact_ecard",
     "exact_name_unique_compatible_profile",
     "exact_name_course_date_evidence",
+    "exact_identity_date_unique_required_course",
+    "existing_ecard_exact_identity_date_inferred_course",
 }
 
 
@@ -59,9 +62,15 @@ def validate_apply_plan(
         if row.get("proposed_history_reconciliation"):
             reconciliations.append(dict(row["proposed_history_reconciliation"]))
         if row.get("proposed_profile_update"):
-            if (row.get("proposed_history_insert") or {}).get(
+            insert_is_current = (row.get("proposed_history_insert") or {}).get(
                 "certification_status"
-            ) != "current":
+            ) == "current"
+            history_is_current = (
+                (match.get("evidence") or {})
+                .get("existing_history_state", {})
+                .get("certification_status")
+            ) == "current"
+            if not (insert_is_current or history_is_current):
                 raise ValueError("profile projection is not backed by a current credential")
             profile_updates.append({
                 "employee_profile_id": match["employee_profile_id"],

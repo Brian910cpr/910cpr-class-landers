@@ -80,10 +80,11 @@ def _profile_projection(
     existing_ecard = str(profile.get("prior_ecard_code") or "")
     if not assessment.expiration_date:
         return None, ["current_status_without_expiration"]
-    if existing_expiration and not _is_later(
-        assessment.expiration_date, existing_expiration
+    if (
+        existing_expiration
+        and assessment.expiration_date < existing_expiration
     ):
-        skips.append("earlier_or_equal_expiration")
+        skips.append("earlier_expiration")
     if record.class_date and existing_class and record.class_date < existing_class:
         skips.append("older_class_date")
     if existing_ecard and not (
@@ -109,17 +110,27 @@ def _profile_projection(
         "ecard_detected_at": datetime.now(timezone.utc).isoformat(),
         "updated_at": datetime.now(timezone.utc).isoformat(),
     }
+    existing_prior = profile.get("prior_class_date")
+    scheduled_value = profile.get("scheduled_class_date")
     if record.class_date:
-        patch["prior_class_date"] = f"{record.class_date}T12:00:00Z"
+        if _date_value(existing_prior) == record.class_date:
+            patch["prior_class_date"] = existing_prior
+        elif _date_value(scheduled_value) == record.class_date:
+            patch["prior_class_date"] = scheduled_value
+        else:
+            patch["prior_class_date"] = f"{record.class_date}T12:00:00Z"
     patch["expiration_date"] = assessment.expiration_date
 
-    if scheduled and record.class_date == scheduled and stage in (2, 3):
+    current_cycle = bool(
+        source_cycle_date
+        and (
+            source_cycle_date == scheduled
+            or source_cycle_date == existing_class
+        )
+    )
+    if current_cycle and stage < 4:
         patch["workflow_stage"] = 4
-        existing_detail = str(profile.get("status_detail") or "")
-        if not existing_detail or existing_detail.casefold().startswith(
-            ("registered", "awaiting", "class complete")
-        ):
-            patch["status_detail"] = f"eCard issued {record.class_date}"
+        patch["status_detail"] = f"eCard {record.ecard_code}"
     return patch, skips
 
 
@@ -183,6 +194,17 @@ def reconcile(
         if record.ecard_code:
             seen_ecards[record.ecard_code] = source_identity
         match = matcher.match(record)
+        if (
+            match.status == "exact_match"
+            and match.method in {
+                "exact_identity_date_unique_required_course",
+                "existing_ecard_exact_identity_date_inferred_course",
+            }
+        ):
+            record = replace(
+                record,
+                normalized_course=match.evidence["inferred_course"],
+            )
         result = ReconciledRecord(certification=record, match=match)
         if match.status == "reference_only":
             output.append(result)
@@ -217,6 +239,27 @@ def reconcile(
                     "append_source_occurrence": occurrence,
                     "reason": "existing_ecard_new_source_occurrence",
                 }
+            if match.status == "exact_match" and match.employee_profile_id:
+                profile = profiles_by_id[match.employee_profile_id]
+                existing_status = str(
+                    existing.get("certification_status") or ""
+                )
+                existing_expiration = _date_value(
+                    existing.get("expiration_date")
+                )
+                if existing_status == "current" and existing_expiration:
+                    assessment = CertificationAssessment(
+                        certification_status="current",
+                        expiration_date=existing_expiration,
+                        expiration_source=(
+                            existing.get("expiration_source")
+                            or "existing_production"
+                        ),
+                    )
+                    result.proposed_profile_update, skips = (
+                        _profile_projection(record, profile, assessment)
+                    )
+                    result.skip_reasons.extend(skips)
         elif match.status == "exact_match" and match.employee_profile_id:
             profile = profiles_by_id[match.employee_profile_id]
             match.evidence["existing_profile_state"] = {

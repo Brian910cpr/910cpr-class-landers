@@ -177,7 +177,8 @@ def certification(**overrides: object) -> NormalizedCertification:
 
 def profile(
     profile_id: str = "profile-1", first: str = "Avery", last: str = "Sample",
-    email: str = "avery@example.test", course: str = "BLS", **overrides: object,
+    email: str = "avery@example.test", course: str = "BLS",
+    phone: str = "910-555-0100", **overrides: object,
 ) -> dict[str, object]:
     row: dict[str, object] = {
         "id": profile_id,
@@ -189,7 +190,10 @@ def profile(
         "expiration_date": None,
         "prior_ecard_code": None,
         "scheduled_class_date": "2026-07-01T12:00:00Z",
-        "customers": {"first_name": first, "last_name": last, "email": email},
+        "customers": {
+            "first_name": first, "last_name": last, "email": email,
+            "phone": phone,
+        },
     }
     row.update(overrides)
     return row
@@ -308,6 +312,50 @@ class MatchingTests(unittest.TestCase):
         )
         self.assertNotEqual(result.status, "exact_match")
 
+    def test_unknown_course_exact_identity_date_infers_required_course(self) -> None:
+        record = certification(
+            normalized_course="UNKNOWN",
+            course_name_raw="",
+            raw_record={
+                "eCard Code": "123456789012",
+                "Mobile Phone": "(910) 555-0100",
+            },
+        )
+        result = DeterministicMatcher([profile()], []).match(record)
+        self.assertEqual(result.status, "exact_match")
+        self.assertEqual(
+            result.method, "exact_identity_date_unique_required_course"
+        )
+        self.assertEqual(result.evidence["inferred_course"], "BLS")
+
+    def test_unknown_course_without_exact_phone_remains_ambiguous(self) -> None:
+        record = certification(
+            normalized_course="UNKNOWN",
+            course_name_raw="",
+            raw_record={"Mobile Phone": "910-555-9999"},
+        )
+        result = DeterministicMatcher([profile()], []).match(record)
+        self.assertEqual(result.status, "ambiguous")
+
+    def test_existing_ecard_unknown_source_course_uses_exact_identity_and_date(self) -> None:
+        record = certification(
+            normalized_course="UNKNOWN",
+            course_name_raw="",
+            raw_record={"Mobile Phone": "910-555-0100"},
+        )
+        history = [{
+            "employee_profile_id": "profile-1",
+            "ecard_number": record.ecard_code,
+            "course": "BLS",
+        }]
+        result = DeterministicMatcher([profile()], history).match(record)
+        self.assertEqual(result.status, "exact_match")
+        self.assertEqual(
+            result.method,
+            "existing_ecard_exact_identity_date_inferred_course",
+        )
+        self.assertEqual(result.evidence["inferred_course"], "BLS")
+
     def test_fuzzy_name_is_review_only(self) -> None:
         result = DeterministicMatcher(
             [profile(first="Averyy", email="different@example.test")], []
@@ -341,7 +389,7 @@ class ReconcileTests(unittest.TestCase):
             [certification()], {"profiles": [candidate], "history": []}
         )[0]
         self.assertIsNone(result.proposed_profile_update)
-        self.assertIn("earlier_or_equal_expiration", result.skip_reasons)
+        self.assertIn("earlier_expiration", result.skip_reasons)
 
     def test_newer_expiration_accepted(self) -> None:
         candidate = profile(
@@ -378,6 +426,53 @@ class ReconcileTests(unittest.TestCase):
         )[0]
         self.assertIsNone(result.proposed_history_insert)
         self.assertIn("ecard_already_in_certification_history", result.skip_reasons)
+
+    def test_existing_current_ecard_backfills_missing_profile_projection(self) -> None:
+        record = certification()
+        history = [{
+            "id": "history-1",
+            "employee_profile_id": "profile-1",
+            "ecard_number": record.ecard_code,
+            "course": "BLS",
+            "issue_date": "2026-07-01",
+            "expiration_date": "2028-07-31",
+            "expiration_source": "calculated_policy",
+            "certification_status": "current",
+            "source_occurrences": [],
+        }]
+        candidate = profile(
+            workflow_stage=0,
+            status_detail="Completed 7/1/2026",
+            scheduled_class_date=None,
+            prior_class_date="2026-07-01T12:00:00Z",
+            expiration_date="2028-07-31",
+            prior_ecard_code=None,
+        )
+        result = reconcile(
+            [record], {"profiles": [candidate], "history": history}
+        )[0]
+        self.assertEqual(
+            result.proposed_profile_update["prior_ecard_code"],
+            record.ecard_code,
+        )
+        self.assertEqual(result.proposed_profile_update["workflow_stage"], 4)
+        self.assertEqual(
+            result.proposed_profile_update["status_detail"],
+            f"eCard {record.ecard_code}",
+        )
+
+    def test_equal_expiration_does_not_block_missing_ecard_projection(self) -> None:
+        candidate = profile(
+            expiration_date="2028-07-31",
+            prior_ecard_code=None,
+        )
+        result = reconcile(
+            [certification()], {"profiles": [candidate], "history": []}
+        )[0]
+        self.assertEqual(
+            result.proposed_profile_update["prior_ecard_code"],
+            "123456789012",
+        )
 
     def test_ambiguous_existing_ecard_never_proposes_reconciliation(self) -> None:
         record = certification()

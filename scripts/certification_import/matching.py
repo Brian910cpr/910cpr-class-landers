@@ -5,7 +5,13 @@ from difflib import SequenceMatcher
 from typing import Any
 
 from .models import MatchResult, NormalizedCertification
-from .normalize import compatible_course, normalize_email, split_name
+from .normalize import (
+    canonical_header,
+    compatible_course,
+    normalize_course,
+    normalize_email,
+    split_name,
+)
 
 
 def _profile_name(profile: dict[str, Any]) -> str:
@@ -17,6 +23,40 @@ def _profile_name(profile: dict[str, Any]) -> str:
 
 def _profile_email(profile: dict[str, Any]) -> str | None:
     return normalize_email((profile.get("customers") or {}).get("email"))
+
+
+def _normalize_phone(value: Any) -> str | None:
+    digits = "".join(ch for ch in str(value or "") if ch.isdigit())
+    if len(digits) == 11 and digits.startswith("1"):
+        digits = digits[1:]
+    return digits if len(digits) == 10 else None
+
+
+def _record_phone(record: NormalizedCertification) -> str | None:
+    for key, value in (record.raw_record or {}).items():
+        if canonical_header(key) in {"mobile phone", "phone", "phone number"}:
+            phone = _normalize_phone(value)
+            if phone:
+                return phone
+    return None
+
+
+def _profile_phone(profile: dict[str, Any]) -> str | None:
+    return _normalize_phone((profile.get("customers") or {}).get("phone"))
+
+
+def _exact_identity(
+    record: NormalizedCertification, profile: dict[str, Any]
+) -> bool:
+    record_phone = _record_phone(record)
+    return bool(
+        record.email
+        and record.email == _profile_email(profile)
+        and record.normalized_name
+        and record.normalized_name == _profile_name(profile)
+        and record_phone
+        and record_phone == _profile_phone(profile)
+    )
 
 
 def _date_compatible(record: NormalizedCertification, profile: dict[str, Any]) -> bool:
@@ -112,6 +152,38 @@ class DeterministicMatcher:
                     method="existing_exact_ecard",
                     confidence=1.0,
                 )
+            inferred_course = (
+                normalize_course(str(history_rows[0].get("course") or ""))
+                if len(history_rows) == 1 else "UNKNOWN"
+            )
+            if (
+                profile
+                and record.normalized_course == "UNKNOWN"
+                and inferred_course != "UNKNOWN"
+                and inferred_course
+                == normalize_course(profile.get("required_training", ""))
+                and _exact_identity(record, profile)
+                and _date_compatible(record, profile)
+            ):
+                return MatchResult(
+                    status="exact_match",
+                    employee_profile_id=profile_id,
+                    method=(
+                        "existing_ecard_exact_identity_date_inferred_course"
+                    ),
+                    confidence=1.0,
+                    evidence={
+                        "source_course": "UNKNOWN",
+                        "inferred_course": inferred_course,
+                        "course_inference_source": (
+                            "existing_history_and_required_training"
+                        ),
+                        "identity_fields": [
+                            "normalized_name", "email", "phone"
+                        ],
+                        "class_date_exact": True,
+                    },
+                )
             return MatchResult(
                 status="conflict",
                 method="existing_ecard_course_conflict",
@@ -172,6 +244,35 @@ class DeterministicMatcher:
                     },
                 )
             if len(email_matches) == 1:
+                candidate = email_matches[0]
+                inferred_course = normalize_course(
+                    candidate.get("required_training", "")
+                )
+                if (
+                    record.normalized_course == "UNKNOWN"
+                    and inferred_course != "UNKNOWN"
+                    and _exact_identity(record, candidate)
+                    and _date_compatible(record, candidate)
+                ):
+                    return MatchResult(
+                        status="exact_match",
+                        employee_profile_id=candidate["id"],
+                        method=(
+                            "exact_identity_date_unique_required_course"
+                        ),
+                        confidence=1.0,
+                        evidence={
+                            "source_course": "UNKNOWN",
+                            "inferred_course": inferred_course,
+                            "course_inference_source": (
+                                "unique_maxim_profile_required_training"
+                            ),
+                            "identity_fields": [
+                                "normalized_name", "email", "phone"
+                            ],
+                            "class_date_exact": True,
+                        },
+                    )
                 return MatchResult(
                     status="ambiguous",
                     method="exact_email_incompatible_or_unknown_course",

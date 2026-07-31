@@ -69,9 +69,13 @@ Automatic exact matches are considered in this order:
 
 1. Existing exact eCard with compatible required course.
 2. Unique exact normalized email with compatible required course.
-3. Unique exact normalized name, explicit compatible customer, and compatible
+3. A missing source course may be inferred only when normalized name, email,
+   phone, and class date all exactly match one unique Maxim profile and its
+   required training maps to a recognized course. An existing eCard/history
+   course provides additional deterministic confirmation when present.
+4. Unique exact normalized name, explicit compatible customer, and compatible
    course.
-4. Unique exact normalized name with compatible course and exact
+5. Unique exact normalized name with compatible course and exact
    scheduled/prior class date.
 
 Duplicate or conflicting candidates are ambiguous. Fuzzy normalized-name
@@ -110,3 +114,7 @@ policy and evidence.
 - A different, newer eCard may be preserved as a new history credential.
 - Older/equal expirations, older class dates, incompatible courses, and
   unproven replacement cards never overwrite the profile projection.
+- Equal expiration does not block filling a missing profile eCard when a
+  proven-current compatible history record exists for the same class cycle.
+- Existing current history rows are eligible to repair missing legacy profile
+  projections; no duplicate history row is created.
