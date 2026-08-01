@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-01T11:18:23.794800+00:00",
+  "generated_at": "2026-08-01T12:04:43.375590+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
-    "sessions": 51,
+    "sessions": 47,
     "brian_resource_blocks": 14,
     "student_snapshot_classes": 17,
     "student_snapshot_matches": 0,
@@ -97,66 +97,6 @@
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13782393",
       "source": "enrollware_ical",
       "blocking_resources": [
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ]
-    },
-    {
-      "session_id": "13828437",
-      "course_name": "AHA ACLS Provider (Initial)",
-      "start_at": "2026-08-03T14:00:00-04:00",
-      "end_at": "2026-08-03T18:00:00-04:00",
-      "lead_instructor_name": "Amy Arnold",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 0,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13828437",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "instructor:amy_arnold",
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ]
-    },
-    {
-      "session_id": "13828444",
-      "course_name": "AHA ACLS Provider (Renewal)",
-      "start_at": "2026-08-03T14:00:00-04:00",
-      "end_at": "2026-08-03T18:00:00-04:00",
-      "lead_instructor_name": "Amy Arnold",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 0,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13828444",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "instructor:amy_arnold",
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ]
-    },
-    {
-      "session_id": "13828453",
-      "course_name": "AHA PALS Provider",
-      "start_at": "2026-08-03T14:00:00-04:00",
-      "end_at": "2026-08-03T18:00:00-04:00",
-      "lead_instructor_name": "Amy Arnold",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 0,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13828453",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "instructor:amy_arnold",
-        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
-      ]
-    },
-    {
-      "session_id": "13828460",
-      "course_name": "AHA PALS Renewal",
-      "start_at": "2026-08-03T14:00:00-04:00",
-      "end_at": "2026-08-03T18:00:00-04:00",
-      "lead_instructor_name": "Amy Arnold",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-      "registered_count": 0,
-      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13828460",
-      "source": "enrollware_ical",
-      "blocking_resources": [
-        "instructor:amy_arnold",
         "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
       ]
     },
