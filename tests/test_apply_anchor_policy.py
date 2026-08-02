@@ -2,6 +2,7 @@ import unittest
 
 from scripts.anchor_state import promote_seated_sessions
 from scripts.apply_anchor_policy import consolidate_node
+from scripts.apply_anchor_seat_overrides import apply as apply_overrides
 
 
 class ApplyAnchorPolicyTests(unittest.TestCase):
@@ -39,6 +40,14 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
                 "registration_url": "https://example.test/classes/51231",
             },
         ]
+
+    def test_seat_override_converts_zero_count_ical_session(self):
+        payload = {"sessions": [{"session_id": "13833211", "registered_count": 0}]}
+        changed = apply_overrides(payload, {"13833211": {"registered_count": 1, "appointment_class_id": "51275"}})
+        self.assertEqual(changed, 1)
+        self.assertEqual(payload["sessions"][0]["registered_count"], 1)
+        self.assertTrue(payload["sessions"][0]["confirmed_seated"])
+        self.assertEqual(payload["sessions"][0]["appointment_class_id"], "51275")
 
     def test_every_seated_session_promotes_even_when_course_was_barnacle(self):
         anchors = promote_seated_sessions(self.sessions)
