@@ -1,0 +1,10 @@
+{
+  "schema_version": "910cpr-anchor-seat-overrides.v1",
+  "source": "Owner-confirmed Enrollware class list, 2026-08-02",
+  "notes": "Temporary authoritative seat overrides until the Enrollware student snapshot matches appointment-created sessions reliably.",
+  "sessions": {
+    "13833211": {"registered_count": 1, "appointment_class_id": "51275"},
+    "13818252": {"registered_count": 1, "appointment_class_id": "51239"},
+    "13787687": {"registered_count": 1, "appointment_class_id": "51231"}
+  }
+}
