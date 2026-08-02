@@ -1,0 +1,51 @@
+{
+  "schema_version": "910cpr-course-descriptions.v1",
+  "courses": {
+    "aha_bls_provider": {
+      "audience": "Designed for healthcare professionals and clinical teams who need an American Heart Association BLS Provider certification.",
+      "overview": "This instructor-led course includes hands-on practice in high-quality adult, child and infant CPR, AED use, ventilations, choking response and team-based resuscitation. Skills are practiced and evaluated using realistic healthcare scenarios.",
+      "credential": "Successful participants receive an American Heart Association BLS Provider course completion card, valid for two years."
+    },
+    "aha_bls_provider_renewal": {
+      "audience": "Designed for current or recently expired BLS providers who need to renew their American Heart Association certification.",
+      "overview": "This renewal course reviews and evaluates high-quality adult, child and infant CPR, AED use, ventilations, choking response and effective team-based resuscitation.",
+      "credential": "Successful participants receive an American Heart Association BLS Provider course completion card, valid for two years."
+    },
+    "aha_heartcode_bls": {
+      "audience": "Designed for healthcare professionals completing the hands-on portion of the American Heart Association HeartCode BLS blended course.",
+      "overview": "During this skills session, participants demonstrate high-quality adult, child and infant CPR, AED use, ventilations and choking response with an AHA instructor.",
+      "preparation": "Complete the AHA HeartCode BLS online course before your appointment and bring the online completion certificate to the skills session.",
+      "credential": "After successful skills testing, participants receive an American Heart Association BLS Provider course completion card, valid for two years."
+    },
+    "aha_heartsaver_first_aid_cpr_aed": {
+      "audience": "Designed for people with little or no medical training who need CPR, AED and first aid certification for employment, regulatory requirements or personal preparedness.",
+      "overview": "This instructor-led class includes hands-on adult CPR, AED use, choking response and practical first aid. Topics include medical, injury and environmental emergencies, severe bleeding, stroke recognition, opioid emergencies and naloxone, heat illness, burns, allergic reactions, seizures and asthma.",
+      "credential": "Successful participants receive an American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years."
+    },
+    "aha_acls_provider_initial": {
+      "audience": "Designed for healthcare professionals who direct or participate in the management of cardiopulmonary arrest and other cardiovascular emergencies.",
+      "overview": "This initial ACLS course uses instruction, skills stations and team scenarios to cover systematic assessment, cardiac arrest algorithms, rhythm and medication concepts, airway and ventilation decisions, stroke recognition, post-cardiac-arrest care and high-performance team communication.",
+      "credential": "Successful participants receive an American Heart Association ACLS Provider course completion card, valid for two years."
+    },
+    "aha_acls_provider_renewal": {
+      "audience": "Designed for current or recently expired ACLS providers who need to renew their American Heart Association certification.",
+      "overview": "This renewal course reinforces systematic assessment, cardiac arrest algorithms, rhythm and medication concepts, airway and ventilation decisions, stroke recognition, post-cardiac-arrest care and high-performance team communication through focused skills and team scenarios.",
+      "credential": "Successful participants receive an American Heart Association ACLS Provider course completion card, valid for two years."
+    },
+    "aha_pals_provider": {
+      "audience": "Designed for healthcare professionals who respond to respiratory, shock and cardiopulmonary emergencies involving infants and children.",
+      "overview": "This initial PALS course uses skills stations and team scenarios to cover pediatric assessment, respiratory emergencies, shock, rhythm disturbances, cardiac arrest and effective team-based response.",
+      "credential": "Successful participants receive an American Heart Association PALS Provider course completion card, valid for two years."
+    },
+    "aha_pals_renewal": {
+      "audience": "Designed for current or recently expired PALS providers who need to renew their American Heart Association certification.",
+      "overview": "This renewal course reinforces pediatric assessment, respiratory emergencies, shock, rhythm disturbances, cardiac arrest and effective team-based response through focused skills and scenarios.",
+      "credential": "Successful participants receive an American Heart Association PALS Provider course completion card, valid for two years."
+    },
+    "aha_family_friends_cpr": {
+      "audience": "Designed for family members, friends and community members who want practical CPR and emergency-response skills without needing a workplace certification card.",
+      "overview": "This instructor-led awareness course provides hands-on practice in adult and child CPR, AED use and choking response in a relaxed community setting.",
+      "credential": "Family & Friends CPR is an educational participation course and does not issue an American Heart Association course completion card."
+    }
+  }
+}

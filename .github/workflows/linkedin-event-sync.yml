@@ -76,14 +76,19 @@ jobs:
       - name: Save LinkedIn state
         if: ${{ inputs.apply && always() }}
         run: |
-          if git diff --quiet -- data/runtime/linkedin_event_state.json; then
+          if [[ ! -f data/runtime/linkedin_event_state.json ]]; then
             echo "No state change."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- data/runtime/linkedin_event_state.json
+          if git diff --cached --quiet; then
+            echo "No state change."
+            exit 0
+          fi
           git commit -m "chore: update LinkedIn event sync state"
+          git pull --rebase origin main
           git push
 
       - name: Upload audit report
