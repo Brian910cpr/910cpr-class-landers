@@ -24,6 +24,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SCHEDULE = ROOT / "docs/data/schedule_future.json"
 DEFAULT_CONFIG = ROOT / "data/linkedin_event_sync.json"
+DEFAULT_DESCRIPTIONS = ROOT / "data/course_descriptions.json"
 DEFAULT_STATE = ROOT / "data/runtime/linkedin_event_state.json"
 
 
@@ -57,11 +58,23 @@ class PlannedEvent:
     fingerprint: str
 
 
-def event_description(session: dict[str, Any]) -> str:
-    parts = [
-        session.get("mapped_short_description") or session.get("course_name"),
-        "View details and register through 910CPR.",
-    ]
+def event_description(session: dict[str, Any], descriptions: dict[str, Any], address: dict[str, str]) -> str:
+    copy = descriptions.get("courses", {}).get(session.get("course_key"), {})
+    parts = [copy.get("audience"), copy.get("overview"), copy.get("preparation"), copy.get("credential")]
+    if not any(parts):
+        parts = [
+            session.get("mapped_who_class_for"),
+            session.get("mapped_what_to_expect") or session.get("mapped_short_description"),
+            session.get("mapped_prerequisites"),
+            session.get("mapped_certification_card"),
+        ]
+    location = ", ".join(
+        value for value in [address.get("line1"), address.get("city"), address.get("geographicArea")] if value
+    )
+    parts.extend([
+        f"Location: 910CPR, {location}",
+        "Choose this class date and register using the event link.",
+    ])
     return "\n\n".join(part.strip() for part in parts if part and part.strip())
 
 
@@ -94,7 +107,7 @@ def eligible(session: dict[str, Any], config: dict[str, Any]) -> tuple[bool, str
     return True, "promoted override" if promoted else "public seated class"
 
 
-def build_event(session: dict[str, Any], config: dict[str, Any]) -> PlannedEvent:
+def build_event(session: dict[str, Any], config: dict[str, Any], descriptions: dict[str, Any] | None = None) -> PlannedEvent:
     location = normalized_location(session.get("location_display") or session.get("location_name"))
     session_id = str(session["session_id"])
     course_id = str(session.get("course_id") or "")
@@ -103,9 +116,10 @@ def build_event(session: dict[str, Any], config: dict[str, Any]) -> PlannedEvent
     image_urn = config.get("background_image_urn") or os.getenv("LINKEDIN_EVENT_BACKGROUND_IMAGE_URN")
     if not organizer:
         organizer = "urn:li:organization:REQUIRED"
+    address = address_for(location, config)
     payload: dict[str, Any] = {
         "name": {"localized": {"en_US": session.get("mapped_clean_title") or session["course_name"]}},
-        "description": {"localized": {"en_US": {"rawText": event_description(session)}}},
+        "description": {"localized": {"en_US": {"rawText": event_description(session, descriptions or {}, address)}}},
         "organizer": organizer,
         "startsAt": epoch_ms(session["start_at"]),
         "discoveryMode": "LISTED",
@@ -113,7 +127,7 @@ def build_event(session: dict[str, Any], config: dict[str, Any]) -> PlannedEvent
             "inPerson": {
                 "endsAt": epoch_ms(session["end_at"]),
                 "url": session["registration_url"],
-                "address": address_for(location, config),
+                "address": address,
                 "venueDetails": {"localized": {"en_US": {"rawText": location.removeprefix("::").strip()}}},
             }
         },
@@ -246,15 +260,16 @@ def event_registration_url(remote: dict[str, Any]) -> str | None:
     return remote.get("type", {}).get("inPerson", {}).get("url")
 
 
-def plan(schedule_path: Path, config_path: Path) -> tuple[list[PlannedEvent], list[dict[str, str]]]:
+def plan(schedule_path: Path, config_path: Path, descriptions_path: Path = DEFAULT_DESCRIPTIONS) -> tuple[list[PlannedEvent], list[dict[str, str]]]:
     schedule = load_json(schedule_path)
     config = load_json(config_path)
+    descriptions = load_json(descriptions_path, default={"courses": {}})
     events: list[PlannedEvent] = []
     skipped: list[dict[str, str]] = []
     for session in schedule.get("sessions", []):
         ok, reason = eligible(session, config)
         if ok:
-            events.append(build_event(session, config))
+            events.append(build_event(session, config, descriptions))
         else:
             skipped.append({"session_id": str(session.get("session_id") or ""), "reason": reason})
     return events, skipped
@@ -269,6 +284,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--schedule", type=Path, default=DEFAULT_SCHEDULE)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    parser.add_argument("--descriptions", type=Path, default=DEFAULT_DESCRIPTIONS)
     parser.add_argument("--state", type=Path, default=DEFAULT_STATE)
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--output", type=Path)
@@ -276,7 +292,7 @@ def main() -> int:
     parser.add_argument("--max-events", type=int, default=0, help="Maximum changed events to write; 0 means unlimited")
     args = parser.parse_args()
 
-    events, skipped = plan(args.schedule, args.config)
+    events, skipped = plan(args.schedule, args.config, args.descriptions)
     if args.session_id:
         events = [event for event in events if event.session_id == args.session_id]
     report: dict[str, Any] = {

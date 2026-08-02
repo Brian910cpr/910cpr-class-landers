@@ -69,6 +69,23 @@ def test_payload_uses_session_times_registration_and_address():
     assert event.image_path == "docs/images/zoom-bls-aha.png"
 
 
+def test_rich_course_description_includes_audience_credential_and_location():
+    descriptions = {
+        "courses": {
+            "aha_bls_provider": {
+                "audience": "For healthcare professionals.",
+                "overview": "Hands-on adult, child and infant CPR practice.",
+                "credential": "AHA BLS Provider card valid for two years.",
+            }
+        }
+    }
+    event = MODULE.build_event(session(course_key="aha_bls_provider"), CONFIG, descriptions)
+    text = event.payload["description"]["localized"]["en_US"]["rawText"]
+    assert "For healthcare professionals." in text
+    assert "valid for two years" in text
+    assert "4018 Shipyard Blvd, Wilmington, North Carolina" in text
+
+
 def test_remote_event_registration_url_is_detected():
     remote = {"type": {"inPerson": {"url": "https://example.test/enroll?id=99"}}}
     assert MODULE.event_registration_url(remote).endswith("id=99")
