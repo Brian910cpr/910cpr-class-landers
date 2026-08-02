@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, asdict
 from datetime import datetime
+import re
 from typing import Any, Iterable
 
 
@@ -22,17 +23,31 @@ def _dt(value: Any) -> datetime | None:
 
 
 def _count(session: dict[str, Any]) -> int:
-    for key in ("registered_count", "enrolled_count", "seated_count", "participant_count"):
+    for key in (
+        "registered_count",
+        "registration_count",
+        "enrolled_count",
+        "seated_count",
+        "participant_count",
+        "students_registered",
+        "students_enrolled",
+        "seats_taken",
+    ):
         value = session.get(key)
         if value is None:
             continue
-        try:
-            return max(0, int(value))
-        except (TypeError, ValueError):
-            continue
-    # A session imported from Enrollware is a real seated class even when the
-    # public feed omits counts. The caller may explicitly set confirmed_seated.
-    return 1 if session.get("confirmed_seated") is True else 0
+        if isinstance(value, (list, tuple, set)):
+            return len(value)
+        match = re.match(r"\s*(\d+)\s*(?:/|of\b)?", str(value), re.I)
+        if match:
+            return max(0, int(match.group(1)))
+    for key in ("participants", "students", "registrations"):
+        value = session.get(key)
+        if isinstance(value, list):
+            return len(value)
+    if session.get("confirmed_seated") is True or session.get("has_students") is True:
+        return 1
+    return 0
 
 
 def _course_id(session: dict[str, Any]) -> str:
@@ -40,7 +55,7 @@ def _course_id(session: dict[str, Any]) -> str:
 
 
 def _session_id(session: dict[str, Any]) -> str:
-    return _text(session.get("session_id") or session.get("id"))
+    return _text(session.get("session_id") or session.get("id") or session.get("class_id"))
 
 
 def _location(session: dict[str, Any]) -> str:
@@ -70,6 +85,7 @@ class Anchor:
     instructor: str
     registered_count: int
     cluster_id: str
+    registration_url: str = ""
     schedule_role: str = "anchor"
     schedule_symbol: str = ANCHOR_SYMBOL
     promotion_reason: str = "first_confirmed_seat"
@@ -78,12 +94,7 @@ class Anchor:
 
 
 def promote_seated_sessions(sessions: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Return explicit anchor records for every real session with a seat.
-
-    This intentionally does not consult speculative ``anchor_eligible`` rules.
-    Those rules may decide whether an empty availability block can originate an
-    offer. They must never prevent a real seated class from becoming an anchor.
-    """
+    """Return explicit anchor records for every real session with a seat."""
     anchors: list[dict[str, Any]] = []
     seen: set[str] = set()
     for session in sessions:
@@ -105,6 +116,7 @@ def promote_seated_sessions(sessions: Iterable[dict[str, Any]]) -> list[dict[str
             instructor=_instructor(session),
             registered_count=count,
             cluster_id=cluster_id(session),
+            registration_url=_text(session.get("registration_url") or session.get("enrollment_url")),
         )))
     anchors.sort(key=lambda item: (item["start_at"], item["session_id"]))
     return anchors
