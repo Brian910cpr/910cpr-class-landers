@@ -1,7 +1,7 @@
 {
   "build": {
-    "generated_at": "2026-08-02T14:31:03.856257-04:00",
-    "source_file": "data\\sessions_current.json",
+    "generated_at": "2026-08-02T15:14:43.864815-04:00",
+    "source_file": "data/sessions_current.json",
     "counts": {
       "sessions_input": 366,
       "sessions_output": 38,
