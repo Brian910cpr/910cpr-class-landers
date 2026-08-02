@@ -5,6 +5,21 @@
     "::"
   ],
   "promoted_session_ids": [],
+  "course_images": {
+    "209805": "docs/images/HS-CPR-AED.jpeg",
+    "209806": "docs/images/zoom-bls-aha.png",
+    "209808": "docs/images/HS-CPR-AED.jpeg",
+    "209809": "docs/images/HS-FA-CPR-AED.jpeg",
+    "209818": "docs/images/HS-PEDI-FA-CPR-AED.jpeg",
+    "210549": "docs/images/zoom-bls-aha.png",
+    "241108": "docs/images/25-acls-new.png",
+    "251496": "docs/images/25-pals-new.png",
+    "251545": "docs/images/HS-PEDI-FA-CPR-AED.jpeg",
+    "252737": "docs/images/family-and-friends-CPR.jpg",
+    "329495": "docs/images/HS-FA-CPR-AED.jpeg",
+    "351632": "docs/images/HS-PEDI-FA-CPR-AED.jpeg",
+    "359474": "docs/images/zoom-bls-aha.png"
+  },
   "location_addresses": {
     ":: Wilmington; Shipyard Blvd": {
       "line1": "4018 Shipyard Blvd",

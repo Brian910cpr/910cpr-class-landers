@@ -13,6 +13,7 @@ import json
 import os
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -49,6 +50,8 @@ def normalized_location(value: str | None) -> str:
 @dataclass(frozen=True)
 class PlannedEvent:
     session_id: str
+    course_id: str
+    image_path: str | None
     payload: dict[str, Any]
     post_payload: dict[str, Any]
     fingerprint: str
@@ -94,6 +97,8 @@ def eligible(session: dict[str, Any], config: dict[str, Any]) -> tuple[bool, str
 def build_event(session: dict[str, Any], config: dict[str, Any]) -> PlannedEvent:
     location = normalized_location(session.get("location_display") or session.get("location_name"))
     session_id = str(session["session_id"])
+    course_id = str(session.get("course_id") or "")
+    image_path = config.get("course_images", {}).get(course_id)
     organizer = config.get("organizer_urn") or os.getenv("LINKEDIN_ORGANIZATION_URN")
     image_urn = config.get("background_image_urn") or os.getenv("LINKEDIN_EVENT_BACKGROUND_IMAGE_URN")
     if not organizer:
@@ -130,7 +135,7 @@ def build_event(session: dict[str, Any], config: dict[str, Any]) -> PlannedEvent
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     fingerprint = hashlib.sha256(canonical.encode()).hexdigest()
-    return PlannedEvent(session_id, payload, post_payload, fingerprint)
+    return PlannedEvent(session_id, course_id, image_path, payload, post_payload, fingerprint)
 
 
 class LinkedInClient:
@@ -138,7 +143,7 @@ class LinkedInClient:
         self.token = token
         self.version = version
 
-    def request(self, method: str, path: str, payload: dict[str, Any], restli_method: str | None = None) -> tuple[int, dict[str, str], Any]:
+    def request(self, method: str, path: str, payload: dict[str, Any] | None = None, restli_method: str | None = None) -> tuple[int, dict[str, str], Any]:
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Accept": "application/json",
@@ -150,7 +155,7 @@ class LinkedInClient:
             headers["X-RestLi-Method"] = restli_method
         request = urllib.request.Request(
             f"https://api.linkedin.com/rest/{path}",
-            data=json.dumps(payload).encode(),
+            data=json.dumps(payload).encode() if payload is not None else None,
             headers=headers,
             method=method,
         )
@@ -178,6 +183,67 @@ class LinkedInClient:
     def update_event(self, event_id: str, payload: dict[str, Any]) -> None:
         mutable = {k: v for k, v in payload.items() if k not in {"organizer"}}
         self.request("POST", f"events/{event_id}", {"patch": {"$set": mutable}}, "partial_update")
+
+    def find_upcoming_events(self, organizer: str) -> list[dict[str, Any]]:
+        encoded = urllib.parse.quote(organizer, safe="")
+        path = (
+            "events?q=eventsByOrganizer"
+            f"&organizer={encoded}&start=0&count=100&excludeCancelled=true"
+            "&timeBasedFilter=(lifeCycleState:UPCOMING)&entryCriteria=PUBLIC"
+            "&sortOrder=START_TIME_ASC"
+        )
+        _, _, body = self.request("GET", path)
+        return (body or {}).get("elements", [])
+
+    def upload_event_image(self, image_path: Path, owner: str) -> str:
+        register = {
+            "registerUploadRequest": {
+                "owner": owner,
+                "recipes": ["urn:li:digitalmediaRecipe:event-background-image"],
+                "serviceRelationships": [{
+                    "identifier": "urn:li:userGeneratedContent",
+                    "relationshipType": "OWNER",
+                }],
+                "supportedUploadMechanism": ["SYNCHRONOUS_UPLOAD"],
+            }
+        }
+        _, _, body = self.request("POST", "assets?action=registerUpload", register)
+        value = (body or {}).get("value", {})
+        mechanism = value.get("uploadMechanism", {}).get(
+            "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest", {}
+        )
+        upload_url = mechanism.get("uploadUrl")
+        asset = value.get("asset")
+        if not upload_url or not asset:
+            raise RuntimeError("LinkedIn did not return an event image upload URL and asset URN")
+        content_type = "image/png" if image_path.suffix.lower() == ".png" else "image/jpeg"
+        upload_request = urllib.request.Request(
+            upload_url,
+            data=image_path.read_bytes(),
+            headers={
+                "Authorization": f"Bearer {self.token}",
+                "Content-Type": content_type,
+                "X-Restli-Protocol-Version": "2.0.0",
+                "Linkedin-Version": self.version,
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(upload_request, timeout=60):
+                pass
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")
+            raise RuntimeError(f"LinkedIn image upload failed ({exc.code}): {detail}") from exc
+        return str(asset)
+
+
+def event_fingerprint(payload: dict[str, Any]) -> str:
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode()).hexdigest()
+
+
+def event_registration_url(remote: dict[str, Any]) -> str | None:
+    return remote.get("type", {}).get("inPerson", {}).get("url")
 
 
 def plan(schedule_path: Path, config_path: Path) -> tuple[list[PlannedEvent], list[dict[str, str]]]:
@@ -230,11 +296,41 @@ def main() -> int:
     token = os.getenv("LINKEDIN_ACCESS_TOKEN")
     if not token:
         raise SystemExit("LINKEDIN_ACCESS_TOKEN is required with --apply")
-    state = load_json(args.state, default={"sessions": {}})
+    state = load_json(args.state, default={"sessions": {}, "assets": {}})
+    state.setdefault("sessions", {})
+    state.setdefault("assets", {})
     client = LinkedInClient(token, os.getenv("LINKEDIN_API_VERSION", "202607"))
+    organizer = os.getenv("LINKEDIN_ORGANIZATION_URN") or load_json(args.config).get("organizer_urn")
+    remote_by_url = {
+        event_registration_url(remote): remote
+        for remote in client.find_upcoming_events(organizer)
+        if event_registration_url(remote)
+    }
     actions: list[dict[str, str]] = []
     changed = 0
     for event in events:
+        registration_url = event.payload["type"]["inPerson"]["url"]
+        if event.session_id not in state["sessions"] and registration_url in remote_by_url:
+            remote = remote_by_url[registration_url]
+            state["sessions"][event.session_id] = {
+                "event_id": str(remote["id"]),
+                "post_id": remote.get("ugcPost"),
+                "fingerprint": "",
+            }
+            save_state(args.state, state)
+
+        if event.image_path:
+            asset = state["assets"].get(event.image_path)
+            if not asset:
+                image_file = ROOT / event.image_path
+                if not image_file.is_file():
+                    raise RuntimeError(f"Configured LinkedIn event image does not exist: {image_file}")
+                asset = client.upload_event_image(image_file, event.payload["organizer"])
+                state["assets"][event.image_path] = asset
+                save_state(args.state, state)
+            event.payload["backgroundImage"] = asset
+            object.__setattr__(event, "fingerprint", event_fingerprint(event.payload))
+
         existing = state["sessions"].get(event.session_id)
         if existing and existing.get("fingerprint") == event.fingerprint:
             actions.append({"session_id": event.session_id, "action": "unchanged"})
