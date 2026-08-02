@@ -1,0 +1,97 @@
+name: LinkedIn Event Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Create/update LinkedIn Events"
+        required: true
+        default: false
+        type: boolean
+      max_events:
+        description: "Maximum Events changed in this run"
+        required: true
+        default: "1"
+        type: string
+      session_id:
+        description: "Optional single Enrollware session ID"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: linkedin-event-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate interface
+        run: |
+          python -m py_compile scripts/linkedin_event_sync.py scripts/linkedin_refresh_token.py
+          python scripts/linkedin_event_sync.py --output /tmp/linkedin-event-plan.json
+          python - <<'PY'
+          import json
+          report = json.load(open('/tmp/linkedin-event-plan.json'))
+          print(f"Eligible: {report['eligible_count']}; skipped: {len(report['skipped'])}")
+          PY
+
+      - name: Refresh LinkedIn access token
+        if: ${{ inputs.apply }}
+        id: token
+        env:
+          LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
+          LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+          LINKEDIN_REFRESH_TOKEN: ${{ secrets.LINKEDIN_REFRESH_TOKEN }}
+        run: |
+          token="$(python scripts/linkedin_refresh_token.py)"
+          echo "::add-mask::$token"
+          echo "access_token=$token" >> "$GITHUB_OUTPUT"
+
+      - name: Synchronize Events
+        id: sync
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ steps.token.outputs.access_token || secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_ORGANIZATION_URN: ${{ secrets.LINKEDIN_ORGANIZATION_URN }}
+          LINKEDIN_EVENT_BACKGROUND_IMAGE_URN: ${{ secrets.LINKEDIN_EVENT_BACKGROUND_IMAGE_URN }}
+        run: |
+          args=(--max-events "${{ inputs.max_events }}" --output /tmp/linkedin-event-report.json)
+          if [[ -n "${{ inputs.session_id }}" ]]; then
+            args+=(--session-id "${{ inputs.session_id }}")
+          fi
+          if [[ "${{ inputs.apply }}" == "true" ]]; then
+            args+=(--apply)
+          fi
+          python scripts/linkedin_event_sync.py "${args[@]}"
+
+      - name: Save LinkedIn state
+        if: ${{ inputs.apply && always() }}
+        run: |
+          if git diff --quiet -- data/runtime/linkedin_event_state.json; then
+            echo "No state change."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/runtime/linkedin_event_state.json
+          git commit -m "chore: update LinkedIn event sync state"
+          git push
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linkedin-event-sync-report
+          path: |
+            /tmp/linkedin-event-plan.json
+            /tmp/linkedin-event-report.json
+          if-no-files-found: ignore

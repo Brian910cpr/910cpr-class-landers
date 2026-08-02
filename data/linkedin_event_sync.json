@@ -1,0 +1,17 @@
+{
+  "organizer_urn": "",
+  "background_image_urn": "",
+  "public_location_prefixes": [
+    "::"
+  ],
+  "promoted_session_ids": [],
+  "location_addresses": {
+    ":: Wilmington; Shipyard Blvd": {
+      "line1": "4018 Shipyard Blvd",
+      "city": "Wilmington",
+      "geographicArea": "North Carolina",
+      "postalCode": "28403",
+      "country": "US"
+    }
+  }
+}
