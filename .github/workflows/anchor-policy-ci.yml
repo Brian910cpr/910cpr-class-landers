@@ -1,0 +1,37 @@
+name: Anchor policy CI
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/anchor_state.py'
+      - 'scripts/apply_anchor_seat_overrides.py'
+      - 'scripts/apply_anchor_policy.py'
+      - 'tests/test_anchor_state.py'
+      - 'tests/test_apply_anchor_policy.py'
+      - '.github/workflows/anchor-policy-ci.yml'
+  push:
+    branches:
+      - 'codex/anchor-promotion-pipeline'
+    paths:
+      - 'scripts/anchor_state.py'
+      - 'scripts/apply_anchor_seat_overrides.py'
+      - 'scripts/apply_anchor_policy.py'
+      - 'tests/test_anchor_state.py'
+      - 'tests/test_apply_anchor_policy.py'
+      - '.github/workflows/anchor-policy-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile anchor modules
+        run: python -m py_compile scripts/anchor_state.py scripts/apply_anchor_seat_overrides.py scripts/apply_anchor_policy.py
+      - name: Run anchor regressions
+        run: python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy

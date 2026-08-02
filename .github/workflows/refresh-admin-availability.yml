@@ -17,7 +17,11 @@ on:
       - 'scripts/publish_admin_reference_data.py'
       - 'scripts/block_start_time_selector.py'
       - 'scripts/build_bls_block_schedule_pilot.py'
+      - 'scripts/anchor_state.py'
+      - 'scripts/apply_anchor_seat_overrides.py'
+      - 'scripts/apply_anchor_policy.py'
       - 'scripts/ensure_dashboard_refresh_controls.py'
+      - 'data/runtime/anchor_seat_overrides.json'
       - 'data/config/people_catalog.json'
       - 'data/config/location_resource_map.json'
       - 'data/config/travel_time_rules.json'
@@ -90,6 +94,14 @@ jobs:
               print(f"Published {page_key}: {payload.get('counts', {}).get('publicSelectableStartTimeCount', 0)} selectable starts -> {output}")
           PY
 
+      - name: Apply confirmed seat counts
+        run: python -m scripts.apply_anchor_seat_overrides
+
+      - name: Promote seated sessions and consolidate same-course offers
+        run: |
+          python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy
+          python -m scripts.apply_anchor_policy
+
       - name: Publish instructor and location reference feeds
         run: python -m scripts.publish_admin_reference_data
 
@@ -113,13 +125,14 @@ jobs:
             docs/data/admin_availability.json \
             docs/data/admin_people.json \
             docs/data/admin_locations.json \
+            docs/data/anchor_state.json \
             docs/data/block-selector-availability \
             docs/admin/dashboard.html \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json
           if git diff --cached --quiet; then
-            echo "No schedule, availability, selector, or admin reference changes to commit."
+            echo "No schedule, availability, selector, anchor, or admin reference changes to commit."
             exit 0
           fi
-          git commit -m "Refresh admin schedule and live availability feeds"
+          git commit -m "Refresh admin schedule, anchors, and live availability feeds"
           git push
