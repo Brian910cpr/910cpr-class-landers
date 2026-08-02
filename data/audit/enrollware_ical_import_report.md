@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-08-02T03:33:20.889393-04:00`
+- Generated at: `2026-08-02T05:59:40.408698-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `371`
-- Public sessions created: `371`
+- iCal events read: `370`
+- Public sessions created: `370`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `328`
+- Registration unavailable sessions marked not direct-bookable: `327`
 - Unmapped sessions: `24`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `13411226` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-05-04T08:00:00-04:00 | NHCS Bus Maintenance Shop - Carolina Bch Rd |
 | `12774309` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-05-04T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775506` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-05-04T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775751` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-05-04T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `12775756` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-05-13T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774560` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-05-13T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775278` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-05-13T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12776693` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-05-14T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
