@@ -15,6 +15,7 @@ from scripts.block_start_time_selector import (
     build_bls_pilot_schedule,
     load_block_schedule_page_configs,
 )
+from scripts.apply_anchor_policy import resolve_selector_payload
 
 
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -38,6 +39,7 @@ def selector_availability_path(page_key: str) -> Path:
 
 
 def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    payload = resolve_selector_payload(payload)
     return {
         "schemaVersion": "selector-resolved-availability.v1",
         "generatedAt": payload.get("generatedAt"),
@@ -571,14 +573,32 @@ def css() -> str:
       font-size: .75rem;
     }
     .day-button {
-      min-height: 34px;
-      padding: 0;
+      position: relative;
+      min-height: 48px;
+      padding: 3px 3px 8px;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: .9rem;
     }
+    .day-number { position: relative; z-index: 2; }
+    .day-star { margin-left: 2px; color: #236b36; font-size: .72rem; vertical-align: top; }
+    .day-timeline {
+      position: absolute;
+      left: 3px;
+      right: 3px;
+      bottom: 3px;
+      height: 5px;
+      display: grid;
+      grid-template-columns: repeat(48, minmax(0, 1fr));
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+    }
+    .day-timeline-segment { min-width: 0; background: transparent; }
+    .day-timeline-segment.is-offered { background: #fff1a8; }
+    .day-timeline-segment.is-anchor { background: #9fd5ad; }
     .day-button.is-past,
     .start-grid button.is-past {
       color: #6b7280;
@@ -615,6 +635,11 @@ def css() -> str:
       text-align: center;
       justify-content: center;
     }
+    .start-grid button.is-speculative { background: #fff8cf; border-color: #e6d888; }
+    .start-grid button.is-anchor { background: #e1f4e5; border-color: #8ac79a; color: #174f2b; }
+    .start-grid button[aria-pressed="true"] { box-shadow: 0 0 0 3px rgba(10,102,165,.28); border-color: var(--accent); }
+    .start-grid button.is-anchor[aria-pressed="true"] { background: linear-gradient(#e1f4e5, #e1f4e5); }
+    .start-grid button.is-speculative[aria-pressed="true"] { background: linear-gradient(#fff8cf, #fff8cf); }
     .course {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -929,7 +954,7 @@ def render_html(payload: dict[str, Any]) -> str:
       {student_html}
     </section>"""
     back_href = html.escape(str(page_config.get("back_link_href") or "/index.html"), quote=True)
-    back_label = html.escape(str(page_config.get("back_link_label") or "Back to Find Your Class"))
+    back_label = html.escape(str(page_config.get("back_link_label") or "Back to All Courses"))
     course_aliases = sorted({
         str(alias).strip()
         for option in course_options
@@ -1584,14 +1609,60 @@ def render_html(payload: dict[str, Any]) -> str:
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'day-button';
-            button.textContent = String(dayNum);
+            const stateForCourse = course => course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : 'standalone_offer');
+            const segments = Array.from({{ length: 48 }}, () => '');
+            let hasAnchor = false;
+            const anchorLabels = [];
+            const optionLabels = [];
+            available.startTimes.forEach(slot => {{
+              slot.courses.forEach(course => {{
+                const role = stateForCourse(course);
+                const [hour, minute] = slot.startTime.split(':').map(Number);
+                const startBand = Math.max(0, Math.min(47, hour * 2 + Math.floor(minute / 30)));
+                const duration = Number(course.durationMinutes || course.schedulerConsumptionMinutes || 30);
+                const endBand = Math.min(48, startBand + Math.max(1, Math.ceil(duration / 30)));
+                const segmentState = role === 'anchor' ? 'is-anchor' : 'is-offered';
+                if (role === 'anchor') {{
+                  hasAnchor = true;
+                  if (!anchorLabels.includes(slot.displayStartTime)) anchorLabels.push(slot.displayStartTime);
+                }} else if (!optionLabels.includes(slot.displayStartTime)) {{
+                  optionLabels.push(slot.displayStartTime);
+                }}
+                for (let band = startBand; band < endBand; band += 1) {{
+                  if (segmentState === 'is-anchor' || !segments[band]) segments[band] = segmentState;
+                }}
+              }});
+            }});
+            const number = document.createElement('span');
+            number.className = 'day-number';
+            number.textContent = String(dayNum);
+            if (hasAnchor) {{
+              const star = document.createElement('span');
+              star.className = 'day-star';
+              star.setAttribute('aria-hidden', 'true');
+              star.textContent = '★';
+              number.appendChild(star);
+            }}
+            const timeline = document.createElement('span');
+            timeline.className = 'day-timeline';
+            timeline.setAttribute('aria-hidden', 'true');
+            segments.forEach(state => {{
+              const segment = document.createElement('span');
+              segment.className = 'day-timeline-segment' + (state ? ' ' + state : '');
+              timeline.appendChild(segment);
+            }});
+            button.append(number, timeline);
             const disabled = !isSelectableDate(available, now);
             if (disabled) {{
               button.classList.add('is-past');
             }}
             button.disabled = disabled;
             button.setAttribute('aria-disabled', String(disabled));
-            button.setAttribute('aria-label', available.displayDate + ' ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times' : 'available'));
+            const activityText = [
+              anchorLabels.length ? 'Confirmed class at ' + anchorLabels.join(', ') : '',
+              optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''
+            ].filter(Boolean).join('; ');
+            button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'Not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {{
               if (!isSelectableDate(available)) {{
@@ -1649,14 +1720,17 @@ def render_html(payload: dict[str, Any]) -> str:
         slots.forEach(slot => {{
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = slot.displayStartTime;
+        const anchorCourse = slot.courses.find(course => (course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '')) === 'anchor');
+        const isAnchor = Boolean(anchorCourse);
+        button.textContent = (isAnchor ? '★ ' : '') + slot.displayStartTime;
+        button.classList.add(isAnchor ? 'is-anchor' : 'is-speculative');
         const disabled = isPastStart(day, slot);
         if (disabled) {{
           button.classList.add('is-past');
         }}
         button.disabled = disabled;
         button.setAttribute('aria-disabled', String(disabled));
-        button.setAttribute('aria-label', slot.displayStartTime + ' ' + (disabled ? 'not bookable; past ' + scheduleTimezone + ' start time' : 'available'));
+        button.setAttribute('aria-label', slot.displayStartTime + (isAnchor ? ' confirmed class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
         button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
         button.addEventListener('click', () => {{
           if (isPastStart(day, slot)) {{
@@ -1703,6 +1777,17 @@ def render_html(payload: dict[str, Any]) -> str:
         locationRow.className = 'selected-summary-row';
         locationRow.textContent = course.location;
         summary.append(title, dateRow, timeRow, locationRow);
+        const role = course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '');
+        if (role === 'anchor') {{
+          const anchorTitle = document.createElement('strong');
+          anchorTitle.className = 'anchor-class-title';
+          anchorTitle.textContent = '⭐ Anchor Class';
+          const anchorMessage = document.createElement('div');
+          const count = Number(course.registered_count ?? course.registeredCount ?? 0);
+          anchorMessage.className = 'selected-summary-row';
+          anchorMessage.textContent = 'Join us and train with others! ' + count + ' student' + (count === 1 ? '' : 's') + ' already registered.';
+          summary.append(anchorTitle, anchorMessage);
+        }}
         const badge = document.createElement('div');
         badge.className = 'delivery-badge';
         badge.textContent = deliveryLabel(course.deliveryMode);

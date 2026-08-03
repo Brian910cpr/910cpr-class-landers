@@ -1,0 +1,16 @@
+{
+  "schema_version": "910cpr-anchor-schedule-policy.v1",
+  "default_repeat_delay_minutes": 1440,
+  "families": {
+    "aha-bls-in-person": {
+      "course_ids": ["209806", "359474"],
+      "repeat_delay_minutes": 240
+    }
+  },
+  "exact_courses": {
+    "463743": {
+      "label": "HSI Adult-only CPR",
+      "repeat_delay_minutes": 4320
+    }
+  }
+}

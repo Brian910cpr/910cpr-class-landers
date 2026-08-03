@@ -27,6 +27,7 @@ on:
       - 'data/config/travel_time_rules.json'
       - 'data/enrollware_student_snapshot.json'
       - 'data/config/block_schedule_pages.json'
+      - 'data/config/anchor_schedule_policy.json'
 
 permissions:
   contents: write
@@ -55,6 +56,9 @@ jobs:
 
       - name: Rebuild future seated schedule
         run: python -m scripts.build_schedule_future
+
+      - name: Apply confirmed seat counts
+        run: python -m scripts.apply_anchor_seat_overrides
 
       - name: Publish complete admin occupancy schedule
         run: python -m scripts.publish_admin_schedule
@@ -94,13 +98,13 @@ jobs:
               print(f"Published {page_key}: {payload.get('counts', {}).get('publicSelectableStartTimeCount', 0)} selectable starts -> {output}")
           PY
 
-      - name: Apply confirmed seat counts
-        run: python -m scripts.apply_anchor_seat_overrides
-
-      - name: Promote seated sessions and consolidate same-course offers
+      - name: Promote seated sessions and apply Anchor repeat policy
         run: |
           python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy
           python -m scripts.apply_anchor_policy
+
+      - name: Build durable seated Anchor session pages
+        run: python -m scripts.build_landers --anchors-only
 
       - name: Publish instructor and location reference feeds
         run: python -m scripts.publish_admin_reference_data
@@ -127,6 +131,7 @@ jobs:
             docs/data/admin_locations.json \
             docs/data/anchor_state.json \
             docs/data/block-selector-availability \
+            docs/classes \
             docs/admin/dashboard.html \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json

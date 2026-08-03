@@ -420,14 +420,32 @@
       font-size: .75rem;
     }
     .day-button {
-      min-height: 34px;
-      padding: 0;
+      position: relative;
+      min-height: 48px;
+      padding: 3px 3px 8px;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: .9rem;
     }
+    .day-number { position: relative; z-index: 2; }
+    .day-star { margin-left: 2px; color: #236b36; font-size: .72rem; vertical-align: top; }
+    .day-timeline {
+      position: absolute;
+      left: 3px;
+      right: 3px;
+      bottom: 3px;
+      height: 5px;
+      display: grid;
+      grid-template-columns: repeat(48, minmax(0, 1fr));
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+    }
+    .day-timeline-segment { min-width: 0; background: transparent; }
+    .day-timeline-segment.is-offered { background: #fff1a8; }
+    .day-timeline-segment.is-anchor { background: #9fd5ad; }
     .day-button.is-past,
     .start-grid button.is-past {
       color: #6b7280;
@@ -464,6 +482,11 @@
       text-align: center;
       justify-content: center;
     }
+    .start-grid button.is-speculative { background: #fff8cf; border-color: #e6d888; }
+    .start-grid button.is-anchor { background: #e1f4e5; border-color: #8ac79a; color: #174f2b; }
+    .start-grid button[aria-pressed="true"] { box-shadow: 0 0 0 3px rgba(10,102,165,.28); border-color: var(--accent); }
+    .start-grid button.is-anchor[aria-pressed="true"] { background: linear-gradient(#e1f4e5, #e1f4e5); }
+    .start-grid button.is-speculative[aria-pressed="true"] { background: linear-gradient(#fff8cf, #fff8cf); }
     .course {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -589,22 +612,8 @@
       }
     }
     </style>
-<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH');
-</script>
-<!-- End Google Tag Manager -->
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
   <div class="selector-brand-bar">
     <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
       <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
@@ -613,7 +622,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a class="selector-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
   </div>
   <header>
-    <a class="back-link" href="/index.html">← Back to Find Your Class</a>
+    <a class="back-link" href="/index.html">← Back to All Courses</a>
     <div class="page-heading-row">
       <div>
         <h1>HSI CPR, First Aid &amp; BLS Classes</h1>
@@ -621,14 +630,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="muted">Choose the HSI class that fits your requirement, then select a date and time.</p>
       </div>
       
-      <aside class="header-credential" aria-label="HSI Approved Training Center">
-        <img src="/images/HSI.png" alt="HSI Approved Training Center" loading="eager">
-        <div>
-          <span class="header-credential-eyebrow">Approved training</span>
-          <strong>HSI Approved Training Center</strong>
-          <p>HSI BLS, CPR, AED, and First Aid training at 910CPR.</p>
-        </div>
-      </aside>
     </div>
     
     <div class="family-help" aria-label="Course format guide">
@@ -700,7 +701,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="/assets/resolved-selector-availability.js?v=20260723.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-08-03T00%3A00%3A55.548123";
+    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-07-18T17%3A38%3A51.199491";
     const courseOptions = [{"courseId": "463743", "courseName": "HSI BLS Challenge", "family": "HSI", "variant": "challenge", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["challenge", "challenge", "hsi-bls", "bls"], "iconLabel": "HSI", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS Challenge course option", "deliveryBadge": "IN-PERSON", "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.", "details": {"course_key": "hsi_bls_challenge", "title": "HSI BLS Challenge", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.", "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."], "certification_issued": "HSI certification issued after successful completion.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."], "full_course_page": "/hsi.html"}}, {"courseId": "445670", "courseName": "HSI BLS + Adult First Aid", "family": "HSI", "variant": "bls-first-aid", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["bls-first-aid", "bls-first-aid", "hsi-bls-fa", "hsi-bls-first-aid"], "iconLabel": "FA", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS + Adult First Aid course option", "deliveryBadge": "BLENDED", "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.", "details": {"course_key": "hsi_bls_adult_first_aid", "title": "HSI BLS + Adult First Aid", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI blended option combining Basic Life Support with Adult First Aid/CPR/AED.", "who_this_is_for": "Workplaces, healthcare-adjacent teams, dental offices, ABA providers, and organizations that accept HSI and need both BLS and first aid coverage.", "topics_covered": ["HSI BLS", "Adult first aid", "CPR and AED", "Online coursework", "In-person skills verification"], "required_materials": ["Completed assigned HSI online coursework before the skills session."], "certification_issued": "HSI certification issued after successful completion and valid for two years.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."], "full_course_page": "/hsi.html"}}];
     const optionGroups = {"HSI": {"family": "HSI", "label": "All HSI options", "courseIds": ["463743", "445670"]}};
     const unsupportedOptions = [];
@@ -1180,14 +1181,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'day-button';
-            button.textContent = String(dayNum);
+            const stateForCourse = course => course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : 'standalone_offer');
+            const segments = Array.from({ length: 48 }, () => '');
+            let hasAnchor = false;
+            const anchorLabels = [];
+            const optionLabels = [];
+            available.startTimes.forEach(slot => {
+              slot.courses.forEach(course => {
+                const role = stateForCourse(course);
+                const [hour, minute] = slot.startTime.split(':').map(Number);
+                const startBand = Math.max(0, Math.min(47, hour * 2 + Math.floor(minute / 30)));
+                const duration = Number(course.durationMinutes || course.schedulerConsumptionMinutes || 30);
+                const endBand = Math.min(48, startBand + Math.max(1, Math.ceil(duration / 30)));
+                const segmentState = role === 'anchor' ? 'is-anchor' : 'is-offered';
+                if (role === 'anchor') {
+                  hasAnchor = true;
+                  if (!anchorLabels.includes(slot.displayStartTime)) anchorLabels.push(slot.displayStartTime);
+                } else if (!optionLabels.includes(slot.displayStartTime)) {
+                  optionLabels.push(slot.displayStartTime);
+                }
+                for (let band = startBand; band < endBand; band += 1) {
+                  if (segmentState === 'is-anchor' || !segments[band]) segments[band] = segmentState;
+                }
+              });
+            });
+            const number = document.createElement('span');
+            number.className = 'day-number';
+            number.textContent = String(dayNum);
+            if (hasAnchor) {
+              const star = document.createElement('span');
+              star.className = 'day-star';
+              star.setAttribute('aria-hidden', 'true');
+              star.textContent = '★';
+              number.appendChild(star);
+            }
+            const timeline = document.createElement('span');
+            timeline.className = 'day-timeline';
+            timeline.setAttribute('aria-hidden', 'true');
+            segments.forEach(state => {
+              const segment = document.createElement('span');
+              segment.className = 'day-timeline-segment' + (state ? ' ' + state : '');
+              timeline.appendChild(segment);
+            });
+            button.append(number, timeline);
             const disabled = !isSelectableDate(available, now);
             if (disabled) {
               button.classList.add('is-past');
             }
             button.disabled = disabled;
             button.setAttribute('aria-disabled', String(disabled));
-            button.setAttribute('aria-label', available.displayDate + ' ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times' : 'available'));
+            const activityText = [
+              anchorLabels.length ? 'Confirmed class at ' + anchorLabels.join(', ') : '',
+              optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''
+            ].filter(Boolean).join('; ');
+            button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'Not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {
               if (!isSelectableDate(available)) {
@@ -1245,14 +1292,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         slots.forEach(slot => {
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = slot.displayStartTime;
+        const anchorCourse = slot.courses.find(course => (course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '')) === 'anchor');
+        const isAnchor = Boolean(anchorCourse);
+        button.textContent = (isAnchor ? '★ ' : '') + slot.displayStartTime;
+        button.classList.add(isAnchor ? 'is-anchor' : 'is-speculative');
         const disabled = isPastStart(day, slot);
         if (disabled) {
           button.classList.add('is-past');
         }
         button.disabled = disabled;
         button.setAttribute('aria-disabled', String(disabled));
-        button.setAttribute('aria-label', slot.displayStartTime + ' ' + (disabled ? 'not bookable; past ' + scheduleTimezone + ' start time' : 'available'));
+        button.setAttribute('aria-label', slot.displayStartTime + (isAnchor ? ' confirmed class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
         button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
         button.addEventListener('click', () => {
           if (isPastStart(day, slot)) {
@@ -1299,6 +1349,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         locationRow.className = 'selected-summary-row';
         locationRow.textContent = course.location;
         summary.append(title, dateRow, timeRow, locationRow);
+        const role = course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '');
+        if (role === 'anchor') {
+          const anchorTitle = document.createElement('strong');
+          anchorTitle.className = 'anchor-class-title';
+          anchorTitle.textContent = '⭐ Anchor Class';
+          const anchorMessage = document.createElement('div');
+          const count = Number(course.registered_count ?? course.registeredCount ?? 0);
+          anchorMessage.className = 'selected-summary-row';
+          anchorMessage.textContent = 'Join us and train with others! ' + count + ' student' + (count === 1 ? '' : 's') + ' already registered.';
+          summary.append(anchorTitle, anchorMessage);
+        }
         const badge = document.createElement('div');
         badge.className = 'delivery-badge';
         badge.textContent = deliveryLabel(course.deliveryMode);

@@ -420,14 +420,32 @@
       font-size: .75rem;
     }
     .day-button {
-      min-height: 34px;
-      padding: 0;
+      position: relative;
+      min-height: 48px;
+      padding: 3px 3px 8px;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: .9rem;
     }
+    .day-number { position: relative; z-index: 2; }
+    .day-star { margin-left: 2px; color: #236b36; font-size: .72rem; vertical-align: top; }
+    .day-timeline {
+      position: absolute;
+      left: 3px;
+      right: 3px;
+      bottom: 3px;
+      height: 5px;
+      display: grid;
+      grid-template-columns: repeat(48, minmax(0, 1fr));
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+    }
+    .day-timeline-segment { min-width: 0; background: transparent; }
+    .day-timeline-segment.is-offered { background: #fff1a8; }
+    .day-timeline-segment.is-anchor { background: #9fd5ad; }
     .day-button.is-past,
     .start-grid button.is-past {
       color: #6b7280;
@@ -464,6 +482,11 @@
       text-align: center;
       justify-content: center;
     }
+    .start-grid button.is-speculative { background: #fff8cf; border-color: #e6d888; }
+    .start-grid button.is-anchor { background: #e1f4e5; border-color: #8ac79a; color: #174f2b; }
+    .start-grid button[aria-pressed="true"] { box-shadow: 0 0 0 3px rgba(10,102,165,.28); border-color: var(--accent); }
+    .start-grid button.is-anchor[aria-pressed="true"] { background: linear-gradient(#e1f4e5, #e1f4e5); }
+    .start-grid button.is-speculative[aria-pressed="true"] { background: linear-gradient(#fff8cf, #fff8cf); }
     .course {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -589,22 +612,8 @@
       }
     }
     </style>
-<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH');
-</script>
-<!-- End Google Tag Manager -->
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
   <div class="selector-brand-bar">
     <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
       <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
@@ -613,7 +622,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a class="selector-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
   </div>
   <header>
-    <a class="back-link" href="/index.html">← Back to Find Your Class</a>
+    <a class="back-link" href="/index.html">← Back to All Courses</a>
     <div class="page-heading-row">
       <div>
         <h1>Heartsaver CPR, AED &amp; First Aid Classes</h1>
@@ -621,14 +630,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="muted">Choose the class that fits your needs, then select a date and time.</p>
       </div>
       
-      <aside class="header-credential" aria-label="American Heart Association Training Site">
-        <img src="/images/Logo_circle_AHA-Training-Site.webp" alt="American Heart Association Authorized Training Site" loading="eager">
-        <div>
-          <span class="header-credential-eyebrow">Authorized training</span>
-          <strong>American Heart Association Training Site</strong>
-          <p>AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR.</p>
-        </div>
-      </aside>
     </div>
     
     <div class="family-help" aria-label="Course format guide">
@@ -700,7 +701,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="/assets/resolved-selector-availability.js?v=20260723.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/heartsaver.json?v=2026-08-03T00%3A00%3A55.548123";
+    const availabilityUrl = "/data/block-selector-availability/heartsaver.json?v=2026-07-18T17%3A38%3A51.199491";
     const courseOptions = [{"courseId": "344085", "courseName": "AHA Heartsaver CPR AED", "family": "Heartsaver", "variant": "cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["cpr-aed", "cpr-aed"], "iconLabel": "CPR", "imageUrl": "/images/HS-CPR-AED.jpeg", "imageFit": "contain", "imageAlt": "AHA Heartsaver CPR AED course option", "deliveryBadge": "IN-PERSON", "clarification": "CPR and AED training completed entirely in person.", "details": {"course_key": "aha_heartsaver_cpr_aed", "title": "AHA Heartsaver CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "CPR and AED training for workplace, school, family, and community requirements that do not require first aid.", "who_this_is_for": "Students who need CPR/AED certification without a first aid component.", "topics_covered": ["Adult, child, and infant CPR concepts", "AED use", "Choking response", "When breaths matter", "Emergency action steps"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["This does not satisfy requirements that specifically ask for First Aid + CPR + AED.", "This is not BLS for healthcare providers."], "full_course_page": "/courses/heartsaver-cpr-aed.html"}}, {"courseId": "209808", "courseName": "AHA Heartsaver CPR AED Online", "family": "Heartsaver", "variant": "cpr-aed-online", "deliveryMode": "blended", "recommended": false, "deepLinkAliases": ["cpr-aed-online", "cpr-aed-online", "heartcode-first-aid-cpr-aed"], "iconLabel": "CPR", "imageUrl": "/images/hc_A_ss_click.png", "imageFit": "contain", "imageAlt": "AHA Heartsaver CPR AED Online course option", "deliveryBadge": "BLENDED", "clarification": "Complete the online CPR/AED course first, then attend a skills session.", "details": {"course_key": "aha_heartsaver_cpr_aed_online", "title": "AHA Heartsaver CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended CPR/AED option with online coursework followed by an in-person skills session.", "who_this_is_for": "Students whose requirement accepts AHA Heartsaver CPR AED and who prefer online coursework before skills practice.", "topics_covered": ["Online CPR/AED coursework", "In-person CPR skills", "AED skills", "Choking response skills"], "required_materials": ["Completed AHA Heartsaver CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["This does not satisfy requirements that specifically ask for First Aid + CPR + AED.", "Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-cpr-aed.html"}}, {"courseId": "209809", "courseName": "AHA Heartsaver First Aid CPR AED", "family": "Heartsaver", "variant": "first-aid-cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["first-aid-cpr-aed", "first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/heartsaver_general.png", "imageFit": "contain", "imageAlt": "AHA Heartsaver First Aid CPR AED course option", "deliveryBadge": "IN-PERSON", "clarification": "First Aid, CPR, and AED classroom option.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed", "title": "AHA Heartsaver First Aid CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "First Aid, CPR, and AED training for workplace, school, and professional requirements.", "who_this_is_for": "Students who need a combined first aid, CPR, and AED certification for work, school, licensing, or general preparedness.", "topics_covered": ["First aid basics", "CPR and AED use", "Choking response", "Opioid emergency awareness", "Stroke warning signs", "Seizures", "Asthma support", "Heat illness", "Burns and common injuries"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use this path when your requirement specifically includes first aid plus CPR/AED."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "329495", "courseName": "AHA Heartsaver First Aid CPR AED - Blended", "family": "Heartsaver", "variant": "first-aid-cpr-aed-blended", "deliveryMode": "blended", "recommended": false, "deepLinkAliases": ["first-aid-cpr-aed-blended", "first-aid-cpr-aed-blended"], "iconLabel": "BL", "imageUrl": "/images/heartsaver_general.png", "imageFit": "contain", "imageAlt": "AHA Heartsaver First Aid CPR AED - Blended course option", "deliveryBadge": "BLENDED", "clarification": "Blended First Aid, CPR, and AED option.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed_blended", "title": "AHA Heartsaver First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended First Aid/CPR/AED option with online coursework and an in-person skills session.", "who_this_is_for": "Students whose requirement accepts blended Heartsaver First Aid CPR AED.", "topics_covered": ["Online first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA Heartsaver First Aid CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "351632", "courseName": "AHA Heartsaver Pediatric First Aid / CPR / AED", "family": "Heartsaver", "variant": "pediatric-first-aid-cpr-aed-in-person", "deliveryMode": "in-person", "recommended": false, "deepLinkAliases": ["pediatric-first-aid-cpr-aed-in-person", "pediatric-first-aid-cpr-aed-in-person"], "iconLabel": "PED", "imageUrl": "/images/HS-PEDI-FA-CPR-AED.jpeg", "imageFit": "contain", "imageAlt": "AHA Heartsaver Pediatric First Aid / CPR / AED course option", "deliveryBadge": "IN-PERSON", "clarification": "Pediatric First Aid, CPR, and AED training completed in person.", "details": {"course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed", "title": "AHA Heartsaver Pediatric First Aid / CPR / AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Pediatric first aid, CPR, AED, and emergency recognition for childcare, school, camp, and youth settings.", "who_this_is_for": "Childcare providers, school staff, camp staff, caregivers, and youth-program teams that need pediatric first aid with CPR/AED.", "topics_covered": ["Infant and child CPR concepts", "AED use", "Choking response", "Pediatric first aid", "Seizures", "Asthma", "Severe allergic reactions", "Heat illness", "Burns", "Injury care"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver Pediatric First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Designed for pediatric and childcare-related requirements.", "North Carolina childcare programs should verify the exact requirement with their licensing or employer contact."], "full_course_page": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html"}}, {"courseId": "251545", "courseName": "AHA Heartsaver Pediatric First Aid CPR AED Online", "family": "Heartsaver", "variant": "pediatric", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["pediatric", "pediatric-first-aid-cpr-aed"], "iconLabel": "PED", "imageUrl": "/images/HS-PEDI-FA-CPR-AED.jpeg", "imageFit": "contain", "imageAlt": "AHA Heartsaver Pediatric First Aid CPR AED Online course option", "deliveryBadge": "BLENDED", "clarification": "Complete the pediatric online course first, then attend a skills session.", "details": {"course_key": "aha_heartsaver_pediatric_first_aid_cpr_aed_online", "title": "AHA Heartsaver Pediatric First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended pediatric First Aid/CPR/AED option with online coursework and in-person skills.", "who_this_is_for": "Childcare, school, camp, and caregiver students whose requirement accepts the AHA blended pediatric path.", "topics_covered": ["Online pediatric first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected pediatric first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA pediatric Heartsaver online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver Pediatric First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-pediatric-first-aid-cpr-aed.html"}}];
     const optionGroups = {"Heartsaver": {"family": "Heartsaver", "label": "All AHA Heartsaver options", "courseIds": ["344085", "209808", "209809", "329495", "351632", "251545"]}};
     const unsupportedOptions = [];
@@ -1180,14 +1181,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'day-button';
-            button.textContent = String(dayNum);
+            const stateForCourse = course => course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : 'standalone_offer');
+            const segments = Array.from({ length: 48 }, () => '');
+            let hasAnchor = false;
+            const anchorLabels = [];
+            const optionLabels = [];
+            available.startTimes.forEach(slot => {
+              slot.courses.forEach(course => {
+                const role = stateForCourse(course);
+                const [hour, minute] = slot.startTime.split(':').map(Number);
+                const startBand = Math.max(0, Math.min(47, hour * 2 + Math.floor(minute / 30)));
+                const duration = Number(course.durationMinutes || course.schedulerConsumptionMinutes || 30);
+                const endBand = Math.min(48, startBand + Math.max(1, Math.ceil(duration / 30)));
+                const segmentState = role === 'anchor' ? 'is-anchor' : 'is-offered';
+                if (role === 'anchor') {
+                  hasAnchor = true;
+                  if (!anchorLabels.includes(slot.displayStartTime)) anchorLabels.push(slot.displayStartTime);
+                } else if (!optionLabels.includes(slot.displayStartTime)) {
+                  optionLabels.push(slot.displayStartTime);
+                }
+                for (let band = startBand; band < endBand; band += 1) {
+                  if (segmentState === 'is-anchor' || !segments[band]) segments[band] = segmentState;
+                }
+              });
+            });
+            const number = document.createElement('span');
+            number.className = 'day-number';
+            number.textContent = String(dayNum);
+            if (hasAnchor) {
+              const star = document.createElement('span');
+              star.className = 'day-star';
+              star.setAttribute('aria-hidden', 'true');
+              star.textContent = '★';
+              number.appendChild(star);
+            }
+            const timeline = document.createElement('span');
+            timeline.className = 'day-timeline';
+            timeline.setAttribute('aria-hidden', 'true');
+            segments.forEach(state => {
+              const segment = document.createElement('span');
+              segment.className = 'day-timeline-segment' + (state ? ' ' + state : '');
+              timeline.appendChild(segment);
+            });
+            button.append(number, timeline);
             const disabled = !isSelectableDate(available, now);
             if (disabled) {
               button.classList.add('is-past');
             }
             button.disabled = disabled;
             button.setAttribute('aria-disabled', String(disabled));
-            button.setAttribute('aria-label', available.displayDate + ' ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times' : 'available'));
+            const activityText = [
+              anchorLabels.length ? 'Confirmed class at ' + anchorLabels.join(', ') : '',
+              optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''
+            ].filter(Boolean).join('; ');
+            button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'Not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {
               if (!isSelectableDate(available)) {
@@ -1245,14 +1292,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         slots.forEach(slot => {
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = slot.displayStartTime;
+        const anchorCourse = slot.courses.find(course => (course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '')) === 'anchor');
+        const isAnchor = Boolean(anchorCourse);
+        button.textContent = (isAnchor ? '★ ' : '') + slot.displayStartTime;
+        button.classList.add(isAnchor ? 'is-anchor' : 'is-speculative');
         const disabled = isPastStart(day, slot);
         if (disabled) {
           button.classList.add('is-past');
         }
         button.disabled = disabled;
         button.setAttribute('aria-disabled', String(disabled));
-        button.setAttribute('aria-label', slot.displayStartTime + ' ' + (disabled ? 'not bookable; past ' + scheduleTimezone + ' start time' : 'available'));
+        button.setAttribute('aria-label', slot.displayStartTime + (isAnchor ? ' confirmed class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
         button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
         button.addEventListener('click', () => {
           if (isPastStart(day, slot)) {
@@ -1299,6 +1349,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         locationRow.className = 'selected-summary-row';
         locationRow.textContent = course.location;
         summary.append(title, dateRow, timeRow, locationRow);
+        const role = course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '');
+        if (role === 'anchor') {
+          const anchorTitle = document.createElement('strong');
+          anchorTitle.className = 'anchor-class-title';
+          anchorTitle.textContent = '⭐ Anchor Class';
+          const anchorMessage = document.createElement('div');
+          const count = Number(course.registered_count ?? course.registeredCount ?? 0);
+          anchorMessage.className = 'selected-summary-row';
+          anchorMessage.textContent = 'Join us and train with others! ' + count + ' student' + (count === 1 ? '' : 's') + ' already registered.';
+          summary.append(anchorTitle, anchorMessage);
+        }
         const badge = document.createElement('div');
         badge.className = 'delivery-badge';
         badge.textContent = deliveryLabel(course.deliveryMode);

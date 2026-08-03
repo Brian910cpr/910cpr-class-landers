@@ -1,6 +1,8 @@
 import unittest
 
-from scripts.anchor_state import ANCHOR_SYMBOL, annotate_offer, promote_seated_sessions, same_course_anchor
+from datetime import datetime
+
+from scripts.anchor_state import ANCHOR_SYMBOL, annotate_offer, in_repeat_bubble, promote_seated_sessions, repeat_scope_key, same_course_anchor
 
 
 def session(**overrides):
@@ -81,6 +83,20 @@ class AnchorStateTests(unittest.TestCase):
             anchors=anchors,
         )
         self.assertIsNone(selected)
+
+    def test_repeat_bubble_projects_backward_and_forward_start_to_start(self):
+        anchor = datetime.fromisoformat("2026-08-05T12:00:00-04:00")
+        self.assertTrue(in_repeat_bubble(datetime.fromisoformat("2026-08-05T08:00:00-04:00"), anchor, 240))
+        self.assertTrue(in_repeat_bubble(datetime.fromisoformat("2026-08-05T16:00:00-04:00"), anchor, 240))
+        self.assertFalse(in_repeat_bubble(datetime.fromisoformat("2026-08-05T16:30:00-04:00"), anchor, 240))
+
+    def test_shared_bls_family_and_exact_low_demand_scopes(self):
+        policy = {
+            "families": {"bls": {"course_ids": ["209806", "359474"], "repeat_delay_minutes": 240}},
+            "exact_courses": {"463743": {"repeat_delay_minutes": 4320}},
+        }
+        self.assertEqual(repeat_scope_key("209806", policy), repeat_scope_key("359474", policy))
+        self.assertEqual(repeat_scope_key("463743", policy), ("course:463743", 4320))
 
 
 if __name__ == "__main__":

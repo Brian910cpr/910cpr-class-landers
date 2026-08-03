@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, asdict
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 from typing import Any, Iterable
 
@@ -165,3 +165,24 @@ def annotate_offer(
         result.setdefault("landing_page_required", False)
         result.setdefault("external_publication_eligible", False)
     return result
+
+
+def repeat_scope_key(course_id: str, policy: dict[str, Any]) -> tuple[str, int]:
+    """Return the configured repeat scope and start-to-start delay for a course."""
+    cid = _text(course_id)
+    exact = policy.get("exact_courses", {}).get(cid, {})
+    if exact:
+        return f"course:{cid}", max(0, int(exact.get("repeat_delay_minutes") or 0))
+    for family_id, family in policy.get("families", {}).items():
+        if cid in {_text(item) for item in family.get("course_ids", [])}:
+            return f"family:{family_id}", max(0, int(family.get("repeat_delay_minutes") or 0))
+    default = max(0, int(policy.get("default_repeat_delay_minutes") or 0))
+    return f"course:{cid}", default
+
+
+def in_repeat_bubble(start: datetime, anchor_start: datetime, delay_minutes: int) -> bool:
+    """Repeat delays are inclusive, bidirectional, and measured start-to-start."""
+    if (start.tzinfo is None) != (anchor_start.tzinfo is None):
+        start = start.replace(tzinfo=None)
+        anchor_start = anchor_start.replace(tzinfo=None)
+    return anchor_start - timedelta(minutes=delay_minutes) <= start <= anchor_start + timedelta(minutes=delay_minutes)
