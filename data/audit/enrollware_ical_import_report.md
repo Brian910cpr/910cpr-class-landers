@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-08-03T14:19:35.133685-04:00`
+- Generated at: `2026-08-03T16:12:46.294166-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `364`
-- Public sessions created: `364`
+- iCal events read: `363`
+- Public sessions created: `363`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `322`
+- Registration unavailable sessions marked not direct-bookable: `321`
 - Unmapped sessions: `23`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776762` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-05-05T18:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774041` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-05-06T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776856` | enrollware_registration_closed | USCG Elementary First Aid | CPR (AHA Heartsaver®) | 2026-05-06T09:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776130` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-05-06T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `13295707` | enrollware_registration_closed | AHA ACLS Provider (Initial) | 2026-05-15T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13295727` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-05-15T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774013` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-05-16T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13496218` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-05-16T09:00:00-04:00 | ?Lanes Creek Volunteer Fire Department |
 
 ## Unmapped Examples
 
