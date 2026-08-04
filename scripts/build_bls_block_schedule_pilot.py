@@ -1790,17 +1790,6 @@ def render_html(payload: dict[str, Any]) -> str:
         locationRow.className = 'selected-summary-row';
         locationRow.textContent = course.location;
         summary.append(title, dateRow, timeRow, locationRow);
-        const role = course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '');
-        if (role === 'anchor') {{
-          const anchorTitle = document.createElement('strong');
-          anchorTitle.className = 'anchor-class-title';
-          anchorTitle.textContent = '⭐ Anchor Class';
-          const anchorMessage = document.createElement('div');
-          const count = Number(course.registered_count ?? course.registeredCount ?? 0);
-          anchorMessage.className = 'selected-summary-row';
-          anchorMessage.textContent = 'Join us and train with others! ' + count + ' student' + (count === 1 ? '' : 's') + ' already registered.';
-          summary.append(anchorTitle, anchorMessage);
-        }}
         const badge = document.createElement('div');
         badge.className = 'delivery-badge';
         badge.textContent = deliveryLabel(course.deliveryMode);

@@ -28,6 +28,8 @@ class AnchorCalendarAndLanderTests(unittest.TestCase):
             self.assertNotIn("day-timeline-segment.is-offered", html, page)
             self.assertIn("background: transparent", html, page)
             self.assertIn("★", html, page)
+            self.assertNotIn("⭐ Anchor Class", html, page)
+            self.assertNotIn("Join us and train with others!", html, page)
             self.assertNotIn("availability-dot", html, page)
 
     def test_bls_feed_has_three_anchors_and_at_most_one_position_per_direction(self):
