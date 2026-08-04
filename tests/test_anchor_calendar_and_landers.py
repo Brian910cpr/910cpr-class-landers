@@ -26,6 +26,7 @@ class AnchorCalendarAndLanderTests(unittest.TestCase):
             self.assertIn("is-available", html, page)
             self.assertIn("register-panel", html, page)
             self.assertNotIn("day-timeline-segment.is-offered", html, page)
+            self.assertIn("background: transparent", html, page)
             self.assertIn("★", html, page)
             self.assertNotIn("availability-dot", html, page)
 
