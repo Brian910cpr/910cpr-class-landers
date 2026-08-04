@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-04T19:09:35.409470+00:00",
+  "generated_at": "2026-08-04T20:52:31.614953+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-04T19:09:34.841608+00:00",
+      "generated_at": "2026-08-04T20:52:31.042419+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-04T19:09:35.409470+00:00",
-      "event_count": 122
+      "generated_at": "2026-08-04T20:52:31.614953+00:00",
+      "event_count": 118
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-04T19:09:35.085435+00:00",
+      "generated_at": "2026-08-04T20:52:31.291955+00:00",
       "event_count": 0
     }
   ],
@@ -34,32 +34,10 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR Shift — Unavailable",
-      "start": "2026-08-07T10:00:00+00:00",
-      "end": "2026-08-07T22:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "Busco Beach",
       "start": "2026-08-09T04:00:00+00:00",
       "end": "2026-08-10T03:30:00+00:00",
       "location": "Busco Beach and ATV Park\\, 1243 Bryan Blvd\\, Goldsboro\\, NC 27530\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Unavailable",
-      "start": "2026-08-11T10:00:00+00:00",
-      "end": "2026-08-11T22:00:00+00:00",
-      "location": "",
       "status": "CONFIRMED"
     },
     {
@@ -79,19 +57,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR Shift — Unavailable",
-      "start": "2026-08-13T10:00:00+00:00",
-      "end": "2026-08-13T22:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Unavailable",
-      "start": "2026-08-18T10:00:00+00:00",
-      "end": "2026-08-18T22:00:00+00:00",
+      "start": "2026-08-14T22:00:00+00:00",
+      "end": "2026-08-15T10:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -157,7 +124,7 @@
       "instructor_key": "brian",
       "title": "Busy",
       "start": "2026-08-20T12:00:00+00:00",
-      "end": "2026-08-20T14:30:00+00:00",
+      "end": "2026-08-20T14:45:00+00:00",
       "location": "",
       "status": "UNKNOWN"
     },
@@ -254,17 +221,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR Shift — Unavailable",
-      "start": "2026-08-25T10:00:00+00:00",
-      "end": "2026-08-25T22:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Pickup",
       "start": "2026-08-25T15:00:00-04:00",
       "end": "2026-08-25T17:30:00-04:00",
@@ -331,10 +287,10 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR Shift — Unavailable",
-      "start": "2026-08-28T10:00:00+00:00",
-      "end": "2026-08-28T22:00:00+00:00",
-      "location": "",
+      "title": "CFA Pickup",
+      "start": "2026-08-28T15:00:00-04:00",
+      "end": "2026-08-28T17:30:00-04:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
     {
@@ -342,10 +298,10 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-08-28T15:00:00-04:00",
-      "end": "2026-08-28T17:30:00-04:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "title": "ADR Shift — Unavailable",
+      "start": "2026-08-28T22:00:00+00:00",
+      "end": "2026-08-29T10:00:00+00:00",
+      "location": "",
       "status": "CONFIRMED"
     },
     {
@@ -368,17 +324,6 @@
       "start": "2026-08-31T06:30:00-04:00",
       "end": "2026-08-31T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Unavailable",
-      "start": "2026-08-31T10:00:00+00:00",
-      "end": "2026-08-31T22:00:00+00:00",
-      "location": "",
       "status": "CONFIRMED"
     },
     {
@@ -1368,6 +1313,17 @@
       "title": "CFA Drop Off",
       "start": "2026-11-02T06:30:00-05:00",
       "end": "2026-11-02T07:45:00-05:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Pickup",
+      "start": "2026-11-02T15:00:00-05:00",
+      "end": "2026-11-02T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     }
