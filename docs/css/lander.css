@@ -4179,3 +4179,17 @@ textarea {
     padding: 22px 18px 26px;
   }
 }
+/* Confirmed seated session state. */
+.anchor-class-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .45rem 1rem;
+  margin: 0 0 1rem;
+  padding: .85rem 1rem;
+  border: 1px solid #9fd5ad;
+  border-radius: 12px;
+  background: #e6f6e9;
+  color: #174f2b;
+}
+.anchor-class-banner strong { font-size: 1.05rem; }

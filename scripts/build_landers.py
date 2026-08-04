@@ -20,10 +20,12 @@ try:
     from scripts.title_cleaner import normalize_course_title, seo_title_for_session
     from scripts.build_metadata import apply_build_metadata, current_build_metadata
     from scripts.public_class_eligibility import session_has_public_class_location
+    from scripts.dockmaster import dockmaster_comment
 except ModuleNotFoundError:
     from title_cleaner import normalize_course_title, seo_title_for_session
     from build_metadata import apply_build_metadata, current_build_metadata
     from public_class_eligibility import session_has_public_class_location
+    from dockmaster import dockmaster_comment
 
 TZ = ZoneInfo("America/New_York")
 
@@ -88,6 +90,15 @@ def strip_html(text: str) -> str:
 
 def normalize_whitespace(text: str) -> str:
     return re.sub(r"\s+", " ", str(text or "")).strip()
+
+
+def without_build_metadata(value: str) -> str:
+    value = re.sub(r"<!-- BUILD_CODE: .*? -->\s*", "", value, count=1, flags=re.S)
+    value = re.sub(r'<meta\s+name=["\']build-date["\'][^>]*>\s*', "", value, count=1, flags=re.I)
+    value = re.sub(r'<div\s+class=["\']build-stamp["\'][^>]*>.*?</div>', "", value, count=1, flags=re.I | re.S)
+    value = re.sub(r'(build_stamp\s*:\s*)["\'][^"\']*["\']', r'\1""', value, count=1)
+    value = re.sub(r'("validFrom"\s*:\s*)"[^"]*"', r'\1""', value, count=1)
+    return value.strip()
 
 
 def display_course_name(course_raw: str) -> str:
@@ -2064,6 +2075,7 @@ def render_who_for_section(session: dict, course_display: str) -> str:
 
 
 TEMPLATE = """<!DOCTYPE html>
+{dockmaster_comment}
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -2072,6 +2084,15 @@ TEMPLATE = """<!DOCTYPE html>
 <meta name="description" content="{meta_description}">
 <meta name="robots" content="{robots_value}">
 <link rel="canonical" href="{canonical_url}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{page_title}">
+<meta property="og:description" content="{meta_description}">
+<meta property="og:url" content="{canonical_url}">
+<meta property="og:image" content="{social_image_url}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{page_title}">
+<meta name="twitter:description" content="{meta_description}">
+<meta name="twitter:image" content="{social_image_url}">
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="shortcut icon" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
@@ -2093,6 +2114,8 @@ TEMPLATE = """<!DOCTYPE html>
     </header>
 
     {state_notice}
+
+    {anchor_banner}
 
     {top_inventory_html}
 
@@ -2346,6 +2369,11 @@ def main() -> None:
         help="Choose the input dataset. Defaults to future to preserve current behavior.",
     )
     parser.add_argument(
+        "--anchors-only",
+        action="store_true",
+        help="Build only public sessions with a confirmed seat; preserve every existing historical page.",
+    )
+    parser.add_argument(
         "--data-file",
         default="",
         help="Optional explicit input JSON path, relative to repo root.",
@@ -2372,6 +2400,8 @@ def main() -> None:
     data_file = resolve_data_file(args.dataset, args.data_file.strip() or None)
 
     canonical_sessions = load_sessions_from_file(data_file)
+    if args.anchors_only:
+        canonical_sessions = [session for session in canonical_sessions if session_enrolled_count(session) >= 1]
     historical_sessions = []
     for source in (FULL_DATA_FILE, DEFAULT_DATA_FILE):
         if source.resolve() != data_file.resolve():
@@ -2386,7 +2416,7 @@ def main() -> None:
 
     existing_page_ids = {path.stem for path in OUTPUT_DIR.glob("*.html") if path.name.lower() != "index.html"}
     deleted_page_ids = []
-    for class_id in sorted(existing_page_ids - canonical_ids):
+    for class_id in ([] if args.anchors_only else sorted(existing_page_ids - canonical_ids)):
         path = OUTPUT_DIR / f"{class_id}.html"
         if path.exists():
             path.unlink()
@@ -2648,10 +2678,15 @@ def main() -> None:
         trust_badge_copy = same_day_note(session) or "Structured course metadata is shown before schedule alternatives."
 
         html_doc = TEMPLATE.format(
+            dockmaster_comment=dockmaster_comment(session_id),
             page_title=escape(page_title),
             meta_description=escape(meta_description),
             robots_value=robots_for_lander_status(lander_status, register),
             canonical_url=escape(canonical_url),
+            social_image_url=escape(
+                (schema_image_url if str(schema_image_url or "").startswith("http") else f"https://www.910cpr.com{schema_image_url or '/images/logo.png'}"),
+                quote=True,
+            ),
             gtm_head=render_gtm_head(),
             gtm_body=render_gtm_body(),
             schema_block=make_schema(
@@ -2669,6 +2704,13 @@ def main() -> None:
                 valid_from_dt=schema_valid_from_dt,
             ) if status_is_indexable(lander_status, register) else "",
             state_notice=state_notice,
+            anchor_banner=(
+                f'<section class="anchor-class-banner" aria-label="Confirmed Anchor Class">'
+                f'<strong>⭐ Anchor Class</strong><span>Join us and train with others!</span>'
+                f'<span>{session_enrolled_count(session)} student{("" if session_enrolled_count(session) == 1 else "s")} already registered.</span>'
+                f'</section>'
+                if session_enrolled_count(session) >= 1 else ""
+            ),
             top_inventory_html=top_inventory_html,
             month_abbr=escape(month_abbr),
             day_num=escape(day_num),
@@ -2708,6 +2750,10 @@ def main() -> None:
         )
         html_doc = apply_build_metadata(html_doc, build_meta)
 
+        if args.anchors_only and output_path.exists():
+            existing_html = output_path.read_text(encoding="utf-8", errors="ignore")
+            if without_build_metadata(existing_html) == without_build_metadata(html_doc):
+                html_doc = existing_html
         output_path.write_text(html_doc, encoding="utf-8")
         count += 1
 

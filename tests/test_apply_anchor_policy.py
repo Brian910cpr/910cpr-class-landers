@@ -1,7 +1,7 @@
 import unittest
 
 from scripts.anchor_state import promote_seated_sessions
-from scripts.apply_anchor_policy import consolidate_node
+from scripts.apply_anchor_policy import apply_selector_policy, consolidate_node
 from scripts.apply_anchor_seat_overrides import apply as apply_overrides
 
 
@@ -96,6 +96,43 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         result = consolidate_node(offer, anchors, stats)
         self.assertEqual(result["session_id"], "51239")
         self.assertEqual(result["start_at"], "2026-08-05T13:00:00-04:00")
+
+    def test_one_barnacle_each_direction_no_recursion_and_outside_returns(self):
+        anchors = promote_seated_sessions([self.sessions[0]])
+        starts = ["04:30", "05:30", "07:30", "09:00", "09:30", "10:00", "11:30", "13:30", "14:00"]
+        courses = []
+        dates = [{"date": "2026-08-05", "displayDate": "Wednesday, August 5, 2026", "startTimes": []}]
+        for clock in starts:
+            offer = {
+                "date": "2026-08-05", "displayDate": dates[0]["displayDate"], "startTime": clock,
+                "displayStartTime": clock, "courseId": "359474", "courseName": "BLS Renewal",
+                "location": ":: Wilmington; Shipyard Blvd - B", "appointmentUrl": f"https://example.test/{clock}",
+            }
+            if clock == "09:30":
+                offer["appointmentUrl"] = self.sessions[0]["registration_url"]
+            dates[0]["startTimes"].append({"startTime": clock, "displayStartTime": clock, "courses": [offer]})
+            courses.append(offer)
+        payload = {"dates": dates, "counts": {}}
+        policy = {"families": {"bls": {"course_ids": ["209806", "359474"], "repeat_delay_minutes": 240}}}
+        result = apply_selector_policy(payload, anchors, policy)
+        rendered = [course for day in result["dates"] for slot in day["startTimes"] for course in slot["courses"]]
+        roles = [item.get("schedule_role") for item in rendered]
+        self.assertEqual(roles.count("anchor"), 1)
+        self.assertGreaterEqual(roles.count("barnacle"), 2)
+        self.assertEqual({item["startTime"] for item in rendered if item.get("schedule_role") == "barnacle"}, {"09:00", "10:00"})
+        self.assertIn("04:30", {item["startTime"] for item in rendered})
+        self.assertIn("14:00", {item["startTime"] for item in rendered})
+        self.assertNotIn("07:30", {item["startTime"] for item in rendered})
+
+    def test_other_occupancy_can_push_first_surviving_start_later(self):
+        anchors = promote_seated_sessions([self.sessions[0]])
+        # The hard-legal input has no 2:00 PM offer; policy must not fabricate one.
+        offer = {"date": "2026-08-05", "displayDate": "Wednesday", "startTime": "15:30", "displayStartTime": "3:30 PM", "courseId": "359474", "courseName": "BLS Renewal", "location": ":: Wilmington; Shipyard Blvd - B", "appointmentUrl": "https://example.test/1530"}
+        payload = {"dates": [{"date": "2026-08-05", "displayDate": "Wednesday", "startTimes": [{"startTime": "15:30", "displayStartTime": "3:30 PM", "courses": [offer]}]}], "counts": {}}
+        policy = {"families": {"bls": {"course_ids": ["209806", "359474"], "repeat_delay_minutes": 240}}}
+        result = apply_selector_policy(payload, anchors, policy)
+        starts = [slot["startTime"] for day in result["dates"] for slot in day["startTimes"]]
+        self.assertEqual(starts, ["15:30"])
 
 
 if __name__ == "__main__":

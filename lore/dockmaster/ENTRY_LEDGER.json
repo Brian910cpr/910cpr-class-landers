@@ -1,0 +1,9 @@
+{
+  "schema_version": "dockmaster-entry-ledger.v1",
+  "entries": [
+    {"id": "0001", "purpose": "session_page", "text": "A proper berth has a name, a time, and a clear way aboard. Anything less leaves good people pacing the quay."},
+    {"id": "0002", "purpose": "session_page", "text": "I keep the marker after the vessel has gone. A late traveler still deserves to know where the next safe passage begins."},
+    {"id": "0003", "purpose": "session_page", "text": "Once one passenger commits, the departure is real. Then the useful work is helping the others find it."}
+  ],
+  "assignments": {}
+}

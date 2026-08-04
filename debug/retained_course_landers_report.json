@@ -1,1524 +1,229 @@
 {
   "dataset_used": "docs/data/schedule_future.json",
   "pages_deleted_count": 0,
-  "live_specific_class_pages_count": 218,
-  "retained_course_landers_count": 80,
-  "needs_review_count": 0,
+  "live_specific_class_pages_count": 3,
+  "retained_course_landers_count": 0,
+  "needs_review_count": 34,
   "live_specific_class_pages": [
     {
-      "class_id": "10009277",
-      "path": "docs/classes/10009277.html"
+      "class_id": "13787687",
+      "path": "docs/classes/13787687.html"
     },
     {
-      "class_id": "12774032",
-      "path": "docs/classes/12774032.html"
+      "class_id": "13818252",
+      "path": "docs/classes/13818252.html"
     },
     {
-      "class_id": "12774040",
-      "path": "docs/classes/12774040.html"
-    },
-    {
-      "class_id": "12774085",
-      "path": "docs/classes/12774085.html"
-    },
-    {
-      "class_id": "12774086",
-      "path": "docs/classes/12774086.html"
-    },
-    {
-      "class_id": "12774087",
-      "path": "docs/classes/12774087.html"
-    },
-    {
-      "class_id": "12774088",
-      "path": "docs/classes/12774088.html"
-    },
-    {
-      "class_id": "12774094",
-      "path": "docs/classes/12774094.html"
-    },
-    {
-      "class_id": "12774095",
-      "path": "docs/classes/12774095.html"
-    },
-    {
-      "class_id": "12774096",
-      "path": "docs/classes/12774096.html"
-    },
-    {
-      "class_id": "12774097",
-      "path": "docs/classes/12774097.html"
-    },
-    {
-      "class_id": "12774325",
-      "path": "docs/classes/12774325.html"
-    },
-    {
-      "class_id": "12774326",
-      "path": "docs/classes/12774326.html"
-    },
-    {
-      "class_id": "12774334",
-      "path": "docs/classes/12774334.html"
-    },
-    {
-      "class_id": "12774335",
-      "path": "docs/classes/12774335.html"
-    },
-    {
-      "class_id": "12774336",
-      "path": "docs/classes/12774336.html"
-    },
-    {
-      "class_id": "12774337",
-      "path": "docs/classes/12774337.html"
-    },
-    {
-      "class_id": "12774338",
-      "path": "docs/classes/12774338.html"
-    },
-    {
-      "class_id": "12774344",
-      "path": "docs/classes/12774344.html"
-    },
-    {
-      "class_id": "12774345",
-      "path": "docs/classes/12774345.html"
-    },
-    {
-      "class_id": "12774346",
-      "path": "docs/classes/12774346.html"
-    },
-    {
-      "class_id": "12774347",
-      "path": "docs/classes/12774347.html"
-    },
-    {
-      "class_id": "12774348",
-      "path": "docs/classes/12774348.html"
-    },
-    {
-      "class_id": "12774548",
-      "path": "docs/classes/12774548.html"
-    },
-    {
-      "class_id": "12774571",
-      "path": "docs/classes/12774571.html"
-    },
-    {
-      "class_id": "12774575",
-      "path": "docs/classes/12774575.html"
-    },
-    {
-      "class_id": "12774582",
-      "path": "docs/classes/12774582.html"
-    },
-    {
-      "class_id": "12774584",
-      "path": "docs/classes/12774584.html"
-    },
-    {
-      "class_id": "12774585",
-      "path": "docs/classes/12774585.html"
-    },
-    {
-      "class_id": "12774586",
-      "path": "docs/classes/12774586.html"
-    },
-    {
-      "class_id": "12774587",
-      "path": "docs/classes/12774587.html"
-    },
-    {
-      "class_id": "12774588",
-      "path": "docs/classes/12774588.html"
-    },
-    {
-      "class_id": "12774589",
-      "path": "docs/classes/12774589.html"
-    },
-    {
-      "class_id": "12774590",
-      "path": "docs/classes/12774590.html"
-    },
-    {
-      "class_id": "12774591",
-      "path": "docs/classes/12774591.html"
-    },
-    {
-      "class_id": "12774592",
-      "path": "docs/classes/12774592.html"
-    },
-    {
-      "class_id": "12774593",
-      "path": "docs/classes/12774593.html"
-    },
-    {
-      "class_id": "12774594",
-      "path": "docs/classes/12774594.html"
-    },
-    {
-      "class_id": "12774595",
-      "path": "docs/classes/12774595.html"
-    },
-    {
-      "class_id": "12774596",
-      "path": "docs/classes/12774596.html"
-    },
-    {
-      "class_id": "12774597",
-      "path": "docs/classes/12774597.html"
-    },
-    {
-      "class_id": "12774598",
-      "path": "docs/classes/12774598.html"
-    },
-    {
-      "class_id": "12774599",
-      "path": "docs/classes/12774599.html"
-    },
-    {
-      "class_id": "12774600",
-      "path": "docs/classes/12774600.html"
-    },
-    {
-      "class_id": "12775294",
-      "path": "docs/classes/12775294.html"
-    },
-    {
-      "class_id": "12775295",
-      "path": "docs/classes/12775295.html"
-    },
-    {
-      "class_id": "12775298",
-      "path": "docs/classes/12775298.html"
-    },
-    {
-      "class_id": "12775306",
-      "path": "docs/classes/12775306.html"
-    },
-    {
-      "class_id": "12775308",
-      "path": "docs/classes/12775308.html"
-    },
-    {
-      "class_id": "12775309",
-      "path": "docs/classes/12775309.html"
-    },
-    {
-      "class_id": "12775310",
-      "path": "docs/classes/12775310.html"
-    },
-    {
-      "class_id": "12775311",
-      "path": "docs/classes/12775311.html"
-    },
-    {
-      "class_id": "12775312",
-      "path": "docs/classes/12775312.html"
-    },
-    {
-      "class_id": "12775313",
-      "path": "docs/classes/12775313.html"
-    },
-    {
-      "class_id": "12775314",
-      "path": "docs/classes/12775314.html"
-    },
-    {
-      "class_id": "12775315",
-      "path": "docs/classes/12775315.html"
-    },
-    {
-      "class_id": "12775316",
-      "path": "docs/classes/12775316.html"
-    },
-    {
-      "class_id": "12775317",
-      "path": "docs/classes/12775317.html"
-    },
-    {
-      "class_id": "12775318",
-      "path": "docs/classes/12775318.html"
-    },
-    {
-      "class_id": "12775319",
-      "path": "docs/classes/12775319.html"
-    },
-    {
-      "class_id": "12775320",
-      "path": "docs/classes/12775320.html"
-    },
-    {
-      "class_id": "12775321",
-      "path": "docs/classes/12775321.html"
-    },
-    {
-      "class_id": "12775322",
-      "path": "docs/classes/12775322.html"
-    },
-    {
-      "class_id": "12775323",
-      "path": "docs/classes/12775323.html"
-    },
-    {
-      "class_id": "12775324",
-      "path": "docs/classes/12775324.html"
-    },
+      "class_id": "13833211",
+      "path": "docs/classes/13833211.html"
+    }
+  ],
+  "retained_course_landers": [],
+  "needs_review": [
     {
       "class_id": "12775325",
-      "path": "docs/classes/12775325.html"
+      "path": "docs/classes/12775325.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775527",
-      "path": "docs/classes/12775527.html"
+      "class_id": "13828438",
+      "path": "docs/classes/13828438.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775528",
-      "path": "docs/classes/12775528.html"
+      "class_id": "13828439",
+      "path": "docs/classes/13828439.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775539",
-      "path": "docs/classes/12775539.html"
+      "class_id": "13828440",
+      "path": "docs/classes/13828440.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775540",
-      "path": "docs/classes/12775540.html"
+      "class_id": "13828441",
+      "path": "docs/classes/13828441.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775541",
-      "path": "docs/classes/12775541.html"
+      "class_id": "13828442",
+      "path": "docs/classes/13828442.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775542",
-      "path": "docs/classes/12775542.html"
+      "class_id": "13828443",
+      "path": "docs/classes/13828443.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775543",
-      "path": "docs/classes/12775543.html"
+      "class_id": "13828445",
+      "path": "docs/classes/13828445.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775544",
-      "path": "docs/classes/12775544.html"
+      "class_id": "13828446",
+      "path": "docs/classes/13828446.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775550",
-      "path": "docs/classes/12775550.html"
+      "class_id": "13828447",
+      "path": "docs/classes/13828447.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775551",
-      "path": "docs/classes/12775551.html"
+      "class_id": "13828448",
+      "path": "docs/classes/13828448.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775552",
-      "path": "docs/classes/12775552.html"
+      "class_id": "13828449",
+      "path": "docs/classes/13828449.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775553",
-      "path": "docs/classes/12775553.html"
+      "class_id": "13828450",
+      "path": "docs/classes/13828450.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775554",
-      "path": "docs/classes/12775554.html"
+      "class_id": "13828454",
+      "path": "docs/classes/13828454.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775555",
-      "path": "docs/classes/12775555.html"
+      "class_id": "13828455",
+      "path": "docs/classes/13828455.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775556",
-      "path": "docs/classes/12775556.html"
+      "class_id": "13828456",
+      "path": "docs/classes/13828456.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775557",
-      "path": "docs/classes/12775557.html"
+      "class_id": "13828457",
+      "path": "docs/classes/13828457.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775558",
-      "path": "docs/classes/12775558.html"
+      "class_id": "13828458",
+      "path": "docs/classes/13828458.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775772",
-      "path": "docs/classes/12775772.html"
+      "class_id": "13828459",
+      "path": "docs/classes/13828459.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775784",
-      "path": "docs/classes/12775784.html"
+      "class_id": "13828461",
+      "path": "docs/classes/13828461.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775786",
-      "path": "docs/classes/12775786.html"
+      "class_id": "13828462",
+      "path": "docs/classes/13828462.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775787",
-      "path": "docs/classes/12775787.html"
+      "class_id": "13828463",
+      "path": "docs/classes/13828463.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775788",
-      "path": "docs/classes/12775788.html"
+      "class_id": "13828464",
+      "path": "docs/classes/13828464.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775789",
-      "path": "docs/classes/12775789.html"
+      "class_id": "13828465",
+      "path": "docs/classes/13828465.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775795",
-      "path": "docs/classes/12775795.html"
+      "class_id": "13828466",
+      "path": "docs/classes/13828466.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775796",
-      "path": "docs/classes/12775796.html"
+      "class_id": "13828726",
+      "path": "docs/classes/13828726.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775797",
-      "path": "docs/classes/12775797.html"
+      "class_id": "13842363",
+      "path": "docs/classes/13842363.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775798",
-      "path": "docs/classes/12775798.html"
+      "class_id": "13843367",
+      "path": "docs/classes/13843367.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775799",
-      "path": "docs/classes/12775799.html"
+      "class_id": "13847870",
+      "path": "docs/classes/13847870.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775800",
-      "path": "docs/classes/12775800.html"
+      "class_id": "13850189",
+      "path": "docs/classes/13850189.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775801",
-      "path": "docs/classes/12775801.html"
+      "class_id": "13857862",
+      "path": "docs/classes/13857862.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775802",
-      "path": "docs/classes/12775802.html"
+      "class_id": "13859298",
+      "path": "docs/classes/13859298.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775803",
-      "path": "docs/classes/12775803.html"
+      "class_id": "13861222",
+      "path": "docs/classes/13861222.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     },
     {
-      "class_id": "12775975",
-      "path": "docs/classes/12775975.html"
-    },
-    {
-      "class_id": "12775976",
-      "path": "docs/classes/12775976.html"
-    },
-    {
-      "class_id": "12775977",
-      "path": "docs/classes/12775977.html"
-    },
-    {
-      "class_id": "12775978",
-      "path": "docs/classes/12775978.html"
-    },
-    {
-      "class_id": "12775984",
-      "path": "docs/classes/12775984.html"
-    },
-    {
-      "class_id": "12775985",
-      "path": "docs/classes/12775985.html"
-    },
-    {
-      "class_id": "12775987",
-      "path": "docs/classes/12775987.html"
-    },
-    {
-      "class_id": "12775990",
-      "path": "docs/classes/12775990.html"
-    },
-    {
-      "class_id": "12775992",
-      "path": "docs/classes/12775992.html"
-    },
-    {
-      "class_id": "12776000",
-      "path": "docs/classes/12776000.html"
-    },
-    {
-      "class_id": "12776143",
-      "path": "docs/classes/12776143.html"
-    },
-    {
-      "class_id": "12776151",
-      "path": "docs/classes/12776151.html"
-    },
-    {
-      "class_id": "12776152",
-      "path": "docs/classes/12776152.html"
-    },
-    {
-      "class_id": "12776153",
-      "path": "docs/classes/12776153.html"
-    },
-    {
-      "class_id": "12776154",
-      "path": "docs/classes/12776154.html"
-    },
-    {
-      "class_id": "12776155",
-      "path": "docs/classes/12776155.html"
-    },
-    {
-      "class_id": "12776161",
-      "path": "docs/classes/12776161.html"
-    },
-    {
-      "class_id": "12776162",
-      "path": "docs/classes/12776162.html"
-    },
-    {
-      "class_id": "12776163",
-      "path": "docs/classes/12776163.html"
-    },
-    {
-      "class_id": "12776164",
-      "path": "docs/classes/12776164.html"
-    },
-    {
-      "class_id": "12776165",
-      "path": "docs/classes/12776165.html"
-    },
-    {
-      "class_id": "12776266",
-      "path": "docs/classes/12776266.html"
-    },
-    {
-      "class_id": "12776267",
-      "path": "docs/classes/12776267.html"
-    },
-    {
-      "class_id": "12776269",
-      "path": "docs/classes/12776269.html"
-    },
-    {
-      "class_id": "12776273",
-      "path": "docs/classes/12776273.html"
-    },
-    {
-      "class_id": "12776274",
-      "path": "docs/classes/12776274.html"
-    },
-    {
-      "class_id": "12776339",
-      "path": "docs/classes/12776339.html"
-    },
-    {
-      "class_id": "12776340",
-      "path": "docs/classes/12776340.html"
-    },
-    {
-      "class_id": "12776341",
-      "path": "docs/classes/12776341.html"
-    },
-    {
-      "class_id": "12776342",
-      "path": "docs/classes/12776342.html"
-    },
-    {
-      "class_id": "12776343",
-      "path": "docs/classes/12776343.html"
-    },
-    {
-      "class_id": "12776344",
-      "path": "docs/classes/12776344.html"
-    },
-    {
-      "class_id": "12776419",
-      "path": "docs/classes/12776419.html"
-    },
-    {
-      "class_id": "12776420",
-      "path": "docs/classes/12776420.html"
-    },
-    {
-      "class_id": "12776424",
-      "path": "docs/classes/12776424.html"
-    },
-    {
-      "class_id": "12776428",
-      "path": "docs/classes/12776428.html"
-    },
-    {
-      "class_id": "12776429",
-      "path": "docs/classes/12776429.html"
-    },
-    {
-      "class_id": "12776430",
-      "path": "docs/classes/12776430.html"
-    },
-    {
-      "class_id": "12776432",
-      "path": "docs/classes/12776432.html"
-    },
-    {
-      "class_id": "12776433",
-      "path": "docs/classes/12776433.html"
-    },
-    {
-      "class_id": "12776434",
-      "path": "docs/classes/12776434.html"
-    },
-    {
-      "class_id": "12776435",
-      "path": "docs/classes/12776435.html"
-    },
-    {
-      "class_id": "12776436",
-      "path": "docs/classes/12776436.html"
-    },
-    {
-      "class_id": "12776437",
-      "path": "docs/classes/12776437.html"
-    },
-    {
-      "class_id": "12776438",
-      "path": "docs/classes/12776438.html"
-    },
-    {
-      "class_id": "12776439",
-      "path": "docs/classes/12776439.html"
-    },
-    {
-      "class_id": "12776440",
-      "path": "docs/classes/12776440.html"
-    },
-    {
-      "class_id": "12776441",
-      "path": "docs/classes/12776441.html"
-    },
-    {
-      "class_id": "12776557",
-      "path": "docs/classes/12776557.html"
-    },
-    {
-      "class_id": "12776562",
-      "path": "docs/classes/12776562.html"
-    },
-    {
-      "class_id": "12776563",
-      "path": "docs/classes/12776563.html"
-    },
-    {
-      "class_id": "12776564",
-      "path": "docs/classes/12776564.html"
-    },
-    {
-      "class_id": "12776567",
-      "path": "docs/classes/12776567.html"
-    },
-    {
-      "class_id": "12776568",
-      "path": "docs/classes/12776568.html"
-    },
-    {
-      "class_id": "12776569",
-      "path": "docs/classes/12776569.html"
-    },
-    {
-      "class_id": "12776570",
-      "path": "docs/classes/12776570.html"
-    },
-    {
-      "class_id": "12776571",
-      "path": "docs/classes/12776571.html"
-    },
-    {
-      "class_id": "12776635",
-      "path": "docs/classes/12776635.html"
-    },
-    {
-      "class_id": "12776666",
-      "path": "docs/classes/12776666.html"
-    },
-    {
-      "class_id": "12776667",
-      "path": "docs/classes/12776667.html"
-    },
-    {
-      "class_id": "12776668",
-      "path": "docs/classes/12776668.html"
-    },
-    {
-      "class_id": "12776669",
-      "path": "docs/classes/12776669.html"
-    },
-    {
-      "class_id": "12776699",
-      "path": "docs/classes/12776699.html"
-    },
-    {
-      "class_id": "12776700",
-      "path": "docs/classes/12776700.html"
-    },
-    {
-      "class_id": "12776701",
-      "path": "docs/classes/12776701.html"
-    },
-    {
-      "class_id": "12776702",
-      "path": "docs/classes/12776702.html"
-    },
-    {
-      "class_id": "12776703",
-      "path": "docs/classes/12776703.html"
-    },
-    {
-      "class_id": "12776704",
-      "path": "docs/classes/12776704.html"
-    },
-    {
-      "class_id": "12776773",
-      "path": "docs/classes/12776773.html"
-    },
-    {
-      "class_id": "12776774",
-      "path": "docs/classes/12776774.html"
-    },
-    {
-      "class_id": "12776778",
-      "path": "docs/classes/12776778.html"
-    },
-    {
-      "class_id": "12776779",
-      "path": "docs/classes/12776779.html"
-    },
-    {
-      "class_id": "12776780",
-      "path": "docs/classes/12776780.html"
-    },
-    {
-      "class_id": "12776783",
-      "path": "docs/classes/12776783.html"
-    },
-    {
-      "class_id": "12776784",
-      "path": "docs/classes/12776784.html"
-    },
-    {
-      "class_id": "12776785",
-      "path": "docs/classes/12776785.html"
-    },
-    {
-      "class_id": "12776786",
-      "path": "docs/classes/12776786.html"
-    },
-    {
-      "class_id": "12776787",
-      "path": "docs/classes/12776787.html"
-    },
-    {
-      "class_id": "12783382",
-      "path": "docs/classes/12783382.html"
-    },
-    {
-      "class_id": "12783383",
-      "path": "docs/classes/12783383.html"
-    },
-    {
-      "class_id": "12783384",
-      "path": "docs/classes/12783384.html"
-    },
-    {
-      "class_id": "12783385",
-      "path": "docs/classes/12783385.html"
-    },
-    {
-      "class_id": "12783386",
-      "path": "docs/classes/12783386.html"
-    },
-    {
-      "class_id": "12783390",
-      "path": "docs/classes/12783390.html"
-    },
-    {
-      "class_id": "13472467",
-      "path": "docs/classes/13472467.html"
-    },
-    {
-      "class_id": "13472468",
-      "path": "docs/classes/13472468.html"
-    },
-    {
-      "class_id": "13472469",
-      "path": "docs/classes/13472469.html"
-    },
-    {
-      "class_id": "13472475",
-      "path": "docs/classes/13472475.html"
-    },
-    {
-      "class_id": "13472476",
-      "path": "docs/classes/13472476.html"
-    },
-    {
-      "class_id": "13472477",
-      "path": "docs/classes/13472477.html"
-    },
-    {
-      "class_id": "13472483",
-      "path": "docs/classes/13472483.html"
-    },
-    {
-      "class_id": "13472484",
-      "path": "docs/classes/13472484.html"
-    },
-    {
-      "class_id": "13472490",
-      "path": "docs/classes/13472490.html"
-    },
-    {
-      "class_id": "13472491",
-      "path": "docs/classes/13472491.html"
-    },
-    {
-      "class_id": "13601250",
-      "path": "docs/classes/13601250.html"
-    },
-    {
-      "class_id": "13601272",
-      "path": "docs/classes/13601272.html"
-    },
-    {
-      "class_id": "13623240",
-      "path": "docs/classes/13623240.html"
-    },
-    {
-      "class_id": "13623263",
-      "path": "docs/classes/13623263.html"
-    },
-    {
-      "class_id": "13652911",
-      "path": "docs/classes/13652911.html"
-    },
-    {
-      "class_id": "13652925",
-      "path": "docs/classes/13652925.html"
-    },
-    {
-      "class_id": "13652926",
-      "path": "docs/classes/13652926.html"
-    },
-    {
-      "class_id": "13652927",
-      "path": "docs/classes/13652927.html"
-    },
-    {
-      "class_id": "13652928",
-      "path": "docs/classes/13652928.html"
-    },
-    {
-      "class_id": "13652929",
-      "path": "docs/classes/13652929.html"
-    },
-    {
-      "class_id": "13652930",
-      "path": "docs/classes/13652930.html"
-    },
-    {
-      "class_id": "13652931",
-      "path": "docs/classes/13652931.html"
-    },
-    {
-      "class_id": "13652932",
-      "path": "docs/classes/13652932.html"
-    },
-    {
-      "class_id": "13652933",
-      "path": "docs/classes/13652933.html"
-    },
-    {
-      "class_id": "13652934",
-      "path": "docs/classes/13652934.html"
-    },
-    {
-      "class_id": "13652937",
-      "path": "docs/classes/13652937.html"
-    },
-    {
-      "class_id": "13652938",
-      "path": "docs/classes/13652938.html"
-    },
-    {
-      "class_id": "13652939",
-      "path": "docs/classes/13652939.html"
-    },
-    {
-      "class_id": "13652940",
-      "path": "docs/classes/13652940.html"
-    },
-    {
-      "class_id": "13652941",
-      "path": "docs/classes/13652941.html"
-    },
-    {
-      "class_id": "13652942",
-      "path": "docs/classes/13652942.html"
-    },
-    {
-      "class_id": "13652943",
-      "path": "docs/classes/13652943.html"
-    },
-    {
-      "class_id": "13652944",
-      "path": "docs/classes/13652944.html"
-    },
-    {
-      "class_id": "13652945",
-      "path": "docs/classes/13652945.html"
-    },
-    {
-      "class_id": "13652946",
-      "path": "docs/classes/13652946.html"
-    },
-    {
-      "class_id": "13653161",
-      "path": "docs/classes/13653161.html"
+      "class_id": "13865036",
+      "path": "docs/classes/13865036.html",
+      "reason": "course type cannot be determined",
+      "action": "needs_review"
     }
   ],
-  "retained_course_landers": [
-    {
-      "class_id": "10009265",
-      "path": "docs/classes/10009265.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "10009276",
-      "path": "docs/classes/10009276.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "11341054",
-      "path": "docs/classes/11341054.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774031",
-      "path": "docs/classes/12774031.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774033",
-      "path": "docs/classes/12774033.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774034",
-      "path": "docs/classes/12774034.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774037",
-      "path": "docs/classes/12774037.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774089",
-      "path": "docs/classes/12774089.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774090",
-      "path": "docs/classes/12774090.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774091",
-      "path": "docs/classes/12774091.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774092",
-      "path": "docs/classes/12774092.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774093",
-      "path": "docs/classes/12774093.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774327",
-      "path": "docs/classes/12774327.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774328",
-      "path": "docs/classes/12774328.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774339",
-      "path": "docs/classes/12774339.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774340",
-      "path": "docs/classes/12774340.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774341",
-      "path": "docs/classes/12774341.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774342",
-      "path": "docs/classes/12774342.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774343",
-      "path": "docs/classes/12774343.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774572",
-      "path": "docs/classes/12774572.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774577",
-      "path": "docs/classes/12774577.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12774579",
-      "path": "docs/classes/12774579.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775296",
-      "path": "docs/classes/12775296.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775297",
-      "path": "docs/classes/12775297.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775300",
-      "path": "docs/classes/12775300.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775301",
-      "path": "docs/classes/12775301.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775302",
-      "path": "docs/classes/12775302.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775529",
-      "path": "docs/classes/12775529.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775530",
-      "path": "docs/classes/12775530.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775533",
-      "path": "docs/classes/12775533.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775534",
-      "path": "docs/classes/12775534.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775536",
-      "path": "docs/classes/12775536.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775545",
-      "path": "docs/classes/12775545.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775546",
-      "path": "docs/classes/12775546.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775547",
-      "path": "docs/classes/12775547.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775548",
-      "path": "docs/classes/12775548.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775549",
-      "path": "docs/classes/12775549.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775779",
-      "path": "docs/classes/12775779.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775781",
-      "path": "docs/classes/12775781.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775790",
-      "path": "docs/classes/12775790.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775791",
-      "path": "docs/classes/12775791.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775792",
-      "path": "docs/classes/12775792.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775793",
-      "path": "docs/classes/12775793.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775794",
-      "path": "docs/classes/12775794.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12775997",
-      "path": "docs/classes/12775997.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776142",
-      "path": "docs/classes/12776142.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776144",
-      "path": "docs/classes/12776144.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776145",
-      "path": "docs/classes/12776145.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776148",
-      "path": "docs/classes/12776148.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776149",
-      "path": "docs/classes/12776149.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776156",
-      "path": "docs/classes/12776156.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776157",
-      "path": "docs/classes/12776157.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776158",
-      "path": "docs/classes/12776158.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776159",
-      "path": "docs/classes/12776159.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776160",
-      "path": "docs/classes/12776160.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776270",
-      "path": "docs/classes/12776270.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776336",
-      "path": "docs/classes/12776336.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776337",
-      "path": "docs/classes/12776337.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776416",
-      "path": "docs/classes/12776416.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776421",
-      "path": "docs/classes/12776421.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776422",
-      "path": "docs/classes/12776422.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776425",
-      "path": "docs/classes/12776425.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776554",
-      "path": "docs/classes/12776554.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776559",
-      "path": "docs/classes/12776559.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776565",
-      "path": "docs/classes/12776565.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776566",
-      "path": "docs/classes/12776566.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776632",
-      "path": "docs/classes/12776632.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776696",
-      "path": "docs/classes/12776696.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776697",
-      "path": "docs/classes/12776697.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776770",
-      "path": "docs/classes/12776770.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776775",
-      "path": "docs/classes/12776775.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776776",
-      "path": "docs/classes/12776776.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776781",
-      "path": "docs/classes/12776781.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776782",
-      "path": "docs/classes/12776782.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12776866",
-      "path": "docs/classes/12776866.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12783387",
-      "path": "docs/classes/12783387.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "12783389",
-      "path": "docs/classes/12783389.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "13460876",
-      "path": "docs/classes/13460876.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "13472474",
-      "path": "docs/classes/13472474.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    },
-    {
-      "class_id": "13600390",
-      "path": "docs/classes/13600390.html",
-      "reason": "class_id_missing_from_current_report",
-      "action": "converted_to_course_schedule_lander",
-      "course_title": "Course",
-      "course_hub": "/schedule.html"
-    }
-  ],
-  "needs_review": []
+  "deleted_pages": []
 }
