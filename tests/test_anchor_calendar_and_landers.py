@@ -22,7 +22,9 @@ class AnchorCalendarAndLanderTests(unittest.TestCase):
             html = (ROOT / "docs" / f"{page}.html").read_text(encoding="utf-8")
             self.assertIn("day-timeline-segment", html, page)
             self.assertIn("is-anchor", html, page)
-            self.assertIn("is-speculative", html, page)
+            self.assertIn("is-barnacle", html, page)
+            self.assertIn("is-available", html, page)
+            self.assertIn("register-panel", html, page)
             self.assertIn("★", html, page)
             self.assertNotIn("availability-dot", html, page)
 

@@ -641,11 +641,17 @@ def css() -> str:
       text-align: center;
       justify-content: center;
     }
-    .start-grid button.is-speculative { background: #ffef9d; border-color: #d5b92f; color: #594700; }
+    .start-grid button.is-available { background: #fff; border-color: var(--line); color: var(--ink); }
+    .start-grid button.is-barnacle { background: #ffef9d; border-color: #d5b92f; color: #594700; }
     .start-grid button.is-anchor { background: #bfe8c9; border-color: #54a96b; color: #123f21; }
     .start-grid button[aria-pressed="true"] { box-shadow: 0 0 0 3px rgba(10,102,165,.28); border-color: var(--accent); }
     .start-grid button.is-anchor[aria-pressed="true"] { background: linear-gradient(#bfe8c9, #bfe8c9); }
-    .start-grid button.is-speculative[aria-pressed="true"] { background: linear-gradient(#ffef9d, #ffef9d); }
+    .start-grid button.is-barnacle[aria-pressed="true"] { background: linear-gradient(#ffef9d, #ffef9d); }
+    .start-grid button.is-available[aria-pressed="true"] { background: linear-gradient(#fff, #fff); }
+    .register-panel {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(10,102,165,.28);
+    }
     .course {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -1124,7 +1130,7 @@ def render_html(payload: dict[str, Any]) -> str:
           <h2>Start Times</h2>
           <div id="start-list" class="button-list"></div>
         </div>
-        <div class="panel">
+        <div class="panel register-panel">
           <h2>Register</h2>
           <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
           <div id="course-list" class="course-list"></div>
@@ -1728,8 +1734,9 @@ def render_html(payload: dict[str, Any]) -> str:
         button.type = 'button';
         const anchorCourse = slot.courses.find(course => (course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '')) === 'anchor');
         const isAnchor = Boolean(anchorCourse);
+        const isBarnacle = slot.courses.some(course => (course.schedule_role || course.scheduleRole || '') === 'barnacle');
         button.textContent = (isAnchor ? '★ ' : '') + slot.displayStartTime;
-        button.classList.add(isAnchor ? 'is-anchor' : 'is-speculative');
+        button.classList.add(isAnchor ? 'is-anchor' : (isBarnacle ? 'is-barnacle' : 'is-available'));
         const disabled = isPastStart(day, slot);
         if (disabled) {{
           button.classList.add('is-past');
