@@ -441,17 +441,15 @@
       grid-template-columns: repeat(48, minmax(0, 1fr));
       overflow: hidden;
       border-radius: 999px;
-      background: rgba(255,255,255,.88);
-      border: 1px solid rgba(24,33,44,.12);
+      background: transparent;
     }
     .day-timeline-segment {
       min-width: 0;
       background: transparent;
-      border-right: 1px solid rgba(24,33,44,.16);
     }
-    .day-timeline-segment:last-child { border-right: 0; }
-    .day-timeline-segment.is-offered { background: #ffe67a; }
-    .day-timeline-segment.is-anchor { background: #72c38a; }
+    .day-timeline-segment.is-available { background: #d9dee5; border-right: 1px solid #fff; }
+    .day-timeline-segment.is-barnacle { background: #ffe67a; border-right: 1px solid rgba(89,71,0,.18); }
+    .day-timeline-segment.is-anchor { background: #72c38a; border-right: 1px solid rgba(18,63,33,.18); }
     .day-button.is-past,
     .start-grid button.is-past {
       color: #6b7280;
@@ -1205,7 +1203,7 @@
                 const startBand = Math.max(0, Math.min(47, hour * 2 + Math.floor(minute / 30)));
                 const duration = Number(course.durationMinutes || course.schedulerConsumptionMinutes || 30);
                 const endBand = Math.min(48, startBand + Math.max(1, Math.ceil(duration / 30)));
-                const segmentState = role === 'anchor' ? 'is-anchor' : 'is-offered';
+                const segmentState = role === 'anchor' ? 'is-anchor' : (role === 'barnacle' ? 'is-barnacle' : 'is-available');
                 if (role === 'anchor') {
                   hasAnchor = true;
                   if (!anchorLabels.includes(slot.displayStartTime)) anchorLabels.push(slot.displayStartTime);
@@ -1213,7 +1211,8 @@
                   optionLabels.push(slot.displayStartTime);
                 }
                 for (let band = startBand; band < endBand; band += 1) {
-                  if (segmentState === 'is-anchor' || !segments[band]) segments[band] = segmentState;
+                  const priority = { '': 0, 'is-available': 1, 'is-barnacle': 2, 'is-anchor': 3 };
+                  if (priority[segmentState] > priority[segments[band]]) segments[band] = segmentState;
                 }
               });
             });
