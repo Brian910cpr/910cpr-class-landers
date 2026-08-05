@@ -4,6 +4,17 @@ on:
   schedule:
     - cron: "*/30 * * * *"
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "docs/**/*.html"
+      - "docs/favicon*"
+      - "docs/apple-touch-icon.png"
+      - "docs/assets/css/global.css"
+      - "scripts/**/*.py"
+      - "tests/**"
+      - "config/global-page-requirements-exclusions.json"
+      - "build/full_validated_public_build.bat"
+      - ".github/workflows/refresh-public-site.yml"
 
 permissions:
   contents: write
@@ -13,7 +24,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  global-page-audit:
+    if: github.event_name == 'pull_request'
+    name: Audit final public HTML
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install parser dependency
+        run: python -m pip install beautifulsoup4
+      - name: Confirm global processing is idempotent
+        run: python -m scripts.global_page_requirements --check
+      - name: Audit published docs artifact
+        run: python -m scripts.audit_global_page_requirements
+
   refresh:
+    if: github.event_name != 'pull_request'
     name: Refresh public static output
     runs-on: windows-latest
 

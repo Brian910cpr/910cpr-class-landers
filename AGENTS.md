@@ -264,6 +264,13 @@ Priorities:
 
 Prefer practical operational improvements over theoretical perfection.
 
+\## Global Page Requirements
+
+\* A task that creates or modifies a browser-rendered HTML page is incomplete until the final file under `docs/` passes `python -m scripts.audit_global_page_requirements`.
+\* All HTML generators must preserve the centralized contract implemented by `scripts/global_page_requirements.py`.
+\* Do not manually copy analytics, favicon, viewport, charset, or global stylesheet blocks into pages or generators.
+\* Run global enforcement after generation and before auditing or publishing.
+
 
 \## Enrollware and Public Inventory Safety
 
