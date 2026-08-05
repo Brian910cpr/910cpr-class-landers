@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-05T21:13:33.599949+00:00",
+  "generated_at": "2026-08-05T22:36:27.622462+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-05T21:13:33.032565+00:00",
+      "generated_at": "2026-08-05T22:36:27.070008+00:00",
       "event_count": 0
     },
     {
@@ -16,30 +16,19 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-05T21:13:33.599949+00:00",
-      "event_count": 123
+      "generated_at": "2026-08-05T22:36:27.622462+00:00",
+      "event_count": 124
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-05T21:13:33.333610+00:00",
+      "generated_at": "2026-08-05T22:36:27.295714+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR",
-      "start": "2026-08-05T22:00:00+00:00",
-      "end": "2026-08-06T10:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
@@ -335,6 +324,28 @@
       "start": "2026-08-28T22:00:00+00:00",
       "end": "2026-08-29T10:00:00+00:00",
       "location": "",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Gap",
+      "start": "2026-08-30T04:05:00+00:00",
+      "end": "2026-08-31T03:55:00+00:00",
+      "location": "",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Rean's 13th",
+      "start": "2026-08-30T15:00:00+00:00",
+      "end": "2026-08-30T17:00:00+00:00",
+      "location": "Retroscape - Gaming & Soda Lounge\\, 1123 Princess St\\, Wilmington\\, NC 28401\\, USA",
       "status": "CONFIRMED"
     },
     {
