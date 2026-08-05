@@ -1,12 +1,12 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-08-05T11:39:13.068254-04:00`
+- Generated at: `2026-08-05T13:41:15.555089-04:00`
 - Source: `enrollware_ical`
 - iCal events read: `357`
 - Public sessions created: `357`
 - Skipped events: `0`
 - Registration unavailable sessions marked not direct-bookable: `312`
-- Unmapped sessions: `21`
+- Unmapped sessions: `22`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
 - Stale manual/Class Report sessions excluded: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776550` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-05-07T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776766` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-05-07T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774014` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-05-09T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776010` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-05-09T09:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `12776128` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-05-18T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774310` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-05-18T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775508` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-05-18T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12775753` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-05-18T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
@@ -95,4 +95,4 @@ They remain separate registration-signal/audit inputs only.
 - `10009277`: AHA - PALS Instructor Renewal (2026-07-01T00:00:00-04:00)
 - `12775788`: AHA - Family & Friends® CPR (2026-07-20T18:00:00-04:00)
 - `13859298`: AHA - Family & Friends® CPR (2026-08-04T19:00:00-04:00)
-- `13613957`: AHA - Family & Friends® CPR (2026-08-16T14:00:00-04:00)
+- `13880764`: ARC Adult CPR AED - Blended Online course + in-person skills session for workplace and general certification (2026-08-10T09:30:00-04:00)
