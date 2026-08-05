@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "exclusions": [
+    {
+      "path": "docs/404.html",
+      "reason": "GitHub Pages error document is deliberately noindex and has no stable requested production URL.",
+      "excluded_requirements": ["canonical"]
+    }
+  ]
+}

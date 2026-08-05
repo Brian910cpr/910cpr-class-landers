@@ -61,8 +61,12 @@ echo === Build index and sitemap ===
 python -m scripts.build_index_and_sitemap || goto :fail
 
 echo.
-echo === Ensure analytics tags ===
-python -m scripts.ensure_analytics_tags || goto :fail
+echo === Enforce global page requirements ===
+python -m scripts.global_page_requirements || goto :fail
+
+echo.
+echo === Audit final published HTML ===
+python -m scripts.audit_global_page_requirements || goto :fail
 
 echo.
 echo === Run unit tests ===
