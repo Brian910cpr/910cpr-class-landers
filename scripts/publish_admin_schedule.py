@@ -73,6 +73,52 @@ def apply_student_snapshot(rows: list[dict[str, Any]], snapshot: Any) -> dict[st
     return apply_snapshot_to_sessions(rows, snapshot)
 
 
+def parse_timestamp(raw: Any) -> datetime | None:
+    if raw in (None, ""):
+        return None
+    try:
+        return datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+
+
+def find_schedule_conflicts(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return deterministic hard conflicts for invalid or shared-resource overlaps."""
+    conflicts: list[dict[str, Any]] = []
+    parsed: list[tuple[dict[str, Any], datetime, datetime]] = []
+
+    for row in rows:
+        start = parse_timestamp(row.get("start_at"))
+        end = parse_timestamp(row.get("end_at"))
+        if not start or not end or end <= start:
+            conflicts.append({
+                "type": "invalid_time_range",
+                "session_ids": [row.get("session_id")],
+                "start_at": row.get("start_at"),
+                "end_at": row.get("end_at"),
+            })
+            continue
+        parsed.append((row, start, end))
+
+    parsed.sort(key=lambda item: (item[1], str(item[0].get("session_id"))))
+    for index, (first, first_start, first_end) in enumerate(parsed):
+        first_resources = set(first.get("blocking_resources") or [])
+        for second, second_start, second_end in parsed[index + 1:]:
+            if second_start >= first_end:
+                break
+            shared_resources = sorted(first_resources.intersection(second.get("blocking_resources") or []))
+            if second_start < first_end and first_start < second_end and shared_resources:
+                conflicts.append({
+                    "type": "shared_resource_overlap",
+                    "session_ids": [first.get("session_id"), second.get("session_id")],
+                    "shared_resources": shared_resources,
+                    "overlap_start": max(first_start, second_start).isoformat(),
+                    "overlap_end": min(first_end, second_end).isoformat(),
+                })
+
+    return conflicts
+
+
 def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_snapshot: Any = None) -> dict[str, Any]:
     rows = payload.get("sessions", []) if isinstance(payload, dict) else []
     normalized = [row for session in rows if isinstance(session, dict) for row in [normalize_session(session)] if row]
@@ -84,6 +130,7 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
     ]
     normalized.sort(key=lambda row: (str(row.get("start_at")), str(row.get("session_id"))))
     enrollment_counts = apply_student_snapshot(normalized, student_snapshot)
+    conflicts = find_schedule_conflicts(normalized)
     brian_rows = [
         row for row in normalized
         if str(row.get("lead_instructor_name") or "").strip().lower() in {"brian", "brian ennis", "b. ennis"}
@@ -95,7 +142,12 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
         "counts": {
             "sessions": len(normalized),
             "brian_resource_blocks": len(brian_rows),
+            "hard_conflicts": len(conflicts),
             **enrollment_counts,
+        },
+        "integrity": {
+            "status": "blocked" if conflicts else "ok",
+            "hard_conflicts": conflicts,
         },
         "sessions": normalized,
     }
@@ -104,6 +156,12 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
 def main() -> int:
     snapshot = read_json(STUDENT_SNAPSHOT) if STUDENT_SNAPSHOT.exists() else None
     payload = build_admin_schedule(read_json(SESSIONS_CURRENT), student_snapshot=snapshot)
+    conflicts = payload["integrity"]["hard_conflicts"]
+    if conflicts:
+        print(f"BLOCKED: refusing to replace the last known-good admin schedule; found {len(conflicts)} hard conflict(s).")
+        for conflict in conflicts:
+            print(json.dumps(conflict, sort_keys=True))
+        return 1
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Published {payload['counts']['sessions']} admin schedule sessions to {OUTPUT}")
