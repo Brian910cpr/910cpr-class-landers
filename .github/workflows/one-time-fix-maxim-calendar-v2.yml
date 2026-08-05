@@ -1,0 +1,47 @@
+name: One-time stronger Maxim calendar separation fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/one-time-fix-maxim-calendar-v2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix-calendar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Add a real gutter and constrain calendar cells
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('docs/corp/maxim.html')
+          text = path.read_text(encoding='utf-8')
+          old = '.months{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.month{min-width:0}.month h3'
+          new = '.months{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:26px}.month{min-width:0}.month+.month{border-left:1px solid var(--line);padding-left:13px}.month h3'
+          if old not in text:
+              raise SystemExit('Expected Maxim calendar CSS was not found; no change made.')
+          text = text.replace(old, new, 1)
+          old2 = '.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.dow,.day{min-height:31px;display:grid;place-items:center;border-radius:6px}'
+          new2 = '.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;min-width:0}.dow,.day{min-width:0;width:100%;padding:0;min-height:31px;display:grid;place-items:center;border-radius:6px}'
+          if old2 not in text:
+              raise SystemExit('Expected Maxim day-grid CSS was not found; no change made.')
+          text = text.replace(old2, new2, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+          rm .github/workflows/one-time-fix-maxim-calendar-v2.yml
+      - name: Commit live fix and remove one-time workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/corp/maxim.html .github/workflows/one-time-fix-maxim-calendar-v2.yml
+          git commit -m "fix: visibly separate Maxim calendar months"
+          git push origin main
