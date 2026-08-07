@@ -10,6 +10,13 @@ routes = [
   { pattern = "schedule.910cpr.com/*", zone_name = "910cpr.com" }
 ]
 
+# Required production configuration (resource identifiers are intentionally not
+# guessed or committed here):
+#   secret: HOT_SYNC_ADMIN_KEY
+#   D1 binding: HOT_SYNC_D1 (apply worker/migrations/0001_admin_operations.sql)
+#   R2 binding: LANDERWARE_INBOX
+# Verify all three on free-time-offer-worker before deploying this config.
+
 [vars]
 CREATION_ENABLED = "false"
 DRY_RUN = "true"
