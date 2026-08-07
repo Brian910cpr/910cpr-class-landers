@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-07T19:31:08.496661+00:00",
+  "generated_at": "2026-08-07T20:44:11.462606+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 323,
+    "blocks_generated": 324,
     "blocks_blocked": 11,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -38,11 +38,11 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 126,
+      "blocked": 127,
       "available": 197
     },
     "inverse_generated_availability_blocks": 197,
-    "inverse_blocking_event_blocks": 126
+    "inverse_blocking_event_blocks": 127
   },
   "availability_blocks": [
     {
@@ -3072,11 +3072,35 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-07T15:45:00",
+      "start_datetime": "2026-11-05T15:00:00",
+      "end_datetime": "2026-11-05T17:30:00",
+      "date": "2026-11-05",
+      "end_date": "2026-11-05",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261105T1500000500",
+      "summary": "CFA Pickup",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-07T16:45:00",
       "end_datetime": "2026-08-08T00:00:00",
       "date": "2026-08-07",
       "end_date": "2026-08-08",
-      "start_time": "15:45",
+      "start_time": "16:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -9149,11 +9173,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-05T07:45:00",
-      "end_datetime": "2026-11-05T15:45:00",
+      "end_datetime": "2026-11-05T15:00:00",
       "date": "2026-11-05",
       "end_date": "2026-11-05",
       "start_time": "07:45",
-      "end_time": "15:45",
+      "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
