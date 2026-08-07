@@ -1,6 +1,6 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-08-07T17:40:59.801589-04:00`
+- Generated at: `2026-08-07T18:38:13.591452-04:00`
 - Source: `enrollware_ical`
 - iCal events read: `357`
 - Public sessions created: `357`
@@ -95,4 +95,4 @@ They remain separate registration-signal/audit inputs only.
 - `10009277`: AHA - PALS Instructor Renewal (2026-07-01T00:00:00-04:00)
 - `12775788`: AHA - Family & Friends® CPR (2026-07-20T18:00:00-04:00)
 - `13859298`: AHA - Family & Friends® CPR (2026-08-04T19:00:00-04:00)
-- `13880764`: ARC Adult CPR AED - Blended Online course + in-person skills session for workplace and general certification (2026-08-10T09:30:00-04:00)
+- `13880764`: ARC Adult CPR AED - Blended (2026-08-10T09:30:00-04:00)
