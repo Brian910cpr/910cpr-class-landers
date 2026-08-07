@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-06T14:55:33.953290+00:00",
+  "generated_at": "2026-08-07T00:25:39.025510+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 319,
+    "blocks_generated": 321,
     "blocks_blocked": 11,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -38,11 +38,11 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 124,
-      "available": 195
+      "blocked": 125,
+      "available": 196
     },
-    "inverse_generated_availability_blocks": 195,
-    "inverse_blocking_event_blocks": 124
+    "inverse_generated_availability_blocks": 196,
+    "inverse_blocking_event_blocks": 125
   },
   "availability_blocks": [
     {
@@ -3024,11 +3024,35 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-06T11:00:00",
+      "start_datetime": "2026-11-04T15:00:00",
+      "end_datetime": "2026-11-04T17:30:00",
+      "date": "2026-11-04",
+      "end_date": "2026-11-04",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi@google.com:20261104T1500000500",
+      "summary": "CFA Pickup",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-06T20:30:00",
       "end_datetime": "2026-08-07T00:00:00",
       "date": "2026-08-06",
       "end_date": "2026-08-07",
-      "start_time": "11:00",
+      "start_time": "20:30",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -9039,11 +9063,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-04T07:45:00",
-      "end_datetime": "2026-11-04T11:00:00",
+      "end_datetime": "2026-11-04T15:00:00",
       "date": "2026-11-04",
       "end_date": "2026-11-04",
       "start_time": "07:45",
-      "end_time": "11:00",
+      "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -9057,6 +9081,37 @@
       ],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "brian_do_not_schedule:inverse_gap:195",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-11-04T17:30:00",
+      "end_datetime": "2026-11-04T20:30:00",
+      "date": "2026-11-04",
+      "end_date": "2026-11-04",
+      "start_time": "17:30",
+      "end_time": "20:30",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "ARC",
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:196",
       "source_type": "inverse_google_calendar",
       "inverse_generated": true,
       "reasons": [
