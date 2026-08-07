@@ -704,29 +704,47 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertTrue(conflict(20, 45, 21, 15))
         self.assertFalse(conflict(21, 0, 22, 30))
 
-    def test_brian_travel_rules_expand_offsite_instructor_conflicts_only(self):
-        rules = block_start_time_selector.read_required_json(block_start_time_selector.TRAVEL_TIME_RULES_PATH)
-        cases = [
-            ("ADR Shift — Unavailable", "", 60),
-            ("AHA Family & Friends CPR", "Freya's Haus, Scotts Hill Loop Rd", 60),
-            ("AHA BLS Provider", "Brunswick Oral & Maxillofacial Surgery", 90),
-            ("AHA HeartCode BLS", "4018 Shipyard Blvd; Room B @ 910CPR's Office", 0),
-        ]
-        for title, location, expected in cases:
-            with self.subTest(title=title):
-                block = {
-                    "start": datetime(2026, 8, 16, 14, 0),
-                    "end": datetime(2026, 8, 16, 16, 0),
-                    "instructor": "Brian Ennis",
-                    "location": location,
-                    "course_title": title,
-                }
-                block_start_time_selector.apply_travel_time_rule(block, rules)
-                self.assertEqual(expected, block.get("travel_before_minutes", 0))
-                self.assertEqual(expected, block.get("travel_after_minutes", 0))
-                if expected:
-                    self.assertEqual(datetime(2026, 8, 16, 14, 0) - timedelta(minutes=expected), block["instructor_conflict_start"])
-                    self.assertEqual(datetime(2026, 8, 16, 16, 0) + timedelta(minutes=expected), block["instructor_conflict_end"])
+    def test_offsite_events_are_not_silently_expanded_with_travel_time(self):
+        occupancy = block_start_time_selector.build_occupancy(
+            {
+                "sessions_current": {"sessions": []},
+                "schedule_future": {"sessions": []},
+                "location_resource_map": block_start_time_selector.read_required_json(block_start_time_selector.LOCATION_RESOURCE_MAP_PATH),
+                "live_availability_snapshot": {
+                    "availability_blocks": [{
+                        "availability_status": "blocked",
+                        "start_datetime": "2026-08-16T14:00:00",
+                        "end_datetime": "2026-08-16T16:00:00",
+                        "instructor_name": "Brian Ennis",
+                        "location_name": "Cape Fear Academy, 3900 College Rd",
+                        "summary": "CFA Pickup",
+                    }],
+                },
+            },
+            {},
+        )
+        self.assertEqual(1, len(occupancy))
+        self.assertNotIn("instructor_conflict_start", occupancy[0])
+        self.assertNotIn("instructor_conflict_end", occupancy[0])
+        self.assertNotIn("travel_before_minutes", occupancy[0])
+
+    def test_visible_travel_calendar_event_blocks_only_its_stated_interval(self):
+        travel = {
+            "start": datetime(2026, 8, 16, 13, 0),
+            "end": datetime(2026, 8, 16, 14, 0),
+            "instructor": "Brian Ennis",
+            "location": "Cape Fear Academy",
+            "course_title": "TRAVEL — Shipyard to CFA",
+            "source_file": "live_availability_snapshot.blocked[1]",
+        }
+        person = {"display_name": "Brian Ennis"}
+        shipyard = ":: Wilmington; Shipyard Blvd"
+        self.assertTrue(block_start_time_selector.generate_dynamic_offers.has_conflict(
+            datetime(2026, 8, 16, 13, 30), datetime(2026, 8, 16, 13, 45), [travel], shipyard, person
+        )[0])
+        self.assertFalse(block_start_time_selector.generate_dynamic_offers.has_conflict(
+            datetime(2026, 8, 16, 12, 30), datetime(2026, 8, 16, 13, 0), [travel], shipyard, person
+        )[0])
 
     def test_travel_buffer_blocks_brian_but_not_shipyard_room_for_another_instructor(self):
         block = {

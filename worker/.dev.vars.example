@@ -5,6 +5,22 @@ CREATION_ENABLED=false
 DRY_RUN=true
 ALLOW_PUBLIC_CREATION=false
 
+# Travel calendar materialization is disabled until all secrets and the target
+# calendar are deliberately configured. Never commit their live values.
+TRAVEL_EVENT_SYNC_ENABLED=false
+# TRAVEL_SYNC_WEBHOOK_SECRET=
+# TRAVEL_CALENDAR_ID=
+# Prefer OAuth refresh credentials because direct access tokens expire.
+# GOOGLE_CLIENT_ID=
+# GOOGLE_CLIENT_SECRET=
+# GOOGLE_REFRESH_TOKEN=
+# GOOGLE_CALENDAR_ACCESS_TOKEN=
+# GOOGLE_ROUTES_API_KEY=
+# TRAVEL_BASE_ADDRESS=4018 Shipyard Blvd, Wilmington, NC 28403
+# TRAVEL_UNKNOWN_OFFSITE_MINUTES=90
+# TRAVEL_ROUTE_MARGIN_MINUTES=10
+# TRAVEL_NAMED_RULES_JSON=[]
+
 # For local slug lookup testing only. Populate in your shell instead of committing
 # live JSON here:
 # OFFER_DATA_JSON=<contents of docs/data/customer_facing_offers.json>

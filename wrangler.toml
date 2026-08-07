@@ -14,3 +14,4 @@ routes = [
 CREATION_ENABLED = "false"
 DRY_RUN = "true"
 ALLOW_PUBLIC_CREATION = "false"
+TRAVEL_EVENT_SYNC_ENABLED = "false"

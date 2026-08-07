@@ -24,7 +24,6 @@ on:
       - 'data/runtime/anchor_seat_overrides.json'
       - 'data/config/people_catalog.json'
       - 'data/config/location_resource_map.json'
-      - 'data/config/travel_time_rules.json'
       - 'data/enrollware_student_snapshot.json'
       - 'data/config/block_schedule_pages.json'
       - 'data/config/anchor_schedule_policy.json'

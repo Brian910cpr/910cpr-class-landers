@@ -1,4 +1,5 @@
 import { handleAdminApi } from "./admin-api.js";
+import { handleTravelCalendarSync } from "./travel-calendar-events.js";
 
 const DEFAULT_CONFIG = {
   creationEnabled: false,
@@ -27,6 +28,9 @@ async function handleRequest(request, env, ctx) {
   const url = new URL(request.url);
   const adminResponse = await handleAdminApi(request, env, url);
   if (adminResponse) return adminResponse;
+  if (url.pathname === "/internal/travel-events/sync") {
+    return handleTravelCalendarSync(request, env);
+  }
   if (request.method === "GET" && url.pathname.startsWith("/o/")) {
     return handleOfferSlug(request, env);
   }
