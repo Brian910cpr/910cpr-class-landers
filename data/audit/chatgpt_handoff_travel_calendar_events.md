@@ -77,6 +77,14 @@ PASS
 Guarded production endpoint check
 HTTP 503: {"status":"disabled","writesPerformed":false}
 
+Live Aug 20 pilot (bulk backfill was not run)
+Parent: CFA Pickup, 2026-08-20 3:00-5:30 PM America/New_York
+Inbound: trvlf494a16483f99c195b8b41fe881a391b647d2d40a, 2:40-3:00 PM
+Outbound: trvlc1cb44bf589919fccc0751b0befdc8705128b0f2b, 5:30-5:50 PM
+Both generated events are CONFIRMED, OPAQUE, and visible with full route addresses.
+The refreshed Google Calendar snapshot independently confirmed both records.
+After the pilot, the production sync endpoint was locked again and returned HTTP 503 disabled.
+
 Read-only production credential validation
 HTTP 200: calendar reachable; Google Routes returned both directions; writesPerformed=false
 Shipyard to Cape Fear Academy: 4,421 meters / 8 minutes
