@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T03:32:35.153737+00:00",
+  "generated_at": "2026-08-08T04:37:09.831165+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -3072,11 +3072,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-08T00:00:00",
+      "start_datetime": "2026-08-08T00:45:00",
       "end_datetime": "2026-08-09T00:00:00",
       "date": "2026-08-08",
       "end_date": "2026-08-09",
-      "start_time": "00:00",
+      "start_time": "00:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -9149,11 +9149,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-05T17:30:00",
-      "end_datetime": "2026-11-05T23:45:00",
+      "end_datetime": "2026-11-06T00:00:00",
       "date": "2026-11-05",
-      "end_date": "2026-11-05",
+      "end_date": "2026-11-06",
       "start_time": "17:30",
-      "end_time": "23:45",
+      "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -9187,14 +9187,6 @@
         "non_standard_time_increment"
       ],
       "message": "Calendar event was not usable as an inverse blocking interval."
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-08-07T23:45:00",
-      "end_datetime": "2026-08-08T00:00:00"
     },
     {
       "calendar_source_key": "brian_do_not_schedule",
@@ -9267,6 +9259,14 @@
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
       "start_datetime": "2026-08-31T06:00:00",
       "end_datetime": "2026-08-31T06:30:00"
+    },
+    {
+      "calendar_source_key": "brian_do_not_schedule",
+      "source_type": "inverse_google_calendar",
+      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
+      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
+      "start_datetime": "2026-11-06T00:00:00",
+      "end_datetime": "2026-11-06T00:45:00"
     }
   ]
 }
