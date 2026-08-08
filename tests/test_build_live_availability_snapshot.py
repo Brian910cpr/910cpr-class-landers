@@ -252,6 +252,24 @@ END:VCALENDAR
         self.assertEqual(2, stats["inverse_generated_availability_blocks"])
         self.assertEqual(1, stats["inverse_blocking_event_blocks"])
 
+    def test_visible_travel_event_is_a_blocking_event(self) -> None:
+        self.assertTrue(snapshot.is_blocking_event({"summary": "TRAVEL — Shipyard to Cape Fear Academy"}))
+
+    def test_blocking_event_keeps_exact_nonstandard_times(self) -> None:
+        source = {"allow_non_standard_time_increment": False}
+        travel = {
+            "summary": "TRAVEL — Shipyard to Cape Fear Academy",
+            "start": "2026-08-20T14:40:00",
+            "end": "2026-08-20T15:00:00",
+        }
+        available = {
+            "summary": "HARD",
+            "start": "2026-08-20T14:40:00",
+            "end": "2026-08-20T15:00:00",
+        }
+        self.assertEqual([], snapshot.event_policy_reason_codes(source, travel, snapshot.parse_dt(travel["start"]), snapshot.parse_dt(travel["end"])))
+        self.assertEqual(["non_standard_time_increment"], snapshot.event_policy_reason_codes(source, available, snapshot.parse_dt(available["start"]), snapshot.parse_dt(available["end"])))
+
     def test_inverse_expansion_respects_appointment_container_coverage(self) -> None:
         calendar_payload = {
             "calendar_sources": [{

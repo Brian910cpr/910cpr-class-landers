@@ -164,6 +164,7 @@ def event_policy_reason_codes(source: dict[str, Any], event: dict[str, Any], sta
         reasons.append("invalid_time_range")
     if (
         explicit_time
+        and not is_blocking_event(event)
         and not bool(source.get("allow_non_standard_time_increment"))
         and (not is_standard_time_increment(start) or not is_standard_time_increment(end))
     ):
@@ -546,7 +547,7 @@ def event_text(event: dict[str, Any]) -> str:
 
 def is_blocking_event(event: dict[str, Any]) -> bool:
     text = event_text(event)
-    return any(marker in text for marker in ("dns", "do not schedule", "adr", "employment", "personal", "unavailable"))
+    return any(marker in text for marker in ("dns", "do not schedule", "adr", "employment", "personal", "unavailable", "travel"))
 
 
 def events_for_source(snapshot_payload: Any, source_key: str) -> list[dict[str, Any]]:
