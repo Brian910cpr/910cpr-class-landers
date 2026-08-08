@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-07T22:58:47.367353+00:00",
+  "generated_at": "2026-08-08T01:24:13.573369+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,27 +22,27 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 325,
-    "blocks_blocked": 11,
+    "blocks_generated": 324,
+    "blocks_blocked": 12,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "non_standard_time_increment": 1,
-      "inverse_gap_shorter_than_minimum_consumption": 10
+      "non_standard_time_increment": 3,
+      "inverse_gap_shorter_than_minimum_consumption": 9
     },
     "blocked_all_reason_counts": {
-      "non_standard_time_increment": 1,
-      "inverse_gap_shorter_than_minimum_consumption": 10
+      "non_standard_time_increment": 3,
+      "inverse_gap_shorter_than_minimum_consumption": 9
     },
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 127,
+      "blocked": 126,
       "available": 198
     },
     "inverse_generated_availability_blocks": 198,
-    "inverse_blocking_event_blocks": 127
+    "inverse_blocking_event_blocks": 126
   },
   "availability_blocks": [
     {
@@ -80,8 +80,8 @@
       "end_time": "06:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "nn6t52op1fp7d0mcicb7rqpigo@google.com",
@@ -104,8 +104,8 @@
       "end_time": "06:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "kluic9ga6q0lcv6u5au6f3u35s@google.com",
@@ -128,8 +128,8 @@
       "end_time": "06:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "6osjgdr3clhm2bb2cgrj2b9kcph62b9p60qj2b9ic4o68dplcdj66opkcc@google.com",
@@ -264,30 +264,6 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-20T08:00:00",
-      "end_datetime": "2026-08-20T10:45:00",
-      "date": "2026-08-20",
-      "end_date": "2026-08-20",
-      "start_time": "08:00",
-      "end_time": "10:45",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "hghqn91dqla1o39p95es498v5g@google.com",
-      "summary": "Busy",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
       "start_datetime": "2026-08-20T15:00:00",
       "end_datetime": "2026-08-20T17:30:00",
       "date": "2026-08-20",
@@ -301,7 +277,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260820T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -320,8 +296,8 @@
       "end_time": "06:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "gvloqfpftu3sg8vkeut3uisn9o@google.com",
@@ -373,7 +349,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260821T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -392,8 +368,8 @@
       "end_time": "06:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "gpsu3cpoeq691utosp6hrn9lmo@google.com",
@@ -445,7 +421,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260824T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -493,7 +469,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260825T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -541,7 +517,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260826T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -560,8 +536,8 @@
       "end_time": "06:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "60r6ac1mcoo3gb9kc5hjib9k6th6cbb2cphm4bb561i3aoj268s3io9l70@google.com",
@@ -613,7 +589,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260827T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -661,7 +637,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260828T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -680,8 +656,8 @@
       "end_time": "06:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "guh2d18abfea0o5bkua2oidm0g@google.com",
@@ -728,8 +704,8 @@
       "end_time": "06:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "ln8kmtjtdv2o0rmpc4em1892oo@google.com",
@@ -781,7 +757,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260831T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -829,7 +805,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260901T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -877,7 +853,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260902T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -925,7 +901,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260903T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -973,7 +949,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260904T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1021,7 +997,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260907T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1069,7 +1045,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260908T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1117,7 +1093,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260909T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1165,7 +1141,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260910T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1213,7 +1189,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260911T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1261,7 +1237,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260914T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1309,7 +1285,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260915T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1357,7 +1333,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260916T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1405,7 +1381,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260917T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1453,7 +1429,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260918T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1501,7 +1477,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260921T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1549,7 +1525,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260922T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1597,7 +1573,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260923T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1645,7 +1621,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260924T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1693,7 +1669,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260925T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1741,7 +1717,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260928T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1789,7 +1765,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260929T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1837,7 +1813,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260930T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1885,7 +1861,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261001T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1933,7 +1909,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261002T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1981,7 +1957,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261005T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2029,7 +2005,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261006T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2077,7 +2053,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261007T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2125,7 +2101,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261008T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2173,7 +2149,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261009T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2221,7 +2197,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261012T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2269,7 +2245,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261013T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2317,7 +2293,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2365,7 +2341,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261015T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2413,7 +2389,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2461,7 +2437,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261019T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2509,7 +2485,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2557,7 +2533,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261021T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2605,7 +2581,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261022T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2653,7 +2629,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261023T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2701,7 +2677,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261026T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2749,7 +2725,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261027T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2797,7 +2773,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261028T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2845,7 +2821,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261029T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2893,7 +2869,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261030T1500000400",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2941,7 +2917,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261102T1500000500",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -2989,7 +2965,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261103T1500000500",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -3037,7 +3013,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261104T1500000500",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -3085,7 +3061,7 @@
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261105T1500000500",
-      "summary": "CFA Pickup (Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA)",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -3096,11 +3072,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-07T19:00:00",
+      "start_datetime": "2026-08-07T21:30:00",
       "end_datetime": "2026-08-08T00:00:00",
       "date": "2026-08-07",
       "end_date": "2026-08-08",
-      "start_time": "19:00",
+      "start_time": "21:30",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -3561,11 +3537,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-20T10:45:00",
+      "start_datetime": "2026-08-20T07:45:00",
       "end_datetime": "2026-08-20T15:00:00",
       "date": "2026-08-20",
       "end_date": "2026-08-20",
-      "start_time": "10:45",
+      "start_time": "07:45",
       "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -9204,11 +9180,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-05T17:30:00",
-      "end_datetime": "2026-11-05T19:00:00",
+      "end_datetime": "2026-11-05T21:30:00",
       "date": "2026-11-05",
       "end_date": "2026-11-05",
       "start_time": "17:30",
-      "end_time": "19:00",
+      "end_time": "21:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -9235,6 +9211,26 @@
   "blocked_or_placeholder_sources": [
     {
       "calendar_source_key": "brian_do_not_schedule",
+      "source_event_id": "trvlf494a16483f99c195b8b41fe881a391b647d2d40a@google.com",
+      "source_type": "inverse_google_calendar",
+      "reason_code": "non_standard_time_increment",
+      "all_reason_codes": [
+        "non_standard_time_increment"
+      ],
+      "message": "Calendar event was not usable as an inverse blocking interval."
+    },
+    {
+      "calendar_source_key": "brian_do_not_schedule",
+      "source_event_id": "trvlc1cb44bf589919fccc0751b0befdc8705128b0f2b@google.com",
+      "source_type": "inverse_google_calendar",
+      "reason_code": "non_standard_time_increment",
+      "all_reason_codes": [
+        "non_standard_time_increment"
+      ],
+      "message": "Calendar event was not usable as an inverse blocking interval."
+    },
+    {
+      "calendar_source_key": "brian_do_not_schedule",
       "source_event_id": "c8pm8e336spj8b9ickrm6b9k6gr32bb16cqm6bb2chi34opm6dij0eb3co@google.com",
       "source_type": "inverse_google_calendar",
       "reason_code": "non_standard_time_increment",
@@ -9258,14 +9254,6 @@
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
       "start_datetime": "2026-08-19T07:45:00",
       "end_datetime": "2026-08-19T08:30:00"
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-08-20T07:45:00",
-      "end_datetime": "2026-08-20T08:00:00"
     },
     {
       "calendar_source_key": "brian_do_not_schedule",
