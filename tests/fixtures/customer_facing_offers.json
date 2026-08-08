@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-08-08T12:00:00-04:00",
+  "timezone": "America/New_York",
+  "courses": [
+    {
+      "course_key": "bls-renewal",
+      "course_title": "AHA BLS Provider Renewal",
+      "course_display_name": "AHA BLS Renewal",
+      "offered_options": [
+        {
+          "offer_slug": "bls-renewal-wilmington-20260813-1300",
+          "session_status": "proposed",
+          "start_time": "2026-08-13T13:00:00-04:00",
+          "end_time": "2026-08-13T15:00:00-04:00",
+          "location_name": "Wilmington Office",
+          "instructor": "Brian Ennis",
+          "capacity": 8,
+          "offer_source": "customer_facing_offers"
+        },
+        {
+          "offer_slug": "bls-renewal-wilmington-20260813-1530-suppressed",
+          "session_status": "suppressed",
+          "start_time": "2026-08-13T15:30:00-04:00",
+          "end_time": "2026-08-13T17:30:00-04:00",
+          "location_name": "Wilmington Office",
+          "instructor": "Brian Ennis"
+        }
+      ]
+    }
+  ]
+}

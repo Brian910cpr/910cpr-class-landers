@@ -177,6 +177,11 @@ def find_availability(request: dict[str, Any], *, schedule: Any = None, offers: 
         if str(group.get("course_key") or "") != course["course_key"]:
             continue
         for row in _as_rows(group, "offered_options"):
+            # This is the same publication gate used by build_slug_hubs.py's
+            # load_customer_facing_offers(). Draft/suppressed rows are not
+            # options merely because they remain in the generated artifact.
+            if str(row.get("session_status") or "").strip() != "proposed":
+                continue
             start = row.get("start_time") or row.get("start_at")
             if not _date_in_range(start, start_date, end_date):
                 continue
