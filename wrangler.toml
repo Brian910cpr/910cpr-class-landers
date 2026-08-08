@@ -10,12 +10,18 @@ routes = [
   { pattern = "schedule.910cpr.com/*", zone_name = "910cpr.com" }
 ]
 
-# Required production configuration (resource identifiers are intentionally not
-# guessed or committed here):
-#   secret: HOT_SYNC_ADMIN_KEY
-#   D1 binding: HOT_SYNC_D1 (apply worker/migrations/0001_admin_operations.sql)
-#   R2 binding: LANDERWARE_INBOX
-# Verify all three on free-time-offer-worker before deploying this config.
+# Required secret (set with `wrangler secret put`, never commit its value):
+#   HOT_SYNC_ADMIN_KEY
+
+[[d1_databases]]
+binding = "HOT_SYNC_D1"
+database_name = "landerware-hot-sync"
+database_id = "755bbe0b-300d-4c71-b3e3-f686f3b3d966"
+migrations_dir = "worker/migrations"
+
+[[r2_buckets]]
+binding = "LANDERWARE_INBOX"
+bucket_name = "landerware-inbox"
 
 [vars]
 CREATION_ENABLED = "false"
