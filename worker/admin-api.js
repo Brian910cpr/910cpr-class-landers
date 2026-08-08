@@ -19,6 +19,12 @@ export async function handleAdminApi(request, env, url) {
   if (hotSyncMatch && request.method === "PUT") return updateHotSync(hotSyncMatch[1], request, env, origin);
   if (hotSyncMatch && request.method === "DELETE") return cancelHotSync(hotSyncMatch[1], env, origin);
 
+  const studentsMatch = url.pathname.match(/^\/admin\/classes\/([A-Za-z0-9_.:-]{1,160})\/students$/);
+  const studentMatch = url.pathname.match(/^\/admin\/classes\/([A-Za-z0-9_.:-]{1,160})\/students\/([A-Za-z0-9_-]{6,100})$/);
+  if (studentsMatch && request.method === "GET") return listStudents(studentsMatch[1], env, origin);
+  if (studentsMatch && request.method === "POST") return addStudents(studentsMatch[1], request, env, origin);
+  if (studentMatch && request.method === "DELETE") return deleteStudent(studentMatch[1], studentMatch[2], env, origin);
+
   if (url.pathname === "/admin/inbox" && request.method === "GET") return listInbox(env, origin);
   if (url.pathname === "/admin/inbox" && request.method === "POST") return uploadInbox(request, env, origin);
   const inboxMatch = url.pathname.match(/^\/admin\/inbox\/([A-Za-z0-9_-]{6,100})$/);
@@ -167,6 +173,80 @@ async function readHotSync(id, env, origin) {
   try {
     const row = await env.HOT_SYNC_D1.prepare("SELECT * FROM hot_sync_sessions WHERE id = ?").bind(cleanId(id)).first();
     return row ? json({ record: classFromRow(row), blocking: blocksAvailability(classFromRow(row)) }, 200, origin) : json({ error: "HOT_SYNC record not found.", code: "not_found" }, 404, origin);
+  } catch (error) { return safeError(error, origin); }
+}
+
+function cleanClassRef(value) {
+  const classId = String(value || "");
+  if (!/^[A-Za-z0-9_.:-]{1,160}$/.test(classId)) throw new ValidationError("Class ID is invalid.");
+  return classId;
+}
+
+function normalizeStudent(input) {
+  const firstName = cleanText(input.first_name, 120);
+  const lastName = cleanText(input.last_name, 120);
+  const email = cleanText(input.email, 320).toLowerCase();
+  const phone = cleanText(input.phone, 50);
+  if (!firstName && !lastName && !email) throw new ValidationError("Each student needs a name or email address.");
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new ValidationError(`Student email is invalid: ${email}`);
+  return {
+    id: input.id ? cleanId(input.id) : `student_${crypto.randomUUID().replace(/-/g, "")}`,
+    first_name: firstName,
+    last_name: lastName,
+    email,
+    phone,
+    employee_id: cleanText(input.employee_id, 120),
+    notes: cleanText(input.notes, 2000),
+    raw_input: cleanText(input.raw_input, 2000),
+  };
+}
+
+async function listStudents(classId, env, origin) {
+  const unavailable = requireDatabase(env, origin);
+  if (unavailable) return unavailable;
+  try {
+    classId = cleanClassRef(classId);
+    const result = await env.HOT_SYNC_D1.prepare("SELECT * FROM class_students WHERE class_id = ? ORDER BY last_name, first_name, created_at").bind(classId).all();
+    return json({ class_id: classId, students: result.results || [] }, 200, origin);
+  } catch (error) { return safeError(error, origin); }
+}
+
+async function addStudents(classId, request, env, origin) {
+  const unavailable = requireDatabase(env, origin);
+  if (unavailable) return unavailable;
+  try {
+    classId = cleanClassRef(classId);
+    const input = await requestJson(request);
+    const rows = Array.isArray(input.students) ? input.students : [];
+    if (!rows.length) throw new ValidationError("At least one student is required.");
+    if (rows.length > 200) throw new ValidationError("A single import is limited to 200 students.");
+    const students = rows.map(normalizeStudent);
+    const now = new Date().toISOString();
+    const who = actor(env);
+    const statements = students.map((student) => env.HOT_SYNC_D1.prepare(`INSERT INTO class_students
+      (id,class_id,first_name,last_name,email,phone,employee_id,notes,raw_input,created_at,updated_at,created_by)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`).bind(student.id, classId, student.first_name, student.last_name, student.email, student.phone, student.employee_id, student.notes, student.raw_input, now, now, who));
+    statements.push(auditStatement(env, "students_import", classId, who, now, { count: students.length, student_ids: students.map((student) => student.id) }));
+    await env.HOT_SYNC_D1.batch(statements);
+    return json({ class_id: classId, students: students.map((student) => ({ ...student, created_at: now, updated_at: now, created_by: who })) }, 201, origin);
+  } catch (error) { return safeError(error, origin); }
+}
+
+async function deleteStudent(classId, studentId, env, origin) {
+  const unavailable = requireDatabase(env, origin);
+  if (unavailable) return unavailable;
+  try {
+    classId = cleanClassRef(classId);
+    studentId = cleanId(studentId);
+    const existing = await env.HOT_SYNC_D1.prepare("SELECT * FROM class_students WHERE class_id = ? AND id = ?").bind(classId, studentId).first();
+    if (!existing) return json({ error: "Student not found.", code: "not_found" }, 404, origin);
+    const now = new Date().toISOString();
+    const who = actor(env);
+    await env.HOT_SYNC_D1.batch([
+      env.HOT_SYNC_D1.prepare("DELETE FROM class_students WHERE class_id = ? AND id = ?").bind(classId, studentId),
+      auditStatement(env, "student_delete", classId, who, now, { student_id: studentId }),
+    ]);
+    return json({ class_id: classId, id: studentId, deleted: true }, 200, origin);
   } catch (error) { return safeError(error, origin); }
 }
 
@@ -333,4 +413,4 @@ function safeError(error, origin) {
 
 class ValidationError extends Error {}
 
-export const adminApiInternals = { normalizeClass, blocksAvailability, cleanId, MAX_UPLOAD_BYTES, ALLOWED_EXTENSIONS };
+export const adminApiInternals = { normalizeClass, normalizeStudent, blocksAvailability, cleanId, cleanClassRef, MAX_UPLOAD_BYTES, ALLOWED_EXTENSIONS };

@@ -147,6 +147,15 @@ test("IDs reject path traversal", () => {
   assert.equal(adminApiInternals.cleanId("inbox_safe_123"), "inbox_safe_123");
 });
 
+test("student normalization preserves source data and validates identity", () => {
+  const student = adminApiInternals.normalizeStudent({ first_name: " Jane ", last_name: " Doe ", email: "JANE@EXAMPLE.COM", raw_input: "Jane Doe <JANE@EXAMPLE.COM>" });
+  assert.equal(student.first_name, "Jane");
+  assert.equal(student.email, "jane@example.com");
+  assert.equal(student.raw_input, "Jane Doe <JANE@EXAMPLE.COM>");
+  assert.throws(() => adminApiInternals.normalizeStudent({ phone: "910-555-1212" }), /name or email/i);
+  assert.throws(() => adminApiInternals.cleanClassRef("../../class"), /invalid/i);
+});
+
 test("unauthorized upload is rejected before file processing", async () => {
   const url = new URL("https://schedule.910cpr.com/admin/inbox");
   const response = await handleAdminApi(request("/admin/inbox", { method: "POST", body: new FormData() }), { HOT_SYNC_ADMIN_KEY: "correct" }, url);

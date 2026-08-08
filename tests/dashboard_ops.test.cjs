@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { freshness, validateUpload, MAX_FILE_BYTES } = require("../docs/admin/dashboard-ops.js");
+const { freshness, validateUpload, hotSyncSaveRequest, parseStudentText, MAX_FILE_BYTES } = require("../docs/admin/dashboard-ops.js");
 
 const NOW = Date.parse("2026-07-26T20:00:00Z");
 
@@ -65,4 +65,33 @@ test("admin authentication uses an on-page unlock control instead of a password 
   assert.doesNotMatch(operations, /prompt\(['"]LanderWare admin key/);
   assert.match(operations, /sessionStorage\.setItem\("hotSyncAdminKey", key\)/);
   assert.match(operations, /sessionStorage\.removeItem\("hotSyncAdminKey"\)/);
+});
+
+test("new HOT_SYNC records POST even after a client ID is generated", () => {
+  const record = { id: "hs-client-generated" };
+  assert.deepEqual(hotSyncSaveRequest(record, false), {
+    method: "POST",
+    endpoint: "https://schedule.910cpr.com/admin/hot-sync",
+  });
+  assert.deepEqual(hotSyncSaveRequest(record, true), {
+    method: "PUT",
+    endpoint: "https://schedule.910cpr.com/admin/hot-sync/hs-client-generated",
+  });
+});
+
+test("student intake parses email paste, line lists, and CSV headers", () => {
+  assert.deepEqual(parseStudentText("Jane Doe <jane@example.com>\n- John Smith 910-555-1212"), [
+    { first_name: "Jane", last_name: "Doe", email: "jane@example.com", phone: "", employee_id: "", notes: "", raw_input: "Jane Doe <jane@example.com>" },
+    { first_name: "John", last_name: "Smith", email: "", phone: "910-555-1212", employee_id: "", notes: "", raw_input: "- John Smith 910-555-1212" },
+  ]);
+  assert.deepEqual(parseStudentText("First Name,Last Name,Email,Employee ID\nAmy,Jones,amy@example.com,E-42")[0], {
+    first_name: "Amy", last_name: "Jones", email: "amy@example.com", phone: "", employee_id: "E-42", notes: "", raw_input: "Amy,Jones,amy@example.com,E-42",
+  });
+});
+
+test("student intake UI supports paste and private source documents", () => {
+  const html = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard.html"), "utf8");
+  assert.match(html, /id="studentPaste"/);
+  assert.match(html, /id="studentFileDrop"/);
+  assert.match(html, /PDF, Excel, Word, PNG, and JPG are privately attached/);
 });
