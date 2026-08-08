@@ -38,6 +38,129 @@
     return "";
   }
 
+  function hotSyncSaveRequest(record, persisted) {
+    return persisted
+      ? { method: "PUT", endpoint: `${API_BASE}/hot-sync/${encodeURIComponent(record.id)}` }
+      : { method: "POST", endpoint: `${API_BASE}/hot-sync` };
+  }
+
+  function splitDelimitedLine(line, delimiter) {
+    const values = [];
+    let value = "";
+    let quoted = false;
+    for (let index = 0; index < line.length; index += 1) {
+      const character = line[index];
+      if (character === '"' && quoted && line[index + 1] === '"') { value += '"'; index += 1; }
+      else if (character === '"') quoted = !quoted;
+      else if (character === delimiter && !quoted) { values.push(value.trim()); value = ""; }
+      else value += character;
+    }
+    values.push(value.trim());
+    return values;
+  }
+
+  function parseStudentText(text) {
+    const lines = String(text || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+    if (!lines.length) return [];
+    const delimiter = lines.some((line) => line.includes("\t")) ? "\t" : lines.some((line) => line.includes(",")) ? "," : "";
+    const headerAliases = {
+      first_name: ["first", "first name", "firstname"], last_name: ["last", "last name", "lastname", "surname"],
+      name: ["name", "student", "student name", "full name"], email: ["email", "email address", "e-mail"],
+      phone: ["phone", "phone number", "mobile", "cell"], employee_id: ["employee id", "employee", "id", "staff id"],
+    };
+    let headers = [];
+    if (delimiter) {
+      const first = splitDelimitedLine(lines[0], delimiter).map((value) => value.toLowerCase().replace(/[_-]+/g, " ").trim());
+      headers = first.map((value) => Object.entries(headerAliases).find(([, aliases]) => aliases.includes(value))?.[0] || "");
+      if (headers.some(Boolean)) lines.shift(); else headers = [];
+    }
+    return lines.map((rawLine) => {
+      const raw = rawLine.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").trim();
+      const student = { first_name: "", last_name: "", email: "", phone: "", employee_id: "", notes: "", raw_input: rawLine };
+      const cells = delimiter ? splitDelimitedLine(raw, delimiter) : [raw];
+      if (headers.length) {
+        headers.forEach((field, index) => { if (field) student[field] = cells[index] || ""; });
+      } else {
+        const email = raw.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || "";
+        const phone = raw.match(/(?:\+?1[ .-]?)?\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}/)?.[0] || "";
+        student.email = email;
+        student.phone = phone;
+        const nonContact = raw.replace(email, "").replace(phone, "").replace(/[<>|;]/g, " ").trim().replace(/\s{2,}/g, " ");
+        if (delimiter === "," && cells.length >= 2 && !cells[0].includes("@") && !cells[1].includes("@")) {
+          student.last_name = cells[0];
+          student.first_name = cells[1];
+          if (!student.email) student.email = cells.find((cell) => cell.includes("@")) || "";
+          if (!student.phone) student.phone = cells.find((cell) => /\d{3}.*\d{3}.*\d{4}/.test(cell)) || "";
+        } else {
+          const name = nonContact.replace(/^name:\s*/i, "").replace(/\s*,\s*$/, "").trim();
+          const parts = name.split(/\s+/).filter(Boolean);
+          student.first_name = parts.shift() || "";
+          student.last_name = parts.join(" ");
+        }
+      }
+      if (student.name) {
+        const parts = student.name.trim().split(/\s+/);
+        student.first_name = parts.shift() || "";
+        student.last_name = parts.join(" ");
+        delete student.name;
+      }
+      student.email = String(student.email || "").replace(/[<>]/g, "").trim().toLowerCase();
+      return student;
+    }).filter((student) => student.first_name || student.last_name || student.email);
+  }
+
+  let studentPreviewRows = [];
+  let selectedStudentClassId = "";
+
+  function studentMessage(text, state = "warn") {
+    const element = document.getElementById("studentMessage");
+    element.textContent = text;
+    element.className = `saveMessage ${state}`;
+  }
+
+  function renderStudentPreview(rows) {
+    const host = document.getElementById("studentPreview");
+    host.innerHTML = rows.length ? rows.map((student) => `<div class="recordRow"><div><b>${root.esc([student.first_name, student.last_name].filter(Boolean).join(" ") || student.email)}</b><div class="muted">${root.esc([student.email, student.phone, student.employee_id].filter(Boolean).join(" · ") || "No contact fields supplied")}</div></div><span class="pill">preview</span></div>`).join("") : '<div class="emptymsg">Nothing recognizable was found.</div>';
+    document.getElementById("importStudentsBtn").disabled = !selectedStudentClassId || !rows.length;
+  }
+
+  async function loadStudents(classId = selectedStudentClassId) {
+    if (!classId) return;
+    const payload = await jsonRequest(`${API_BASE}/classes/${encodeURIComponent(classId)}/students`, { headers: authHeaders() });
+    const students = payload.students || [];
+    document.getElementById("studentCount").textContent = `${students.length} student${students.length === 1 ? "" : "s"}`;
+    const host = document.getElementById("studentList");
+    host.innerHTML = students.length ? students.map((student) => `<div class="recordRow"><div><b>${root.esc([student.first_name, student.last_name].filter(Boolean).join(" ") || student.email)}</b><div class="muted">${root.esc([student.email, student.phone, student.employee_id].filter(Boolean).join(" · ") || "No contact fields supplied")}</div></div><button class="btn small danger" data-student-delete="${root.esc(student.id)}">Remove</button></div>`).join("") : '<div class="emptymsg">No students attached to this class yet.</div>';
+    host.querySelectorAll("[data-student-delete]").forEach((button) => {
+      button.onclick = async () => {
+        if (!confirm("Remove this student from the class?")) return;
+        await jsonRequest(`${API_BASE}/classes/${encodeURIComponent(classId)}/students/${encodeURIComponent(button.dataset.studentDelete)}`, { method: "DELETE", headers: authHeaders() });
+        await loadStudents(classId);
+      };
+    });
+  }
+
+  function selectStudentClass(classId) {
+    selectedStudentClassId = String(classId || "");
+    const enabled = Boolean(selectedStudentClassId);
+    document.getElementById("studentClassHelp").textContent = enabled ? `Adding students to ${selectedStudentClassId}` : "Save or open a persisted HOT_SYNC class before adding students.";
+    document.getElementById("previewStudentsBtn").disabled = !enabled;
+    document.getElementById("chooseStudentFiles").disabled = !enabled;
+    document.getElementById("studentFileDrop").setAttribute("aria-disabled", enabled ? "false" : "true");
+    document.getElementById("studentCount").textContent = enabled ? "Loading students…" : "No class selected";
+    if (enabled) loadStudents(selectedStudentClassId).catch((error) => studentMessage(`Could not load students: ${error.message}`, "bad"));
+  }
+
+  async function importStudentPreview() {
+    if (!selectedStudentClassId || !studentPreviewRows.length) return;
+    const payload = await jsonRequest(`${API_BASE}/classes/${encodeURIComponent(selectedStudentClassId)}/students`, { method: "POST", headers: authHeaders("application/json"), body: JSON.stringify({ students: studentPreviewRows }) });
+    studentMessage(`${payload.students.length} student${payload.students.length === 1 ? "" : "s"} added.`, "good");
+    studentPreviewRows = [];
+    document.getElementById("studentPaste").value = "";
+    renderStudentPreview([]);
+    await loadStudents(selectedStudentClassId);
+  }
+
   function authHeaders(contentType) {
     const key = sessionStorage.getItem("hotSyncAdminKey") || "";
     const headers = { "X-Hot-Sync-Admin-Key": key };
@@ -170,7 +293,10 @@
     host.querySelectorAll("[data-server-edit]").forEach((button) => {
       button.onclick = () => {
         const record = serverRecords.find((item) => item.id === button.dataset.serverEdit);
-        if (record) root.setFields(record);
+        if (record) {
+          root.setFields(record, true);
+          selectStudentClass(record.id);
+        }
       };
     });
     host.querySelectorAll("[data-draft-edit]").forEach((button) => {
@@ -203,9 +329,12 @@
     if (missing.length) { root.showSaveMessage(`Missing: ${missing.join(", ")}.`, "bad"); return; }
     if (!requireKey()) { root.showSaveMessage("Save failed: authentication is required.", "bad"); return; }
     try {
-      const method = record.id ? "PUT" : "POST";
-      const endpoint = record.id ? `${API_BASE}/hot-sync/${encodeURIComponent(record.id)}` : `${API_BASE}/hot-sync`;
+      const { method, endpoint } = hotSyncSaveRequest(record, Boolean(root.isEditingPersistedRecord?.()));
       const payload = await jsonRequest(endpoint, { method, headers: authHeaders("application/json"), body: JSON.stringify(record) });
+      if (payload.record && typeof root.setFields === "function") {
+        root.setFields(payload.record, true);
+        selectStudentClass(payload.record.id);
+      }
       if (typeof root.removeDraft === "function") root.removeDraft(record.id);
       root.showSaveMessage(payload.blocking ? "Saved to HOT_SYNC. This committed class is now blocking availability." : "Saved to HOT_SYNC. This record is not currently blocking availability.", "good");
       await loadHotSyncRecords();
@@ -357,6 +486,42 @@
       }).observe(freshnessElement, { childList: true, characterData: true, subtree: true });
     }
     document.getElementById("saveHotSyncBtn").onclick = saveHotSyncOperational;
+    document.getElementById("previewStudentsBtn").onclick = () => {
+      studentPreviewRows = parseStudentText(document.getElementById("studentPaste").value);
+      renderStudentPreview(studentPreviewRows);
+      studentMessage(studentPreviewRows.length ? `${studentPreviewRows.length} row${studentPreviewRows.length === 1 ? "" : "s"} ready for review.` : "No recognizable student rows were found.", studentPreviewRows.length ? "good" : "warn");
+    };
+    document.getElementById("importStudentsBtn").onclick = () => importStudentPreview().catch((error) => studentMessage(`Import failed: ${error.message}`, "bad"));
+    const studentFiles = document.getElementById("studentFileInput");
+    const handleStudentFiles = async (files) => {
+      if (!selectedStudentClassId) return;
+      for (const file of Array.from(files || [])) {
+        const extension = file.name.split(".").pop().toLowerCase();
+        if (extension === "txt" || extension === "csv") {
+          const paste = document.getElementById("studentPaste");
+          paste.value = [paste.value, await file.text()].filter(Boolean).join("\n");
+          studentPreviewRows = parseStudentText(paste.value);
+          renderStudentPreview(studentPreviewRows);
+          studentMessage(`${file.name} loaded: ${studentPreviewRows.length} row${studentPreviewRows.length === 1 ? "" : "s"} ready for review.`, "good");
+        } else {
+          document.getElementById("inboxCategory").value = "Signed roster";
+          document.getElementById("inboxAssociation").value = selectedStudentClassId;
+          document.getElementById("inboxNotes").value = "Student roster source document; review and import student details manually.";
+          await uploadFiles([file]);
+          studentMessage(`${file.name} attached privately to ${selectedStudentClassId} for review.`, "good");
+        }
+      }
+      studentFiles.value = "";
+    };
+    document.getElementById("chooseStudentFiles").onclick = () => studentFiles.click();
+    studentFiles.onchange = () => handleStudentFiles(studentFiles.files).catch((error) => studentMessage(`File intake failed: ${error.message}`, "bad"));
+    const studentDrop = document.getElementById("studentFileDrop");
+    studentDrop.ondragover = (event) => { event.preventDefault(); };
+    studentDrop.ondrop = (event) => {
+      event.preventDefault();
+      if (studentDrop.getAttribute("aria-disabled") === "true") return;
+      handleStudentFiles(event.dataTransfer.files).catch((error) => studentMessage(`File intake failed: ${error.message}`, "bad"));
+    };
     document.getElementById("viewRecordsBtn").onclick = async () => {
       const box = document.getElementById("recordBrowser");
       box.style.display = box.style.display === "none" ? "block" : "none";
@@ -399,7 +564,7 @@
     }
   }
 
-  const api = { freshness, validateUpload, MAX_FILE_BYTES };
+  const api = { freshness, validateUpload, hotSyncSaveRequest, parseStudentText, MAX_FILE_BYTES };
   root.DashboardOps = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   if (typeof document !== "undefined") initialize();
