@@ -13,7 +13,8 @@ const workerModuleUrl = `data:text/javascript;base64,${Buffer.from(
     `import { handleAdminApi } from "${moduleUrl}";`,
   ),
 ).toString("base64")}`;
-const worker = (await import(workerModuleUrl)).default;
+const workerModule = await import(workerModuleUrl);
+const worker = workerModule.default;
 
 function request(path, { method = "GET", key = "", origin = "https://www.910cpr.com", body, headers = {} } = {}) {
   return new Request(`https://schedule.910cpr.com${path}`, {
@@ -105,6 +106,23 @@ test("entrypoint PUT persists a committed hidden class as blocking", async () =>
   assert.match(batches[0][0].sql, /^UPDATE hot_sync_sessions/);
   assert.equal(batches[0][0].args[1], "committed");
   assert.equal(batches[0][0].args[2], "hidden");
+});
+
+test("click-time recheck rejects an offer overlapping a committed hidden HOT_SYNC class", async () => {
+  let queryArgs = [];
+  const database = {
+    prepare(sql) {
+      assert.match(sql, /status = 'committed'/);
+      return { bind(...args) { queryArgs = args; return { async first() { return { id: "hs_blocking" }; } }; } };
+    },
+  };
+  const result = await workerModule.offerWorkerInternals.clickTimeRecheck({
+    requested_start: "2026-08-26T09:30:00-04:00",
+    requested_end: "2026-08-26T11:30:00-04:00",
+  }, { HOT_SYNC_D1: database });
+  assert.equal(result.available, false);
+  assert.match(result.reason, /committed class/);
+  assert.deepEqual(queryArgs, ["2026-08-26T15:30:00.000Z", "2026-08-26T13:30:00.000Z"]);
 });
 
 test("unconfigured service and missing persistence report unavailable", async () => {

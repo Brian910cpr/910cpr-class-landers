@@ -272,7 +272,9 @@
     try {
       const payload = await jsonRequest(`${API_BASE}/hot-sync`, { headers: authHeaders() });
       setConnection("hotSyncConnection", "HOT_SYNC connected", "good");
-      renderRecords(Array.isArray(payload.records) ? payload.records : []);
+      const records = Array.isArray(payload.records) ? payload.records : [];
+      renderRecords(records);
+      if (typeof root.applyHotSyncRecords === "function") root.applyHotSyncRecords(records);
       return payload.records || [];
     } catch (error) {
       classifyConnectionError(error, "hotSyncConnection");

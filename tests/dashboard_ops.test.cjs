@@ -95,3 +95,12 @@ test("student intake UI supports paste and private source documents", () => {
   assert.match(html, /id="studentFileDrop"/);
   assert.match(html, /PDF, Excel, Word, PNG, and JPG are privately attached/);
 });
+
+test("planner merges committed HOT_SYNC classes and suppresses overlapping offer starts", () => {
+  const html = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard.html"), "utf8");
+  const operations = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard-ops.js"), "utf8");
+  assert.match(html, /function applyHotSyncRecords\(records\)/);
+  assert.match(html, /r\.status==='committed'&&r\.needs_class_report_absorption/);
+  assert.match(html, /function offerIsHotSyncBlocked\(offer\)/);
+  assert.match(operations, /root\.applyHotSyncRecords\(records\)/);
+});
