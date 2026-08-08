@@ -34,11 +34,20 @@ from scripts.hybrid_inventory import (
     sort_by_momentum,
     sort_by_start,
 )
-from supervisor.status_snapshot import write_status_snapshot
+try:
+    from supervisor.status_snapshot import write_status_snapshot
+except ModuleNotFoundError:  # Sparse/test checkouts do not include supervisor.
+    def write_status_snapshot() -> None:
+        return None
 from zoneinfo import ZoneInfo
 
 
 from scripts.local_data_paths import public_sellable_offers_preview_path
+from scripts.public_dynamic_inventory import (
+    collect_public_dynamic_inventory,
+    merge_appointment_seed_offers,
+    write_public_dynamic_inventory,
+)
 from scripts.public_class_eligibility import is_public_class_location, session_has_public_class_location
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,6 +60,7 @@ SEED_APPOINTMENT_URL_PREVIEW_PATH = ROOT / "data" / "audit" / "seed_appointment_
 PUBLIC_SELLABLE_OFFERS_PREVIEW_PATH = public_sellable_offers_preview_path(ROOT)
 PRESENTATION_POLICY_PREVIEW_PATH = ROOT / "data" / "audit" / "dynamic_offer_presentation_policy_report.json"
 UNIVERSAL_OFFER_INVENTORY_PATH = ROOT / "data" / "audit" / "universal_offer_inventory.json"
+PUBLIC_DYNAMIC_INVENTORY_PATH = ROOT / "docs" / "data" / "public_dynamic_inventory.json"
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
 APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
 LOCATION_RESOURCE_MAP_PATH = ROOT / "data" / "config" / "location_resource_map.json"
@@ -354,32 +364,6 @@ def load_public_sellable_appointment_seed_offers() -> dict[str, list[dict[str, A
     for hub_slug, offers in list(grouped.items()):
         grouped[hub_slug] = sorted(offers, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
     return grouped
-
-
-def merge_appointment_seed_offers(
-    *grouped_sources: dict[str, list[dict[str, Any]]],
-) -> dict[str, list[dict[str, Any]]]:
-    merged: dict[str, list[dict[str, Any]]] = {}
-    seen_by_hub: dict[str, set[str]] = {}
-    for grouped in grouped_sources:
-        for hub_slug, offers in grouped.items():
-            hub_key = normalize_space(hub_slug)
-            if not hub_key:
-                continue
-            seen = seen_by_hub.setdefault(hub_key, set())
-            for offer in offers:
-                href = normalize_space(offer.get("appointment_registration_url"))
-                dedupe_key = href or "|".join(
-                    normalize_space(offer.get(key))
-                    for key in ("course_id", "start_datetime", "location_name", "instructor_display_name")
-                )
-                if not dedupe_key or dedupe_key in seen:
-                    continue
-                seen.add(dedupe_key)
-                merged.setdefault(hub_key, []).append(offer)
-    for hub_slug, offers in list(merged.items()):
-        merged[hub_slug] = sorted(offers, key=lambda item: parse_dt(item.get("start_datetime")) or datetime.max.replace(tzinfo=TZ))
-    return merged
 
 
 def load_universal_offer_inventory() -> dict[str, list[dict[str, Any]]]:
@@ -3696,18 +3680,17 @@ def build() -> None:
     sessions, schedule_source_path = load_authoritative_schedule()
     grouped_customer_offers = load_customer_facing_offers()
     universal_offers_by_page = load_universal_offer_inventory()
-    universal_appointment_seed_offers_by_page = {
-        hub_slug: [
-            offer for offer in offers
-            if offer.get("display_item_type") == "appointment_seed_offer"
-        ]
-        for hub_slug, offers in universal_offers_by_page.items()
-    }
-    appointment_seed_offers_by_page = merge_appointment_seed_offers(
-        universal_appointment_seed_offers_by_page,
-        load_hub_appointment_seed_offers(),
-        load_public_sellable_appointment_seed_offers(),
+    public_dynamic_inventory = collect_public_dynamic_inventory(
+        legacy_requestable_by_course=grouped_customer_offers,
+        universal_by_hub=universal_offers_by_page,
+        modeled_seed_by_hub=load_hub_appointment_seed_offers(),
+        public_sellable_seed_by_hub=load_public_sellable_appointment_seed_offers(),
+        generated_at=datetime.now(TZ).isoformat(),
     )
+    write_public_dynamic_inventory(PUBLIC_DYNAMIC_INVENTORY_PATH, public_dynamic_inventory)
+    grouped_customer_offers = public_dynamic_inventory["legacy_requestable_by_course"]
+    universal_offers_by_page = public_dynamic_inventory["universal_by_hub"]
+    appointment_seed_offers_by_page = public_dynamic_inventory["appointment_seed_by_hub"]
     now = datetime.now(TZ)
     build_meta = current_build_metadata("scripts/build_slug_hubs.py", f"slug hub rebuild from {schedule_source_label(schedule_source_path)}")
 

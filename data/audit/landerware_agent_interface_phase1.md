@@ -64,20 +64,39 @@ It is also no longer the complete dynamic-public boundary. The current hub build
 3. approved seed URL previews; and
 4. universal offer inventory when present.
 
-The existing Agent adapter is exact for seated inventory and the legacy customer-facing stream, but it does not yet expose every modern appointment-seed row that the hub builder can render. The branch should not be merged as complete dynamic parity until the hub's normalized dynamic collector is extracted into a small shared module used by both `build_slug_hubs.py` and the Agent adapter.
+The shared normalized collector is now `scripts/public_dynamic_inventory.py`. Existing hub loaders retain ownership of all source-specific publication, presentation-policy, appointment-container, URL, sellability, and renderability gates. They pass only normalized rows into `collect_public_dynamic_inventory`, which applies the hub's existing source precedence/deduplication and returns `landerware.public-dynamic-inventory.v1`.
 
-## Current reusable boundary
+`build_slug_hubs.py` writes that exact in-memory collection to `docs/data/public_dynamic_inventory.json` and renders from the same returned dictionaries. `landerware_agent_interface.py` consumes the persisted contract. The Agent therefore does not import the hub builder or independently interpret newer dynamic artifacts.
 
-The initial Phase 1 boundary is the pair of machine-readable contracts directly consumed by the public presentation:
+The collector inputs are:
+
+- normalized proposed legacy requestable offers keyed by course;
+- normalized universal offers keyed by hub;
+- normalized approved modeled/seed-preview offers keyed by hub; and
+- normalized presentation-policy/public-sellable appointment seeds keyed by hub.
+
+Its output preserves three explicit collections:
+
+- `legacy_requestable_by_course`;
+- `appointment_seed_by_hub` after existing source precedence and booking-tuple deduplication; and
+- `universal_by_hub`, including public-safe request-only rows.
+
+A missing generated contract still fails closed. The legacy file remains a compatibility fallback until every operational build produces `public_dynamic_inventory.json`.
+
+## Reusable boundary
+
+The Phase 1 boundary is now the pair of machine-readable contracts directly consumed by the public presentation:
 
 - `docs/data/schedule_future.json` for real seated Enrollware sessions.
-- `docs/data/customer_facing_offers.json` for dynamic options that have already passed resolver and presentation-policy selection.
+- `docs/data/public_dynamic_inventory.json` for the normalized union of dynamic options the hub may expose.
 
-`scripts/landerware_agent_interface.py` provides `identify_course` and `find_availability` over those contracts. It performs filtering and response shaping only; it does not recreate scheduling decisions. Missing dynamic inventory fails closed and never creates an offer. A representative generated fixture lives at `tests/fixtures/customer_facing_offers.json`; parity tests verify that the same `session_status == proposed` rows selected by the hub loader are returned by the Agent adapter.
+`scripts/landerware_agent_interface.py` provides `identify_course` and `find_availability` over those contracts. It performs date/course filtering and response shaping only; it does not recreate scheduling or publication decisions. Missing dynamic inventory fails closed and never creates an offer. A representative legacy fixture lives at `tests/fixtures/customer_facing_offers.json`.
 
 ## Presentation coupling and next extraction
 
-Dynamic resolution and JSON/report/page writes are mixed in `free_time_scheduler.py::generate_customer_facing_offers`. A later transport service that must calculate on demand should first extract that function into a pure resolver returning the existing payload, leaving the current writer and website builder as consumers. That extraction needs fixture parity tests before deployment. Phase 1 intentionally avoids it.
+Dynamic resolution and source-specific normalization remain in their existing owners. The shared seam does not calculate on demand and does not alter those policies. If a future transport requires live recalculation rather than consuming the latest generated contract, that is a separate resolver-lifecycle design and is not part of Phase 1.
+
+`build_slug_hubs.py` now treats the optional `supervisor.status_snapshot` integration as unavailable in sparse/test checkouts by installing a no-op only when that module is absent. Production behavior is unchanged when the supervisor package exists; the dynamic collector itself has no supervisor dependency.
 
 ## JSON CLI versus eventual HTTP docking interface
 

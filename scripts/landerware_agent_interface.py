@@ -21,6 +21,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 DYNAMIC_OFFERS_PATH = ROOT / "docs" / "data" / "customer_facing_offers.json"
+PUBLIC_DYNAMIC_INVENTORY_PATH = ROOT / "docs" / "data" / "public_dynamic_inventory.json"
 COURSE_MASTER_PATH = ROOT / "data" / "config" / "course_master.json"
 API_VERSION = "landerware.agent.v1"
 
@@ -49,7 +50,16 @@ def _as_rows(payload: Any, key: str) -> list[dict[str, Any]]:
     return [row for row in rows if isinstance(row, dict)]
 
 
-def _course_records(schedule: Any, offers: Any, master: Any) -> list[dict[str, Any]]:
+def _dynamic_groups(payload: Any, key: str) -> dict[str, list[dict[str, Any]]]:
+    groups = payload.get(key, {}) if isinstance(payload, dict) else {}
+    return {
+        str(group): [row for row in rows if isinstance(row, dict)]
+        for group, rows in groups.items()
+        if isinstance(rows, list)
+    } if isinstance(groups, dict) else {}
+
+
+def _course_records(schedule: Any, offers: Any, master: Any, public_dynamic: Any = None) -> list[dict[str, Any]]:
     records: dict[str, dict[str, Any]] = {}
 
     def add(key: Any, title: Any, course_id: Any = None, aliases: Any = None) -> None:
@@ -70,6 +80,14 @@ def _course_records(schedule: Any, offers: Any, master: Any) -> list[dict[str, A
         add(row.get("course_key"), row.get("official_course_name") or row.get("course_name"), row.get("course_id"), [row.get("raw_course_name")])
     for group in _as_rows(offers, "courses"):
         add(group.get("course_key"), group.get("course_display_name") or group.get("course_title"))
+    if isinstance(public_dynamic, dict):
+        for rows in (
+            *_dynamic_groups(public_dynamic, "legacy_requestable_by_course").values(),
+            *_dynamic_groups(public_dynamic, "appointment_seed_by_hub").values(),
+            *_dynamic_groups(public_dynamic, "universal_by_hub").values(),
+        ):
+            for row in rows:
+                add(row.get("course_key"), row.get("course_display_name") or row.get("course_title"), row.get("course_id"))
     master_rows = master.get("courses", master) if isinstance(master, dict) else master
     if isinstance(master_rows, list):
         for row in master_rows:
@@ -78,7 +96,7 @@ def _course_records(schedule: Any, offers: Any, master: Any) -> list[dict[str, A
     return sorted(records.values(), key=lambda row: (row["course_name"], row["course_key"], row["course_id"]))
 
 
-def identify_course(intent: dict[str, Any], *, schedule: Any = None, offers: Any = None, course_master: Any = None) -> dict[str, Any]:
+def identify_course(intent: dict[str, Any], *, schedule: Any = None, offers: Any = None, course_master: Any = None, public_dynamic_inventory: Any = None) -> dict[str, Any]:
     """Resolve structured intent without inventing a course mapping."""
     if not isinstance(intent, dict):
         raise AgentInterfaceError("intent must be a JSON object")
@@ -88,7 +106,9 @@ def identify_course(intent: dict[str, Any], *, schedule: Any = None, offers: Any
         offers, _ = _read_json(DYNAMIC_OFFERS_PATH)
     if course_master is None:
         course_master, _ = _read_json(COURSE_MASTER_PATH)
-    records = _course_records(schedule, offers, course_master)
+    if public_dynamic_inventory is None:
+        public_dynamic_inventory, _ = _read_json(PUBLIC_DYNAMIC_INVENTORY_PATH)
+    records = _course_records(schedule, offers, course_master, public_dynamic_inventory)
     requested_key = str(intent.get("course_key") or "").strip()
     requested_id = str(intent.get("course_id") or "").strip()
     requested_name = _norm(intent.get("course_name") or intent.get("query"))
@@ -125,7 +145,7 @@ def _parse_date(value: Any, field: str) -> date | None:
         raise AgentInterfaceError(f"{field} must be YYYY-MM-DD") from exc
 
 
-def find_availability(request: dict[str, Any], *, schedule: Any = None, offers: Any = None, course_master: Any = None) -> dict[str, Any]:
+def find_availability(request: dict[str, Any], *, schedule: Any = None, offers: Any = None, course_master: Any = None, public_dynamic_inventory: Any = None) -> dict[str, Any]:
     """Return only options already approved for the public web experience."""
     if not isinstance(request, dict):
         raise AgentInterfaceError("request must be a JSON object")
@@ -140,8 +160,12 @@ def find_availability(request: dict[str, Any], *, schedule: Any = None, offers: 
         course_master, warning = _read_json(COURSE_MASTER_PATH)
         if warning:
             warnings.append(warning)
+    if public_dynamic_inventory is None:
+        public_dynamic_inventory, warning = _read_json(PUBLIC_DYNAMIC_INVENTORY_PATH)
+        if warning:
+            warnings.append(warning)
 
-    resolved = identify_course(request.get("course") or request, schedule=schedule, offers=offers, course_master=course_master)
+    resolved = identify_course(request.get("course") or request, schedule=schedule, offers=offers, course_master=course_master, public_dynamic_inventory=public_dynamic_inventory)
     if resolved["status"] != "resolved":
         return {"api_version": API_VERSION, "status": "course_unresolved", "course_resolution": resolved, "options": [], "warnings": warnings}
     course = resolved["match"]
@@ -173,7 +197,13 @@ def find_availability(request: dict[str, Any], *, schedule: Any = None, offers: 
             "location": row.get("location_display") or row.get("location_name"), "instructor": row.get("lead_instructor_name") or row.get("instructor"),
             "capacity": capacity, "remaining_capacity": remaining, "registration_url": row.get("registration_url") or row.get("enrollware_enroll_url"),
         })
-    for group in _as_rows(offers, "courses"):
+    normalized_legacy = _dynamic_groups(public_dynamic_inventory, "legacy_requestable_by_course")
+    legacy_groups = [
+        {"course_key": key, "offered_options": rows}
+        for key, rows in normalized_legacy.items()
+    ] if normalized_legacy else _as_rows(offers, "courses")
+    seen_dynamic_ids: set[str] = set()
+    for group in legacy_groups:
         if str(group.get("course_key") or "") != course["course_key"]:
             continue
         for row in _as_rows(group, "offered_options"):
@@ -185,19 +215,49 @@ def find_availability(request: dict[str, Any], *, schedule: Any = None, offers: 
             start = row.get("start_time") or row.get("start_at")
             if not _date_in_range(start, start_date, end_date):
                 continue
+            dynamic_id = str(row.get("offer_slug") or row.get("page_slug") or "")
+            if not dynamic_id or dynamic_id in seen_dynamic_ids:
+                continue
+            seen_dynamic_ids.add(dynamic_id)
             options.append({
-                "offering_id": str(row.get("offer_slug") or row.get("page_slug") or ""),
+                "offering_id": dynamic_id,
                 "offering_type": "dynamic_offer",
                 "course_key": course["course_key"], "course_id": course["course_id"], "course_name": course["course_name"],
                 "start_at": start, "end_at": row.get("end_time") or row.get("end_at"), "timezone": offers.get("timezone") or schedule.get("timezone"),
                 "location": row.get("location_name"), "instructor": row.get("instructor"), "capacity": row.get("capacity"),
                 "remaining_capacity": None, "registration_url": row.get("appointment_url") or row.get("registration_url"),
             })
+    for source_key in ("appointment_seed_by_hub", "universal_by_hub"):
+        for _hub, rows in _dynamic_groups(public_dynamic_inventory, source_key).items():
+            for row in rows:
+                row_key = str(row.get("course_key") or "")
+                row_id = str(row.get("course_id") or "")
+                if not ((course["course_key"] and row_key == course["course_key"]) or (course["course_id"] and row_id == course["course_id"])):
+                    continue
+                start = row.get("start_datetime") or row.get("start_time")
+                if not _date_in_range(start, start_date, end_date):
+                    continue
+                dynamic_id = str(row.get("source_offer_id") or row.get("offer_id") or row.get("seed_id") or row.get("offer_slug") or "")
+                if not dynamic_id or dynamic_id in seen_dynamic_ids:
+                    continue
+                seen_dynamic_ids.add(dynamic_id)
+                display_type = str(row.get("display_item_type") or row.get("public_display_item_type") or "dynamic_offer")
+                options.append({
+                    "offering_id": dynamic_id, "offering_type": display_type,
+                    "course_key": row_key or course["course_key"], "course_id": row_id or course["course_id"],
+                    "course_name": row.get("course_title") or course["course_name"],
+                    "start_at": start, "end_at": row.get("end_datetime") or row.get("end_time"),
+                    "timezone": schedule.get("timezone"), "location": row.get("location_name"),
+                    "instructor": row.get("instructor_display_name") or row.get("instructor"), "capacity": row.get("capacity"),
+                    "remaining_capacity": None,
+                    "registration_url": row.get("appointment_registration_url") or row.get("request_url"),
+                    "render_source": row.get("render_source"),
+                })
     options.sort(key=lambda row: (row.get("start_at") or "", row["offering_type"], row["offering_id"]))
     return {
         "api_version": API_VERSION, "status": "ok", "read_only": True, "course_resolution": resolved,
         "options": options[:limit], "option_count": min(len(options), limit), "total_matching_options": len(options),
-        "authoritative_sources": ["docs/data/schedule_future.json", "docs/data/customer_facing_offers.json"], "warnings": warnings,
+        "authoritative_sources": ["docs/data/schedule_future.json", "docs/data/public_dynamic_inventory.json"], "warnings": warnings,
     }
 
 
