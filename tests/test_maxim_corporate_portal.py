@@ -82,6 +82,10 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertNotIn("function isValidPublicRow", html)
         self.assertNotIn("public_direct_booking", html)
         self.assertNotIn("registration_status", html)
+        self.assertNotIn("canUseDateForPerson", html)
+        self.assertNotIn('id="locationChoice"', html)
+        self.assertNotIn("chosenLocation", html)
+        self.assertIn("rows.push({...course", html)
 
     def test_public_pages_and_generator_use_the_same_shared_projection(self) -> None:
         self.assertTrue(SHARED_AVAILABILITY.exists())
@@ -406,7 +410,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
 
     def test_empty_canonical_course_projection_is_shown_without_fallback(self) -> None:
         self.assertIn(
-            "No current valid dates are available at the approved location",
+            "No current valid public dates are available",
             read_page(),
         )
 
@@ -457,13 +461,15 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn('"history"', source)
         self.assertIn("p.bucket==='history'&&q", html)
 
-    def test_location_and_expiration_policies_are_enforced(self) -> None:
+    def test_public_slots_are_not_prefiltered_by_corporate_policies(self) -> None:
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
         html = read_page()
-        self.assertIn('id="locationChoice"', html)
+        self.assertNotIn('id="locationChoice"', html)
         self.assertIn("locationKeyForCourse", html)
-        self.assertIn("canUseDateForPerson", html)
+        self.assertNotIn("canUseDateForPerson", html)
+        self.assertNotIn("chosenLocation", html)
         self.assertIn("adminOverrideExpiration:true", html)
+        # The server still validates the exact public slot after selection.
         self.assertIn("MAXIM_APPROVED_LOCATIONS", source)
         self.assertIn("!body.adminOverrideExpiration && body.expirationDate", source)
         self.assertIn("canonicalLocationKey !== String(body.locationKey", source)
