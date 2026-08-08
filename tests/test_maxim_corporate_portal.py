@@ -87,6 +87,18 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertNotIn("chosenLocation", html)
         self.assertIn("rows.push({...course", html)
 
+    def test_time_buttons_preserve_public_schedule_cues(self) -> None:
+        html = read_page()
+        self.assertIn("row?.schedule_role", html)
+        self.assertIn("row?.registered_count", html)
+        self.assertIn("slot-anchor", html)
+        self.assertIn("slot-barnacle", html)
+        self.assertIn("slot-open", html)
+        self.assertIn("★", html)
+        self.assertIn("☆", html)
+        self.assertIn('data-display-time="${row.displayStartTime}"', html)
+        self.assertIn("el.dataset.displayTime||el.textContent.trim()", html)
+
     def test_public_pages_and_generator_use_the_same_shared_projection(self) -> None:
         self.assertTrue(SHARED_AVAILABILITY.exists())
         for path in [*PUBLIC_SELECTOR_PAGES, SELECTOR_GENERATOR]:
