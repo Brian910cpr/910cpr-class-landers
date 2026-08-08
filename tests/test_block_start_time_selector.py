@@ -128,9 +128,28 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
     def test_bls_config_hides_open_times_after_anchor_and_shows_only_enrolled_classes(self):
         config = block_start_time_selector.load_block_schedule_page_configs()["bls"]
         self.assertIs(config["consolidate_after_seated_family_anchor"], True)
-        self.assertEqual(1, config["same_day_anchor_minimum_enrollment"])
+        self.assertEqual(0, config["same_day_anchor_minimum_enrollment"])
         self.assertIs(config["include_seated_classes"], True)
-        self.assertEqual(1, config["seated_class_minimum_enrollment"])
+        self.assertEqual(0, config["seated_class_minimum_enrollment"])
+
+    def test_zero_enrollment_scheduled_class_locks_its_day(self):
+        schedule = {"sessions": [{
+            "session_id": "open-zero-seat-class",
+            "course_id": "209809",
+            "start_at": "2026-08-14T12:00:00-04:00",
+            "lead_instructor_name": "Brian Ennis",
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "registered_count": 0,
+            "registration_status": "open",
+            "public_direct_booking": True,
+        }]}
+        anchors = block_start_time_selector.seated_family_anchors(
+            schedule_future_payload=schedule,
+            selected_course_ids=set(),
+            minimum_enrollment=0,
+            location_resource_map={},
+        )
+        self.assertEqual(["open-zero-seat-class"], [anchor["sessionId"] for anchor in anchors])
 
     def test_shared_board_cooldown_suppresses_booking_day_and_following_six_days(self):
         anchors = [{"date": "2026-07-20", "startTime": "09:00", "sessionId": "arc-booking"}]
