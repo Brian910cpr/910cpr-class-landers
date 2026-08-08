@@ -29,14 +29,14 @@ class PublicCssReferenceTests(unittest.TestCase):
             for match in LANDER_REFERENCE.finditer(path.read_text(encoding="utf-8", errors="replace")):
                 references.append((path, match.group(1)))
         self.assertGreater(len(references), 0)
-        failures = [f"{path.relative_to(ROOT)} -> {reference}" for path, reference in references if reference != "/css/lander.css"]
+        failures = [f"{path.relative_to(ROOT)} -> {reference}" for path, reference in references if not reference.startswith("/css/lander.css")]
         self.assertEqual([], failures, "Nonstandard public stylesheet references:\n" + "\n".join(failures))
 
     def test_generators_never_emit_relative_lander_reference(self) -> None:
         failures: list[str] = []
         for path in sorted((ROOT / "scripts").rglob("*.py")):
             for match in LANDER_REFERENCE.finditer(path.read_text(encoding="utf-8", errors="replace")):
-                if match.group(1) != "/css/lander.css":
+                if not match.group(1).startswith("/css/lander.css"):
                     failures.append(f"{path.relative_to(ROOT)} -> {match.group(1)}")
         self.assertEqual([], failures, "Generators emitting nonstandard stylesheet references:\n" + "\n".join(failures))
 

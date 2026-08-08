@@ -44,7 +44,8 @@ REVIEWS_SOURCE = ROOT / "data" / "raw" / "reviews"
 COURSE_MAP_FILE = ROOT / "data" / "config" / "course_map.json"
 
 GTM_ID = "GTM-PQS8DCBH"
-UPCOMING_LIMIT = 10
+LANDER_CSS_URL = "/css/lander.css?v=20260808-session-discovery"
+UPCOMING_LIMIT = 12
 REVIEWS_PER_PAGE = 3
 MIN_REVIEW_LENGTH = 35
 ENTITY_IDENTITY = "Authorized American Heart Association Training Site providing CPR, BLS, ACLS, PALS & Heartsaver courses throughout Coastal North Carolina."
@@ -227,7 +228,7 @@ def load_sessions_from_file(path: Path) -> list[dict]:
         if not isinstance(item, dict) or not session_has_public_class_location(item):
             continue
         normalized = normalize_session_record(item)
-        if not is_public_direct_bookable_session(normalized):
+        if not is_session_lander_candidate(normalized):
             continue
         sessions.append(normalized)
     return sessions
@@ -249,6 +250,14 @@ def is_public_direct_bookable_session(session: dict) -> bool:
     if session.get("is_full") is True or str(session.get("is_full")).strip().lower() == "true":
         return False
     return verified_enrollware_url(enrollware_url_for_session(session))
+
+
+def is_session_lander_candidate(session: dict) -> bool:
+    """A seated class or an open public Enrollware session deserves a durable page."""
+    register_url = enrollware_url_for_session(session)
+    if not verified_enrollware_url(register_url):
+        return False
+    return session_enrolled_count(session) >= 1 or is_public_direct_bookable_session(session)
 
 
 def is_mapped(session: dict) -> bool:
@@ -437,7 +446,7 @@ def session_lander_status(session: dict, register_url: str, dt: datetime | None,
 
 
 def status_is_indexable(status: str, register_url: str) -> bool:
-    return status == "published_upcoming" and verified_enrollware_url(register_url)
+    return status in {"published_upcoming", "past_completed"} and verified_enrollware_url(register_url)
 
 
 def robots_for_lander_status(status: str, register_url: str) -> str:
@@ -1177,12 +1186,12 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], course_url: str
 """
         )
 
-    heading = "More upcoming dates" if upcoming_sessions else "Need a different time?"
+    heading = f"Latest {course_label} class dates" if upcoming_sessions else "Need a different time?"
     return f"""
 <section id="upcoming-times" class="section-box js-live-session-group" data-empty-link="{escape(course_url)}" data-empty-link-label="{escape(primary_label)}" data-full-schedule-link="{escape(full_schedule_url)}">
   <div class="upcoming-head">
     <h2>{escape(heading)}</h2>
-    <p>These related future sessions link to their own class pages before registration.</p>
+    <p>Compare the newest currently bookable dates. Every listed session has its own class page and registration path.</p>
   </div>
   <div class="upcoming-grid">
     {''.join(cards)}
@@ -1192,6 +1201,56 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], course_url: str
     <a class="text-link" href="{escape(full_schedule_url)}">See all 910CPR classes</a>
   </div>
 </section>
+"""
+
+
+def get_other_current_courses(current_session: dict, sessions: list[dict], now_dt: datetime) -> list[dict]:
+    """Return the next public session for every other currently offered course."""
+    current_course_id = str(current_session.get("course_id") or current_session.get("course_number") or "").strip()
+    current_name = display_course_name(current_session.get("course_name", "")).lower()
+    next_by_course: dict[str, dict] = {}
+
+    for session in sessions:
+        if not is_public_direct_bookable_session(session):
+            continue
+        dt = session.get("_parsed_dt") or parse_dt(session.get("start_at"))
+        if not is_future_session(dt, now_dt):
+            continue
+        course_id = str(session.get("course_id") or session.get("course_number") or "").strip()
+        course_name = display_course_name(session.get("course_name", ""))
+        if (current_course_id and course_id == current_course_id) or course_name.lower() == current_name:
+            continue
+        key = course_id or course_name.lower()
+        copy = dict(session)
+        copy["_parsed_dt"] = dt
+        existing = next_by_course.get(key)
+        if existing is None or dt < existing["_parsed_dt"]:
+            next_by_course[key] = copy
+
+    return sorted(next_by_course.values(), key=lambda item: (item["_parsed_dt"], display_course_name(item.get("course_name", "")).lower()))
+
+
+def render_current_courses_sidebar_html(current_courses: list[dict]) -> str:
+    if not current_courses:
+        return ""
+    links = []
+    for session in current_courses:
+        dt = session["_parsed_dt"]
+        sid = str(session.get("session_id") or "").strip()
+        course_name = display_course_name(session.get("course_name", ""))
+        links.append(
+            f'<li><a href="{escape(session_lander_url(sid), quote=True)}">'
+            f'<strong>{escape(course_name)}</strong>'
+            f'<span>Next: {escape(dt.strftime("%b %d at %I:%M %p").replace(" 0", " "))}</span>'
+            '</a></li>'
+        )
+    return f"""
+<aside class="current-courses-sidebar" aria-labelledby="current-courses-heading">
+  <h2 id="current-courses-heading">Other current courses</h2>
+  <p>Explore the next live session for every other course currently offered by 910CPR.</p>
+  <ul>{''.join(links)}</ul>
+  <a class="text-link strong-link" href="/schedule.html">View the complete class schedule</a>
+</aside>
 """
 
 
@@ -1432,7 +1491,7 @@ def render_retained_course_lander_page(
 <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="{escape(canonical_url)}">
 <link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="stylesheet" href="/css/lander.css">
+<link rel="stylesheet" href="{LANDER_CSS_URL}">
 {render_gtm_head()}
 </head>
 <body class="lander course-{short_slug(course_display)}">
@@ -2096,7 +2155,7 @@ TEMPLATE = """<!DOCTYPE html>
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="shortcut icon" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="stylesheet" href="/css/lander.css">
+<link rel="stylesheet" href="{LANDER_CSS_URL}">
 {gtm_head}
 {schema_block}
 </head>
@@ -2183,7 +2242,12 @@ TEMPLATE = """<!DOCTYPE html>
 
     {guideline_update_section}
 
-    {upcoming_sessions_html}
+    <div class="lander-discovery-layout">
+      <div class="lander-latest-sessions">
+        {upcoming_sessions_html}
+      </div>
+      {current_courses_sidebar_html}
+    </div>
 
     {brand_strip_html}
 
@@ -2371,7 +2435,7 @@ def main() -> None:
     parser.add_argument(
         "--anchors-only",
         action="store_true",
-        help="Build only public sessions with a confirmed seat; preserve every existing historical page.",
+        help="Build every current public direct-bookable Enrollware session; preserve every existing historical page.",
     )
     parser.add_argument(
         "--data-file",
@@ -2401,7 +2465,9 @@ def main() -> None:
 
     canonical_sessions = load_sessions_from_file(data_file)
     if args.anchors_only:
-        canonical_sessions = [session for session in canonical_sessions if session_enrolled_count(session) >= 1]
+        # Kept for workflow compatibility: public Enrollware sessions are real
+        # lander anchors even before their first student registers.
+        canonical_sessions = [session for session in canonical_sessions if is_session_lander_candidate(session)]
     historical_sessions = []
     for source in (FULL_DATA_FILE, DEFAULT_DATA_FILE):
         if source.resolve() != data_file.resolve():
@@ -2650,15 +2716,14 @@ def main() -> None:
             session,
             sessions,
             now_dt,
-            limit=5,
+            limit=UPCOMING_LIMIT,
             future_index=future_replacement_index,
         )
-        if lander_status in {"past_completed", "published_closed", "proposed"} or retained_course_lander:
-            top_inventory_html = render_past_current_inventory_html(upcoming_sessions, type_page_url, course_label)
-            upcoming_sessions_html = ""
-        else:
-            top_inventory_html = ""
-            upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, type_page_url, course_label)
+        top_inventory_html = ""
+        upcoming_sessions_html = render_upcoming_sessions_html(upcoming_sessions, type_page_url, course_label)
+        current_courses_sidebar_html = render_current_courses_sidebar_html(
+            get_other_current_courses(session, canonical_sessions, now_dt)
+        )
 
         selected_reviews = pick_reviews_for_session(
             session_id=session_id,
@@ -2678,6 +2743,7 @@ def main() -> None:
         trust_badge_copy = same_day_note(session) or "Structured course metadata is shown before schedule alternatives."
 
         html_doc = TEMPLATE.format(
+            LANDER_CSS_URL=LANDER_CSS_URL,
             dockmaster_comment=dockmaster_comment(session_id),
             page_title=escape(page_title),
             meta_description=escape(meta_description),
@@ -2731,6 +2797,7 @@ def main() -> None:
             local_reference_html=local_reference_html,
             review_snippet_html=review_snippet_html,
             upcoming_sessions_html=upcoming_sessions_html,
+            current_courses_sidebar_html=current_courses_sidebar_html,
             brand_strip_html=brand_strip_html,
             reviews_html=reviews_html,
             course_description_section=course_description_section,
@@ -2749,6 +2816,7 @@ def main() -> None:
             course_page_url=escape(course_page_url),
         )
         html_doc = apply_build_metadata(html_doc, build_meta)
+        html_doc = "\n".join(line.rstrip() for line in html_doc.splitlines()) + "\n"
 
         if args.anchors_only and output_path.exists():
             existing_html = output_path.read_text(encoding="utf-8", errors="ignore")
