@@ -7,7 +7,7 @@ export async function handleTravelCalendarSync(request, env, dependencies = {}) 
   if (String(env.TRAVEL_EVENT_SYNC_ENABLED || "false") !== "true") {
     return json({ status: "disabled", writesPerformed: false }, 503);
   }
-  if (!env.TRAVEL_SYNC_WEBHOOK_SECRET || request.headers.get("x-910cpr-travel-secret") !== env.TRAVEL_SYNC_WEBHOOK_SECRET) {
+  if (!env.TRAVEL_SYNC_WEBHOOK_SECRET || !await secretsMatch(request.headers.get("x-910cpr-travel-secret"), env.TRAVEL_SYNC_WEBHOOK_SECRET)) {
     return json({ error: "unauthorized" }, 401);
   }
 
@@ -213,3 +213,12 @@ function googleHeaders(token) { return { authorization: `Bearer ${token}`, "cont
 function requireEnv(env, name) { if (!env[name]) throw new Error(`${name} is not configured`); }
 function positiveInt(value, fallback) { const parsed = Number.parseInt(value, 10); return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback; }
 function json(payload, status) { return new Response(JSON.stringify(payload), { status, headers: { "content-type": "application/json" } }); }
+
+async function secretsMatch(provided, expected) {
+  const encoder = new TextEncoder();
+  const [providedHash, expectedHash] = await Promise.all([
+    crypto.subtle.digest("SHA-256", encoder.encode(String(provided || ""))),
+    crypto.subtle.digest("SHA-256", encoder.encode(String(expected || ""))),
+  ]);
+  return crypto.subtle.timingSafeEqual(providedHash, expectedHash);
+}

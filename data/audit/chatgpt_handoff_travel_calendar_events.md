@@ -5,7 +5,8 @@
 - Branch: `codex/travel-calendar-events`
 - Locally implemented and tested.
 - Worker write gate remains disabled: `TRAVEL_EVENT_SYNC_ENABLED=false`.
-- Not deployed and no Google Calendar events were created, updated, or deleted.
+- Guarded Worker deployed as Cloudflare version `0d2ae4c7-3f15-4248-8aea-e9707d0f8208` with `TRAVEL_EVENT_SYNC_ENABLED=false`.
+- No Google Calendar events were created, updated, or deleted.
 
 ## Behavior
 
@@ -33,6 +34,8 @@ Required configuration/secrets:
 - `GOOGLE_ROUTES_API_KEY`
 - Google Calendar OAuth: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`
 - Optional base address, fallback, margin, and named minimum JSON settings
+
+The calendar ID, webhook secret, Routes API key, OAuth client ID, OAuth client secret, and OAuth refresh token are now installed as Cloudflare Worker secrets. Their values are not committed.
 
 The upstream recognizer that sends complete create/move/address-change/delete payloads to the internal endpoint still needs to be connected. Native Google Calendar push notifications identify a changed resource but do not themselves contain the complete event record.
 
@@ -68,6 +71,12 @@ PASS
 node --experimental-default-type=module --test worker/travel-calendar-events.test.mjs
 7 tests passed, 0 failed
 
+wrangler deploy --dry-run --keep-vars --config wrangler.toml
+PASS
+
+Guarded production endpoint check
+HTTP 503: {"status":"disabled","writesPerformed":false}
+
 git diff --check
 PASS
 ```
@@ -78,4 +87,3 @@ PASS
 2. Decide what component recognizes Google event changes and calls the Worker endpoint.
 3. Confirm Google Calendar write scope and Routes API billing/key restrictions.
 4. Backfill future off-site events before enabling the selector change.
-
