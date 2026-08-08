@@ -335,11 +335,26 @@ async function clickTimeRecheck(offer, env) {
   // 2. Read canonical Class Report / hot-sync state.
   // 3. Re-run the same travel, cleanup, instructor, duplicate, and same-program rules.
   // 4. Return { available: true } only when the exact course/start/location still fits.
+  if (env.HOT_SYNC_D1) {
+    const start = new Date(offer.requested_start);
+    const end = new Date(offer.requested_end || offer.requested_start);
+    if (!Number.isNaN(start.getTime())) {
+      const effectiveEnd = Number.isNaN(end.getTime()) || end <= start ? new Date(start.getTime() + 60_000) : end;
+      const conflict = await env.HOT_SYNC_D1.prepare(
+        `SELECT id FROM hot_sync_sessions
+         WHERE status = 'committed' AND needs_class_report_absorption = 1
+           AND start_time < ? AND end_time > ? LIMIT 1`
+      ).bind(effectiveEnd.toISOString(), start.toISOString()).first();
+      if (conflict) return { available: false, reason: "That time conflicts with a committed class." };
+    }
+  }
   if (env.CLICK_TIME_RECHECK_URL) {
     return { available: false, reason: "Remote click-time recheck is not wired in this Worker scaffold." };
   }
   return { available: true, scaffold_only: true };
 }
+
+export const offerWorkerInternals = { clickTimeRecheck };
 
 async function createEnrollwareClass(offer, env) {
   // Stub only. Real implementation must supply:
