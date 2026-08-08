@@ -164,6 +164,7 @@ def event_policy_reason_codes(source: dict[str, Any], event: dict[str, Any], sta
         reasons.append("invalid_time_range")
     if (
         explicit_time
+        and not is_blocking_event(event)
         and not bool(source.get("allow_non_standard_time_increment"))
         and (not is_standard_time_increment(start) or not is_standard_time_increment(end))
     ):
