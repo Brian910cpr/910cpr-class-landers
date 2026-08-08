@@ -41,7 +41,20 @@ Expected behavior:
 
 ## Safe Deploy Command
 
-Run only after explicit approval:
+Before deploying, verify the `free-time-offer-worker` has all of these production
+bindings. The admin API deliberately fails closed when either authentication or
+persistence is missing:
+
+- Secret `HOT_SYNC_ADMIN_KEY`
+- D1 database binding `HOT_SYNC_D1`, with `migrations/0001_admin_operations.sql` applied
+- R2 bucket binding `LANDERWARE_INBOX`
+
+The checked-in `wrangler.toml` does not contain resource IDs or secret values. Do
+not guess them or create replacement storage during a routing repair. Add the
+existing D1 and R2 resource identifiers to the deployment configuration (or
+confirm they will be preserved by the deployment path) before deploying.
+
+Run only after the binding check and explicit approval:
 
 ```powershell
 cd E:\GitHub\910cpr-class-landers
