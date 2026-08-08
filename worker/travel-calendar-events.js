@@ -4,21 +4,51 @@ const DEFAULT_FALLBACK_MINUTES = 90;
 
 export async function handleTravelCalendarSync(request, env, dependencies = {}) {
   if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
-  if (String(env.TRAVEL_EVENT_SYNC_ENABLED || "false") !== "true") {
-    return json({ status: "disabled", writesPerformed: false }, 503);
-  }
-  if (!env.TRAVEL_SYNC_WEBHOOK_SECRET || !await secretsMatch(request.headers.get("x-910cpr-travel-secret"), env.TRAVEL_SYNC_WEBHOOK_SECRET)) {
-    return json({ error: "unauthorized" }, 401);
-  }
-
   let change;
   try {
     change = await request.json();
   } catch {
     return json({ error: "invalid_json" }, 400);
   }
+  const validationOnly = String(change && change.action || "").toLowerCase() === "validate";
+  if (!validationOnly && String(env.TRAVEL_EVENT_SYNC_ENABLED || "false") !== "true") {
+    return json({ status: "disabled", writesPerformed: false }, 503);
+  }
+  if (!env.TRAVEL_SYNC_WEBHOOK_SECRET || !await secretsMatch(request.headers.get("x-910cpr-travel-secret"), env.TRAVEL_SYNC_WEBHOOK_SECRET)) {
+    return json({ error: "unauthorized" }, 401);
+  }
+
+  if (validationOnly) {
+    const result = await validateTravelConfiguration(change, env, dependencies);
+    return json(result, 200);
+  }
   const result = await reconcileTravelEvents(change, env, dependencies);
   return json(result, result.status === "invalid" ? 400 : 200);
+}
+
+export async function validateTravelConfiguration(change, env, dependencies = {}) {
+  const fetcher = dependencies.fetch || fetch;
+  const source = normalizeSourceEvent(change && change.event);
+  if (!source.ok) return { status: "invalid", reason: source.reason, writesPerformed: false };
+  requireEnv(env, "TRAVEL_CALENDAR_ID");
+  const accessToken = await googleAccessToken(env, fetcher);
+  const calendarResponse = await fetcher(`${calendarCollectionUrl(env)}?maxResults=1&singleEvents=true`, {
+    headers: { authorization: `Bearer ${accessToken}` },
+  });
+  if (!calendarResponse.ok) throw new Error(`calendar_access_check_failed_${calendarResponse.status}`);
+  const baseAddress = String(env.TRAVEL_BASE_ADDRESS || DEFAULT_BASE_ADDRESS).trim();
+  const fallbackMinutes = positiveInt(env.TRAVEL_UNKNOWN_OFFSITE_MINUTES, DEFAULT_FALLBACK_MINUTES);
+  const inbound = await resolveRoute(baseAddress, source.location, env, fetcher, fallbackMinutes);
+  const outbound = await resolveRoute(source.location, baseAddress, env, fetcher, fallbackMinutes);
+  return {
+    status: "validated",
+    writesPerformed: false,
+    calendarReachable: true,
+    routes: [
+      { direction: "inbound", source: inbound.source, minutes: inbound.minutes, distanceMeters: inbound.distanceMeters },
+      { direction: "outbound", source: outbound.source, minutes: outbound.minutes, distanceMeters: outbound.distanceMeters },
+    ],
+  };
 }
 
 export async function reconcileTravelEvents(change, env, dependencies = {}) {

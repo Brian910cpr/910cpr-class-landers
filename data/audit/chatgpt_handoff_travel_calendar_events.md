@@ -77,6 +77,11 @@ PASS
 Guarded production endpoint check
 HTTP 503: {"status":"disabled","writesPerformed":false}
 
+Read-only production credential validation
+HTTP 200: calendar reachable; Google Routes returned both directions; writesPerformed=false
+Shipyard to Cape Fear Academy: 4,421 meters / 8 minutes
+Cape Fear Academy to Shipyard: 4,025 meters / 8 minutes
+
 git diff --check
 PASS
 ```

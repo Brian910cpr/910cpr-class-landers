@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { handleTravelCalendarSync, isGeneratedTravelEvent, reconcileTravelEvents, travelEventId } from "./travel-calendar-events.js";
+import { handleTravelCalendarSync, isGeneratedTravelEvent, reconcileTravelEvents, travelEventId, validateTravelConfiguration } from "./travel-calendar-events.js";
 
 const sourceEvent = {
   id: "parent-123",
@@ -111,4 +111,20 @@ test("refreshes an OAuth access token before calendar writes", async () => {
   const calendarCalls = calls.filter(call => call.url.includes("calendar/v3"));
   assert.equal(calendarCalls.length, 2);
   assert.equal(calendarCalls[0].options.headers.authorization, "Bearer refreshed-token");
+});
+
+test("validation checks calendar and both routes without writes", async () => {
+  const methods = [];
+  const fetch = async (url, options = {}) => {
+    methods.push(options.method || "GET");
+    if (url.includes("calendar/v3")) return response(200, { items: [] });
+    if (url.includes("routes.googleapis.com")) return response(200, { routes: [{ duration: "720s", distanceMeters: 9000 }] });
+    throw new Error(`unexpected request ${url}`);
+  };
+  const result = await validateTravelConfiguration({ action: "validate", event: sourceEvent }, env(), { fetch });
+  assert.equal(result.status, "validated");
+  assert.equal(result.writesPerformed, false);
+  assert.equal(result.calendarReachable, true);
+  assert.deepEqual(result.routes.map(route => route.source), ["google_routes", "google_routes"]);
+  assert.deepEqual(methods, ["GET", "POST", "POST"]);
 });
