@@ -10,6 +10,19 @@ routes = [
   { pattern = "schedule.910cpr.com/*", zone_name = "910cpr.com" }
 ]
 
+# Required secret (set with `wrangler secret put`, never commit its value):
+#   HOT_SYNC_ADMIN_KEY
+
+[[d1_databases]]
+binding = "HOT_SYNC_D1"
+database_name = "landerware-hot-sync"
+database_id = "755bbe0b-300d-4c71-b3e3-f686f3b3d966"
+migrations_dir = "worker/migrations"
+
+[[r2_buckets]]
+binding = "LANDERWARE_INBOX"
+bucket_name = "landerware-inbox"
+
 [vars]
 CREATION_ENABLED = "false"
 DRY_RUN = "true"

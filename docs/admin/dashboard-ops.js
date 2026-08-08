@@ -46,10 +46,45 @@
   }
 
   function requireKey() {
-    let key = sessionStorage.getItem("hotSyncAdminKey") || "";
-    if (!key) key = prompt("LanderWare admin key (kept only in this browser tab):") || "";
-    if (key) sessionStorage.setItem("hotSyncAdminKey", key);
+    const key = sessionStorage.getItem("hotSyncAdminKey") || document.getElementById("adminKeyInput")?.value.trim() || "";
+    if (key) {
+      sessionStorage.setItem("hotSyncAdminKey", key);
+      updateUnlockPanel(true);
+    } else {
+      updateUnlockPanel(false, "Enter the admin key below, then click Unlock.");
+      document.getElementById("adminKeyInput")?.focus();
+    }
     return key;
+  }
+
+  function updateUnlockPanel(unlocked, message = "") {
+    const input = document.getElementById("adminKeyInput");
+    const unlock = document.getElementById("adminUnlockBtn");
+    const forget = document.getElementById("adminForgetBtn");
+    const help = document.getElementById("adminUnlockHelp");
+    if (input) {
+      input.value = "";
+      input.hidden = unlocked;
+    }
+    if (unlock) unlock.hidden = unlocked;
+    if (forget) forget.hidden = !unlocked;
+    if (help) help.textContent = message || (unlocked ? "Admin tools are unlocked for this tab." : "Enter the LanderWare admin key once. It stays only in this browser tab and is cleared when the tab closes.");
+  }
+
+  async function unlockAdmin() {
+    if (!requireKey()) return;
+    try {
+      await loadHotSyncRecords();
+      await loadInbox().catch(() => {});
+      updateUnlockPanel(true, "Admin tools are unlocked for this tab.");
+    } catch (error) {
+      if (error.status === 401 || error.status === 403) {
+        sessionStorage.removeItem("hotSyncAdminKey");
+        updateUnlockPanel(false, "That key was not accepted. Check it and try again.");
+        document.getElementById("adminKeyInput")?.focus();
+      }
+      throw error;
+    }
   }
 
   async function jsonRequest(url, options = {}) {
@@ -98,6 +133,8 @@
   function classifyConnectionError(error, target) {
     if (error.status === 401 || error.status === 403) {
       setConnection(target, "Authentication required", "warn");
+      sessionStorage.removeItem("hotSyncAdminKey");
+      updateUnlockPanel(false, "That key was not accepted. Check it and try again.");
       return;
     }
     setConnection(target, target === "hotSyncConnection" ? "HOT_SYNC unavailable" : "LanderWare Inbox is not connected", "bad");
@@ -331,6 +368,16 @@
       document.getElementById("uploadStatus").className = "saveMessage bad";
     });
     const input = document.getElementById("inboxFileInput");
+    const adminKeyInput = document.getElementById("adminKeyInput");
+    document.getElementById("adminUnlockBtn").onclick = () => unlockAdmin().catch((error) => root.showSaveMessage(`Unlock failed: ${error.message}`, "bad"));
+    document.getElementById("adminForgetBtn").onclick = () => {
+      sessionStorage.removeItem("hotSyncAdminKey");
+      updateUnlockPanel(false, "The key was forgotten. Enter it again to use admin tools.");
+      setConnection("hotSyncConnection", "Authentication required", "warn");
+      setConnection("inboxConnection", "Authentication required", "warn");
+      adminKeyInput?.focus();
+    };
+    if (adminKeyInput) adminKeyInput.onkeydown = (event) => { if (event.key === "Enter") document.getElementById("adminUnlockBtn").click(); };
     const choose = document.getElementById("chooseInboxFiles");
     choose.onclick = () => input.click();
     input.onchange = () => uploadFiles(input.files);
@@ -342,9 +389,11 @@
       uploadFiles(event.dataTransfer.files);
     };
     if (sessionStorage.getItem("hotSyncAdminKey")) {
+      updateUnlockPanel(true);
       loadHotSyncRecords().catch(() => {});
       loadInbox().catch(() => {});
     } else {
+      updateUnlockPanel(false);
       setConnection("hotSyncConnection", "Authentication required", "warn");
       setConnection("inboxConnection", "Authentication required", "warn");
     }

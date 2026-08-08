@@ -54,3 +54,15 @@ test("local file dashboard loads its live feeds from the public site", () => {
   assert.match(html, /PUBLIC_SITE_ORIGIN\+url/);
   assert.match(operations, /root\.location\?\.protocol === "file:" \? "https:\/\/www\.910cpr\.com" : ""/);
 });
+
+test("admin authentication uses an on-page unlock control instead of a password prompt", () => {
+  const html = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard.html"), "utf8");
+  const operations = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard-ops.js"), "utf8");
+  assert.match(html, /id="adminKeyInput" type="password"/);
+  assert.match(html, /id="adminUnlockBtn"/);
+  assert.match(html, /id="adminForgetBtn"/);
+  assert.doesNotMatch(html, /prompt\(['"]HOT_SYNC admin key/);
+  assert.doesNotMatch(operations, /prompt\(['"]LanderWare admin key/);
+  assert.match(operations, /sessionStorage\.setItem\("hotSyncAdminKey", key\)/);
+  assert.match(operations, /sessionStorage\.removeItem\("hotSyncAdminKey"\)/);
+});
