@@ -88,13 +88,13 @@ class Anchor:
     registration_url: str = ""
     schedule_role: str = "anchor"
     schedule_symbol: str = ANCHOR_SYMBOL
-    promotion_reason: str = "first_confirmed_seat"
+    promotion_reason: str = "existing_public_class"
     landing_page_required: bool = True
     external_publication_eligible: bool = True
 
 
 def promote_seated_sessions(sessions: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Return explicit anchor records for every real session with a seat."""
+    """Return anchors for every open public class, including zero-enrollment classes."""
     anchors: list[dict[str, Any]] = []
     seen: set[str] = set()
     for session in sessions:
@@ -102,7 +102,14 @@ def promote_seated_sessions(sessions: Iterable[dict[str, Any]]) -> list[dict[str
         start = _dt(session.get("start_at") or session.get("start"))
         end = _dt(session.get("end_at") or session.get("end"))
         count = _count(session)
-        if not session_id or not start or not end or count < 1:
+        registration_status = _text(session.get("registration_status") or "open").lower()
+        if (
+            not session_id
+            or not start
+            or not end
+            or session.get("public_direct_booking") is False
+            or registration_status in {"closed", "full", "cancelled", "canceled"}
+        ):
             continue
         if session_id in seen:
             continue

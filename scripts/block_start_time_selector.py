@@ -714,7 +714,7 @@ def seated_family_anchors(
     for session in schedule_future_payload["sessions"]:
         if not isinstance(session, dict):
             continue
-        if clean_text(session.get("course_id")) not in selected_course_ids:
+        if selected_course_ids and clean_text(session.get("course_id")) not in selected_course_ids:
             continue
         if session_enrollment_count(session) < minimum_enrollment:
             continue
@@ -941,6 +941,12 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         minimum_enrollment=anchor_minimum_enrollment,
         location_resource_map=loaded["location_resource_map"],
     ) if page_config.get("consolidate_after_seated_family_anchor") is True else []
+    scheduled_day_anchors = seated_family_anchors(
+        schedule_future_payload=loaded.get("schedule_future"),
+        selected_course_ids=set(),
+        minimum_enrollment=0,
+        location_resource_map=loaded["location_resource_map"],
+    )
     shared_cooldown_days = int(page_config.get("shared_cooldown_days_after_booking") or 0)
     shared_cooldown_anchors = seated_family_anchors(
         schedule_future_payload=loaded.get("schedule_future"),
@@ -1037,6 +1043,15 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 )
                 if same_day_anchor:
                     reasons.append("same_day_family_anchor_already_seated")
+                scheduled_day_anchor = matching_same_day_anchor(
+                    scheduled_day_anchors,
+                    day=start.date(),
+                    instructor=instructor_name,
+                    location=location,
+                    location_resource_map=loaded["location_resource_map"],
+                )
+                if scheduled_day_anchor:
+                    reasons.append("scheduled_day_already_has_public_class")
                 shared_cooldown_anchor = matching_shared_cooldown_anchor(
                     shared_cooldown_anchors,
                     day=start.date(),
@@ -1068,6 +1083,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                         "reasons": reasons + public_reasons,
                         "conflictReason": conflict_reason,
                         "sameDayFamilyAnchor": same_day_anchor,
+                        "scheduledDayAnchor": scheduled_day_anchor,
                         "sharedCooldownAnchor": shared_cooldown_anchor,
                     })
                     continue
@@ -1088,7 +1104,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "publicSelectable": True,
                 })
 
-    if page_config.get("include_seated_classes") is True:
+    if page_config.get("include_seated_classes", True) is True:
         offers.extend(
             seated_class_selector_offers(
                 schedule_future_payload=loaded.get("schedule_future"),

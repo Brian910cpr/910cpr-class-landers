@@ -20,18 +20,24 @@ def session(**overrides):
 
 
 class AnchorStateTests(unittest.TestCase):
-    def test_first_seat_promotes_any_real_course_to_anchor(self):
+    def test_existing_public_class_promotes_to_anchor(self):
         anchors = promote_seated_sessions([session()])
         self.assertEqual(len(anchors), 1)
         anchor = anchors[0]
         self.assertEqual(anchor["schedule_role"], "anchor")
         self.assertEqual(anchor["schedule_symbol"], ANCHOR_SYMBOL)
-        self.assertEqual(anchor["promotion_reason"], "first_confirmed_seat")
+        self.assertEqual(anchor["promotion_reason"], "existing_public_class")
         self.assertIs(anchor["landing_page_required"], True)
         self.assertIs(anchor["external_publication_eligible"], True)
 
-    def test_empty_session_is_not_promoted(self):
-        self.assertEqual(promote_seated_sessions([session(registered_count=0)]), [])
+    def test_zero_enrollment_public_class_is_promoted(self):
+        anchors = promote_seated_sessions([session(registered_count=0)])
+        self.assertEqual(1, len(anchors))
+        self.assertEqual(0, anchors[0]["registered_count"])
+
+    def test_closed_or_nonpublic_class_is_not_promoted(self):
+        self.assertEqual(promote_seated_sessions([session(registration_status="closed")]), [])
+        self.assertEqual(promote_seated_sessions([session(public_direct_booking=False)]), [])
 
     def test_barnacle_with_first_seat_promotes_on_next_refresh(self):
         prior_offer = annotate_offer(
