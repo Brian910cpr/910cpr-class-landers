@@ -252,6 +252,9 @@ END:VCALENDAR
         self.assertEqual(2, stats["inverse_generated_availability_blocks"])
         self.assertEqual(1, stats["inverse_blocking_event_blocks"])
 
+    def test_visible_travel_event_is_a_blocking_event(self) -> None:
+        self.assertTrue(snapshot.is_blocking_event({"summary": "TRAVEL — Shipyard to Cape Fear Academy"}))
+
     def test_inverse_expansion_respects_appointment_container_coverage(self) -> None:
         calendar_payload = {
             "calendar_sources": [{

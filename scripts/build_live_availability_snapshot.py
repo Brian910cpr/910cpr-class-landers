@@ -546,7 +546,7 @@ def event_text(event: dict[str, Any]) -> str:
 
 def is_blocking_event(event: dict[str, Any]) -> bool:
     text = event_text(event)
-    return any(marker in text for marker in ("dns", "do not schedule", "adr", "employment", "personal", "unavailable"))
+    return any(marker in text for marker in ("dns", "do not schedule", "adr", "employment", "personal", "unavailable", "travel"))
 
 
 def events_for_source(snapshot_payload: Any, source_key: str) -> list[dict[str, Any]]:
