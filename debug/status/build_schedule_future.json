@@ -3,13 +3,13 @@
   "worker": "build_schedule_future",
   "script": "scripts/build_schedule_future.py",
   "status": "done",
-  "last_run": "2026-08-09T12:37:58.854731-04:00",
-  "current_count": 353,
-  "total_count": 353,
+  "last_run": "2026-08-09T13:33:57.786824-04:00",
+  "current_count": 351,
+  "total_count": 351,
   "percent_complete": 100.0,
   "last_output_file": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/docs/data/schedule_future.json",
-  "timestamp": "2026-08-09T12:37:58.854731-04:00",
-  "last_successful_run": "2026-08-09T12:37:58.854731-04:00",
+  "timestamp": "2026-08-09T13:33:57.786824-04:00",
+  "last_successful_run": "2026-08-09T13:33:57.786824-04:00",
   "inputs": [
     "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/sessions_current.json",
     "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/Class Report.xlsx",
@@ -22,10 +22,10 @@
     "/home/runner/work/910cpr-class-landers/910cpr-class-landers/debug/course_identity_match_report.json"
   ],
   "counts": {
-    "sessions_input": 353,
+    "sessions_input": 351,
     "sessions_output": 39,
     "skipped_missing_start": 0,
-    "skipped_past": 307,
+    "skipped_past": 305,
     "skipped_orphan": 0,
     "skipped_non_public_location": 6,
     "skipped_tbd_location": 0,
@@ -34,8 +34,8 @@
     "included_by_legacy_mapping": 39,
     "included_by_course_identity_resolver": 0,
     "skipped_unmapped_after_resolver": 1,
-    "course_identity_unmatched": 12,
-    "course_identity_needs_review": 12
+    "course_identity_unmatched": 11,
+    "course_identity_needs_review": 11
   },
   "pages_generated": null,
   "warnings": [
