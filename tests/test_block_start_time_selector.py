@@ -382,7 +382,6 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("Choose the class that fits your needs, then select a date and time.", html)
         self.assertIn("In-person classes are completed entirely at our Wilmington training center.", html)
         self.assertIn("Online + Skills classes begin with an online course, followed by a shorter in-person skills session.", html)
-        self.assertNotIn("Need First Aid or CPR ASAP? Show all AHA Heartsaver options", html)
         self.assertNotIn('id="compare-toggle"', html)
         self.assertIn('"variant": "cpr-aed"', html)
         self.assertIn('"first-aid-cpr-aed"', html)
@@ -404,11 +403,24 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("Full course page", html)
         self.assertIn("selected-summary", html)
         self.assertIn("start-grid", html)
-        self.assertIn("Show all course options", html)
+        self.assertNotIn('id="show-all-toggle"', html)
+        self.assertIn("const groupCourseOptions = true", html)
+        self.assertIn("course-family-grid", html)
+        self.assertIn('"familyLabel": "CPR AED"', html)
+        self.assertIn('"familyLabel": "First Aid CPR AED"', html)
+        self.assertIn('"familyLabel": "Pediatric First Aid CPR AED"', html)
+        self.assertIn('"optionLabel": "Blended — Online + In-person Skills"', html)
+        self.assertIn('"price": 70', html)
+        self.assertIn('"price": 80', html)
+        self.assertIn('"price": 95', html)
+        self.assertIn('type="application/ld+json"', html)
+        self.assertIn('"priceCurrency": "USD"', html)
+        self.assertIn("course-price", html)
+        self.assertIn('/assets/interaction-motion.js', html)
         self.assertIn('"deliveryMode": "in-person"', html)
         self.assertIn('"deliveryMode": "blended"', html)
         self.assertIn('"imageUrl": "/images/HS-CPR-AED.jpeg"', html)
-        self.assertIn('"recommended": false', html)
+        self.assertNotIn('"recommended": false', html)
         self.assertIn('"209808"', html)
         self.assertIn('"329495"', html)
         self.assertIn('"351632"', html)
@@ -439,6 +451,35 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         self.assertNotIn("courseId=460465", html)
 
+    def test_stacked_provider_pages_keep_prices_and_online_choice(self):
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        expected = {
+            "bls": [("209806", 75), ("359474", 75), ("210549", 55)],
+            "acls": [("241108", 225), ("209818", 225), ("209811", 100)],
+            "pals": [("209805", 275), ("251496", 225), ("209812", 100)],
+            "uscg_first_aid_cpr_aed": [("209809", 95), ("329495", 95)],
+        }
+        for page_key, rows in expected.items():
+            config = configs[page_key]
+            self.assertTrue(config["group_course_options"])
+            self.assertEqual(
+                [(item["course_id"], item["price"]) for item in config["course_options"]],
+                rows,
+            )
+            payload = block_start_time_selector.build_block_schedule_page(config)
+            html = build_bls_block_schedule_pilot.render_html(payload)
+            self.assertIn("const groupCourseOptions = true", html)
+            self.assertTrue(
+                "Online + In-person Skills" in html or "Skills Session Only" in html
+            )
+            self.assertIn('type="application/ld+json"', html)
+            self.assertIn("course-price", html)
+        for page_key in ("bls", "acls", "pals"):
+            options = configs[page_key]["course_options"]
+            skills = next(item for item in options if item["variant"] == "heartcode")
+            self.assertIn("skills-session", skills["family_group"])
+            self.assertIn("Skills Session Only", skills["family_label"])
+            self.assertIn("purchased and completed", skills["clarification"])
     def test_heartsaver_artifact_excludes_newly_conflicting_pediatric_offer(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
         payload = block_start_time_selector.build_block_schedule_page(configs["heartsaver"])

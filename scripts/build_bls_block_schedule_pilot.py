@@ -15,7 +15,6 @@ from scripts.block_start_time_selector import (
     build_bls_pilot_schedule,
     load_block_schedule_page_configs,
 )
-from scripts.apply_anchor_policy import resolve_selector_payload
 
 
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -39,7 +38,6 @@ def selector_availability_path(page_key: str) -> Path:
 
 
 def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, Any]:
-    payload = resolve_selector_payload(payload)
     return {
         "schemaVersion": "selector-resolved-availability.v1",
         "generatedAt": payload.get("generatedAt"),
@@ -537,6 +535,25 @@ def css() -> str:
       color: var(--accent-dark);
       font-weight: 700;
     }
+    .choice-list.course-family-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      overflow: visible;
+    }
+    .course-family-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+    }
+    .course-family-card h3 { margin: 12px 14px 8px; font-size: 1rem; }
+    .course-family-choices { display: grid; gap: 8px; padding: 0 12px 12px; }
+    .course-family-choice { display: grid; gap: 4px; width: 100%; }
+    .course-family-choice strong { color: var(--ink); }
+    .course-family-choice span { color: var(--muted); font-size: .82rem; line-height: 1.3; }
+    .course-family-choice .course-price { color: var(--accent-dark); font-size: 1rem; font-weight: 900; }
     .month-stack { display: grid; gap: 14px; }
     .month-nav {
       display: none;
@@ -573,37 +590,14 @@ def css() -> str:
       font-size: .75rem;
     }
     .day-button {
-      position: relative;
-      min-height: 48px;
-      padding: 3px 3px 8px;
+      min-height: 34px;
+      padding: 0;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: .9rem;
     }
-    .day-number { position: relative; z-index: 2; }
-    .day-star { margin-left: 2px; color: #236b36; font-size: .72rem; vertical-align: top; }
-    .day-timeline {
-      position: absolute;
-      left: 3px;
-      right: 3px;
-      bottom: 3px;
-      height: 8px;
-      display: grid;
-      grid-template-columns: repeat(48, minmax(0, 1fr));
-      overflow: hidden;
-      border-radius: 999px;
-      background: transparent;
-      border: 1px solid #aeb7c2;
-    }
-    .day-timeline-segment {
-      min-width: 0;
-      background: transparent;
-    }
-    .day-timeline-segment.is-available { background: #cbd2da; border-right: 1px solid #aeb7c2; }
-    .day-timeline-segment.is-barnacle { background: #ffe67a; border-right: 1px solid rgba(89,71,0,.18); }
-    .day-timeline-segment.is-anchor { background: #72c38a; border-right: 1px solid rgba(18,63,33,.18); }
     .day-button.is-past,
     .start-grid button.is-past {
       color: #6b7280;
@@ -639,17 +633,6 @@ def css() -> str:
       min-width: 76px;
       text-align: center;
       justify-content: center;
-    }
-    .start-grid button.is-available { background: #fff; border-color: var(--line); color: var(--ink); }
-    .start-grid button.is-barnacle { background: #ffef9d; border-color: #d5b92f; color: #594700; }
-    .start-grid button.is-anchor { background: #bfe8c9; border-color: #54a96b; color: #123f21; }
-    .start-grid button[aria-pressed="true"] { box-shadow: 0 0 0 3px rgba(10,102,165,.28); border-color: var(--accent); }
-    .start-grid button.is-anchor[aria-pressed="true"] { background: linear-gradient(#bfe8c9, #bfe8c9); }
-    .start-grid button.is-barnacle[aria-pressed="true"] { background: linear-gradient(#ffef9d, #ffef9d); }
-    .start-grid button.is-available[aria-pressed="true"] { background: linear-gradient(#fff, #fff); }
-    .register-panel {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(10,102,165,.28);
     }
     .course {
       border: 1px solid var(--line);
@@ -715,7 +698,6 @@ def css() -> str:
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
       header, main, .selector-brand-bar { padding: 18px; }
-      main { padding-bottom: calc(100vh - 120px); }
       .selector-brand-link img { height: 38px; }
       .selector-brand-link { font-size: 1.05rem; }
       .selector-header-phone { font-size: 1.05rem; }
@@ -733,6 +715,13 @@ def css() -> str:
         padding-left: 0;
         padding-right: 0;
         scroll-snap-type: x mandatory;
+      }
+      .choice-list.course-family-grid {
+        grid-template-columns: 1fr;
+        grid-auto-flow: row;
+        grid-auto-columns: unset;
+        overflow: visible;
+        scroll-snap-type: none;
       }
       .course-rail {
         padding-left: 44px;
@@ -806,6 +795,10 @@ def render_html(payload: dict[str, Any]) -> str:
             "imageAlt": option.get("image_alt") or f"{option.get('display_label') or page_family} course option",
             "deliveryBadge": option.get("delivery_badge") or delivery_label_for_config(option.get("delivery_mode")),
             "clarification": option.get("clarification") or "",
+            "familyGroup": option.get("family_group") or "",
+            "familyLabel": option.get("family_label") or "",
+            "optionLabel": option.get("option_label") or "",
+            "price": option.get("price"),
             "details": course_descriptions.get(course_id, {}),
         }
         for course_id, option in configured_options.items()
@@ -869,6 +862,10 @@ def render_html(payload: dict[str, Any]) -> str:
                     "imageAlt": configured_options.get(course["courseId"], {}).get("image_alt") or f"{configured_options.get(course['courseId'], {}).get('display_label') or course['courseName']} course option",
                     "deliveryBadge": configured_options.get(course["courseId"], {}).get("delivery_badge") or delivery_label_for_config(configured_options.get(course["courseId"], {}).get("delivery_mode") or course.get("deliveryMode")),
                     "clarification": configured_options.get(course["courseId"], {}).get("clarification") or "",
+                    "familyGroup": configured_options.get(course["courseId"], {}).get("family_group") or "",
+                    "familyLabel": configured_options.get(course["courseId"], {}).get("family_label") or "",
+                    "optionLabel": configured_options.get(course["courseId"], {}).get("option_label") or "",
+                    "price": configured_options.get(course["courseId"], {}).get("price"),
                     "details": course_descriptions.get(course["courseId"], {}),
                 })
                 compare_groups = page_config.get("compare_mode", {}).get("groups", {})
@@ -916,7 +913,37 @@ def render_html(payload: dict[str, Any]) -> str:
         if course_id in course_options_by_id
     ]
     course_options_json = json.dumps(course_options, ensure_ascii=False)
+    public_page_path = "/" + str(page_config.get("output_path") or "docs/index.html").replace("\\", "/").removeprefix("docs/")
+    public_page_url = "https://www.910cpr.com" + public_page_path
+    priced_courses = [option for option in course_options if isinstance(option.get("price"), (int, float))]
+    commerce_schema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Course",
+                "name": option.get("courseName"),
+                "description": option.get("clarification") or option.get("courseName"),
+                "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"},
+                "offers": {
+                    "@type": "Offer",
+                    "price": f"{float(option['price']):.2f}",
+                    "priceCurrency": "USD",
+                    "availability": "https://schema.org/InStock",
+                    "url": f"{public_page_url}?course={quote(str(option.get('courseId') or ''))}",
+                },
+            }
+            for option in priced_courses
+        ],
+    }
+    commerce_schema_html = (
+        '<script type="application/ld+json">'
+        + json.dumps(commerce_schema, ensure_ascii=False).replace("</", "<\\/")
+        + "</script>"
+        if priced_courses
+        else ""
+    )
     option_groups_json = json.dumps(option_groups, ensure_ascii=False)
+    compare_label_json = json.dumps(str(page_config.get("compare_mode", {}).get("label") or "Show all options"), ensure_ascii=False)
     availability_url_json = json.dumps(availability_url)
     unsupported_options = [
         option
@@ -965,7 +992,7 @@ def render_html(payload: dict[str, Any]) -> str:
       {student_html}
     </section>"""
     back_href = html.escape(str(page_config.get("back_link_href") or "/index.html"), quote=True)
-    back_label = html.escape(str(page_config.get("back_link_label") or "Back to All Courses"))
+    back_label = html.escape(str(page_config.get("back_link_label") or "Back to Find Your Class"))
     course_aliases = sorted({
         str(alias).strip()
         for option in course_options
@@ -1076,7 +1103,9 @@ def render_html(payload: dict[str, Any]) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title} | 910CPR</title>
+  <link rel="stylesheet" href="/assets/interaction-motion.css">
   <style>{css()}</style>
+  {commerce_schema_html}
 </head>
 <body>
   <div class="selector-brand-bar">
@@ -1129,7 +1158,7 @@ def render_html(payload: dict[str, Any]) -> str:
           <h2>Start Times</h2>
           <div id="start-list" class="button-list"></div>
         </div>
-        <div class="panel register-panel">
+        <div class="panel">
           <h2>Register</h2>
           <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
           <div id="course-list" class="course-list"></div>
@@ -1137,13 +1166,15 @@ def render_html(payload: dict[str, Any]) -> str:
       </div>
     </section>
   </main>
-  <script src="/assets/resolved-selector-availability.js?v=20260723.1"></script>
+  <script src="/assets/interaction-motion.js"></script>
   <script>
     const embeddedScheduleDates = {data_json};
     const availabilityUrl = {availability_url_json};
     const courseOptions = {course_options_json};
     const optionGroups = {option_groups_json};
+    const asapOptionLabel = {compare_label_json};
     const unsupportedOptions = {unsupported_options_json};
+    const groupCourseOptions = {json.dumps(page_config.get("group_course_options") is True)};
     let scheduleDates = embeddedScheduleDates;
     let availabilityState = 'checking';
     let availabilityMessage = 'Checking current class times…';
@@ -1183,24 +1214,6 @@ def render_html(payload: dict[str, Any]) -> str:
 
     function isMobileLayout() {{
       return window.matchMedia('(max-width: 820px)').matches;
-    }}
-
-    function scrollToNextStep(targetId) {{
-      if (!isMobileLayout()) {{
-        return;
-      }}
-      const host = byId(targetId);
-      const target = host?.closest('.panel') || host;
-      if (!target) {{
-        return;
-      }}
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      window.setTimeout(() => {{
-        target.scrollIntoView({{
-          behavior: reducedMotion ? 'auto' : 'smooth',
-          block: 'start'
-        }});
-      }}, 60);
     }}
 
     function normalizeDeepLink(value) {{
@@ -1390,30 +1403,97 @@ def render_html(payload: dict[str, Any]) -> str:
     const scheduleTimezone = 'America/New_York';
 
     function businessNow() {{
-      return ResolvedSelectorAvailability.businessNow(scheduleTimezone);
+      const parts = new Intl.DateTimeFormat('en-CA', {{
+        timeZone: scheduleTimezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }}).formatToParts(new Date()).reduce((values, part) => {{
+        values[part.type] = part.value;
+        return values;
+      }}, {{}});
+      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
+      return {{
+        dateKey: `${{parts.year}}-${{parts.month}}-${{parts.day}}`,
+        minutes: (hour * 60) + Number(parts.minute)
+      }};
     }}
 
     function startMinutes(startTime) {{
-      return ResolvedSelectorAvailability.startMinutes(startTime);
+      const [hour, minute] = String(startTime || '').split(':').map(Number);
+      return (hour * 60) + minute;
     }}
 
     function isPastStart(day, slot, now = businessNow()) {{
-      return ResolvedSelectorAvailability.isPastStart(day, slot, now);
+      if (!day || !slot) {{
+        return true;
+      }}
+      if (day.date < now.dateKey) {{
+        return true;
+      }}
+      if (day.date > now.dateKey) {{
+        return false;
+      }}
+      return startMinutes(slot.startTime) <= now.minutes;
     }}
 
     function selectableStartTimes(day, now = businessNow()) {{
-      return ResolvedSelectorAvailability.selectableStartTimes(day, now);
+      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
     }}
 
     function isSelectableDate(day, now = businessNow()) {{
-      return ResolvedSelectorAvailability.isSelectableDate(day, now);
+      return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
     }}
 
     function filteredDates() {{
       if (!availabilityReady()) {{
         return [];
       }}
-      return ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds());
+      return scheduleDates.map(day => {{
+        const startTimes = day.startTimes.map(slot => ({{
+          ...slot,
+          courses: filteredCourses(slot)
+        }})).filter(slot => slot.courses.length);
+        return {{ ...day, startTimes }};
+      }}).filter(day => day.startTimes.length);
+    }}
+
+    function asapAlternativeDates(now = businessNow()) {{
+      if (compareMode) return [];
+      const selected = courseOptions.find(course => course.courseId === selectedCourseId);
+      const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
+      const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
+      if (!alternativeIds.size) return [];
+      return scheduleDates.filter(day =>
+        isSelectableDate(day, now) && day.startTimes.some(slot =>
+          !isPastStart(day, slot, now) && slot.courses.some(course => alternativeIds.has(course.courseId))
+        )
+      );
+    }}
+
+    function renderAsapAlternative(host) {{
+      if (!host || !asapAlternativeDates().length) return false;
+      const box = document.createElement('div');
+      box.className = 'empty asap-alternative';
+      const message = document.createElement('p');
+      message.textContent = `${{selectedCourseLabel()}} has no matching near-term result, but another acceptable option is available.`;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'asap-alternative-button';
+      button.textContent = asapOptionLabel;
+      button.addEventListener('click', () => {{
+        compareMode = true;
+        const toggle = byId('compare-toggle');
+        if (toggle) toggle.checked = true;
+        renderAll();
+      }});
+      box.append(message, button);
+      host.innerHTML = '';
+      host.appendChild(box);
+      return true;
     }}
 
     function syncSelection() {{
@@ -1445,6 +1525,58 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderCourseOptions() {{
       const host = byId('course-option-list');
       host.innerHTML = '';
+      if (groupCourseOptions) {{
+        host.classList.add('course-family-grid');
+        const families = new Map();
+        visibleCourseOptions().forEach(course => {{
+          const key = course.familyGroup || course.courseId;
+          if (!families.has(key)) families.set(key, []);
+          families.get(key).push(course);
+        }});
+        families.forEach(courses => {{
+          const family = document.createElement('article');
+          family.className = 'course-family-card';
+          const icon = document.createElement('span');
+          icon.className = 'course-icon';
+          const image = document.createElement('img');
+          image.src = courses[0].imageUrl;
+          image.alt = courses[0].familyLabel || courses[0].courseName;
+          image.loading = 'lazy';
+          icon.appendChild(image);
+          const heading = document.createElement('h3');
+          heading.textContent = courses[0].familyLabel || courses[0].courseName;
+          const choices = document.createElement('div');
+          choices.className = 'course-family-choices';
+          courses.forEach(course => {{
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'course-family-choice';
+            button.dataset.courseId = course.courseId;
+            button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
+            const label = document.createElement('strong');
+            label.textContent = course.optionLabel || course.deliveryBadge || deliveryLabel(course.deliveryMode);
+            const help = document.createElement('span');
+            help.textContent = course.clarification || '';
+            const price = document.createElement('span');
+            price.className = 'course-price';
+            price.textContent = Number.isFinite(Number(course.price)) ? `$${{Number(course.price).toFixed(2)}}` : '';
+            button.appendChild(label);
+            if (price.textContent) button.appendChild(price);
+            button.appendChild(help);
+            button.addEventListener('click', () => {{
+              selectedCourseId = course.courseId;
+              window.LanderWareMotion?.connect(button, byId('date-list'));
+              renderAll();
+            }});
+            choices.appendChild(button);
+          }});
+          family.append(icon, heading, choices);
+          host.appendChild(family);
+        }});
+        scheduleCourseRailUpdate();
+        return;
+      }}
+      host.classList.remove('course-family-grid');
       visibleCourseOptions().forEach(course => {{
         const button = document.createElement('button');
         button.type = 'button';
@@ -1478,7 +1610,12 @@ def render_html(payload: dict[str, Any]) -> str:
         const help = document.createElement('span');
         help.className = 'course-help';
         help.textContent = course.clarification || '';
-        copy.append(title, delivery, help);
+        const price = document.createElement('span');
+        price.className = 'course-price';
+        price.textContent = Number.isFinite(Number(course.price)) ? `$${{Number(course.price).toFixed(2)}}` : '';
+        copy.append(title, delivery);
+        if (price.textContent) copy.appendChild(price);
+        copy.appendChild(help);
         button.append(icon, copy);
         const details = course.details || {{}};
         if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length) {{
@@ -1518,7 +1655,6 @@ def render_html(payload: dict[str, Any]) -> str:
         button.addEventListener('click', () => {{
           selectedCourseId = course.courseId;
           renderAll();
-          scrollToNextStep('date-list');
         }});
         host.appendChild(button);
       }});
@@ -1546,7 +1682,9 @@ def render_html(payload: dict[str, Any]) -> str:
       const days = syncSelection();
       const now = businessNow();
       if (!days.length) {{
-        host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        if (!renderAsapAlternative(host)) {{
+          host.innerHTML = '<div class="empty">No matching times are currently available.</div>';
+        }}
         return;
       }}
       const availableByDate = new Map(days.map(day => [day.date, day]));
@@ -1620,61 +1758,14 @@ def render_html(payload: dict[str, Any]) -> str:
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'day-button';
-            const stateForCourse = course => course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : 'standalone_offer');
-            const segments = Array.from({{ length: 48 }}, () => '');
-            let hasAnchor = false;
-            const anchorLabels = [];
-            const optionLabels = [];
-            available.startTimes.forEach(slot => {{
-              slot.courses.forEach(course => {{
-                const role = stateForCourse(course);
-                const [hour, minute] = slot.startTime.split(':').map(Number);
-                const startBand = Math.max(0, Math.min(47, hour * 2 + Math.floor(minute / 30)));
-                const duration = Number(course.durationMinutes || course.schedulerConsumptionMinutes || 30);
-                const endBand = Math.min(48, startBand + Math.max(1, Math.ceil(duration / 30)));
-                const segmentState = role === 'anchor' ? 'is-anchor' : (role === 'barnacle' ? 'is-barnacle' : 'is-available');
-                if (role === 'anchor') {{
-                  hasAnchor = true;
-                  if (!anchorLabels.includes(slot.displayStartTime)) anchorLabels.push(slot.displayStartTime);
-                }} else if (!optionLabels.includes(slot.displayStartTime)) {{
-                  optionLabels.push(slot.displayStartTime);
-                }}
-                for (let band = startBand; band < endBand; band += 1) {{
-                  const priority = {{ '': 0, 'is-available': 1, 'is-barnacle': 2, 'is-anchor': 3 }};
-                  if (priority[segmentState] > priority[segments[band]]) segments[band] = segmentState;
-                }}
-              }});
-            }});
-            const number = document.createElement('span');
-            number.className = 'day-number';
-            number.textContent = String(dayNum);
-            if (hasAnchor) {{
-              const star = document.createElement('span');
-              star.className = 'day-star';
-              star.setAttribute('aria-hidden', 'true');
-              star.textContent = '★';
-              number.appendChild(star);
-            }}
-            const timeline = document.createElement('span');
-            timeline.className = 'day-timeline';
-            timeline.setAttribute('aria-hidden', 'true');
-            segments.forEach(state => {{
-              const segment = document.createElement('span');
-              segment.className = 'day-timeline-segment' + (state ? ' ' + state : '');
-              timeline.appendChild(segment);
-            }});
-            button.append(number, timeline);
+            button.textContent = String(dayNum);
             const disabled = !isSelectableDate(available, now);
             if (disabled) {{
               button.classList.add('is-past');
             }}
             button.disabled = disabled;
             button.setAttribute('aria-disabled', String(disabled));
-            const activityText = [
-              anchorLabels.length ? 'Confirmed class at ' + anchorLabels.join(', ') : '',
-              optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''
-            ].filter(Boolean).join('; ');
-            button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'Not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
+            button.setAttribute('aria-label', available.displayDate + ' ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times' : 'available'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {{
               if (!isSelectableDate(available)) {{
@@ -1683,8 +1774,8 @@ def render_html(payload: dict[str, Any]) -> str:
               selectedDate = available.date;
               mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
               selectedStart = selectableStartTimes(available)[0]?.startTime || '';
+              window.LanderWareMotion?.connect(button, byId('start-list'));
               renderAll();
-              scrollToNextStep('start-list');
             }});
             grid.appendChild(button);
           }} else {{
@@ -1732,26 +1823,22 @@ def render_html(payload: dict[str, Any]) -> str:
         slots.forEach(slot => {{
         const button = document.createElement('button');
         button.type = 'button';
-        const anchorCourse = slot.courses.find(course => (course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '')) === 'anchor');
-        const isAnchor = Boolean(anchorCourse);
-        const isBarnacle = slot.courses.some(course => (course.schedule_role || course.scheduleRole || '') === 'barnacle');
-        button.textContent = (isAnchor ? '★ ' : '') + slot.displayStartTime;
-        button.classList.add(isAnchor ? 'is-anchor' : (isBarnacle ? 'is-barnacle' : 'is-available'));
+        button.textContent = slot.displayStartTime;
         const disabled = isPastStart(day, slot);
         if (disabled) {{
           button.classList.add('is-past');
         }}
         button.disabled = disabled;
         button.setAttribute('aria-disabled', String(disabled));
-        button.setAttribute('aria-label', slot.displayStartTime + (isAnchor ? ' confirmed class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
+        button.setAttribute('aria-label', slot.displayStartTime + ' ' + (disabled ? 'not bookable; past ' + scheduleTimezone + ' start time' : 'available'));
         button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
         button.addEventListener('click', () => {{
           if (isPastStart(day, slot)) {{
             return;
           }}
           selectedStart = slot.startTime;
+          window.LanderWareMotion?.connect(button, byId('course-list'));
           renderAll();
-          scrollToNextStep('course-list');
         }});
           grid.appendChild(button);
         }});

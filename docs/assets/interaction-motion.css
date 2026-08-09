@@ -1,0 +1,19 @@
+.lw-motion-trail {
+  position: fixed;
+  z-index: 9999;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  border-radius: 999px;
+  background: rgba(0, 113, 173, .3);
+  box-shadow: 0 0 16px rgba(0, 113, 173, .38);
+  transform: translate(-50%, -50%);
+}
+.lw-motion-settle { animation: lw-motion-settle 280ms ease-out; }
+@keyframes lw-motion-settle {
+  45% { box-shadow: 0 0 0 4px rgba(0, 113, 173, .14); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lw-motion-trail { display: none !important; }
+  .lw-motion-settle { animation: none; }
+}
