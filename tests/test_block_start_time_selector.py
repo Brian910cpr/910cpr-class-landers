@@ -500,7 +500,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("family_cpr", configs)
         family = configs["family_cpr"]
         self.assertEqual(family["output_path"], "docs/family-cpr.html")
-        self.assertIs(family.get("render_html"), False)
+        self.assertIs(family.get("render_html"), True)
         self.assertEqual([option["course_id"] for option in family["course_options"]], ["252737"])
 
         rules = block_start_time_selector.course_rules_by_id(
