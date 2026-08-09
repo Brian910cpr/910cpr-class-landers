@@ -1921,7 +1921,7 @@ def render_homepage() -> str:
   </div>
 </noscript>
 
-<script src="/assets/booking-home.js"></script>
+<script src="/assets/booking-home.js?v=20260809.1"></script>
 <script src="/assets/session-expiry.js"></script>
 {telemetry_script("home", "910CPR Homepage")}
 </body>
