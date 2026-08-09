@@ -702,13 +702,32 @@ def css() -> str:
       background: var(--band);
     }
     @media (max-width: 820px) {
-      .page-heading-row { grid-template-columns: 1fr; }
-      .header-credential { grid-template-columns: 76px minmax(0, 1fr); }
-      .header-credential img { width: 76px; max-height: 92px; }
+      .page-heading-row { grid-template-columns: 1fr; gap: 10px; }
+      .header-credential {
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 8px;
+        padding: 7px 9px;
+        border-width: 1px;
+        border-radius: 9px;
+        box-shadow: 0 4px 12px rgba(120, 18, 22, .09);
+      }
+      .header-credential img { width: 44px; max-height: 48px; }
+      .header-credential strong { font-size: .86rem; }
+      .header-credential p { margin-top: 2px; font-size: .72rem; line-height: 1.2; }
+      .header-credential-eyebrow { margin-bottom: 1px; font-size: .58rem; }
       .selector-grid { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
-      header, main, .selector-brand-bar { padding: 18px; }
+      header, main, .selector-brand-bar { padding: 14px 16px; }
+      header { padding-top: 8px; padding-bottom: 10px; }
+      main { padding-top: 10px; }
+      .back-link { margin-bottom: 7px; }
+      h1 { margin-bottom: 4px; font-size: clamp(1.55rem, 7vw, 2rem); }
+      .page-subtitle { margin-bottom: 4px; font-size: 1rem; }
+      .page-heading-row .muted { margin-bottom: 0; }
+      .page-context { gap: 8px; margin-bottom: 10px; }
+      .page-note { padding: 10px 12px; }
+      .selector-shell { gap: 10px; }
       .selector-brand-link img { height: 38px; }
       .selector-brand-link { font-size: 1.05rem; }
       .selector-header-phone { font-size: 1.05rem; }
@@ -1120,8 +1139,14 @@ def render_html(payload: dict[str, Any]) -> str:
   <link rel="stylesheet" href="/assets/interaction-motion.css">
   <style>{css()}</style>
   {commerce_schema_html}
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}})(window,document,'script','dataLayer','GTM-PQS8DCBH');</script>
+  <!-- End Google Tag Manager -->
 </head>
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <div class="selector-brand-bar">
     <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
       <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
@@ -1579,7 +1604,7 @@ def render_html(payload: dict[str, Any]) -> str:
             button.appendChild(help);
             button.addEventListener('click', () => {{
               selectedCourseId = course.courseId;
-              window.LanderWareMotion?.connect(button, byId('date-list'));
+              window.LanderWareMotion?.progress(button, byId('date-list'));
               renderAll();
             }});
             choices.appendChild(button);
@@ -1668,6 +1693,7 @@ def render_html(payload: dict[str, Any]) -> str:
         }}
         button.addEventListener('click', () => {{
           selectedCourseId = course.courseId;
+          window.LanderWareMotion?.progress(button, byId('date-list'));
           renderAll();
         }});
         host.appendChild(button);
@@ -1817,7 +1843,7 @@ def render_html(payload: dict[str, Any]) -> str:
               selectedDate = available.date;
               mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
               selectedStart = selectableStartTimes(available)[0]?.startTime || '';
-              window.LanderWareMotion?.connect(button, byId('start-list'));
+              window.LanderWareMotion?.progress(button, byId('start-list'));
               renderAll();
             }});
             grid.appendChild(button);
@@ -1884,7 +1910,7 @@ def render_html(payload: dict[str, Any]) -> str:
             return;
           }}
           selectedStart = slot.startTime;
-          window.LanderWareMotion?.connect(button, byId('course-list'));
+          window.LanderWareMotion?.progress(button, byId('course-list'));
           renderAll();
         }});
           grid.appendChild(button);

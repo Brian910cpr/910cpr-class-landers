@@ -19,7 +19,7 @@
         "body": "AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR."
       },
       "include_seated_classes": true,
-      "seated_class_minimum_enrollment": 1,
+      "seated_class_minimum_enrollment": 0,
       "consolidate_after_seated_family_anchor": false,
       "same_day_anchor_minimum_enrollment": 1,
       "report_json_path": "data/audit/bls_block_schedule_pilot.json",
@@ -693,7 +693,7 @@
       "intro": "Choose the Red Cross course your requirement names, then select any time with enough room for the complete class.",
       "output_path": "docs/arc.html",
       "include_seated_classes": true,
-      "seated_class_minimum_enrollment": 1,
+      "seated_class_minimum_enrollment": 0,
       "shared_cooldown_days_after_booking": 6,
       "shared_cooldown_minimum_enrollment": 1,
       "default_course_id": "372258",

@@ -532,6 +532,13 @@ def absorb_hot_sync_delta(
     review: list[dict[str, Any]] = []
     for raw_entry in raw_entries:
         entry = normalize_hot_sync_entry(raw_entry)
+        status = str(first_present(entry, ["session_status", "status", "hot_sync_status"]) or "active").strip().lower()
+        if status in {"cancelled", "canceled", "deleted"}:
+            # A struck berth remains in the ledger for provenance, but it no
+            # longer occupies the harbor or suppresses future availability.
+            entry["hot_sync_status"] = "cancelled"
+            kept_active.append(entry)
+            continue
         entry_keys = session_match_keys(entry, config)
         if entry_keys & class_report_keys:
             absorbed_entry = {
@@ -567,7 +574,11 @@ def absorb_hot_sync_delta(
         "absorbed_entries": absorbed,
         "kept_active_entries": kept_active,
         "review_entries": review,
-        "active_sessions_for_merge": [*kept_active, *review],
+        "active_sessions_for_merge": [
+            entry for entry in [*kept_active, *review]
+            if str(first_present(entry, ["session_status", "status", "hot_sync_status"]) or "active").strip().lower()
+            not in {"cancelled", "canceled", "deleted"}
+        ],
     }
 
 

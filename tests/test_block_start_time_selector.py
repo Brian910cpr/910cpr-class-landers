@@ -23,6 +23,54 @@ def artifact_offers(artifact):
 
 
 class BlockStartTimeSelectorTests(unittest.TestCase):
+    def test_existing_inventory_unknown_enrollment_is_visible_across_families(self):
+        fixtures = [
+            ("13850189", "359474", "BLS", "2026-08-10T13:00:00-04:00", "AHA BLS Provider Renewal"),
+            ("13895945", "359474", "BLS", "2026-08-10T15:00:00-04:00", "AHA BLS Provider Renewal"),
+            ("13889121", "209806", "BLS", "2026-08-11T08:00:00-04:00", "AHA BLS Provider Initial"),
+            ("13865036", "359474", "BLS", "2026-08-11T19:00:00-04:00", "AHA BLS Provider Renewal"),
+            ("acls-existing", "241108", "ACLS", "2026-08-12T14:00:00-04:00", "AHA ACLS Provider Initial"),
+            ("arc-existing", "248288", "ARC", "2026-08-13T09:00:00-04:00", "ARC BLS"),
+        ]
+        schedule = {"sessions": [{
+            "session_id": session_id,
+            "course_id": course_id,
+            "course_name": title,
+            "mapped_family": family,
+            "start_at": start,
+            "end_at": (datetime.fromisoformat(start) + timedelta(hours=2)).isoformat(),
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "lead_instructor_name": "Brian Ennis",
+            "registration_url": f"https://coastalcprtraining.enrollware.com/enroll?id={session_id}",
+            "registration_status": "open",
+            "public_direct_booking": True,
+            "registered_count": None,
+            "enrolled_count": None,
+            "available_seats": None,
+            "is_full": None,
+        } for session_id, course_id, family, start, title in fixtures]}
+        courses = [{"course_id": course_id, "course_family": family} for _, course_id, family, _, _ in fixtures]
+        rules = {course_id: {"duration_minutes": 120, "scheduler_consumption_minutes": 120} for _, course_id, _, _, _ in fixtures}
+
+        offers = block_start_time_selector.seated_class_selector_offers(
+            schedule_future_payload=schedule,
+            selected_courses=courses,
+            selected_course_ids={item[1] for item in fixtures},
+            course_rules=rules,
+            minimum_enrollment=99,
+        )
+
+        self.assertEqual([item[0] for item in fixtures], [offer["sourceAvailabilityBlock"]["sessionId"] for offer in offers])
+        self.assertTrue(all(offer["offerType"] == "seated_class" for offer in offers))
+
+    def test_existing_inventory_still_honors_explicit_hard_registration_blocks(self):
+        base = {"public_direct_booking": True, "registration_status": "open", "session_status": "active", "is_full": None}
+        self.assertTrue(block_start_time_selector.public_direct_bookable_session(base))
+        self.assertFalse(block_start_time_selector.public_direct_bookable_session({**base, "registration_status": "full"}))
+        self.assertFalse(block_start_time_selector.public_direct_bookable_session({**base, "is_full": True}))
+        self.assertFalse(block_start_time_selector.public_direct_bookable_session({**base, "session_status": "cancelled"}))
+        self.assertFalse(block_start_time_selector.public_direct_bookable_session({**base, "public_direct_booking": False}))
+
     def test_live_enrollware_calendar_suppresses_disappeared_appointment_offer(self):
         payload = {
             "offers": [
@@ -223,6 +271,12 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_rendered_html_loads_shell_without_actionable_static_times(self):
         html = build_bls_block_schedule_pilot.render_html(self.payload)
+        self.assertIn("GTM-PQS8DCBH", html)
+        self.assertIn("googletagmanager.com/gtm.js", html)
+        self.assertIn("googletagmanager.com/ns.html", html)
+        self.assertEqual(html.count("LanderWareMotion?.progress"), 4)
+        self.assertNotIn("LanderWareMotion?.connect(button", html)
+        self.assertIn("grid-template-columns: 44px minmax(0, 1fr)", html)
         self.assertIn("BLS Certification Classes", html)
         self.assertIn("Register", html)
         self.assertIn("Checking current class times…", html)
@@ -232,6 +286,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("selector-resolved-availability.v1", html)
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         self.assertIn("Need BLS ASAP? Show all AHA BLS options", html)
+
         self.assertIn("const courseOptions =", html)
         self.assertIn("const optionGroups =", html)
         self.assertIn("let compareMode = false", html)
@@ -267,6 +322,13 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("12:00 AM\u20136:00 PM", html)
         self.assertNotIn("Calendy", html)
         self.assertNotIn("shotgun", html.lower())
+
+    def test_shared_motion_progresses_once_on_mobile_and_respects_reduced_motion(self):
+        script = (ROOT / "docs" / "assets" / "interaction-motion.js").read_text(encoding="utf-8")
+        self.assertIn("function progress(source, destination)", script)
+        self.assertIn("matchMedia('(max-width: 820px)')", script)
+        self.assertIn("window.scrollTo({ top, behavior: reduced() ? 'auto' : 'smooth' })", script)
+        self.assertNotIn("addEventListener('resize'", script)
 
     def test_compare_mode_data_model_groups_bls_family_generically(self):
         html = build_bls_block_schedule_pilot.render_html(self.payload)
