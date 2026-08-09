@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-09T20:35:46.163247+00:00",
+  "generated_at": "2026-08-09T21:34:51.677298+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 328,
+    "blocks_generated": 329,
     "blocks_blocked": 9,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -38,13 +38,37 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 127,
+      "blocked": 128,
       "available": 201
     },
     "inverse_generated_availability_blocks": 201,
-    "inverse_blocking_event_blocks": 127
+    "inverse_blocking_event_blocks": 128
   },
   "availability_blocks": [
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-10T18:00:00",
+      "end_datetime": "2026-08-11T06:00:00",
+      "date": "2026-08-10",
+      "end_date": "2026-08-11",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "location_name": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "74ojec1g60qjibb16ss36b9k64rmab9p6cs3gbb3c5j32d33cgq3eohjcc@google.com",
+      "summary": "ADR Shift — Unavailable",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -3096,11 +3120,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-09T16:45:00",
+      "start_datetime": "2026-08-09T17:45:00",
       "end_datetime": "2026-08-10T00:00:00",
       "date": "2026-08-09",
       "end_date": "2026-08-10",
-      "start_time": "16:45",
+      "start_time": "17:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -3128,11 +3152,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-08-10T00:00:00",
-      "end_datetime": "2026-08-11T00:00:00",
+      "end_datetime": "2026-08-10T18:00:00",
       "date": "2026-08-10",
-      "end_date": "2026-08-11",
+      "end_date": "2026-08-10",
       "start_time": "00:00",
-      "end_time": "00:00",
+      "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -3158,11 +3182,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-11T00:00:00",
+      "start_datetime": "2026-08-11T06:00:00",
       "end_datetime": "2026-08-12T00:00:00",
       "date": "2026-08-11",
       "end_date": "2026-08-12",
-      "start_time": "00:00",
+      "start_time": "06:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -9297,11 +9321,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-07T00:00:00",
-      "end_datetime": "2026-11-07T16:45:00",
+      "end_datetime": "2026-11-07T17:45:00",
       "date": "2026-11-07",
       "end_date": "2026-11-07",
       "start_time": "00:00",
-      "end_time": "16:45",
+      "end_time": "17:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",

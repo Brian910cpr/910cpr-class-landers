@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-09T20:35:46.058769+00:00",
+  "generated_at": "2026-08-09T21:34:51.573194+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-09T20:35:45.562344+00:00",
+      "generated_at": "2026-08-09T21:34:51.112181+00:00",
       "event_count": 0
     },
     {
@@ -16,19 +16,30 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-09T20:35:46.058769+00:00",
-      "event_count": 128
+      "generated_at": "2026-08-09T21:34:51.573194+00:00",
+      "event_count": 129
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-09T20:35:45.770017+00:00",
+      "generated_at": "2026-08-09T21:34:51.294888+00:00",
       "event_count": 0
     }
   ],
   "events": [
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "ADR Shift — Unavailable",
+      "start": "2026-08-10T22:00:00+00:00",
+      "end": "2026-08-11T10:00:00+00:00",
+      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "status": "CONFIRMED"
+    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
