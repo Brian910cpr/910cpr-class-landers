@@ -22,7 +22,7 @@ CANONICAL_RUNTIME_CARDS = {
     "AHA Heartsaver CPR AED": ("/heartsaver.html#cpr-aed", "/images/HS-FA-CPR-AED.jpeg"),
     "ARC Programs": ("/arc.html", "/images/0arc.png"),
     "HSI Programs": ("/hsi.html", "/images/0hsi.png"),
-    "USCG / Maritime": ("/courses/uscg-first-aid-cpr-aed.html", "/images/maritime-first-aid.svg"),
+    "USCG / Maritime": ("/courses/uscg-first-aid-cpr-aed.html", "/images/stripes.png"),
     "Family & Friends CPR": ("/family-cpr.html", "/images/FF-CPR-2.jpg"),
 }
 
@@ -176,11 +176,11 @@ class HomepageRoutingTests(unittest.TestCase):
         self.assertIn("Requirement from my employer, school, or license:", js)
         self.assertIn("My deadline:", js)
 
-    def test_homepage_uscg_card_uses_maritime_svg_and_valid_route(self) -> None:
+    def test_homepage_uscg_card_uses_stripes_logo_and_valid_route(self) -> None:
         combined = read(INDEX) + "\n" + read(BOOKING_HOME)
         self.assertIn('href: "/courses/uscg-first-aid-cpr-aed.html"', combined)
-        self.assertIn('image: "/images/maritime-first-aid.svg"', combined)
-        self.assertTrue((DOCS / "images" / "maritime-first-aid.svg").exists())
+        self.assertIn('image: "/images/stripes.png"', combined)
+        self.assertTrue((DOCS / "images" / "stripes.png").exists())
 
     def test_homepage_styles_prevent_mobile_horizontal_overflow(self) -> None:
         css = read(DOCS / "css" / "lander.css")
