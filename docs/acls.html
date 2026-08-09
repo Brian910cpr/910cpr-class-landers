@@ -440,14 +440,22 @@
       font-size: .75rem;
     }
     .day-button {
+      position: relative;
       min-height: 34px;
-      padding: 0;
+      padding: 0 0 9px;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: .9rem;
     }
+    .day-number { position: relative; z-index: 2; }
+    .day-star { margin-left: 2px; color: #236b36; font-size: .72rem; vertical-align: top; }
+    .day-timeline { position: absolute; left: 3px; right: 3px; bottom: 3px; height: 6px; display: grid; grid-template-columns: repeat(48, minmax(0, 1fr)); overflow: hidden; border: 1px solid #aeb7c2; border-radius: 999px; background: transparent; }
+    .day-timeline-segment { min-width: 0; background: transparent; }
+    .day-timeline-segment.is-available { background: #cbd2da; }
+    .day-timeline-segment.is-barnacle { background: #ffe67a; }
+    .day-timeline-segment.is-anchor { background: #72c38a; }
     .day-button.is-past,
     .start-grid button.is-past {
       color: #6b7280;
@@ -484,6 +492,9 @@
       text-align: center;
       justify-content: center;
     }
+    .start-grid button.is-available { background: #fff; border-color: var(--line); color: var(--ink); }
+    .start-grid button.is-barnacle { background: #ffef9d; border-color: #d5b92f; color: #594700; }
+    .start-grid button.is-anchor { background: #bfe8c9; border-color: #54a96b; color: #123f21; }
     .course {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -616,22 +627,8 @@
     }
     </style>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Course", "name": "AHA ACLS Provider (Initial)", "description": "Full classroom ACLS Provider certification for first-time or returning ACLS students.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "225.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/acls.html?course=241108"}}, {"@type": "Course", "name": "AHA ACLS Provider (Renewal)", "description": "Shorter ACLS renewal path for providers with prior ACLS training.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "225.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/acls.html?course=209818"}}, {"@type": "Course", "name": "AHA ACLS HeartCode", "description": "For students who already purchased and completed the AHA online course separately.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "100.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/acls.html?course=209811"}}]}</script>
-<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH');
-</script>
-<!-- End Google Tag Manager -->
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
   <div class="selector-brand-bar">
     <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
       <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
@@ -1312,14 +1309,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'day-button';
-            button.textContent = String(dayNum);
+            const segments = Array(48).fill('');
+            const anchorLabels = [];
+            const optionLabels = [];
+            let hasAnchor = false;
+            available.startTimes.forEach(slot => {
+              slot.courses.forEach(course => {
+                const role = course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '');
+                const [hour, minute] = slot.startTime.split(':').map(Number);
+                const startBand = Math.max(0, Math.min(47, hour * 2 + Math.floor(minute / 30)));
+                const duration = Number(course.durationMinutes || course.schedulerConsumptionMinutes || 30);
+                const endBand = Math.min(48, startBand + Math.max(1, Math.ceil(duration / 30)));
+                const segmentState = role === 'anchor' ? 'is-anchor' : (role === 'barnacle' ? 'is-barnacle' : 'is-available');
+                if (role === 'anchor') { hasAnchor = true; if (!anchorLabels.includes(slot.displayStartTime)) anchorLabels.push(slot.displayStartTime); }
+                else if (!optionLabels.includes(slot.displayStartTime)) optionLabels.push(slot.displayStartTime);
+                for (let band = startBand; band < endBand; band += 1) {
+                  const priority = { '': 0, 'is-available': 1, 'is-barnacle': 2, 'is-anchor': 3 };
+                  if (priority[segmentState] > priority[segments[band]]) segments[band] = segmentState;
+                }
+              });
+            });
+            const number = document.createElement('span');
+            number.className = 'day-number';
+            number.textContent = String(dayNum);
+            if (hasAnchor) { const star = document.createElement('span'); star.className = 'day-star'; star.setAttribute('aria-hidden', 'true'); star.textContent = '★'; number.appendChild(star); }
+            const timeline = document.createElement('span');
+            timeline.className = 'day-timeline';
+            timeline.setAttribute('aria-hidden', 'true');
+            segments.forEach(state => { const segment = document.createElement('span'); segment.className = 'day-timeline-segment' + (state ? ' ' + state : ''); timeline.appendChild(segment); });
+            button.append(number, timeline);
             const disabled = !isSelectableDate(available, now);
             if (disabled) {
               button.classList.add('is-past');
             }
             button.disabled = disabled;
             button.setAttribute('aria-disabled', String(disabled));
-            button.setAttribute('aria-label', available.displayDate + ' ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times' : 'available'));
+            const activityText = [anchorLabels.length ? 'Confirmed class at ' + anchorLabels.join(', ') : '', optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''].filter(Boolean).join('; ');
+            button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'Not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {
               if (!isSelectableDate(available)) {
@@ -1377,14 +1403,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         slots.forEach(slot => {
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = slot.displayStartTime;
+        const anchorCourse = slot.courses.find(course => (course.schedule_role || course.scheduleRole || (course.offerType === 'seated_class' ? 'anchor' : '')) === 'anchor');
+        const isAnchor = Boolean(anchorCourse);
+        const isBarnacle = slot.courses.some(course => (course.schedule_role || course.scheduleRole || '') === 'barnacle');
+        button.textContent = (isAnchor ? '★ ' : '') + slot.displayStartTime;
+        button.classList.add(isAnchor ? 'is-anchor' : (isBarnacle ? 'is-barnacle' : 'is-available'));
         const disabled = isPastStart(day, slot);
         if (disabled) {
           button.classList.add('is-past');
         }
         button.disabled = disabled;
         button.setAttribute('aria-disabled', String(disabled));
-        button.setAttribute('aria-label', slot.displayStartTime + ' ' + (disabled ? 'not bookable; past ' + scheduleTimezone + ' start time' : 'available'));
+        button.setAttribute('aria-label', slot.displayStartTime + (isAnchor ? ' confirmed class' : isBarnacle ? ' good fit around an existing class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
         button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
         button.addEventListener('click', () => {
           if (isPastStart(day, slot)) {
