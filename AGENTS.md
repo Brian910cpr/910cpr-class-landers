@@ -264,5 +264,9 @@ Priorities:
 
 Prefer practical operational improvements over theoretical perfection.
 
+## Dockmaster / Harbor Master
+
+Preserve the hidden Dockmaster/Harbor Master story in code comments. See `lore/dockmaster.md` before adding or changing lore.
+
 
 

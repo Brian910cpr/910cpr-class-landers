@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>USCG-Approved First Aid / CPR / AED | 910CPR</title>
+  <link rel="stylesheet" href="/assets/interaction-motion.css">
   <style>
     :root {
       color-scheme: light;
@@ -384,6 +385,25 @@
       color: var(--accent-dark);
       font-weight: 700;
     }
+    .choice-list.course-family-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      overflow: visible;
+    }
+    .course-family-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+    }
+    .course-family-card h3 { margin: 12px 14px 8px; font-size: 1rem; }
+    .course-family-choices { display: grid; gap: 8px; padding: 0 12px 12px; }
+    .course-family-choice { display: grid; gap: 4px; width: 100%; }
+    .course-family-choice strong { color: var(--ink); }
+    .course-family-choice span { color: var(--muted); font-size: .82rem; line-height: 1.3; }
+    .course-family-choice .course-price { color: var(--accent-dark); font-size: 1rem; font-weight: 900; }
     .month-stack { display: grid; gap: 14px; }
     .month-nav {
       display: none;
@@ -546,6 +566,13 @@
         padding-right: 0;
         scroll-snap-type: x mandatory;
       }
+      .choice-list.course-family-grid {
+        grid-template-columns: 1fr;
+        grid-auto-flow: row;
+        grid-auto-columns: unset;
+        overflow: visible;
+        scroll-snap-type: none;
+      }
       .course-rail {
         padding-left: 44px;
         padding-right: 44px;
@@ -588,6 +615,7 @@
       }
     }
     </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Course", "name": "In-person AHA Heartsaver First Aid CPR AED", "description": "First Aid, CPR, and AED training completed entirely in person.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "95.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/courses/uscg-first-aid-cpr-aed.html?course=209809"}}, {"@type": "Course", "name": "Online learning + in-person skills session", "description": "Complete assigned online coursework before the scheduled skills/classroom session.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "95.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/courses/uscg-first-aid-cpr-aed.html?course=329495"}}]}</script>
 </head>
 <body>
   <div class="selector-brand-bar">
@@ -671,13 +699,15 @@
       </div>
     </section>
   </main>
+  <script src="/assets/interaction-motion.js"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/uscg_first_aid_cpr_aed.json?v=2026-07-20T11%3A53%3A55.429281";
-    const courseOptions = [{"courseId": "209809", "courseName": "In-person AHA Heartsaver First Aid CPR AED", "family": "Heartsaver", "variant": "in-person", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["in-person", "classroom", "uscg-in-person", "first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/heartsaver-total-course-images-2.jpg", "imageFit": "contain", "imageAlt": "AHA Heartsaver First Aid CPR AED course training", "deliveryBadge": "IN-PERSON", "clarification": "First Aid, CPR, and AED training completed entirely in person.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed", "title": "AHA Heartsaver First Aid CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "First Aid, CPR, and AED training for workplace, school, and professional requirements.", "who_this_is_for": "Students who need a combined first aid, CPR, and AED certification for work, school, licensing, or general preparedness.", "topics_covered": ["First aid basics", "CPR and AED use", "Choking response", "Opioid emergency awareness", "Stroke warning signs", "Seizures", "Asthma support", "Heat illness", "Burns and common injuries"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use this path when your requirement specifically includes first aid plus CPR/AED."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "329495", "courseName": "Online learning + in-person skills session", "family": "Heartsaver", "variant": "online-learning-skills", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["online-learning-skills", "blended", "uscg-blended", "first-aid-cpr-aed-blended"], "iconLabel": "BL", "imageUrl": "/images/Heartsaver-TOTAL-Online.webp", "imageFit": "contain", "imageAlt": "AHA Heartsaver Total online learning course", "deliveryBadge": "BLENDED", "clarification": "Complete assigned online coursework before the scheduled skills/classroom session.", "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed_blended", "title": "AHA Heartsaver First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended First Aid/CPR/AED option with online coursework and an in-person skills session.", "who_this_is_for": "Students whose requirement accepts blended Heartsaver First Aid CPR AED.", "topics_covered": ["Online first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA Heartsaver First Aid CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}];
+    const availabilityUrl = "/data/block-selector-availability/uscg_first_aid_cpr_aed.json?v=2026-07-22T21%3A20%3A52.489422";
+    const courseOptions = [{"courseId": "209809", "courseName": "In-person AHA Heartsaver First Aid CPR AED", "family": "Heartsaver", "variant": "in-person", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["in-person", "classroom", "uscg-in-person", "first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/heartsaver-total-course-images-2.jpg", "imageFit": "contain", "imageAlt": "AHA Heartsaver First Aid CPR AED course training", "deliveryBadge": "IN-PERSON", "clarification": "First Aid, CPR, and AED training completed entirely in person.", "familyGroup": "uscg-first-aid-cpr-aed", "familyLabel": "First Aid CPR AED — USCG Documentation Path", "optionLabel": "In Person", "price": 95, "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed", "title": "AHA Heartsaver First Aid CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "First Aid, CPR, and AED training for workplace, school, and professional requirements.", "who_this_is_for": "Students who need a combined first aid, CPR, and AED certification for work, school, licensing, or general preparedness.", "topics_covered": ["First aid basics", "CPR and AED use", "Choking response", "Opioid emergency awareness", "Stroke warning signs", "Seizures", "Asthma support", "Heat illness", "Burns and common injuries"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use this path when your requirement specifically includes first aid plus CPR/AED."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "329495", "courseName": "Online learning + in-person skills session", "family": "Heartsaver", "variant": "online-learning-skills", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["online-learning-skills", "blended", "uscg-blended", "first-aid-cpr-aed-blended"], "iconLabel": "BL", "imageUrl": "/images/Heartsaver-TOTAL-Online.webp", "imageFit": "contain", "imageAlt": "AHA Heartsaver Total online learning course", "deliveryBadge": "BLENDED", "clarification": "Complete assigned online coursework before the scheduled skills/classroom session.", "familyGroup": "uscg-first-aid-cpr-aed", "familyLabel": "First Aid CPR AED — USCG Documentation Path", "optionLabel": "Blended — Online + In-person Skills", "price": 95, "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed_blended", "title": "AHA Heartsaver First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended First Aid/CPR/AED option with online coursework and an in-person skills session.", "who_this_is_for": "Students whose requirement accepts blended Heartsaver First Aid CPR AED.", "topics_covered": ["Online first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA Heartsaver First Aid CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}];
     const optionGroups = {"USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED": {"family": "USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED", "label": "AHA Heartsaver First Aid CPR AED Total options", "courseIds": ["209809", "329495"]}};
     const asapOptionLabel = "Show all options";
     const unsupportedOptions = [];
+    const groupCourseOptions = true;
     let scheduleDates = embeddedScheduleDates;
     let availabilityState = 'checking';
     let availabilityMessage = 'Checking current class times…';
@@ -1028,6 +1058,58 @@
     function renderCourseOptions() {
       const host = byId('course-option-list');
       host.innerHTML = '';
+      if (groupCourseOptions) {
+        host.classList.add('course-family-grid');
+        const families = new Map();
+        visibleCourseOptions().forEach(course => {
+          const key = course.familyGroup || course.courseId;
+          if (!families.has(key)) families.set(key, []);
+          families.get(key).push(course);
+        });
+        families.forEach(courses => {
+          const family = document.createElement('article');
+          family.className = 'course-family-card';
+          const icon = document.createElement('span');
+          icon.className = 'course-icon';
+          const image = document.createElement('img');
+          image.src = courses[0].imageUrl;
+          image.alt = courses[0].familyLabel || courses[0].courseName;
+          image.loading = 'lazy';
+          icon.appendChild(image);
+          const heading = document.createElement('h3');
+          heading.textContent = courses[0].familyLabel || courses[0].courseName;
+          const choices = document.createElement('div');
+          choices.className = 'course-family-choices';
+          courses.forEach(course => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'course-family-choice';
+            button.dataset.courseId = course.courseId;
+            button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
+            const label = document.createElement('strong');
+            label.textContent = course.optionLabel || course.deliveryBadge || deliveryLabel(course.deliveryMode);
+            const help = document.createElement('span');
+            help.textContent = course.clarification || '';
+            const price = document.createElement('span');
+            price.className = 'course-price';
+            price.textContent = Number.isFinite(Number(course.price)) ? `$${Number(course.price).toFixed(2)}` : '';
+            button.appendChild(label);
+            if (price.textContent) button.appendChild(price);
+            button.appendChild(help);
+            button.addEventListener('click', () => {
+              selectedCourseId = course.courseId;
+              window.LanderWareMotion?.connect(button, byId('date-list'));
+              renderAll();
+            });
+            choices.appendChild(button);
+          });
+          family.append(icon, heading, choices);
+          host.appendChild(family);
+        });
+        scheduleCourseRailUpdate();
+        return;
+      }
+      host.classList.remove('course-family-grid');
       visibleCourseOptions().forEach(course => {
         const button = document.createElement('button');
         button.type = 'button';
@@ -1061,7 +1143,12 @@
         const help = document.createElement('span');
         help.className = 'course-help';
         help.textContent = course.clarification || '';
-        copy.append(title, delivery, help);
+        const price = document.createElement('span');
+        price.className = 'course-price';
+        price.textContent = Number.isFinite(Number(course.price)) ? `$${Number(course.price).toFixed(2)}` : '';
+        copy.append(title, delivery);
+        if (price.textContent) copy.appendChild(price);
+        copy.appendChild(help);
         button.append(icon, copy);
         const details = course.details || {};
         if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length) {
@@ -1220,6 +1307,7 @@
               selectedDate = available.date;
               mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
               selectedStart = selectableStartTimes(available)[0]?.startTime || '';
+              window.LanderWareMotion?.connect(button, byId('start-list'));
               renderAll();
             });
             grid.appendChild(button);
@@ -1282,6 +1370,7 @@
             return;
           }
           selectedStart = slot.startTime;
+          window.LanderWareMotion?.connect(button, byId('course-list'));
           renderAll();
         });
           grid.appendChild(button);

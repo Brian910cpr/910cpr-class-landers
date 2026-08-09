@@ -42,6 +42,10 @@
       "course_options": [
         {
           "course_id": "209806",
+          "family_group": "bls-provider",
+          "family_label": "BLS Provider",
+          "option_label": "Initial — In Person",
+          "price": 75,
           "display_label": "AHA BLS Provider",
           "icon_label": "BLS",
           "clarification": "Full classroom BLS certification for healthcare providers and clinical students.",
@@ -57,6 +61,10 @@
         },
         {
           "course_id": "359474",
+          "family_group": "bls-provider",
+          "family_label": "BLS Provider",
+          "option_label": "Renewal — In Person",
+          "price": 75,
           "display_label": "AHA BLS Provider Renewal",
           "icon_label": "RN",
           "clarification": "Renewal path for providers who already hold current or recently expired BLS.",
@@ -72,9 +80,13 @@
         },
         {
           "course_id": "210549",
+          "family_group": "bls-skills-session",
+          "family_label": "BLS Skills Session Only",
+          "option_label": "In-person Skills Session",
+          "price": 55,
           "display_label": "AHA HeartCode BLS",
           "icon_label": "HC",
-          "clarification": "Complete HeartCode BLS online first, then attend an in-person skills session.",
+          "clarification": "For students who already purchased and completed the AHA online course separately.",
           "delivery_mode": "skills-session",
           "variant": "heartcode",
           "deep_link_aliases": [
@@ -85,6 +97,8 @@
           "delivery_badge": "ONLINE + SKILLS"
         }
       ],
+      "group_course_options": true,
+      "show_all_enabled": false,
       "back_link_label": "Back to Find Your Class",
       "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
@@ -136,6 +150,10 @@
       "course_options": [
         {
           "course_id": "241108",
+          "family_group": "acls-provider",
+          "family_label": "ACLS Provider",
+          "option_label": "Initial — In Person",
+          "price": 225,
           "display_label": "AHA ACLS Provider (Initial)",
           "icon_label": "ACLS",
           "clarification": "Full classroom ACLS Provider certification for first-time or returning ACLS students.",
@@ -151,6 +169,10 @@
         },
         {
           "course_id": "209818",
+          "family_group": "acls-provider",
+          "family_label": "ACLS Provider",
+          "option_label": "Renewal — In Person",
+          "price": 225,
           "display_label": "AHA ACLS Provider (Renewal)",
           "icon_label": "RN",
           "clarification": "Shorter ACLS renewal path for providers with prior ACLS training.",
@@ -166,9 +188,13 @@
         },
         {
           "course_id": "209811",
+          "family_group": "acls-skills-session",
+          "family_label": "ACLS Skills Session Only",
+          "option_label": "In-person Skills Session",
+          "price": 100,
           "display_label": "AHA ACLS HeartCode",
           "icon_label": "HC",
-          "clarification": "Complete HeartCode ACLS online first, then attend an in-person skills session.",
+          "clarification": "For students who already purchased and completed the AHA online course separately.",
           "delivery_mode": "skills-session",
           "variant": "heartcode",
           "deep_link_aliases": [
@@ -179,6 +205,8 @@
           "delivery_badge": "ONLINE + SKILLS"
         }
       ],
+      "group_course_options": true,
+      "show_all_enabled": false,
       "back_link_label": "Back to Find Your Class",
       "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
@@ -230,6 +258,10 @@
       "course_options": [
         {
           "course_id": "209805",
+          "family_group": "pals-provider",
+          "family_label": "PALS Provider",
+          "option_label": "Initial — In Person",
+          "price": 275,
           "display_label": "AHA PALS Provider",
           "icon_label": "PALS",
           "clarification": "Full classroom PALS Provider certification for pediatric emergency response roles.",
@@ -245,6 +277,10 @@
         },
         {
           "course_id": "251496",
+          "family_group": "pals-provider",
+          "family_label": "PALS Provider",
+          "option_label": "Renewal — In Person",
+          "price": 225,
           "display_label": "AHA PALS Renewal",
           "icon_label": "RN",
           "clarification": "Renewal path for providers with prior PALS training.",
@@ -260,9 +296,13 @@
         },
         {
           "course_id": "209812",
+          "family_group": "pals-skills-session",
+          "family_label": "PALS Skills Session Only",
+          "option_label": "In-person Skills Session",
+          "price": 100,
           "display_label": "AHA PALS HeartCode",
           "icon_label": "HC",
-          "clarification": "Complete HeartCode PALS online first, then attend an in-person skills session.",
+          "clarification": "For students who already purchased and completed the AHA online course separately.",
           "delivery_mode": "skills-session",
           "variant": "heartcode",
           "deep_link_aliases": [
@@ -273,6 +313,8 @@
           "delivery_badge": "ONLINE + SKILLS"
         }
       ],
+      "group_course_options": true,
+      "show_all_enabled": false,
       "back_link_label": "Back to Find Your Class",
       "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
@@ -304,6 +346,8 @@
         "body": "AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR."
       },
       "show_all_label": "Show all course options",
+      "show_all_enabled": false,
+      "group_course_options": true,
       "compare_mode": {
         "enabled": true,
         "label": "Need First Aid or CPR ASAP? Show all AHA Heartsaver options",
@@ -324,6 +368,10 @@
       "course_options": [
         {
           "course_id": "344085",
+          "family_group": "cpr-aed",
+          "family_label": "CPR AED",
+          "option_label": "In Person",
+          "price": 70,
           "display_label": "AHA Heartsaver CPR AED",
           "icon_label": "CPR",
           "clarification": "CPR and AED training completed entirely in person.",
@@ -338,6 +386,10 @@
         },
         {
           "course_id": "209808",
+          "family_group": "cpr-aed",
+          "family_label": "CPR AED",
+          "option_label": "Blended — Online + In-person Skills",
+          "price": 80,
           "display_label": "AHA Heartsaver CPR AED Online",
           "icon_label": "CPR",
           "clarification": "Complete the online CPR/AED course first, then attend a skills session.",
@@ -347,13 +399,16 @@
             "cpr-aed-online",
             "heartcode-first-aid-cpr-aed"
           ],
-          "recommended": false,
           "image_url": "/images/hc_A_ss_click.png",
           "image_alt": "AHA Heartsaver CPR AED Online course option",
           "delivery_badge": "BLENDED"
         },
         {
           "course_id": "209809",
+          "family_group": "first-aid-cpr-aed",
+          "family_label": "First Aid CPR AED",
+          "option_label": "In Person",
+          "price": 95,
           "display_label": "AHA Heartsaver First Aid CPR AED",
           "icon_label": "FA",
           "clarification": "First Aid, CPR, and AED classroom option.",
@@ -368,6 +423,10 @@
         },
         {
           "course_id": "329495",
+          "family_group": "first-aid-cpr-aed",
+          "family_label": "First Aid CPR AED",
+          "option_label": "Blended — Online + In-person Skills",
+          "price": 95,
           "display_label": "AHA Heartsaver First Aid CPR AED - Blended",
           "icon_label": "BL",
           "clarification": "Blended First Aid, CPR, and AED option.",
@@ -376,13 +435,16 @@
           "deep_link_aliases": [
             "first-aid-cpr-aed-blended"
           ],
-          "recommended": false,
           "image_url": "/images/heartsaver_general.png",
           "image_alt": "AHA Heartsaver First Aid CPR AED - Blended course option",
           "delivery_badge": "BLENDED"
         },
         {
           "course_id": "351632",
+          "family_group": "pediatric-first-aid-cpr-aed",
+          "family_label": "Pediatric First Aid CPR AED",
+          "option_label": "In Person",
+          "price": 95,
           "display_label": "AHA Heartsaver Pediatric First Aid / CPR / AED",
           "icon_label": "PED",
           "clarification": "Pediatric First Aid, CPR, and AED training completed in person.",
@@ -391,13 +453,16 @@
           "deep_link_aliases": [
             "pediatric-first-aid-cpr-aed-in-person"
           ],
-          "recommended": false,
           "image_url": "/images/HS-PEDI-FA-CPR-AED.jpeg",
           "image_alt": "AHA Heartsaver Pediatric First Aid / CPR / AED course option",
           "delivery_badge": "IN-PERSON"
         },
         {
           "course_id": "251545",
+          "family_group": "pediatric-first-aid-cpr-aed",
+          "family_label": "Pediatric First Aid CPR AED",
+          "option_label": "Blended — Online + In-person Skills",
+          "price": 95,
           "display_label": "AHA Heartsaver Pediatric First Aid CPR AED Online",
           "icon_label": "PED",
           "clarification": "Complete the pediatric online course first, then attend a skills session.",
@@ -481,6 +546,10 @@
       "course_options": [
         {
           "course_id": "209809",
+          "family_group": "uscg-first-aid-cpr-aed",
+          "family_label": "First Aid CPR AED — USCG Documentation Path",
+          "option_label": "In Person",
+          "price": 95,
           "display_label": "In-person AHA Heartsaver First Aid CPR AED",
           "icon_label": "FA",
           "clarification": "First Aid, CPR, and AED training completed entirely in person.",
@@ -497,6 +566,10 @@
         },
         {
           "course_id": "329495",
+          "family_group": "uscg-first-aid-cpr-aed",
+          "family_label": "First Aid CPR AED — USCG Documentation Path",
+          "option_label": "Blended — Online + In-person Skills",
+          "price": 95,
           "display_label": "Online learning + in-person skills session",
           "icon_label": "BL",
           "clarification": "Complete assigned online coursework before the scheduled skills/classroom session.",
@@ -512,6 +585,7 @@
           "delivery_badge": "BLENDED"
         }
       ],
+      "group_course_options": true,
       "course_id_notes": {
         "209809": "Routine public AHA Heartsaver First Aid CPR AED in-person course used for the USCG/AMERHA-216 cover page.",
         "329495": "Routine public AHA Heartsaver First Aid CPR AED blended course used for the USCG/AMERHA-216 cover page.",
@@ -563,6 +637,7 @@
       "course_options": [
         {
           "course_id": "463743",
+          "price": 80,
           "display_label": "HSI BLS Challenge",
           "icon_label": "HSI",
           "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.",
@@ -579,6 +654,7 @@
         },
         {
           "course_id": "445670",
+          "price": 90,
           "display_label": "HSI BLS + Adult First Aid",
           "icon_label": "FA",
           "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.",
@@ -646,6 +722,7 @@
       "course_options": [
         {
           "course_id": "248288",
+          "price": 99,
           "display_label": "American Red Cross Basic Life Support",
           "icon_label": "ARC",
           "clarification": "Red Cross BLS classroom option.",
@@ -658,6 +735,7 @@
         },
         {
           "course_id": "372258",
+          "price": 90,
           "display_label": "American Red Cross Adult CPR/AED",
           "icon_label": "CPR",
           "clarification": "Red Cross Adult CPR/AED skills option.",
@@ -670,6 +748,7 @@
         },
         {
           "course_id": "369209",
+          "price": 110,
           "display_label": "American Red Cross First Aid/CPR/AED",
           "icon_label": "FA",
           "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.",
@@ -712,6 +791,7 @@
       "course_options": [
         {
           "course_id": "252737",
+          "price": 45,
           "display_label": "Family & Friends CPR",
           "icon_label": "CPR",
           "clarification": "Relaxed, hands-on CPR practice for families and community members. No certification card is included.",

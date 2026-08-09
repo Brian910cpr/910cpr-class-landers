@@ -535,6 +535,25 @@ def css() -> str:
       color: var(--accent-dark);
       font-weight: 700;
     }
+    .choice-list.course-family-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      overflow: visible;
+    }
+    .course-family-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+    }
+    .course-family-card h3 { margin: 12px 14px 8px; font-size: 1rem; }
+    .course-family-choices { display: grid; gap: 8px; padding: 0 12px 12px; }
+    .course-family-choice { display: grid; gap: 4px; width: 100%; }
+    .course-family-choice strong { color: var(--ink); }
+    .course-family-choice span { color: var(--muted); font-size: .82rem; line-height: 1.3; }
+    .course-family-choice .course-price { color: var(--accent-dark); font-size: 1rem; font-weight: 900; }
     .month-stack { display: grid; gap: 14px; }
     .month-nav {
       display: none;
@@ -697,6 +716,13 @@ def css() -> str:
         padding-right: 0;
         scroll-snap-type: x mandatory;
       }
+      .choice-list.course-family-grid {
+        grid-template-columns: 1fr;
+        grid-auto-flow: row;
+        grid-auto-columns: unset;
+        overflow: visible;
+        scroll-snap-type: none;
+      }
       .course-rail {
         padding-left: 44px;
         padding-right: 44px;
@@ -769,6 +795,10 @@ def render_html(payload: dict[str, Any]) -> str:
             "imageAlt": option.get("image_alt") or f"{option.get('display_label') or page_family} course option",
             "deliveryBadge": option.get("delivery_badge") or delivery_label_for_config(option.get("delivery_mode")),
             "clarification": option.get("clarification") or "",
+            "familyGroup": option.get("family_group") or "",
+            "familyLabel": option.get("family_label") or "",
+            "optionLabel": option.get("option_label") or "",
+            "price": option.get("price"),
             "details": course_descriptions.get(course_id, {}),
         }
         for course_id, option in configured_options.items()
@@ -832,6 +862,10 @@ def render_html(payload: dict[str, Any]) -> str:
                     "imageAlt": configured_options.get(course["courseId"], {}).get("image_alt") or f"{configured_options.get(course['courseId'], {}).get('display_label') or course['courseName']} course option",
                     "deliveryBadge": configured_options.get(course["courseId"], {}).get("delivery_badge") or delivery_label_for_config(configured_options.get(course["courseId"], {}).get("delivery_mode") or course.get("deliveryMode")),
                     "clarification": configured_options.get(course["courseId"], {}).get("clarification") or "",
+                    "familyGroup": configured_options.get(course["courseId"], {}).get("family_group") or "",
+                    "familyLabel": configured_options.get(course["courseId"], {}).get("family_label") or "",
+                    "optionLabel": configured_options.get(course["courseId"], {}).get("option_label") or "",
+                    "price": configured_options.get(course["courseId"], {}).get("price"),
                     "details": course_descriptions.get(course["courseId"], {}),
                 })
                 compare_groups = page_config.get("compare_mode", {}).get("groups", {})
@@ -879,6 +913,35 @@ def render_html(payload: dict[str, Any]) -> str:
         if course_id in course_options_by_id
     ]
     course_options_json = json.dumps(course_options, ensure_ascii=False)
+    public_page_path = "/" + str(page_config.get("output_path") or "docs/index.html").replace("\\", "/").removeprefix("docs/")
+    public_page_url = "https://www.910cpr.com" + public_page_path
+    priced_courses = [option for option in course_options if isinstance(option.get("price"), (int, float))]
+    commerce_schema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Course",
+                "name": option.get("courseName"),
+                "description": option.get("clarification") or option.get("courseName"),
+                "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"},
+                "offers": {
+                    "@type": "Offer",
+                    "price": f"{float(option['price']):.2f}",
+                    "priceCurrency": "USD",
+                    "availability": "https://schema.org/InStock",
+                    "url": f"{public_page_url}?course={quote(str(option.get('courseId') or ''))}",
+                },
+            }
+            for option in priced_courses
+        ],
+    }
+    commerce_schema_html = (
+        '<script type="application/ld+json">'
+        + json.dumps(commerce_schema, ensure_ascii=False).replace("</", "<\\/")
+        + "</script>"
+        if priced_courses
+        else ""
+    )
     option_groups_json = json.dumps(option_groups, ensure_ascii=False)
     compare_label_json = json.dumps(str(page_config.get("compare_mode", {}).get("label") or "Show all options"), ensure_ascii=False)
     availability_url_json = json.dumps(availability_url)
@@ -1040,7 +1103,9 @@ def render_html(payload: dict[str, Any]) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title} | 910CPR</title>
+  <link rel="stylesheet" href="/assets/interaction-motion.css">
   <style>{css()}</style>
+  {commerce_schema_html}
 </head>
 <body>
   <div class="selector-brand-bar">
@@ -1101,6 +1166,7 @@ def render_html(payload: dict[str, Any]) -> str:
       </div>
     </section>
   </main>
+  <script src="/assets/interaction-motion.js"></script>
   <script>
     const embeddedScheduleDates = {data_json};
     const availabilityUrl = {availability_url_json};
@@ -1108,6 +1174,7 @@ def render_html(payload: dict[str, Any]) -> str:
     const optionGroups = {option_groups_json};
     const asapOptionLabel = {compare_label_json};
     const unsupportedOptions = {unsupported_options_json};
+    const groupCourseOptions = {json.dumps(page_config.get("group_course_options") is True)};
     let scheduleDates = embeddedScheduleDates;
     let availabilityState = 'checking';
     let availabilityMessage = 'Checking current class times…';
@@ -1458,6 +1525,58 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderCourseOptions() {{
       const host = byId('course-option-list');
       host.innerHTML = '';
+      if (groupCourseOptions) {{
+        host.classList.add('course-family-grid');
+        const families = new Map();
+        visibleCourseOptions().forEach(course => {{
+          const key = course.familyGroup || course.courseId;
+          if (!families.has(key)) families.set(key, []);
+          families.get(key).push(course);
+        }});
+        families.forEach(courses => {{
+          const family = document.createElement('article');
+          family.className = 'course-family-card';
+          const icon = document.createElement('span');
+          icon.className = 'course-icon';
+          const image = document.createElement('img');
+          image.src = courses[0].imageUrl;
+          image.alt = courses[0].familyLabel || courses[0].courseName;
+          image.loading = 'lazy';
+          icon.appendChild(image);
+          const heading = document.createElement('h3');
+          heading.textContent = courses[0].familyLabel || courses[0].courseName;
+          const choices = document.createElement('div');
+          choices.className = 'course-family-choices';
+          courses.forEach(course => {{
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'course-family-choice';
+            button.dataset.courseId = course.courseId;
+            button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId));
+            const label = document.createElement('strong');
+            label.textContent = course.optionLabel || course.deliveryBadge || deliveryLabel(course.deliveryMode);
+            const help = document.createElement('span');
+            help.textContent = course.clarification || '';
+            const price = document.createElement('span');
+            price.className = 'course-price';
+            price.textContent = Number.isFinite(Number(course.price)) ? `$${{Number(course.price).toFixed(2)}}` : '';
+            button.appendChild(label);
+            if (price.textContent) button.appendChild(price);
+            button.appendChild(help);
+            button.addEventListener('click', () => {{
+              selectedCourseId = course.courseId;
+              window.LanderWareMotion?.connect(button, byId('date-list'));
+              renderAll();
+            }});
+            choices.appendChild(button);
+          }});
+          family.append(icon, heading, choices);
+          host.appendChild(family);
+        }});
+        scheduleCourseRailUpdate();
+        return;
+      }}
+      host.classList.remove('course-family-grid');
       visibleCourseOptions().forEach(course => {{
         const button = document.createElement('button');
         button.type = 'button';
@@ -1491,7 +1610,12 @@ def render_html(payload: dict[str, Any]) -> str:
         const help = document.createElement('span');
         help.className = 'course-help';
         help.textContent = course.clarification || '';
-        copy.append(title, delivery, help);
+        const price = document.createElement('span');
+        price.className = 'course-price';
+        price.textContent = Number.isFinite(Number(course.price)) ? `$${{Number(course.price).toFixed(2)}}` : '';
+        copy.append(title, delivery);
+        if (price.textContent) copy.appendChild(price);
+        copy.appendChild(help);
         button.append(icon, copy);
         const details = course.details || {{}};
         if (details.short_description || details.who_this_is_for || (details.topics_covered || []).length) {{
@@ -1650,6 +1774,7 @@ def render_html(payload: dict[str, Any]) -> str:
               selectedDate = available.date;
               mobileMonthIndex = monthKeys.indexOf(available.date.slice(0, 7));
               selectedStart = selectableStartTimes(available)[0]?.startTime || '';
+              window.LanderWareMotion?.connect(button, byId('start-list'));
               renderAll();
             }});
             grid.appendChild(button);
@@ -1712,6 +1837,7 @@ def render_html(payload: dict[str, Any]) -> str:
             return;
           }}
           selectedStart = slot.startTime;
+          window.LanderWareMotion?.connect(button, byId('course-list'));
           renderAll();
         }});
           grid.appendChild(button);
