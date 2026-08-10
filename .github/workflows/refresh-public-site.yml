@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: "*/30 * * * *"
   workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: "Force a full rebuild from the live Enrollware feed even when the feed hash is unchanged"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -78,43 +84,49 @@ jobs:
           '@
           $script | python -
 
+      - name: Report forced rebuild
+        if: github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true
+        shell: pwsh
+        run: |
+          Write-Host "Force rebuild requested. Rebuilding from the live Enrollware feed even if its stable hash is unchanged."
+
       - name: Skip unchanged iCal feed
-        if: steps.ical.outputs.changed == 'false'
+        if: steps.ical.outputs.changed == 'false' && !(github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: |
           Write-Host "Enrollware iCal hash unchanged. Skipping public build and commit."
 
       - name: Run full validated public build
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: cmd
         env:
           LANDER_SKIP_REPOSITORY_TESTS: "1"
         run: build\full_validated_public_build.bat
 
       - name: Refresh admin occupancy snapshot
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: python -m scripts.publish_admin_schedule
 
       - name: Run link audit
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: python -m scripts.audit_sitewide_links
 
       - name: Validate refreshed public inventory
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: python -m scripts.validate_public_refresh_output
 
       - name: Update stored iCal hash
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force data/state_public | Out-Null
           Set-Content -Path data/state_public/enrollware_ical_hash.txt -Value "${{ steps.ical.outputs.current_hash }}" -NoNewline -Encoding utf8
 
       - name: Commit approved public output
-        if: steps.ical.outputs.changed == 'true'
+        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
@@ -140,4 +152,3 @@ jobs:
 
           git commit -m "Refresh public schedule from Enrollware iCal"
           git push origin main
-
