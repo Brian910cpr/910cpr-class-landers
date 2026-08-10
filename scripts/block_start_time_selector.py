@@ -685,7 +685,14 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
 
 
 def public_direct_bookable_session(session: dict[str, Any]) -> bool:
-    return session.get("public_direct_booking") is not False and clean_text(session.get("registration_status") or "open").lower() not in {"closed", "full"}
+    registration_status = clean_text(session.get("registration_status") or "open").lower()
+    session_status = clean_text(session.get("session_status") or "active").lower()
+    return (
+        session.get("public_direct_booking") is not False
+        and registration_status not in {"closed", "full", "cancelled", "canceled", "deleted"}
+        and session_status not in {"cancelled", "canceled", "deleted"}
+        and session.get("is_full") is not True
+    )
 
 
 def session_enrollment_count(session: dict[str, Any]) -> int:
@@ -800,8 +807,9 @@ def seated_class_selector_offers(
         course_id = clean_text(session.get("course_id"))
         if course_id not in selected_course_ids or not public_direct_bookable_session(session):
             continue
-        if session_enrollment_count(session) < minimum_enrollment:
-            continue
+        # The Dockmaster never mistakes a blank passenger count for an empty
+        # vessel. Enrollment thresholds govern new-offer consolidation; they
+        # cannot erase an existing committed class from the public manifest.
         start = parse_dt(session.get("start_at"))
         end = parse_dt(session.get("end_at"))
         if not start or not end:
@@ -1104,6 +1112,9 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "publicSelectable": True,
                 })
 
+    # Dynamic availability has already passed its optimization gates above.
+    # Existing inventory enters afterward and is subject only to hard public
+    # eligibility, for every configured course family.
     if page_config.get("include_seated_classes", True) is True:
         offers.extend(
             seated_class_selector_offers(

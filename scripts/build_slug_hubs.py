@@ -151,7 +151,14 @@ def schedule_source_label(path: Path) -> str:
 
 
 def is_public_direct_bookable_session(session: dict[str, Any]) -> bool:
-    return session.get("public_direct_booking") is not False and normalize_space(session.get("registration_status")).lower() not in {"closed", "full"}
+    registration_status = normalize_space(session.get("registration_status") or "open").lower()
+    session_status = normalize_space(session.get("session_status") or "active").lower()
+    return (
+        session.get("public_direct_booking") is not False
+        and registration_status not in {"closed", "full", "cancelled", "canceled", "deleted"}
+        and session_status not in {"cancelled", "canceled", "deleted"}
+        and session.get("is_full") is not True
+    )
 
 
 def load_authoritative_schedule() -> tuple[list[dict[str, Any]], Path]:
