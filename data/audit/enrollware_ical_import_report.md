@@ -1,12 +1,12 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-08-10T13:26:26.693938-04:00`
+- Generated at: `2026-08-10T14:24:56.135285-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `350`
-- Public sessions created: `350`
+- iCal events read: `351`
+- Public sessions created: `351`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `305`
-- Unmapped sessions: `21`
+- Registration unavailable sessions marked not direct-bookable: `306`
+- Unmapped sessions: `22`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
 - Stale manual/Class Report sessions excluded: `0`
@@ -95,4 +95,4 @@ They remain separate registration-signal/audit inputs only.
 - `12775788`: AHA - Family & Friends® CPR (2026-07-20T18:00:00-04:00)
 - `13859298`: AHA - Family & Friends® CPR (2026-08-04T19:00:00-04:00)
 - `13880764`: ARC Adult CPR AED - Blended (2026-08-10T09:30:00-04:00)
-- `13613957`: AHA - Family & Friends® CPR (2026-08-16T14:00:00-04:00)
+- `13901730`: BLS Provider (NHCSO) (2026-08-12T13:00:00-04:00)
