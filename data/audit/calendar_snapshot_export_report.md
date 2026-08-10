@@ -9,7 +9,7 @@ Private event descriptions are stored only inside the local runtime snapshot JSO
 - Calendar sources found: 3
 - Snapshots written: 3
 - Total events exported: 129
-- Date range exported: 2026-08-10T00:22:44.006706+00:00 through 2026-11-08T00:22:44.006706+00:00
+- Date range exported: 2026-08-10T00:24:59.627138+00:00 through 2026-11-08T00:24:59.627138+00:00
 - Private calendar secrets loaded: False
 
 ## Events Exported Per Source
