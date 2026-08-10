@@ -24,6 +24,8 @@ MAXIM_DIRECT_REGISTRATION_MIGRATION = (
     / "migrations"
     / "20260728093000_maxim_hotsync_direct_registration_simulated_emails.sql"
 )
+MAXIM_DURABLE_MIGRATION = ROOT / "supabase" / "migrations" / "20260810020058_maxim_durable_records.sql"
+MAXIM_SELF_SERVICE_PAGE = ROOT / "docs" / "corp" / "maxim-schedule.html"
 
 EXPECTED_VARIANTS = {
     "Initial": "209806",
@@ -169,7 +171,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("openEmployee('${p.id||personIdFromName(p.name)}')", html)
         self.assertIn("method:'PATCH'", html)
         self.assertIn("method:'DELETE'", html)
-        self.assertIn("Remove from active list", html)
+        self.assertIn("Archive from active workflow", html)
         self.assertIn("history will be preserved", html)
         self.assertIn("scheduleEmployee", html)
 
@@ -188,7 +190,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("No eCard found yet", html)
         self.assertIn("Schedule for them", html)
         self.assertIn("returnToComingDue", html)
-        self.assertIn("Wilmingtonoffice%40maxim.com", html)
+        self.assertNotIn("Wilmingtonoffice%40maxim.com", html)
         self.assertIn("https://ecards.heart.org/Student/MyeCards", html)
         self.assertIn("function lastNameOf", html)
         self.assertIn("function compareTrainingFlow", html)
@@ -196,12 +198,12 @@ class MaximCorporatePortalTests(unittest.TestCase):
 
     def test_workflow_columns_have_the_requested_meaning_and_actions(self) -> None:
         html = read_page()
-        self.assertIn("<div>Participant</div><div>Coming Due / Link</div><div>Status</div>", html)
+        self.assertIn("<div>Participant</div><div>Renew By</div><div>Status</div>", html)
         self.assertIn("<div>Class date / time</div><div>eCard / expiration</div>", html)
         self.assertIn("completed=Boolean(person.eCardCode)", html)
         self.assertIn(">Send link</button>", html)
         self.assertIn(">Schedule</button>", html)
-        self.assertIn(">Skip</button>", html)
+        self.assertIn("Archive from active workflow", html)
         self.assertIn(">Reschedule</button>", html)
         self.assertIn("returnToComingDue", html)
         self.assertIn("No eCard found yet", html)
@@ -220,16 +222,18 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn('class="gantt-email" href="mailto:', html)
         self.assertIn("Email unavailable", html)
 
-    def test_link_sent_date_is_persisted_before_opening_email(self) -> None:
+    def test_link_is_prepared_without_falsely_claiming_gmail_delivery(self) -> None:
         html = read_page()
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
         self.assertIn("/link-sent", html)
         self.assertIn("markScheduleLinkSent", source)
-        self.assertIn("link_sent_at: sentAt", source)
+        self.assertIn("link_prepared_at: sentAt", source)
         self.assertIn("linkSentDate: row.link_sent_at", source)
+        self.assertIn("linkPreparedDate: row.link_prepared_at", source)
         self.assertIn('route[2] === "link-sent"', source)
         self.assertIn("person.stage=result.workflowStage", html)
         self.assertIn("profiles[0].current_external_registration_id ? 2 : 1", source)
+        self.assertIn("Gmail delivery pending", source)
         self.assertIn("Scheduling is closed because this employee has an eCard.", source)
 
     def test_return_to_due_is_a_persistent_authenticated_workflow_action(self) -> None:
@@ -264,7 +268,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("timeZone:'America/New_York'", html)
         self.assertIn("classDateLabel=person.classDateDisplay||displayDate(person.classDate)", html)
 
-    def test_maxim_direct_registration_uses_hot_sync_source_and_simulated_emails(self) -> None:
+    def test_maxim_direct_registration_keeps_legacy_simulation_and_adds_durable_gmail_queue(self) -> None:
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
         self.assertIn("buildMaximSimulatedEmails", source)
         self.assertIn('sendMode: "simulated"', source)
@@ -275,8 +279,52 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn('registrationSource: "maxim_portal_hot_sync"', source)
         self.assertIn('emailMode: "simulated"', source)
         self.assertNotIn("postmark", source.lower())
-        self.assertNotIn("gmail", source.lower())
+        self.assertIn('delivery_provider: "gmail"', source)
+        self.assertIn('delivery_status: "pending"', source)
+        self.assertIn("deliveryConfigured: false", source)
         self.assertNotIn("sendEmail(", source)
+
+    def test_durable_records_cover_person_session_roster_activity_message_and_document(self) -> None:
+        sql = MAXIM_DURABLE_MIGRATION.read_text(encoding="utf-8")
+        for table in ("landerware_people", "landerware_organizations", "landerware_certification_requirements",
+                      "landerware_sessions", "landerware_rosters", "landerware_roster_memberships",
+                      "landerware_registrations", "landerware_activity_events", "landerware_messages",
+                      "landerware_documents", "landerware_credentials", "landerware_self_service_tokens"):
+            self.assertIn(f"public.{table}", sql)
+        self.assertIn("enable row level security", sql)
+        self.assertIn("storage_provider text", sql)
+        self.assertIn("retention_class text not null default 'durable_indefinite'", sql)
+
+    def test_reschedule_atomically_links_registration_session_and_roster_history(self) -> None:
+        sql = MAXIM_DURABLE_MIGRATION.read_text(encoding="utf-8")
+        self.assertIn("landerware_record_corporate_registration", sql)
+        self.assertIn("pg_advisory_xact_lock", sql)
+        self.assertIn("supersedes_registration_id", sql)
+        self.assertIn("superseded_by_registration_id", sql)
+        self.assertIn("status='superseded'", sql)
+        self.assertIn("landerware_roster_memberships", sql)
+        self.assertIn("requirements_manifest", sql)
+
+    def test_self_service_is_token_scoped_and_enforces_requirement_and_expiration(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        page = MAXIM_SELF_SERVICE_PAGE.read_text(encoding="utf-8")
+        self.assertIn("token_sha256=eq.${tokenHash}", source)
+        self.assertIn("person_id=eq.${access.person_id}", source)
+        self.assertIn('"The employer-controlled requirement cannot be changed."', source)
+        self.assertIn("String(body.date) > String(records.requirement.expiration_date)", source)
+        self.assertIn('registerEmployee(registrationRequest, "employee_self_service")', source)
+        self.assertIn("if(day.date<today||day.date>ends)continue", page)
+
+    def test_portal_teaches_person_scheduling_and_exposes_activity(self) -> None:
+        html = read_page()
+        self.assertIn('id="scheduleContext"', html)
+        self.assertIn("has been pre-selected", html)
+        self.assertIn("like to attend?", html)
+        self.assertIn("Schedule Class for New Provider", html)
+        self.assertIn("data-activity-filter", html)
+        self.assertIn("Renew By", html)
+        self.assertNotIn("Class already forming", html)
+        self.assertNotIn("Good fit around an existing class", html)
 
     def test_maxim_hot_sync_registration_migration_records_wall_time_and_simulated_email_payloads(self) -> None:
         sql = MAXIM_DIRECT_REGISTRATION_MIGRATION.read_text(encoding="utf-8")
@@ -336,7 +384,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("priorWorkflowClassAgeDays >= 0", source)
         self.assertIn("priorWorkflowClassAgeDays <= 14", source)
         self.assertIn("const eCardCode = workflowStage >= 4 && currentClassDate", source)
-        self.assertIn("Due ${safeText(displayDateOnly(person.expirationDate))}", html)
+        self.assertIn("${safeText(displayDateOnly(person.expirationDate))}", html)
 
     def test_old_stage_three_class_ecard_and_invoice_are_context_only(self) -> None:
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
@@ -365,8 +413,8 @@ class MaximCorporatePortalTests(unittest.TestCase):
     def test_participant_skip_remove_prevents_resurfacing_but_preserves_searchable_history(self) -> None:
         html = read_page()
         source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
-        self.assertIn('title="Skip / Remove"', html)
-        self.assertIn("They will not resurface for future recertification", html)
+        self.assertIn("Archive from active workflow", html)
+        self.assertIn("history will remain searchable", html)
         self.assertIn("method:'DELETE'", html)
         self.assertIn("active: false", source)
         self.assertIn('history: mapped.filter((row: any) => row.bucket === "history")', source)
