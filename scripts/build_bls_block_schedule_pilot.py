@@ -1205,7 +1205,7 @@ def render_html(payload: dict[str, Any]) -> str:
       </div>
     </section>
   </main>
-  <script src="/assets/interaction-motion.js"></script>
+  <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
     const availabilityUrl = {availability_url_json};

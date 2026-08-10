@@ -481,7 +481,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn('type="application/ld+json"', html)
         self.assertIn('"priceCurrency": "USD"', html)
         self.assertIn("course-price", html)
-        self.assertIn('/assets/interaction-motion.js', html)
+        self.assertIn('/assets/interaction-motion.js?v=20260809.1', html)
         self.assertIn('"deliveryMode": "in-person"', html)
         self.assertIn('"deliveryMode": "blended"', html)
         self.assertIn('"imageUrl": "/images/HS-CPR-AED.jpeg"', html)

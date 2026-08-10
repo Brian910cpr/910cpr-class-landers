@@ -9,53 +9,53 @@ Local build artifact for a customer-facing block schedule page. Enrollware was n
 - Horizon days: `180`
 - Minimum lead hours: `24`
 - Whole block presented as class: `False`
-- Public-selectable offers: `5062`
-- Public-selectable dates: `82`
-- Public-selectable start times: `860`
-- Rejected course/start evaluations: `15884`
+- Public-selectable offers: `7751`
+- Public-selectable dates: `85`
+- Public-selectable start times: `1316`
+- Rejected course/start evaluations: `14338`
 - Suppressed stale/orphaned offers: `0`
 
 ## Sample Public-Selectable URLs
 
 | Date | Start | Course | appointmentDayId | URL |
 | --- | --- | --- | ---: | --- |
-| 2026-07-23 | 12:30 PM | AHA Heartsaver CPR AED (`344085`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=12%3A30%20PM&courseId=344085` |
-| 2026-07-23 | 12:30 PM | AHA Heartsaver CPR AED Online (`209808`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=12%3A30%20PM&courseId=209808` |
-| 2026-07-23 | 12:30 PM | AHA Heartsaver First Aid CPR AED (`209809`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=12%3A30%20PM&courseId=209809` |
-| 2026-07-23 | 12:30 PM | AHA Heartsaver First Aid CPR AED - Blended (`329495`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=12%3A30%20PM&courseId=329495` |
-| 2026-07-23 | 12:30 PM | AHA Heartsaver Pediatric First Aid / CPR / AED (`351632`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=12%3A30%20PM&courseId=351632` |
-| 2026-07-23 | 12:30 PM | AHA Heartsaver Pediatric First Aid CPR AED Online (`251545`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=12%3A30%20PM&courseId=251545` |
-| 2026-07-23 | 1:00 PM | AHA Heartsaver CPR AED (`344085`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=1%3A00%20PM&courseId=344085` |
-| 2026-07-23 | 1:00 PM | AHA Heartsaver CPR AED Online (`209808`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=1%3A00%20PM&courseId=209808` |
-| 2026-07-23 | 1:00 PM | AHA Heartsaver First Aid CPR AED (`209809`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=1%3A00%20PM&courseId=209809` |
-| 2026-07-23 | 1:00 PM | AHA Heartsaver First Aid CPR AED - Blended (`329495`) | 260702 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260702&startTime=1%3A00%20PM&courseId=329495` |
+| 2026-08-12 | 8:00 AM | AHA Heartsaver CPR AED (`344085`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A00%20AM&courseId=344085` |
+| 2026-08-12 | 8:00 AM | AHA Heartsaver CPR AED Online (`209808`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A00%20AM&courseId=209808` |
+| 2026-08-12 | 8:00 AM | AHA Heartsaver First Aid CPR AED (`209809`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A00%20AM&courseId=209809` |
+| 2026-08-12 | 8:00 AM | AHA Heartsaver First Aid CPR AED - Blended (`329495`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A00%20AM&courseId=329495` |
+| 2026-08-12 | 8:00 AM | AHA Heartsaver Pediatric First Aid / CPR / AED (`351632`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A00%20AM&courseId=351632` |
+| 2026-08-12 | 8:00 AM | AHA Heartsaver Pediatric First Aid CPR AED Online (`251545`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A00%20AM&courseId=251545` |
+| 2026-08-12 | 8:30 AM | AHA Heartsaver CPR AED (`344085`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A30%20AM&courseId=344085` |
+| 2026-08-12 | 8:30 AM | AHA Heartsaver CPR AED Online (`209808`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A30%20AM&courseId=209808` |
+| 2026-08-12 | 8:30 AM | AHA Heartsaver First Aid CPR AED (`209809`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A30%20AM&courseId=209809` |
+| 2026-08-12 | 8:30 AM | AHA Heartsaver First Aid CPR AED - Blended (`329495`) | 260722 | `https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260722&startTime=8%3A30%20AM&courseId=329495` |
 
 ## Top Rejection Reasons
 
-- `outside_public_dynamic_hours`: 11436
-- `does_not_fit_inside_availability_after_duration_and_buffers`: 3632
-- `conflicts_with_brian_travel_buffer`: 3238
-- `conflicts_with_existing_enrollware_occupancy`: 3194
-- `starts_before_current_time`: 210
-- `inside_minimum_lead_time`: 114
+- `outside_public_dynamic_hours`: 11646
+- `does_not_fit_inside_availability_after_duration_and_buffers`: 4380
+- `conflicts_with_existing_enrollware_occupancy`: 3550
+- `scheduled_day_already_has_public_class`: 1464
+- `inside_minimum_lead_time`: 264
+- `starts_before_current_time`: 6
 
 ## Final Live Availability Guard
 
 - Enabled: `True`
-- Rendered dates: `2026-07-23, 2026-07-26, 2026-07-27, 2026-07-28, 2026-07-31, 2026-08-01, 2026-08-02, 2026-08-03, 2026-08-04, 2026-08-05, 2026-08-06, 2026-08-07, 2026-08-08, 2026-08-09, 2026-08-10, 2026-08-11, 2026-08-12, 2026-08-13, 2026-08-14, 2026-08-15, 2026-08-16, 2026-08-17, 2026-08-18, 2026-08-19, 2026-08-20, 2026-08-21, 2026-08-22, 2026-08-23, 2026-08-24, 2026-08-25, 2026-08-26, 2026-08-27, 2026-08-28, 2026-08-29, 2026-08-30, 2026-08-31, 2026-09-01, 2026-09-02, 2026-09-03, 2026-09-04, 2026-09-05, 2026-09-06, 2026-09-07, 2026-09-08, 2026-09-09, 2026-09-10, 2026-09-11, 2026-09-12, 2026-09-13, 2026-09-14, 2026-09-15, 2026-09-16, 2026-09-17, 2026-09-18, 2026-09-19, 2026-09-20, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25, 2026-09-26, 2026-09-27, 2026-09-28, 2026-09-29, 2026-09-30, 2026-10-01, 2026-10-02, 2026-10-03, 2026-10-04, 2026-10-05, 2026-10-06, 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, 2026-10-12, 2026-10-13, 2026-10-14, 2026-10-15, 2026-10-16`
-- Source blocks used: `120`
+- Rendered dates: `2026-08-12, 2026-08-14, 2026-08-16, 2026-08-17, 2026-08-18, 2026-08-19, 2026-08-20, 2026-08-21, 2026-08-22, 2026-08-23, 2026-08-25, 2026-08-26, 2026-08-27, 2026-08-28, 2026-08-29, 2026-08-30, 2026-08-31, 2026-09-01, 2026-09-02, 2026-09-03, 2026-09-04, 2026-09-05, 2026-09-06, 2026-09-07, 2026-09-08, 2026-09-09, 2026-09-10, 2026-09-11, 2026-09-12, 2026-09-13, 2026-09-14, 2026-09-15, 2026-09-16, 2026-09-17, 2026-09-18, 2026-09-19, 2026-09-20, 2026-09-21, 2026-09-22, 2026-09-23, 2026-09-24, 2026-09-25, 2026-09-26, 2026-09-27, 2026-09-28, 2026-09-29, 2026-09-30, 2026-10-01, 2026-10-02, 2026-10-03, 2026-10-04, 2026-10-05, 2026-10-06, 2026-10-07, 2026-10-08, 2026-10-09, 2026-10-10, 2026-10-11, 2026-10-12, 2026-10-13, 2026-10-14, 2026-10-15, 2026-10-16, 2026-10-17, 2026-10-18, 2026-10-19, 2026-10-20, 2026-10-21, 2026-10-22, 2026-10-23, 2026-10-24, 2026-10-25, 2026-10-26, 2026-10-27, 2026-10-28, 2026-10-29, 2026-10-30, 2026-10-31, 2026-11-01, 2026-11-02, 2026-11-03, 2026-11-04, 2026-11-05, 2026-11-06, 2026-11-07`
+- Source blocks used: `141`
 - Suppressed available block dates: `none`
 - Suppressed stale/orphaned offer dates: `none`
 
 ## Source Files
 
-- `liveAvailabilitySnapshot`: `E:\GitHub\910cpr-class-landers_family_ctas\data\audit\live_availability_snapshot_preview.json`
-- `courseConsumptionRules`: `E:\GitHub\910cpr-class-landers_family_ctas\data\inventory\course_consumption_rules.json`
-- `courseCatalog`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\course_catalog.json`
-- `peopleCatalog`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\people_catalog.json`
-- `publicOfferPolicy`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\public_offer_policy.json`
-- `publicLocationPolicy`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\public_location_policy.json`
-- `appointmentContainers`: `E:\GitHub\910cpr-class-landers_family_ctas\data\inventory\appointment_containers.json`
-- `sessionsCurrent`: `E:\GitHub\910cpr-class-landers_family_ctas\data\sessions_current.json`
-- `scheduleFuture`: `E:\GitHub\910cpr-class-landers_family_ctas\docs\data\schedule_future.json`
-- `blockSchedulePages`: `E:\GitHub\910cpr-class-landers_family_ctas\data\config\block_schedule_pages.json`
+- `liveAvailabilitySnapshot`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\data\audit\live_availability_snapshot_preview.json`
+- `courseConsumptionRules`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\data\inventory\course_consumption_rules.json`
+- `courseCatalog`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\data\config\course_catalog.json`
+- `peopleCatalog`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\data\config\people_catalog.json`
+- `publicOfferPolicy`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\data\config\public_offer_policy.json`
+- `publicLocationPolicy`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\data\config\public_location_policy.json`
+- `appointmentContainers`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\data\inventory\appointment_containers.json`
+- `sessionsCurrent`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\data\sessions_current.json`
+- `scheduleFuture`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\docs\data\schedule_future.json`
+- `blockSchedulePages`: `E:\GitHub\910cpr-class-landers-existing-inventory-final\data\config\block_schedule_pages.json`
