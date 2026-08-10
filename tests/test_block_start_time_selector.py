@@ -493,6 +493,22 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("appointmentDayId $", html)
         self.assertNotIn("courseId $", html)
 
+    def test_shared_schedule_role_visual_language_is_semantic_and_compact(self):
+        html = build_bls_block_schedule_pilot.render_html(self.payload)
+        self.assertIn(".start-grid button.is-seated", html)
+        self.assertIn(".start-grid button.is-anchor", html)
+        self.assertIn(".start-grid button.is-barnacle", html)
+        self.assertIn(".course.is-seated", html)
+        self.assertIn(".course.is-anchor", html)
+        self.assertIn(".course.is-barnacle", html)
+        self.assertIn("Scheduled · Anchor", html)
+        self.assertIn("Attached · Barnacle", html)
+        self.assertIn("★ Scheduled class", html)
+        self.assertIn("scheduled class; anchor", html)
+        self.assertIn("barnacle; attached opportunity around an anchor", html)
+        self.assertIn("course.offerType === 'seated_class'", html)
+        self.assertIn("course.schedule_role || course.scheduleRole", html)
+
     def test_heartsaver_cpr_aed_public_ids_exclude_fire_department_partner_course(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
         heartsaver = configs["heartsaver"]
