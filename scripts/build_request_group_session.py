@@ -84,9 +84,11 @@ def build():
     <div class='hero-main'>
       <div class='eyebrow'>Private Team Training</div>
       <h1>Request On-Site Group Training</h1>
-      <p class='subhead'>Tell us what your team needs, where you need it, and when you’d like it. We’ll help match the right training option and scheduling path for your group.</p>
+      <p class='subhead'>Tell us what your team needs, where you need it, and when you’d like it. You can send the requirement exactly as you received it—we’ll help choose the right course and scheduling path.</p>
       <div class='request-hero-actions'>
         <a class='button primary' href='#request-form'>Start your request</a>
+        <a class='button secondary' href='sms:+19103955193?body=I%27d%20like%20to%20ask%20about%20group%20CPR%20training.'>Text us</a>
+        <a class='button secondary' href='mailto:info@910cpr.com?subject=Group%20training%20for%20our%20staff'>Email us</a>
         <a class='button secondary' href='/index.html'>Find an individual class</a>
       </div>
     </div>
@@ -120,7 +122,7 @@ def build():
         </div>
         <p class='muted'>Share the basics below and we’ll follow up with the best scheduling path for your team.</p>
       </div>
-      <form method='post' action='#'>
+      <form id='group-request-form' action='mailto:info@910cpr.com' method='get'>
         <input id='request_type' type='hidden' name='request_type' value='group'>
         <div class='grid-2'>
           <label class='field'><span>Name</span><input type='text' name='name' autocomplete='name' required></label>
@@ -144,6 +146,15 @@ def build():
     </section>
 
     <aside class='section-box request-sidebar'>
+      <div class='callout request-seat-board'>
+        <strong>Prefer direct help?</strong>
+        <p class='muted'>Written details are especially useful for complex requirements, mixed courses, or translation needs.</p>
+        <div class='request-link-list'>
+          <a href='mailto:info@910cpr.com?subject=Group%20training%20for%20our%20staff'>Email info@910cpr.com</a>
+          <a href='sms:+19103955193?body=I%27d%20like%20to%20ask%20about%20group%20CPR%20training.'>Text 910-395-5193</a>
+          <a href='tel:+19103955193'>Call 910-395-5193</a>
+        </div>
+      </div>
       <div class='callout request-seat-board'>
         <strong>Need an individual seat schedule?</strong>
         <p class='muted'>If private group scheduling is not the right fit, use the public booking pages below to find the next available class.</p>
@@ -192,6 +203,27 @@ def build():
     }}
   }}
   if (bestButton) bestButton.click();
+
+  var form = document.getElementById("group-request-form");
+  if (form) form.addEventListener("submit", function (event) {{
+    event.preventDefault();
+    var values = new FormData(form);
+    var lines = [
+      "Group training request", "",
+      "Name: " + (values.get("name") || ""),
+      "Organization: " + (values.get("organization") || ""),
+      "Email: " + (values.get("email") || ""),
+      "Mobile: " + (values.get("mobile") || ""),
+      "City: " + (values.get("city") || ""),
+      "On-site address: " + (values.get("address") || ""),
+      "Estimated headcount: " + (values.get("headcount") || ""),
+      "Desired dates / times: " + (values.get("preferred_times") || ""),
+      "Program / requirement: " + (values.get("program") || ""),
+      "Comments: " + (values.get("comments") || "")
+    ];
+    if (window.dataLayer) window.dataLayer.push({{event: "group_training_request", method: "email"}});
+    window.location.href = "mailto:info@910cpr.com?subject=" + encodeURIComponent("Group training request - " + (values.get("organization") || values.get("name") || "910CPR")) + "&body=" + encodeURIComponent(lines.join("\n"));
+  }});
 }})();
 </script>
 """

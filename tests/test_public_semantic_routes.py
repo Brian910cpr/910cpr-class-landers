@@ -78,9 +78,27 @@ class PublicSemanticRouteTests(unittest.TestCase):
         self.assertIn('params.get("program")', html)
         self.assertIn('params.get("request_type")', html)
         self.assertIn("programInput.value = program", html)
+        self.assertIn('id=\'group-request-form\'', html)
+        self.assertIn('mailto:info@910cpr.com', html)
+        self.assertIn('event: "group_training_request"', html)
         self.assertNotIn("bls-schedule.html", html)
         self.assertNotIn("acls-schedule.html", html)
         self.assertNotIn("pals-schedule.html", html)
+
+    def test_group_landing_answers_buyer_questions_and_offers_human_help(self) -> None:
+        html = (DOCS / "group-training.html").read_text(encoding="utf-8")
+        for expected in (
+            "Yes, we come to you.",
+            "Which training does your organization need?",
+            "How on-site training works",
+            "How many people can we train?",
+            "Can part of the course be completed online?",
+            "mailto:info@910cpr.com",
+            "sms:+19103955193",
+            "tel:+19103955193",
+            '"@type":"FAQPage"',
+        ):
+            self.assertIn(expected, html)
 
     def test_course_family_schedule_routes_match_family(self) -> None:
         pages = slug_hub_pages()

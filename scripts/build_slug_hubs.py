@@ -2779,6 +2779,106 @@ def render_group_training_push(page: dict[str, Any], first_tab: dict[str, Any], 
 """.rstrip()
 
 
+def render_group_training_overview(page: dict[str, Any]) -> str:
+    if not page.get("group_mode"):
+        return ""
+    request_url = "/request_group_session.html?program=Workplace%20Group%20Training&request_type=group"
+    return f"""
+  <nav class="group-quick-actions" aria-label="Group training actions">
+    <a class="button primary" href="{request_url}">Request group training</a>
+    <a class="button secondary" href="mailto:info@910cpr.com?subject=Group%20training%20for%20our%20staff">Email details</a>
+    <a class="button secondary" href="sms:+19103955193?body=I%27d%20like%20to%20ask%20about%20group%20CPR%20training.">Text 910CPR</a>
+    <a class="button secondary" href="tel:+19103955193">Call 910-395-5193</a>
+  </nav>
+
+  <section class="group-answer-strip" aria-label="Group training at a glance">
+    <article><strong>Yes, we come to you.</strong><span>On-site training at workplaces, healthcare offices, schools, job sites, churches, and community organizations.</span></article>
+    <article><strong>We help choose the course.</strong><span>Send the exact wording from an employer, regulator, school, or credentialing requirement. You do not need to decode the acronyms first.</span></article>
+    <article><strong>One request starts the schedule.</strong><span>Share your headcount, location, deadline, and a few workable times. We will confirm the appropriate program and next available path.</span></article>
+  </section>
+
+  <section class="section-box group-pathfinder" aria-labelledby="group-pathfinder-title">
+    <div class="section-head">
+      <div class="section-title-wrap">
+        <div class="eyebrow">Start With The Requirement</div>
+        <h2 id="group-pathfinder-title">Which training does your organization need?</h2>
+        <p>You can request help if you are unsure. These plain-language routes cover the most common group needs.</p>
+      </div>
+    </div>
+    <div class="group-path-grid">
+      <a href="#group-bls"><strong>Healthcare or dental team</strong><span>Start with BLS. We can also coordinate blended HeartCode BLS skills sessions.</span></a>
+      <a href="#group-heartsaver"><strong>Workplace, school, church, or community team</strong><span>Start with CPR/AED, First Aid, or a combined program based on the requirement.</span></a>
+      <a href="#group-acls"><strong>Advanced clinical team</strong><span>Ask about coordinated ACLS or PALS options for appropriate clinical groups.</span></a>
+      <a href="{request_url}"><strong>Not sure—or your team needs more than one course</strong><span>Send us the requirement. We will sort out AHA, ARC, HSI, blended, and in-person options with you.</span></a>
+    </div>
+  </section>
+""".rstrip()
+
+
+def render_group_training_details(page: dict[str, Any]) -> str:
+    if not page.get("group_mode"):
+        return ""
+    request_url = "/request_group_session.html?program=Workplace%20Group%20Training&request_type=group"
+    return f"""
+  <section class="section-box group-process" aria-labelledby="group-process-title">
+    <div class="section-head"><div class="section-title-wrap"><div class="eyebrow">Simple Group Scheduling</div><h2 id="group-process-title">How on-site training works</h2></div></div>
+    <ol class="group-steps">
+      <li><strong>Tell us the basics.</strong><span>Organization, city, approximate headcount, deadline, and any course wording you were given.</span></li>
+      <li><strong>We match the training.</strong><span>We confirm the certification body, course format, equipment, timing, and pricing for your group.</span></li>
+      <li><strong>Choose a workable date.</strong><span>We coordinate against real instructor and class availability instead of asking your staff to register separately.</span></li>
+      <li><strong>We bring the classroom.</strong><span>Your instructor arrives with the training equipment and guides the group through the required skills and completion process.</span></li>
+    </ol>
+  </section>
+
+  <section class="section-box group-faq" aria-labelledby="group-faq-title">
+    <div class="section-head"><div class="section-title-wrap"><div class="eyebrow">Before You Ask</div><h2 id="group-faq-title">Group training questions</h2></div></div>
+    <div class="group-faq-grid">
+      <details open><summary>Where does 910CPR provide on-site training?</summary><p>910CPR is based in Wilmington and serves organizations across southeastern and coastal North Carolina. Tell us your city and preferred timing so we can confirm travel and instructor availability.</p></details>
+      <details><summary>How many people can we train?</summary><p>Group size depends on the course, space, equipment, and instructor ratio. Send an estimated headcount—even if it may change—and we will recommend the practical class setup.</p></details>
+      <details><summary>Can part of the course be completed online?</summary><p>Yes, blended options are available for several programs. Online coursework can reduce time together, but required hands-on skills still must be completed in person.</p></details>
+      <details><summary>What equipment or space do we need?</summary><p>We bring the course training equipment. You provide a suitable room with enough clear floor or table space for the group. We will confirm course-specific needs before the date.</p></details>
+      <details><summary>What certification will employees receive?</summary><p>That depends on the selected program and certifying body. 910CPR supports AHA, ARC, and HSI pathways where appropriate. We will match the card to the requirement you provide rather than guess.</p></details>
+      <details><summary>How much does group training cost?</summary><p>Pricing varies by program, headcount, delivery format, location, and any online course materials. The request form collects the details needed for an accurate quote; published package pricing appears on the next page where available.</p></details>
+      <details><summary>How far ahead should we schedule?</summary><p>Earlier requests provide more choices, especially for large teams or firm compliance deadlines. If your need is urgent, include the deadline and several possible times so we can identify the fastest realistic option.</p></details>
+      <details><summary>Can employees take a public class instead?</summary><p>Yes. If only a few people need certification or your team cannot meet together, use 910CPR’s live public course pages to compare actual dates and book individual seats.</p></details>
+    </div>
+    <div class="group-final-cta">
+      <div><strong>Ready to get this off your list?</strong><span>You can send the details now, even if you do not know the exact course.</span></div>
+      <div class="group-final-actions"><a class="button primary" href="{request_url}">Start the group request</a><a class="button secondary" href="mailto:info@910cpr.com?subject=Help%20with%20group%20training">Email for help</a></div>
+    </div>
+  </section>
+""".rstrip()
+
+
+def render_group_training_schema(page: dict[str, Any]) -> str:
+    if not page.get("group_mode"):
+        return ""
+    schema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Service",
+                "name": "On-Site Group CPR Training",
+                "url": "https://www.910cpr.com/group-training.html",
+                "provider": {"@type": "LocalBusiness", "name": "910CPR", "telephone": "+1-910-395-5193", "email": "info@910cpr.com"},
+                "areaServed": ["Wilmington", "Southeastern North Carolina", "Coastal North Carolina"],
+                "serviceType": ["CPR training", "BLS training", "First Aid training", "AED training", "Workplace training"],
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {"@type": "Question", "name": "Where does 910CPR provide on-site training?", "acceptedAnswer": {"@type": "Answer", "text": "910CPR is based in Wilmington and serves organizations across southeastern and coastal North Carolina. Travel and instructor availability are confirmed for each request."}},
+                    {"@type": "Question", "name": "How many people can we train?", "acceptedAnswer": {"@type": "Answer", "text": "Group size depends on the course, space, equipment, and instructor ratio. 910CPR recommends a practical class setup after reviewing the estimated headcount."}},
+                    {"@type": "Question", "name": "Can part of the course be completed online?", "acceptedAnswer": {"@type": "Answer", "text": "Blended options are available for several programs. Required hands-on skills are completed in person."}},
+                    {"@type": "Question", "name": "What certification will employees receive?", "acceptedAnswer": {"@type": "Answer", "text": "Certification depends on the selected program and certifying body. 910CPR supports AHA, ARC, and HSI pathways where appropriate."}},
+                    {"@type": "Question", "name": "How much does group training cost?", "acceptedAnswer": {"@type": "Answer", "text": "Pricing varies by program, headcount, delivery format, location, and online course materials. 910CPR provides an accurate quote after reviewing the request."}},
+                ],
+            },
+        ],
+    }
+    return f'<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False, separators=(",", ":"))}</script>'
+
+
 def resolve_guidance_banners(page: dict[str, Any], banner_library: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     resolved: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -3638,10 +3738,12 @@ def render_page(
       {render_hero_image(page)}
     </div>
   </section>
+  {render_group_training_overview(page)}
   {render_emergency_alert()}
   {render_guidance_banners(page, banner_library)}
   {render_heartsaver_course_jumps(page)}
   {tabs_html}
+  {render_group_training_details(page)}
   {render_google_trust_block()}
   {render_group_training_push(page, first_tab, group_mode=group_mode)}
   {render_other_training_options(page)}
@@ -3657,6 +3759,7 @@ def render_page(
 <meta name="description" content="{escape(page['description'])}">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.910cpr.com/{escape(page['slug'])}.html">
+{render_group_training_schema(page)}
 <link rel="icon" type="image/png" href="images/logo.png">
 <link rel="shortcut icon" href="images/logo.png">
 <link rel="apple-touch-icon" href="images/logo.png">
