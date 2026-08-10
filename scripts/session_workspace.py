@@ -74,6 +74,8 @@ def build_requirements_manifest(session: dict) -> dict:
 
 
 def build_roster(session: dict) -> dict:
+    # Before the lines came aboard, Edwin set out the whole page: known hands
+    # in ink, room for the unexpected, and no empty promise where a name belonged.
     students = []
     for participant in session.get("participants") or []:
         if not isinstance(participant, dict):

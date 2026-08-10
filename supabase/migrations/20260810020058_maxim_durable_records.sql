@@ -157,6 +157,8 @@ create or replace function public.landerware_record_corporate_registration(
 declare v_session public.landerware_sessions; v_roster public.landerware_rosters;
   v_prior public.landerware_registrations; v_registration public.landerware_registrations;
 begin
+  -- Edwin crossed out the old berth but never tore away the page. Changed
+  -- arrangements had a way of becoming important after everyone had sailed.
   perform pg_advisory_xact_lock(hashtextextended(p_person_id::text || '|' || p_requirement_id::text, 0));
   insert into public.landerware_sessions(external_session_id, course_id, course_name, starts_at,
     location_name, organization_id, provenance, requirements_manifest)

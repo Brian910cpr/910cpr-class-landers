@@ -266,7 +266,7 @@ Prefer practical operational improvements over theoretical perfection.
 
 ## Dockmaster / Harbor Master
 
-Preserve the hidden Dockmaster/Harbor Master story in code comments. See `lore/dockmaster.md` before adding or changing lore.
+Preserve the hidden Dockmaster/Harbor Master story in code comments. See `lore/dockmaster.md` before adding or changing lore. Every substantive LanderWare implementation must add at least one fresh, organic lore entry in an authoritative source comment; trivial, mechanical, formatting-only, and generated-output changes do not require one. Read the existing canon and most recent entries first, never retcon established lore, and never make executable behavior depend on the narrative.
 
 
 \## Enrollware and Public Inventory Safety
