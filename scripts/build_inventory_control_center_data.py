@@ -6,6 +6,10 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.public_offer_capacity_health import build_health
+except ModuleNotFoundError:
+    from public_offer_capacity_health import build_health
 
 ROOT = Path(__file__).resolve().parents[1]
 DEBUG_DIR = ROOT / "debug"
@@ -21,7 +25,23 @@ SOURCE_PATHS = {
     "instructor_availability": INVENTORY_DIR / "instructor_availability.json",
     "course_consumption_rules": INVENTORY_DIR / "course_consumption_rules.json",
     "mock_anchor_bookings": INVENTORY_DIR / "mock_anchor_bookings.json",
+    "schedule_future": ROOT / "docs" / "data" / "schedule_future.json",
+    "live_availability": ROOT / "data" / "audit" / "live_availability_snapshot_preview.json",
+    "public_offer_policy": ROOT / "data" / "config" / "public_offer_policy.json",
 }
+
+SELECTOR_PATHS = [
+    ROOT / "data" / "audit" / name
+    for name in (
+        "bls_block_schedule_pilot.json",
+        "heartsaver_block_schedule.json",
+        "uscg_first_aid_cpr_aed_block_schedule.json",
+        "hsi_block_schedule.json",
+        "family_cpr_block_schedule.json",
+        "acls_block_schedule.json",
+        "pals_block_schedule.json",
+    )
+]
 
 
 def read_json(path: Path, default: Any) -> Any:
@@ -318,6 +338,10 @@ def build() -> dict[str, Any]:
     availability_config = read_json(SOURCE_PATHS["instructor_availability"], {"availability_blocks": []})
     rules_config = read_json(SOURCE_PATHS["course_consumption_rules"], {"rules": []})
     anchors_config = read_json(SOURCE_PATHS["mock_anchor_bookings"], {"scenarios": {}})
+    schedule_future = read_json(SOURCE_PATHS["schedule_future"], {"sessions": []})
+    live_availability = read_json(SOURCE_PATHS["live_availability"], {"availability_blocks": []})
+    public_offer_policy = read_json(SOURCE_PATHS["public_offer_policy"], {})
+    selector_payloads = [read_json(path, {"offers": []}) for path in SELECTOR_PATHS if path.exists()]
 
     containers = containers_config.get("containers", [])
     availability = availability_config.get("availability_blocks", [])
@@ -576,10 +600,17 @@ def build() -> dict[str, Any]:
     suppression_percent = round((len(suppressed) / max(1, len(candidates))) * 100, 1)
     alarming_count = sum(row["count"] for row in alarming_reasons)
     suppression_health = "alarming" if alarming_count else "healthy" if healthy_reasons else "watch"
+    public_offer_health = build_health(
+        selector_payloads=selector_payloads,
+        schedule_future=schedule_future,
+        live_availability=live_availability,
+        public_offer_policy=public_offer_policy,
+    )
 
     data = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "source_statuses": source_statuses(),
+        "public_offer_health": public_offer_health,
         "totals": {
             "availability_blocks": len(availability),
             "total_candidates": len(candidates),

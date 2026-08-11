@@ -187,6 +187,101 @@ h3 {
   padding: 16px;
 }
 
+.offer-health-panel {
+  margin-bottom: 16px;
+}
+
+.offer-health-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.health-block {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel-soft);
+}
+
+.health-block.prominent {
+  border-color: var(--blue);
+  background: #eef5ff;
+}
+
+.health-kicker {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.health-primary {
+  margin-top: 3px;
+  color: var(--ink);
+  font-size: 27px;
+  font-weight: 900;
+}
+
+.health-primary small {
+  color: var(--green);
+  font-size: 13px;
+}
+
+.health-origin-line {
+  margin: 3px 0 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.capacity-line,
+.health-detail summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+}
+
+.health-detail summary {
+  cursor: pointer;
+}
+
+.health-detail-list {
+  max-height: 240px;
+  overflow: auto;
+  padding: 6px 0;
+}
+
+.health-detail-list > div {
+  display: grid;
+  padding: 5px 0;
+  border-top: 1px dashed var(--line);
+  font-size: 12px;
+}
+
+.health-limitations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.health-limitations span {
+  padding: 4px 7px;
+  border-radius: 5px;
+  background: var(--panel-soft);
+}
+
+@media (max-width: 900px) {
+  .offer-health-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .metric {
   display: grid;
   gap: 4px;

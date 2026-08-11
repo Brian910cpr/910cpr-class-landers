@@ -77,6 +77,75 @@ function setHtml(id, html) {
   if (node) node.innerHTML = html;
 }
 
+function sessionDetails(label, value, rows) {
+  return `<details class="health-detail">
+    <summary><span>${escapeHtml(label)}</span><strong>${escapeHtml(number(value))}</strong></summary>
+    <div class="health-detail-list">${(rows || []).length ? rows.map(row => `
+      <div><strong>${escapeHtml(row.date)} ${escapeHtml(row.start?.slice(11, 16) || "")}-${escapeHtml(row.end?.slice(11, 16) || "")}</strong>
+      <span>${escapeHtml(row.origin)} · ${escapeHtml(row.kind)}${row.course ? ` · ${escapeHtml(row.course)}` : ""}</span></div>
+    `).join("") : `<div class="muted">No underlying sessions.</div>`}</div>
+  </details>`;
+}
+
+function windowDetails(label, hours, rows) {
+  return `<details class="health-detail">
+    <summary><span>${escapeHtml(label)}</span><strong>${escapeHtml(number(hours))} hrs</strong></summary>
+    <div class="health-detail-list">${(rows || []).length ? rows.map(row => `
+      <div><strong>${escapeHtml(row.date)} ${escapeHtml(row.start)}-${escapeHtml(row.end)}</strong>
+      <span>${escapeHtml(row.minutes)} min · ${escapeHtml(row.instructor)} · ${escapeHtml(row.reason)}</span></div>
+    `).join("") : `<div class="muted">No underlying windows, or historical source coverage is unavailable.</div>`}</div>
+  </details>`;
+}
+
+function renderPublicOfferHealth(data) {
+  const health = data.public_offer_health || {};
+  const inventory = health.inventory || {};
+  const current = inventory.current_month || {};
+  const previous = inventory.previous_month || {};
+  const average = inventory.rolling_average || {};
+  const remainder = inventory.remainder || {};
+  const capacity = health.capacity || {};
+  const remainingCapacity = capacity.remainder || {};
+  const change = inventory.month_over_month || {};
+  const changeText = change.percent_change === null || change.percent_change === undefined
+    ? "No prior comparison"
+    : `${change.count_change >= 0 ? "▲" : "▼"} ${Math.abs(change.count_change)} / ${change.percent_change >= 0 ? "+" : ""}${change.percent_change}%`;
+  setHtml("offer-health-as-of", `As of ${health.as_of || "unknown"}`);
+  setHtml("public-offer-health", `
+    <section class="health-block">
+      <span class="health-kicker">${escapeHtml(current.period_start?.slice(0, 7) || "Current month")}</span>
+      <div class="health-primary">${number(current.total)} <small>${escapeHtml(changeText)}</small></div>
+      <div class="health-origin-line">Anchor ${number(current.anchor)} · Barnacle ${number(current.barnacle)} · Manual ${number(current.manual)}</div>
+      ${sessionDetails("Total sessions", current.total, current.sessions)}
+      ${sessionDetails("Anchors", current.anchor, (current.sessions || []).filter(row => row.origin === "ANCHOR"))}
+      ${sessionDetails("Barnacles", current.barnacle, (current.sessions || []).filter(row => row.origin === "BARNACLE"))}
+      ${sessionDetails("Manual", current.manual, (current.sessions || []).filter(row => row.origin === "MANUAL"))}
+      <p class="muted">Previous ${number(previous.total)} · ${escapeHtml(average.label || "Average")} ${number(average.total_per_month)}/mo</p>
+    </section>
+    <section class="health-block prominent">
+      <span class="health-kicker">Remainder of month</span>
+      <div class="health-primary">${number(remainder.total)} sessions</div>
+      <div class="health-origin-line">${number(remainder.sessions_per_remaining_day)}/day · ${number(remainder.calendar_days_remaining)} days · <strong>${escapeHtml(remainder.pace_status)}</strong></div>
+      ${sessionDetails("Remaining sessions", remainder.total, remainder.sessions)}
+      ${windowDetails("Usable capacity", remainingCapacity.usable_hours, remainingCapacity.usable_windows)}
+      ${windowDetails(`Exposed capacity · ${number(remainingCapacity.capacity_exposed_percent)}%`, remainingCapacity.exposed_hours, remainingCapacity.exposed_windows)}
+      ${windowDetails("Hidden usable capacity", remainingCapacity.hidden_hours, remainingCapacity.hidden_windows)}
+    </section>
+    <section class="health-block">
+      <span class="health-kicker">Capacity audit</span>
+      <div class="health-primary">${number(remainingCapacity.capacity_exposed_percent)}%</div>
+      <div class="health-origin-line">Unique physical time exposed</div>
+      <div class="capacity-line"><span>Operating hours</span><strong>${escapeHtml(capacity.operating_hours_assumption)}</strong></div>
+      <div class="capacity-line"><span>Coverage starts</span><strong>${escapeHtml(capacity.coverage_start)}</strong></div>
+      <div class="capacity-line"><span>Typical exposure</span><strong>${capacity.typical_exposure_percent === null || capacity.typical_exposure_percent === undefined ? "Unavailable" : `${number(capacity.typical_exposure_percent)}%`}</strong></div>
+      <p class="muted">Overlapping course alternatives and candidate starts are merged before minutes are counted.</p>
+    </section>
+  `);
+  const quality = health.data_quality || {};
+  setHtml("public-offer-health-limitations", [quality.origin_limitation, quality.capacity_history_limitation, quality.current_capacity_coverage]
+    .filter(Boolean).map(item => `<span>${escapeHtml(item)}</span>`).join(""));
+}
+
 function renderSystem(data) {
   const totals = data.totals || {};
   setHtml("system-kpis", [
@@ -520,6 +589,7 @@ function renderAll() {
   const data = state.data;
   if (!data) return;
   renderSystem(data);
+  renderPublicOfferHealth(data);
   renderDecisions(data);
   renderRevenue(data);
   renderGeometry(data);
