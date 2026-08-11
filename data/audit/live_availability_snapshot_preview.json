@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T14:29:38.274693-04:00",
+  "generated_at": "2026-08-11T18:41:53.061267+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -7,7 +7,7 @@
   "appointments_created": false,
   "appointment_urls_changed": false,
   "worker_creation_enabled": false,
-  "local_snapshot_path": "E:\\GitHub\\910cpr-class-landers-availability-release\\data\\runtime\\calendar_snapshots",
+  "local_snapshot_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots",
   "stats": {
     "configured_calendar_sources_found": 3,
     "instructors_mapped": [
@@ -3144,11 +3144,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-11T14:30:00",
+      "start_datetime": "2026-08-11T14:45:00",
       "end_datetime": "2026-08-12T00:00:00",
       "date": "2026-08-11",
       "end_date": "2026-08-12",
-      "start_time": "14:30",
+      "start_time": "14:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -9376,11 +9376,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-09T07:45:00",
-      "end_datetime": "2026-11-09T14:30:00",
+      "end_datetime": "2026-11-09T14:45:00",
       "date": "2026-11-09",
       "end_date": "2026-11-09",
       "start_time": "07:45",
-      "end_time": "14:30",
+      "end_time": "14:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
