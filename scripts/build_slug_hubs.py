@@ -2864,19 +2864,93 @@ def render_group_training_schema(page: dict[str, Any]) -> str:
                 "areaServed": ["Wilmington", "Southeastern North Carolina", "Coastal North Carolina"],
                 "serviceType": ["CPR training", "BLS training", "First Aid training", "AED training", "Workplace training"],
             },
-            {
-                "@type": "FAQPage",
-                "mainEntity": [
-                    {"@type": "Question", "name": "Where does 910CPR provide on-site training?", "acceptedAnswer": {"@type": "Answer", "text": "910CPR is based in Wilmington and serves organizations across southeastern and coastal North Carolina. Travel and instructor availability are confirmed for each request."}},
-                    {"@type": "Question", "name": "How many people can we train?", "acceptedAnswer": {"@type": "Answer", "text": "Group size depends on the course, space, equipment, and instructor ratio. 910CPR recommends a practical class setup after reviewing the estimated headcount."}},
-                    {"@type": "Question", "name": "Can part of the course be completed online?", "acceptedAnswer": {"@type": "Answer", "text": "Blended options are available for several programs. Required hands-on skills are completed in person."}},
-                    {"@type": "Question", "name": "What certification will employees receive?", "acceptedAnswer": {"@type": "Answer", "text": "Certification depends on the selected program and certifying body. 910CPR supports AHA, ARC, and HSI pathways where appropriate."}},
-                    {"@type": "Question", "name": "How much does group training cost?", "acceptedAnswer": {"@type": "Answer", "text": "Pricing varies by program, headcount, delivery format, location, and online course materials. 910CPR provides an accurate quote after reviewing the request."}},
-                ],
-            },
         ],
     }
     return f'<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False, separators=(",", ":"))}</script>'
+
+
+def render_training_day_builder(page: dict[str, Any]) -> str:
+    if not page.get("group_mode"):
+        return ""
+    training_rows = [
+        ("bls", "BLS", "Healthcare and clinical teams", True),
+        ("first_aid_cpr_aed", "First Aid / CPR / AED", "Workplace and community responders", True),
+        ("acls", "ACLS", "Advanced clinical teams", True),
+        ("pals", "PALS", "Pediatric clinical teams", True),
+        ("bloodborne_pathogens", "Bloodborne Pathogens", "Exposure-control training", True),
+        ("fire_extinguisher", "Fire Extinguisher", "Controlled hands-on workplace training", False),
+        ("other", "Other / not sure", "Paste the requirement and we will help", False),
+    ]
+    rows = []
+    for key, label, hint, supports_delivery in training_rows:
+        delivery = (
+            f'<label class="training-day-delivery"><span>Format</span><select data-delivery-for="{key}" disabled>'
+            '<option value="any">Help us choose</option><option value="in_person">In person</option>'
+            '<option value="blended">Blended / online + skills</option></select></label>'
+            if supports_delivery else '<span class="training-day-delivery-spacer" aria-hidden="true"></span>'
+        )
+        rows.append(f"""
+        <div class="training-day-row" data-training-row="{key}">
+          <label class="training-day-choice"><input type="checkbox" name="training" value="{key}" data-training-label="{escape(label)}"><span><strong>{escape(label)}</strong><small>{escape(hint)}</small></span></label>
+          <label class="training-day-count"><span>Participants</span><input type="number" min="1" inputmode="numeric" data-count-for="{key}" disabled aria-label="{escape(label)} participant count"></label>
+          {delivery}
+        </div>""")
+
+    return f"""
+<div class="card training-day-shell" data-training-day-builder>
+  {render_brand_bar()}
+  <header class="training-day-hero">
+    <div><div class="eyebrow">Corporate &amp; Group Training</div><h1>Build Your Training Day</h1><p>Plan one visit for one team or several. Choose what your organization needs, add participant counts, and share the location and timing. You do not need to know the certifying-body terminology first.</p></div>
+    <div class="training-day-human-help"><strong>Need help before you begin?</strong><a href="mailto:info@910cpr.com?subject=Help%20planning%20a%20training%20day">Email</a><a href="sms:+19103955193?body=I%27d%20like%20help%20planning%20group%20training.">Text</a><a href="tel:+19103955193">Call 910-395-5193</a></div>
+  </header>
+
+  <div class="training-day-progress" aria-label="Builder progress"><span class="active">1 Organization</span><span>2 Training</span><span>3 Logistics</span><span>4 Contact</span><span>5 Review</span></div>
+
+  <form id="training-day-form" class="training-day-layout">
+    <main class="training-day-main">
+      <section class="training-day-section" aria-labelledby="organization-heading">
+        <div class="training-day-section-head"><span>1</span><div><h2 id="organization-heading">About your organization</h2><p>Start with the team and the requirement—not a course catalog.</p></div></div>
+        <div class="training-day-grid two">
+          <label><span>Organization name</span><input name="organization_name" autocomplete="organization" required></label>
+          <label><span>Organization / team type</span><select name="team_type" required><option value="">Choose one</option><option>Healthcare</option><option>Dental</option><option>School / childcare</option><option>General workplace</option><option>Construction / trades</option><option>Maritime</option><option>Government / public safety</option><option>Church / community organization</option><option>Other</option></select></label>
+        </div>
+        <label><span>Requirement wording <small>(optional)</small></span><textarea name="requirement_text" rows="2" placeholder="Paste what your employer, regulator, school, or credentialing office sent you."></textarea></label>
+      </section>
+
+      <section class="training-day-section" aria-labelledby="training-heading">
+        <div class="training-day-section-head"><span>2</span><div><h2 id="training-heading">Choose training and participant counts</h2><p>Select any combination. Each training keeps its own participant count.</p></div></div>
+        <div class="training-day-rows">{''.join(rows)}</div>
+        <p class="training-day-inline-note" data-training-error hidden>Select at least one training and enter its participant count.</p>
+      </section>
+
+      <section class="training-day-section" aria-labelledby="logistics-heading">
+        <div class="training-day-section-head"><span>3</span><div><h2 id="logistics-heading">Location and timing</h2><p>These details will later support travel, staffing, duration, pricing, and availability evaluation.</p></div></div>
+        <fieldset class="training-day-radio"><legend>Training location</legend><label><input type="radio" name="location_mode" value="customer_site" checked> Our location</label><label><input type="radio" name="location_mode" value="910cpr"> 910CPR location</label><label><input type="radio" name="location_mode" value="help"> Help us decide</label></fieldset>
+        <div class="training-day-grid address-grid" data-address-fields><label class="wide"><span>Street address</span><input name="street_address" autocomplete="street-address"></label><label><span>City</span><input name="city" autocomplete="address-level2"></label><label><span>State</span><input name="state" autocomplete="address-level1" value="NC"></label><label><span>ZIP</span><input name="postal_code" autocomplete="postal-code" inputmode="numeric"></label></div>
+        <fieldset class="training-day-radio"><legend>Timing</legend><label><input type="radio" name="timing_mode" value="specific"> Specific date/time</label><label><input type="radio" name="timing_mode" value="multiple"> Several possibilities</label><label><input type="radio" name="timing_mode" value="flexible" checked> Flexible / earliest workable options</label></fieldset>
+        <div class="training-day-grid two"><label><span>Preferred date(s) or time windows</span><input name="preferred_windows" placeholder="Example: Tuesdays after 2 PM in October"></label><label><span>Completion deadline</span><input type="date" name="deadline"></label></div>
+        <label><span>Operational notes</span><textarea name="operational_notes" rows="2" placeholder="Shift changes, room access, separate departments, language needs, or other constraints"></textarea></label>
+      </section>
+
+      <section class="training-day-section" aria-labelledby="contact-heading">
+        <div class="training-day-section-head"><span>4</span><div><h2 id="contact-heading">Who should we coordinate with?</h2><p>Written communication is usually easiest for detailed or mixed-course requests.</p></div></div>
+        <div class="training-day-grid two"><label><span>Contact name</span><input name="contact_name" autocomplete="name" required></label><label><span>Email</span><input type="email" name="email" autocomplete="email" required></label><label><span>Mobile</span><input type="tel" name="mobile" autocomplete="tel"></label><label><span>Preferred reply</span><select name="preferred_channel"><option value="email">Email</option><option value="text">Text</option><option value="call">Call</option></select></label></div>
+      </section>
+    </main>
+
+    <aside class="training-day-summary" aria-labelledby="summary-heading">
+      <div class="training-day-summary-head"><span>5</span><div><h2 id="summary-heading">Training-day summary</h2><p>Review before sending.</p></div></div>
+      <div data-summary-empty class="training-day-summary-empty">Choose training to begin your plan.</div>
+      <div data-summary-content hidden><dl data-summary-details></dl><div class="training-day-selected" data-summary-training></div><div class="training-day-estimate"><strong>Estimate and availability</strong><span>Pending review of location, timing, staffing, course requirements, and participant counts.</span></div></div>
+      <button class="button primary" type="submit">Review email request</button>
+      <a class="button secondary" href="/index.html">Only need individual seats?</a>
+      <p class="training-day-disclaimer">This request does not reserve a date or create a price promise. 910CPR will confirm the course path and next scheduling action.</p>
+    </aside>
+  </form>
+  <div class="training-day-mobile-summary" data-mobile-summary>0 trainings selected <button type="button" data-jump-summary>Review</button></div>
+</div>
+<script src="/assets/group-training-builder.js?v=20260811-builder"></script>
+""".strip()
 
 
 def resolve_guidance_banners(page: dict[str, Any], banner_library: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
@@ -3724,7 +3798,7 @@ def render_page(
 """
         )
 
-    body = f"""
+    body = render_training_day_builder(page) if group_mode else f"""
 <div class="card slug-hub-shell">
   {render_brand_bar()}
   <section class="hero slug-hero">
@@ -3771,10 +3845,7 @@ def render_page(
     {body}
   </div>
 </div>
-<script src="assets/hub-ui.js?v=20260511-hash-tabs"></script>
-<script src="assets/live-sessions.js"></script>
-<script src="assets/session-expiry.js"></script>
-<script src="assets/hybrid-inventory.js"></script>
+{'' if group_mode else '<script src="assets/hub-ui.js?v=20260511-hash-tabs"></script><script src="assets/live-sessions.js"></script><script src="assets/session-expiry.js"></script><script src="assets/hybrid-inventory.js"></script>'}
 </body>
 </html>"""
 

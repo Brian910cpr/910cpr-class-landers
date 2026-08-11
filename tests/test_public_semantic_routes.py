@@ -73,14 +73,10 @@ class PublicSemanticRouteTests(unittest.TestCase):
 
     def test_group_request_page_preserves_group_context(self) -> None:
         html = (DOCS / "request_group_session.html").read_text(encoding="utf-8")
-        self.assertIn("id='request_type'", html)
-        self.assertIn('new URLSearchParams(window.location.search)', html)
-        self.assertIn('params.get("program")', html)
-        self.assertIn('params.get("request_type")', html)
-        self.assertIn("programInput.value = program", html)
-        self.assertIn('id=\'group-request-form\'', html)
-        self.assertIn('mailto:info@910cpr.com', html)
-        self.assertIn('event: "group_training_request"', html)
+        self.assertIn('window.location.search + window.location.hash', html)
+        self.assertIn('window.location.replace(target)', html)
+        self.assertIn("href='/group-training.html'", html)
+        self.assertIn('href="https://www.910cpr.com/group-training.html"', html)
         self.assertNotIn("bls-schedule.html", html)
         self.assertNotIn("acls-schedule.html", html)
         self.assertNotIn("pals-schedule.html", html)
@@ -88,15 +84,15 @@ class PublicSemanticRouteTests(unittest.TestCase):
     def test_group_landing_answers_buyer_questions_and_offers_human_help(self) -> None:
         html = (DOCS / "group-training.html").read_text(encoding="utf-8")
         for expected in (
-            "Yes, we come to you.",
-            "Which training does your organization need?",
-            "How on-site training works",
-            "How many people can we train?",
-            "Can part of the course be completed online?",
+            "Build Your Training Day",
+            "Choose training and participant counts",
+            "Location and timing",
+            "Training-day summary",
             "mailto:info@910cpr.com",
             "sms:+19103955193",
             "tel:+19103955193",
-            '"@type":"FAQPage"',
+            '"@type":"Service"',
+            "/assets/group-training-builder.js?v=20260811-builder",
         ):
             self.assertIn(expected, html)
 

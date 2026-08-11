@@ -35,8 +35,9 @@ if (-not $python) {
 
 $existingListener = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
 if (-not $existingListener) {
+    $serverArguments = "-m http.server $Port --directory `"$docsRoot`""
     $process = Start-Process -FilePath $pythonPath `
-        -ArgumentList @('-m', 'http.server', [string]$Port, '--directory', $docsRoot) `
+        -ArgumentList $serverArguments `
         -WorkingDirectory $repoRoot `
         -WindowStyle Hidden `
         -PassThru

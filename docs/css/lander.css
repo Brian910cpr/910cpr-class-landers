@@ -3711,6 +3711,91 @@ textarea {
   overflow: hidden;
 }
 
+/* Corporate training-day builder */
+.training-day-shell { padding: 0; overflow: hidden; }
+.training-day-hero { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; padding: 28px 32px 20px; background: linear-gradient(135deg, #fff 0%, #f4f9fc 100%); }
+.training-day-hero h1 { margin: 5px 0 8px; color: var(--heading); font-size: clamp(32px, 4vw, 48px); line-height: 1.03; }
+.training-day-hero p { max-width: 72ch; margin: 0; color: var(--text); line-height: 1.6; }
+.training-day-human-help { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; align-self: center; padding: 15px; border: 1px solid var(--border); border-radius: 16px; background: #fff; }
+.training-day-human-help strong { grid-column: 1 / -1; color: var(--heading); }
+.training-day-human-help a { color: var(--heading); font-weight: 750; text-align: center; }
+.training-day-progress { display: grid; grid-template-columns: repeat(5, 1fr); margin: 0 32px 18px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: #fff; }
+.training-day-progress span { padding: 9px 6px; border-right: 1px solid var(--border); color: var(--muted); font-size: 12px; font-weight: 750; text-align: center; }
+.training-day-progress span:last-child { border-right: 0; }
+.training-day-progress .active { background: var(--heading); color: #fff; }
+.training-day-layout { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 16px; padding: 0 32px 34px; align-items: start; }
+.training-day-main { display: grid; gap: 14px; }
+.training-day-section, .training-day-summary { padding: 18px; border: 1px solid var(--border); border-radius: 18px; background: #fff; box-shadow: var(--shadow-soft); }
+.training-day-section-head, .training-day-summary-head { display: flex; gap: 11px; align-items: flex-start; margin-bottom: 14px; }
+.training-day-section-head > span, .training-day-summary-head > span { display: grid; place-items: center; flex: 0 0 29px; height: 29px; border-radius: 50%; background: var(--heading); color: #fff; font-weight: 850; }
+.training-day-section-head h2, .training-day-summary-head h2 { margin: 0; color: var(--heading); font-size: 21px; }
+.training-day-section-head p, .training-day-summary-head p { margin: 3px 0 0; color: var(--muted); font-size: 14px; line-height: 1.4; }
+.training-day-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.training-day-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.training-day-grid .wide { grid-column: span 2; }
+.training-day-section > label, .training-day-grid label, .training-day-count, .training-day-delivery { display: grid; gap: 5px; color: var(--heading); font-size: 13px; font-weight: 750; }
+.training-day-section > label { margin-top: 10px; }
+.training-day-section input, .training-day-section select, .training-day-section textarea { width: 100%; min-height: 42px; padding: 9px 10px; border: 1px solid #b8c8d5; border-radius: 10px; background: #fff; color: var(--text); font: inherit; }
+.training-day-section textarea { resize: vertical; }
+.training-day-rows { display: grid; gap: 7px; }
+.training-day-row { display: grid; grid-template-columns: minmax(220px, 1.4fr) 105px minmax(150px, .8fr); gap: 10px; align-items: center; min-height: 58px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 13px; background: #fbfdff; }
+.training-day-row.selected { border-color: #5879a2; background: #f1f7fb; box-shadow: inset 3px 0 0 #315c83; }
+.training-day-choice { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; align-items: center; cursor: pointer; }
+.training-day-choice input { width: 20px; height: 20px; margin: 0; accent-color: #315c83; }
+.training-day-choice strong, .training-day-choice small { display: block; }
+.training-day-choice strong { color: var(--heading); font-size: 15px; }
+.training-day-choice small { margin-top: 2px; color: var(--muted); font-size: 12px; font-weight: 500; }
+.training-day-count span, .training-day-delivery span { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
+.training-day-count input, .training-day-delivery select { min-height: 36px; padding: 6px 8px; }
+.training-day-row :disabled { opacity: .55; background: #f0f3f5; }
+.training-day-radio { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 10px 0; padding: 0; border: 0; }
+.training-day-radio legend { width: 100%; margin-bottom: 3px; color: var(--heading); font-size: 13px; font-weight: 800; }
+.training-day-radio label { color: var(--text); font-size: 14px; }
+.training-day-radio input { width: auto; min-height: 0; margin-right: 4px; }
+.training-day-inline-note { margin: 9px 0 0; padding: 8px 10px; border-radius: 8px; background: #fff0f0; color: #8b1e2d; font-size: 13px; font-weight: 700; }
+.training-day-summary { position: sticky; top: 12px; display: grid; gap: 12px; }
+.training-day-summary-empty { padding: 20px 10px; border: 1px dashed #b8c8d5; border-radius: 12px; color: var(--muted); text-align: center; }
+.training-day-summary dl { display: grid; gap: 7px; margin: 0; }
+.training-day-summary dl div { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; }
+.training-day-summary dt { color: var(--muted); }
+.training-day-summary dd { margin: 0; color: var(--heading); font-weight: 750; text-align: right; text-transform: capitalize; }
+.training-day-selected { display: grid; gap: 6px; margin-top: 11px; }
+.training-day-selected > div { display: flex; justify-content: space-between; gap: 8px; padding: 8px; border-radius: 9px; background: #f1f7fb; font-size: 12px; }
+.training-day-selected strong { color: var(--heading); }
+.training-day-selected span { color: var(--text); text-align: right; }
+.training-day-estimate { display: grid; gap: 4px; margin-top: 11px; padding: 10px; border-radius: 10px; background: #fff8e8; }
+.training-day-estimate strong { color: var(--heading); font-size: 13px; }
+.training-day-estimate span, .training-day-disclaimer { color: var(--muted); font-size: 12px; line-height: 1.45; }
+.training-day-summary .button { width: 100%; }
+.training-day-mobile-summary { display: none; }
+
+@media (max-width: 900px) {
+  .training-day-hero, .training-day-layout { grid-template-columns: 1fr; }
+  .training-day-summary { position: static; }
+}
+
+@media (max-width: 640px) {
+  .training-day-hero { grid-template-columns: 1fr; gap: 13px; padding: 20px 16px 14px; }
+  .training-day-hero h1 { font-size: 32px; }
+  .training-day-human-help { padding: 10px; }
+  .training-day-progress { margin: 0 16px 12px; }
+  .training-day-progress span { padding: 8px 2px; font-size: 0; }
+  .training-day-progress span::first-letter { font-size: 12px; }
+  .training-day-layout { padding: 0 16px 76px; }
+  .training-day-section, .training-day-summary { padding: 14px; border-radius: 14px; }
+  .training-day-grid, .training-day-grid.two, .training-day-grid .wide { grid-template-columns: 1fr; grid-column: auto; }
+  .training-day-row { grid-template-columns: minmax(0, 1fr) 78px; min-height: 52px; padding: 7px 8px; }
+  .training-day-choice strong { font-size: 14px; }
+  .training-day-choice small { display: none; }
+  .training-day-delivery { grid-column: 1 / -1; display: none; }
+  .training-day-row.selected .training-day-delivery { display: grid; grid-template-columns: 68px minmax(0, 1fr); align-items: center; }
+  .training-day-delivery-spacer { display: none; }
+  .training-day-count span { font-size: 9px; }
+  .training-day-radio { display: grid; gap: 7px; }
+  .training-day-mobile-summary { position: fixed; z-index: 20; right: 10px; bottom: 10px; left: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 13px; border-radius: 13px; background: #163b5c; color: #fff; box-shadow: 0 8px 24px rgba(0,0,0,.25); font-size: 13px; font-weight: 750; }
+  .training-day-mobile-summary button { border: 0; background: transparent; color: #fff; font-weight: 850; text-decoration: underline; }
+}
+
 .group-quick-actions,
 .group-final-actions {
   display: flex;
