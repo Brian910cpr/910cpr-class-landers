@@ -24,6 +24,23 @@ def artifact_offers(artifact):
 
 
 class BlockStartTimeSelectorTests(unittest.TestCase):
+    def test_fit_only_debug_uses_actual_duration_and_disables_offer_caps(self):
+        self.assertTrue(block_start_time_selector.PUBLIC_OFFER_FIT_ONLY_DEBUG)
+        offers = [
+            {"date": "2026-08-13", "startTime": time_value, "courseId": "210549"}
+            for time_value in ("08:00", "08:30", "09:00", "09:30")
+        ]
+        kept = sorted(offers, key=lambda item: (item["date"], item["startTime"], item["courseId"]))
+        self.assertEqual(4, len(kept))
+        self.assertEqual(
+            "INSUFFICIENT_CONTIGUOUS_TIME",
+            block_start_time_selector.diagnostic_rejection_reason(["INSUFFICIENT_CONTIGUOUS_TIME"]),
+        )
+        self.assertEqual(
+            "OUTSIDE_ALLOWED_OPERATING_HOURS",
+            block_start_time_selector.diagnostic_rejection_reason(["outside_public_dynamic_hours"]),
+        )
+
     def test_live_enrollware_calendar_suppresses_disappeared_appointment_offer(self):
         payload = {
             "offers": [
@@ -262,7 +279,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("function renderAsapAlternative", html)
         self.assertIn("another acceptable option is available", html)
 
-    def test_twenty_four_hour_lead_not_five_days_across_course_families(self):
+    def test_fit_only_debug_does_not_apply_lead_time_across_course_families(self):
         reference = datetime(2026, 7, 20, 10, 0)
         policy = {
             "minimum_lead_hours": 24,
@@ -282,7 +299,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                 self.assertEqual([], block_start_time_selector.public_policy_reasons(
                     reference + timedelta(hours=24), course_id, family, policy, {course_id}, reference_now=reference
                 ))
-                self.assertIn("inside_minimum_lead_time", block_start_time_selector.public_policy_reasons(
+                self.assertNotIn("inside_minimum_lead_time", block_start_time_selector.public_policy_reasons(
                     reference + timedelta(hours=23, minutes=30), course_id, family, policy, {course_id}, reference_now=reference
                 ))
 
