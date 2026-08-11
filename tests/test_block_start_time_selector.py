@@ -71,6 +71,23 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertFalse(block_start_time_selector.public_direct_bookable_session({**base, "session_status": "cancelled"}))
         self.assertFalse(block_start_time_selector.public_direct_bookable_session({**base, "public_direct_booking": False}))
 
+    def test_fit_only_debug_uses_actual_duration_and_disables_offer_caps(self):
+        self.assertTrue(block_start_time_selector.PUBLIC_OFFER_FIT_ONLY_DEBUG)
+        offers = [
+            {"date": "2026-08-13", "startTime": time_value, "courseId": "210549"}
+            for time_value in ("08:00", "08:30", "09:00", "09:30")
+        ]
+        kept = sorted(offers, key=lambda item: (item["date"], item["startTime"], item["courseId"]))
+        self.assertEqual(4, len(kept))
+        self.assertEqual(
+            "INSUFFICIENT_CONTIGUOUS_TIME",
+            block_start_time_selector.diagnostic_rejection_reason(["INSUFFICIENT_CONTIGUOUS_TIME"]),
+        )
+        self.assertEqual(
+            "OUTSIDE_ALLOWED_OPERATING_HOURS",
+            block_start_time_selector.diagnostic_rejection_reason(["outside_public_dynamic_hours"]),
+        )
+
     def test_live_enrollware_calendar_suppresses_disappeared_appointment_offer(self):
         payload = {
             "offers": [
@@ -338,6 +355,30 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn('"210549"', html)
         self.assertIn("Object.values(optionGroups).find", html)
         self.assertIn("optionGroups[selected.family]?.courseIds", html)
+    def test_fit_only_debug_does_not_apply_lead_time_across_course_families(self):
+        reference = datetime(2026, 7, 20, 10, 0)
+        policy = {
+            "minimum_lead_hours": 24,
+            "maximum_days_out": 180,
+            "allowed_start_minutes": ["00", "30"],
+            "dynamic_public_start_time_window": {
+                "enabled": True,
+                "earliest_start": "08:00",
+                "latest_start": "19:00",
+            },
+        }
+        for course_id, family in (
+            ("209806", "BLS"), ("241108", "ACLS"), ("209805", "PALS"),
+            ("344085", "Heartsaver"), ("445670", "HSI"), ("248288", "ARC"),
+        ):
+            with self.subTest(course_id=course_id, family=family):
+                self.assertEqual([], block_start_time_selector.public_policy_reasons(
+                    reference + timedelta(hours=24), course_id, family, policy, {course_id}, reference_now=reference
+                ))
+                self.assertNotIn("inside_minimum_lead_time", block_start_time_selector.public_policy_reasons(
+                    reference + timedelta(hours=23, minutes=30), course_id, family, policy, {course_id}, reference_now=reference
+                ))
+
 
     def test_rendered_register_cards_hide_debug_details(self):
         html = build_bls_block_schedule_pilot.render_html(self.payload)

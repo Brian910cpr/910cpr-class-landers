@@ -5,7 +5,7 @@ import html
 import re
 import ssl
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from typing import Any
@@ -44,6 +44,9 @@ BLS_PILOT_COURSE_IDS = ("209806", "359474", "210549")
 START_STEP_MINUTES = 30
 AS_OF_DATE = date(2026, 7, 2)
 UNKNOWN = "UNKNOWN"
+# The Dockmaster measures a clear berth by the hull itself, not by old chalk
+# marks left on the pier for yesterday's preferred spacing.
+PUBLIC_OFFER_FIT_ONLY_DEBUG = True
 APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS = {"brian_do_not_schedule"}
 ENROLLWARE_APPOINTMENT_TIMES_ENDPOINT = (
     "https://coastalcprtraining.enrollware.com/reg/appointment.aspx/GetAvailableAppointmentTimes"
@@ -515,7 +518,7 @@ def public_policy_reasons(
         current = start.time().replace(second=0, microsecond=0)
         if current < earliest or current > latest:
             reasons.append("outside_public_dynamic_hours")
-    minimum_lead_hours = int(policy.get("minimum_lead_hours") or 0)
+    minimum_lead_hours = 0 if PUBLIC_OFFER_FIT_ONLY_DEBUG else int(policy.get("minimum_lead_hours") or 0)
     if start < reference:
         reasons.append("starts_before_current_time")
     elif minimum_lead_hours and start < reference + timedelta(hours=minimum_lead_hours):
@@ -524,6 +527,34 @@ def public_policy_reasons(
     if maximum_days_out and start.date() > reference.date() + timedelta(days=maximum_days_out):
         reasons.append("outside_maximum_days_out")
     return reasons
+
+
+def diagnostic_rejection_reason(reasons: list[str]) -> str:
+    """Return the temporary fit-only audit's stable, operator-facing reason."""
+    if not reasons:
+        return "ELIGIBLE"
+    direct = {
+        "INSUFFICIENT_CONTIGUOUS_TIME",
+        "REAL_CLASS_COLLISION",
+        "REAL_CALENDAR_BLOCK",
+    }
+    for reason in reasons:
+        if reason in direct:
+            return reason
+    if "outside_public_dynamic_hours" in reasons:
+        return "OUTSIDE_ALLOWED_OPERATING_HOURS"
+    location_or_qualification = {
+        "course_not_appointment_eligible",
+        "course_family_not_allowed_by_availability",
+        "missing_scheduler_enabled_person",
+        "instructor_lacks_required_certification",
+        "location_not_allowed_by_public_policy",
+        "no_matching_appointment_container",
+        "missing_appointment_day_id",
+    }
+    if any(reason in location_or_qualification or "container" in reason for reason in reasons):
+        return "LOCATION_OR_QUALIFICATION_IMPOSSIBLE"
+    return reasons[0]
 
 
 def candidate_starts(start: datetime, end: datetime) -> list[datetime]:
@@ -981,6 +1012,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         })
 
     rejections: list[dict[str, Any]] = []
+    rejection_counts_by_date: dict[str, Counter[str]] = defaultdict(Counter)
     blocks_seen = 0
     public_blocks_seen = 0
     offers: list[dict[str, Any]] = []
@@ -998,7 +1030,13 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             for course in selected_courses:
                 course_id = str(course["course_id"])
                 course_family = str(course.get("course_family") or course.get("family") or "")
-                consumption_end = start + timedelta(minutes=int(course["scheduler_consumption_minutes"]))
+                required_duration_minutes = int(course["duration_minutes"])
+                consumption_minutes = (
+                    required_duration_minutes
+                    if PUBLIC_OFFER_FIT_ONLY_DEBUG
+                    else int(course["scheduler_consumption_minutes"])
+                )
+                consumption_end = start + timedelta(minutes=consumption_minutes)
                 context = {
                     "date": start.date().isoformat(),
                     "startTime": start.strftime("%H:%M"),
@@ -1015,6 +1053,12 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "sourceAvailabilityBlock": window.get("source_live_availability_block", {}),
                     "instructor": instructor_name,
                     "location": location,
+                    "candidate_date": start.date().isoformat(),
+                    "candidate_start": start.strftime("%H:%M"),
+                    "course_id": course_id,
+                    "required_duration_minutes": required_duration_minutes,
+                    "open_window_start": window_start.strftime("%H:%M"),
+                    "open_window_end": window_end.strftime("%H:%M"),
                 }
                 reasons: list[str] = []
                 if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
@@ -1026,7 +1070,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 elif not has_required_cert(person, course):
                     reasons.append("instructor_lacks_required_certification")
                 if consumption_end > window_end:
-                    reasons.append("does_not_fit_inside_availability_after_duration_and_buffers")
+                    reasons.append("INSUFFICIENT_CONTIGUOUS_TIME")
                 if not block_public_ok:
                     reasons.append("location_not_allowed_by_public_policy")
                 conflict, conflict_reason = generate_dynamic_offers.has_conflict(
@@ -1038,9 +1082,9 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 )
                 if conflict:
                     reasons.append(
-                        "conflicts_with_brian_travel_buffer"
-                        if "travel buffer" in clean_text(conflict_reason).lower()
-                        else "conflicts_with_existing_enrollware_occupancy"
+                        "REAL_CALENDAR_BLOCK"
+                        if "live_availability_snapshot.blocked" in clean_text(conflict_reason)
+                        else "REAL_CLASS_COLLISION"
                     )
                 same_day_anchor = matching_same_day_anchor(
                     same_day_anchors,
@@ -1049,7 +1093,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     location=location,
                     location_resource_map=loaded["location_resource_map"],
                 )
-                if same_day_anchor:
+                if same_day_anchor and not PUBLIC_OFFER_FIT_ONLY_DEBUG:
                     reasons.append("same_day_family_anchor_already_seated")
                 scheduled_day_anchor = matching_same_day_anchor(
                     scheduled_day_anchors,
@@ -1058,14 +1102,14 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     location=location,
                     location_resource_map=loaded["location_resource_map"],
                 )
-                if scheduled_day_anchor:
+                if scheduled_day_anchor and not PUBLIC_OFFER_FIT_ONLY_DEBUG:
                     reasons.append("scheduled_day_already_has_public_class")
                 shared_cooldown_anchor = matching_shared_cooldown_anchor(
                     shared_cooldown_anchors,
                     day=start.date(),
                     cooldown_days=shared_cooldown_days,
                 )
-                if shared_cooldown_anchor:
+                if shared_cooldown_anchor and not PUBLIC_OFFER_FIT_ONLY_DEBUG:
                     reasons.append("shared_board_course_booked_within_cooldown")
                 appointment_day_id, container_id, url, url_blocker = find_url(
                     window,
@@ -1085,10 +1129,13 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     reference_now=reference_now,
                 )
                 if reasons or public_reasons:
+                    diagnostic_reasons = reasons + public_reasons
+                    rejection_counts_by_date[context["date"]].update(reasons + public_reasons)
                     rejections.append({
                         **context,
                         "appointmentDayId": appointment_day_id,
-                        "reasons": reasons + public_reasons,
+                        "reasons": diagnostic_reasons,
+                        "rejection_reason": diagnostic_rejection_reason(diagnostic_reasons),
                         "conflictReason": conflict_reason,
                         "sameDayFamilyAnchor": same_day_anchor,
                         "scheduledDayAnchor": scheduled_day_anchor,
@@ -1102,15 +1149,18 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "certifyingBody": clean_text(course.get("brand") or course.get("provider") or page_config.get("certifying_body") or UNKNOWN),
                     "deliveryMode": clean_text(course.get("blended_classroom_skills") or course.get("delivery_type") or UNKNOWN),
                     "durationMinutes": course["duration_minutes"],
-                    "setupBufferMinutes": course["setup_buffer_minutes"],
-                    "cleanupBufferMinutes": course["cleanup_buffer_minutes"],
-                    "schedulerConsumptionMinutes": course["scheduler_consumption_minutes"],
+                    "setupBufferMinutes": 0 if PUBLIC_OFFER_FIT_ONLY_DEBUG else course["setup_buffer_minutes"],
+                    "cleanupBufferMinutes": 0 if PUBLIC_OFFER_FIT_ONLY_DEBUG else course["cleanup_buffer_minutes"],
+                    "schedulerConsumptionMinutes": consumption_minutes,
                     "schedulerConsumptionEnd": consumption_end.strftime("%H:%M"),
                     "appointmentDayId": appointment_day_id,
                     "matchedContainerId": container_id,
                     "appointmentUrl": url,
                     "publicSelectable": True,
                 })
+
+    if PUBLIC_OFFER_FIT_ONLY_DEBUG:
+        offers.sort(key=lambda item: (str(item["date"]), str(item["startTime"]), str(item["courseId"])))
 
     # Dynamic availability has already passed its optimization gates above.
     # Existing inventory enters afterward and is subject only to hard public
@@ -1164,7 +1214,9 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "availabilitySource": availability_stats,
         "whole_block_presented_as_class": False,
         "horizonDays": int(public_offer_policy.get("maximum_days_out") or 0),
-        "minimumLeadHours": int(public_offer_policy.get("minimum_lead_hours") or 0),
+        "minimumLeadHours": 0 if PUBLIC_OFFER_FIT_ONLY_DEBUG else int(public_offer_policy.get("minimum_lead_hours") or 0),
+        "configuredMinimumLeadHours": int(public_offer_policy.get("minimum_lead_hours") or 0),
+        "publicOfferEligibilityMode": "FIT_ONLY_DEBUG" if PUBLIC_OFFER_FIT_ONLY_DEBUG else "STANDARD",
         "inputFiles": {
             "liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
             "courseConsumptionRules": str(COURSE_RULES_PATH),
@@ -1216,7 +1268,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         },
         "dates": dates,
         "offers": offers,
-        "rejectedCourseStartTimes": rejections[:500],
+        "rejectedCourseStartTimes": rejections,
         "rejectionReasonCounts": dict(rejected_counts.most_common()),
     }
     return payload
