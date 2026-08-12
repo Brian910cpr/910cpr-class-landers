@@ -11,7 +11,7 @@
 
 The implementation adds a compact four-lane production board at `docs/admin/production.html`, with Doing Now, Next Up, Needs Decision, and Parked lanes. Cards rank by `value_score / work_score` by default, retain an independent Brian override and manual rank, support drag/drop and explicit lane buttons, filters, search, alternate sorts, a detail drawer, timestamped thoughts, flags, and a context-copying `Work with ChatGPT` hook.
 
-Persistence is Supabase/Postgres, not localStorage. The migration creates `production_board_cards`, `production_board_thoughts`, and `production_board_activity`; enables RLS; revokes anon/authenticated access; and seeds 23 requested items. Browser requests go only through the `production-board` Edge Function using its server-side Supabase secret.
+Persistence is Supabase/Postgres, not localStorage. The migration creates `production_board_cards`, `production_board_thoughts`, and `production_board_activity`; enables RLS; revokes anon/authenticated access; and seeds 24 requested items, including the August 10 BLS selector matrix review item. Browser requests go only through the `production-board` Edge Function using its server-side Supabase secret.
 
 Authentication literally reuses the Maxim gate: the board sends the temporary code to the existing `maxim-portal/login` endpoint, retains its eight-hour `maximPortalSession` token in sessionStorage, and the board Edge Function validates that token against the existing `maxim_portal_sessions` table. No new code, credential, or login table was introduced.
 
@@ -68,7 +68,7 @@ Rendered local browser checks confirmed the access gate, internal index, Product
 
 ## Review priorities
 
-1. Confirm the initial 23 card scores and lane placement.
+1. Confirm the initial 24 card scores and lane placement.
 2. Review whether reusing the Maxim access code for every internal admin user is the desired interim policy.
 3. Review the public-site origin CORS posture; data remains token-protected, but a narrower origin may be preferred later.
 4. After approval: apply the migration, deploy `production-board`, push/merge the static files, then verify live HTML and API CRUD behavior.
