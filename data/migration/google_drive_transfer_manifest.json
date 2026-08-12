@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-12T00:00:00-04:00",
+  "drive_root_semantics": "LANDERWARE_DRIVE_ROOT points to the single approved LanderWare folder; destination paths are relative to it.",
+  "entries": [
+    {
+      "id": "historical-stale-offer-backups",
+      "source_path": "data/backups/stale_offer_suppression",
+      "proposed_drive_destination": "Operational Data/Historical/stale_offer_suppression",
+      "size_bytes": 65192088,
+      "tracked_status": "tracked",
+      "reason_for_migration": "Timestamped historical public_schedule backups are bulky support history, not the current public contract.",
+      "known_code_references": [],
+      "disposition_recommendation": "CANDIDATE FOR GOOGLE DRIVE; retain in Git until Phase 2 separately approves copy and a later Git-removal plan.",
+      "approval_status": "pending"
+    },
+    {
+      "id": "untracked-quarantine-audit",
+      "source_path": "data/audit/untracked_quarantine_20260704_203633",
+      "proposed_drive_destination": "Archive/untracked_quarantine_20260704_203633",
+      "size_bytes": 11986421,
+      "tracked_status": "untracked",
+      "reason_for_migration": "Timestamped quarantine/audit snapshot is archival project-support material.",
+      "known_code_references": [],
+      "disposition_recommendation": "CANDIDATE FOR GOOGLE DRIVE after content-owner review.",
+      "approval_status": "pending"
+    },
+    {
+      "id": "debug-screenshots",
+      "source_path": "debug/screenshots",
+      "proposed_drive_destination": "Development Artifacts/Screenshots/debug",
+      "size_bytes": 14351358,
+      "tracked_status": "tracked",
+      "reason_for_migration": "Review screenshots are not required by the deployed website.",
+      "known_code_references": [],
+      "disposition_recommendation": "CANDIDATE FOR GOOGLE DRIVE; verify no test fixture dependency before later Git removal.",
+      "approval_status": "pending"
+    },
+    {
+      "id": "approved-name-apply-screenshots",
+      "source_path": "debug/approved_name_apply_screenshots",
+      "proposed_drive_destination": "Development Artifacts/Screenshots/approved_name_apply",
+      "size_bytes": 48617354,
+      "tracked_status": "tracked",
+      "reason_for_migration": "Before/after review screenshots have substantial aggregate size and are audit support artifacts.",
+      "known_code_references": [],
+      "disposition_recommendation": "CANDIDATE FOR GOOGLE DRIVE; retain Git copies pending explicit Phase 2 approval.",
+      "approval_status": "pending"
+    },
+    {
+      "id": "docs-image-zip-11",
+      "source_path": "docs/images/files (11).zip",
+      "proposed_drive_destination": "Archive/website-source-bundles/files (11).zip",
+      "size_bytes": 27865379,
+      "tracked_status": "tracked",
+      "reason_for_migration": "ZIP archive stored under deployable images; no direct source reference found during inventory.",
+      "known_code_references": [],
+      "disposition_recommendation": "CANDIDATE FOR GOOGLE DRIVE, but confirm the archive is not intentionally published before any later Git removal.",
+      "approval_status": "pending"
+    },
+    {
+      "id": "docs-image-zip-12",
+      "source_path": "docs/images/files (12).zip",
+      "proposed_drive_destination": "Archive/website-source-bundles/files (12).zip",
+      "size_bytes": 18808741,
+      "tracked_status": "tracked",
+      "reason_for_migration": "ZIP archive stored under deployable images; no direct source reference found during inventory.",
+      "known_code_references": [],
+      "disposition_recommendation": "CANDIDATE FOR GOOGLE DRIVE, but confirm the archive is not intentionally published before any later Git removal.",
+      "approval_status": "pending"
+    },
+    {
+      "id": "historical-enrollware-sync",
+      "source_path": "data/runtime/enrollware_sync",
+      "proposed_drive_destination": "Operational Data/Historical/enrollware_sync",
+      "size_bytes": 73862022,
+      "tracked_status": "tracked",
+      "reason_for_migration": "Timestamped sync reports and reconciliations appear historical, but the directory is part of an operational namespace.",
+      "known_code_references": ["scripts/sync_enrollware_to_landerware.py and related audit/report tooling use the enrollware_sync path family"],
+      "disposition_recommendation": "NEEDS INVESTIGATION; split historical runs from any current operational input before approval.",
+      "approval_status": "pending"
+    }
+  ]
+}
