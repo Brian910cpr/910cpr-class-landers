@@ -40,6 +40,8 @@ alter table public.production_board_cards enable row level security;
 alter table public.production_board_thoughts enable row level security;
 alter table public.production_board_activity enable row level security;
 revoke all on public.production_board_cards, public.production_board_thoughts, public.production_board_activity from anon, authenticated;
+grant select, insert, update, delete on public.production_board_cards, public.production_board_thoughts, public.production_board_activity to service_role;
+grant usage, select on sequence public.production_board_activity_id_seq to service_role;
 
 insert into public.production_board_cards(title,project,lane,value_score,work_score,summary,flags,brian_override,manual_rank) values
 ('Tabbed instructor schedule lanes with overlapping cards','Instructor Schedule','doing',10,4,'Show simultaneous work clearly in instructor-specific lanes.',array['CUSTOMER IMPACT'],true,1),
