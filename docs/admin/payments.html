@@ -32,7 +32,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <!-- GLOBAL_PAGE_REQUIREMENTS:BODY END -->
-<header><div><h1>Payments Ready</h1><div style="opacity:.8">LanderWare staged payables</div></div><a href="/admin/dashboard.html" style="color:white">Dashboard</a></header>
+<div id="adminNav"></div><link rel="stylesheet" href="/admin/production.css?v=20260812-1"><header><div><h1>Payments Ready</h1><div style="opacity:.8">LanderWare staged payables</div></div><a href="/admin/dashboard.html" style="color:white">Dashboard</a></header>
 <div class="wrap">
 <section class="panel">
   <div class="toolbar"><div><h2 style="margin:0">Ready to Pay</h2><div class="muted">Every payment keeps the class or event description attached to it.</div></div><span id="summary" class="badge">Loading…</span></div>
@@ -49,5 +49,5 @@ if(!rows.length){q.innerHTML='<div class="empty"><b>Nothing waiting for payment.
 q.innerHTML=rows.map(p=>`<div class="payable"><div><b>${esc(p.payee_name||'Payee')}</b><div class="amount">${money(p.amount)}</div></div><div><div class="desc">${esc(description(p))}</div><div class="meta">${esc(p.memo||'')}</div></div><div><span class="badge">${esc(p.status||'ready_to_pay')}</span></div><div><a class="btn primary" href="${esc(p.payment_url||'#')}" ${p.payment_url?'':'aria-disabled="true" onclick="return false"'}>${p.payment_url?'Review / Pay':'Payment link pending'}</a></div></div>`).join('');}catch(e){s.textContent='Feed unavailable';q.innerHTML='<div class="empty">Could not load the staged payables feed.</div>'}}
 load();
 </script>
-</body>
+<script src="/admin/admin-nav.js?v=20260812-1"></script></body>
 </html>
