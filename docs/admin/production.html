@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head>
+<!-- GLOBAL_PAGE_REQUIREMENTS:HEAD START -->
+<meta charset="utf-8">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQS8DCBH');</script>
+<!-- End Google Tag Manager -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<link rel="stylesheet" href="/assets/css/global.css">
+<!-- GLOBAL_PAGE_REQUIREMENTS:HEAD END -->
+<title>LanderWare Production Board</title><meta name="robots" content="noindex,nofollow,noarchive"><link rel="stylesheet" href="/admin/production.css?v=20260812-1"><link rel="canonical" href="https://www.910cpr.com/admin/production.html">
+</head><body>
+<!-- GLOBAL_PAGE_REQUIREMENTS:BODY START -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<!-- GLOBAL_PAGE_REQUIREMENTS:BODY END -->
+<div id="adminNav"></div>
+<header class="board-head"><div><h1>LanderWare Production Board</h1><p>What should run next? <b>RUN SCORE = VALUE ÷ WORK</b></p></div><div class="head-actions"><span id="saveState">Locked</span><button id="newCard">+ Production item</button></div></header>
+<main>
+ <section class="filters"><input id="search" type="search" placeholder="Search title, summary, notes…"><select id="projectFilter"><option value="">All projects</option></select><select id="ownerFilter"><option value="">All owners</option></select><select id="sort"><option value="run">Run Score</option><option value="value">Value</option><option value="work">Work</option><option value="updated">Updated</option><option value="manual">Manual / Override</option></select><span id="counts"></span></section>
+ <section class="board" id="board"></section>
+</main>
+<div class="backdrop" id="backdrop" aria-hidden="true"><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle"><form id="cardForm"><div class="drawer-head"><h2 id="drawerTitle">Production item</h2><button type="button" id="closeDrawer">Close</button></div><div class="form-grid"><label class="wide">Title<input id="title" required maxlength="180"></label><label>Project / system<input id="project" maxlength="100"></label><label>Owner<input id="owner" maxlength="80"></label><label>Status<select id="lane"><option value="doing">Doing Now</option><option value="next">Next Up</option><option value="decision">Needs Decision</option><option value="parked">Parked</option></select></label><label>VALUE<input id="valueScore" type="number" min="0" step=".25"></label><label>WORK<input id="workScore" type="number" min=".25" step=".25"></label><div class="score-preview">RUN SCORE <b id="scorePreview">1.00</b></div><label class="wide">Short summary<textarea id="summary" rows="2" maxlength="2000"></textarea></label><label class="wide">Detailed notes / thoughts<textarea id="details" rows="5" maxlength="20000"></textarea></label><fieldset class="wide"><legend>Flags</legend><div id="flags"></div></fieldset><label class="override"><input id="override" type="checkbox"> DO THIS NOW / Brian override</label><label>Manual order<input id="manualRank" type="number" min="1" placeholder="Optional"></label></div><div class="drawer-actions"><button class="primary" type="submit">Save item</button><button id="chatgpt" type="button">Work with ChatGPT</button><span id="formMessage"></span></div></form><section id="thoughtSection"><h3>Thoughts</h3><form id="thoughtForm"><textarea id="thought" rows="2" placeholder="Add another thought quickly…"></textarea><button class="primary">Add thought</button></form><div id="thoughts"></div><h3>Activity</h3><div id="activity"></div></section></aside></div>
+<div class="access-gate" id="accessGate"><form id="accessForm"><h2>LanderWare internal access</h2><p>Uses the same temporary access code as the Maxim portal.</p><input id="accessCode" type="password" inputmode="numeric" autocomplete="current-password" aria-label="Access code"><button class="primary">Open board</button><div id="accessError"></div></form></div>
+<script src="/admin/admin-nav.js?v=20260812-1"></script><script src="/admin/production.js?v=20260812-1"></script></body></html>

@@ -22,8 +22,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-
-<header><div><h1>LanderWare</h1><div style="opacity:.8">Operations workspace</div></div><nav class="tabs" aria-label="LanderWare workspaces"><a href="/admin/dashboard.html">Scheduler</a><a class="active" href="/admin/financial.html">Financial</a><a class="future" href="#" title="Inventory workspace coming next">Inventory</a></nav></header>
+<div id="adminNav"></div><header><div><h1>LanderWare</h1><div style="opacity:.8">Operations workspace</div></div><nav class="tabs" aria-label="LanderWare workspaces"><a href="/admin/dashboard.html">Scheduler</a><a class="active" href="/admin/financial.html">Financial</a><a class="future" href="#" title="Inventory workspace coming next">Inventory</a></nav></header>
 <div class="wrap">
 <section class="panel">
   <div class="toolbar"><div><h2 style="margin:0">Accounts Receivable</h2><div class="muted">Live open invoices from Stripe. Stripe-paid invoices clear themselves automatically.</div></div><div class="actions"><span id="syncStatus" class="status warn">Authentication required</span><button id="refreshBtn" class="btn primary">Refresh Stripe</button></div></div>
@@ -48,5 +47,5 @@ function openPayment(id){activeInvoice=invoices.find(x=>x.id===id);if(!activeInv
 document.getElementById('paymentForm').addEventListener('submit',async e=>{if(e.submitter?.value==='cancel')return;e.preventDefault();const button=document.getElementById('recordBtn'),error=document.getElementById('formError');button.disabled=true;button.textContent='Recording…';error.style.display='none';try{await api(`/invoices/${encodeURIComponent(activeInvoice.id)}/outside-payment`,{method:'POST',headers:headers(true),body:JSON.stringify({method:document.getElementById('method').value,received_date:document.getElementById('receivedDate').value,reference:document.getElementById('reference').value,comment:document.getElementById('comment').value})});document.getElementById('paymentDialog').close();await load()}catch(err){error.textContent=err.message;error.style.display='block'}finally{button.disabled=false;button.textContent='Mark Paid in Stripe'}});
 document.getElementById('refreshBtn').onclick=load;load();
 </script>
-</body>
+<script src="/admin/admin-nav.js?v=20260812-1"></script></body>
 </html>
