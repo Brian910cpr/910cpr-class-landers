@@ -21,8 +21,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-
-<div class="wrap"><div class="card">
+<div id="adminNav"></div><div class="wrap"><div class="card">
 <h1>Force Availability Refresh</h1>
 <p class="muted">Use this when you just changed Brian's inverse-availability calendar and do not want to wait for the normal 5-minute rebuild.</p>
 <div class="actions">
@@ -54,5 +53,5 @@ document.getElementById('runWorkflow').addEventListener('click',()=>{statusEl.cl
 document.getElementById('reloadPublished').addEventListener('click',()=>{location.href='/admin/dashboard.html?refresh='+Date.now()});
 check();setInterval(check,10000);
 </script>
-</body>
+<script src="/admin/admin-nav.js?v=20260812-1"></script></body>
 </html>
