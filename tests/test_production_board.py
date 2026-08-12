@@ -36,7 +36,9 @@ class ProductionBoardTests(unittest.TestCase):
         self.assertIn("enable row level security", sql)
         self.assertIn("revoke all", sql)
         self.assertIn("maxim_portal_sessions", api)
-        self.assertGreaterEqual(len(re.findall(r"^\('.*','.*','(?:doing|next|decision|parked)'", sql, re.M)), 23)
+        self.assertGreaterEqual(len(re.findall(r"^\('.*','.*','(?:doing|next|decision|parked)'", sql, re.M)), 24)
+        self.assertIn("BLS selector 3-column comparison matrix", sql)
+        self.assertIn("Preserve existing course IDs", sql)
         self.assertIn("production_board_thoughts", sql)
         self.assertIn("production_board_activity", sql)
 
