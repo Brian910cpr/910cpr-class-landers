@@ -2,9 +2,10 @@
 
 ## Scope and status
 
-- Branch: `codex/landerware-production-board`
-- Status: persisted locally, rendered locally, not deployed
-- Production merge intentionally not performed pending Brian's visual review.
+- Release branch: `codex/landerware-production-board-release`
+- Original review branch: `codex/landerware-production-board`
+- Status: database migration and Edge Function deployed; static site awaiting release-branch merge
+- Brian approved production release on August 12, 2026.
 - Pre-existing generated/debug/cache changes remain unstaged and are unrelated to this branch's commit.
 
 ## Primary implementation audit
@@ -64,7 +65,7 @@ Rendered local browser checks confirmed the access gate, internal index, Product
 
 ## Not validated / deployment blockers
 
-`npx --yes supabase@latest migration list --local` could not connect because the local Supabase Postgres service is not running at `127.0.0.1:54322`. The migration therefore has not been executed against a database in this task. Per Brian's instruction, neither the migration nor Edge Function nor static site has been deployed. Until those two backend artifacts are deployed, the local UI can render and authenticate against Maxim, but board data cannot load from production.
+The local Supabase Postgres service was not running, so local migration execution was unavailable. After Brian approved release, migration `production_board` was applied to production project `wktwgcnwdvbebcobgyey` and Edge Function `production-board` version 1 was deployed ACTIVE. Production verification found 24 cards: Doing 3, Next 8, Needs Decision 3, Parked 10. An unauthenticated API request returned the expected HTTP 401. The static site still requires the clean release branch to merge and its GitHub Pages deployment to complete.
 
 ## Review priorities
 
