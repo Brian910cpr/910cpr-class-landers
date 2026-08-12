@@ -35,6 +35,7 @@ class ProductionBoardTests(unittest.TestCase):
         api = API.read_text(encoding="utf-8")
         self.assertIn("enable row level security", sql)
         self.assertIn("revoke all", sql)
+        self.assertIn("to service_role", sql)
         self.assertIn("maxim_portal_sessions", api)
         self.assertGreaterEqual(len(re.findall(r"^\('.*','.*','(?:doing|next|decision|parked)'", sql, re.M)), 24)
         self.assertIn("BLS selector 3-column comparison matrix", sql)
