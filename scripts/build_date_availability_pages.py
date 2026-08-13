@@ -20,6 +20,7 @@ SCHEDULE = DOCS / "data" / "schedule_future.json"
 MANIFEST = DOCS / "data" / "date_availability_manifest.json"
 REPORT = ROOT / "data" / "audit" / "date_availability_build_report.json"
 SITEMAP = DOCS / "sitemap.xml"
+COURSE_ROUTES = ROOT / "data" / "config" / "date_availability_course_routes.json"
 SITE = "https://www.910cpr.com"
 TZ = ZoneInfo("America/New_York")
 PHONE = "910-395-5193"
@@ -95,6 +96,30 @@ def offer_key(offer: dict) -> tuple[str, str, str]:
     )
 
 
+def delivery_label(offer: dict) -> str:
+    return "Blended" if str(offer.get("deliveryMode") or "").lower() == "blended" else "In person"
+
+
+def course_filter_options(offers: list[dict]) -> list[dict[str, str]]:
+    by_course: dict[str, dict[str, str]] = {}
+    for offer in offers:
+        course_id = str(offer.get("courseId") or "")
+        if not course_id:
+            continue
+        candidate = str(offer.get("courseName") or "").strip()
+        current = by_course.get(course_id)
+        if current is None or len(candidate) < len(current["name"]):
+            by_course[course_id] = {
+                "course_id": course_id,
+                "name": candidate,
+                "delivery": delivery_label(offer),
+            }
+    options = sorted(by_course.values(), key=lambda row: (row["name"].lower(), row["delivery"]))
+    for option in options:
+        option["key"] = f"course-{slug(option['name'])}-{slug(option['delivery'])}"
+    return options
+
+
 def valid_appointment_url(offer: dict) -> bool:
     url = str(offer.get("appointmentUrl") or offer.get("registrationUrl") or "")
     if is_real_session(offer):
@@ -107,9 +132,49 @@ def valid_appointment_url(offer: dict) -> bool:
     )
 
 
+def load_course_routes() -> list[dict]:
+    payload = load_json(COURSE_ROUTES, {})
+    if not isinstance(payload, dict) or payload.get("schemaVersion") != "date-availability-course-routes.v1":
+        raise ValueError(f"Invalid course route configuration: {COURSE_ROUTES}")
+    routes = payload.get("routes", [])
+    if not isinstance(routes, list):
+        raise ValueError("Course route configuration must contain a routes list")
+    seen_routes: set[str] = set()
+    for route in routes:
+        required = {"family_key", "course_id", "route", "name", "hub_path"}
+        if not isinstance(route, dict) or not required.issubset(route) or not all(str(route[k]).strip() for k in required):
+            raise ValueError(f"Incomplete course route configuration: {route}")
+        if route["route"] in seen_routes:
+            raise ValueError(f"Duplicate public course route: {route['route']}")
+        seen_routes.add(str(route["route"]))
+    return routes
+
+
 def collect(now: date) -> tuple[dict[tuple[str, str, str], dict], int]:
     pages: dict[tuple[str, str, str], dict] = {}
     skipped = 0
+    routes = load_course_routes()
+    routes_by_family_course: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    for route in routes:
+        routes_by_family_course[(str(route["family_key"]), str(route["course_id"]))].append(route)
+
+    def add_page(page_key: str, family_key: str, city: str, day: dict, offers: list[dict], route: dict | None = None) -> None:
+        key = (page_key, slug(city), str(day["date"]))
+        pages[key] = {
+            "page_key": page_key,
+            "family_key": family_key,
+            "city": city,
+            "date": str(day["date"]),
+            "display_date": str(day.get("displayDate") or day["date"]),
+            "offers": sorted(offers, key=lambda row: (row["startTime"], row["courseName"])),
+            "authority": day.get("authority", {}),
+            "generated_at": day.get("generated_at"),
+            "is_course_page": route is not None,
+            "display_name": route.get("name") if route else None,
+            "hub_path": route.get("hub_path") if route else None,
+            "course_id": route.get("course_id") if route else None,
+        }
+
     for path in sorted(ARTIFACTS.glob("*.json")):
         payload = load_json(path, {})
         if not isinstance(payload, dict) or payload.get("schemaVersion") != "selector-resolved-availability.v1":
@@ -130,16 +195,14 @@ def collect(now: date) -> tuple[dict[tuple[str, str, str], dict], int]:
                     grouped[city_for(str(offer.get("location") or ""))].append(offer)
             for city, offers in grouped.items():
                 if offers:
-                    key = (page_key, slug(city), str(day["date"]))
-                    pages[key] = {
-                        "page_key": page_key,
-                        "city": city,
-                        "date": str(day["date"]),
-                        "display_date": str(day.get("displayDate") or day["date"]),
-                        "offers": sorted(offers, key=lambda row: (row["startTime"], row["courseName"])),
-                        "authority": payload.get("authority", {}),
-                        "generated_at": payload.get("generatedAt"),
-                    }
+                    source_day = {**day, "authority": payload.get("authority", {}), "generated_at": payload.get("generatedAt")}
+                    add_page(page_key, page_key, city, source_day, offers)
+                    by_course: dict[str, list[dict]] = defaultdict(list)
+                    for offer in offers:
+                        by_course[str(offer.get("courseId") or "")].append(offer)
+                    for course_id, course_offers in by_course.items():
+                        for route in routes_by_family_course.get((page_key, course_id), []):
+                            add_page(str(route["route"]), page_key, city, source_day, course_offers, route)
 
     schedule = load_json(SCHEDULE, {})
     sessions = schedule.get("sessions", []) if isinstance(schedule, dict) else []
@@ -154,14 +217,35 @@ def collect(now: date) -> tuple[dict[tuple[str, str, str], dict], int]:
         if key not in pages:
             pages[key] = {
                 "page_key": page_key,
+                "family_key": page_key,
                 "city": city,
                 "date": day,
                 "display_date": datetime.fromisoformat(day).strftime("%A, %B %-d, %Y") if __import__("os").name != "nt" else datetime.fromisoformat(day).strftime("%A, %B %#d, %Y"),
                 "offers": [],
                 "authority": {"name": "schedule_future real session"},
                 "generated_at": schedule.get("build", {}).get("generated_at"),
+                "is_course_page": False,
             }
         pages[key]["real_sessions"] = pages[key].get("real_sessions", []) + [session]
+        course_id = str(session.get("course_id") or session.get("course_number") or "")
+        for route in routes_by_family_course.get((page_key, course_id), []):
+            course_key = (str(route["route"]), slug(city), day)
+            if course_key not in pages:
+                pages[course_key] = {
+                    "page_key": route["route"],
+                    "family_key": page_key,
+                    "city": city,
+                    "date": day,
+                    "display_date": datetime.fromisoformat(day).strftime("%A, %B %-d, %Y") if __import__("os").name != "nt" else datetime.fromisoformat(day).strftime("%A, %B %#d, %Y"),
+                    "offers": [],
+                    "authority": {"name": "schedule_future real session"},
+                    "generated_at": schedule.get("build", {}).get("generated_at"),
+                    "is_course_page": True,
+                    "display_name": route["name"],
+                    "hub_path": route["hub_path"],
+                    "course_id": route["course_id"],
+                }
+            pages[course_key]["real_sessions"] = pages[course_key].get("real_sessions", []) + [session]
     return pages, skipped
 
 
@@ -236,7 +320,8 @@ def data_layer_script(page: dict, state: str) -> str:
     agency = sorted({str(o.get("certifyingBody") or "") for o in page["offers"]})
     payload = {
         "event": "view_date_availability",
-        "course_family": page["page_key"],
+        "course_family": page.get("family_key") or page["page_key"],
+        "course_route": page["page_key"] if page.get("is_course_page") else "",
         "agency": ",".join(agency),
         "location_name": page["city"],
         "city": page["city"],
@@ -249,6 +334,7 @@ def data_layer_script(page: dict, state: str) -> str:
 
 def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tuple[str, str]:
     key = page["page_key"]
+    family_key = page.get("family_key") or key
     city = page["city"]
     display_date = page["display_date"]
     canonical_path = f"/{key}/{slug(city)}/{page['date']}.html"
@@ -275,8 +361,8 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
     open_appointments = [o for o in page["offers"] if not is_real_session(o)]
     full = bool(matched_anchor_sessions) and not seated_offers and not open_appointments
     state = "expired" if expired else "anchored" if seated_offers or anchor_sessions else "full" if full else "open"
-    family_name = PAGE_NAMES.get(key, key.replace("_", " ").title())
-    hub_path = HUB_PATHS.get(key, f"/{key}.html")
+    family_name = str(page.get("display_name") or PAGE_NAMES.get(family_key, family_key.replace("_", " ").title()))
+    hub_path = str(page.get("hub_path") or HUB_PATHS.get(family_key, f"/{family_key}.html"))
     agency = ", ".join(sorted({str(o.get("certifyingBody") or "") for o in page["offers"] if o.get("certifyingBody")})) or "910CPR"
     title = f"{family_name} in {city} on {display_date} | 910CPR"
     description = f"View current {family_name} start times in {city} for {display_date}. Register through 910CPR using live resolved availability."
@@ -292,9 +378,22 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
           <h2>Classes for {escape(datetime.fromisoformat(page["date"]).strftime("%B %#d" if __import__("os").name == "nt" else "%B %-d"))} have concluded.</h2>
           <p>View the next available {escape(family_name)} dates in {escape(city)}.</p></section>"""
     else:
+        filter_options = course_filter_options([*seated_offers, *open_appointments])
+        filter_keys = {option["course_id"]: option["key"] for option in filter_options}
+        filter_html = ""
+        if len(filter_options) > 1:
+            option_tags = "".join(
+                f'<option value="{escape(option["key"])}">{escape(option["name"])} — {escape(option["delivery"])}</option>'
+                for option in filter_options
+            )
+            filter_html = f"""<div class="course-filter">
+              <label for="course-option-filter">Show course / delivery type</label>
+              <select id="course-option-filter"><option value="all">All course options</option>{option_tags}</select>
+              <p id="course-filter-status" class="course-filter-status" aria-live="polite"></p>
+            </div>"""
         anchor_cards = []
         for offer in seated_offers:
-            anchor_cards.append(f"""<a class="anchor-card" data-registration data-event="select_seated_class" data-anchor="true" href="{escape(str(offer.get("appointmentUrl") or offer.get("registrationUrl")))}">
+            anchor_cards.append(f"""<a class="anchor-card" data-course-option="{escape(filter_keys[str(offer.get("courseId") or "")])}" data-registration data-event="select_seated_class" data-anchor="true" href="{escape(str(offer.get("appointmentUrl") or offer.get("registrationUrl")))}">
               <span class="status-dot">Scheduled class — join this class</span><strong>{escape(str(offer["displayStartTime"]))}</strong>
               <span>{escape(str(offer["courseName"]))}</span><b>Reserve your seat</b></a>""")
         options = []
@@ -304,19 +403,19 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
             if k in seen:
                 continue
             seen.add(k)
-            options.append(f"""<a class="time-choice" data-registration data-event="select_appointment_time" data-anchor="false" href="{escape(str(offer["appointmentUrl"]))}">
+            options.append(f"""<a class="time-choice" data-course-option="{escape(filter_keys[str(offer.get("courseId") or "")])}" data-registration data-event="select_appointment_time" data-anchor="false" href="{escape(str(offer["appointmentUrl"]))}">
               <strong>{escape(str(offer["displayStartTime"]))}</strong><span>{escape(str(offer["courseName"]))}</span><b>Choose this time</b></a>""")
         if anchor_cards:
-            anchor_html = '<h2>Scheduled class — join this class</h2>' + "".join(anchor_cards)
+            anchor_html = '<div data-filter-group="anchor"><h2>Scheduled class — join this class</h2>' + "".join(anchor_cards) + "</div>"
         elif full:
             anchor_html = '<div class="status-panel full"><h2>This date is currently full</h2><p>Choose a nearby date below.</p></div>'
         else:
             anchor_html = '<div class="availability-note"><strong>Open scheduling day</strong><span>Choose any start time currently shown.</span></div>'
         option_html = (
-            '<h2>Additional available start times</h2><div class="time-grid">' + "".join(options) + "</div>"
+            '<div data-filter-group="additional"><h2>Additional available start times</h2><div class="time-grid">' + "".join(options) + "</div></div>"
             if options else ("" if full else '<p class="muted">No additional start times are currently available.</p>')
         )
-        schedule_html = f'<section id="available-times" class="schedule-card">{anchor_html}{option_html}</section>'
+        schedule_html = f'<section id="available-times" class="schedule-card">{filter_html}{anchor_html}{option_html}<p id="course-filter-empty" class="filter-empty" hidden>No available start times match that course option on this date.</p></section>'
     breadcrumbs = {
         "@type": "BreadcrumbList",
         "@id": canonical + "#breadcrumbs",
@@ -359,13 +458,13 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
 <meta property="og:description" content="{escape(description)}"><meta property="og:url" content="{escape(canonical)}"><meta property="og:image" content="{SITE}/images/910CPR_wave.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{escape(title)}"><meta name="twitter:description" content="{escape(description)}">
 <meta name="twitter:image" content="{SITE}/images/910CPR_wave.jpg"><link rel="icon" href="/images/910CPR round __ PNG.png">
-<link rel="stylesheet" href="/css/date-availability.css?v=20260724"><script type="application/ld+json">{schema}</script>{GTM_HEAD_SNIPPET}</head>
+<link rel="stylesheet" href="/css/date-availability.css?v=20260725"><script type="application/ld+json">{schema}</script>{GTM_HEAD_SNIPPET}</head>
 <body data-page-id="{escape(key)}-{escape(slug(city))}-{page['date']}" data-build-id="{escape(build_id)}" data-page-state="{state}">
 {GTM_NOSCRIPT_SNIPPET}{data_layer_script(page, state)}
 <header class="site-header"><a href="/" class="brand"><img src="/images/910CPR_wave.jpg" alt="910CPR"><span>Professional certification training</span></a><a data-event="click_phone" href="tel:+19103955193">{PHONE}</a></header>
 <main><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>›</span><a href="{hub_path}">{escape(family_name)}</a><span>›</span><span>{escape(display_date)}</span></nav>
 <section class="hero"><div><p class="eyebrow">{escape(agency)} training · {escape(city)}, NC</p><h1>{escape(family_name)}</h1><p class="date-line">{escape(display_date)}</p>
-<p class="location-line">{escape(location)}</p>{primary_cta}</div><img src="/images/{'0arc.png' if key == 'arc' else '0hsi.png' if key == 'hsi' else '0aha.png'}" alt="{escape(agency)} training identity"></section>
+<p class="location-line">{escape(location)}</p>{primary_cta}</div><img src="/images/{'0arc.png' if family_key == 'arc' else '0hsi.png' if family_key == 'hsi' else '0aha.png'}" alt="{escape(agency)} training identity"></section>
 <section class="facts" aria-label="Course details"><div><span>Location</span><strong>{escape(city)}, NC</strong></div><div><span>Format</span><strong>In person / blended as listed</strong></div><div><span>Duration</span><strong>Shown by course</strong></div><div><span>Price</span><strong>Shown in registration</strong></div></section>
 {schedule_html}
 <section class="expectations"><div><p class="eyebrow">Before class</p><h2>Arrive ready to begin</h2><p>Plan to arrive a few minutes early. HeartCode students should bring proof that the required online portion is complete.</p></div>
@@ -375,7 +474,7 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
 <section id="upcoming" class="upcoming"><p class="eyebrow">Related dates</p><h2>More {escape(family_name)} dates in {escape(city)}</h2>{upcoming}
 <a class="text-link" data-event="view_more_dates" href="{FULL_SCHEDULE}">View the full schedule →</a></section>
 </main><footer><span>© 910CPR</span><button id="copy-diagnostics" type="button">Copy page diagnostics</button></footer>
-<script src="/assets/date-availability.js?v=20260724" defer></script></body></html>"""
+<script src="/assets/date-availability.js?v=20260725" defer></script></body></html>"""
 
 
 def update_sitemap(paths: list[str]) -> None:
@@ -400,6 +499,31 @@ def build(output_root: Path, now: date) -> dict:
     pages, skipped = collect(now)
     previous = load_json(MANIFEST, {})
     prior_rows = previous.get("pages", []) if isinstance(previous, dict) else []
+    configured_routes = {str(row["route"]): row for row in load_course_routes()}
+    for old in prior_rows:
+        old_date = str(old.get("date") or "")
+        old_page_key = str(old.get("page_key") or "")
+        old_city = str(old.get("city") or "")
+        old_key = (old_page_key, slug(old_city), old_date)
+        if old_key in pages or not old_date or old_date >= now.isoformat():
+            continue
+        route = configured_routes.get(old_page_key)
+        family_key = str(old.get("family_key") or (route or {}).get("family_key") or old_page_key)
+        pages[old_key] = {
+            "page_key": old_page_key,
+            "family_key": family_key,
+            "city": old_city,
+            "date": old_date,
+            "display_date": datetime.fromisoformat(old_date).strftime("%A, %B %-d, %Y") if __import__("os").name != "nt" else datetime.fromisoformat(old_date).strftime("%A, %B %#d, %Y"),
+            "offers": [],
+            "real_sessions": [],
+            "authority": {"name": "durable expired date page"},
+            "generated_at": None,
+            "is_course_page": route is not None,
+            "display_name": route.get("name") if route else None,
+            "hub_path": route.get("hub_path") if route else None,
+            "course_id": route.get("course_id") if route else None,
+        }
     build_id = datetime.now(TZ).isoformat(timespec="seconds")
     page_list = []
     seated_pages = set()
@@ -413,13 +537,16 @@ def build(output_root: Path, now: date) -> dict:
         state = re.search(r'data-page-state="([^"]+)"', html).group(1)
         if state == "anchored":
             seated_pages.add(path)
-        page_list.append({"path": path, "state": state, "page_key": page["page_key"], "city": page["city"], "date": page["date"]})
+        page_list.append({
+            "path": path,
+            "state": state,
+            "page_key": page["page_key"],
+            "family_key": page.get("family_key") or page["page_key"],
+            "page_type": "course_date" if page.get("is_course_page") else "family_date",
+            "city": page["city"],
+            "date": page["date"],
+        })
     if output_root == DOCS:
-        for old in prior_rows:
-            if old.get("path") not in {p["path"] for p in page_list}:
-                old_path = DOCS / str(old.get("path") or "").lstrip("/")
-                if old_path.exists() and str(old.get("date") or "") < now.isoformat():
-                    page_list.append(old)
         manifest = {"schemaVersion": "date-availability-manifest.v1", "generatedAt": build_id, "pages": page_list}
         MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         update_sitemap([row["path"] for row in page_list])
@@ -427,6 +554,8 @@ def build(output_root: Path, now: date) -> dict:
         report = {
             "generated_at": build_id,
             "date_pages_generated": len(page_list),
+            "family_date_pages_generated": sum(row.get("page_type") != "course_date" for row in page_list),
+            "course_date_pages_generated": sum(row.get("page_type") == "course_date" for row in page_list),
             "seated_class_pages_generated_by_date_builder": 0,
             "anchored_date_pages_generated": len(seated_pages),
             "real_session_landers_present": len(list((DOCS / "classes").glob("*.html"))) - int((DOCS / "classes" / "index.html").exists()),

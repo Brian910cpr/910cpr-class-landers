@@ -1,19 +1,21 @@
 {
-  "generated_at": "2026-07-24T15:38:30-04:00",
-  "date_pages_generated": 534,
+  "generated_at": "2026-07-25T09:41:08-04:00",
+  "date_pages_generated": 2062,
+  "family_date_pages_generated": 544,
+  "course_date_pages_generated": 1518,
   "seated_class_pages_generated_by_date_builder": 0,
-  "anchored_date_pages_generated": 8,
-  "real_session_landers_present": 23,
+  "anchored_date_pages_generated": 63,
+  "real_session_landers_present": 52,
   "skipped_empty_or_invalid_offers": 0,
   "state_counts": {
-    "full": 1,
-    "anchored": 8,
-    "open": 525
+    "expired": 1,
+    "anchored": 63,
+    "open": 1998
   },
   "examples": {
-    "open": "https://www.910cpr.com/arc/wilmington/2026-07-25.html",
+    "open": "https://www.910cpr.com/aha-bls-provider/wilmington/2026-07-26.html",
     "anchored": "https://www.910cpr.com/acls/wilmington/2026-07-29.html",
-    "full": "https://www.910cpr.com/acls/wilmington/2026-07-24.html",
-    "expired": null
+    "full": null,
+    "expired": "https://www.910cpr.com/acls/wilmington/2026-07-24.html"
   }
 }

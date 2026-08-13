@@ -26,14 +26,24 @@ class DateAvailabilityPagesTests(unittest.TestCase):
         self.assertTrue(all(re.search(r"/\d{4}-\d{2}-\d{2}\.html$", p.as_posix()) for p in self.pages))
 
     def test_appointment_links_preserve_resolved_identifiers(self):
+        resolved_urls = set()
+        for artifact in builder.ARTIFACTS.glob("*.json"):
+            payload = json.loads(artifact.read_text(encoding="utf-8"))
+            for day in payload.get("dates", []):
+                for slot in day.get("startTimes", []):
+                    for offer in slot.get("courses", []):
+                        if offer.get("publicSelectable") and offer.get("appointmentUrl"):
+                            resolved_urls.add(str(offer["appointmentUrl"]))
         checked = 0
         for path in self.pages:
             html = path.read_text(encoding="utf-8")
             for url in re.findall(r'href="([^"]*appointmentDayId[^"]+)"', html):
-                query = parse_qs(urlparse(url.replace("&amp;", "&")).query)
+                raw_url = url.replace("&amp;", "&")
+                query = parse_qs(urlparse(raw_url).query)
                 self.assertTrue(query["appointmentDayId"][0])
                 self.assertTrue(query["startTime"][0])
                 self.assertTrue(query["courseId"][0])
+                self.assertIn(raw_url, resolved_urls)
                 checked += 1
         self.assertGreater(checked, 0)
 
@@ -74,7 +84,8 @@ class DateAvailabilityPagesTests(unittest.TestCase):
     def test_open_page_hero_routes_to_course_family_without_preselecting(self):
         open_pages = [
             path for path in self.pages
-            if 'data-page-state="open"' in path.read_text(encoding="utf-8")
+            if "/arc/" in path.as_posix()
+            and 'data-page-state="open"' in path.read_text(encoding="utf-8")
         ]
         self.assertTrue(open_pages)
         html = open_pages[0].read_text(encoding="utf-8")
@@ -83,6 +94,50 @@ class DateAvailabilityPagesTests(unittest.TestCase):
         self.assertIn("Choose your course", hero)
         self.assertNotIn("data-registration", hero)
         self.assertNotIn("appointmentDayId", hero)
+
+    def test_generates_exact_course_date_pages_from_route_config(self):
+        exact = self.root / "aha-bls-provider" / "wilmington" / "2026-08-12.html"
+        self.assertTrue(exact.exists())
+        html = exact.read_text(encoding="utf-8")
+        self.assertIn("<h1>AHA BLS Provider</h1>", html)
+        self.assertNotIn("AHA HeartCode BLS</span>", html)
+        self.assertNotIn("AHA BLS Provider Renewal</span>", html)
+        self.assertNotIn('id="course-option-filter"', html)
+
+    def test_course_routes_are_backed_by_confirmed_resolved_course_ids(self):
+        routes = builder.load_course_routes()
+        artifact_ids = set()
+        for path in builder.ARTIFACTS.glob("*.json"):
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            family = str(payload.get("pageKey") or path.stem)
+            for day in payload.get("dates", []):
+                for slot in day.get("startTimes", []):
+                    for offer in slot.get("courses", []):
+                        if offer.get("publicSelectable"):
+                            artifact_ids.add((family, str(offer.get("courseId") or "")))
+        for route in routes:
+            self.assertIn((route["family_key"], route["course_id"]), artifact_ids)
+
+    def test_detected_course_delivery_filter_uses_resolved_offers(self):
+        filtered_pages = []
+        for path in self.pages:
+            html = path.read_text(encoding="utf-8")
+            if 'id="course-option-filter"' not in html:
+                continue
+            filtered_pages.append(path)
+            self.assertIn('<option value="all">All course options</option>', html)
+            option_keys = set(re.findall(r'<option value="(course-[^"]+)"', html))
+            card_keys = set(re.findall(r'data-course-option="(course-[^"]+)"', html))
+            self.assertEqual(option_keys, card_keys)
+            self.assertNotRegex(html, r'>\s*\d{5,}\s*</option>')
+            self.assertFalse(any(re.fullmatch(r"course-\d+", key) for key in option_keys))
+        self.assertTrue(filtered_pages)
+
+    def test_filter_assets_are_versioned_together(self):
+        for path in self.pages:
+            html = path.read_text(encoding="utf-8")
+            self.assertIn('/css/date-availability.css?v=20260725', html)
+            self.assertIn('/assets/date-availability.js?v=20260725', html)
 
     def test_full_and_expired_state_rendering(self):
         closed = {
@@ -103,6 +158,31 @@ class DateAvailabilityPagesTests(unittest.TestCase):
         self.assertIn('data-page-state="expired"', expired_html)
         self.assertIn("have concluded", expired_html)
         self.assertIn("View upcoming dates", expired_html)
+
+    def test_prior_date_pages_are_rerendered_as_expired(self):
+        original_manifest = builder.MANIFEST
+        try:
+            with tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir)
+                manifest = root / "manifest.json"
+                manifest.write_text(json.dumps({
+                    "pages": [{
+                        "path": "/bls/wilmington/2026-07-23.html",
+                        "state": "full",
+                        "page_key": "bls",
+                        "family_key": "bls",
+                        "page_type": "family_date",
+                        "city": "Wilmington",
+                        "date": "2026-07-23",
+                    }]
+                }), encoding="utf-8")
+                builder.MANIFEST = manifest
+                builder.build(root, date(2026, 7, 24))
+                html = (root / "bls" / "wilmington" / "2026-07-23.html").read_text(encoding="utf-8")
+                self.assertIn('data-page-state="expired"', html)
+                self.assertIn("have concluded", html)
+        finally:
+            builder.MANIFEST = original_manifest
 
 
 if __name__ == "__main__":

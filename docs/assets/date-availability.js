@@ -25,14 +25,42 @@
       registration_type: link.dataset.anchor === "true" ? "seated_class" : "appointment"
     });
   });
+  const courseFilter = document.getElementById("course-option-filter");
+  if (courseFilter) {
+    const choices = Array.from(document.querySelectorAll("[data-course-option]"));
+    const empty = document.getElementById("course-filter-empty");
+    const status = document.getElementById("course-filter-status");
+    const applyCourseFilter = function (trackInteraction) {
+      const selected = courseFilter.value;
+      let shown = 0;
+      choices.forEach(function (choice) {
+        const visible = selected === "all" || choice.dataset.courseOption === selected;
+        choice.hidden = !visible;
+        if (visible) shown += 1;
+      });
+      document.querySelectorAll("[data-filter-group]").forEach(function (group) {
+        group.hidden = !group.querySelector("[data-course-option]:not([hidden])");
+      });
+      if (empty) empty.hidden = shown !== 0;
+      if (status) status.textContent = `${shown} available start ${shown === 1 ? "time" : "times"} shown`;
+      if (trackInteraction) {
+        push("filter_date_availability", {
+          course_filter: selected === "all" ? "all" : courseFilter.options[courseFilter.selectedIndex].text,
+          visible_start_times: shown
+        });
+      }
+    };
+    courseFilter.addEventListener("change", function () { applyCourseFilter(true); });
+    applyCourseFilter(false);
+  }
   document.getElementById("copy-diagnostics")?.addEventListener("click", async function () {
     const text = [
       `URL: ${location.href}`,
       `Page: ${page.dataset.pageId || ""}`,
       `State: ${page.dataset.pageState || ""}`,
       `Build: ${page.dataset.buildId || ""}`,
-      "CSS: date-availability.css?v=20260724",
-      "JS: date-availability.js?v=20260724"
+      "CSS: date-availability.css?v=20260725",
+      "JS: date-availability.js?v=20260725"
     ].join("\n");
     await navigator.clipboard.writeText(text);
     this.textContent = "Diagnostics copied";
