@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-13T17:30:15.623012+00:00",
+  "generated_at": "2026-08-13T18:31:01.527399+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 340,
+    "blocks_generated": 341,
     "blocks_blocked": 10,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -38,11 +38,11 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 135,
+      "blocked": 136,
       "available": 205
     },
     "inverse_generated_availability_blocks": 205,
-    "inverse_blocking_event_blocks": 135
+    "inverse_blocking_event_blocks": 136
   },
   "availability_blocks": [
     {
@@ -254,6 +254,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260820T1500000400",
       "summary": "CFA Pickup",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-20T15:30:00",
+      "end_datetime": "2026-08-20T17:15:00",
+      "date": "2026-08-20",
+      "end_date": "2026-08-20",
+      "start_time": "15:30",
+      "end_time": "17:15",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "chgm2pb2chh62bb16op3cb9k65gmcbb1cgr6cbb56sqj0ob3copm6e9p68@google.com",
+      "summary": "Meet ask...",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -3288,11 +3312,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-13T13:45:00",
+      "start_datetime": "2026-08-13T14:45:00",
       "end_datetime": "2026-08-14T00:00:00",
       "date": "2026-08-13",
       "end_date": "2026-08-14",
-      "start_time": "13:45",
+      "start_time": "14:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -9613,11 +9637,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-11T07:45:00",
-      "end_datetime": "2026-11-11T13:45:00",
+      "end_datetime": "2026-11-11T14:45:00",
       "date": "2026-11-11",
       "end_date": "2026-11-11",
       "start_time": "07:45",
-      "end_time": "13:45",
+      "end_time": "14:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
