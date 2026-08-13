@@ -9,6 +9,7 @@ SCRIPT = ROOT / "docs" / "admin" / "production.js"
 SUMMARY = ROOT / "docs" / "admin" / "production-summary.js"
 API = ROOT / "supabase" / "functions" / "production-board" / "index.ts"
 MIGRATION = ROOT / "supabase" / "migrations" / "20260812161043_production_board.sql"
+CONTEXT_MIGRATION = ROOT / "supabase" / "migrations" / "20260813103000_production_board_context_manifest.sql"
 
 
 class ProductionBoardTests(unittest.TestCase):
@@ -26,9 +27,11 @@ class ProductionBoardTests(unittest.TestCase):
         for lane in ("doing", "next", "decision", "parked"):
             self.assertIn(f"['{lane}'", js)
         self.assertIn("Number(c.value_score)/", js)
-        self.assertIn("Work with ChatGPT", html)
         self.assertIn("/thoughts", js)
         self.assertIn("draggable=\"true\"", js)
+        self.assertIn("Copy standalone handoff", html)
+        self.assertIn("Copy raw card JSON", html)
+        self.assertIn("landerware-card-context-v1", js)
 
     def test_storage_is_server_side_and_seed_is_complete(self):
         sql = MIGRATION.read_text(encoding="utf-8")
@@ -42,6 +45,25 @@ class ProductionBoardTests(unittest.TestCase):
         self.assertIn("Preserve existing course IDs", sql)
         self.assertIn("production_board_thoughts", sql)
         self.assertIn("production_board_activity", sql)
+
+    def test_context_catalog_migration_is_forward_only_and_seeds_tabbed_lanes(self):
+        sql = CONTEXT_MIGRATION.read_text(encoding="utf-8")
+        self.assertIn("add column if not exists context_manifest jsonb", sql)
+        self.assertIn("Tabbed instructor schedule lanes with overlapping cards", sql)
+        self.assertIn("Tabbed Lanes Scheduling", sql)
+        self.assertIn("Build LanderWare production board", sql)
+        self.assertIn('"status": "pending"', sql)
+        self.assertIn('"status": "enriched"', sql)
+
+    def test_api_preserves_a_bounded_context_manifest(self):
+        api = API.read_text(encoding="utf-8")
+        self.assertIn("cleanContext", api)
+        self.assertIn("cleanThread", api)
+        self.assertIn("review_status", api)
+        self.assertIn("confidence", api)
+        self.assertIn("context_manifest:cleanContext", api)
+        self.assertIn("related_threads", api)
+        self.assertNotIn("transcript", api)
 
     def test_operations_has_protected_summary_hook(self):
         dashboard = (ROOT / "docs" / "admin" / "dashboard.html").read_text(encoding="utf-8")
