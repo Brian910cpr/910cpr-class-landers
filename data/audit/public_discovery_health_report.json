@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-08-13T09:30:00-04:00",
+  "source": "docs\\data\\schedule_future.json",
+  "source_age_hours": 0.2,
+  "source_session_count": 34,
+  "current_source_session_count": 34,
+  "past_source_session_count": 0,
+  "sitemap_url_count": 54,
+  "sitemap_session_count": 30,
+  "sitemap_dated_page_count": 0,
+  "public_language_terms_checked": [
+    "RAW SEO POWE-AH",
+    "Brian Override",
+    "Production Board",
+    "Bundle Advantage",
+    "Value / Work",
+    "Run Score",
+    "Discovery Surface Sprint",
+    "BLS/Wilmington pilot",
+    "LanderWare truth layer",
+    "inventory contract",
+    "normalized entity graph",
+    "crawl-surface cleanup",
+    "discovery-health monitor",
+    "implementation status",
+    "architectural migration",
+    "backend epic title",
+    "Harbor Master / Dockmaster",
+    "browser build diagnostics"
+  ],
+  "failures": {
+    "past_sessions_in_upcoming_html": [],
+    "sitemap_past_or_future_date_permutations": [],
+    "broken_sitemap_session_files": [],
+    "session_pages_missing_event_markup": [],
+    "session_pages_with_invalid_json_ld": [],
+    "current_sessions_missing_booking_urls": [],
+    "duplicate_canonical_signals": [],
+    "public_internal_language_leaks": []
+  },
+  "ok": true
+}

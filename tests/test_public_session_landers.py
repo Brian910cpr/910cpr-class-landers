@@ -35,8 +35,58 @@ class PublicSessionLanderTests(unittest.TestCase):
         session = self.session(101, 1, "AHA BLS Provider", days=-1)
         register_url = session["registration_url"]
         status = build_landers.session_lander_status(session, register_url, build_landers.parse_dt(session["start_at"]), self.now)
-        self.assertEqual("past_completed", status)
+        self.assertEqual("completed", status)
         self.assertEqual("index,follow", build_landers.robots_for_lander_status(status, register_url))
+
+    def test_customer_facing_lifecycle_states_are_distinct(self):
+        sold_out = self.session(102, 1, "AHA BLS Provider")
+        sold_out["registration_status"] = "full"
+        self.assertEqual(
+            "sold_out",
+            build_landers.session_lander_status(sold_out, sold_out["registration_url"], build_landers.parse_dt(sold_out["start_at"]), self.now),
+        )
+
+        cancelled = self.session(103, 1, "AHA BLS Provider")
+        cancelled["session_status"] = "cancelled"
+        self.assertEqual(
+            "cancelled",
+            build_landers.session_lander_status(cancelled, cancelled["registration_url"], build_landers.parse_dt(cancelled["start_at"]), self.now),
+        )
+
+        rescheduled = self.session(104, 1, "AHA BLS Provider")
+        rescheduled["session_status"] = "rescheduled"
+        rescheduled["replacement_session_id"] = "105"
+        self.assertEqual(
+            "rescheduled",
+            build_landers.session_lander_status(rescheduled, rescheduled["registration_url"], build_landers.parse_dt(rescheduled["start_at"]), self.now),
+        )
+        self.assertEqual("/classes/105.html", build_landers.replacement_session_url(rescheduled))
+
+    def test_schema_reflects_cancelled_and_sold_out_truth(self):
+        cancelled = build_landers.make_schema(
+            "AHA BLS Provider",
+            self.now,
+            "4018 Shipyard Blvd",
+            "Wilmington",
+            "NC",
+            "https://coastalcprtraining.enrollware.com/enroll?id=103",
+            self_url="https://www.910cpr.com/classes/103.html",
+            lifecycle_status="cancelled",
+        )
+        self.assertIn("EventCancelled", cancelled)
+        self.assertNotIn('"offers"', cancelled)
+
+        sold_out = build_landers.make_schema(
+            "AHA BLS Provider",
+            self.now,
+            "4018 Shipyard Blvd",
+            "Wilmington",
+            "NC",
+            "https://coastalcprtraining.enrollware.com/enroll?id=104",
+            self_url="https://www.910cpr.com/classes/104.html",
+            lifecycle_status="sold_out",
+        )
+        self.assertIn("SoldOut", sold_out)
 
     def test_sidebar_has_one_next_session_for_every_other_current_course(self):
         current = self.session(101, 1, "AHA BLS Provider")

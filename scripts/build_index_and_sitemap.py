@@ -422,7 +422,7 @@ def infer_parent_hub(course_name: str) -> str:
         return "/bls.html"
     if "GROUP" in upper or "ONSITE" in upper:
         return "/group-training.html"
-    return "/index.html"
+    return "/"
 
 
 def course_description(course_name: str) -> str:
@@ -760,19 +760,19 @@ def render_classes_finder_index(
             "title": "Not Sure What I Need",
             "description": "Use this if the wording from your job, school, agency, or licensing board is unclear. We can help you avoid choosing the wrong class.",
             "image": "/images/confused-frustrated.png",
-            "href": "/index.html#class-finder",
+            "href": "/#class-finder",
             "action": "Help me choose",
             "label": "Best when",
             "common": [
                 "Unclear requirement",
-                {"label": "Course finder", "href": "/index.html#class-finder"},
+                {"label": "Course finder", "href": "/#class-finder"},
                 {"label": "Call 910-395-5193", "href": "tel:9103955193"},
                 "Employer request",
             ],
             "link_label": "Contact us",
             "links": [
                 ("Call 910-395-5193", "tel:9103955193"),
-                ("Use course finder", "/index.html#class-finder"),
+                ("Use course finder", "/#class-finder"),
                 ("Group training request", "/group-training.html"),
             ],
         },
@@ -1770,14 +1770,14 @@ ul {{
 <header>
   <div class="wrap">
     <div class="site-brand-bar site-brand-bar-inline">
-      <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+      <a class="site-brand-link" href="/" aria-label="910CPR home">
         <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
         <span class="site-brand-wordmark">910CPR</span>
       </a>
       <a class="site-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
     </div>
     <div class="nav small" style="margin-top:8px;">
-      <a href="/index.html">Home</a>
+      <a href="/">Home</a>
       <a href="/bls.html">BLS</a>
       <a href="/acls.html">ACLS</a>
       <a href="/pals.html">PALS</a>
@@ -1840,7 +1840,7 @@ def render_homepage() -> str:
   <div class="page-shell">
     <main class="card home-shell">
       <header class="site-brand-bar">
-        <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+        <a class="site-brand-link" href="/" aria-label="910CPR home">
           <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
           <span class="site-brand-wordmark">910CPR</span>
         </a>
@@ -2055,7 +2055,11 @@ def build():
         if parsed and parsed.get("course_name", "").strip().lower() != "course":
             parsed_class_page_sessions.append(parsed)
 
-    future_sessions = load_schedule_future_sessions()
+    now_dt = datetime.now(LOCAL_TZ)
+    future_sessions = [
+        session for session in load_schedule_future_sessions()
+        if session.get("_parsed_start") and session["_parsed_start"] > now_dt
+    ]
     future_session_source = public_session_source_label(future_sessions)
     sessions = [
         public_session
@@ -2195,7 +2199,7 @@ def build():
     <h2>Looking for a current class instead of historical listings?</h2>
     <p class="course-description">This page remains available for archive support and crawl coverage, but current public booking flows live on the homepage and family hubs.</p>
     <div class="course-cta-row">
-      <a class="course-primary-cta" href="/index.html">Find current classes</a>
+      <a class="course-primary-cta" href="/">Find current classes</a>
       <a class="course-secondary-cta" href="{ENROLLWARE_SCHEDULE_URL}">Open full class schedule</a>
     </div>
   </div>
@@ -2228,13 +2232,12 @@ def build():
     # -----------------------------------------------------------------
     urls = [
         f"{SITE_BASE}/",
-        f"{SITE_BASE}/index.html",
         f"{SITE_BASE}/bls.html",
         f"{SITE_BASE}/acls.html",
         f"{SITE_BASE}/pals.html",
         f"{SITE_BASE}/heartsaver.html",
         f"{SITE_BASE}/arc",
-        f"{SITE_BASE}/hsi",
+        f"{SITE_BASE}/hsi.html",
         f"{SITE_BASE}/uscg-elementary-first-aid-cpr.html",
         f"{SITE_BASE}/group-training.html",
         f"{SITE_BASE}/request_group_session.html",
@@ -2253,12 +2256,8 @@ def build():
     for location_name in location_groups.keys():
         urls.append(f"{SITE_BASE}/locations/{short_slug(location_name)}.html")
 
-    if DATE_AVAILABILITY_MANIFEST_FILE.exists():
-        date_manifest = json.loads(DATE_AVAILABILITY_MANIFEST_FILE.read_text(encoding="utf-8"))
-        for page in date_manifest.get("pages", []):
-            path = str(page.get("path") or "")
-            if path.startswith("/") and (DOCS_DIR / path.lstrip("/")).exists():
-                urls.append(f"{SITE_BASE}{path}")
+    # Rolling course/date combinations remain available as navigation views,
+    # but are intentionally excluded from the canonical sitemap.
 
     # Deduplicate while preserving order
     seen = set()
@@ -2279,6 +2278,12 @@ def build():
     sitemap_xml.append("</urlset>")
 
     SITEMAP_FILE.write_text("\n".join(sitemap_xml), encoding="utf-8")
+    (DOCS_DIR / "robots.txt").write_text(
+        "User-agent: *\nAllow: /\n\n"
+        "User-agent: OAI-SearchBot\nAllow: /\n\n"
+        f"Sitemap: {SITE_BASE}/sitemap.xml\n",
+        encoding="utf-8",
+    )
     reporter.done(
         current=len(class_files),
         total=len(class_files),

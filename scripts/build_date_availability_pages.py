@@ -248,6 +248,7 @@ def data_layer_script(page: dict, state: str) -> str:
 
 
 def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tuple[str, str]:
+    del build_id
     key = page["page_key"]
     city = page["city"]
     display_date = page["display_date"]
@@ -360,7 +361,7 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{escape(title)}"><meta name="twitter:description" content="{escape(description)}">
 <meta name="twitter:image" content="{SITE}/images/910CPR_wave.jpg"><link rel="icon" href="/images/910CPR round __ PNG.png">
 <link rel="stylesheet" href="/css/date-availability.css?v=20260724"><script type="application/ld+json">{schema}</script>{GTM_HEAD_SNIPPET}</head>
-<body data-page-id="{escape(key)}-{escape(slug(city))}-{page['date']}" data-build-id="{escape(build_id)}" data-page-state="{state}">
+<body data-page-id="{escape(key)}-{escape(slug(city))}-{page['date']}" data-page-state="{state}">
 {GTM_NOSCRIPT_SNIPPET}{data_layer_script(page, state)}
 <header class="site-header"><a href="/" class="brand"><img src="/images/910CPR_wave.jpg" alt="910CPR"><span>Professional certification training</span></a><a data-event="click_phone" href="tel:+19103955193">{PHONE}</a></header>
 <main><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>›</span><a href="{hub_path}">{escape(family_name)}</a><span>›</span><span>{escape(display_date)}</span></nav>
@@ -374,7 +375,7 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
 <p>{ADDRESS} · <a data-event="click_phone" href="tel:+19103955193">{PHONE}</a></p><p>Experienced local instructors and provider credentials are shown when confirmed. Read our <a href="https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403">Google reviews</a>.</p></div></section>
 <section id="upcoming" class="upcoming"><p class="eyebrow">Related dates</p><h2>More {escape(family_name)} dates in {escape(city)}</h2>{upcoming}
 <a class="text-link" data-event="view_more_dates" href="{FULL_SCHEDULE}">View the full schedule →</a></section>
-</main><footer><span>© 910CPR</span><button id="copy-diagnostics" type="button">Copy page diagnostics</button></footer>
+</main><footer><span>© 910CPR</span></footer>
 <script src="/assets/date-availability.js?v=20260724" defer></script></body></html>"""
 
 
@@ -410,7 +411,12 @@ def build(output_root: Path, now: date) -> dict:
         target = output_root / path.lstrip("/")
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(html, encoding="utf-8")
-        state = re.search(r'data-page-state="([^"]+)"', html).group(1)
+        state = (
+            "expired" if 'status-panel expired' in html
+            else "anchored" if 'class="anchor-card"' in html
+            else "full" if 'status-panel full' in html
+            else "open"
+        )
         if state == "anchored":
             seated_pages.add(path)
         page_list.append({"path": path, "state": state, "page_key": page["page_key"], "city": page["city"], "date": page["date"]})
