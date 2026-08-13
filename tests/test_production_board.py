@@ -10,6 +10,7 @@ SUMMARY = ROOT / "docs" / "admin" / "production-summary.js"
 API = ROOT / "supabase" / "functions" / "production-board" / "index.ts"
 MIGRATION = ROOT / "supabase" / "migrations" / "20260812161043_production_board.sql"
 CONTEXT_MIGRATION = ROOT / "supabase" / "migrations" / "20260813103000_production_board_context_manifest.sql"
+PLANNING_MIGRATION = ROOT / "supabase" / "migrations" / "20260813115137_production_board_epics_dependencies.sql"
 
 
 class ProductionBoardTests(unittest.TestCase):
@@ -64,6 +65,22 @@ class ProductionBoardTests(unittest.TestCase):
         self.assertIn("context_manifest:cleanContext", api)
         self.assertIn("related_threads", api)
         self.assertNotIn("transcript", api)
+
+    def test_epics_dependencies_and_bundle_scoring_are_supported(self):
+        sql = PLANNING_MIGRATION.read_text(encoding="utf-8")
+        api = API.read_text(encoding="utf-8")
+        js = SCRIPT.read_text(encoding="utf-8")
+        self.assertIn("production_board_dependencies", sql)
+        self.assertIn("parent_card_id", sql)
+        self.assertIn("original_work_score", sql)
+        self.assertIn("bundled_work_score", sql)
+        self.assertIn("bundle_advantage", sql)
+        self.assertIn("Finish Durable Maxim", sql)
+        self.assertIn("Private LanderWare Platform", sql)
+        self.assertIn("3,000 BLS providers/year", sql)
+        self.assertIn('c.card_type==="epic"', api)
+        self.assertIn("EPIC · ", js)
+        self.assertIn("BLOCKED BY", js)
 
     def test_operations_has_protected_summary_hook(self):
         dashboard = (ROOT / "docs" / "admin" / "dashboard.html").read_text(encoding="utf-8")
