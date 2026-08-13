@@ -20,12 +20,10 @@ try:
     from scripts.title_cleaner import normalize_course_title, seo_title_for_session
     from scripts.build_metadata import apply_build_metadata, current_build_metadata
     from scripts.public_class_eligibility import session_has_public_class_location
-    from scripts.dockmaster import dockmaster_comment
 except ModuleNotFoundError:
     from title_cleaner import normalize_course_title, seo_title_for_session
     from build_metadata import apply_build_metadata, current_build_metadata
     from public_class_eligibility import session_has_public_class_location
-    from dockmaster import dockmaster_comment
 
 TZ = ZoneInfo("America/New_York")
 
@@ -432,29 +430,94 @@ def public_indexable_session(session: dict, register_url: str) -> bool:
 
 def session_lander_status(session: dict, register_url: str, dt: datetime | None, now_dt: datetime) -> str:
     raw_status = str(session.get("session_status") or "").strip().lower()
+    registration_status = str(session.get("registration_status") or "").strip().lower()
     if raw_status == "proposed":
         return "proposed"
-    if any(token in raw_status for token in ("cancel", "removed", "deleted")):
-        return "cancelled_or_removed"
+    if "resched" in raw_status or "resched" in registration_status:
+        return "rescheduled"
+    if "cancel" in raw_status or "cancel" in registration_status:
+        return "cancelled"
     if dt and dt <= now_dt:
-        return "past_completed"
-    if is_cancelled_or_full(session):
-        return "published_closed"
+        return "completed"
+    if registration_status in {"closed", "full"} or session.get("is_full") is True or str(session.get("is_full")).strip().lower() == "true":
+        return "sold_out"
     if public_indexable_session(session, register_url):
-        return "published_upcoming"
-    return "published_closed"
+        return "scheduled"
+    return "unavailable"
 
 
 def status_is_indexable(status: str, register_url: str) -> bool:
-    return status in {"published_upcoming", "past_completed"} and verified_enrollware_url(register_url)
+    return status in {"scheduled", "sold_out", "cancelled", "rescheduled", "completed"} and verified_enrollware_url(register_url)
 
 
 def robots_for_lander_status(status: str, register_url: str) -> str:
     if status_is_indexable(status, register_url):
         return "index,follow"
-    if status == "proposed":
+    if status in {"proposed", "unavailable"}:
         return "noindex,nofollow"
     return "noindex,follow"
+
+
+def lifecycle_presentation(
+    status: str,
+    course_label: str,
+    city: str,
+    type_page_url: str,
+    register_url: str,
+    successor_url: str = "",
+    dt: datetime | None = None,
+) -> dict[str, str]:
+    course = escape(course_label)
+    hub = escape(type_page_url, quote=True)
+    if status == "completed":
+        return {
+            "notice": "This class was held on the date shown below. Looking for an upcoming class?",
+            "button": f'<a class="button secondary" href="{hub}">See Upcoming {course} Classes</a>',
+            "label": "This class has ended",
+            "subhead": f"This {course_label} class was held in {city}. Choose an upcoming class below.",
+        }
+    if status == "cancelled":
+        return {
+            "notice": "This class was cancelled. See the next available classes below.",
+            "button": f'<a class="button secondary" href="{hub}">See Upcoming {course} Classes</a>',
+            "label": "Class cancelled",
+            "subhead": f"This {course_label} class in {city} was cancelled. Current options are listed below.",
+        }
+    if status == "rescheduled":
+        replacement = escape(successor_url or type_page_url, quote=True)
+        return {
+            "notice": "This class time changed. Use the updated class link below.",
+            "button": f'<a class="button primary" href="{replacement}">View the Updated Class</a>',
+            "label": "Class time changed",
+            "subhead": f"This {course_label} class in {city} was rescheduled. Follow the updated class link or choose another current option.",
+        }
+    if status == "sold_out":
+        return {
+            "notice": f"This class is full. See the next available {course_label} classes below.",
+            "button": f'<a class="button secondary" href="{hub}">See Next Available Classes</a>',
+            "label": "This class is full",
+            "subhead": f"This {course_label} class in {city} has no seats available. Choose another date below.",
+        }
+    if status == "scheduled":
+        return {
+            "notice": "",
+            "button": f'<a class="button primary" href="{escape(register_url, quote=True)}">Continue to Registration</a>',
+            "label": "Reserve your seat",
+            "subhead": f"{session_daypart_phrase(dt).capitalize()} in {city} with direct registration after the class details below.",
+        }
+    if status == "proposed":
+        return {
+            "notice": "This time is not yet available for registration.",
+            "button": f'<a class="button secondary" href="{hub}">Request a Time</a>',
+            "label": "Request a class time",
+            "subhead": f"This requested time is not currently bookable. View current {course_label} options or request a class.",
+        }
+    return {
+        "notice": "Registration is not currently available for this class. See upcoming classes below.",
+        "button": f'<a class="button secondary" href="{hub}">View Upcoming Classes</a>',
+        "label": "Choose another class",
+        "subhead": f"Registration is not currently available for this {course_label} class in {city}.",
+    }
 
 
 def render_removed_redirect_page(target_url: str, course_display: str) -> str:
@@ -475,6 +538,17 @@ def render_removed_redirect_page(target_url: str, course_display: str) -> str:
 </body>
 </html>
 """
+
+
+def replacement_session_url(session: dict) -> str:
+    for key in ("rescheduled_to_session_id", "replacement_session_id", "successor_session_id"):
+        value = str(session.get(key) or "").strip()
+        if value.isdigit():
+            return session_lander_url(value)
+    value = str(session.get("rescheduled_to_url") or session.get("replacement_url") or "").strip()
+    if value.startswith("/classes/") or verified_enrollware_url(value):
+        return value
+    return ""
 
 
 def time_of_day_label(dt: datetime | None) -> str:
@@ -563,7 +637,7 @@ def render_session_intro_block(session: dict, course_display: str, dt: datetime 
     aha_phrase = " from an AHA Training Site" if body == "AHA" else ""
     return f"""
 <section class="section-box session-intro-block">
-  <h2>This Session</h2>
+  <h2>This class</h2>
   <p>This {daypart} for {escape(course_display)} is scheduled in {escape(city)} on {escape(date_label)} at {escape(time_label)} for {audience} who need practical certification training{aha_phrase}.{escape(seats_sentence)}</p>
   <p>{escape(session_identity_variant(str(session.get("session_id") or "")))}</p>
 </section>
@@ -674,7 +748,7 @@ def render_faq_block(session: dict, course_display: str) -> str:
         )
     return f"""
 <section class="section-box session-faq-block">
-  <h2>Session FAQ</h2>
+  <h2>Class FAQ</h2>
 {''.join(items)}
 </section>
 """.strip()
@@ -757,6 +831,8 @@ def make_schema(
     description: str = "",
     price=None,
     valid_from_dt=None,
+    lifecycle_status: str = "scheduled",
+    successor_url: str = "",
 ) -> str:
     start_iso = session_dt.isoformat() if session_dt else ""
     end_iso = (end_dt or session_dt).isoformat() if (end_dt or session_dt) else ""
@@ -767,10 +843,11 @@ def make_schema(
         "name": "910CPR",
         "url": "https://www.910cpr.com/",
     }
+    availability = "https://schema.org/InStock" if lifecycle_status == "scheduled" else "https://schema.org/SoldOut"
     offer = {
         "@type": "Offer",
         "url": register_url,
-        "availability": "https://schema.org/InStock",
+        "availability": availability,
         "priceCurrency": "USD",
     }
     price_value = schema_price(price)
@@ -779,6 +856,10 @@ def make_schema(
     if valid_from_iso:
         offer["validFrom"] = valid_from_iso
 
+    event_status = {
+        "cancelled": "https://schema.org/EventCancelled",
+        "rescheduled": "https://schema.org/EventRescheduled",
+    }.get(lifecycle_status, "https://schema.org/EventScheduled")
     schema = {
         "@context": "https://schema.org",
         "@type": "Event",
@@ -787,7 +868,7 @@ def make_schema(
         "url": self_url,
         "sameAs": register_url,
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-        "eventStatus": "https://schema.org/EventScheduled",
+        "eventStatus": event_status,
         "startDate": start_iso,
         "endDate": end_iso,
         "image": absolute_site_url(image_url or default_logo_url()),
@@ -804,8 +885,11 @@ def make_schema(
             },
         },
         "organizer": performer,
-        "offers": offer,
+        "offers": offer if lifecycle_status in {"scheduled", "sold_out"} else None,
+        "previousStartDate": start_iso if lifecycle_status == "rescheduled" else None,
     }
+    if lifecycle_status == "rescheduled" and successor_url:
+        schema["sameAs"] = successor_url
     schema = {key: value for key, value in schema.items() if value not in ("", None)}
     return f"""
 <script type="application/ld+json">
@@ -1500,7 +1584,7 @@ def render_retained_course_lander_page(
   <div class="page-shell">
     <span id="ForwardToEnrollware" aria-hidden="true"></span>
     <header class="site-brand-bar">
-      <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+      <a class="site-brand-link" href="/" aria-label="910CPR home">
         <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
         <span class="site-brand-wordmark">910CPR</span>
       </a>
@@ -1560,19 +1644,17 @@ def render_retained_course_lander_page(
       <p>910CPR keeps older class paths useful by routing students to current course options when the original class ID is no longer active in the current schedule report.</p>
     </section>
 
-    <div class="build-stamp">build: {escape(build_stamp)}</div>
   </div>
 </div>
 <script>
 window.dataLayer = window.dataLayer || [];
 window.dataLayer.push({{
   event: "page_context",
-  page_type: "retained_course_lander",
+  page_type: "course_options",
   session_id: "{escape(session_id)}",
   course_name: "{js_escape(course_display)}",
   register_url: "",
-  course_page_url: "{escape(type_page_url)}",
-  build_stamp: "{escape(build_stamp)}"
+  course_page_url: "{escape(type_page_url)}"
 }});
 </script>
 <script src="/assets/live-sessions.js"></script>
@@ -2134,7 +2216,6 @@ def render_who_for_section(session: dict, course_display: str) -> str:
 
 
 TEMPLATE = """<!DOCTYPE html>
-{dockmaster_comment}
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -2165,7 +2246,7 @@ TEMPLATE = """<!DOCTYPE html>
   <div class="page-shell">
     <span id="ForwardToEnrollware" aria-hidden="true"></span>
     <header class="site-brand-bar">
-      <a class="site-brand-link" href="/index.html" aria-label="910CPR home">
+      <a class="site-brand-link" href="/" aria-label="910CPR home">
         <img class="site-brand-logo" src="/images/logo.png" alt="910CPR logo" loading="eager" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
         <span class="site-brand-wordmark">910CPR</span>
       </a>
@@ -2257,8 +2338,6 @@ TEMPLATE = """<!DOCTYPE html>
 
     {reviews_html}
 
-    <div class="build-stamp">build: {build_stamp}</div>
-
   </div>
 </div>
 
@@ -2276,7 +2355,7 @@ const pageContext = {{
   register_url: "{register_js}",
   schedule_url: "{schedule_url}",
   course_page_url: "{course_page_url}",
-  build_stamp: "{build_stamp}"
+  class_status: "{public_status_js}"
 }};
 
 window.dataLayer.push({{
@@ -2481,16 +2560,27 @@ def main() -> None:
             render_by_id[sid] = session
 
     existing_page_ids = {path.stem for path in OUTPUT_DIR.glob("*.html") if path.name.lower() != "index.html"}
-    deleted_page_ids = []
-    for class_id in ([] if args.anchors_only else sorted(existing_page_ids - canonical_ids)):
-        path = OUTPUT_DIR / f"{class_id}.html"
-        if path.exists():
-            path.unlink()
-            deleted_page_ids.append(class_id)
+    # Feed rollover is not a deletion instruction. Existing public class URLs
+    # remain in place until the documented retention review chooses a 301 or 410.
+    deleted_page_ids: list[str] = []
 
+    # Rebuild retained pages from the existing historical Session source so
+    # their visible state advances after they leave the current feed. A past
+    # class becomes completed; an explicitly cancelled/rescheduled class keeps
+    # that state; a future class absent from the current feed becomes
+    # unavailable and cannot retain a stale booking action.
+    retained_ids = existing_page_ids & set(render_by_id)
     sessions = []
-    for session_id in sorted(canonical_ids):
+    for session_id in sorted(canonical_ids | retained_ids):
         session = dict(render_by_id[session_id])
+        if session_id not in canonical_ids:
+            session["_retained_session"] = True
+            retained_dt = parse_dt(session.get("start_at"))
+            retained_raw_status = str(session.get("session_status") or "").lower()
+            if not retained_dt or retained_dt > datetime.now(TZ):
+                if "cancel" not in retained_raw_status and "resched" not in retained_raw_status:
+                    session["session_status"] = "unavailable"
+                    session["registration_status"] = "unavailable"
         sessions.append(session)
 
     retained_report = write_retained_course_landers_report(data_file, canonical_sessions, sessions, deleted_page_ids)
@@ -2560,7 +2650,7 @@ def main() -> None:
         page_title = dynamic_session_title(session, course_display, dt, city, state)
         session_h1 = dynamic_session_h1(session, course_display, dt, city)
         meta_description = (
-            f"{course_label} session in {city}, {state} on {date} at {time}. "
+            f"{course_label} class in {city}, {state} on {date} at {time}. "
             f"View details and continue to secure registration with 910CPR."
         )
 
@@ -2577,54 +2667,16 @@ def main() -> None:
         lander_status = session_lander_status(session, register, dt, now_dt)
 
         if retained_course_lander:
-            lander_status = "published_closed"
+            lander_status = "unavailable"
 
-        if lander_status == "cancelled_or_removed" and not is_past:
-            output_path.write_text(render_removed_redirect_page(type_page_url, course_display), encoding="utf-8")
-            count += 1
-            continue
-
-        if lander_status == "past_completed":
-            state_notice = """
-<div class="notice">
-  This class has passed. Choose a current option below.
-</div>
-"""
-            button_html = f'<a class="button secondary" href="{escape(register, quote=True)}">Source registration record</a>'
-            cta_panel_label = "Historical class record"
-            hero_subhead = "This class is no longer bookable. Current options are shown above; this record remains for validation."
-        elif retained_course_lander:
-            state_notice = f"""
-<div class="notice">
-  You came here for this course. Current available options are shown below.
-</div>
-"""
-            button_html = f'<a class="button primary" href="{escape(type_page_url, quote=True)}">Need more options?</a>'
-            cta_panel_label = "Current course options"
-            hero_subhead = f"This page now routes you to current {course_label} options instead of an unavailable older class registration."
-        elif lander_status == "published_closed":
-            state_notice = f"""
-<div class="notice">
-  Registration for this class is closed, full, or unavailable. Use the matching current options below.
-</div>
-"""
-            button_html = f'<a class="button secondary" href="{escape(type_page_url, quote=True)}">See Matching Current Sessions</a>'
-            cta_panel_label = "Registration unavailable"
-            hero_subhead = f"This class is listed for {city}, but registration is not currently available. Matching course options are linked below."
-        elif lander_status == "proposed":
-            state_notice = f"""
-<div class="notice">
-  This time is proposed and is not a published Enrollware class.
-</div>
-"""
-            button_html = f'<a class="button secondary" href="{escape(type_page_url, quote=True)}">Request a Time</a>'
-            cta_panel_label = "Proposed time"
-            hero_subhead = f"This proposed time is not bookable. Use current course options or request a matching time."
-        else:
-            state_notice = ""
-            button_html = f'<a class="button primary" href="{escape(register, quote=True)}">Continue to Registration</a>'
-            cta_panel_label = "Reserve your seat"
-            hero_subhead = f"{session_daypart_phrase(dt).capitalize()} in {city} with direct registration after the class details below."
+        successor_url = replacement_session_url(session)
+        presentation = lifecycle_presentation(
+            lander_status, course_label, city, type_page_url, register, successor_url, dt
+        )
+        state_notice = f'<div class="notice">{presentation["notice"]}</div>' if presentation["notice"] else ""
+        button_html = presentation["button"]
+        cta_panel_label = presentation["label"]
+        hero_subhead = presentation["subhead"]
 
         if retained_course_lander:
             upcoming_sessions = get_upcoming_sessions(
@@ -2739,12 +2791,11 @@ def main() -> None:
         session_intro_html = render_session_intro_block(session, course_display, dt, city, location)
         local_reference_html = render_local_reference_block(city, state, location)
         faq_block_html = render_faq_block(session, course_display)
-        trust_badge_title = "Mapped course details" if is_mapped(session) else "Mapping review needed"
+        trust_badge_title = "Course details" if is_mapped(session) else "We're confirming course details"
         trust_badge_copy = same_day_note(session) or "Structured course metadata is shown before schedule alternatives."
 
         html_doc = TEMPLATE.format(
             LANDER_CSS_URL=LANDER_CSS_URL,
-            dockmaster_comment=dockmaster_comment(session_id),
             page_title=escape(page_title),
             meta_description=escape(meta_description),
             robots_value=robots_for_lander_status(lander_status, register),
@@ -2768,6 +2819,8 @@ def main() -> None:
                 description=f"{course_label} in {city} on {date}. {ENTITY_IDENTITY} {schema_description}",
                 price=session.get("price"),
                 valid_from_dt=schema_valid_from_dt,
+                lifecycle_status=lander_status,
+                successor_url=successor_url,
             ) if status_is_indexable(lander_status, register) else "",
             state_notice=state_notice,
             anchor_banner=(
@@ -2814,6 +2867,7 @@ def main() -> None:
             register_js=js_escape(register if not retained_course_lander else ""),
             schedule_url=escape(schedule_url),
             course_page_url=escape(course_page_url),
+            public_status_js=js_escape(lander_status),
         )
         html_doc = apply_build_metadata(html_doc, build_meta)
         html_doc = "\n".join(line.rstrip() for line in html_doc.splitlines()) + "\n"

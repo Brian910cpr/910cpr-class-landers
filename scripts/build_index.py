@@ -346,13 +346,13 @@ def topic_page(slug: str, sessions: list[dict], canonical_path: str) -> str:
     session_lines = "\n".join(format_session_line(item) for item in sessions[:80]) or "<li>No archived sessions are currently grouped under this topic.</li>"
     body = f"""
 <div class="archive-topbar">
-  <div>Archive support page for legacy topic URLs</div>
+  <div>Previously listed course information</div>
   <div><a href="/index.html">Go to current class finder</a></div>
 </div>
 <section class="archive-hero">
-  <p class="archive-eyebrow">Support URL, Not Primary Booking Path</p>
-  <h1>{escape(label)} archive support</h1>
-  <p>This URL stays live for crawl coverage and legacy references, but the real customer decision path starts on the homepage or the related modern hub.</p>
+  <p class="archive-eyebrow">Previously listed classes</p>
+  <h1>Previously listed {escape(label)} classes</h1>
+  <p>This older page remains available for reference. Use the homepage or related course page to find current classes.</p>
   <div class="archive-cta-row">
     <a class="archive-primary" href="{primary_href}">{escape(primary_label(slug))}</a>
     <a class="archive-secondary" href="{ENROLLWARE_SCHEDULE_URL}">Open full Enrollware schedule</a>
@@ -361,14 +361,14 @@ def topic_page(slug: str, sessions: list[dict], canonical_path: str) -> str:
 <section class="archive-grid">
   <article class="archive-panel">
     <h2>What this page is for</h2>
-    <p class="archive-note">This is an archive-support landing page. Humans should use the current booking hubs. Bots can still follow the preserved detail links below.</p>
+    <p class="archive-note">This page provides older class details for reference. Use the current course page when you are ready to choose a class.</p>
   </article>
   <article class="archive-panel">
     <h2>Current snapshot</h2>
     <ul class="archive-link-list">
       <li>{len(sessions)} archived session links grouped here</li>
       <li>{future_count} future sessions still associated with this topic</li>
-      <li>Search engines may crawl these links, but the page itself is marked <code>noindex,follow</code></li>
+      <li>Use the current course page for the latest available dates</li>
     </ul>
   </article>
 </section>
@@ -383,7 +383,7 @@ def topic_page(slug: str, sessions: list[dict], canonical_path: str) -> str:
   </details>
 </section>
 """
-    return page_shell(f"{label} Archive Support | {SITE_NAME}", f"Archive support page for legacy {label} topic URLs.", body, canonical_path)
+    return page_shell(f"Previously Listed {label} Classes | {SITE_NAME}", f"Previously listed {label} class information and links to current training options.", body, canonical_path)
 
 
 def topic_year_page(slug: str, year: str, sessions: list[dict], canonical_path: str) -> str:
@@ -392,13 +392,13 @@ def topic_year_page(slug: str, year: str, sessions: list[dict], canonical_path: 
     session_lines = "\n".join(format_session_line(item) for item in sessions[:120]) or "<li>No archived sessions are currently grouped in this bucket.</li>"
     body = f"""
 <div class="archive-topbar">
-  <div>Archive support page for legacy topic-year URLs</div>
+  <div>Previously listed course information</div>
   <div><a href="{topic_href}">Open topic support page</a></div>
 </div>
 <section class="archive-hero">
-  <p class="archive-eyebrow">Legacy Year Bucket</p>
-  <h1>{escape(label)} {escape(year)} archive support</h1>
-  <p>This page keeps old topic-year URLs crawlable while redirecting real humans back to current decision pages and live scheduling paths.</p>
+  <p class="archive-eyebrow">Previously listed classes</p>
+  <h1>{escape(label)} classes from {escape(year)}</h1>
+  <p>These older class details remain available for reference. Use the current course page to find an upcoming class.</p>
   <div class="archive-cta-row">
     <a class="archive-primary" href="{primary_destination(slug)}">{escape(primary_label(slug))}</a>
     <a class="archive-secondary" href="/index.html">Find current classes</a>
@@ -414,7 +414,7 @@ def topic_year_page(slug: str, year: str, sessions: list[dict], canonical_path: 
   </details>
 </section>
 """
-    return page_shell(f"{label} {year} Archive Support | {SITE_NAME}", f"Archive support page for legacy {label} {year} URLs.", body, canonical_path)
+    return page_shell(f"Previously Listed {label} Classes from {year} | {SITE_NAME}", f"Previously listed {label} class information from {year} and links to current training options.", body, canonical_path)
 
 
 def year_page(year: str, grouped: dict[str, list[dict]], canonical_path: str) -> str:
@@ -427,20 +427,20 @@ def year_page(year: str, grouped: dict[str, list[dict]], canonical_path: str) ->
   <p class="archive-note">{len(sessions)} archived session links in this year bucket.</p>
   <div class="archive-cta-row">
     <a class="archive-primary" href="{primary_destination(slug)}">{escape(primary_label(slug))}</a>
-    <a class="archive-secondary" href="/topics-year/{slug}-{year}.html">Open archive support bucket</a>
+    <a class="archive-secondary" href="/topics-year/{slug}-{year}.html">View previously listed classes</a>
   </div>
 </article>
 """
         )
     body = f"""
 <div class="archive-topbar">
-  <div>Archive support page for legacy yearly indexes</div>
+  <div>Previously listed course information</div>
   <div><a href="/index.html">Return to the live booking homepage</a></div>
 </div>
 <section class="archive-hero">
-  <p class="archive-eyebrow">Legacy Year Index</p>
-  <h1>{escape(year)} archive support</h1>
-  <p>This year index stays crawlable, but humans should use the current homepage, hubs, and exact-course pages instead of browsing historical buckets.</p>
+  <p class="archive-eyebrow">Previously listed classes</p>
+  <h1>Classes from {escape(year)}</h1>
+  <p>These older class details remain available for reference. Use the current homepage and course pages to find upcoming classes.</p>
   <div class="archive-cta-row">
     <a class="archive-primary" href="/index.html">Find current classes</a>
     <a class="archive-secondary" href="{ENROLLWARE_SCHEDULE_URL}">Open full Enrollware schedule</a>
@@ -450,7 +450,7 @@ def year_page(year: str, grouped: dict[str, list[dict]], canonical_path: str) ->
   {''.join(cards) or '<article class="archive-panel"><h2>No grouped topics</h2><p class="archive-note">No sessions were found for this year bucket.</p></article>'}
 </section>
 """
-    return page_shell(f"{year} Archive Support | {SITE_NAME}", f"Archive support page for legacy {year} class indexes.", body, canonical_path)
+    return page_shell(f"Previously Listed Classes from {year} | {SITE_NAME}", f"Previously listed class information from {year} and links to current training options.", body, canonical_path)
 
 
 def load_sessions() -> list[dict]:

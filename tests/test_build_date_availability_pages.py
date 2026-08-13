@@ -45,10 +45,13 @@ class DateAvailabilityPagesTests(unittest.TestCase):
             types = [node.get("@type") for node in schema["@graph"]]
             self.assertIn("BreadcrumbList", types)
             self.assertIn(["Organization", "LocalBusiness"], types)
-            has_seated = 'data-page-state="anchored"' in html or 'data-page-state="full"' in html
+            has_real_class = (
+                'data-page-state="anchored"' in html or 'data-page-state="full"' in html
+            ) and 'data-page-state="expired"' not in html
             has_event = "Event" in types
-            self.assertEqual(has_event, has_seated)
-            anchored += int(has_seated)
+            self.assertEqual(has_real_class, has_event)
+            self.assertIn('content="noindex,follow"', html)
+            anchored += int(has_real_class)
         self.assertGreater(anchored, 0)
 
     def test_one_gtm_and_unique_metadata(self):
@@ -77,12 +80,14 @@ class DateAvailabilityPagesTests(unittest.TestCase):
             if 'data-page-state="open"' in path.read_text(encoding="utf-8")
         ]
         self.assertTrue(open_pages)
-        html = open_pages[0].read_text(encoding="utf-8")
-        hero = re.search(r'<section class="hero">(.*?)</section>', html, re.DOTALL).group(1)
-        self.assertIn('href="/arc.html"', hero)
-        self.assertIn("Choose your course", hero)
-        self.assertNotIn("data-registration", hero)
-        self.assertNotIn("appointmentDayId", hero)
+        for path in open_pages:
+            html = path.read_text(encoding="utf-8")
+            hero = re.search(r'<section class="hero">(.*?)</section>', html, re.DOTALL).group(1)
+            page_key = path.relative_to(self.root).parts[0]
+            self.assertIn(f'href="{builder.hub_path_for(page_key)}"', hero)
+            self.assertIn("Choose your course", hero)
+            self.assertNotIn("data-registration", hero)
+            self.assertNotIn("appointmentDayId", hero)
 
     def test_full_and_expired_state_rendering(self):
         closed = {
@@ -103,6 +108,8 @@ class DateAvailabilityPagesTests(unittest.TestCase):
         self.assertIn('data-page-state="expired"', expired_html)
         self.assertIn("have concluded", expired_html)
         self.assertIn("View upcoming dates", expired_html)
+        expired_schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', expired_html).group(1))
+        self.assertNotIn("Event", [node.get("@type") for node in expired_schema["@graph"]])
 
 
 if __name__ == "__main__":

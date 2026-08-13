@@ -55,29 +55,19 @@ def current_build_metadata(script: str, source: str) -> BuildMetadata:
 
 
 def build_footer_html(meta: BuildMetadata) -> str:
-    return f'<div class="build-stamp">Build: {escape(meta.visible)}</div>'
+    # Build details belong in CI, logs, and authenticated operations tools.
+    # They are intentionally not delivered in public HTML.
+    return ""
 
 
 def apply_build_metadata(html: str, meta: BuildMetadata) -> str:
-    out = re.sub(r"<!-- BUILD_CODE: .*? -->\s*", "", html, count=1, flags=re.S)
-    out = meta.code + "\n" + out.lstrip()
-
-    meta_tag = f'<meta name="build-date" content="{escape(meta.iso)}">'
-    if re.search(r'<meta\s+name=["\']build-date["\'][^>]*>', out, flags=re.I):
-        out = re.sub(r'<meta\s+name=["\']build-date["\'][^>]*>', meta_tag, out, count=1, flags=re.I)
-    else:
-        out = re.sub(r"(<head[^>]*>)", r"\1\n" + meta_tag, out, count=1, flags=re.I)
-
-    footer = build_footer_html(meta)
-    if re.search(r'<div\s+class=["\']build-stamp["\'][^>]*>.*?</div>', out, flags=re.I | re.S):
-        out = re.sub(
-            r'<div\s+class=["\']build-stamp["\'][^>]*>.*?</div>',
-            footer,
-            out,
-            count=1,
-            flags=re.I | re.S,
-        )
-    else:
-        out = re.sub(r"(</body\s*>)", footer + "\n" + r"\1", out, count=1, flags=re.I)
-
-    return out
+    del meta
+    out = re.sub(r"<!-- BUILD_CODE: .*? -->\s*", "", html, flags=re.S)
+    out = re.sub(r'<meta\s+name=["\']build-date["\'][^>]*>\s*', "", out, flags=re.I)
+    out = re.sub(
+        r'<div\s+class=["\']build-stamp["\'][^>]*>.*?</div>\s*',
+        "",
+        out,
+        flags=re.I | re.S,
+    )
+    return out.lstrip()
