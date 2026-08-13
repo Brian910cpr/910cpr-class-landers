@@ -1,12 +1,12 @@
 {
-  "checked_at": "2026-08-13T09:30:00-04:00",
+  "checked_at": "2026-08-13T10:30:00-04:00",
   "source": "docs\\data\\schedule_future.json",
-  "source_age_hours": 0.2,
+  "source_age_hours": 1.2,
   "source_session_count": 34,
-  "current_source_session_count": 34,
-  "past_source_session_count": 0,
-  "sitemap_url_count": 54,
-  "sitemap_session_count": 30,
+  "current_source_session_count": 33,
+  "past_source_session_count": 1,
+  "sitemap_url_count": 45,
+  "sitemap_session_count": 28,
   "sitemap_dated_page_count": 0,
   "public_language_terms_checked": [
     "RAW SEO POWE-AH",
@@ -26,7 +26,13 @@
     "architectural migration",
     "backend epic title",
     "Harbor Master / Dockmaster",
-    "browser build diagnostics"
+    "browser build diagnostics",
+    "course mapping language",
+    "archive/crawl language",
+    "resolved availability language",
+    "class inventory language",
+    "awkward Session heading",
+    "browser debug language"
   ],
   "failures": {
     "past_sessions_in_upcoming_html": [],
@@ -36,6 +42,7 @@
     "session_pages_with_invalid_json_ld": [],
     "current_sessions_missing_booking_urls": [],
     "duplicate_canonical_signals": [],
+    "sitemap_noncanonical_or_noindex_members": [],
     "public_internal_language_leaks": []
   },
   "ok": true

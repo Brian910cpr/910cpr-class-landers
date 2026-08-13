@@ -37,6 +37,12 @@ PROHIBITED_PUBLIC_PATTERNS: dict[str, re.Pattern[str]] = {
         r"BUILD_CODE|data-build-id|copy page diagnostics|class=[\"']build-stamp[\"']|name=[\"']build-date[\"']",
         re.I,
     ),
+    "course mapping language": re.compile(r"mapped course details|mapping review needed", re.I),
+    "archive/crawl language": re.compile(r"archive support|crawl coverage", re.I),
+    "resolved availability language": re.compile(r"live resolved availability", re.I),
+    "class inventory language": re.compile(r"upcoming class inventory", re.I),
+    "awkward Session heading": re.compile(r">\s*this session\s*<", re.I),
+    "browser debug language": re.compile(r"copy diagnostics|diagnostics copied|page diagnostics", re.I),
 }
 
 
@@ -86,6 +92,34 @@ def sitemap_urls(path: Path) -> list[str]:
     if not path.exists():
         return []
     return re.findall(r"<loc>(.*?)</loc>", path.read_text(encoding="utf-8", errors="ignore"), flags=re.I)
+
+
+def public_file_for_url(docs_dir: Path, url: str) -> Path | None:
+    relative = urlparse(url).path.lstrip("/")
+    candidates = [docs_dir / "index.html"] if not relative else []
+    if relative.endswith("/"):
+        candidates.append(docs_dir / relative / "index.html")
+    elif Path(relative).suffix:
+        candidates.append(docs_dir / relative)
+    else:
+        candidates.extend((docs_dir / f"{relative}.html", docs_dir / relative / "index.html"))
+    return next((candidate for candidate in candidates if candidate.is_file()), None)
+
+
+def sitemap_membership_issues(docs_dir: Path, urls: list[str]) -> list[dict[str, str]]:
+    issues: list[dict[str, str]] = []
+    for url in urls:
+        page = public_file_for_url(docs_dir, url)
+        if page is None:
+            issues.append({"url": url, "reason": "missing"})
+            continue
+        html = page.read_text(encoding="utf-8", errors="ignore")
+        canonicals = re.findall(r'<link[^>]+rel=["\']canonical["\'][^>]+href=["\']([^"\']+)', html, flags=re.I)
+        if canonicals != [url]:
+            issues.append({"url": url, "reason": f"canonical:{canonicals}"})
+        if re.search(r'<meta[^>]+name=["\']robots["\'][^>]+content=["\'][^"\']*noindex', html, flags=re.I):
+            issues.append({"url": url, "reason": "noindex"})
+    return issues
 
 
 def audit(repo_root: Path, now: datetime) -> dict[str, Any]:
@@ -138,6 +172,7 @@ def audit(repo_root: Path, now: datetime) -> dict[str, Any]:
         source_age_hours = round((now.timestamp() - schedule_path.stat().st_mtime) / 3600, 1)
 
     language_leaks = scan_public_language(docs_dir)
+    membership_issues = sitemap_membership_issues(docs_dir, urls)
     failures = {
         "past_sessions_in_upcoming_html": stale_upcoming,
         "sitemap_past_or_future_date_permutations": dated_urls,
@@ -146,6 +181,7 @@ def audit(repo_root: Path, now: datetime) -> dict[str, Any]:
         "session_pages_with_invalid_json_ld": invalid_event_json,
         "current_sessions_missing_booking_urls": missing_booking_urls,
         "duplicate_canonical_signals": [key for key, present in duplicate_signals.items() if present],
+        "sitemap_noncanonical_or_noindex_members": membership_issues,
         "public_internal_language_leaks": language_leaks,
     }
     return {

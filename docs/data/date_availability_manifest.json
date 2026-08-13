@@ -1,153 +1,41 @@
 {
   "schemaVersion": "date-availability-manifest.v1",
-  "generatedAt": "2026-07-24T15:38:30-04:00",
+  "generatedAt": "2026-08-13T13:36:35-04:00",
   "pages": [
     {
-      "path": "/acls/wilmington/2026-07-24.html",
-      "state": "full",
+      "path": "/acls/wilmington/2026-08-13.html",
+      "state": "open",
       "page_key": "acls",
       "city": "Wilmington",
-      "date": "2026-07-24"
+      "date": "2026-08-13"
     },
     {
-      "path": "/acls/wilmington/2026-07-29.html",
+      "path": "/acls/wilmington/2026-08-17.html",
       "state": "anchored",
       "page_key": "acls",
       "city": "Wilmington",
-      "date": "2026-07-29"
+      "date": "2026-08-17"
     },
     {
-      "path": "/acls/wilmington/2026-07-30.html",
+      "path": "/acls/wilmington/2026-08-18.html",
       "state": "anchored",
       "page_key": "acls",
       "city": "Wilmington",
-      "date": "2026-07-30"
+      "date": "2026-08-18"
     },
     {
-      "path": "/arc/wilmington/2026-07-25.html",
-      "state": "open",
-      "page_key": "arc",
+      "path": "/acls/wilmington/2026-08-26.html",
+      "state": "anchored",
+      "page_key": "acls",
       "city": "Wilmington",
-      "date": "2026-07-25"
+      "date": "2026-08-26"
     },
     {
-      "path": "/arc/wilmington/2026-07-26.html",
-      "state": "open",
-      "page_key": "arc",
+      "path": "/acls/wilmington/2026-08-31.html",
+      "state": "anchored",
+      "page_key": "acls",
       "city": "Wilmington",
-      "date": "2026-07-26"
-    },
-    {
-      "path": "/arc/wilmington/2026-07-27.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-07-27"
-    },
-    {
-      "path": "/arc/wilmington/2026-07-28.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-07-28"
-    },
-    {
-      "path": "/arc/wilmington/2026-07-30.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-07-30"
-    },
-    {
-      "path": "/arc/wilmington/2026-07-31.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-07-31"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-01.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-01"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-02.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-02"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-03.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-03"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-04.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-04"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-05.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-05"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-06.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-06"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-07.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-07"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-08.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-08"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-09.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-09"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-10.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-10"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-11.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-11"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-12.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-12"
+      "date": "2026-08-31"
     },
     {
       "path": "/arc/wilmington/2026-08-13.html",
@@ -239,13 +127,6 @@
       "page_key": "arc",
       "city": "Wilmington",
       "date": "2026-08-25"
-    },
-    {
-      "path": "/arc/wilmington/2026-08-26.html",
-      "state": "open",
-      "page_key": "arc",
-      "city": "Wilmington",
-      "date": "2026-08-26"
     },
     {
       "path": "/arc/wilmington/2026-08-27.html",
@@ -640,169 +521,176 @@
       "date": "2026-10-21"
     },
     {
-      "path": "/bls/wilmington/2026-07-25.html",
-      "state": "anchored",
-      "page_key": "bls",
-      "city": "Wilmington",
-      "date": "2026-07-25"
-    },
-    {
-      "path": "/bls/wilmington/2026-07-26.html",
+      "path": "/arc/wilmington/2026-10-22.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-07-26"
+      "date": "2026-10-22"
     },
     {
-      "path": "/bls/wilmington/2026-07-27.html",
+      "path": "/arc/wilmington/2026-10-23.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-07-27"
+      "date": "2026-10-23"
     },
     {
-      "path": "/bls/wilmington/2026-07-28.html",
+      "path": "/arc/wilmington/2026-10-24.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-07-28"
+      "date": "2026-10-24"
     },
     {
-      "path": "/bls/wilmington/2026-07-29.html",
-      "state": "anchored",
-      "page_key": "bls",
-      "city": "Wilmington",
-      "date": "2026-07-29"
-    },
-    {
-      "path": "/bls/wilmington/2026-07-30.html",
+      "path": "/arc/wilmington/2026-10-25.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-07-30"
+      "date": "2026-10-25"
     },
     {
-      "path": "/bls/wilmington/2026-07-31.html",
+      "path": "/arc/wilmington/2026-10-26.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-07-31"
+      "date": "2026-10-26"
     },
     {
-      "path": "/bls/wilmington/2026-08-01.html",
+      "path": "/arc/wilmington/2026-10-27.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-01"
+      "date": "2026-10-27"
     },
     {
-      "path": "/bls/wilmington/2026-08-02.html",
+      "path": "/arc/wilmington/2026-10-28.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-02"
+      "date": "2026-10-28"
     },
     {
-      "path": "/bls/wilmington/2026-08-03.html",
+      "path": "/arc/wilmington/2026-10-29.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-03"
+      "date": "2026-10-29"
     },
     {
-      "path": "/bls/wilmington/2026-08-04.html",
+      "path": "/arc/wilmington/2026-10-30.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-04"
+      "date": "2026-10-30"
     },
     {
-      "path": "/bls/wilmington/2026-08-05.html",
+      "path": "/arc/wilmington/2026-10-31.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-05"
+      "date": "2026-10-31"
     },
     {
-      "path": "/bls/wilmington/2026-08-06.html",
+      "path": "/arc/wilmington/2026-11-01.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-06"
+      "date": "2026-11-01"
     },
     {
-      "path": "/bls/wilmington/2026-08-07.html",
+      "path": "/arc/wilmington/2026-11-02.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-07"
+      "date": "2026-11-02"
     },
     {
-      "path": "/bls/wilmington/2026-08-08.html",
+      "path": "/arc/wilmington/2026-11-03.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-08"
+      "date": "2026-11-03"
     },
     {
-      "path": "/bls/wilmington/2026-08-09.html",
+      "path": "/arc/wilmington/2026-11-04.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-09"
+      "date": "2026-11-04"
     },
     {
-      "path": "/bls/wilmington/2026-08-10.html",
+      "path": "/arc/wilmington/2026-11-05.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-10"
+      "date": "2026-11-05"
     },
     {
-      "path": "/bls/wilmington/2026-08-11.html",
+      "path": "/arc/wilmington/2026-11-06.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-11"
+      "date": "2026-11-06"
     },
     {
-      "path": "/bls/wilmington/2026-08-12.html",
+      "path": "/arc/wilmington/2026-11-07.html",
       "state": "open",
-      "page_key": "bls",
+      "page_key": "arc",
       "city": "Wilmington",
-      "date": "2026-08-12"
+      "date": "2026-11-07"
+    },
+    {
+      "path": "/arc/wilmington/2026-11-08.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-11-08"
+    },
+    {
+      "path": "/arc/wilmington/2026-11-09.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-11-09"
+    },
+    {
+      "path": "/arc/wilmington/2026-11-10.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-11-10"
     },
     {
       "path": "/bls/wilmington/2026-08-13.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "bls",
       "city": "Wilmington",
       "date": "2026-08-13"
     },
     {
       "path": "/bls/wilmington/2026-08-14.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "bls",
       "city": "Wilmington",
       "date": "2026-08-14"
     },
     {
       "path": "/bls/wilmington/2026-08-15.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "bls",
       "city": "Wilmington",
       "date": "2026-08-15"
     },
     {
       "path": "/bls/wilmington/2026-08-16.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "bls",
       "city": "Wilmington",
       "date": "2026-08-16"
     },
     {
       "path": "/bls/wilmington/2026-08-17.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "bls",
       "city": "Wilmington",
       "date": "2026-08-17"
@@ -816,7 +704,7 @@
     },
     {
       "path": "/bls/wilmington/2026-08-19.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "bls",
       "city": "Wilmington",
       "date": "2026-08-19"
@@ -851,7 +739,7 @@
     },
     {
       "path": "/bls/wilmington/2026-08-24.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "bls",
       "city": "Wilmington",
       "date": "2026-08-24"
@@ -862,13 +750,6 @@
       "page_key": "bls",
       "city": "Wilmington",
       "date": "2026-08-25"
-    },
-    {
-      "path": "/bls/wilmington/2026-08-26.html",
-      "state": "open",
-      "page_key": "bls",
-      "city": "Wilmington",
-      "date": "2026-08-26"
     },
     {
       "path": "/bls/wilmington/2026-08-27.html",
@@ -1263,130 +1144,144 @@
       "date": "2026-10-21"
     },
     {
-      "path": "/family_cpr/wilmington/2026-07-25.html",
+      "path": "/bls/wilmington/2026-10-22.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-07-25"
+      "date": "2026-10-22"
     },
     {
-      "path": "/family_cpr/wilmington/2026-07-26.html",
+      "path": "/bls/wilmington/2026-10-23.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-07-26"
+      "date": "2026-10-23"
     },
     {
-      "path": "/family_cpr/wilmington/2026-07-27.html",
+      "path": "/bls/wilmington/2026-10-24.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-07-27"
+      "date": "2026-10-24"
     },
     {
-      "path": "/family_cpr/wilmington/2026-07-28.html",
+      "path": "/bls/wilmington/2026-10-25.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-07-28"
+      "date": "2026-10-25"
     },
     {
-      "path": "/family_cpr/wilmington/2026-07-30.html",
+      "path": "/bls/wilmington/2026-10-26.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-07-30"
+      "date": "2026-10-26"
     },
     {
-      "path": "/family_cpr/wilmington/2026-07-31.html",
+      "path": "/bls/wilmington/2026-10-27.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-07-31"
+      "date": "2026-10-27"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-01.html",
+      "path": "/bls/wilmington/2026-10-28.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-01"
+      "date": "2026-10-28"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-02.html",
+      "path": "/bls/wilmington/2026-10-29.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-02"
+      "date": "2026-10-29"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-03.html",
+      "path": "/bls/wilmington/2026-10-30.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-03"
+      "date": "2026-10-30"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-04.html",
+      "path": "/bls/wilmington/2026-10-31.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-04"
+      "date": "2026-10-31"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-05.html",
+      "path": "/bls/wilmington/2026-11-01.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-05"
+      "date": "2026-11-01"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-06.html",
+      "path": "/bls/wilmington/2026-11-02.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-06"
+      "date": "2026-11-02"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-07.html",
+      "path": "/bls/wilmington/2026-11-03.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-07"
+      "date": "2026-11-03"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-08.html",
+      "path": "/bls/wilmington/2026-11-04.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-08"
+      "date": "2026-11-04"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-09.html",
+      "path": "/bls/wilmington/2026-11-05.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-09"
+      "date": "2026-11-05"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-10.html",
+      "path": "/bls/wilmington/2026-11-06.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-10"
+      "date": "2026-11-06"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-11.html",
+      "path": "/bls/wilmington/2026-11-07.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-11"
+      "date": "2026-11-07"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-12.html",
+      "path": "/bls/wilmington/2026-11-08.html",
       "state": "open",
-      "page_key": "family_cpr",
+      "page_key": "bls",
       "city": "Wilmington",
-      "date": "2026-08-12"
+      "date": "2026-11-08"
+    },
+    {
+      "path": "/bls/wilmington/2026-11-09.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-11-09"
+    },
+    {
+      "path": "/bls/wilmington/2026-11-10.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-11-10"
     },
     {
       "path": "/family_cpr/wilmington/2026-08-13.html",
@@ -1417,25 +1312,11 @@
       "date": "2026-08-16"
     },
     {
-      "path": "/family_cpr/wilmington/2026-08-17.html",
-      "state": "open",
-      "page_key": "family_cpr",
-      "city": "Wilmington",
-      "date": "2026-08-17"
-    },
-    {
       "path": "/family_cpr/wilmington/2026-08-18.html",
       "state": "open",
       "page_key": "family_cpr",
       "city": "Wilmington",
       "date": "2026-08-18"
-    },
-    {
-      "path": "/family_cpr/wilmington/2026-08-19.html",
-      "state": "open",
-      "page_key": "family_cpr",
-      "city": "Wilmington",
-      "date": "2026-08-19"
     },
     {
       "path": "/family_cpr/wilmington/2026-08-20.html",
@@ -1478,13 +1359,6 @@
       "page_key": "family_cpr",
       "city": "Wilmington",
       "date": "2026-08-25"
-    },
-    {
-      "path": "/family_cpr/wilmington/2026-08-26.html",
-      "state": "open",
-      "page_key": "family_cpr",
-      "city": "Wilmington",
-      "date": "2026-08-26"
     },
     {
       "path": "/family_cpr/wilmington/2026-08-27.html",
@@ -1879,130 +1753,144 @@
       "date": "2026-10-21"
     },
     {
-      "path": "/heartsaver/wilmington/2026-07-25.html",
-      "state": "anchored",
-      "page_key": "heartsaver",
-      "city": "Wilmington",
-      "date": "2026-07-25"
-    },
-    {
-      "path": "/heartsaver/wilmington/2026-07-26.html",
+      "path": "/family_cpr/wilmington/2026-10-22.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-07-26"
+      "date": "2026-10-22"
     },
     {
-      "path": "/heartsaver/wilmington/2026-07-27.html",
+      "path": "/family_cpr/wilmington/2026-10-23.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-07-27"
+      "date": "2026-10-23"
     },
     {
-      "path": "/heartsaver/wilmington/2026-07-28.html",
-      "state": "anchored",
-      "page_key": "heartsaver",
-      "city": "Wilmington",
-      "date": "2026-07-28"
-    },
-    {
-      "path": "/heartsaver/wilmington/2026-07-30.html",
+      "path": "/family_cpr/wilmington/2026-10-24.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-07-30"
+      "date": "2026-10-24"
     },
     {
-      "path": "/heartsaver/wilmington/2026-07-31.html",
+      "path": "/family_cpr/wilmington/2026-10-25.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-07-31"
+      "date": "2026-10-25"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-01.html",
+      "path": "/family_cpr/wilmington/2026-10-26.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-01"
+      "date": "2026-10-26"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-02.html",
+      "path": "/family_cpr/wilmington/2026-10-27.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-02"
+      "date": "2026-10-27"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-03.html",
+      "path": "/family_cpr/wilmington/2026-10-28.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-03"
+      "date": "2026-10-28"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-04.html",
+      "path": "/family_cpr/wilmington/2026-10-29.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-04"
+      "date": "2026-10-29"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-05.html",
+      "path": "/family_cpr/wilmington/2026-10-30.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-05"
+      "date": "2026-10-30"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-06.html",
+      "path": "/family_cpr/wilmington/2026-10-31.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-06"
+      "date": "2026-10-31"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-07.html",
+      "path": "/family_cpr/wilmington/2026-11-01.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-07"
+      "date": "2026-11-01"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-08.html",
+      "path": "/family_cpr/wilmington/2026-11-02.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-08"
+      "date": "2026-11-02"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-09.html",
+      "path": "/family_cpr/wilmington/2026-11-03.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-09"
+      "date": "2026-11-03"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-10.html",
+      "path": "/family_cpr/wilmington/2026-11-04.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-10"
+      "date": "2026-11-04"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-11.html",
+      "path": "/family_cpr/wilmington/2026-11-05.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-11"
+      "date": "2026-11-05"
     },
     {
-      "path": "/heartsaver/wilmington/2026-08-12.html",
+      "path": "/family_cpr/wilmington/2026-11-06.html",
       "state": "open",
-      "page_key": "heartsaver",
+      "page_key": "family_cpr",
       "city": "Wilmington",
-      "date": "2026-08-12"
+      "date": "2026-11-06"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-11-07.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-11-07"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-11-08.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-11-08"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-11-09.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-11-09"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-11-10.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-11-10"
     },
     {
       "path": "/heartsaver/wilmington/2026-08-13.html",
@@ -2013,7 +1901,7 @@
     },
     {
       "path": "/heartsaver/wilmington/2026-08-14.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "heartsaver",
       "city": "Wilmington",
       "date": "2026-08-14"
@@ -2034,7 +1922,7 @@
     },
     {
       "path": "/heartsaver/wilmington/2026-08-17.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "heartsaver",
       "city": "Wilmington",
       "date": "2026-08-17"
@@ -2048,7 +1936,7 @@
     },
     {
       "path": "/heartsaver/wilmington/2026-08-19.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "heartsaver",
       "city": "Wilmington",
       "date": "2026-08-19"
@@ -2083,7 +1971,7 @@
     },
     {
       "path": "/heartsaver/wilmington/2026-08-24.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "heartsaver",
       "city": "Wilmington",
       "date": "2026-08-24"
@@ -2094,13 +1982,6 @@
       "page_key": "heartsaver",
       "city": "Wilmington",
       "date": "2026-08-25"
-    },
-    {
-      "path": "/heartsaver/wilmington/2026-08-26.html",
-      "state": "open",
-      "page_key": "heartsaver",
-      "city": "Wilmington",
-      "date": "2026-08-26"
     },
     {
       "path": "/heartsaver/wilmington/2026-08-27.html",
@@ -2495,130 +2376,144 @@
       "date": "2026-10-21"
     },
     {
-      "path": "/hsi/wilmington/2026-07-25.html",
+      "path": "/heartsaver/wilmington/2026-10-22.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-07-25"
+      "date": "2026-10-22"
     },
     {
-      "path": "/hsi/wilmington/2026-07-26.html",
+      "path": "/heartsaver/wilmington/2026-10-23.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-07-26"
+      "date": "2026-10-23"
     },
     {
-      "path": "/hsi/wilmington/2026-07-27.html",
+      "path": "/heartsaver/wilmington/2026-10-24.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-07-27"
+      "date": "2026-10-24"
     },
     {
-      "path": "/hsi/wilmington/2026-07-28.html",
+      "path": "/heartsaver/wilmington/2026-10-25.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-07-28"
+      "date": "2026-10-25"
     },
     {
-      "path": "/hsi/wilmington/2026-07-30.html",
+      "path": "/heartsaver/wilmington/2026-10-26.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-07-30"
+      "date": "2026-10-26"
     },
     {
-      "path": "/hsi/wilmington/2026-07-31.html",
+      "path": "/heartsaver/wilmington/2026-10-27.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-07-31"
+      "date": "2026-10-27"
     },
     {
-      "path": "/hsi/wilmington/2026-08-01.html",
+      "path": "/heartsaver/wilmington/2026-10-28.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-01"
+      "date": "2026-10-28"
     },
     {
-      "path": "/hsi/wilmington/2026-08-02.html",
+      "path": "/heartsaver/wilmington/2026-10-29.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-02"
+      "date": "2026-10-29"
     },
     {
-      "path": "/hsi/wilmington/2026-08-03.html",
+      "path": "/heartsaver/wilmington/2026-10-30.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-03"
+      "date": "2026-10-30"
     },
     {
-      "path": "/hsi/wilmington/2026-08-04.html",
+      "path": "/heartsaver/wilmington/2026-10-31.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-04"
+      "date": "2026-10-31"
     },
     {
-      "path": "/hsi/wilmington/2026-08-05.html",
+      "path": "/heartsaver/wilmington/2026-11-01.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-05"
+      "date": "2026-11-01"
     },
     {
-      "path": "/hsi/wilmington/2026-08-06.html",
+      "path": "/heartsaver/wilmington/2026-11-02.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-06"
+      "date": "2026-11-02"
     },
     {
-      "path": "/hsi/wilmington/2026-08-07.html",
+      "path": "/heartsaver/wilmington/2026-11-03.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-07"
+      "date": "2026-11-03"
     },
     {
-      "path": "/hsi/wilmington/2026-08-08.html",
+      "path": "/heartsaver/wilmington/2026-11-04.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-08"
+      "date": "2026-11-04"
     },
     {
-      "path": "/hsi/wilmington/2026-08-09.html",
+      "path": "/heartsaver/wilmington/2026-11-05.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-09"
+      "date": "2026-11-05"
     },
     {
-      "path": "/hsi/wilmington/2026-08-10.html",
+      "path": "/heartsaver/wilmington/2026-11-06.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-10"
+      "date": "2026-11-06"
     },
     {
-      "path": "/hsi/wilmington/2026-08-11.html",
+      "path": "/heartsaver/wilmington/2026-11-07.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-11"
+      "date": "2026-11-07"
     },
     {
-      "path": "/hsi/wilmington/2026-08-12.html",
+      "path": "/heartsaver/wilmington/2026-11-08.html",
       "state": "open",
-      "page_key": "hsi",
+      "page_key": "heartsaver",
       "city": "Wilmington",
-      "date": "2026-08-12"
+      "date": "2026-11-08"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-11-09.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-11-09"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-11-10.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-11-10"
     },
     {
       "path": "/hsi/wilmington/2026-08-13.html",
@@ -2710,13 +2605,6 @@
       "page_key": "hsi",
       "city": "Wilmington",
       "date": "2026-08-25"
-    },
-    {
-      "path": "/hsi/wilmington/2026-08-26.html",
-      "state": "open",
-      "page_key": "hsi",
-      "city": "Wilmington",
-      "date": "2026-08-26"
     },
     {
       "path": "/hsi/wilmington/2026-08-27.html",
@@ -3111,144 +2999,179 @@
       "date": "2026-10-21"
     },
     {
-      "path": "/pals/wilmington/2026-07-29.html",
+      "path": "/hsi/wilmington/2026-10-22.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-22"
+    },
+    {
+      "path": "/hsi/wilmington/2026-10-23.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-23"
+    },
+    {
+      "path": "/hsi/wilmington/2026-10-24.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-24"
+    },
+    {
+      "path": "/hsi/wilmington/2026-10-25.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-25"
+    },
+    {
+      "path": "/hsi/wilmington/2026-10-26.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-26"
+    },
+    {
+      "path": "/hsi/wilmington/2026-10-27.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-27"
+    },
+    {
+      "path": "/hsi/wilmington/2026-10-28.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-28"
+    },
+    {
+      "path": "/hsi/wilmington/2026-10-29.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-29"
+    },
+    {
+      "path": "/hsi/wilmington/2026-10-30.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-30"
+    },
+    {
+      "path": "/hsi/wilmington/2026-10-31.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-10-31"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-01.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-01"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-02.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-02"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-03.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-03"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-04.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-04"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-05.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-05"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-06.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-06"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-07.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-07"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-08.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-08"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-09.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-09"
+    },
+    {
+      "path": "/hsi/wilmington/2026-11-10.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-11-10"
+    },
+    {
+      "path": "/pals/wilmington/2026-08-13.html",
+      "state": "open",
+      "page_key": "pals",
+      "city": "Wilmington",
+      "date": "2026-08-13"
+    },
+    {
+      "path": "/pals/wilmington/2026-08-17.html",
       "state": "anchored",
       "page_key": "pals",
       "city": "Wilmington",
-      "date": "2026-07-29"
+      "date": "2026-08-17"
     },
     {
-      "path": "/pals/wilmington/2026-07-30.html",
+      "path": "/pals/wilmington/2026-08-18.html",
       "state": "anchored",
       "page_key": "pals",
       "city": "Wilmington",
-      "date": "2026-07-30"
+      "date": "2026-08-18"
     },
     {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-25.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
+      "path": "/pals/wilmington/2026-08-26.html",
+      "state": "anchored",
+      "page_key": "pals",
       "city": "Wilmington",
-      "date": "2026-07-25"
+      "date": "2026-08-26"
     },
     {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-26.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
+      "path": "/pals/wilmington/2026-08-31.html",
+      "state": "anchored",
+      "page_key": "pals",
       "city": "Wilmington",
-      "date": "2026-07-26"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-27.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-07-27"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-28.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-07-28"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-30.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-07-30"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-31.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-07-31"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-01.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-01"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-02.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-02"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-03.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-03"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-04.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-04"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-05.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-05"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-06.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-06"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-07.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-07"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-08.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-08"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-09.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-09"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-10.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-10"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-11.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-11"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-12.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-12"
+      "date": "2026-08-31"
     },
     {
       "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-13.html",
@@ -3259,7 +3182,7 @@
     },
     {
       "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-14.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "uscg_first_aid_cpr_aed",
       "city": "Wilmington",
       "date": "2026-08-14"
@@ -3280,7 +3203,7 @@
     },
     {
       "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-17.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "uscg_first_aid_cpr_aed",
       "city": "Wilmington",
       "date": "2026-08-17"
@@ -3294,7 +3217,7 @@
     },
     {
       "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-19.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "uscg_first_aid_cpr_aed",
       "city": "Wilmington",
       "date": "2026-08-19"
@@ -3329,7 +3252,7 @@
     },
     {
       "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-24.html",
-      "state": "open",
+      "state": "anchored",
       "page_key": "uscg_first_aid_cpr_aed",
       "city": "Wilmington",
       "date": "2026-08-24"
@@ -3340,13 +3263,6 @@
       "page_key": "uscg_first_aid_cpr_aed",
       "city": "Wilmington",
       "date": "2026-08-25"
-    },
-    {
-      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-26.html",
-      "state": "open",
-      "page_key": "uscg_first_aid_cpr_aed",
-      "city": "Wilmington",
-      "date": "2026-08-26"
     },
     {
       "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-27.html",
@@ -3739,6 +3655,944 @@
       "page_key": "uscg_first_aid_cpr_aed",
       "city": "Wilmington",
       "date": "2026-10-21"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-22.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-22"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-23.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-23"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-24.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-24"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-25.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-25"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-26.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-26"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-27.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-27"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-28.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-28"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-29.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-29"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-30.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-30"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-10-31.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-10-31"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-01.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-01"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-02.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-02"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-03.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-03"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-04.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-04"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-05.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-05"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-06.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-06"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-07.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-07"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-08.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-08"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-09.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-09"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-11-10.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-11-10"
+    },
+    {
+      "path": "/acls/wilmington/2026-07-24.html",
+      "state": "full",
+      "page_key": "acls",
+      "city": "Wilmington",
+      "date": "2026-07-24"
+    },
+    {
+      "path": "/acls/wilmington/2026-07-29.html",
+      "state": "anchored",
+      "page_key": "acls",
+      "city": "Wilmington",
+      "date": "2026-07-29"
+    },
+    {
+      "path": "/acls/wilmington/2026-07-30.html",
+      "state": "anchored",
+      "page_key": "acls",
+      "city": "Wilmington",
+      "date": "2026-07-30"
+    },
+    {
+      "path": "/arc/wilmington/2026-07-25.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-07-25"
+    },
+    {
+      "path": "/arc/wilmington/2026-07-26.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-07-26"
+    },
+    {
+      "path": "/arc/wilmington/2026-07-27.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-07-27"
+    },
+    {
+      "path": "/arc/wilmington/2026-07-28.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-07-28"
+    },
+    {
+      "path": "/arc/wilmington/2026-07-30.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-07-30"
+    },
+    {
+      "path": "/arc/wilmington/2026-07-31.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-07-31"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-01.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-01"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-02.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-02"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-03.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-03"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-04.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-04"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-05.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-05"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-06.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-06"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-07.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-07"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-08.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-08"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-09.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-09"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-10.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-10"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-11.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-11"
+    },
+    {
+      "path": "/arc/wilmington/2026-08-12.html",
+      "state": "open",
+      "page_key": "arc",
+      "city": "Wilmington",
+      "date": "2026-08-12"
+    },
+    {
+      "path": "/bls/wilmington/2026-07-25.html",
+      "state": "anchored",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-07-25"
+    },
+    {
+      "path": "/bls/wilmington/2026-07-26.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-07-26"
+    },
+    {
+      "path": "/bls/wilmington/2026-07-27.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-07-27"
+    },
+    {
+      "path": "/bls/wilmington/2026-07-28.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-07-28"
+    },
+    {
+      "path": "/bls/wilmington/2026-07-29.html",
+      "state": "anchored",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-07-29"
+    },
+    {
+      "path": "/bls/wilmington/2026-07-30.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-07-30"
+    },
+    {
+      "path": "/bls/wilmington/2026-07-31.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-07-31"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-01.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-01"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-02.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-02"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-03.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-03"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-04.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-04"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-05.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-05"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-06.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-06"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-07.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-07"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-08.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-08"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-09.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-09"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-10.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-10"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-11.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-11"
+    },
+    {
+      "path": "/bls/wilmington/2026-08-12.html",
+      "state": "open",
+      "page_key": "bls",
+      "city": "Wilmington",
+      "date": "2026-08-12"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-07-25.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-07-25"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-07-26.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-07-26"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-07-27.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-07-27"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-07-28.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-07-28"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-07-30.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-07-30"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-07-31.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-07-31"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-01.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-01"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-02.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-02"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-03.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-03"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-04.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-04"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-05.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-05"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-06.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-06"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-07.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-07"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-08.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-08"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-09.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-09"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-10.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-10"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-11.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-11"
+    },
+    {
+      "path": "/family_cpr/wilmington/2026-08-12.html",
+      "state": "open",
+      "page_key": "family_cpr",
+      "city": "Wilmington",
+      "date": "2026-08-12"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-07-25.html",
+      "state": "anchored",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-07-25"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-07-26.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-07-26"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-07-27.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-07-27"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-07-28.html",
+      "state": "anchored",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-07-28"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-07-30.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-07-30"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-07-31.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-07-31"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-01.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-01"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-02.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-02"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-03.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-03"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-04.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-04"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-05.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-05"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-06.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-06"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-07.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-07"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-08.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-08"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-09.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-09"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-10.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-10"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-11.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-11"
+    },
+    {
+      "path": "/heartsaver/wilmington/2026-08-12.html",
+      "state": "open",
+      "page_key": "heartsaver",
+      "city": "Wilmington",
+      "date": "2026-08-12"
+    },
+    {
+      "path": "/hsi/wilmington/2026-07-25.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-07-25"
+    },
+    {
+      "path": "/hsi/wilmington/2026-07-26.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-07-26"
+    },
+    {
+      "path": "/hsi/wilmington/2026-07-27.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-07-27"
+    },
+    {
+      "path": "/hsi/wilmington/2026-07-28.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-07-28"
+    },
+    {
+      "path": "/hsi/wilmington/2026-07-30.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-07-30"
+    },
+    {
+      "path": "/hsi/wilmington/2026-07-31.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-07-31"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-01.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-01"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-02.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-02"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-03.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-03"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-04.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-04"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-05.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-05"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-06.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-06"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-07.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-07"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-08.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-08"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-09.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-09"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-10.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-10"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-11.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-11"
+    },
+    {
+      "path": "/hsi/wilmington/2026-08-12.html",
+      "state": "open",
+      "page_key": "hsi",
+      "city": "Wilmington",
+      "date": "2026-08-12"
+    },
+    {
+      "path": "/pals/wilmington/2026-07-29.html",
+      "state": "anchored",
+      "page_key": "pals",
+      "city": "Wilmington",
+      "date": "2026-07-29"
+    },
+    {
+      "path": "/pals/wilmington/2026-07-30.html",
+      "state": "anchored",
+      "page_key": "pals",
+      "city": "Wilmington",
+      "date": "2026-07-30"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-25.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-07-25"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-26.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-07-26"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-27.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-07-27"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-28.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-07-28"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-30.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-07-30"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-07-31.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-07-31"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-01.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-01"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-02.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-02"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-03.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-03"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-04.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-04"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-05.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-05"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-06.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-06"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-07.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-07"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-08.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-08"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-09.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-09"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-10.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-10"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-11.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-11"
+    },
+    {
+      "path": "/uscg_first_aid_cpr_aed/wilmington/2026-08-12.html",
+      "state": "open",
+      "page_key": "uscg_first_aid_cpr_aed",
+      "city": "Wilmington",
+      "date": "2026-08-12"
     }
   ]
 }

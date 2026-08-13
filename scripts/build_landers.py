@@ -458,6 +458,68 @@ def robots_for_lander_status(status: str, register_url: str) -> str:
     return "noindex,follow"
 
 
+def lifecycle_presentation(
+    status: str,
+    course_label: str,
+    city: str,
+    type_page_url: str,
+    register_url: str,
+    successor_url: str = "",
+    dt: datetime | None = None,
+) -> dict[str, str]:
+    course = escape(course_label)
+    hub = escape(type_page_url, quote=True)
+    if status == "completed":
+        return {
+            "notice": "This class was held on the date shown below. Looking for an upcoming class?",
+            "button": f'<a class="button secondary" href="{hub}">See Upcoming {course} Classes</a>',
+            "label": "This class has ended",
+            "subhead": f"This {course_label} class was held in {city}. Choose an upcoming class below.",
+        }
+    if status == "cancelled":
+        return {
+            "notice": "This class was cancelled. See the next available classes below.",
+            "button": f'<a class="button secondary" href="{hub}">See Upcoming {course} Classes</a>',
+            "label": "Class cancelled",
+            "subhead": f"This {course_label} class in {city} was cancelled. Current options are listed below.",
+        }
+    if status == "rescheduled":
+        replacement = escape(successor_url or type_page_url, quote=True)
+        return {
+            "notice": "This class time changed. Use the updated class link below.",
+            "button": f'<a class="button primary" href="{replacement}">View the Updated Class</a>',
+            "label": "Class time changed",
+            "subhead": f"This {course_label} class in {city} was rescheduled. Follow the updated class link or choose another current option.",
+        }
+    if status == "sold_out":
+        return {
+            "notice": f"This class is full. See the next available {course_label} classes below.",
+            "button": f'<a class="button secondary" href="{hub}">See Next Available Classes</a>',
+            "label": "This class is full",
+            "subhead": f"This {course_label} class in {city} has no seats available. Choose another date below.",
+        }
+    if status == "scheduled":
+        return {
+            "notice": "",
+            "button": f'<a class="button primary" href="{escape(register_url, quote=True)}">Continue to Registration</a>',
+            "label": "Reserve your seat",
+            "subhead": f"{session_daypart_phrase(dt).capitalize()} in {city} with direct registration after the class details below.",
+        }
+    if status == "proposed":
+        return {
+            "notice": "This time is not yet available for registration.",
+            "button": f'<a class="button secondary" href="{hub}">Request a Time</a>',
+            "label": "Request a class time",
+            "subhead": f"This requested time is not currently bookable. View current {course_label} options or request a class.",
+        }
+    return {
+        "notice": "Registration is not currently available for this class. See upcoming classes below.",
+        "button": f'<a class="button secondary" href="{hub}">View Upcoming Classes</a>',
+        "label": "Choose another class",
+        "subhead": f"Registration is not currently available for this {course_label} class in {city}.",
+    }
+
+
 def render_removed_redirect_page(target_url: str, course_display: str) -> str:
     target = escape(target_url or "/schedule.html", quote=True)
     title = escape(f"{course_display} moved | 910CPR")
@@ -575,7 +637,7 @@ def render_session_intro_block(session: dict, course_display: str, dt: datetime 
     aha_phrase = " from an AHA Training Site" if body == "AHA" else ""
     return f"""
 <section class="section-box session-intro-block">
-  <h2>This Session</h2>
+  <h2>This class</h2>
   <p>This {daypart} for {escape(course_display)} is scheduled in {escape(city)} on {escape(date_label)} at {escape(time_label)} for {audience} who need practical certification training{aha_phrase}.{escape(seats_sentence)}</p>
   <p>{escape(session_identity_variant(str(session.get("session_id") or "")))}</p>
 </section>
@@ -686,7 +748,7 @@ def render_faq_block(session: dict, course_display: str) -> str:
         )
     return f"""
 <section class="section-box session-faq-block">
-  <h2>Session FAQ</h2>
+  <h2>Class FAQ</h2>
 {''.join(items)}
 </section>
 """.strip()
@@ -2502,9 +2564,23 @@ def main() -> None:
     # remain in place until the documented retention review chooses a 301 or 410.
     deleted_page_ids: list[str] = []
 
+    # Rebuild retained pages from the existing historical Session source so
+    # their visible state advances after they leave the current feed. A past
+    # class becomes completed; an explicitly cancelled/rescheduled class keeps
+    # that state; a future class absent from the current feed becomes
+    # unavailable and cannot retain a stale booking action.
+    retained_ids = existing_page_ids & set(render_by_id)
     sessions = []
-    for session_id in sorted(canonical_ids):
+    for session_id in sorted(canonical_ids | retained_ids):
         session = dict(render_by_id[session_id])
+        if session_id not in canonical_ids:
+            session["_retained_session"] = True
+            retained_dt = parse_dt(session.get("start_at"))
+            retained_raw_status = str(session.get("session_status") or "").lower()
+            if not retained_dt or retained_dt > datetime.now(TZ):
+                if "cancel" not in retained_raw_status and "resched" not in retained_raw_status:
+                    session["session_status"] = "unavailable"
+                    session["registration_status"] = "unavailable"
         sessions.append(session)
 
     retained_report = write_retained_course_landers_report(data_file, canonical_sessions, sessions, deleted_page_ids)
@@ -2574,7 +2650,7 @@ def main() -> None:
         page_title = dynamic_session_title(session, course_display, dt, city, state)
         session_h1 = dynamic_session_h1(session, course_display, dt, city)
         meta_description = (
-            f"{course_label} session in {city}, {state} on {date} at {time}. "
+            f"{course_label} class in {city}, {state} on {date} at {time}. "
             f"View details and continue to secure registration with 910CPR."
         )
 
@@ -2594,75 +2670,13 @@ def main() -> None:
             lander_status = "unavailable"
 
         successor_url = replacement_session_url(session)
-        if lander_status == "completed":
-            state_notice = """
-<div class="notice">
-  This class was held on the date shown below. Looking for an upcoming class?
-</div>
-"""
-            button_html = f'<a class="button secondary" href="{escape(type_page_url, quote=True)}">See Upcoming {escape(course_label)} Classes</a>'
-            cta_panel_label = "This class has ended"
-            hero_subhead = f"This {course_label} class was held in {city}. Choose an upcoming class below."
-        elif lander_status == "cancelled":
-            state_notice = """
-<div class="notice">
-  This class was cancelled. See the next available classes below.
-</div>
-"""
-            button_html = f'<a class="button secondary" href="{escape(type_page_url, quote=True)}">See Upcoming {escape(course_label)} Classes</a>'
-            cta_panel_label = "Class cancelled"
-            hero_subhead = f"This {course_label} class in {city} was cancelled. Current options are listed below."
-        elif lander_status == "rescheduled":
-            replacement = successor_url or type_page_url
-            state_notice = """
-<div class="notice">
-  This class time changed. Use the updated class link below.
-</div>
-"""
-            button_html = f'<a class="button primary" href="{escape(replacement, quote=True)}">View the Updated Class</a>'
-            cta_panel_label = "Class time changed"
-            hero_subhead = f"This {course_label} class in {city} was rescheduled. Follow the updated class link or choose another current option."
-        elif retained_course_lander:
-            state_notice = f"""
-<div class="notice">
-  You came here for this course. Current available options are shown below.
-</div>
-"""
-            button_html = f'<a class="button primary" href="{escape(type_page_url, quote=True)}">Need more options?</a>'
-            cta_panel_label = "Current course options"
-            hero_subhead = f"This page now routes you to current {course_label} options instead of an unavailable older class registration."
-        elif lander_status == "sold_out":
-            state_notice = f"""
-<div class="notice">
-  This class is full. See the next available {escape(course_label)} classes below.
-</div>
-"""
-            button_html = f'<a class="button secondary" href="{escape(type_page_url, quote=True)}">See Next Available Classes</a>'
-            cta_panel_label = "This class is full"
-            hero_subhead = f"This {course_label} class in {city} has no seats available. Choose another date below."
-        elif lander_status == "proposed":
-            state_notice = f"""
-<div class="notice">
-  This time is proposed and is not a published Enrollware class.
-</div>
-"""
-            button_html = f'<a class="button secondary" href="{escape(type_page_url, quote=True)}">Request a Time</a>'
-            cta_panel_label = "Proposed time"
-            hero_subhead = f"This proposed time is not bookable. Use current course options or request a matching time."
-        elif lander_status == "scheduled":
-            state_notice = ""
-            button_html = f'<a class="button primary" href="{escape(register, quote=True)}">Continue to Registration</a>'
-            cta_panel_label = "Reserve your seat"
-            hero_subhead = f"{session_daypart_phrase(dt).capitalize()} in {city} with direct registration after the class details below."
-        else:
-            state_notice = """
-<div class="notice">
-  Registration is not currently available for this class. See upcoming classes below.
-</div>
-"""
-            button_html = f'<a class="button secondary" href="{escape(type_page_url, quote=True)}">View Upcoming Classes</a>'
-            cta_panel_label = "Choose another class"
-            hero_subhead = f"Registration is not currently available for this {course_label} class in {city}."
+        presentation = lifecycle_presentation(
+            lander_status, course_label, city, type_page_url, register, successor_url, dt
+        )
+        state_notice = f'<div class="notice">{presentation["notice"]}</div>' if presentation["notice"] else ""
+        button_html = presentation["button"]
+        cta_panel_label = presentation["label"]
+        hero_subhead = presentation["subhead"]
 
         if retained_course_lander:
             upcoming_sessions = get_upcoming_sessions(
@@ -2777,7 +2791,7 @@ def main() -> None:
         session_intro_html = render_session_intro_block(session, course_display, dt, city, location)
         local_reference_html = render_local_reference_block(city, state, location)
         faq_block_html = render_faq_block(session, course_display)
-        trust_badge_title = "Mapped course details" if is_mapped(session) else "Mapping review needed"
+        trust_badge_title = "Course details" if is_mapped(session) else "We're confirming course details"
         trust_badge_copy = same_day_note(session) or "Structured course metadata is shown before schedule alternatives."
 
         html_doc = TEMPLATE.format(

@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+import json
+from pathlib import Path
 import unittest
 
 from scripts import build_landers
@@ -108,6 +110,57 @@ class PublicSessionLanderTests(unittest.TestCase):
     def test_class_templates_cache_bust_the_changed_stylesheet(self):
         self.assertIn('href="{LANDER_CSS_URL}"', build_landers.TEMPLATE)
         self.assertIn("?v=", build_landers.LANDER_CSS_URL)
+
+    def test_deterministic_lifecycle_fixtures_render_customer_truth(self):
+        fixtures = json.loads(
+            (Path(__file__).parent / "fixtures" / "public_session_lifecycle.json").read_text(encoding="utf-8")
+        )
+        expected_event = {
+            "scheduled": "EventScheduled",
+            "sold_out": "EventScheduled",
+            "cancelled": "EventCancelled",
+            "rescheduled": "EventRescheduled",
+            "completed": "EventScheduled",
+        }
+        prohibited = ("mapped", "mapping", "inventory", "renderer", "generator", "diagnostic")
+        for fixture in fixtures:
+            session = self.session(fixture["id"], 1, "AHA BLS Provider", days=fixture["days"])
+            session.update({key: value for key, value in fixture.items() if key not in {"id", "state", "days"}})
+            status = build_landers.session_lander_status(
+                session, session["registration_url"], build_landers.parse_dt(session["start_at"]), self.now
+            )
+            self.assertEqual(fixture["state"], status)
+            presentation = build_landers.lifecycle_presentation(
+                status,
+                "BLS",
+                "Wilmington",
+                "/bls.html",
+                session["registration_url"],
+                build_landers.replacement_session_url(session),
+                build_landers.parse_dt(session["start_at"]),
+            )
+            rendered = " ".join(presentation.values())
+            self.assertIn('/bls.html', rendered) if status != "scheduled" and status != "rescheduled" else None
+            self.assertFalse(any(term in rendered.lower() for term in prohibited))
+            robots = build_landers.robots_for_lander_status(status, session["registration_url"])
+            self.assertEqual("noindex,nofollow" if status == "unavailable" else "index,follow", robots)
+            if status == "unavailable":
+                self.assertFalse(build_landers.status_is_indexable(status, session["registration_url"]))
+            else:
+                schema = build_landers.make_schema(
+                    "AHA BLS Provider",
+                    build_landers.parse_dt(session["start_at"]),
+                    "4018 Shipyard Blvd",
+                    "Wilmington",
+                    "NC",
+                    session["registration_url"],
+                    self_url=f'https://www.910cpr.com/classes/{fixture["id"]}.html',
+                    lifecycle_status=status,
+                    successor_url=build_landers.replacement_session_url(session),
+                )
+                self.assertIn(expected_event[status], schema)
+            if status in {"completed", "cancelled", "rescheduled", "unavailable"}:
+                self.assertNotIn("Continue to Registration", rendered)
 
 
 if __name__ == "__main__":

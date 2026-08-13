@@ -42,6 +42,10 @@ HUB_PATHS = {
 }
 
 
+def hub_path_for(page_key: str) -> str:
+    return HUB_PATHS.get(page_key, f"/{page_key}.html")
+
+
 def slug(value: object) -> str:
     text = re.sub(r"[^a-z0-9]+", "-", str(value or "").lower()).strip("-")
     return text or "wilmington"
@@ -257,9 +261,12 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
     sessions = page.get("real_sessions", [])
     seated_offers = [o for o in page["offers"] if is_real_session(o)]
     anchors = {str(o.get("sourceAvailabilityBlock", {}).get("sessionId") or "") for o in seated_offers}
-    matched_anchor_sessions = [s for s in sessions if str(s.get("session_id") or "") in anchors] or [
-        s for s in sessions if str(s.get("registered_count") or "0") not in {"", "0"}
-    ]
+    matched_anchor_sessions = [s for s in sessions if str(s.get("session_id") or "") in anchors]
+    # A lone real class supplied for the page remains identifiable even when
+    # it is closed and therefore absent from selectable offers. Never infer a
+    # match from unrelated registered classes in a shared date container.
+    if not matched_anchor_sessions and len(sessions) == 1:
+        matched_anchor_sessions = sessions
     anchor_sessions = [
         s for s in matched_anchor_sessions
         if str(s.get("registration_status") or "open").lower() not in {"closed", "full"}
@@ -275,12 +282,13 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
     expired = date.fromisoformat(page["date"]) < now
     open_appointments = [o for o in page["offers"] if not is_real_session(o)]
     full = bool(matched_anchor_sessions) and not seated_offers and not open_appointments
-    state = "expired" if expired else "anchored" if seated_offers or anchor_sessions else "full" if full else "open"
+    has_real_class = bool(matched_anchor_sessions) and not expired
+    state = "expired" if expired else "full" if full else "anchored" if has_real_class else "open"
     family_name = PAGE_NAMES.get(key, key.replace("_", " ").title())
-    hub_path = HUB_PATHS.get(key, f"/{key}.html")
+    hub_path = hub_path_for(key)
     agency = ", ".join(sorted({str(o.get("certifyingBody") or "") for o in page["offers"] if o.get("certifyingBody")})) or "910CPR"
     title = f"{family_name} in {city} on {display_date} | 910CPR"
-    description = f"View current {family_name} start times in {city} for {display_date}. Register through 910CPR using live resolved availability."
+    description = f"View available {family_name} start times in {city} for {display_date}. Choose a course and continue to registration through 910CPR."
     location = clean_location(str((page["offers"] or [{}])[0].get("location") or city))
     related = "".join(
         f'<a data-analytics-event="related_date" href="/{p["page_key"]}/{slug(p["city"])}/{p["date"]}.html"><strong>{escape(p["display_date"])}</strong><span>View availability</span></a>'
@@ -337,10 +345,12 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
         "address": {"@type": "PostalAddress", "streetAddress": "4018 Shipyard Blvd", "addressLocality": "Wilmington", "addressRegion": "NC", "postalCode": "28403", "addressCountry": "US"},
     }
     graph = [organization, breadcrumbs, *course_schema(page, canonical, location)]
-    graph.extend(event_schema(s) for s in matched_anchor_sessions)
+    # Appointment choices do not create Events. A dated view may describe a
+    # real class, but expired generic views must not retain historical Events.
+    graph.extend(event_schema(s) for s in matched_anchor_sessions if has_real_class)
     schema = json.dumps({"@context": "https://schema.org", "@graph": graph}, separators=(",", ":"))
     primary = seated_offers[0] if seated_offers else open_appointments[0] if open_appointments else None
-    if primary and not expired and is_real_session(primary):
+    if primary and not expired and state == "anchored" and is_real_session(primary):
         primary_cta = (
             f'<a class="primary-cta" data-registration data-event="select_seated_class" '
             f'href="{escape(str(primary.get("appointmentUrl") or primary.get("registrationUrl")))}">'
@@ -351,11 +361,13 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
             f'<a class="primary-cta" data-event="view_course_options" href="{hub_path}">'
             "Choose your course</a>"
         )
-    else:
+    elif expired:
         primary_cta = '<a class="primary-cta" data-event="expired_date_recovery" href="#upcoming">View upcoming dates</a>'
+    else:
+        primary_cta = f'<a class="primary-cta" data-event="view_course_options" href="{hub_path}">Choose your course</a>'
     return canonical_path, f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{escape(title)}</title><meta name="description" content="{escape(description)}"><meta name="robots" content="index,follow">
+<title>{escape(title)}</title><meta name="description" content="{escape(description)}"><meta name="robots" content="noindex,follow">
 <link rel="canonical" href="{escape(canonical)}"><meta property="og:type" content="website"><meta property="og:title" content="{escape(title)}">
 <meta property="og:description" content="{escape(description)}"><meta property="og:url" content="{escape(canonical)}"><meta property="og:image" content="{SITE}/images/910CPR_wave.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{escape(title)}"><meta name="twitter:description" content="{escape(description)}">
@@ -397,6 +409,41 @@ def update_sitemap(paths: list[str]) -> None:
     tree.write(SITEMAP, encoding="utf-8", xml_declaration=True)
 
 
+def enforce_generic_date_page_policy(path: Path) -> None:
+    """Keep legacy date views usable while removing them from search competition."""
+    html = path.read_text(encoding="utf-8", errors="ignore")
+    html = re.sub(
+        r'(<meta\s+name=["\']robots["\']\s+content=["\'])[^"\']*(["\'])',
+        r'\1noindex,follow\2',
+        html,
+        flags=re.I,
+    )
+    html = re.sub(
+        r"View current (.*?) start times in (.*?) for (.*?)\. Register through 910CPR using live resolved availability\.",
+        r"View available \1 start times in \2 for \3. Choose a course and continue to registration through 910CPR.",
+        html,
+        flags=re.I,
+    )
+
+    def clean_json_ld(match: re.Match[str]) -> str:
+        opening, payload, closing = match.groups()
+        try:
+            data = json.loads(payload)
+        except json.JSONDecodeError:
+            return match.group(0)
+        if isinstance(data, dict) and isinstance(data.get("@graph"), list):
+            data["@graph"] = [node for node in data["@graph"] if node.get("@type") != "Event"]
+        return opening + json.dumps(data, separators=(",", ":")) + closing
+
+    html = re.sub(
+        r'(<script[^>]+type=["\']application/ld\+json["\'][^>]*>)(.*?)(</script>)',
+        clean_json_ld,
+        html,
+        flags=re.I | re.S,
+    )
+    path.write_text(html, encoding="utf-8")
+
+
 def build(output_root: Path, now: date) -> dict:
     pages, skipped = collect(now)
     previous = load_json(MANIFEST, {})
@@ -426,6 +473,9 @@ def build(output_root: Path, now: date) -> dict:
                 old_path = DOCS / str(old.get("path") or "").lstrip("/")
                 if old_path.exists() and str(old.get("date") or "") < now.isoformat():
                     page_list.append(old)
+        for existing_date_page in DOCS.rglob("*.html"):
+            if re.search(r"/\d{4}-\d{2}-\d{2}\.html$", existing_date_page.as_posix()):
+                enforce_generic_date_page_policy(existing_date_page)
         manifest = {"schemaVersion": "date-availability-manifest.v1", "generatedAt": build_id, "pages": page_list}
         MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         update_sitemap([row["path"] for row in page_list])
