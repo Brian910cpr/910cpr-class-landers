@@ -1828,7 +1828,7 @@ def render_html(payload: dict[str, Any]) -> str:
             let hasSeated = false;
             available.startTimes.forEach(slot => {{
               slot.courses.forEach(course => {{
-                // The Dockmaster reads the manifest before marking each berth.
+                // Read the current options before marking each time.
                 const role = String(course.schedule_role || course.scheduleRole || '').toLowerCase();
                 const isSeated = course.offerType === 'seated_class';
                 const [hour, minute] = slot.startTime.split(':').map(Number);

@@ -1,0 +1,8 @@
+[
+  {"id":"900001","state":"scheduled","days":1,"registration_status":"open"},
+  {"id":"900002","state":"sold_out","days":1,"registration_status":"full"},
+  {"id":"900003","state":"cancelled","days":1,"session_status":"cancelled"},
+  {"id":"900004","state":"rescheduled","days":1,"session_status":"rescheduled","replacement_session_id":"900005"},
+  {"id":"900005","state":"completed","days":-1,"registration_status":"open"},
+  {"id":"900006","state":"unavailable","days":1,"session_status":"unavailable","registration_status":"unavailable"}
+]

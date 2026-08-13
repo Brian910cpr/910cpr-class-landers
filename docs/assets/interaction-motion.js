@@ -26,7 +26,7 @@
     if (!source || !destination) return;
     connect(source, destination);
     if (!window.matchMedia('(max-width: 820px)').matches) return;
-    // The Dockmaster advances the launch only when the crew makes a new choice.
+    // Advance only when the visitor makes a new choice.
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
         const target = destination.getBoundingClientRect();

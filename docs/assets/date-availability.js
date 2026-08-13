@@ -25,16 +25,4 @@
       registration_type: link.dataset.anchor === "true" ? "seated_class" : "appointment"
     });
   });
-  document.getElementById("copy-diagnostics")?.addEventListener("click", async function () {
-    const text = [
-      `URL: ${location.href}`,
-      `Page: ${page.dataset.pageId || ""}`,
-      `State: ${page.dataset.pageState || ""}`,
-      `Build: ${page.dataset.buildId || ""}`,
-      "CSS: date-availability.css?v=20260724",
-      "JS: date-availability.js?v=20260724"
-    ].join("\n");
-    await navigator.clipboard.writeText(text);
-    this.textContent = "Diagnostics copied";
-  });
 })();
