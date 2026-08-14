@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-14T17:56:20.237203+00:00",
+  "generated_at": "2026-08-14T18:57:41.408747+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,27 +22,27 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 355,
-    "blocks_blocked": 10,
+    "blocks_generated": 356,
+    "blocks_blocked": 11,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
       "non_standard_time_increment": 1,
-      "inverse_gap_shorter_than_minimum_consumption": 9
+      "inverse_gap_shorter_than_minimum_consumption": 10
     },
     "blocked_all_reason_counts": {
       "non_standard_time_increment": 1,
-      "inverse_gap_shorter_than_minimum_consumption": 9
+      "inverse_gap_shorter_than_minimum_consumption": 10
     },
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 148,
+      "blocked": 149,
       "available": 207
     },
     "inverse_generated_availability_blocks": 207,
-    "inverse_blocking_event_blocks": 148
+    "inverse_blocking_event_blocks": 149
   },
   "availability_blocks": [
     {
@@ -134,6 +134,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "0247efnshjtkcepukt8lfpnos4@google.com",
       "summary": "TRAVEL",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-08-15T16:30:00",
+      "end_datetime": "2026-08-15T20:00:00",
+      "date": "2026-08-15",
+      "end_date": "2026-08-15",
+      "start_time": "16:30",
+      "end_time": "20:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "4k9785884ssfpias1kgacd29cb@google.com",
+      "summary": "ATV",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -3600,11 +3624,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-14T14:00:00",
+      "start_datetime": "2026-08-14T15:00:00",
       "end_datetime": "2026-08-14T18:00:00",
       "date": "2026-08-14",
       "end_date": "2026-08-14",
-      "start_time": "14:00",
+      "start_time": "15:00",
       "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -3662,11 +3686,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-15T15:45:00",
+      "start_datetime": "2026-08-15T20:00:00",
       "end_datetime": "2026-08-16T00:00:00",
       "date": "2026-08-15",
       "end_date": "2026-08-16",
-      "start_time": "15:45",
+      "start_time": "20:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -9987,11 +10011,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-12T07:45:00",
-      "end_datetime": "2026-11-12T14:00:00",
+      "end_datetime": "2026-11-12T15:00:00",
       "date": "2026-11-12",
       "end_date": "2026-11-12",
       "start_time": "07:45",
-      "end_time": "14:00",
+      "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10025,6 +10049,14 @@
         "non_standard_time_increment"
       ],
       "message": "Calendar event was not usable as an inverse blocking interval."
+    },
+    {
+      "calendar_source_key": "brian_do_not_schedule",
+      "source_type": "inverse_google_calendar",
+      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
+      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
+      "start_datetime": "2026-08-15T15:45:00",
+      "end_datetime": "2026-08-15T16:30:00"
     },
     {
       "calendar_source_key": "brian_do_not_schedule",
