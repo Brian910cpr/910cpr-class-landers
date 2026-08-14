@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-14T20:34:17.872456+00:00",
+  "generated_at": "2026-08-14T21:28:02.216102+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -10048,7 +10048,7 @@
       "source_type": "inverse_google_calendar",
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-08-14T16:45:00",
+      "start_datetime": "2026-08-14T17:30:00",
       "end_datetime": "2026-08-14T18:00:00"
     },
     {
