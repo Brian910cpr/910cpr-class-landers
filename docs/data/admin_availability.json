@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-13T23:44:22.310301+00:00",
+  "generated_at": "2026-08-14T02:07:01.741739+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-13T23:44:21.766385+00:00",
+      "generated_at": "2026-08-14T02:07:01.088647+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-13T23:44:22.310301+00:00",
-      "event_count": 138
+      "generated_at": "2026-08-14T02:07:01.741739+00:00",
+      "event_count": 144
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-13T23:44:21.978439+00:00",
+      "generated_at": "2026-08-14T02:07:01.439052+00:00",
       "event_count": 0
     }
   ],
@@ -45,10 +45,65 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
+      "title": "Travel",
+      "start": "2026-08-15T15:00:00+00:00",
+      "end": "2026-08-15T15:30:00+00:00",
+      "location": "",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Charlie Holt : End of summer slide party",
+      "start": "2026-08-15T15:30:00+00:00",
+      "end": "2026-08-15T19:00:00+00:00",
+      "location": "207 Cabbage Inlet Ln\\, Wilmington\\, NC 28409\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "TRAVEL",
+      "start": "2026-08-15T19:00:00+00:00",
+      "end": "2026-08-15T19:45:00+00:00",
+      "location": "",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Travel / HARD OUT",
+      "start": "2026-08-16T21:00:00+00:00",
+      "end": "2026-08-16T22:00:00+00:00",
+      "location": "",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
       "title": "ADR",
       "start": "2026-08-16T22:00:00+00:00",
       "end": "2026-08-17T10:00:00+00:00",
       "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Travel",
+      "start": "2026-08-17T10:00:00+00:00",
+      "end": "2026-08-17T11:00:00+00:00",
+      "location": "",
       "status": "CONFIRMED"
     },
     {
@@ -159,6 +214,17 @@
       "start": "2026-08-21T06:30:00-04:00",
       "end": "2026-08-21T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Travel",
+      "start": "2026-08-21T10:00:00+00:00",
+      "end": "2026-08-21T11:00:00+00:00",
+      "location": "",
       "status": "CONFIRMED"
     },
     {
