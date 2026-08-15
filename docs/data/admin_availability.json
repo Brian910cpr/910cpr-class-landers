@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-15T20:49:32.164713+00:00",
+  "generated_at": "2026-08-15T21:23:11.496283+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-15T20:49:31.793889+00:00",
+      "generated_at": "2026-08-15T21:23:11.093949+00:00",
       "event_count": 0
     },
     {
@@ -16,7 +16,7 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-15T20:49:32.164713+00:00",
+      "generated_at": "2026-08-15T21:23:11.496283+00:00",
       "event_count": 148
     },
     {
@@ -24,7 +24,7 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-15T20:49:31.941548+00:00",
+      "generated_at": "2026-08-15T21:23:11.269191+00:00",
       "event_count": 0
     }
   ],
