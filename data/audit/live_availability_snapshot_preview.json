@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-15T20:25:31.155212+00:00",
+  "generated_at": "2026-08-15T20:49:32.275766+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 356,
+    "blocks_generated": 355,
     "blocks_blocked": 10,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -38,37 +38,13 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 148,
+      "blocked": 147,
       "available": 208
     },
     "inverse_generated_availability_blocks": 208,
-    "inverse_blocking_event_blocks": 148
+    "inverse_blocking_event_blocks": 147
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-15T16:30:00",
-      "end_datetime": "2026-08-15T20:00:00",
-      "date": "2026-08-15",
-      "end_date": "2026-08-15",
-      "start_time": "16:30",
-      "end_time": "20:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "4k9785884ssfpias1kgacd29cb@google.com",
-      "summary": "ATV",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -3600,11 +3576,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-15T20:00:00",
+      "start_datetime": "2026-08-15T17:00:00",
       "end_datetime": "2026-08-16T00:00:00",
       "date": "2026-08-15",
       "end_date": "2026-08-16",
-      "start_time": "20:00",
+      "start_time": "17:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
