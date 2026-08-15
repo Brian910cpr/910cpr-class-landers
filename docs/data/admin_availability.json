@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-15T15:23:07.403674+00:00",
+  "generated_at": "2026-08-15T15:47:06.206057+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-15T15:23:07.023400+00:00",
+      "generated_at": "2026-08-15T15:47:05.768282+00:00",
       "event_count": 0
     },
     {
@@ -16,30 +16,19 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-15T15:23:07.403674+00:00",
-      "event_count": 150
+      "generated_at": "2026-08-15T15:47:06.206057+00:00",
+      "event_count": 149
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-15T15:23:07.199764+00:00",
+      "generated_at": "2026-08-15T15:47:05.931439+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Charlie Holt : End of summer slide party",
-      "start": "2026-08-15T15:30:00+00:00",
-      "end": "2026-08-15T19:00:00+00:00",
-      "location": "207 Cabbage Inlet Ln\\, Wilmington\\, NC 28409\\, USA",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
