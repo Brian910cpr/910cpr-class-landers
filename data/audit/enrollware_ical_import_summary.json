@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-17T10:56:51.593066-04:00",
+  "generated_at": "2026-08-17T11:30:39.674917-04:00",
   "source": "enrollware_ical",
   "ical_events_read": 328,
   "public_sessions_created": 328,
   "skipped_events": 0,
-  "registration_unavailable_sessions_marked_not_direct_bookable": 303,
+  "registration_unavailable_sessions_marked_not_direct_bookable": 304,
   "unmapped_sessions": 20,
   "prior_sessions_read": 0,
   "sessions_added_compared_with_prior_source": 328,
