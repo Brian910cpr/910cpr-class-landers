@@ -1,14 +1,14 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-08-17T17:36:16.179845+00:00",
+  "generated_at": "2026-08-17T18:43:06.431194+00:00",
   "read_only_snapshot": true,
   "calendar_source_id": "nick_availability",
   "calendar_id": "c_992b654d9adfc7a7ced1ffe4532a186b11b4a1e74c62d48fba07dc4763677b9d@group.calendar.google.com",
   "source_type": "google_calendar",
   "source_display_name": "910CPR - Nick Availability",
   "date_range": {
-    "start": "2026-08-17T17:36:15.577449+00:00",
-    "end": "2026-11-15T17:36:15.577449+00:00",
+    "start": "2026-08-17T18:43:05.843938+00:00",
+    "end": "2026-11-15T18:43:05.843938+00:00",
     "days": 90
   },
   "export_status": "ok",
