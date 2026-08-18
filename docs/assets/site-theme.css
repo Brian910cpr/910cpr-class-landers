@@ -133,6 +133,131 @@ html[data-theme="dark"] body .home-locality {
   background: linear-gradient(135deg, #101b29 0%, #142235 58%, #1d2630 100%) !important;
 }
 
+/* Pills and compact status controls appear across the home, hub, class, and
+   admin views. Give the whole family a dark base before semantic variants. */
+html[data-theme="dark"] body :is(
+  .eyebrow, .badge, .cert-badge, .trust-badge, .finder-pill-tag,
+  .slug-pill-chip, .group-pill-badge, .course-choice-chip,
+  .schedule-cue, .delivery-badge, .status, .pill
+) {
+  background: #1a2b3e !important;
+  color: #e7f1fa !important;
+  border-color: #4b637b !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] body :is(
+  .finder-pill-tag-format, .slug-pill-chip-format, .pill.class, .status.loading
+) {
+  background: #173550 !important;
+  color: #9bd6ff !important;
+  border-color: #376b91 !important;
+}
+
+html[data-theme="dark"] body :is(
+  .finder-pill-tag-popular, .slug-pill-chip-momentum, .pill.offer, .status.good
+) {
+  background: #183a31 !important;
+  color: #9ce1c2 !important;
+  border-color: #36745e !important;
+}
+
+html[data-theme="dark"] body :is(
+  .slug-pill-chip-family, .status.warn
+) {
+  background: #44371c !important;
+  color: #f4d486 !important;
+  border-color: #7e6730 !important;
+}
+
+html[data-theme="dark"] body :is(.pill.block, .status.bad) {
+  background: #482528 !important;
+  color: #ffb4b8 !important;
+  border-color: #81464b !important;
+}
+
+/* Calendar days use a distinct slate scale so they read as controls rather
+   than more content cards. Selection stays unmistakably blue. */
+html[data-theme="dark"] body .calendar-grid {
+  color: #c6d5e3 !important;
+}
+
+html[data-theme="dark"] body :is(.weekday, .calendar-pad) {
+  color: #8296aa !important;
+}
+
+html[data-theme="dark"] body .day-button:not(.is-past) {
+  background: #172a3d !important;
+  color: #dceaf6 !important;
+  border-color: #405b73 !important;
+}
+
+html[data-theme="dark"] body .day-button:not(.is-past):hover {
+  background: #203a52 !important;
+  border-color: #6ea9d0 !important;
+}
+
+html[data-theme="dark"] body .day-button:not(.is-past)[aria-pressed="true"] {
+  background: #126894 !important;
+  color: #ffffff !important;
+  border-color: #8bd4ff !important;
+  box-shadow: 0 0 0 2px rgb(79 180 236 / 28%) !important;
+}
+
+html[data-theme="dark"] body :is(.day-button.is-past, .start-grid button.is-past) {
+  background: #0e1824 !important;
+  color: #667a8e !important;
+  border-color: #26394b !important;
+  opacity: .78 !important;
+}
+
+html[data-theme="dark"] body .day-timeline {
+  background: #0b141e !important;
+  border-color: #385169 !important;
+}
+
+html[data-theme="dark"] body .day-timeline-segment.is-available { background: #53728e !important; }
+html[data-theme="dark"] body .day-timeline-segment.is-seated { background: #55a2d3 !important; }
+html[data-theme="dark"] body .day-timeline-segment.is-barnacle { background: #d1ad4b !important; }
+html[data-theme="dark"] body .day-timeline-segment.is-anchor { background: #55a875 !important; }
+html[data-theme="dark"] body .day-star { color: #81d6a2 !important; }
+
+html[data-theme="dark"] body .start-grid button.is-available {
+  background: #172a3d !important;
+  color: #dceaf6 !important;
+  border-color: #405b73 !important;
+}
+
+html[data-theme="dark"] body .start-grid button.is-seated {
+  background: #173550 !important;
+  color: #a8dcff !important;
+  border-color: #3f789d !important;
+}
+
+html[data-theme="dark"] body .start-grid button.is-barnacle {
+  background: #44371c !important;
+  color: #f4d486 !important;
+  border-color: #846c31 !important;
+}
+
+html[data-theme="dark"] body .start-grid button.is-anchor {
+  background: #183a31 !important;
+  color: #a4e5c8 !important;
+  border-color: #3d7b64 !important;
+}
+
+html[data-theme="dark"] body .start-grid button[aria-pressed="true"] {
+  background: #126894 !important;
+  color: #ffffff !important;
+  border-color: #8bd4ff !important;
+}
+
+html[data-theme="dark"] body :is(.course, .course.is-seated, .course.is-anchor, .course.is-barnacle, .selected-summary) {
+  background: #142335 !important;
+  color: #e5eef7 !important;
+  border-color: #40566d !important;
+}
+
 .site-theme-toggle {
   appearance: none;
   display: inline-flex;
