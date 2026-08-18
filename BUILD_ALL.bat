@@ -57,6 +57,9 @@ if errorlevel 1 goto :fail
 python -m scripts.retrofit_seo_entity
 if errorlevel 1 goto :fail
 
+python -m scripts.inject_global_theme_assets
+if errorlevel 1 goto :fail
+
 python -m scripts.seo_entity_audits
 if errorlevel 1 goto :fail
 

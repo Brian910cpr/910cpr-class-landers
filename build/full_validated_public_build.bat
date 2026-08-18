@@ -65,6 +65,10 @@ echo === Ensure analytics tags ===
 python -m scripts.ensure_analytics_tags || goto :fail
 
 echo.
+echo === Ensure global light/dark theme controls ===
+python -m scripts.inject_global_theme_assets || goto :fail
+
+echo.
 echo === Run unit tests ===
 if /I "%LANDER_SKIP_REPOSITORY_TESTS%"=="1" (
     echo Repository-wide tests are deferred to the caller.
