@@ -10,61 +10,56 @@
 <body>
 <iframe id="workspace" src="/admin/nhcso-training-workspace-v6.html" title="NHCSO Training Workspace"></iframe>
 <script>
-const KEY='lw-nhcso-corp-live-v1';
+const KEY='lw-nhcso-corp-live-v2';
+const OLDKEY='lw-nhcso-corp-live-v1';
 const frame=document.getElementById('workspace');
 frame.addEventListener('load',()=>{
-  const d=frame.contentDocument,w=frame.contentWindow;
-  if(!d)return;
-  const cards=[...d.querySelectorAll('main .card')];
-  const formCard=cards[0], rosterCard=cards[1], notesCard=cards[2];
-  if(!formCard||!rosterCard)return;
-  const selects=formCard.querySelectorAll('select');
-  const inputs=formCard.querySelectorAll('input');
-  const course=selects[0], lead=selects[1], date=inputs[0], time=inputs[1], location=inputs[2], assistants=inputs[3];
-  const roster=rosterCard.querySelector('textarea');
-  if(course)course.id='corpCourse'; if(lead)lead.id='corpLead'; if(date)date.id='corpDate'; if(time)time.id='corpTime'; if(location)location.id='corpLocation'; if(assistants)assistants.id='corpAssistants'; if(roster)roster.id='corpRoster';
+  const d=frame.contentDocument,w=frame.contentWindow;if(!d)return;
+  const cards=[...d.querySelectorAll('main .card')];const formCard=cards[0],rosterCard=cards[1],notesCard=cards[2];if(!formCard||!rosterCard)return;
+  const selects=formCard.querySelectorAll('select'),inputs=formCard.querySelectorAll('input');
+  const course=selects[0],lead=selects[1],date=inputs[0],time=inputs[1],location=inputs[2],assistants=inputs[3];
+  if(course)course.id='corpCourse';if(lead)lead.id='corpLead';if(date)date.id='corpDate';if(time)time.id='corpTime';if(location)location.id='corpLocation';if(assistants)assistants.id='corpAssistants';
+  const oldText=rosterCard.querySelector('textarea');if(oldText)oldText.style.display='none';
 
-  const action=d.createElement('section');
-  action.className='card';
-  action.innerHTML='<div class="toolbar"><div id="corpStatus" class="muted">New classes saved here will appear immediately in My Classes and the calendar on this device.</div><span class="spacer"></span><button class="btn" id="corpClear" type="button">Clear</button><button class="btn primary" id="corpSubmit" type="button" style="font-weight:700;padding:11px 18px">Submit Class</button></div>';
+  const style=d.createElement('style');style.textContent=`
+    .corp-roster{display:grid;gap:8px;margin-top:12px}.corp-person{display:grid;grid-template-columns:28px 1fr 1.25fr 150px auto;gap:8px;align-items:center;padding:9px;border:1px solid #334155;border-radius:9px;background:#091220}.corp-person.inactive{opacity:.5}.corp-person input,.corp-person select{width:100%;background:#091220;color:#f8fafc;border:1px solid #334155;border-radius:8px;padding:9px}.corp-id{font-size:12px;color:#9fb0c7}.corp-x{border:0;background:transparent;color:#9fb0c7;font-size:18px;cursor:pointer}.corp-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.corp-danger{border-color:#7f1d1d!important;color:#fecaca!important}.corp-badge{display:inline-block;padding:4px 8px;border:1px solid #334155;border-radius:999px;font-size:12px;color:#cbd5e1}@media(max-width:760px){.corp-person{grid-template-columns:24px 1fr}.corp-person>*:not(.corp-id){grid-column:2}}
+  `;d.head.appendChild(style);
+
+  rosterCard.querySelector('.notice')?.remove();
+  const intro=d.createElement('div');intro.className='notice';intro.textContent='Participants stay attached to the class as Active, No-show, Rescheduled, or Removed. Non-active records are greyed but remain editable. No individual score entry.';rosterCard.appendChild(intro);
+  const paste=d.createElement('textarea');paste.id='corpPaste';paste.placeholder='Paste names + emails here';paste.style.marginTop='10px';rosterCard.appendChild(paste);
+  const rActions=d.createElement('div');rActions.className='corp-actions';rActions.style.marginTop='8px';rActions.innerHTML='<button class="btn" id="corpParse" type="button">Add pasted people</button><button class="btn" id="corpAddOne" type="button">+ Add one</button><span class="spacer"></span><span id="corpRosterCount" class="corp-badge">0 active</span>';rosterCard.appendChild(rActions);
+  const rList=d.createElement('div');rList.id='corpRosterList';rList.className='corp-roster';rosterCard.appendChild(rList);
+
+  const action=d.createElement('section');action.className='card';action.innerHTML='<div class="toolbar"><div><div id="corpClassId" class="corp-id">New class · class number assigned on first save</div><div id="corpStatus" class="muted">Class number is persistent. Date, time, location, instructors and roster may change.</div></div><span class="spacer"></span><button class="btn" id="corpClear" type="button">New / Clear</button><button class="btn corp-danger" id="corpDelete" type="button" style="display:none">Delete Class</button><button class="btn primary" id="corpSubmit" type="button" style="font-weight:700;padding:11px 18px">Save Class</button></div>';
   (notesCard||rosterCard).insertAdjacentElement('afterend',action);
 
-  function readSaved(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return []}}
-  function writeSaved(v){localStorage.setItem(KEY,JSON.stringify(v))}
+  let currentId='';let workingRoster=[];
   function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-  function fmtTime(t){if(!t)return'';const [h,m]=t.split(':').map(Number),ap=h>=12?'PM':'AM',hh=((h+11)%12)+1;return `${hh}:${String(m).padStart(2,'0')} ${ap}`}
-  function renderSaved(){
-    const saved=readSaved().sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
-    const list=d.getElementById('classList'); if(!list)return;
-    list.querySelectorAll('.corp-current,.corp-current-sep').forEach(x=>x.remove());
-    if(saved.length){
-      const sep=d.createElement('div');sep.className='class-sep corp-current-sep';sep.textContent='CURRENT / NEW CLASSES';list.prepend(sep);
-      [...saved].reverse().forEach(c=>{
-        const el=d.createElement('div');el.className='class-card corp-current';el.dataset.id=c.id;
-        el.innerHTML=`<h3>${esc(c.course)}</h3><div class="meta"><span><b>${esc(c.date)} · ${esc(fmtTime(c.time))}</b></span><span>${esc(c.location||'Location TBD')}</span><span>${esc(c.lead||'')}</span><span>${c.rosterCount||0} participants</span></div>`;
-        el.onclick=()=>loadClass(c.id); list.prepend(el);
-      });
-    }
-    d.querySelectorAll('.day .corp-event').forEach(x=>x.remove());
-    saved.forEach(c=>{
-      const cell=d.querySelector(`.day[data-date="${c.date}"]`); if(!cell)return;
-      const b=d.createElement('button'); b.className='event corp-event'; b.style.borderColor='#2563eb';b.style.background='#12233c';
-      b.innerHTML=`<b>${esc(fmtTime(c.time))} · ${esc(c.course.replace(' Provider',''))}</b>${esc(c.location||'Location TBD')}`;b.onclick=e=>{e.stopPropagation();loadClass(c.id)};cell.appendChild(b);
-    });
+  function readSaved(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(Array.isArray(v))return v;const old=JSON.parse(localStorage.getItem(OLDKEY)||'[]');return Array.isArray(old)?old.map(c=>({...c,roster:(c.roster||parseRosterText(c.rosterText||''))})):[]}catch{return []}}
+  function writeSaved(v){localStorage.setItem(KEY,JSON.stringify(v))}
+  function parseLine(line){line=line.trim();if(!line)return null;const email=(line.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)||[])[0]||'';let name=line.replace(email,'').replace(/[<>,;|]+/g,' ').replace(/\s+/g,' ').trim();return{name,email,status:'Active',card:''}}
+  function parseRosterText(t){return String(t||'').split(/\r?\n/).map(parseLine).filter(Boolean)}
+  function fmtTime(t){if(!t)return'';const[h,m]=t.split(':').map(Number),ap=h>=12?'PM':'AM',hh=((h+11)%12)+1;return `${hh}:${String(m).padStart(2,'0')} ${ap}`}
+  function activeCount(r=workingRoster){return r.filter(p=>(p.status||'Active')==='Active').length}
+  function renderRoster(){rList.innerHTML=workingRoster.map((p,i)=>{const st=p.status||'Active';return `<div class="corp-person ${st==='Active'?'':'inactive'}"><div class="corp-id">${i+1}</div><input data-i="${i}" data-k="name" value="${esc(p.name||'')}" placeholder="Name"><input data-i="${i}" data-k="email" value="${esc(p.email||'')}" placeholder="Email"><select data-i="${i}" data-k="status"><option ${st==='Active'?'selected':''}>Active</option><option ${st==='No-show'?'selected':''}>No-show</option><option ${st==='Rescheduled'?'selected':''}>Rescheduled</option><option ${st==='Removed'?'selected':''}>Removed</option></select><button class="corp-x" data-remove="${i}" title="Remove from active roster">×</button></div>`}).join('');
+    rList.querySelectorAll('[data-i]').forEach(el=>el.oninput=()=>{workingRoster[+el.dataset.i][el.dataset.k]=el.value;renderRoster()});
+    rList.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{workingRoster[+b.dataset.remove].status='Removed';renderRoster()});
+    d.getElementById('corpRosterCount').textContent=`${activeCount()} active · ${workingRoster.length-activeCount()} inactive`;
+    d.getElementById('corpDelete').style.display=currentId&&activeCount()===0?'inline-block':'none';
   }
-  function loadClass(id){const c=readSaved().find(x=>x.id===id);if(!c)return;course.value=c.course;lead.value=c.lead;date.value=c.date;time.value=c.time;location.value=c.location||'';assistants.value=c.assistants||'';roster.value=c.rosterText||'';action.dataset.edit=id;d.getElementById('corpStatus').textContent='Editing saved class.';w.scrollTo({top:formCard.offsetTop-90,behavior:'smooth'});}
-  function clear(){action.dataset.edit='';date.value='';time.value='09:00';location.value='';assistants.value='';roster.value='';d.getElementById('corpStatus').textContent='Ready for a new class.';}
+  d.getElementById('corpParse').onclick=()=>{workingRoster.push(...parseRosterText(paste.value));paste.value='';renderRoster()};
+  d.getElementById('corpAddOne').onclick=()=>{workingRoster.push({name:'',email:'',status:'Active',card:''});renderRoster()};
+
+  function renderSaved(){const saved=readSaved().sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));const list=d.getElementById('classList');if(!list)return;list.querySelectorAll('.corp-current,.corp-current-sep').forEach(x=>x.remove());if(saved.length){const sep=d.createElement('div');sep.className='class-sep corp-current-sep';sep.textContent='CURRENT / NEW CLASSES';list.prepend(sep);[...saved].reverse().forEach(c=>{const el=d.createElement('div');el.className='class-card corp-current';el.dataset.id=c.id;const ac=activeCount(c.roster||[]);el.innerHTML=`<h3>${esc(c.course)}</h3><div class="meta"><span><b>#${esc(c.id)} · ${esc(c.date)} · ${esc(fmtTime(c.time))}</b></span><span>${esc(c.location||'Location TBD')}</span><span>${esc(c.lead||'')}</span><span>${ac} active · ${(c.roster||[]).length-ac} inactive</span></div>`;el.onclick=()=>loadClass(c.id);list.prepend(el)})}
+    d.querySelectorAll('.day .corp-event').forEach(x=>x.remove());saved.forEach(c=>{const cell=d.querySelector(`.day[data-date="${c.date}"]`);if(!cell)return;const b=d.createElement('button');b.className='event corp-event';b.style.borderColor='#2563eb';b.style.background='#12233c';b.innerHTML=`<b>${esc(fmtTime(c.time))} · ${esc(c.course.replace(' Provider',''))}</b>${esc(c.location||'Location TBD')}`;b.onclick=e=>{e.stopPropagation();loadClass(c.id)};cell.appendChild(b)})}
+  function loadClass(id){const c=readSaved().find(x=>x.id===id);if(!c)return;currentId=id;course.value=c.course;lead.value=c.lead;date.value=c.date;time.value=c.time;location.value=c.location||'';assistants.value=c.assistants||'';workingRoster=JSON.parse(JSON.stringify(c.roster||[]));action.dataset.edit=id;d.getElementById('corpClassId').textContent=`Class #${id}`;d.getElementById('corpStatus').textContent='Editing class — class number will not change.';renderRoster();w.scrollTo({top:formCard.offsetTop-90,behavior:'smooth'})}
+  function clear(){currentId='';workingRoster=[];action.dataset.edit='';date.value='';time.value='09:00';location.value='';assistants.value='';paste.value='';d.getElementById('corpClassId').textContent='New class · class number assigned on first save';d.getElementById('corpStatus').textContent='Ready for a new class.';renderRoster()}
   d.getElementById('corpClear').onclick=clear;
-  d.getElementById('corpSubmit').onclick=()=>{
-    if(!date.value){alert('Choose a class date before submitting.');date.focus();return}
-    const rows=(roster.value||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
-    const all=readSaved(); const edit=action.dataset.edit;
-    const rec={id:edit||('nhcso-'+Date.now()),course:course.value,lead:lead.value,date:date.value,time:time.value||'09:00',location:location.value.trim(),assistants:assistants.value.trim(),rosterText:roster.value||'',rosterCount:rows.length,updatedAt:new Date().toISOString()};
-    const i=all.findIndex(x=>x.id===rec.id);if(i>=0)all[i]=rec;else all.push(rec);writeSaved(all);action.dataset.edit=rec.id;
-    d.getElementById('corpStatus').textContent='Saved — class added to My Classes and calendar.';renderSaved();
-  };
+  d.getElementById('corpSubmit').onclick=()=>{if(!date.value){alert('Choose a class date before saving.');date.focus();return}const all=readSaved();const id=currentId||String(Date.now());const rec={id,course:course.value,lead:lead.value,date:date.value,time:time.value||'09:00',location:location.value.trim(),assistants:assistants.value.trim(),roster:JSON.parse(JSON.stringify(workingRoster)),updatedAt:new Date().toISOString()};const i=all.findIndex(x=>x.id===id);if(i>=0)all[i]=rec;else all.push(rec);writeSaved(all);currentId=id;action.dataset.edit=id;d.getElementById('corpClassId').textContent=`Class #${id}`;d.getElementById('corpStatus').textContent='Saved — class number retained.';renderRoster();renderSaved()};
+  d.getElementById('corpDelete').onclick=()=>{if(!currentId)return;if(activeCount()>0){alert('Clear all active participants first.');return}if(!confirm(`Delete class #${currentId}? Participant history is already non-active.`))return;writeSaved(readSaved().filter(x=>x.id!==currentId));clear();renderSaved()};
   const newBtn=[...d.querySelectorAll('button')].find(b=>b.textContent.includes('+ New class'));if(newBtn)newBtn.onclick=()=>{clear();w.scrollTo({top:formCard.offsetTop-90,behavior:'smooth'})};
-  renderSaved();
+  renderRoster();renderSaved();
 });
 </script>
 </body>
