@@ -7,8 +7,24 @@
 :root{color-scheme:dark;--bg:#0b1220;--panel:#111827;--line:#334155;--text:#f8fafc;--muted:#9fb0c7;--accent:#60a5fa;--hist:#6b7280;--histbg:#151a22}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Arial}.top{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:center;justify-content:space-between;background:#08101d}.top h1{font-size:22px;margin:0}.sub{font-size:13px;color:var(--muted);margin-top:3px}.pill{border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);font-size:12px}.shell{padding:22px;display:grid;gap:18px}.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#1e293b;color:var(--text);border-radius:9px;padding:9px 13px;font-size:14px;cursor:pointer}.toolbar strong{font-size:18px}.muted{font-size:12px;color:var(--muted)}.calendar{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}.cal-head,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}.cal-head{background:#0d1626;border-bottom:1px solid var(--line)}.cal-head div{padding:10px;text-align:center;font-size:13px;color:var(--muted);font-weight:600}.day{min-height:132px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px}.day:nth-child(7n){border-right:0}.day.other{opacity:.35}.day.today{box-shadow:inset 0 0 0 2px rgba(96,165,250,.55)}.daynum{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px}.event{display:block;width:100%;text-align:left;border:1px solid #3d4653;background:var(--histbg);color:#b7bec8;border-radius:8px;padding:7px;margin:5px 0;font-size:12px;line-height:1.25;cursor:pointer}.event:hover{border-color:#697586;background:#1a2029}.event b{display:block;color:#c6ccd4;font-size:13px;margin-bottom:2px}.event .tiny{font-size:11px;color:#858f9c}.info{display:grid;grid-template-columns:1fr 330px;gap:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}.card h2{font-size:17px;margin:0 0 10px}.history-list{display:grid;gap:8px;max-height:500px;overflow:auto}.row{display:grid;grid-template-columns:120px 1fr 120px 80px;gap:10px;align-items:center;border:1px solid var(--line);border-radius:9px;padding:10px;background:#0d1626;color:#c4cbd5}.row span{font-size:13px}.row .small{font-size:12px;color:var(--muted)}.note{font-size:12px;color:var(--muted);line-height:1.5}.kpi{font-size:30px;font-weight:700}.selected{outline:2px solid #64748b}.legend{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}.swatch{width:14px;height:14px;border-radius:4px;background:var(--histbg);border:1px solid #3d4653}@media(max-width:900px){.info{grid-template-columns:1fr}.day{min-height:105px}.row{grid-template-columns:100px 1fr}.row>*:nth-child(3),.row>*:nth-child(4){grid-column:2}}@media(max-width:640px){.shell{padding:10px}.top{padding:14px}.top h1{font-size:18px}.cal-head div{font-size:10px}.day{min-height:82px;padding:4px}.event{font-size:10px;padding:5px}.event .tiny{display:none}}
 </style>
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQS8DCBH');
+</script>
+<!-- End Google Tag Manager -->
+<link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
+<script src="/assets/site-theme.js"></script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 <header class="top"><div><h1>NHCSO Training Workspace</h1><div class="sub">Historical training landscape · archived sessions shown in grey until records are enriched</div></div><div class="pill">LanderWare development view</div></header>
 <div class="shell">
 <div class="toolbar"><button class="btn" id="prev">←</button><button class="btn" id="today">Today</button><button class="btn" id="next">→</button><strong id="monthTitle"></strong><span class="muted">Click any grey class to inspect the history we currently know.</span><span style="flex:1"></span><div class="legend"><span class="swatch"></span> Historical / not yet enriched</div></div>
