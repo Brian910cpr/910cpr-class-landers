@@ -32,6 +32,32 @@ class AnchorCalendarAndLanderTests(unittest.TestCase):
             self.assertNotIn("Join us and train with others!", html, page)
             self.assertNotIn("availability-dot", html, page)
 
+    def test_public_selectors_do_not_expose_internal_schedule_role_labels(self):
+        pages = (
+            "bls.html",
+            "acls.html",
+            "pals.html",
+            "heartsaver.html",
+            "arc.html",
+            "hsi.html",
+            "family-cpr.html",
+            "uscg-elementary-first-aid-cpr.html",
+            "courses/uscg-first-aid-cpr-aed.html",
+        )
+        forbidden = (
+            "Scheduled · Anchor",
+            "Attached · Barnacle",
+            "scheduled class; anchor",
+            "barnacle; attached opportunity around an anchor",
+            "anchor at ",
+            "barnacle at ",
+        )
+        for page in pages:
+            html = (ROOT / "docs" / page).read_text(encoding="utf-8")
+            self.assertIn("★ Scheduled class", html, page)
+            for label in forbidden:
+                self.assertNotIn(label, html, page)
+
     def test_bls_feed_has_three_anchors_and_at_most_one_position_per_direction(self):
         payload = json.loads((ROOT / "docs/data/block-selector-availability/bls.json").read_text(encoding="utf-8"))
         courses = [course for day in payload["dates"] for slot in day["startTimes"] for course in slot["courses"]]
