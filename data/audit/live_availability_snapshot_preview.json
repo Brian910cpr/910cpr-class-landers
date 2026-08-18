@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T02:38:27.076789+00:00",
+  "generated_at": "2026-08-18T03:47:42.627433+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -23,15 +23,15 @@
       }
     ],
     "blocks_generated": 352,
-    "blocks_blocked": 12,
+    "blocks_blocked": 11,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
       "non_standard_time_increment": 1,
-      "inverse_gap_shorter_than_minimum_consumption": 11
+      "inverse_gap_shorter_than_minimum_consumption": 10
     },
     "blocked_all_reason_counts": {
       "non_standard_time_increment": 1,
-      "inverse_gap_shorter_than_minimum_consumption": 11
+      "inverse_gap_shorter_than_minimum_consumption": 10
     },
     "source_type_counts": {
       "google_calendar": 2,
@@ -9915,11 +9915,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-15T00:00:00",
-      "end_datetime": "2026-11-15T22:45:00",
+      "end_datetime": "2026-11-16T00:00:00",
       "date": "2026-11-15",
-      "end_date": "2026-11-15",
+      "end_date": "2026-11-16",
       "start_time": "00:00",
-      "end_time": "22:45",
+      "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -9953,14 +9953,6 @@
         "non_standard_time_increment"
       ],
       "message": "Calendar event was not usable as an inverse blocking interval."
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-08-17T22:45:00",
-      "end_datetime": "2026-08-18T00:00:00"
     },
     {
       "calendar_source_key": "brian_do_not_schedule",
