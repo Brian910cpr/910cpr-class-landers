@@ -104,6 +104,17 @@ class AnchorStateTests(unittest.TestCase):
         self.assertEqual(repeat_scope_key("209806", policy), repeat_scope_key("359474", policy))
         self.assertEqual(repeat_scope_key("463743", policy), ("course:463743", 4320))
 
+    def test_production_bls_family_uses_eight_hour_repeat_delay(self):
+        import json
+        from pathlib import Path
+
+        policy_path = Path(__file__).resolve().parents[1] / "data/config/anchor_schedule_policy.json"
+        policy = json.loads(policy_path.read_text(encoding="utf-8"))
+        self.assertEqual(repeat_scope_key("209806", policy), ("family:aha-bls-in-person", 480))
+        self.assertEqual(repeat_scope_key("359474", policy), ("family:aha-bls-in-person", 480))
+        self.assertEqual(repeat_scope_key("210549", policy), ("course:210549", 1440))
+        self.assertFalse(policy["families"]["aha-bls-in-person"]["retain_barnacle_offers"])
+
 
 if __name__ == "__main__":
     unittest.main()

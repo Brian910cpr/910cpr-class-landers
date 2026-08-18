@@ -134,6 +134,52 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         starts = [slot["startTime"] for day in result["dates"] for slot in day["startTimes"]]
         self.assertEqual(starts, ["15:30"])
 
+    def test_bls_family_suppresses_initial_and_renewal_for_eight_hours_without_barnacles(self):
+        anchor_session = {
+            **self.sessions[0],
+            "start_at": "2026-08-05T10:45:00-04:00",
+            "end_at": "2026-08-05T12:45:00-04:00",
+        }
+        anchors = promote_seated_sessions([anchor_session])
+        candidates = (
+            ("01:00", "209806", "BLS Initial"),
+            ("08:45", "209806", "BLS Initial"),
+            ("10:45", "359474", "BLS Renewal"),
+            ("12:45", "359474", "BLS Renewal"),
+            ("13:15", "210549", "HeartCode BLS"),
+            ("19:00", "209806", "BLS Initial"),
+        )
+        slots = []
+        for clock, cid, name in candidates:
+            url = anchor_session["registration_url"] if clock == "10:45" else f"https://example.test/{clock}"
+            offer = {
+                "date": "2026-08-05",
+                "displayDate": "Wednesday",
+                "startTime": clock,
+                "displayStartTime": clock,
+                "courseId": cid,
+                "courseName": name,
+                "appointmentUrl": url,
+            }
+            slots.append({"startTime": clock, "displayStartTime": clock, "courses": [offer]})
+        payload = {"dates": [{"date": "2026-08-05", "displayDate": "Wednesday", "startTimes": slots}], "counts": {}}
+        policy = {
+            "families": {
+                "aha-bls-in-person": {
+                    "course_ids": ["209806", "359474"],
+                    "repeat_delay_minutes": 480,
+                    "retain_barnacle_offers": False,
+                }
+            }
+        }
+
+        result = apply_selector_policy(payload, anchors, policy)
+        rendered = [course for day in result["dates"] for slot in day["startTimes"] for course in slot["courses"]]
+        starts = {item["startTime"] for item in rendered}
+        self.assertEqual(starts, {"01:00", "10:45 AM", "13:15", "19:00"})
+        self.assertEqual(sum(item.get("schedule_role") == "anchor" for item in rendered), 1)
+        self.assertNotIn("barnacle", {item.get("schedule_role") for item in rendered})
+
 
 if __name__ == "__main__":
     unittest.main()
