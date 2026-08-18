@@ -16,6 +16,10 @@ html[data-theme="dark"] {
   --text: #e8eef6;
   --subtle: #a9b8c9;
   --border: #39495d;
+  --border-strong: #53667c;
+  --heading: #f4f8fc;
+  --surface-soft: #172435;
+  --shadow-soft: 0 12px 28px rgb(0 0 0 / 24%);
 }
 
 html[data-theme="dark"],
@@ -30,7 +34,7 @@ html[data-theme="dark"] :is(
   .class-card, .review-snippet, .google-review-card, .request-option-card,
   .ci-card, dialog, table, thead, tbody, tr, td, th
 ) {
-  background-color: #111a27 !important;
+  background: #111a27 !important;
   color: #e8eef6 !important;
   border-color: #39495d !important;
 }
@@ -52,9 +56,81 @@ html[data-theme="dark"] a:not(.button):not(.btn) {
 }
 
 html[data-theme="dark"] :is(input, select, textarea, button:not(.site-theme-toggle)) {
-  background-color: #172334 !important;
+  background: #172334 !important;
   color: #eef5fc !important;
   border-color: #53657a !important;
+}
+
+/* Legacy pages use light gradients and hard-coded white cards rather than the
+   shared variables. Keep this layer explicit so dark mode has real hierarchy. */
+html[data-theme="dark"] body :is(
+  .home-authority, .affiliation-cluster, .home-help-panel, .home-course-chooser,
+  .finder-card, .top-trust, .home-status, .home-locality, .course-hero,
+  .slug-hero, .slug-guidance-banner, .slug-training-options
+) {
+  background: #111c2a !important;
+  color: #e8eef6 !important;
+  border-color: #3e5065 !important;
+  box-shadow: 0 12px 28px rgb(0 0 0 / 22%) !important;
+}
+
+html[data-theme="dark"] body :is(
+  .affiliation-item, .home-course-tile, .home-course-choice-group,
+  .home-exact-wording, .google-review-card, .review-snippet,
+  .home-locality-links a, .home-stat, .jump-chip, .slug-pill,
+  .slug-day-card, .training-option-card
+) {
+  background: #19283a !important;
+  color: #edf4fb !important;
+  border-color: #4a6077 !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] body :is(
+  .home-course-tile, .affiliation-item, .home-locality-links a,
+  .google-review-card, .jump-chip
+):hover {
+  background: #203249 !important;
+  border-color: #78bde9 !important;
+}
+
+html[data-theme="dark"] body :is(
+  .home-course-tile strong, .home-course-tile span, .affiliation-item span,
+  .affiliation-item strong, .home-help-panel h3, .home-help-panel p,
+  .home-locality h2, .home-locality p, .top-trust-copy p,
+  .review-snippet p, .google-review-card strong, .google-review-card em,
+  .finder-card h3, .finder-card p
+) {
+  color: #e8eef6 !important;
+}
+
+html[data-theme="dark"] body :is(
+  .eyebrow, .home-status-label, .affiliation-cluster-heading span,
+  .home-authority-heading > span, .review-theme-label
+) {
+  color: #8fd0f7 !important;
+}
+
+html[data-theme="dark"] body :is(.button.secondary, .home-help-actions .button, .home-help-secondary-actions .button) {
+  background: #19283a !important;
+  color: #dff2ff !important;
+  border-color: #58718b !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] body :is(.button.secondary, .home-help-actions .button, .home-help-secondary-actions .button):hover {
+  background: #243951 !important;
+  border-color: #8fd0f7 !important;
+}
+
+html[data-theme="dark"] body .top-trust {
+  background:
+    linear-gradient(90deg, #4285f4 0 24%, #34a853 24% 50%, #fbbc05 50% 74%, #ea4335 74% 100%) top / 100% 4px no-repeat,
+    #111c2a !important;
+}
+
+html[data-theme="dark"] body .home-locality {
+  background: linear-gradient(135deg, #101b29 0%, #142235 58%, #1d2630 100%) !important;
 }
 
 .site-theme-toggle {
