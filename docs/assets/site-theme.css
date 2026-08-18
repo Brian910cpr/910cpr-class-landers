@@ -258,34 +258,45 @@ html[data-theme="dark"] body :is(.course, .course.is-seated, .course.is-anchor, 
   border-color: #40566d !important;
 }
 
-/* Registration is the primary conversion action. Do not let the light-mode
-   accent token wash it out against dark surfaces. */
-html[data-theme="dark"] body :is(
+/* Registration is the destination action. Give it a restrained green "go"
+   signal in both themes so it stays distinct from blue selection controls. */
+html body :is(
   .register-link, .button.primary, .primary-cta, .course-primary-cta,
   a[data-registration]
 ) {
-  background: linear-gradient(180deg, #0783c8 0%, #05679f 100%) !important;
+  background: linear-gradient(180deg, #198b50 0%, #126b3d 100%) !important;
   color: #ffffff !important;
-  border: 1px solid #36a9e6 !important;
-  box-shadow: 0 9px 22px rgb(0 74 118 / 38%) !important;
+  border: 1px solid #49b978 !important;
+  box-shadow: 0 8px 20px rgb(9 89 48 / 28%) !important;
   text-shadow: 0 1px 1px rgb(0 0 0 / 28%) !important;
 }
 
-html[data-theme="dark"] body :is(
+html body :is(
   .register-link, .button.primary, .primary-cta, .course-primary-cta,
   a[data-registration]
 ):hover {
-  background: linear-gradient(180deg, #1299e2 0%, #0877b5 100%) !important;
-  border-color: #8ad4fa !important;
-  box-shadow: 0 11px 25px rgb(0 87 137 / 45%) !important;
+  background: linear-gradient(180deg, #249e60 0%, #187d49 100%) !important;
+  border-color: #76d59c !important;
+  box-shadow: 0 10px 24px rgb(9 89 48 / 36%) !important;
 }
 
-html[data-theme="dark"] body :is(
+html body :is(
   .register-link, .button.primary, .primary-cta, .course-primary-cta,
   a[data-registration]
 ):focus-visible {
   outline: 3px solid #ffd166 !important;
   outline-offset: 3px !important;
+}
+
+html body :is(
+  .register-link, .button.primary, .primary-cta, .course-primary-cta,
+  a[data-registration]
+):is([disabled], [aria-disabled="true"]) {
+  background: #52655a !important;
+  border-color: #718078 !important;
+  box-shadow: none !important;
+  color: #d8dfdb !important;
+  cursor: not-allowed !important;
 }
 
 /* Course-type controls are implemented under several names across generators:
