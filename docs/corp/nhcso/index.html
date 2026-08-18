@@ -1,14 +1,71 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>NHCSO Training Workspace</title>
-  <meta http-equiv="refresh" content="0; url=/admin/nhcso-training-workspace-v6.html">
-  <link rel="canonical" href="https://www.910cpr.com/corp/nhcso/">
-  <script>location.replace('/admin/nhcso-training-workspace-v6.html');</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NHCSO Training Workspace</title>
+<link rel="canonical" href="https://www.910cpr.com/corp/nhcso/">
+<style>html,body{margin:0;width:100%;height:100%;background:#0b1220}#workspace{border:0;width:100%;height:100vh;display:block}</style>
 </head>
 <body>
-  <p>Opening NHCSO Training Workspace…</p>
+<iframe id="workspace" src="/admin/nhcso-training-workspace-v6.html" title="NHCSO Training Workspace"></iframe>
+<script>
+const KEY='lw-nhcso-corp-live-v1';
+const frame=document.getElementById('workspace');
+frame.addEventListener('load',()=>{
+  const d=frame.contentDocument,w=frame.contentWindow;
+  if(!d)return;
+  const cards=[...d.querySelectorAll('main .card')];
+  const formCard=cards[0], rosterCard=cards[1], notesCard=cards[2];
+  if(!formCard||!rosterCard)return;
+  const selects=formCard.querySelectorAll('select');
+  const inputs=formCard.querySelectorAll('input');
+  const course=selects[0], lead=selects[1], date=inputs[0], time=inputs[1], location=inputs[2], assistants=inputs[3];
+  const roster=rosterCard.querySelector('textarea');
+  if(course)course.id='corpCourse'; if(lead)lead.id='corpLead'; if(date)date.id='corpDate'; if(time)time.id='corpTime'; if(location)location.id='corpLocation'; if(assistants)assistants.id='corpAssistants'; if(roster)roster.id='corpRoster';
+
+  const action=d.createElement('section');
+  action.className='card';
+  action.innerHTML='<div class="toolbar"><div id="corpStatus" class="muted">New classes saved here will appear immediately in My Classes and the calendar on this device.</div><span class="spacer"></span><button class="btn" id="corpClear" type="button">Clear</button><button class="btn primary" id="corpSubmit" type="button" style="font-weight:700;padding:11px 18px">Submit Class</button></div>';
+  (notesCard||rosterCard).insertAdjacentElement('afterend',action);
+
+  function readSaved(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return []}}
+  function writeSaved(v){localStorage.setItem(KEY,JSON.stringify(v))}
+  function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function fmtTime(t){if(!t)return'';const [h,m]=t.split(':').map(Number),ap=h>=12?'PM':'AM',hh=((h+11)%12)+1;return `${hh}:${String(m).padStart(2,'0')} ${ap}`}
+  function renderSaved(){
+    const saved=readSaved().sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+    const list=d.getElementById('classList'); if(!list)return;
+    list.querySelectorAll('.corp-current,.corp-current-sep').forEach(x=>x.remove());
+    if(saved.length){
+      const sep=d.createElement('div');sep.className='class-sep corp-current-sep';sep.textContent='CURRENT / NEW CLASSES';list.prepend(sep);
+      [...saved].reverse().forEach(c=>{
+        const el=d.createElement('div');el.className='class-card corp-current';el.dataset.id=c.id;
+        el.innerHTML=`<h3>${esc(c.course)}</h3><div class="meta"><span><b>${esc(c.date)} · ${esc(fmtTime(c.time))}</b></span><span>${esc(c.location||'Location TBD')}</span><span>${esc(c.lead||'')}</span><span>${c.rosterCount||0} participants</span></div>`;
+        el.onclick=()=>loadClass(c.id); list.prepend(el);
+      });
+    }
+    d.querySelectorAll('.day .corp-event').forEach(x=>x.remove());
+    saved.forEach(c=>{
+      const cell=d.querySelector(`.day[data-date="${c.date}"]`); if(!cell)return;
+      const b=d.createElement('button'); b.className='event corp-event'; b.style.borderColor='#2563eb';b.style.background='#12233c';
+      b.innerHTML=`<b>${esc(fmtTime(c.time))} · ${esc(c.course.replace(' Provider',''))}</b>${esc(c.location||'Location TBD')}`;b.onclick=e=>{e.stopPropagation();loadClass(c.id)};cell.appendChild(b);
+    });
+  }
+  function loadClass(id){const c=readSaved().find(x=>x.id===id);if(!c)return;course.value=c.course;lead.value=c.lead;date.value=c.date;time.value=c.time;location.value=c.location||'';assistants.value=c.assistants||'';roster.value=c.rosterText||'';action.dataset.edit=id;d.getElementById('corpStatus').textContent='Editing saved class.';w.scrollTo({top:formCard.offsetTop-90,behavior:'smooth'});}
+  function clear(){action.dataset.edit='';date.value='';time.value='09:00';location.value='';assistants.value='';roster.value='';d.getElementById('corpStatus').textContent='Ready for a new class.';}
+  d.getElementById('corpClear').onclick=clear;
+  d.getElementById('corpSubmit').onclick=()=>{
+    if(!date.value){alert('Choose a class date before submitting.');date.focus();return}
+    const rows=(roster.value||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+    const all=readSaved(); const edit=action.dataset.edit;
+    const rec={id:edit||('nhcso-'+Date.now()),course:course.value,lead:lead.value,date:date.value,time:time.value||'09:00',location:location.value.trim(),assistants:assistants.value.trim(),rosterText:roster.value||'',rosterCount:rows.length,updatedAt:new Date().toISOString()};
+    const i=all.findIndex(x=>x.id===rec.id);if(i>=0)all[i]=rec;else all.push(rec);writeSaved(all);action.dataset.edit=rec.id;
+    d.getElementById('corpStatus').textContent='Saved — class added to My Classes and calendar.';renderSaved();
+  };
+  const newBtn=[...d.querySelectorAll('button')].find(b=>b.textContent.includes('+ New class'));if(newBtn)newBtn.onclick=()=>{clear();w.scrollTo({top:formCard.offsetTop-90,behavior:'smooth'})};
+  renderSaved();
+});
+</script>
 </body>
 </html>
