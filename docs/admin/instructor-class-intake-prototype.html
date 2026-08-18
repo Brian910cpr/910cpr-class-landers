@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LanderWare Instructor Class Intake — Prototype</title>
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#0f172a; --panel:#111827; --panel2:#172033; --line:#334155;
+    --text:#f8fafc; --muted:#a8b3c7; --accent:#60a5fa; --good:#34d399;
+    --warn:#fbbf24; --danger:#fb7185; --chip:#1e293b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+  button,input,select,textarea{font:inherit}
+  .page{min-height:100vh;display:grid;grid-template-rows:auto 1fr}
+  header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:center;justify-content:space-between;background:#0b1220;position:sticky;top:0;z-index:20}
+  header h1{font-size:18px;margin:0}.sub{color:var(--muted);font-size:13px}
+  .pill{border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:12px}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 390px;min-height:0}
+  main{padding:22px;overflow:auto}.rail{border-left:1px solid var(--line);background:#0b1220;padding:18px;overflow:hidden;display:flex;flex-direction:column;gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+  .card h2{font-size:15px;margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid .full{grid-column:1/-1}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+  input,select,textarea{width:100%;background:#0b1220;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:10px 11px;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(96,165,250,.15)}
+  textarea{min-height:110px;resize:vertical}.hint{font-size:12px;color:var(--muted);margin-top:6px}
+  .actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.btn{border:1px solid var(--line);background:var(--chip);color:var(--text);padding:9px 12px;border-radius:9px;cursor:pointer}.btn.primary{background:#2563eb;border-color:#2563eb}.btn.danger{border-color:#7f1d1d}.btn:hover{filter:brightness(1.08)}
+  .location-wrap{position:relative}.suggestions{position:absolute;left:0;right:0;top:100%;margin-top:5px;background:#0b1220;border:1px solid var(--line);border-radius:10px;max-height:220px;overflow:auto;z-index:30;box-shadow:0 12px 28px rgba(0,0,0,.35);display:none}.suggestions.open{display:block}.suggestion{padding:9px 11px;cursor:pointer;border-bottom:1px solid rgba(51,65,85,.55)}.suggestion:last-child{border-bottom:0}.suggestion:hover{background:#172033}.suggestion b{display:block;font-size:13px}.suggestion span{font-size:11px;color:var(--muted)}
+  .roster{display:grid;gap:7px;margin-top:12px}.person{display:grid;grid-template-columns:28px 1fr 1.25fr auto;gap:8px;align-items:center;padding:8px;background:#0b1220;border:1px solid var(--line);border-radius:9px}.person.duplicate{border-color:var(--warn)}.num{font-size:11px;color:var(--muted);text-align:center}.person .flag{font-size:11px;color:var(--warn);white-space:nowrap}.x{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}.x:hover{color:var(--danger)}
+  .duplicate-note{display:none;margin-top:10px;padding:10px;border:1px solid #735b13;background:#2a230d;border-radius:9px;font-size:12px;color:#fde68a}.duplicate-note.show{display:block}
+  .rail-head{display:flex;justify-content:space-between;align-items:end;gap:8px}.rail-head h2{margin:0;font-size:15px}.rail-head span{font-size:11px;color:var(--muted)}
+  .class-strip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x proximity;min-height:205px}.class-strip::-webkit-scrollbar{height:9px}.class-strip::-webkit-scrollbar-thumb{background:#334155;border-radius:99px}
+  .class-card{min-width:245px;max-width:245px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;scroll-snap-align:start;position:relative}.class-card:hover{border-color:#64748b}.class-card.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(96,165,250,.15)}.class-card.past{opacity:.62}.class-card .remove{position:absolute;right:8px;top:6px}.class-card h3{font-size:14px;margin:0 28px 7px 0}.meta{font-size:12px;color:var(--muted);display:grid;gap:4px}.count{display:inline-block;margin-top:9px;border-radius:999px;padding:4px 8px;background:var(--chip);font-size:11px}.count.has{color:#a7f3d0}.count.empty{color:#cbd5e1}
+  .today-divider{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;margin:2px 0}.today-divider:before,.today-divider:after{content:"";height:1px;background:var(--line);flex:1}
+  .rail-footer{font-size:11px;color:var(--muted);line-height:1.5}.status{font-size:12px;color:var(--good);min-height:18px}
+  @media(max-width:900px){.layout{grid-template-columns:1fr}.rail{border-left:0;border-top:1px solid var(--line)}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+<header>
+  <div><h1>Instructor Class Intake</h1><div class="sub">Fast class creation + roster intake. Prototype only — data stays in this browser.</div></div>
+  <div class="pill">Instructor view · unrestricted times</div>
+</header>
+<div class="layout">
+<main>
+  <section class="card">
+    <h2>Class</h2>
+    <div class="grid">
+      <div><label>Client / Department</label><input id="client" value="New Hanover County Sheriff’s Office" /></div>
+      <div><label>Instructor</label><input id="instructor" value="Lt. Lauren Brothers" /></div>
+      <div><label>Course</label><select id="course"><option>BLS Provider</option><option>BLS Renewal</option><option>Heartsaver First Aid CPR AED</option><option>ACLS Provider</option><option>PALS Provider</option></select></div>
+      <div><label>Date</label><input id="date" type="date" /></div>
+      <div><label>Start time</label><input id="time" type="time" value="09:00" /></div>
+      <div class="location-wrap"><label>Location — start typing</label><input id="location" autocomplete="off" placeholder="NHCSO, range, Castle Hayne, street…" /><div id="suggestions" class="suggestions"></div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Roster</h2>
+    <div class="grid">
+      <div class="full"><label>Paste names + emails</label><textarea id="paste" placeholder="Jane Smith jane.smith@nhcgov.com&#10;Robert Jones &lt;rjones@nhcgov.com&gt;&#10;Amy Taylor, amy.taylor@nhcgov.com"></textarea><div class="hint">Paste from email, Excel, or a messy list. We’ll split obvious names and email addresses into editable rows.</div></div>
+    </div>
+    <div class="actions" style="margin-top:10px"><button class="btn" id="parse">Add pasted people</button><button class="btn" id="addOne">+ Add one person</button></div>
+    <div id="duplicateNote" class="duplicate-note"></div>
+    <div id="roster" class="roster"></div>
+  </section>
+
+  <section class="card">
+    <div class="actions"><div id="status" class="status" style="margin-right:auto"></div><button class="btn" id="newClass">Clear / New class</button><button class="btn primary" id="save">Create / Save class</button></div>
+  </section>
+</main>
+
+<aside class="rail">
+  <div class="rail-head"><div><h2>My Classes</h2><span>Click to edit · × removes empty classes</span></div></div>
+  <div class="today-divider">PAST ← &nbsp; TODAY &nbsp; → UPCOMING</div>
+  <div id="classStrip" class="class-strip"></div>
+  <div class="rail-footer">Classes with a roster are protected from one-click deletion. Duplicate emails are surfaced and automatically moved to the latest upcoming session for the same course/client in this prototype.</div>
+</aside>
+</div>
+</div>
+<script>
+const KEY='lw-instructor-intake-prototype-v1';
+const locations=[
+ {name:'NHCSO Training Division',aliases:'nhcso nhso sheriff training castle hayne',address:'Castle Hayne, NC',last:99,freq:40},
+ {name:'NHCSO Range / Training Center',aliases:'nhcso range sheriff gun range',address:'New Hanover County, NC',last:92,freq:33},
+ {name:'New Hanover County Sheriff’s Office',aliases:'nhcso nhso sheriff main office',address:'Wilmington, NC',last:84,freq:27},
+ {name:'910CPR — Shipyard Blvd',aliases:'910 cpr coastal shipyard classroom',address:'Wilmington, NC',last:80,freq:80},
+ {name:'CFCC Public Safety Training Center',aliases:'cfcc north campus pstc',address:'Castle Hayne, NC',last:55,freq:44},
+ {name:'Surf City Fire Department',aliases:'surf city fd fire',address:'Surf City, NC',last:34,freq:18},
+ {name:'Brunswick County Sheriff’s Office',aliases:'bcso brunswick sheriff',address:'Bolivia, NC',last:15,freq:12}
+];
+let state={classes:[],active:null,roster:[]};
+const $=id=>document.getElementById(id);
+function todayPlus(days){const d=new Date();d.setDate(d.getDate()+days);return d.toISOString().slice(0,10)}
+function seed(){return [
+ {id:'c1',client:'New Hanover County Sheriff’s Office',instructor:'Lt. Lauren Brothers',course:'BLS Provider',date:todayPlus(-21),time:'09:00',location:'NHCSO Training Division',roster:[{name:'Jordan Lee',email:'jlee@nhcgov.com'},{name:'Taylor Reed',email:'treed@nhcgov.com'}]},
+ {id:'c2',client:'New Hanover County Sheriff’s Office',instructor:'Lt. Lauren Brothers',course:'BLS Provider',date:todayPlus(6),time:'09:00',location:'NHCSO Range / Training Center',roster:[]},
+ {id:'c3',client:'New Hanover County Sheriff’s Office',instructor:'Lt. Lauren Brothers',course:'BLS Provider',date:todayPlus(18),time:'13:00',location:'NHCSO Training Division',roster:[{name:'Morgan Hill',email:'mhill@nhcgov.com'}]}
+]}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)); if(v?.classes) state=v; else state.classes=seed()}catch{state.classes=seed()} if(!state.classes.length)state.classes=seed();renderClasses();clearForm()}
+function persist(){localStorage.setItem(KEY,JSON.stringify(state))}
+function scoreLocation(l,q){q=q.trim().toLowerCase();const hay=(l.name+' '+l.aliases+' '+l.address).toLowerCase();let match=0;if(!q)match=1;else if(hay.includes(q))match=100;else{const toks=q.split(/\s+/).filter(Boolean);match=toks.reduce((s,t)=>s+(hay.includes(t)?18:0),0);if(match===0){for(const t of toks){for(const w of hay.split(/\s+/)){if(w.startsWith(t.slice(0,3)))match+=6}}}}const clientBoost=$('client').value.toLowerCase().includes('sheriff')&&hay.includes('sheriff')?25:0;return match+clientBoost+l.last*.35+l.freq*.12}
+function showLocations(){const q=$('location').value;const arr=locations.map(l=>({...l,s:scoreLocation(l,q)})).filter(l=>!q||l.s>20).sort((a,b)=>b.s-a.s).slice(0,7);$('suggestions').innerHTML=arr.map(l=>`<div class="suggestion" data-name="${esc(l.name)}"><b>${esc(l.name)}</b><span>${esc(l.address)}</span></div>`).join('')+`<div class="suggestion" data-name="${esc(q||'New location')}"><b>+ Use new location</b><span>${esc(q||'Type a new site name')}</span></div>`;$('suggestions').classList.add('open');document.querySelectorAll('.suggestion').forEach(x=>x.onclick=()=>{$('location').value=x.dataset.name;$('suggestions').classList.remove('open')})}
+$('location').addEventListener('focus',showLocations);$('location').addEventListener('input',showLocations);document.addEventListener('click',e=>{if(!e.target.closest('.location-wrap'))$('suggestions').classList.remove('open')})
+function parseLine(line){line=line.trim();if(!line)return null;const email=(line.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)||[])[0]||'';let name=line.replace(email,'').replace(/[<>,;|]+/g,' ').replace(/\s+/g,' ').trim();if(!name&&email)name=email.split('@')[0].replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());return {name,email}}
+$('parse').onclick=()=>{const rows=$('paste').value.split(/\r?\n/).map(parseLine).filter(Boolean);state.roster.push(...rows);$('paste').value='';renderRoster()}
+$('addOne').onclick=()=>{state.roster.push({name:'',email:''});renderRoster();setTimeout(()=>document.querySelector('.person:last-child input')?.focus(),0)}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function norm(s=''){return s.trim().toLowerCase()}
+function duplicateInfo(p){if(!p.email)return null;const matches=[];for(const c of state.classes){if(c.id===state.active)continue;for(const r of c.roster||[]){if(norm(r.email)===norm(p.email))matches.push(c)}}return matches.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).pop()||null}
+function renderRoster(){let dupes=[];$('roster').innerHTML=state.roster.map((p,i)=>{const d=duplicateInfo(p);if(d)dupes.push({p,d});return `<div class="person ${d?'duplicate':''}"><div class="num">${i+1}</div><input data-i="${i}" data-k="name" value="${esc(p.name)}" placeholder="Name"><input data-i="${i}" data-k="email" value="${esc(p.email)}" placeholder="Email"><div style="display:flex;align-items:center;gap:7px">${d?`<span class="flag">also ${fmtDate(d.date)}</span>`:''}<button class="x" data-remove="${i}" title="Remove person">×</button></div></div>`}).join('');document.querySelectorAll('.person input').forEach(el=>el.oninput=()=>{state.roster[+el.dataset.i][el.dataset.k]=el.value;renderDuplicateNote()});document.querySelectorAll('[data-remove]').forEach(el=>el.onclick=()=>{state.roster.splice(+el.dataset.remove,1);renderRoster()});renderDuplicateNote()}
+function renderDuplicateNote(){const dupes=state.roster.map(p=>({p,d:duplicateInfo(p)})).filter(x=>x.d);const box=$('duplicateNote');if(!dupes.length){box.classList.remove('show');box.textContent='';return}box.classList.add('show');box.innerHTML=`<b>${dupes.length} duplicate${dupes.length>1?'s':''} surfaced.</b> On Save, matching email${dupes.length>1?'s':''} will be removed from the earlier upcoming session and retained in this latest session. `+dupes.map(x=>`${esc(x.p.name||x.p.email)} → from ${fmtDate(x.d.date)}`).join(' · ')}
+function latestWins(target){for(const p of target.roster){if(!p.email)continue;for(const c of state.classes){if(c.id===target.id)continue;if(c.client!==target.client||c.course!==target.course)continue;if((c.date+c.time)>(target.date+target.time))continue;c.roster=(c.roster||[]).filter(r=>norm(r.email)!==norm(p.email))}}}
+function fmtDate(d){if(!d)return'';return new Date(d+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'})}
+function fmtTime(t){if(!t)return'';const [h,m]=t.split(':').map(Number);return new Date(2000,0,1,h,m).toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}
+function getForm(){return {id:state.active||('c'+Date.now()),client:$('client').value.trim(),instructor:$('instructor').value.trim(),course:$('course').value,date:$('date').value,time:$('time').value,location:$('location').value.trim(),roster:JSON.parse(JSON.stringify(state.roster))}}
+$('save').onclick=()=>{const c=getForm();if(!c.date||!c.time||!c.course){$('status').textContent='Date, time and course are required.';return}latestWins(c);const idx=state.classes.findIndex(x=>x.id===c.id);if(idx>=0)state.classes[idx]=c;else state.classes.push(c);state.active=c.id;persist();renderClasses();renderRoster();$('status').textContent='Saved. Class rail updated.';setTimeout(()=>$('status').textContent='',2500)}
+$('newClass').onclick=clearForm;
+function clearForm(){state.active=null;state.roster=[];$('date').value=todayPlus(7);$('time').value='09:00';$('location').value='';$('paste').value='';renderRoster();renderClasses();$('status').textContent=''}
+function editClass(id){const c=state.classes.find(x=>x.id===id);if(!c)return;state.active=id;$('client').value=c.client;$('instructor').value=c.instructor;$('course').value=c.course;$('date').value=c.date;$('time').value=c.time;$('location').value=c.location;state.roster=JSON.parse(JSON.stringify(c.roster||[]));renderRoster();renderClasses();window.scrollTo({top:0,behavior:'smooth'})}
+function deleteClass(id,e){e.stopPropagation();const c=state.classes.find(x=>x.id===id);if(!c)return;if((c.roster||[]).length){alert(`This class has ${c.roster.length} participant(s). Open the class to move/remove the roster before deleting it.`);return}state.classes=state.classes.filter(x=>x.id!==id);if(state.active===id)clearForm();persist();renderClasses()}
+function renderClasses(){const now=todayPlus(0);const sorted=[...state.classes].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));$('classStrip').innerHTML=sorted.map(c=>`<div class="class-card ${c.id===state.active?'active':''} ${c.date<now?'past':''}" data-id="${c.id}"><button class="x remove" data-del="${c.id}" title="Delete class">×</button><h3>${esc(c.course)}</h3><div class="meta"><div><b>${fmtDate(c.date)}</b> · ${fmtTime(c.time)}</div><div>${esc(c.location||'Location not set')}</div><div>${esc(c.client)}</div></div><span class="count ${(c.roster||[]).length?'has':'empty'}">${(c.roster||[]).length} participant${(c.roster||[]).length===1?'':'s'}</span></div>`).join('');document.querySelectorAll('.class-card').forEach(el=>el.onclick=()=>editClass(el.dataset.id));document.querySelectorAll('[data-del]').forEach(el=>el.onclick=e=>deleteClass(el.dataset.del,e))}
+load();
+</script>
+</body>
+</html>
