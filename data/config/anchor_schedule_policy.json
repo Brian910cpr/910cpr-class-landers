@@ -4,7 +4,8 @@
   "families": {
     "aha-bls-in-person": {
       "course_ids": ["209806", "359474"],
-      "repeat_delay_minutes": 240
+      "repeat_delay_minutes": 480,
+      "retain_barnacle_offers": false
     }
   },
   "exact_courses": {
