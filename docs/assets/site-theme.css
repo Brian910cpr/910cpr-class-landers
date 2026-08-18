@@ -258,6 +258,94 @@ html[data-theme="dark"] body :is(.course, .course.is-seated, .course.is-anchor, 
   border-color: #40566d !important;
 }
 
+/* Registration is the primary conversion action. Do not let the light-mode
+   accent token wash it out against dark surfaces. */
+html[data-theme="dark"] body :is(
+  .register-link, .button.primary, .primary-cta, .course-primary-cta,
+  a[data-registration]
+) {
+  background: linear-gradient(180deg, #0783c8 0%, #05679f 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #36a9e6 !important;
+  box-shadow: 0 9px 22px rgb(0 74 118 / 38%) !important;
+  text-shadow: 0 1px 1px rgb(0 0 0 / 28%) !important;
+}
+
+html[data-theme="dark"] body :is(
+  .register-link, .button.primary, .primary-cta, .course-primary-cta,
+  a[data-registration]
+):hover {
+  background: linear-gradient(180deg, #1299e2 0%, #0877b5 100%) !important;
+  border-color: #8ad4fa !important;
+  box-shadow: 0 11px 25px rgb(0 87 137 / 45%) !important;
+}
+
+html[data-theme="dark"] body :is(
+  .register-link, .button.primary, .primary-cta, .course-primary-cta,
+  a[data-registration]
+):focus-visible {
+  outline: 3px solid #ffd166 !important;
+  outline-offset: 3px !important;
+}
+
+/* Course-type controls are implemented under several names across generators:
+   cards, family choices, hub tabs, and request tabs. Keep all of them dark. */
+html[data-theme="dark"] body :is(
+  .course-family-card, .course-card, .course-family-choice,
+  .choice-list > button, .course-option, .hub-tabs .tab-btn,
+  .request-tab-btn
+) {
+  background: #17283a !important;
+  color: #e8f1f8 !important;
+  border-color: #486179 !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] body :is(.course-family-card, .course-card) {
+  background: #132131 !important;
+}
+
+html[data-theme="dark"] body :is(.course-icon, .course-icon-fallback) {
+  background: #20364b !important;
+  color: #a8dcff !important;
+}
+
+html[data-theme="dark"] body :is(
+  .course-family-choice strong, .course-title, .course-family-card h3,
+  .hub-tab-label, .request-tab-label
+) {
+  color: #f1f7fc !important;
+}
+
+html[data-theme="dark"] body :is(
+  .course-family-choice span, .course-help, .course-details,
+  .course-family-choice .course-price
+) {
+  color: #b7c8d8 !important;
+}
+
+html[data-theme="dark"] body :is(
+  .course-family-choice, .choice-list > button, .course-option,
+  .hub-tabs .tab-btn, .request-tab-btn
+):hover {
+  background: #203a52 !important;
+  color: #ffffff !important;
+  border-color: #75b8e2 !important;
+}
+
+html[data-theme="dark"] body :is(
+  .course-family-choice[aria-pressed="true"],
+  .choice-list > button[aria-pressed="true"],
+  .course-option[aria-pressed="true"],
+  .hub-tabs .tab-btn.active,
+  .request-tab-btn.active
+) {
+  background: #105f8c !important;
+  color: #ffffff !important;
+  border-color: #8bd4ff !important;
+  box-shadow: inset 4px 0 0 #8bd4ff !important;
+}
+
 .site-theme-toggle {
   appearance: none;
   display: inline-flex;
