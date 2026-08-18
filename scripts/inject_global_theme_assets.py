@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
-THEME_VERSION = "20260818.4"
+THEME_VERSION = "20260818.5"
 THEME_TAGS = (
     f'<link rel="stylesheet" href="/assets/site-theme.css?v={THEME_VERSION}">\n'
     '<script src="/assets/site-theme.js"></script>\n'
