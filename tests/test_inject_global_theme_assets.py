@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from scripts.inject_global_theme_assets import inject_html
+from scripts.inject_global_theme_assets import THEME_VERSION, inject_html
 
 
 class GlobalThemeInjectionTests(unittest.TestCase):
@@ -10,6 +10,7 @@ class GlobalThemeInjectionTests(unittest.TestCase):
         updated, changed = inject_html("<html><head><title>X</title></head><body></body></html>")
         self.assertTrue(changed)
         self.assertIn('/assets/site-theme.css', updated)
+        self.assertIn(f'/assets/site-theme.css?v={THEME_VERSION}', updated)
         self.assertIn('/assets/site-theme.js', updated)
         self.assertLess(updated.index('/assets/site-theme.js'), updated.index('</head>'))
 
@@ -18,6 +19,12 @@ class GlobalThemeInjectionTests(unittest.TestCase):
         twice, changed = inject_html(once)
         self.assertFalse(changed)
         self.assertEqual(once, twice)
+
+    def test_upgrades_unversioned_theme_link(self):
+        original = '<html><head><link rel="stylesheet" href="/assets/site-theme.css"><script src="/assets/site-theme.js"></script></head></html>'
+        updated, changed = inject_html(original)
+        self.assertTrue(changed)
+        self.assertIn(f'/assets/site-theme.css?v={THEME_VERSION}', updated)
 
     def test_skips_fragments_without_head(self):
         original = "<section>Fragment</section>"

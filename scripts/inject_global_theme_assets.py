@@ -2,19 +2,27 @@
 from __future__ import annotations
 
 import argparse
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
+THEME_VERSION = "20260818.2"
 THEME_TAGS = (
-    '<link rel="stylesheet" href="/assets/site-theme.css">\n'
+    f'<link rel="stylesheet" href="/assets/site-theme.css?v={THEME_VERSION}">\n'
     '<script src="/assets/site-theme.js"></script>\n'
 )
 
 
 def inject_html(text: str) -> tuple[str, bool]:
-    if "/assets/site-theme.js" in text and "/assets/site-theme.css" in text:
-        return text, False
+    theme_block = re.compile(
+        r'<link rel="stylesheet" href="/assets/site-theme\.css(?:\?v=[^"]+)?">\s*'
+        r'<script src="/assets/site-theme\.js"></script>\s*',
+        re.IGNORECASE,
+    )
+    if theme_block.search(text):
+        updated = theme_block.sub(THEME_TAGS, text, count=1)
+        return updated, updated != text
     lower = text.lower()
     head_end = lower.find("</head>")
     if head_end < 0:
