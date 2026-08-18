@@ -1861,7 +1861,8 @@ def render_html(payload: dict[str, Any]) -> str:
             }}
             button.disabled = disabled;
             button.setAttribute('aria-disabled', String(disabled));
-            const activityText = [seatedLabels.length ? 'Scheduled class at ' + seatedLabels.join(', ') : '', anchorLabels.length ? 'anchor at ' + anchorLabels.join(', ') : '', barnacleLabels.length ? 'barnacle at ' + barnacleLabels.join(', ') : '', optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''].filter(Boolean).join('; ');
+            const scheduledLabels = [...new Set([...seatedLabels, ...anchorLabels, ...barnacleLabels])];
+            const activityText = [scheduledLabels.length ? 'Scheduled class at ' + scheduledLabels.join(', ') : '', optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''].filter(Boolean).join('; ');
             button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'Not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {{
@@ -1931,7 +1932,7 @@ def render_html(payload: dict[str, Any]) -> str:
         }}
         button.disabled = disabled;
         button.setAttribute('aria-disabled', String(disabled));
-        button.setAttribute('aria-label', slot.displayStartTime + (isAnchor ? ' scheduled class; anchor' : isBarnacle ? ' barnacle; attached opportunity around an anchor' : isSeated ? ' scheduled class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
+        button.setAttribute('aria-label', slot.displayStartTime + ((isAnchor || isBarnacle || isSeated) ? ' scheduled class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
         button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
         button.addEventListener('click', () => {{
           if (isPastStart(day, slot)) {{
@@ -1985,7 +1986,7 @@ def render_html(payload: dict[str, Any]) -> str:
         if (isSeated || role === 'anchor' || role === 'barnacle') {{
           const cue = document.createElement('div');
           cue.className = 'schedule-cue';
-          cue.textContent = role === 'anchor' ? '★ Scheduled · Anchor' : (role === 'barnacle' ? '◐ Attached · Barnacle' : '★ Scheduled class');
+          cue.textContent = '★ Scheduled class';
           summary.appendChild(cue);
         }}
         summary.append(title, dateRow, timeRow, locationRow);
