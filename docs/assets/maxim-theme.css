@@ -1,0 +1,189 @@
+/* Maxim portal dark-mode corrections.
+   Uses the same slate/blue hierarchy as the public BLS selector so dark mode
+   remains readable instead of preserving hard-coded light surfaces. */
+html[data-theme="dark"] body {
+  background:#0b1220 !important;
+  color:#e8eef6 !important;
+}
+
+html[data-theme="dark"] body header,
+html[data-theme="dark"] body .card,
+html[data-theme="dark"] body .flow,
+html[data-theme="dark"] body .tabs,
+html[data-theme="dark"] body .section,
+html[data-theme="dark"] body .chat-shell,
+html[data-theme="dark"] body .employee-drawer,
+html[data-theme="dark"] body .access-card {
+  background:#111a27 !important;
+  color:#e8eef6 !important;
+  border-color:#39495d !important;
+}
+
+html[data-theme="dark"] body .flow-head,
+html[data-theme="dark"] body .section-title,
+html[data-theme="dark"] body .chat-head,
+html[data-theme="dark"] body .gantt-head,
+html[data-theme="dark"] body .billing,
+html[data-theme="dark"] body .registerbox,
+html[data-theme="dark"] body .detail {
+  background:#172435 !important;
+  color:#e8eef6 !important;
+  border-color:#39495d !important;
+}
+
+html[data-theme="dark"] body .gantt-person,
+html[data-theme="dark"] body .gantt-cell,
+html[data-theme="dark"] body .gantt-row {
+  background:#111a27 !important;
+  color:#e8eef6 !important;
+  border-color:#39495d !important;
+}
+
+html[data-theme="dark"] body .gantt-head > div {
+  color:#b9c6d5 !important;
+  border-color:#39495d !important;
+}
+
+html[data-theme="dark"] body .gantt-person b,
+html[data-theme="dark"] body .gantt-person button,
+html[data-theme="dark"] body .name,
+html[data-theme="dark"] body a:not(.gantt-pill) {
+  color:#83cbfa !important;
+}
+
+html[data-theme="dark"] body .gantt-person small,
+html[data-theme="dark"] body .flow-head p,
+html[data-theme="dark"] body .course-summary small,
+html[data-theme="dark"] body .muted,
+html[data-theme="dark"] body .portal-grid-note,
+html[data-theme="dark"] body .slot-legend,
+html[data-theme="dark"] body .drawer-message,
+html[data-theme="dark"] body .empty {
+  color:#a9b8c9 !important;
+}
+
+html[data-theme="dark"] body .course-picker button,
+html[data-theme="dark"] body .variant-picker button,
+html[data-theme="dark"] body .btn,
+html[data-theme="dark"] body .tiny,
+html[data-theme="dark"] body .day.avail,
+html[data-theme="dark"] body .timechips button,
+html[data-theme="dark"] body .flow-tools input,
+html[data-theme="dark"] body .flow-tools select,
+html[data-theme="dark"] body .formgrid input,
+html[data-theme="dark"] body .formgrid select,
+html[data-theme="dark"] body .drawer-grid input,
+html[data-theme="dark"] body .drawer-grid select,
+html[data-theme="dark"] body .drawer-close,
+html[data-theme="dark"] body .chat-compose textarea {
+  background:#17283a !important;
+  color:#edf4fb !important;
+  border-color:#4a6077 !important;
+}
+
+html[data-theme="dark"] body .course-picker button:hover,
+html[data-theme="dark"] body .variant-picker button:hover,
+html[data-theme="dark"] body .day.avail:hover,
+html[data-theme="dark"] body .timechips button:hover {
+  background:#203249 !important;
+  border-color:#78bde9 !important;
+}
+
+html[data-theme="dark"] body .course-picker button.active,
+html[data-theme="dark"] body .variant-picker button.active,
+html[data-theme="dark"] body .day.sel,
+html[data-theme="dark"] body .timechips button.sel {
+  background:#126894 !important;
+  color:#fff !important;
+  border-color:#8bd4ff !important;
+  box-shadow:0 0 0 2px rgb(79 180 236 / 28%) !important;
+}
+
+html[data-theme="dark"] body .day:not(.avail):not(.sel) {
+  color:#667a8e !important;
+}
+
+html[data-theme="dark"] body .tab {
+  background:#172435 !important;
+  color:#b9c6d5 !important;
+  border-color:#39495d !important;
+}
+
+html[data-theme="dark"] body .tab.active {
+  background:#203249 !important;
+  color:#8fd0f7 !important;
+  box-shadow:inset 0 3px 0 #69b9ee !important;
+}
+
+html[data-theme="dark"] body .tab .count,
+html[data-theme="dark"] body .gantt-pill {
+  background:#1a2b3e !important;
+  color:#dceaf6 !important;
+}
+
+html[data-theme="dark"] body .gantt-pill.has-data {
+  background:#126894 !important;
+  color:#fff !important;
+}
+
+html[data-theme="dark"] body .gantt-cell.done .gantt-pill {
+  background:#183a31 !important;
+  color:#a4e5c8 !important;
+}
+
+html[data-theme="dark"] body .gantt-track,
+html[data-theme="dark"] body .gantt-cell.future .gantt-track {
+  background:#26394b !important;
+}
+
+html[data-theme="dark"] body .gantt-cell.done .gantt-track {
+  background:#36745e !important;
+}
+
+html[data-theme="dark"] body .timechips button.slot-anchor {
+  background:#183a31 !important;
+  color:#a4e5c8 !important;
+  border-color:#3d7b64 !important;
+}
+
+html[data-theme="dark"] body .timechips button.slot-barnacle {
+  background:#44371c !important;
+  color:#f4d486 !important;
+  border-color:#846c31 !important;
+}
+
+html[data-theme="dark"] body .timechips button.slot-open {
+  background:#173550 !important;
+  color:#a8dcff !important;
+  border-color:#3f789d !important;
+}
+
+html[data-theme="dark"] body .note {
+  background:#44371c !important;
+  color:#f4d486 !important;
+  border-color:#846c31 !important;
+}
+
+html[data-theme="dark"] body .chat-state {
+  background:#44371c !important;
+  color:#f4d486 !important;
+  border-color:#846c31 !important;
+}
+
+html[data-theme="dark"] body .access-gate {
+  background:linear-gradient(135deg,#0b1220,#172435) !important;
+}
+
+html[data-theme="dark"] body .employee-backdrop {
+  background:rgba(0,0,0,.62) !important;
+}
+
+html[data-theme="dark"] body .primary {
+  background:#126894 !important;
+  color:#fff !important;
+  border-color:#8bd4ff !important;
+}
+
+html[data-theme="dark"] body :focus-visible {
+  outline-color:#ffd166;
+}
