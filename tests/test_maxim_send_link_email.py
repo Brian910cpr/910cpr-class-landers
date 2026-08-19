@@ -60,7 +60,7 @@ class MaximSendLinkEmailTests(unittest.TestCase):
         self.assertIn("billingAccount: billing.value", source)
         self.assertIn("requestedBy: requester", source)
 
-    def test_bridge_persists_confirmed_course_billing_and_requester_after_delivery(self) -> None:
+    def test_bridge_persists_confirmed_current_cycle_values_after_delivery(self) -> None:
         source = BRIDGE.read_text(encoding="utf-8")
         self.assertIn('allowedCourses = new Set(["BLS", "HS Total"])', source)
         self.assertIn('allowedBillingAccounts = new Set(["#031", "#0852", "#502"])', source)
