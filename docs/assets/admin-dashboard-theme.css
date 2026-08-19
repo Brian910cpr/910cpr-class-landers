@@ -1,0 +1,179 @@
+/* Operations dashboard dark-mode contrast repair.
+   Loaded only on /admin/dashboard.html by site-theme.js. */
+html[data-theme="dark"] body {
+  --ops-panel: #111a27;
+  --ops-panel-soft: #172435;
+  --ops-control: #1a2b3e;
+  --ops-control-hover: #21364c;
+  --ops-border: #4b6077;
+  --ops-border-strong: #6f879f;
+  --ops-text: #eef5fc;
+  --ops-muted: #b8c8d8;
+  --ops-blue: #8fd0f7;
+}
+
+html[data-theme="dark"] body .panel,
+html[data-theme="dark"] body .month,
+html[data-theme="dark"] body .daydetail,
+html[data-theme="dark"] body .contextpane,
+html[data-theme="dark"] body .recordbar,
+html[data-theme="dark"] body .recordRow,
+html[data-theme="dark"] body .flowitem {
+  background: var(--ops-panel) !important;
+  color: var(--ops-text) !important;
+  border-color: var(--ops-border) !important;
+}
+
+html[data-theme="dark"] body :is(.muted, .searchhint, .emptymsg, .event small, .legend, .field label) {
+  color: var(--ops-muted) !important;
+}
+
+/* Month grid: the old dashboard hard-codes near-white day cells. */
+html[data-theme="dark"] body .d:not(.empty) {
+  background: #18283a !important;
+  color: var(--ops-text) !important;
+  border-color: #50677f !important;
+}
+
+html[data-theme="dark"] body .d:not(.empty):hover {
+  background: #21364c !important;
+  border-color: #86c7ef !important;
+}
+
+html[data-theme="dark"] body .d.today {
+  outline-color: #8fd0f7 !important;
+}
+
+html[data-theme="dark"] body .d.selected {
+  background: #174968 !important;
+  outline-color: #a7dcfb !important;
+}
+
+html[data-theme="dark"] body .d.hasclass {
+  background: #173550 !important;
+  border-color: #4f86aa !important;
+}
+
+html[data-theme="dark"] body .d.hasoffer {
+  box-shadow: inset 0 -4px 0 #55a875 !important;
+}
+
+html[data-theme="dark"] body .d.hasblock {
+  border-top-color: #d97a7a !important;
+}
+
+html[data-theme="dark"] body .d .num,
+html[data-theme="dark"] body .d .tiny {
+  color: inherit !important;
+}
+
+/* Forms and selects need clear separation from the surrounding navy panels. */
+html[data-theme="dark"] body :is(
+  .adminform input, .adminform select, .adminform textarea,
+  #adminKeyInput, #inboxCategory, #inboxAssociation, #inboxNotes,
+  #rosterPaste
+) {
+  background: #1a2b3e !important;
+  color: #f4f8fc !important;
+  border-color: #60758b !important;
+}
+
+html[data-theme="dark"] body :is(input, textarea)::placeholder {
+  color: #9fb1c3 !important;
+  opacity: 1 !important;
+}
+
+html[data-theme="dark"] body select option {
+  background: #172435 !important;
+  color: #eef5fc !important;
+}
+
+/* File-drop zones were the largest remaining white washout. */
+html[data-theme="dark"] body .drop {
+  background: #142234 !important;
+  color: #dce8f4 !important;
+  border-color: #668099 !important;
+}
+
+html[data-theme="dark"] body .drop :is(p, span, small, div) {
+  color: #c4d2e0 !important;
+}
+
+/* Buttons/tabs: preserve primary blue but make secondary controls readable. */
+html[data-theme="dark"] body .btn:not(.primary) {
+  background: #1c3044 !important;
+  color: #edf5fc !important;
+  border-color: #60768d !important;
+}
+
+html[data-theme="dark"] body .btn:not(.primary):hover {
+  background: #29435b !important;
+  border-color: #8fd0f7 !important;
+}
+
+html[data-theme="dark"] body .btn.primary {
+  background: #0d6ea7 !important;
+  color: #ffffff !important;
+  border-color: #72c4f2 !important;
+}
+
+html[data-theme="dark"] body :is(.btn, input, select, textarea):focus-visible {
+  outline: 2px solid #ffd166 !important;
+  outline-offset: 2px !important;
+}
+
+html[data-theme="dark"] body :is(.btn:disabled, input:disabled, select:disabled, textarea:disabled) {
+  background: #182230 !important;
+  color: #8fa1b3 !important;
+  border-color: #394b5e !important;
+  opacity: 1 !important;
+}
+
+/* Status and semantic cards keep meaning without low-contrast pastels. */
+html[data-theme="dark"] body .status {
+  background: #1a2b3e !important;
+  color: #e7f1fa !important;
+  border: 1px solid #4b637b !important;
+}
+
+html[data-theme="dark"] body .status.good {
+  background: #183a31 !important;
+  color: #a7e8cb !important;
+  border-color: #3e8067 !important;
+}
+
+html[data-theme="dark"] body .status.warn {
+  background: #44371c !important;
+  color: #f5d98f !important;
+  border-color: #846c31 !important;
+}
+
+html[data-theme="dark"] body .status.bad {
+  background: #482528 !important;
+  color: #ffb7bb !important;
+  border-color: #81464b !important;
+}
+
+html[data-theme="dark"] body .status.loading {
+  background: #173550 !important;
+  color: #a8dcff !important;
+  border-color: #3f789d !important;
+}
+
+/* Timeline/event rows when a day is selected. */
+html[data-theme="dark"] body .event {
+  background: #17283a !important;
+  color: #eef5fc !important;
+}
+
+html[data-theme="dark"] body .event.offer { background: #183a31 !important; }
+html[data-theme="dark"] body .event.gap { background: #3d321c !important; }
+html[data-theme="dark"] body .event.block { background: #44262a !important; }
+html[data-theme="dark"] body .event.available { background: #302847 !important; }
+
+/* Keep the JSON editor intentionally dark but increase its border contrast. */
+html[data-theme="dark"] body .jsonbox {
+  background: #08111d !important;
+  color: #e5edf6 !important;
+  border-color: #60758b !important;
+}
