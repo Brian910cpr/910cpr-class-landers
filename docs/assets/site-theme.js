@@ -61,4 +61,11 @@
   media.addEventListener("change", function (event) {
     if (!savedTheme()) applyTheme(event.matches ? "dark" : "light");
   });
+
+  if (location.pathname.startsWith("/corp/nhcso")) {
+    const script = document.createElement("script");
+    script.src = "/corp/nhcso/compact-rail.js?v=20260819.1";
+    script.defer = true;
+    document.head.appendChild(script);
+  }
 })();
