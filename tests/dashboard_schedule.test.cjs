@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { scheduleRows, normalizeSessions, monthSummary, reconcileSchedule } = require("../docs/admin/schedule-model.js");
+const { scheduleRows, normalizeSessions, monthSummary, reconcileSchedule, instructorName, instructorNames, annotateConflicts } = require("../docs/admin/schedule-model.js");
 
 const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures/admin_schedule_multiple_sessions.json"), "utf8"));
 const parseDate = (value) => { const date = new Date(value); return Number.isNaN(date.getTime()) ? null : date; };
@@ -42,13 +42,33 @@ test("reconciliation fails loudly for a 23-loaded-to-1-rendered calendar", () =>
   assert.match(result.errors.join(" "), /8 dates should contain classes but only 1/);
 });
 
+test("instructor tabs are filters over one dataset and retain unassigned sessions", () => {
+  const sessions = normalizeSessions(fixture, parseDate, courseName);
+  assert.deepEqual(instructorNames(sessions), ["Amy Jones", "Brian Ennis", "Graves", "Unassigned"]);
+  assert.equal(sessions.filter((session) => instructorName(session) === "Amy Jones").length, 2);
+  assert.equal(sessions.filter((session) => instructorName(session) === "Unassigned").length, 1);
+});
+
+test("overlapping classes and same-location conflicts are annotated, never deduplicated", () => {
+  const sessions = normalizeSessions(fixture, parseDate, courseName).filter((session) => keyOf(session._start) === "2026-08-19");
+  const annotated = annotateConflicts(sessions, (session) => session.location_name || "");
+  assert.equal(annotated.length, 4);
+  assert.equal(annotated.find((session) => session.session_id === "aug19-amy-1")._locationConflict, true);
+  assert.equal(annotated.find((session) => session.session_id === "aug19-amy-2")._locationConflict, true);
+  assert.ok(annotated.filter((session) => session._overlapCount > 0).length >= 3);
+});
+
 test("dashboard startup has no dead legacy month bindings and schedule read remains independent of HOT_SYNC auth", () => {
   const html = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard.html"), "utf8");
   assert.doesNotMatch(html, /getElementById\(['"]prevMonth['"]\)/);
   assert.doesNotMatch(html, /getElementById\(['"]nextMonth['"]\)/);
   assert.match(html, /clearRecord\(\);load\(\)/);
   assert.match(html, /fetch\(`\$\{SCHEDULE_URL\}\?v=\$\{Date\.now\(\)\}`/);
+  assert.match(html, /schedule-model\.js\?v=20260819-2/);
   assert.match(html, /id="scheduleIntegrity"/);
   assert.match(html, /data-class-count=/);
+  assert.match(html, /class=\"instructor-tabs\"/);
+  assert.match(html, /ScheduleModel\.instructorNames\(sessions\)/);
+  assert.match(html, /Same-time location conflict/);
   assert.doesNotMatch(html, /fetch\(`\$\{SCHEDULE_URL\}[^`]*X-Hot-Sync-Admin-Key/);
 });

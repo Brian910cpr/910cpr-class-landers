@@ -27,7 +27,29 @@
     return { ok: errors.length === 0, errors };
   }
 
-  const api = { scheduleRows, normalizeSessions, monthSummary, reconcileSchedule };
+  function instructorName(record) {
+    return String(record.lead_instructor_name || record.instructor || record.instructor_name || "Unassigned").trim() || "Unassigned";
+  }
+
+  function instructorNames(sessions) {
+    return [...new Set(sessions.map(instructorName))].sort((a, b) => a === "Unassigned" ? 1 : b === "Unassigned" ? -1 : a.localeCompare(b));
+  }
+
+  function overlaps(left, right) {
+    const leftEnd = left._end || left._start;
+    const rightEnd = right._end || right._start;
+    return left._start < rightEnd && right._start < leftEnd;
+  }
+
+  function annotateConflicts(sessions, locationName) {
+    return sessions.map((record) => ({
+      ...record,
+      _overlapCount: sessions.filter((other) => other !== record && overlaps(record, other)).length,
+      _locationConflict: sessions.some((other) => other !== record && overlaps(record, other) && locationName(record) && locationName(other).toLowerCase() === locationName(record).toLowerCase()),
+    }));
+  }
+
+  const api = { scheduleRows, normalizeSessions, monthSummary, reconcileSchedule, instructorName, instructorNames, overlaps, annotateConflicts };
   root.ScheduleModel = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);
