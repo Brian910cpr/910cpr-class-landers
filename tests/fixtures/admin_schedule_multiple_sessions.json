@@ -1,0 +1,10 @@
+{
+  "generated_at": "2026-08-19T08:00:00-04:00",
+  "sessions": [
+    {"session_id":"aug19-brian-1","course_name":"AHA BLS Provider","start_at":"2026-08-19T09:00:00-04:00","end_at":"2026-08-19T11:00:00-04:00","lead_instructor_name":"Brian Ennis","location_name":"Shipyard Room B","registered_count":4,"registration_url":"https://example.test/enroll/1"},
+    {"session_id":"aug19-amy-1","course_name":"AHA HeartCode BLS","start_at":"2026-08-19T09:00:00-04:00","end_at":"2026-08-19T10:00:00-04:00","lead_instructor_name":"Amy Jones","location_name":"Shipyard Room A","registered_count":2,"registration_url":"https://example.test/enroll/2"},
+    {"session_id":"aug19-amy-2","course_name":"AHA Heartsaver CPR AED","start_at":"2026-08-19T09:30:00-04:00","end_at":"2026-08-19T11:30:00-04:00","lead_instructor_name":"Amy Jones","location_name":"Shipyard Room A","registered_count":1,"registration_url":"https://example.test/enroll/3"},
+    {"session_id":"aug19-graves-1","course_name":"HSI BLS","start_at":"2026-08-19T13:00:00-04:00","end_at":"2026-08-19T15:00:00-04:00","lead_instructor_name":"Graves","location_name":"Offsite Corporate","registered_count":8,"registration_url":"https://example.test/enroll/4"},
+    {"session_id":"aug20-mednorth","course_name":"AHA BLS Provider Renewal","start_at":"2026-08-20T08:00:00-04:00","end_at":"2026-08-20T10:30:00-04:00","lead_instructor_name":null,"location_name":"MedNorth @ 917 N 4th St","registered_count":6,"registration_url":"https://example.test/enroll/5"}
+  ]
+}
