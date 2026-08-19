@@ -55,8 +55,44 @@
     applyTheme(root.dataset.theme);
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", installToggle, { once: true });
-  else installToggle();
+  function installMaximSendLinkEmail() {
+    if (!/^\/corp\/maxim(?:\.html)?$/.test(window.location.pathname)) return;
+    if (typeof window.emailScheduleLink !== "function") return;
+
+    window.emailScheduleLink = async function (id) {
+      const person = trainingFlow.find(function (item) { return item.id === id; });
+      if (!person) return;
+      if (!person.email) {
+        alert("This employee does not have an email address.");
+        return;
+      }
+
+      const api = "https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/maxim-link-email";
+      const response = await fetch(api, {
+        method: "POST",
+        headers: maximApiHeaders(),
+        body: JSON.stringify({ employeeId: id })
+      });
+      const result = await response.json().catch(function () { return {}; });
+      if (!response.ok) {
+        alert(result.error || "Could not send the scheduling reminder.");
+        return;
+      }
+
+      person.linkSentDate = result.linkSentDate;
+      person.stage = result.workflowStage;
+      renderTrainingFlow();
+      alert("Scheduling reminder sent to " + person.email + ".");
+    };
+  }
+
+  function installPageEnhancements() {
+    installToggle();
+    installMaximSendLinkEmail();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", installPageEnhancements, { once: true });
+  else installPageEnhancements();
 
   media.addEventListener("change", function (event) {
     if (!savedTheme()) applyTheme(event.matches ? "dark" : "light");
