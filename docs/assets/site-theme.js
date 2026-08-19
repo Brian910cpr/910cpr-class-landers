@@ -26,6 +26,16 @@
     });
   }
 
+  function loadPageThemeOverrides() {
+    if (location.pathname === "/admin/dashboard.html") {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "/assets/admin-dashboard-theme.css?v=20260819.1";
+      document.head.appendChild(link);
+    }
+  }
+
+  loadPageThemeOverrides();
   applyTheme(savedTheme() || (media.matches ? "dark" : "light"));
 
   function installToggle() {
