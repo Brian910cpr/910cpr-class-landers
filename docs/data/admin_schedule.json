@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-19T13:45:53.743472+00:00",
+  "generated_at": "2026-08-19T14:34:17.889587+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
     "sessions": 25,
@@ -14,7 +14,7 @@
     {
       "session_id": "13956833",
       "course_name": "AHA BLS Provider",
-      "start_at": "2026-08-19T09:00:00-04:00",
+      "start_at": "2026-08-19T08:00:00-04:00",
       "end_at": "2026-08-19T10:00:00-04:00",
       "lead_instructor_name": "Brian Ennis",
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
@@ -58,9 +58,9 @@
     },
     {
       "session_id": "13945163",
-      "course_name": "American Red Cross Basic Life Support",
+      "course_name": "AHA - BLS Provider - Renewal Instructor-led Classroom program for BLS Renewal",
       "start_at": "2026-08-19T15:15:00-04:00",
-      "end_at": "2026-08-19T17:15:00-04:00",
+      "end_at": "2026-08-19T15:15:00-04:00",
       "lead_instructor_name": "Brian Ennis",
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
