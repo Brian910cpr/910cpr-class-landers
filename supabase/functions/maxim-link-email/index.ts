@@ -65,16 +65,34 @@ function ecardCodeFromStatus(value: unknown) {
   return String(value || "").match(/\beCard\s+([A-Za-z0-9-]+)/i)?.[1] || null;
 }
 
-async function sendReminder(employeeId: string) {
+const allowedCourses = new Set(["BLS", "HS Total"]);
+const allowedBillingAccounts = new Set(["#031", "#0852", "#502"]);
+
+async function sendReminder(input: {
+  employeeId: string;
+  course: string;
+  billingAccount: string;
+  requestedBy: string;
+}) {
   const workerUrl = Deno.env.get("MAXIM_EMAIL_WORKER_URL") || "";
   const workerSecret = Deno.env.get("MAXIM_EMAIL_WORKER_SECRET") || "";
   if (!workerUrl || !workerSecret) {
     return response({ error: "Maxim email delivery is not configured." }, 503);
   }
 
+  if (!allowedCourses.has(input.course)) {
+    return response({ error: "Choose a valid Maxim course." }, 400);
+  }
+  if (!allowedBillingAccounts.has(input.billingAccount)) {
+    return response({ error: "Choose a valid Maxim billing code." }, 400);
+  }
+  if (!input.requestedBy) {
+    return response({ error: "The Maxim member requesting this reminder is required." }, 400);
+  }
+
   const profiles = await rest(
-    `maxim_employee_profiles?select=id,current_external_registration_id,workflow_stage,status_detail,required_training,customers(first_name,email)&id=eq.${
-      encodeURIComponent(employeeId)
+    `maxim_employee_profiles?select=id,current_external_registration_id,workflow_stage,status_detail,customers(first_name,email)&id=eq.${
+      encodeURIComponent(input.employeeId)
     }&active=eq.true&limit=1`,
   );
   if (profiles.length !== 1) return response({ error: "Employee not found." }, 404);
@@ -99,7 +117,9 @@ async function sendReminder(employeeId: string) {
     body: JSON.stringify({
       to: email,
       firstName: String(profile.customers?.first_name || ""),
-      course: String(profile.required_training || ""),
+      course: input.course,
+      billingAccount: input.billingAccount,
+      requestedBy: input.requestedBy,
     }),
   });
   const mailResult = await mailResponse.json().catch(() => ({}));
@@ -112,13 +132,16 @@ async function sendReminder(employeeId: string) {
 
   const sentAt = new Date().toISOString();
   const workflowStage = profile.current_external_registration_id ? 2 : 1;
-  await rest(`maxim_employee_profiles?id=eq.${encodeURIComponent(employeeId)}&active=eq.true`, {
+  const requesterNote = `Requested by ${input.requestedBy}`;
+  await rest(`maxim_employee_profiles?id=eq.${encodeURIComponent(input.employeeId)}&active=eq.true`, {
     method: "PATCH",
     body: JSON.stringify({
+      required_training: input.course,
+      billing_account: input.billingAccount,
       workflow_stage: workflowStage,
       status_detail: workflowStage === 2
-        ? "Registered; another scheduling link sent"
-        : "Scheduling link sent",
+        ? `Registered; another scheduling link sent; ${requesterNote}`
+        : `Scheduling link sent; ${requesterNote}`,
       link_sent_at: sentAt,
       updated_at: sentAt,
     }),
@@ -126,10 +149,13 @@ async function sendReminder(employeeId: string) {
 
   return response({
     ok: true,
-    id: employeeId,
+    id: input.employeeId,
     emailSent: true,
     linkSentDate: sentAt,
     workflowStage,
+    course: input.course,
+    billingAccount: input.billingAccount,
+    requestedBy: input.requestedBy,
     messageId: mailResult.messageId || null,
   });
 }
@@ -141,8 +167,11 @@ Deno.serve(async (req) => {
     if (!(await authorized(req))) return response({ error: "Unauthorized" }, 401);
     const body = await req.json().catch(() => ({}));
     const employeeId = String(body.employeeId || "").trim();
+    const course = String(body.course || "").trim();
+    const billingAccount = String(body.billingAccount || "").trim();
+    const requestedBy = String(body.requestedBy || "").trim();
     if (!employeeId) return response({ error: "employeeId is required." }, 400);
-    return await sendReminder(employeeId);
+    return await sendReminder({ employeeId, course, billingAccount, requestedBy });
   } catch (error) {
     return response({
       error: error instanceof Error ? error.message : "Unexpected error",
