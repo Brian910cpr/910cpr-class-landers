@@ -26,12 +26,20 @@
     });
   }
 
+  function loadStylesheet(href) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    document.head.appendChild(link);
+  }
+
   function loadPageThemeOverrides() {
     if (location.pathname === "/admin/dashboard.html") {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "/assets/admin-dashboard-theme.css?v=20260819.1";
-      document.head.appendChild(link);
+      loadStylesheet("/assets/admin-dashboard-theme.css?v=20260819.1");
+    }
+
+    if (location.pathname === "/corp/maxim" || location.pathname === "/corp/maxim.html") {
+      loadStylesheet("/assets/maxim-theme.css?v=20260819.1");
     }
   }
 
