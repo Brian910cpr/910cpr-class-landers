@@ -7,11 +7,6 @@ binding = "DB"
 database_name = "910cpr-landerware"
 database_id = "REPLACE_WITH_D1_DATABASE_ID"
 
-[[send_email]]
-name = "EMAIL"
-allowed_sender_addresses = [ "brian@910cpr.com" ]
-
 [vars]
 PUBLIC_ORIGIN = "https://www.910cpr.com"
 PORTAL_PATH = "/corp/maxim.html"
-MAXIM_SCHEDULING_URL = "https://www.910cpr.com/corp/maxim"
