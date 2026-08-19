@@ -34,7 +34,9 @@ export default {
     const data = await readJson(request);
     const to = String(data?.to || '').trim();
     const firstName = String(data?.firstName || '').trim();
+    const requestedBy = String(data?.requestedBy || '').trim();
     if (!validEmail(to)) return json({ error: 'A valid employee email is required' }, 400);
+    if (!requestedBy) return json({ error: 'Requested by is required' }, 400);
 
     const greeting = firstName ? `Hi ${firstName},` : 'Hello,';
     const scheduleUrl = env.MAXIM_SCHEDULING_URL || 'https://www.910cpr.com/corp/maxim';
