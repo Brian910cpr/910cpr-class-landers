@@ -6,6 +6,8 @@ const COURSE_MAP = {
   'hs-in-person': { courseId: '209809', credentialKey: 'aha_heartsaver_fa_cpr_aed' },
   'hs-online-skills': { courseId: '329495', credentialKey: 'aha_heartsaver_fa_cpr_aed' }
 };
+const MAXIM_EMAIL_FROM = 'brian@910cpr.com';
+const MAXIM_EMAIL_SUBJECT = 'Maxim CPR recertification reminder';
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: JSON_HEADERS });
@@ -20,6 +22,48 @@ function token() {
 }
 async function body(request) {
   try { return await request.json(); } catch { return null; }
+}
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[character]));
+}
+function validEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
+}
+function authorizedMaximEmailRequest(request, env) {
+  if (!env.MAXIM_EMAIL_SECRET) return false;
+  return request.headers.get('authorization') === `Bearer ${env.MAXIM_EMAIL_SECRET}`;
+}
+
+async function sendMaximReminderEmail(request, env) {
+  if (!authorizedMaximEmailRequest(request, env)) return json({ error: 'Unauthorized' }, 401);
+  if (!env.EMAIL?.send) return json({ error: 'Email binding is not configured' }, 503);
+
+  const data = await body(request);
+  const to = String(data?.to || '').trim();
+  const firstName = String(data?.firstName || '').trim();
+  if (!validEmail(to)) return json({ error: 'A valid employee email is required' }, 400);
+
+  const greeting = firstName ? `Hi ${firstName},` : 'Hello,';
+  const scheduleUrl = env.MAXIM_SCHEDULING_URL || `${env.PUBLIC_ORIGIN}/corp/maxim`;
+  const text = `${greeting}\n\nMaxim has asked me to remind you that your CPR Card is expiring soon, and they would like you to choose a date most convenient for you to recertify.\n\nChoose a date here:\n${scheduleUrl}\n\nIf you need further info on scheduling, please reply here or call 910CPR at 910-395-5193.\n\nOther Maxim-specific questions should be forwarded to your Maxim representative at 910-251-8990.\n\nThank you!\nBrian`;
+  const html = `<p>${escapeHtml(greeting)}</p><p>Maxim has asked me to remind you that your CPR Card is expiring soon, and they would like you to choose a date most convenient for you to recertify.</p><p><a href="${escapeHtml(scheduleUrl)}">Choose a recertification date</a></p><p>If you need further info on scheduling, please reply here or call 910CPR at <a href="tel:+19103955193">910-395-5193</a>.</p><p>Other Maxim-specific questions should be forwarded to your Maxim representative at <a href="tel:+19102518990">910-251-8990</a>.</p><p>Thank you!<br>Brian</p>`;
+
+  try {
+    const result = await env.EMAIL.send({
+      to,
+      from: { email: MAXIM_EMAIL_FROM, name: 'Brian | 910CPR' },
+      replyTo: MAXIM_EMAIL_FROM,
+      subject: MAXIM_EMAIL_SUBJECT,
+      text,
+      html
+    });
+    return json({ ok: true, messageId: result.messageId });
+  } catch (error) {
+    console.error('Maxim reminder email failed', error?.code, error?.message);
+    return json({ error: 'Email delivery failed', code: error?.code || null }, 502);
+  }
 }
 
 async function createGoToken(request, env) {
@@ -93,9 +137,10 @@ async function createRegistration(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { 'access-control-allow-origin': env.PUBLIC_ORIGIN, 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type' } });
+    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { 'access-control-allow-origin': env.PUBLIC_ORIGIN, 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'authorization,content-type' } });
     let response;
-    if (request.method === 'POST' && url.pathname === '/api/corp/maxim/go-links') response = await createGoToken(request, env);
+    if (request.method === 'POST' && url.pathname === '/api/corp/maxim/send-link-email') response = await sendMaximReminderEmail(request, env);
+    else if (request.method === 'POST' && url.pathname === '/api/corp/maxim/go-links') response = await createGoToken(request, env);
     else if (request.method === 'GET' && url.pathname.startsWith('/api/go/')) response = await resolveGoToken(url.pathname.split('/').pop(), env);
     else if (request.method === 'POST' && /^\/api\/corp\/maxim\/renewals\/[^/]+\/skip$/.test(url.pathname)) response = await skipRenewal(request, env, url.pathname.split('/')[5]);
     else if (request.method === 'GET' && /^\/api\/corp\/maxim\/people\/[^/]+\/history$/.test(url.pathname)) response = await history(env, url.pathname.split('/')[5]);
