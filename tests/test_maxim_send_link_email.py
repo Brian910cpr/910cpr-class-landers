@@ -70,6 +70,12 @@ class MaximSendLinkEmailTests(unittest.TestCase):
         self.assertIn("requestedBy: input.requestedBy", source)
         self.assertLess(source.index("const mailResponse = await fetch"), source.index("required_training: input.course"))
 
+    def test_current_billing_change_does_not_rewrite_registration_history(self) -> None:
+        source = BRIDGE.read_text(encoding="utf-8")
+        self.assertIn("maxim_employee_profiles?id=eq.", source)
+        self.assertNotIn("maxim_registration_requests?id=eq.", source)
+        self.assertNotIn("billing_account: input.billingAccount", source[source.index("const mailResponse = await fetch"):source.index("const sentAt = new Date().toISOString()")])
+
     def test_maxim_send_link_click_uses_email_bridge_not_local_mail_client(self) -> None:
         source = SITE_THEME.read_text(encoding="utf-8")
         self.assertIn("installMaximSendLinkEmail", source)
