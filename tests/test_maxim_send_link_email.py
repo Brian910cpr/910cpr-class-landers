@@ -18,6 +18,7 @@ class MaximSendLinkEmailTests(unittest.TestCase):
         self.assertIn("910-251-8990", source)
         self.assertIn("env.EMAIL.send", source)
         self.assertIn("MAXIM_EMAIL_SECRET", source)
+        self.assertIn("Requested by is required", source)
 
     def test_cloudflare_email_binding_restricts_sender(self) -> None:
         source = WRANGLER.read_text(encoding="utf-8")
@@ -66,6 +67,7 @@ class MaximSendLinkEmailTests(unittest.TestCase):
         self.assertIn("required_training: input.course", source)
         self.assertIn("billing_account: input.billingAccount", source)
         self.assertIn("Requested by ${input.requestedBy}", source)
+        self.assertIn("requestedBy: input.requestedBy", source)
         self.assertLess(source.index("const mailResponse = await fetch"), source.index("required_training: input.course"))
 
     def test_maxim_send_link_click_uses_email_bridge_not_local_mail_client(self) -> None:
