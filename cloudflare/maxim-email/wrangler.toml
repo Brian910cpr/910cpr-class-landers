@@ -1,0 +1,10 @@
+name = "910cpr-maxim-email"
+main = "src/index.js"
+compatibility_date = "2026-08-19"
+
+[[send_email]]
+name = "EMAIL"
+allowed_sender_addresses = [ "brian@910cpr.com" ]
+
+[vars]
+MAXIM_SCHEDULING_URL = "https://www.910cpr.com/corp/maxim"
