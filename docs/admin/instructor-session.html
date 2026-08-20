@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LanderWare Instructor Session</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
+<script src="/assets/site-theme.js"></script>
+<style>
+:root{--ink:#172133;--muted:#687386;--line:#d9e0e8;--soft:#f4f7fa;--blue:#0a66a5;--green:#167654;--amber:#a96700;--red:#b33a3a;--purple:#6b46a5}*{box-sizing:border-box}body{margin:0;background:#edf2f6;color:var(--ink);font:14px/1.4 Arial,Helvetica,sans-serif}header{padding:16px 22px;background:#13263a;color:#fff;display:flex;justify-content:space-between;gap:16px;align-items:center}header h1{margin:0;font-size:24px}header small{opacity:.82}.wrap{max-width:1500px;margin:auto;padding:14px}.sessionbar,.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 4px 16px rgba(20,32,51,.05)}.sessionbar{padding:14px;margin-bottom:12px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}.sessionbar h2{margin:0 0 3px;font-size:20px}.muted{color:var(--muted)}.status{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eef4f8;color:#345;font-weight:700}.status.good{background:#e9f6ef;color:#145c3d}.status.warn{background:#fff5df;color:#8b5a00}.workspace{display:grid;grid-template-columns:230px minmax(0,1fr);gap:12px}.nav{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;position:sticky;top:10px;align-self:start}.nav button{width:100%;display:flex;gap:10px;align-items:center;text-align:left;border:0;background:transparent;padding:11px 10px;border-radius:9px;color:var(--ink);font-weight:700;cursor:pointer}.nav button:hover{background:var(--soft)}.nav button.active{background:#e8f2f9;color:#075985}.nav .step{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:999px;background:#edf2f6;font-size:12px;flex:0 0 auto}.nav button.active .step{background:var(--blue);color:#fff}.content{display:grid;gap:12px}.panel{padding:16px}.panel h2{margin:0 0 4px;font-size:20px}.panel h3{margin:16px 0 8px;font-size:15px}.section{display:none}.section.active{display:block}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.field{display:grid;gap:4px}.field label{font-size:11px;font-weight:800;color:#435267}.field input,.field select,.field textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}.span2{grid-column:span 2}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:8px 11px;cursor:pointer;text-decoration:none}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.good{background:var(--green);border-color:var(--green);color:#fff}.drop{border:2px dashed #9cb3c4;border-radius:12px;padding:28px 18px;text-align:center;background:#f8fbfd;margin-top:10px}.drop strong{display:block;font-size:16px;margin-bottom:4px}.choicegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}.choice{border:1px solid var(--line);border-radius:10px;padding:11px;background:#fafbfc}.choice b{display:block;margin-bottom:4px}.table{width:100%;border-collapse:collapse;margin-top:8px}.table th,.table td{text-align:left;padding:9px 8px;border-bottom:1px solid #e8edf1}.table th{font-size:11px;color:#526175;text-transform:uppercase;letter-spacing:.04em}.right{text-align:right!important}.callout{padding:11px 12px;border-radius:10px;background:#eef6fb;border-left:4px solid var(--blue);margin:10px 0}.callout.warn{background:#fff7e7;border-left-color:var(--amber)}.money{font-size:26px;font-weight:800}.split{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:12px}.summarybox{border:1px solid var(--line);border-radius:12px;padding:13px;background:#fafbfc}.summarybox h3{margin:0 0 10px}.mini{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #e8edf1}.mini:last-child{border-bottom:0}.placeholder{font-size:12px;color:var(--muted);margin-top:4px}.tag{display:inline-block;padding:3px 7px;border-radius:999px;background:#eef4f8;font-size:11px;font-weight:700}.tag.green{background:#e9f6ef;color:#145c3d}.tag.amber{background:#fff5df;color:#8b5a00}html[data-theme="dark"] body{background:#0f1722;color:#edf3f8}html[data-theme="dark"] .panel,html[data-theme="dark"] .sessionbar,html[data-theme="dark"] .nav{background:#162231;border-color:#33465a}html[data-theme="dark"] .nav button{color:#edf3f8}html[data-theme="dark"] .nav button:hover,html[data-theme="dark"] .choice,html[data-theme="dark"] .summarybox{background:#1b2a3a}html[data-theme="dark"] .nav button.active{background:#17344a;color:#d9efff}html[data-theme="dark"] .field label,html[data-theme="dark"] .muted,html[data-theme="dark"] .placeholder,html[data-theme="dark"] .table th{color:#b7c4d2}html[data-theme="dark"] .field input,html[data-theme="dark"] .field select,html[data-theme="dark"] .field textarea,html[data-theme="dark"] .btn{background:#101b28;color:#edf3f8;border-color:#40566d}html[data-theme="dark"] .drop{background:#122231;border-color:#66859e}html[data-theme="dark"] .table th,html[data-theme="dark"] .table td,html[data-theme="dark"] .mini{border-color:#304356}html[data-theme="dark"] .callout{background:#132b3d}html[data-theme="dark"] .callout.warn{background:#342817}@media(max-width:850px){.workspace{grid-template-columns:1fr}.nav{position:static;display:flex;overflow:auto}.nav button{min-width:165px}.split,.grid3{grid-template-columns:1fr}}@media(max-width:650px){.grid2{grid-template-columns:1fr}.span2{grid-column:span 1}.sessionbar{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div><h1>LanderWare Instructor Workspace</h1><small>One session from creation through records, cards, and money.</small></div><strong>910CPR</strong></header>
+<div class="wrap">
+  <section class="sessionbar">
+    <div><h2>New Session</h2><div class="muted">Build the class now. The same workspace becomes the permanent record after creation.</div></div>
+    <div><span class="status warn">Draft canvas</span></div>
+  </section>
+  <div class="workspace">
+    <nav class="nav" aria-label="Session sections">
+      <button class="active" data-target="create"><span class="step">1</span>Create a Class</button>
+      <button data-target="participants"><span class="step">2</span>Add Participants</button>
+      <button data-target="materials"><span class="step">3</span>Materials</button>
+      <button data-target="close"><span class="step">4</span>Close a Class</button>
+      <button data-target="cards"><span class="step">5</span>Issue Cards</button>
+      <button data-target="financials"><span class="step">6</span>Financials</button>
+    </nav>
+    <main class="content">
+      <section class="panel section active" id="create">
+        <h2>Create a Class</h2><div class="muted">Create the durable Session. Everything else attaches to this record.</div>
+        <div class="grid2" style="margin-top:14px">
+          <div class="field"><label>Course</label><select><option>Select course…</option><option>AHA BLS Provider</option><option>AHA BLS Renewal</option><option>AHA Heartsaver First Aid CPR AED</option><option>AHA ACLS</option><option>AHA PALS</option></select></div>
+          <div class="field"><label>Client / Organization</label><input placeholder="Optional"></div>
+          <div class="field"><label>Date</label><input type="date"></div><div class="field"><label>Start time</label><input type="time"></div>
+          <div class="field span2"><label>Location</label><input placeholder="910CPR, client site, or address"></div>
+          <div class="field"><label>Primary instructor</label><select><option>Me</option><option>Choose instructor…</option></select></div><div class="field"><label>Assistant instructor(s)</label><input placeholder="Optional"></div>
+          <div class="field"><label>Capacity</label><input type="number" min="1" placeholder="8"></div><div class="field"><label>Visibility</label><select><option>Public</option><option>Private link</option><option>Unlisted / roster only</option></select></div>
+        </div>
+        <h3>How will this class fill?</h3>
+        <div class="choicegrid"><label class="choice"><input type="checkbox"> <b>Public registration</b><span class="muted">Publish a bookable class link.</span></label><label class="choice"><input type="checkbox"> <b>Private link</b><span class="muted">Anyone with the link may register.</span></label><label class="choice"><input type="checkbox" checked> <b>Instructor adds roster</b><span class="muted">Manual, pasted list, or uploaded file.</span></label><label class="choice"><input type="checkbox"> <b>Client adds roster</b><span class="muted">Give the organization a roster-entry link.</span></label></div>
+        <div class="actions"><button class="btn primary">Create Session</button><button class="btn">Save Draft</button></div>
+      </section>
+
+      <section class="panel section" id="participants">
+        <h2>Add Participants</h2><div class="muted">Accept clean data, ugly data, or an existing file. Confirm before committing.</div>
+        <div class="split" style="margin-top:14px"><div>
+          <h3 style="margin-top:0">Drop / Paste List</h3><div class="field"><textarea rows="8" placeholder="Abigale Richardson  arichardson@example.org\nAyana Armstrong  aarmstrong@example.org\n...paste whatever you have"></textarea></div>
+          <div class="actions"><button class="btn primary">Parse List</button><button class="btn">Add One Person</button><button class="btn">Add Walk-in</button></div>
+          <div class="drop"><strong>Drop a roster file here</strong><span class="muted">Excel · CSV · exported roster · other supported list</span><div class="actions" style="justify-content:center"><button class="btn">Choose File</button></div></div>
+        </div><aside class="summarybox"><h3>Roster</h3><div class="mini"><span>Registered</span><b>0</b></div><div class="mini"><span>Walk-ins</span><b>0</b></div><div class="mini"><span>Needs review</span><b>0</b></div><div class="actions"><button class="btn">Copy registration link</button><button class="btn">Client roster link</button></div></aside></div>
+      </section>
+
+      <section class="panel section" id="materials">
+        <h2>Materials</h2><div class="muted">Course definition + headcount should prepare this list automatically.</div>
+        <div class="callout">Choose a course and build the roster to generate the class material requirements.</div>
+        <table class="table"><thead><tr><th>Requirement</th><th>Qty</th><th>Status</th><th>Action</th></tr></thead><tbody><tr><td>Provider manuals / workbooks</td><td>—</td><td><span class="tag">Waiting for roster</span></td><td>—</td></tr><tr><td>Skills sheets</td><td>—</td><td><span class="tag">Auto</span></td><td>Print</td></tr><tr><td>Tests / evaluations</td><td>—</td><td><span class="tag">Auto</span></td><td>Print</td></tr><tr><td>Instructor materials / equipment</td><td>1 set</td><td><span class="tag amber">Review</span></td><td>Check</td></tr></tbody></table>
+        <div class="actions"><button class="btn primary">Build Class Packet</button><button class="btn">Print Materials Checklist</button></div>
+      </section>
+
+      <section class="panel section" id="close">
+        <h2>Close a Class</h2><div class="muted">Confirm who completed the class, record exceptions, and attach the paperwork.</div>
+        <h3>Final Attendance</h3><div class="callout warn">No roster yet. Once participants exist, each person can be marked Complete, No-show, Incomplete, Remediation, or other exception.</div>
+        <div class="drop"><strong>DROP CLASS PAPERWORK HERE</strong><span class="muted">Roster · skills sheets · exams · evaluations · completion forms · photos · scans · PDF</span><div class="actions" style="justify-content:center"><button class="btn">Choose Files</button><button class="btn">Use Camera / Photo</button></div></div>
+        <div class="field" style="margin-top:12px"><label>Class notes / exceptions</label><textarea rows="4" placeholder="Optional notes"></textarea></div>
+        <div class="actions"><button class="btn good">Close Class</button><button class="btn">Save Without Closing</button></div>
+      </section>
+
+      <section class="panel section" id="cards">
+        <h2>Issue Cards</h2><div class="muted">Completion status determines eligibility. Card history remains attached to the participant and Session.</div>
+        <table class="table"><thead><tr><th>Participant</th><th>Completion</th><th>Card</th><th>Action</th></tr></thead><tbody><tr><td colspan="4" class="muted">Add participants to build the card queue.</td></tr></tbody></table>
+        <div class="actions"><button class="btn primary">Issue Eligible Cards</button><button class="btn">Import Card Results</button></div>
+        <div class="placeholder">Future record: card type, number, issue date, expiration, recipient email, resend/reissue history.</div>
+      </section>
+
+      <section class="panel section" id="financials">
+        <h2>Financials</h2><div class="muted">Build the costs that must be covered, then reconcile billing, invoices, and payments. Visibility can vary by role.</div>
+        <div class="split" style="margin-top:14px"><div>
+          <h3 style="margin-top:0">Costs to Cover</h3>
+          <table class="table"><thead><tr><th>Direct cost</th><th>Qty</th><th class="right">Unit</th><th class="right">Total</th></tr></thead><tbody><tr><td>eCards</td><td>0</td><td class="right">—</td><td class="right">$0.00</td></tr><tr><td>Books / course materials</td><td>0</td><td class="right">—</td><td class="right">$0.00</td></tr><tr><td>Instructor compensation</td><td>1</td><td class="right">—</td><td class="right">$0.00</td></tr><tr><td>Assistant instructor</td><td>0</td><td class="right">—</td><td class="right">$0.00</td></tr><tr><td>Travel / other direct costs</td><td>—</td><td class="right">—</td><td class="right">$0.00</td></tr></tbody></table>
+          <div class="actions"><button class="btn">Add Cost</button><button class="btn">Recalculate from Session</button></div>
+          <h3>Billing Arrangement</h3><div class="choicegrid"><label class="choice"><input type="radio" name="payer"> <b>Participants</b><span class="muted">Each participant pays.</span></label><label class="choice"><input type="radio" name="payer"> <b>Client</b><span class="muted">Organization pays some or all.</span></label><label class="choice"><input type="radio" name="payer"> <b>Instructor</b><span class="muted">Instructor covers designated costs.</span></label><label class="choice"><input type="radio" name="payer"> <b>Split / Custom</b><span class="muted">Divide charges among parties.</span></label></div>
+        </div><aside class="summarybox"><h3>Session Financial Snapshot</h3><div class="muted">Estimated direct costs to cover</div><div class="money">$0.00</div><div class="mini"><span>Expected billing</span><b>$0.00</b></div><div class="mini"><span>Invoices sent</span><b>$0.00</b></div><div class="mini"><span>Payments received</span><b>$0.00</b></div><div class="mini"><span>Above / below direct costs</span><b>$0.00</b></div><div class="actions"><button class="btn primary">Prepare Invoice</button><button class="btn">Record Payment</button></div><div class="placeholder">Instructor view can be limited to operational payment status and their own compensation. Owner/Admin can see costs, pricing, and margin detail.</div></aside></div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+document.querySelectorAll('.nav button').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));button.classList.add('active');document.getElementById(button.dataset.target).classList.add('active');if(innerWidth<851)document.getElementById(button.dataset.target).scrollIntoView({behavior:'smooth',block:'start'});}));
+</script>
+</body>
+</html>
