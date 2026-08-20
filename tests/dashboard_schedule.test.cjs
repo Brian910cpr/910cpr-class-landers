@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { scheduleRows, normalizeSessions, monthSummary, reconcileSchedule, instructorName, instructorNames, annotateConflicts } = require("../docs/admin/schedule-model.js");
+const { scheduleRows, normalizeSessions, monthSummary, reconcileSchedule, instructorName, instructorNames, annotateConflicts, brianExceptionRows } = require("../docs/admin/schedule-model.js");
 
 const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures/admin_schedule_multiple_sessions.json"), "utf8"));
 const parseDate = (value) => { const date = new Date(value); return Number.isNaN(date.getTime()) ? null : date; };
@@ -58,17 +58,29 @@ test("overlapping classes and same-location conflicts are annotated, never dedup
   assert.ok(annotated.filter((session) => session._overlapCount > 0).length >= 3);
 });
 
+test("Brian exception layer can be hidden without changing scheduled classes", () => {
+  const events = [
+    { source_type: "inverse_google_calendar", title: "Travel" },
+    { source_type: "google_calendar", title: "Available" },
+  ];
+  assert.deepEqual(brianExceptionRows(events, true).map((event) => event.title), ["Travel"]);
+  assert.deepEqual(brianExceptionRows(events, false), []);
+  assert.equal(normalizeSessions(fixture, parseDate, courseName).length, 5);
+});
+
 test("dashboard startup has no dead legacy month bindings and schedule read remains independent of HOT_SYNC auth", () => {
   const html = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard.html"), "utf8");
   assert.doesNotMatch(html, /getElementById\(['"]prevMonth['"]\)/);
   assert.doesNotMatch(html, /getElementById\(['"]nextMonth['"]\)/);
   assert.match(html, /clearRecord\(\);load\(\)/);
   assert.match(html, /fetch\(`\$\{SCHEDULE_URL\}\?v=\$\{Date\.now\(\)\}`/);
-  assert.match(html, /schedule-model\.js\?v=20260819-2/);
+  assert.match(html, /schedule-model\.js\?v=20260820-1/);
   assert.match(html, /id="scheduleIntegrity"/);
   assert.match(html, /data-class-count=/);
   assert.match(html, /class=\"instructor-tabs\"/);
   assert.match(html, /ScheduleModel\.instructorNames\(sessions\)/);
   assert.match(html, /Same-time location conflict/);
+  assert.match(html, /id="brianExceptionsToggle"[^>]*checked/);
+  assert.match(html, /ScheduleModel\.brianExceptionRows/);
   assert.doesNotMatch(html, /fetch\(`\$\{SCHEDULE_URL\}[^`]*X-Hot-Sync-Admin-Key/);
 });
