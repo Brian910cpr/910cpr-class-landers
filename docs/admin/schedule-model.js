@@ -49,7 +49,12 @@
     }));
   }
 
-  const api = { scheduleRows, normalizeSessions, monthSummary, reconcileSchedule, instructorName, instructorNames, overlaps, annotateConflicts };
+  function brianExceptionRows(events, visible = true) {
+    if (!visible) return [];
+    return events.filter((event) => event.source_type === "inverse_google_calendar");
+  }
+
+  const api = { scheduleRows, normalizeSessions, monthSummary, reconcileSchedule, instructorName, instructorNames, overlaps, annotateConflicts, brianExceptionRows };
   root.ScheduleModel = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : globalThis);
