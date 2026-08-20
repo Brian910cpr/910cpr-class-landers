@@ -567,12 +567,36 @@ async function validateCanonicalSlot(req: Request) {
 async function registerEmployee(req: Request) {
   const body = await req.json().catch(() => ({}));
   const sourceRef = String(body?.person?.personId || body.sourcePersonReference || "");
-  const profiles = await rest(
+  let profiles = await rest(
     `maxim_employee_profiles?source_ref=eq.${
       encodeURIComponent(sourceRef)
     }&active=eq.true&select=id`,
   );
-  if (profiles.length !== 1) return response({ error: "Employee not found." }, 404);
+  if (!profiles.length) {
+    const firstName = String(body?.person?.firstName || "").trim();
+    const lastName = String(body?.person?.lastName || "").trim();
+    if (!sourceRef || !firstName || !lastName) {
+      return response({ error: "First name and last name are required." }, 400);
+    }
+    const courseId = String(body.courseId || "");
+    const requiredTraining = selectorByCourse[courseId] === "bls" ? "BLS" : "HS Total";
+    const billingAccount = String(body.billingAccount || "#031").match(/#\d+/)?.[0] || "#031";
+    const created = await rest("rpc/maxim_find_or_create_employee", {
+      method: "POST",
+      body: JSON.stringify({
+        p_source_ref: sourceRef,
+        p_first_name: firstName,
+        p_last_name: lastName,
+        p_email: String(body?.person?.email || "").trim(),
+        p_phone: String(body?.person?.phone || "").trim(),
+        p_billing_account: billingAccount,
+        p_required_training: requiredTraining,
+      }),
+    });
+    const profileId = Array.isArray(created) ? created[0] : created;
+    profiles = profileId ? [{ id: profileId }] : [];
+  }
+  if (profiles.length !== 1) return response({ error: "Employee could not be created." }, 500);
 
   const canonical = await canonicalCourseSlot(body);
   if (!canonical) return response({ error: "stale_slot_rejected" }, 409);
@@ -599,7 +623,7 @@ async function registerEmployee(req: Request) {
       p_external_session_id: externalSessionId,
       p_external_course_id: courseId,
       p_starts_at: startsAt,
-      p_registration_url: null,
+      p_registration_url: sourceBookingUrl,
       p_billing_account: body.billingAccount,
       p_location_key: canonical.locationKey,
       p_replace_request_id: body.moveFromRegistrationId || null,

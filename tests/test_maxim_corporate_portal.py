@@ -24,6 +24,12 @@ MAXIM_DIRECT_REGISTRATION_MIGRATION = (
     / "migrations"
     / "20260728093000_maxim_hotsync_direct_registration_simulated_emails.sql"
 )
+MAXIM_CREATE_EMPLOYEE_MIGRATION = (
+    ROOT
+    / "supabase"
+    / "migrations"
+    / "20260820173000_maxim_create_employee_during_registration.sql"
+)
 
 EXPECTED_VARIANTS = {
     "Initial": "209806",
@@ -447,6 +453,18 @@ class MaximCorporatePortalTests(unittest.TestCase):
             'body: JSON.stringify({ status: "superseded", updated_at:',
             source[source.index("async function registerEmployee"):],
         )
+
+    def test_new_employee_is_created_atomically_during_registration(self) -> None:
+        source = MAXIM_EDGE_FUNCTION.read_text(encoding="utf-8")
+        sql = MAXIM_CREATE_EMPLOYEE_MIGRATION.read_text(encoding="utf-8")
+        self.assertIn("rpc/maxim_find_or_create_employee", source)
+        self.assertIn("p_registration_url: sourceBookingUrl", source)
+        self.assertIn("p_first_name", source)
+        self.assertIn("insert into public.customers", sql)
+        self.assertIn("insert into public.maxim_employee_profiles", sql)
+        self.assertIn("exception when unique_violation", sql)
+        self.assertIn("to service_role", sql)
+        self.assertIn("from public, anon, authenticated", sql)
 
     def test_actions_continue_until_ecard_and_passed_date_stays_visible(self) -> None:
         html = read_page()
