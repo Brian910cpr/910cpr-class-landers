@@ -1,14 +1,14 @@
 {
   "build": {
-    "generated_at": "2026-08-20T07:54:57.867124-04:00",
+    "generated_at": "2026-08-20T08:41:01.398487-04:00",
     "source_file": "data\\sessions_current.json",
     "counts": {
-      "sessions_input": 360,
+      "sessions_input": 358,
       "sessions_output": 50,
       "skipped_missing_start": 0,
-      "skipped_past": 305,
+      "skipped_past": 304,
       "skipped_orphan": 0,
-      "skipped_non_public_location": 5,
+      "skipped_non_public_location": 4,
       "skipped_tbd_location": 0,
       "included_by_legacy_mapping": 50,
       "included_by_course_identity_resolver": 0,
