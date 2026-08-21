@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-21T09:36:28.436943+00:00",
+  "generated_at": "2026-08-21T11:56:50.161590+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
     "sessions": 51,
