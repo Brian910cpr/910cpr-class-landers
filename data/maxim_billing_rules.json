@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "maxim-billing-rules.v1",
+  "updatedAt": "2026-08-21",
+  "principle": "The Enrollware promo code identifies the Maxim business line that must receive the charge for that registration/completion. Treat billing attribution as transaction-level evidence; a profile billing account is only the current/default value and must not override a class-specific promo code.",
+  "rules": [
+    {
+      "promoCode": "Maxim",
+      "normalizedPromoCode": "maxim",
+      "billingAccount": "#031",
+      "businessLine": "Homecare",
+      "population": "Nurses and CNAs / regular Maxim homecare",
+      "sources": [
+        "Pamela Taylor, 2026-08-21: #031 is the homecare business line; nurses use promo code Maxim",
+        "Amber Walker, 2025-07-17: Maxim031 should include BLS, First Aid and CPR because nurses and CNAs are under this business line"
+      ]
+    },
+    {
+      "promoCode": "MaximDSP",
+      "normalizedPromoCode": "maximdsp",
+      "billingAccount": "#502",
+      "businessLine": "IDD / Direct Support Professionals",
+      "population": "DSP / IDD",
+      "sources": [
+        "Pamela Taylor, 2026-08-21: IDD uses MaximDSP (#502)",
+        "Ann-Marie Konko, 2025-01-09: We would need a MaximDSP with business line #502"
+      ]
+    },
+    {
+      "promoCode": "MaximBH",
+      "normalizedPromoCode": "maximbh",
+      "billingAccount": "#0852",
+      "businessLine": "ABA / Behavioral",
+      "population": "ABA / Wilmington Behavioral",
+      "sources": [
+        "Pamela Taylor, 2026-08-21: ABA uses promo code MaximBH (#852)",
+        "Maxim Vendor Services, 2024-09-03: list #0852 on invoices for Wilmington Behavioral",
+        "Stephanie Jones-Boone, 2024-09-09: allocation to #0852 confirmed"
+      ],
+      "note": "Use formal account number #0852. Pam's 2026 shorthand #852 refers to the same account."
+    }
+  ]
+}
