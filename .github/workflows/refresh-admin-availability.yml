@@ -13,6 +13,7 @@ on:
       - 'scripts/build_live_availability_snapshot.py'
       - 'scripts/publish_admin_availability.py'
       - 'scripts/publish_admin_schedule.py'
+      - 'scripts/publish_scheduling_landscape.py'
       - 'scripts/import_enrollware_student_report.py'
       - 'scripts/publish_admin_reference_data.py'
       - 'scripts/block_start_time_selector.py'
@@ -98,6 +99,9 @@ jobs:
               print(f"Published {page_key}: {payload.get('counts', {}).get('publicSelectableStartTimeCount', 0)} selectable starts -> {output}")
           PY
 
+      - name: Publish Scheduling Landscape diagnostic feed
+        run: python -m scripts.publish_scheduling_landscape
+
       - name: Promote seated sessions and apply Anchor repeat policy
         run: |
           python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy
@@ -129,6 +133,7 @@ jobs:
             docs/data/admin_availability.json \
             docs/data/admin_people.json \
             docs/data/admin_locations.json \
+            docs/data/admin/scheduling_landscape.json \
             docs/data/anchor_state.json \
             docs/data/block-selector-availability \
             docs/classes \
