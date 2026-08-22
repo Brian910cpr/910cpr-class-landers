@@ -180,6 +180,38 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         self.assertEqual(sum(item.get("schedule_role") == "anchor" for item in rendered), 1)
         self.assertNotIn("barnacle", {item.get("schedule_role") for item in rendered})
 
+    def test_daily_stack_keeps_each_unpaid_course_only_directly_before_and_after_anchor(self):
+        anchor_session = self.sessions[0]
+        anchors = promote_seated_sessions([anchor_session])
+        slots = []
+        for clock, cid, duration in (
+            ("07:30", "209806", 60), ("08:30", "209806", 60),
+            ("09:30", "359474", 120),
+            ("11:30", "209806", 60), ("12:30", "209806", 60),
+            ("08:00", "210549", 45), ("08:45", "210549", 45),
+            ("11:30", "210549", 45), ("12:15", "210549", 45),
+        ):
+            url = anchor_session["registration_url"] if cid == "359474" else f"https://example.test/{cid}/{clock}"
+            offer = {
+                "date": "2026-08-05", "displayDate": "Wednesday", "startTime": clock,
+                "displayStartTime": clock, "courseId": cid, "courseName": cid,
+                "durationMinutes": duration, "schedulerConsumptionEnd": "11:30" if cid == "359474" else "",
+                "appointmentUrl": url,
+            }
+            slots.append({"startTime": clock, "displayStartTime": clock, "courses": [offer]})
+        payload = {"dates": [{"date": "2026-08-05", "displayDate": "Wednesday", "startTimes": slots}], "counts": {}}
+        policy = {"mode": "daily_anchor_stack_v1", "one_course_type_per_calendar_day": True}
+
+        result = apply_selector_policy(payload, anchors, policy)
+        rendered = [course for day in result["dates"] for slot in day["startTimes"] for course in slot["courses"]]
+        by_course = {}
+        for item in rendered:
+            by_course.setdefault(item["courseId"], []).append(item)
+        self.assertEqual(len(by_course["359474"]), 1)
+        self.assertEqual({item["startTime"] for item in by_course["209806"]}, {"08:30", "11:30"})
+        self.assertEqual({item["startTime"] for item in by_course["210549"]}, {"08:45", "11:30"})
+        self.assertTrue(all(item.get("schedule_role") == "barnacle" for cid in ("209806", "210549") for item in by_course[cid]))
+
 
 if __name__ == "__main__":
     unittest.main()

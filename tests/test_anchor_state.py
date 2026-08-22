@@ -30,7 +30,7 @@ class AnchorStateTests(unittest.TestCase):
         self.assertIs(anchor["landing_page_required"], True)
         self.assertIs(anchor["external_publication_eligible"], True)
 
-    def test_zero_enrollment_public_class_is_promoted(self):
+    def test_enrollware_class_without_a_reported_count_is_still_seated(self):
         anchors = promote_seated_sessions([session(registered_count=0)])
         self.assertEqual(1, len(anchors))
         self.assertEqual(0, anchors[0]["registered_count"])

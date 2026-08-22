@@ -1,5 +1,8 @@
 {
   "schema_version": "910cpr-anchor-schedule-policy.v1",
+  "mode": "daily_anchor_stack_v1",
+  "one_course_type_per_calendar_day": true,
+  "open_day_excluded_families": ["ACLS", "PALS"],
   "default_repeat_delay_minutes": 1440,
   "retain_barnacle_offers": false,
   "families": {

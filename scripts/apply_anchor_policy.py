@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -216,8 +216,114 @@ def retain_barnacle_offers(course_id_value: str, policy: dict[str, Any]) -> bool
     return bool(policy.get("retain_barnacle_offers", True))
 
 
+def _offer_end(offer: dict[str, Any], start: datetime) -> datetime:
+    explicit = text(offer.get("end_at") or offer.get("end") or offer.get("endsAt"))
+    if explicit and (parsed := dt(explicit)):
+        return parsed.replace(tzinfo=None) if start.tzinfo is None and parsed.tzinfo else parsed
+    clock = text(offer.get("schedulerConsumptionEnd") or offer.get("endTime") or offer.get("end_time"))
+    if clock and len(clock) >= 4:
+        parsed = dt(f"{item_date(offer)}T{clock[:5]}:00")
+        if parsed:
+            if parsed <= start:
+                parsed += timedelta(days=1)
+            return parsed
+    minutes = int(offer.get("schedulerConsumptionMinutes") or offer.get("durationMinutes") or 0)
+    return start + timedelta(minutes=max(0, minutes))
+
+
+def _rebuild_dates(payload: dict[str, Any], offers: list[dict[str, Any]]) -> dict[str, Any]:
+    grouped: dict[str, dict[str, Any]] = {}
+    for offer in offers:
+        date = text(offer.get("date")) or item_date(offer)
+        parsed = _offer_start(offer)
+        start_time = text(offer.get("startTime") or offer.get("start_time")) or (parsed.strftime("%H:%M") if parsed else "")
+        day = grouped.setdefault(date, {"date": date, "displayDate": offer.get("displayDate") or date, "startTimes": {}})
+        slot = day["startTimes"].setdefault(start_time, {"startTime": start_time, "displayStartTime": offer.get("displayStartTime") or start_time, "courses": []})
+        slot["courses"].append(offer)
+    payload["dates"] = []
+    for day in sorted(grouped.values(), key=lambda item: item["date"]):
+        slots = sorted(day["startTimes"].values(), key=lambda item: item["startTime"])
+        payload["dates"].append({**day, "startTimes": slots})
+    payload.setdefault("counts", {})["publicSelectableDateCount"] = len(payload["dates"])
+    payload["counts"]["publicSelectableStartTimeCount"] = sum(len(day["startTimes"]) for day in payload["dates"])
+    return payload
+
+
+def apply_daily_anchor_stack(payload: dict[str, Any], anchors: list[dict[str, Any]], policy: dict[str, Any]) -> dict[str, Any]:
+    """Offer all legal starts on open days, then compact paid days around their anchors."""
+    offers = [item for day in payload.get("dates", []) for slot in day.get("startTimes", []) for item in slot.get("courses", [])]
+    excluded = {text(value).upper() for value in policy.get("open_day_excluded_families", [])}
+    anchors_by_date: dict[str, list[dict[str, Any]]] = {}
+    for anchor in anchors:
+        if parsed := dt(anchor.get("start_at")):
+            anchors_by_date.setdefault(parsed.date().isoformat(), []).append(anchor)
+
+    retained: list[dict[str, Any]] = []
+    suppressed = 0
+    barnacle_count = 0
+    for date in sorted({item_date(offer) for offer in offers}):
+        day_offers = [offer for offer in offers if item_date(offer) == date]
+        day_anchors = anchors_by_date.get(date, [])
+        if not day_anchors:
+            for offer in day_offers:
+                family = text(offer.get("courseFamily")).upper()
+                is_real = text(offer.get("offerType")) == "seated_class" or bool(_anchor_for_offer(offer, anchors))
+                if family in excluded and not is_real:
+                    suppressed += 1
+                else:
+                    retained.append(offer)
+            continue
+
+        anchored_courses = {text(anchor.get("course_id")) for anchor in day_anchors}
+        for offer in day_offers:
+            if seated := _anchor_for_offer(offer, day_anchors):
+                retained.append(rewrite_offer_to_anchor(offer, seated))
+
+        for cid in sorted({course_id(offer) for offer in day_offers} - anchored_courses):
+            candidates = [offer for offer in day_offers if course_id(offer) == cid and not _anchor_for_offer(offer, day_anchors)]
+            chosen: dict[tuple[str, str], tuple[float, str, dict[str, Any]]] = {}
+            for anchor in day_anchors:
+                astart = dt(anchor.get("start_at"))
+                aend = dt(anchor.get("end_at"))
+                if not astart or not aend:
+                    continue
+                astart = astart.replace(tzinfo=None)
+                aend = aend.replace(tzinfo=None)
+                for offer in candidates:
+                    start = _offer_start(offer)
+                    if not start:
+                        continue
+                    start = start.replace(tzinfo=None)
+                    end = _offer_end(offer, start).replace(tzinfo=None)
+                    direction = "pre" if end <= astart else ("post" if start >= aend else "")
+                    if not direction:
+                        continue
+                    gap = (astart - end).total_seconds() if direction == "pre" else (start - aend).total_seconds()
+                    key = (text(anchor.get("session_id")), direction)
+                    candidate = (gap, start.isoformat(), offer)
+                    if key not in chosen or candidate[:2] < chosen[key][:2]:
+                        chosen[key] = candidate
+            seen_ids: set[int] = set()
+            for (anchor_id, direction), (_gap, _stamp, offer) in chosen.items():
+                if id(offer) in seen_ids:
+                    continue
+                seen_ids.add(id(offer))
+                anchor = next(item for item in day_anchors if text(item.get("session_id")) == anchor_id)
+                retained.append({**offer, "schedule_role": "barnacle", "schedule_symbol": "", "cluster_id": anchor.get("cluster_id"), "attached_to_session_id": anchor_id, "barnacle_direction": direction, "landing_page_required": False, "external_publication_eligible": False})
+                barnacle_count += 1
+            suppressed += max(0, len(candidates) - len(seen_ids))
+
+        suppressed += sum(1 for offer in day_offers if course_id(offer) in anchored_courses and not _anchor_for_offer(offer, day_anchors))
+
+    _rebuild_dates(payload, retained)
+    payload["anchor_policy"] = {"version": "daily-anchor-stack-v1", "suppressed_offers": suppressed, "barnacle_positions": barnacle_count, "one_course_type_per_calendar_day": True}
+    return payload
+
+
 def apply_selector_policy(payload: dict[str, Any], anchors: list[dict[str, Any]], policy: dict[str, Any]) -> dict[str, Any]:
     """Resolve roles from hard-legal selector inventory without fabricating starts."""
+    if policy.get("mode") == "daily_anchor_stack_v1":
+        return apply_daily_anchor_stack(payload, anchors, policy)
     offers = [item for day in payload.get("dates", []) for slot in day.get("startTimes", []) for item in slot.get("courses", [])]
     anchor_scopes: dict[str, list[dict[str, Any]]] = {}
     for anchor in anchors:

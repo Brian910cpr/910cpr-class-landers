@@ -94,7 +94,7 @@ class Anchor:
 
 
 def promote_seated_sessions(sessions: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Return anchors for every open public class, including zero-enrollment classes."""
+    """Return anchors for open public seated occurrences from authoritative sources."""
     anchors: list[dict[str, Any]] = []
     seen: set[str] = set()
     for session in sessions:
