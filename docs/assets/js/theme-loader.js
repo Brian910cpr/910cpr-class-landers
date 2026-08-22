@@ -112,4 +112,11 @@
   }
 
   window.SiteThemeLoader = { DEFAULT_THEME, PRESETS, normalizeTheme, applyTheme, validateAssetPath };
+
+  if (/^\/corp\/maxim(?:\.html)?\/?$/.test(location.pathname)) {
+    const script = document.createElement("script");
+    script.src = "/assets/maxim-send-link.js?v=20260821.1";
+    script.defer = true;
+    document.head.appendChild(script);
+  }
 })();
