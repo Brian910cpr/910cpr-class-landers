@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-22T15:20:49.754882+00:00",
+  "generated_at": "2026-08-22T19:02:03.933098+00:00",
   "purpose": "Sanitized complete Enrollware occupancy for the admin planner; includes non-public locations.",
   "counts": {
-    "sessions": 52,
-    "brian_resource_blocks": 9,
+    "sessions": 53,
+    "brian_resource_blocks": 10,
     "student_snapshot_classes": 17,
     "student_snapshot_matches": 0,
     "seated_students_matched": 0,
@@ -50,6 +50,21 @@
       "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
       "registered_count": 0,
       "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13945181",
+      "source": "enrollware_ical",
+      "blocking_resources": [
+        "instructor:brian_ennis",
+        "location:nc - wilmington: 4018 shipyard blvd; room b @ 910cpr's office"
+      ]
+    },
+    {
+      "session_id": "13975991",
+      "course_name": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "start_at": "2026-08-23T13:30:00-04:00",
+      "end_at": "2026-08-23T15:30:00-04:00",
+      "lead_instructor_name": "Brian Ennis",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+      "registered_count": 0,
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=13975991",
       "source": "enrollware_ical",
       "blocking_resources": [
         "instructor:brian_ennis",
