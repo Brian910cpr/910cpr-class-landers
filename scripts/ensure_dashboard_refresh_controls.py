@@ -29,6 +29,25 @@ NEW_RENDER_TAIL = "h+='</div>';host.innerHTML=h;const prev=host.querySelector('#
 text = DASHBOARD.read_text(encoding="utf-8")
 original = text
 
+CURRENT_MARKERS = [
+    'id="calendarFreshness"',
+    'href="/admin/refresh-availability.html"',
+    'id="reloadAvailability"',
+    'class="monthnav"',
+    'id="monthPrev"',
+    'id="monthNext"',
+    "host.querySelector('#monthPrev')",
+    "host.querySelector('#monthNext')",
+    "document.getElementById('reloadAvailability').onclick=()=>load()",
+    "setInterval(()=>load(),60000)",
+]
+
+# New dashboard features may add controls inside the toolbar. If every durable
+# refresh/navigation marker is already present, preserve that newer markup.
+if all(marker in text for marker in CURRENT_MARKERS):
+    print("Dashboard refresh controls and month navigation already current.")
+    raise SystemExit(0)
+
 # Keep older refresh-control migrations working if the dashboard is ever regenerated
 # from a pre-refresh version.
 for old, new in [
@@ -56,18 +75,6 @@ for old, new in [
         raise SystemExit(f"Expected dashboard marker not found: {old[:100]}")
     text = text.replace(old, new, 1)
 
-CURRENT_MARKERS = [
-    'id="calendarFreshness"',
-    'href="/admin/refresh-availability.html"',
-    'id="reloadAvailability"',
-    'class="monthnav"',
-    'id="monthPrev"',
-    'id="monthNext"',
-    "host.querySelector('#monthPrev')",
-    "host.querySelector('#monthNext')",
-    "document.getElementById('reloadAvailability').onclick=()=>load()",
-    "setInterval(()=>load(),60000)",
-]
 if not all(marker in text for marker in CURRENT_MARKERS):
     missing = [marker for marker in CURRENT_MARKERS if marker not in text]
     raise SystemExit(f"Dashboard update incomplete; missing markers: {missing}")
