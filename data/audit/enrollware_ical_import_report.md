@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-08-23T19:22:54.295719-04:00`
+- Generated at: `2026-08-23T19:47:02.695879-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `342`
-- Public sessions created: `342`
+- iCal events read: `341`
+- Public sessions created: `341`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `293`
+- Registration unavailable sessions marked not direct-bookable: `292`
 - Unmapped sessions: `20`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12775509` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-05-25T23:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776278` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-05-26T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776003` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-05-26T09:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13558410` | enrollware_registration_closed | AHA - BLS - Become an American Heart Association Instructor | 2026-05-26T13:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `12776148` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-05T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775300` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-05T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774037` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-06-06T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13628610` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-06-06T09:00:00-04:00 | Salem Baptist Church |
 
 ## Unmapped Examples
 
