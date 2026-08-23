@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AHA BLS at Earl Jackson Pool | 910CPR</title>
+<meta name="description" content="Register for the public AHA BLS Provider class at Earl Jackson Pool in Wilmington on October 4, 2026.">
+<link rel="canonical" href="https://www.910cpr.com/events/nseaswim-earl-jackson-2026-10-04/">
+<style>
+:root{color-scheme:dark;--bg:#08111f;--panel:#101b2d;--line:#2a3d57;--text:#f8fafc;--muted:#aab8ca;--accent:#3b82f6;--good:#86efac;--bad:#fca5a5}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#07101d,#0d1728);color:var(--text);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif}main{max-width:920px;margin:auto;padding:28px 18px 60px}.brand{font-weight:800;letter-spacing:.04em;margin-bottom:22px}.hero,.card{background:rgba(16,27,45,.96);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 15px 50px rgba(0,0,0,.2)}.hero{margin-bottom:18px}.eyebrow{color:#93c5fd;font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:.1em}h1{font-size:clamp(30px,6vw,52px);line-height:1.02;margin:8px 0 14px}.lead{font-size:18px;color:#d9e4f2;line-height:1.5}.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.fact{border:1px solid var(--line);background:#0b1627;border-radius:12px;padding:14px}.fact b{display:block;margin-bottom:4px}.fact span{color:var(--muted);font-size:14px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}input{width:100%;padding:12px 13px;border-radius:10px;border:1px solid var(--line);background:#081321;color:var(--text);font:inherit}.hidden{position:absolute;left:-10000px}button{width:100%;margin-top:14px;border:0;border-radius:11px;background:var(--accent);color:white;font-size:17px;font-weight:800;padding:14px;cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}.small{color:var(--muted);font-size:13px;line-height:1.5}.status{margin-top:12px;font-size:14px}.status.good{color:var(--good)}.status.bad{color:var(--bad)}.seat{font-weight:800;color:#bfdbfe}.partners{margin-top:18px;color:var(--muted);font-size:13px}.footer{margin-top:22px;text-align:center;color:var(--muted);font-size:12px}@media(max-width:650px){.row,.facts{grid-template-columns:1fr}.hero,.card{padding:18px}}
+</style>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PQS8DCBH');</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<main>
+<div class="brand">910CPR · Coastal CPR Training</div>
+<section class="hero">
+<div class="eyebrow">Public training event</div>
+<h1>AHA BLS Provider<br>at Earl Jackson Pool</h1>
+<div class="lead">Join us on deck for an American Heart Association BLS Provider class in downtown Wilmington, hosted with NSeaSwim Foundation.</div>
+<div class="facts">
+<div class="fact"><b>Sunday, October 4, 2026</b><span>11:00 AM–2:00 PM</span></div>
+<div class="fact"><b>Earl Jackson Pool</b><span>750 Bess Street, Wilmington, NC 28401</span></div>
+<div class="fact"><b>$75 per participant</b><span>Registration is handled directly by 910CPR.</span></div>
+<div class="fact"><b id="seatLabel">Checking seats…</b><span>AHA BLS Provider certification course</span></div>
+</div>
+<div class="partners">With NSeaSwim Foundation, 910CPR, and community partners.</div>
+</section>
+<section class="card">
+<h2 style="margin-top:0">Reserve your seat</h2>
+<p class="small">This registration goes directly to the 910CPR / LanderWare class roster. You will not be redirected to Enrollware.</p>
+<form id="form">
+<div class="row">
+<div><label for="first">First name</label><input id="first" name="first" autocomplete="given-name" required></div>
+<div><label for="last">Last name</label><input id="last" name="last" autocomplete="family-name" required></div>
+<div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+<div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel"></div>
+<div class="hidden" aria-hidden="true"><label>Company</label><input id="company" tabindex="-1" autocomplete="off"></div>
+</div>
+<button id="submit" type="submit">Register for this class</button>
+<div id="status" class="status" role="status"></div>
+</form>
+<p class="small" style="margin-bottom:0">Your seat is reserved when you receive the confirmation on this page. Payment and any additional class instructions will be handled by 910CPR.</p>
+</section>
+<div class="footer">Questions? Visit 910CPR.com or contact 910CPR directly.</div>
+</main>
+<script>
+const EVENT='nseaswim-earl-jackson-2026-10-04';
+const API='https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/public-event-registration';
+const seat=document.getElementById('seatLabel'), statusEl=document.getElementById('status'), form=document.getElementById('form'), submit=document.getElementById('submit');
+async function loadEvent(){
+ try{const r=await fetch(`${API}?event=${encodeURIComponent(EVENT)}`);const j=await r.json();if(!r.ok||!j.ok)throw new Error(j.error||'Unable to load event');seat.textContent=j.event.remaining>0?`${j.event.remaining} seats available`:'Class full';if(j.event.remaining<1){submit.disabled=true;submit.textContent='Class full';}}
+ catch(e){seat.textContent='Registration available';}
+}
+form.addEventListener('submit',async e=>{
+ e.preventDefault();statusEl.className='status';statusEl.textContent='Registering…';submit.disabled=true;
+ const body={event:EVENT,firstName:document.getElementById('first').value,lastName:document.getElementById('last').value,email:document.getElementById('email').value,phone:document.getElementById('phone').value,company:document.getElementById('company').value};
+ try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!r.ok||!j.ok)throw new Error(j.error||'Registration failed');statusEl.className='status good';statusEl.textContent=j.duplicate?'You are already registered for this class. Your seat is confirmed.':'You’re registered! Your seat is reserved with 910CPR.';form.querySelectorAll('input').forEach(i=>i.disabled=true);submit.textContent='Registration confirmed';if(j.event&&typeof j.event.remaining==='number')seat.textContent=j.event.remaining>0?`${j.event.remaining} seats available`:'Class full';}
+ catch(err){statusEl.className='status bad';statusEl.textContent=err.message||'We could not complete the registration. Please contact 910CPR.';submit.disabled=false;}
+});
+loadEvent();
+</script>
+</body>
+</html>
