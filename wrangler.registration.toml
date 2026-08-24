@@ -1,0 +1,36 @@
+name = "landerware-public-registration"
+main = "worker/public-registration-worker.js"
+compatibility_date = "2026-08-23"
+workers_dev = true
+
+routes = [
+  { pattern = "register.910cpr.com/*", zone_name = "910cpr.com" }
+]
+
+[[d1_databases]]
+binding = "HOT_SYNC_D1"
+database_name = "landerware-hot-sync"
+database_id = "755bbe0b-300d-4c71-b3e3-f686f3b3d966"
+migrations_dir = "worker/migrations"
+
+# Cloudflare Email Service. Onboard 910cpr.com under Compute > Email Service > Email Sending.
+[[send_email]]
+name = "EMAIL"
+allowed_sender_addresses = [ "Brian@910cpr.com" ]
+
+[triggers]
+crons = [ "0 * * * *" ]
+
+[vars]
+PUBLIC_BASE_URL = "https://register.910cpr.com"
+EMAIL_FROM = "Brian@910cpr.com"
+EMAIL_FROM_NAME = "Brian | 910CPR"
+EMAIL_REPLY_TO = "Brian@910cpr.com"
+OWNER_BCC = "Brian@910cpr.com"
+
+# Defaults apply only when a class does not have explicit pricing columns set.
+# Current public BLS target remains $75 total before optional materials.
+BLS_BASE_PRICE_CENTS = "7140"
+BLS_CARD_PRICE_CENTS = "360"
+BLS_EBOOK_PRICE_CENTS = "1730"
+BLS_EBOOK_TITLE = "2025 AHA BLS Provider Manual eBook (25-3102)"
