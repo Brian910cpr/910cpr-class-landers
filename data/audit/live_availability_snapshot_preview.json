@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T17:33:37.719655+00:00",
+  "generated_at": "2026-08-24T19:31:53.439618+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,53 +22,29 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 356,
-    "blocks_blocked": 9,
+    "blocks_generated": 355,
+    "blocks_blocked": 8,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
       "non_standard_time_increment": 1,
-      "inverse_gap_shorter_than_minimum_consumption": 8
+      "inverse_gap_shorter_than_minimum_consumption": 7
     },
     "blocked_all_reason_counts": {
       "non_standard_time_increment": 1,
-      "inverse_gap_shorter_than_minimum_consumption": 8
+      "inverse_gap_shorter_than_minimum_consumption": 7
     },
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 143,
+      "blocked": 142,
       "available": 213
     },
     "inverse_generated_availability_blocks": 213,
-    "inverse_blocking_event_blocks": 143
+    "inverse_blocking_event_blocks": 142
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-24T15:00:00",
-      "end_datetime": "2026-08-24T17:30:00",
-      "date": "2026-08-24",
-      "end_date": "2026-08-24",
-      "start_time": "15:00",
-      "end_time": "17:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260824T1500000400",
-      "summary": "CFA Pickup",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -3480,11 +3456,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-08-24T17:30:00",
+      "start_datetime": "2026-08-24T15:45:00",
       "end_datetime": "2026-08-25T00:00:00",
       "date": "2026-08-24",
       "end_date": "2026-08-25",
-      "start_time": "17:30",
+      "start_time": "15:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10053,11 +10029,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-11-22T00:00:00",
-      "end_datetime": "2026-11-22T13:45:00",
+      "end_datetime": "2026-11-22T15:45:00",
       "date": "2026-11-22",
       "end_date": "2026-11-22",
       "start_time": "00:00",
-      "end_time": "13:45",
+      "end_time": "15:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10091,14 +10067,6 @@
         "non_standard_time_increment"
       ],
       "message": "Calendar event was not usable as an inverse blocking interval."
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-08-24T13:45:00",
-      "end_datetime": "2026-08-24T15:00:00"
     },
     {
       "calendar_source_key": "brian_do_not_schedule",
