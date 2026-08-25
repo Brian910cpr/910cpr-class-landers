@@ -12,6 +12,7 @@
 </style>
 <style>
 :root{--lane-w:58px}.lane-head,.lane-cell{width:var(--lane-w);min-width:var(--lane-w)}.lane-head{padding:0;background:#f0f4f7!important}.lane-head>div{height:160px;display:flex;align-items:flex-end;justify-content:center;writing-mode:vertical-rl;transform:rotate(180deg);padding:8px 6px;font-size:11px;font-weight:800}.lane-cell{cursor:pointer;position:relative;background:#fafbfc}.lane-cell.unavailable{background:#303b46}.lane-cell.enrollware-ical{background:#5b8def}.lane-cell.class-report{background:#b078d1}.lane-cell.enrollware-other{background:#d59848}.lane-divider{border-right:3px solid #8996a3!important}
+.site-theme-toggle{display:none!important}.drawer{position:static;inset:auto;width:calc(100vw - 36px);max-width:calc(100vw - 36px);max-height:34vh;margin:14px 18px 24px;border:1px solid #bbc4cc;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:16px 18px;overflow:auto;transform:none;transition:none}.drawer button{display:none}.drawer h2{margin:0 0 8px}.drawer:not(.open) #drawerBody:empty:after{content:'Pause over a heat-map cell or click it to inspect the scheduling decision.';color:#56616d}
 </style>
 <script src="/assets/site-theme.js"></script>
 <!-- Google Tag Manager -->
@@ -45,6 +46,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="legend"><span><i class="sw offered"></i> Offered</span><span><i class="sw seated"></i> Seated / real class</span><span><i class="sw joinable"></i> Joinable</span><span><i class="sw suppressed"></i> Suppressed</span><span>Click any cell for the rule trace.</span></div>
   <div class="legend"><span><i class="sw" style="background:#5b8def"></i> Enrollware iCal</span><span><i class="sw" style="background:#b078d1"></i> Class Report</span><span><i class="sw" style="background:#d59848"></i> Other Enrollware</span><span><i class="sw" style="background:#303b46"></i> Brian unavailable</span></div>
+  <p class="status">Pause over a cell to inspect it, or click for an immediate update. The details remain below the chart.</p>
   <div id="error"></div>
   <div class="matrix-wrap" id="wrap"><table id="matrix"></table></div>
 </div>
@@ -62,5 +64,5 @@ function render(){if(!model)return;updateDayButtons();const d=datePick.value;con
 async function init(){try{const r=await fetch(DATA,{cache:'no-store'});if(!r.ok)throw new Error(`Feed returned ${r.status}`);model=await r.json();const families=[...new Set(model.courses.map(c=>c.courseFamily).filter(Boolean))].sort();familyPick.insertAdjacentHTML('beforeend',families.map(f=>`<option>${f}</option>`).join(''));const today=new Date().toLocaleDateString('en-CA');datePick.min=model.window?.startDate||'';datePick.max=model.window?.endDate||'';datePick.value=(today>=datePick.min&&today<=datePick.max)?today:(model.window?.startDate||today);datePick.addEventListener('change',render);familyPick.addEventListener('change',render);$('prevDay').addEventListener('click',()=>shiftDay(-1));$('nextDay').addEventListener('click',()=>shiftDay(1));$('todayBtn').addEventListener('click',()=>{datePick.value=today;render()});render()}catch(err){$('error').innerHTML=`<div class="error"><b>Scheduling Landscape feed is not available.</b><br>${err.message}</div>`;status.textContent='Load failed'}}
 $('closeDrawer').addEventListener('click',()=>{drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true')});init()})();
 </script>
-<script src="/admin/scheduling-landscape-lanes.js?v=20260825-1"></script>
+<script src="/admin/scheduling-landscape-lanes.js?v=20260825-2"></script>
 </body></html>

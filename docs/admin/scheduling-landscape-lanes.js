@@ -5,6 +5,32 @@
   const key = (date, time, lane) => `${date}|${time}|${lane}`;
   let model;
   let laneIndex = new Map();
+  let hoverTimer;
+
+  document.documentElement.dataset.theme = "light";
+  document.documentElement.style.colorScheme = "light";
+
+  function removeThemeToggle() {
+    document.querySelectorAll(".site-theme-toggle").forEach((button) => button.remove());
+    if (document.documentElement.dataset.theme !== "light") document.documentElement.dataset.theme = "light";
+    document.documentElement.style.colorScheme = "light";
+  }
+
+  function installDelayedInspection() {
+    const matrix = document.getElementById("matrix");
+    matrix.addEventListener("pointerover", (event) => {
+      const cell = event.target.closest(".cell,.lane-cell");
+      if (!cell || cell.contains(event.relatedTarget)) return;
+      clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(() => cell.click(), 650);
+    });
+    matrix.addEventListener("pointerout", (event) => {
+      const cell = event.target.closest(".cell,.lane-cell");
+      if (!cell || cell.contains(event.relatedTarget)) return;
+      clearTimeout(hoverTimer);
+    });
+    matrix.addEventListener("click", () => clearTimeout(hoverTimer));
+  }
 
   function showLane(cell, lane, time) {
     const drawer = document.getElementById("drawer");
@@ -51,6 +77,10 @@
     laneIndex = new Map((model.laneCells || []).map((cell) => [key(cell.date, cell.startTime, cell.laneId), cell]));
     const matrix = document.getElementById("matrix");
     new MutationObserver(addLanes).observe(matrix, {childList: true});
+    new MutationObserver(removeThemeToggle).observe(document.body, {childList: true, subtree: true});
+    new MutationObserver(removeThemeToggle).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
+    installDelayedInspection();
+    removeThemeToggle();
     addLanes();
   }).catch((error) => console.error("Operational landscape lanes unavailable", error));
 })();
