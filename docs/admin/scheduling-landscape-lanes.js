@@ -91,8 +91,8 @@
     new MutationObserver(addLanes).observe(matrix, {childList: true});
     new MutationObserver(removeThemeToggle).observe(document.body, {childList: true, subtree: true});
     new MutationObserver(removeThemeToggle).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
-  installDelayedInspection();
-  installDayKeyboardNavigation();
+    installDelayedInspection();
+    installDayKeyboardNavigation();
     removeThemeToggle();
     addLanes();
   }).catch((error) => console.error("Operational landscape lanes unavailable", error));
