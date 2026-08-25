@@ -43,6 +43,17 @@
     }
   }
 
+  function suppressUnavailablePublicSessions() {
+    const suppressedSessionIds = ["13973422"];
+    suppressedSessionIds.forEach(function (sessionId) {
+      document.querySelectorAll('a[href*="' + sessionId + '"]').forEach(function (link) {
+        const container = link.closest(".class-finder-card, .course-session-row, article, li, .course, .session-card, .class-card");
+        if (container) container.hidden = true;
+        else link.hidden = true;
+      });
+    });
+  }
+
   loadPageThemeOverrides();
   applyTheme(savedTheme() || (media.matches ? "dark" : "light"));
 
@@ -73,8 +84,13 @@
     applyTheme(root.dataset.theme);
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", installToggle, { once: true });
-  else installToggle();
+  function installPageBehavior() {
+    installToggle();
+    suppressUnavailablePublicSessions();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", installPageBehavior, { once: true });
+  else installPageBehavior();
 
   media.addEventListener("change", function (event) {
     if (!savedTheme()) applyTheme(event.matches ? "dark" : "light");

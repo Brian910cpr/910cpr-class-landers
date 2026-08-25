@@ -9,10 +9,12 @@ on:
       - '.github/workflows/refresh-admin-availability.yml'
       - 'scripts/build_sessions_current.py'
       - 'scripts/build_schedule_future.py'
+      - 'scripts/fetch_hot_sync_snapshot.py'
       - 'scripts/export_calendar_snapshots.py'
       - 'scripts/build_live_availability_snapshot.py'
       - 'scripts/publish_admin_availability.py'
       - 'scripts/publish_admin_schedule.py'
+      - 'scripts/publish_landerware_ical.py'
       - 'scripts/publish_scheduling_landscape.py'
       - 'scripts/import_enrollware_student_report.py'
       - 'scripts/publish_admin_reference_data.py'
@@ -55,14 +57,22 @@ jobs:
       - name: Refresh Enrollware seated and committed class source
         run: python -m scripts.build_sessions_current --source enrollware_ical
 
+      - name: Fetch committed HOT_SYNC classes
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: python -m scripts.fetch_hot_sync_snapshot
+
       - name: Rebuild future seated schedule
         run: python -m scripts.build_schedule_future
 
       - name: Apply confirmed seat counts
         run: python -m scripts.apply_anchor_seat_overrides
 
-      - name: Publish complete admin occupancy schedule
+      - name: Publish complete canonical admin occupancy schedule
         run: python -m scripts.publish_admin_schedule
+
+      - name: Publish combined LanderWare iCal feed
+        run: python -m scripts.publish_landerware_ical
 
       - name: Refresh read-only calendar snapshots
         run: python -m scripts.export_calendar_snapshots
@@ -116,6 +126,19 @@ jobs:
       - name: Ensure dashboard refresh controls are present
         run: python -m scripts.ensure_dashboard_refresh_controls
 
+      - name: Report canonical source health
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('docs/data/admin_schedule.json').read_text())
+          counts = p.get('counts', {})
+          hot = p.get('sources', {}).get('hot_sync', {})
+          print(f"Canonical schedule: {counts.get('sessions', 0)} total, {counts.get('enrollware_sessions', 0)} Enrollware, {counts.get('hot_sync_sessions_added', 0)} HOT_SYNC")
+          if not hot.get('available'):
+              print(f"::warning title=HOT_SYNC not merged::{hot.get('error') or 'HOT_SYNC snapshot unavailable'}")
+          PY
+
       - name: Commit changed dashboard data
         run: |
           git config user.name "910CPR Availability Bot"
@@ -130,6 +153,7 @@ jobs:
             data/audit/live_availability_snapshot_report.md \
             docs/data/schedule_future.json \
             docs/data/admin_schedule.json \
+            docs/data/landerware.ics \
             docs/data/admin_availability.json \
             docs/data/admin_people.json \
             docs/data/admin_locations.json \
@@ -141,8 +165,8 @@ jobs:
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json
           if git diff --cached --quiet; then
-            echo "No schedule, availability, selector, anchor, or admin reference changes to commit."
+            echo "No schedule, availability, selector, anchor, calendar, or admin reference changes to commit."
             exit 0
           fi
-          git commit -m "Refresh admin schedule, anchors, and live availability feeds"
+          git commit -m "Refresh canonical LanderWare schedule and calendar feed"
           git push
