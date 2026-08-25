@@ -25,6 +25,11 @@ class SchedulingLandscapeOperationalLanesTest(unittest.TestCase):
         self.assertIn('max-height:118px', html)
         self.assertIn('event.key === "ArrowLeft"', script)
         self.assertIn('event.key === "ArrowRight"', script)
+        self.assertIn("fitFullDayToViewport", script)
+        self.assertIn("window.visualViewport?.height", script)
+        self.assertIn("viewportHeight - wrap.getBoundingClientRect().top", script)
+        self.assertIn('window.addEventListener("resize"', script)
+        self.assertIn("new ResizeObserver(fitSoon)", script)
 
     def test_feed_declares_a_complete_midnight_to_midnight_grid(self):
         publisher = (ROOT / "scripts" / "publish_scheduling_landscape.py").read_text(encoding="utf-8")

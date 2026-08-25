@@ -44,6 +44,32 @@
     });
   }
 
+  function fitFullDayToViewport() {
+    const matrix = document.getElementById("matrix");
+    const wrap = document.getElementById("wrap");
+    const rowCount = matrix.tBodies[0]?.rows.length || 96;
+    const headerHeight = matrix.tHead?.getBoundingClientRect().height || 88;
+    const viewportHeight = window.visualViewport?.height || document.documentElement.clientHeight;
+    const availableHeight = Math.max(240, viewportHeight - wrap.getBoundingClientRect().top - 2);
+    const rowHeight = Math.max(2, (availableHeight - headerHeight) / rowCount);
+    const root = document.documentElement.style;
+    root.setProperty("--slot-h", `${rowHeight}px`);
+    root.setProperty("--hour-font", `${Math.min(8, rowHeight)}px`);
+  }
+
+  function installViewportFitting() {
+    let resizeFrame;
+    const fitSoon = () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(fitFullDayToViewport);
+    };
+    window.addEventListener("resize", fitSoon, {passive: true});
+    window.visualViewport?.addEventListener("resize", fitSoon, {passive: true});
+    new ResizeObserver(fitSoon).observe(document.querySelector(".topbar"));
+    new MutationObserver(fitSoon).observe(document.getElementById("matrix"), {childList: true});
+    fitSoon();
+  }
+
   function showLane(cell, lane, time) {
     const drawer = document.getElementById("drawer");
     const items = Array.isArray(cell?.items) ? cell.items : [];
@@ -93,6 +119,7 @@
     new MutationObserver(removeThemeToggle).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
     installDelayedInspection();
     installDayKeyboardNavigation();
+    installViewportFitting();
     removeThemeToggle();
     addLanes();
   }).catch((error) => console.error("Operational landscape lanes unavailable", error));
