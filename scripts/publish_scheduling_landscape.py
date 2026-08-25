@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +10,8 @@ from scripts.build_bls_block_schedule_pilot import apply_final_live_availability
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs" / "data" / "admin" / "scheduling_landscape.json"
+ADMIN_AVAILABILITY = ROOT / "docs" / "data" / "admin_availability.json"
+SCHEDULE_FUTURE = ROOT / "docs" / "data" / "schedule_future.json"
 LOOKBACK_DAYS = 3
 LOOKAHEAD_DAYS = 35
 
@@ -24,6 +26,86 @@ def in_window(value: Any, start: date, end: date) -> bool:
     except ValueError:
         return False
     return start <= parsed <= end
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return payload if isinstance(payload, dict) else {}
+
+
+def parse_dt(value: Any) -> datetime | None:
+    try:
+        return datetime.fromisoformat(clean(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def source_label(value: Any) -> tuple[str, str]:
+    key = clean(value).lower()
+    if "ical" in key:
+        return "enrollware-ical", "Enrollware iCal"
+    if "class_report" in key or "class report" in key:
+        return "class-report", "Class Report"
+    return "enrollware-other", clean(value) or "Other Enrollware source"
+
+
+def quarter_hour_cells(start: datetime, end: datetime) -> list[tuple[str, str]]:
+    if end <= start:
+        return []
+    cursor = start.replace(minute=(start.minute // 15) * 15, second=0, microsecond=0)
+    cells: list[tuple[str, str]] = []
+    while cursor < end:
+        cell_end = cursor + timedelta(minutes=15)
+        if cell_end > start and cursor < end:
+            cells.append((cursor.date().isoformat(), cursor.strftime("%H:%M")))
+        cursor = cell_end
+    return cells
+
+
+def operational_lane_cells(schedule: dict[str, Any], availability: dict[str, Any]) -> list[dict[str, Any]]:
+    cells: dict[tuple[str, str, str], dict[str, Any]] = {}
+    build = schedule.get("build", {}) if isinstance(schedule.get("build"), dict) else {}
+    default_source = build.get("source_mode") or build.get("source_file") or "other"
+    for session in schedule.get("sessions", []):
+        if not isinstance(session, dict):
+            continue
+        start = parse_dt(session.get("start_at"))
+        end = parse_dt(session.get("end_at"))
+        if not start or not end:
+            continue
+        source_class, label = source_label(session.get("source") or default_source)
+        for day, clock in quarter_hour_cells(start, end):
+            key = (day, clock, "enrollware")
+            cell = cells.setdefault(key, {
+                "date": day, "startTime": clock, "laneId": "enrollware",
+                "result": source_class, "sourceLabel": label, "items": [],
+                "reasons": ["enrollware_schedule_input", source_class],
+            })
+            cell["items"].append({
+                "sessionId": clean(session.get("session_id")),
+                "courseName": clean(session.get("course_name") or session.get("official_course_name")),
+                "start": start.isoformat(), "end": end.isoformat(),
+                "registeredCount": session.get("registered_count"),
+            })
+    for event in availability.get("events", []):
+        if not isinstance(event, dict) or clean(event.get("instructor_key")).lower() != "brian":
+            continue
+        start = parse_dt(event.get("start"))
+        end = parse_dt(event.get("end"))
+        if not start or not end:
+            continue
+        for day, clock in quarter_hour_cells(start, end):
+            key = (day, clock, "brian")
+            cell = cells.setdefault(key, {
+                "date": day, "startTime": clock, "laneId": "brian",
+                "result": "unavailable", "sourceLabel": "Google Calendar",
+                "items": [], "reasons": ["brian_google_calendar_unavailable"],
+            })
+            cell["items"].append({
+                "title": "Unavailable", "start": start.isoformat(), "end": end.isoformat(),
+                "sourceKey": clean(event.get("source_key")),
+            })
+    return sorted(cells.values(), key=lambda item: (item["date"], item["startTime"], item["laneId"]))
 
 
 def compact_offer(item: dict[str, Any], page_key: str) -> dict[str, Any]:
@@ -80,6 +162,8 @@ def main() -> None:
     cells: list[dict[str, Any]] = []
     generated_at: list[str] = []
     source_pages: dict[str, dict[str, Any]] = {}
+    schedule = read_json(SCHEDULE_FUTURE)
+    availability = read_json(ADMIN_AVAILABILITY)
 
     for page_key, config in configs.items():
         payload = apply_final_live_availability_guard(build_block_schedule_page(config))
@@ -126,9 +210,15 @@ def main() -> None:
         "window": {"startDate": start.isoformat(), "endDate": end.isoformat()},
         "timeGrid": {"startTime": "08:00", "endTime": "19:00", "stepMinutes": 15},
         "courses": sorted(courses.values(), key=lambda item: (clean(item.get("courseFamily")), clean(item.get("courseName")))),
+        "lanes": [
+            {"laneId": "enrollware", "label": "Enrollware Inputs", "description": "Classes entering the schedule, colored by authoritative source."},
+            {"laneId": "brian", "label": "Brian Unavailable", "description": "DoNotSchedule blocks from Brian's Google Calendar."},
+        ],
+        "laneCells": operational_lane_cells(schedule, availability),
         "cells": sorted(deduped.values(), key=lambda item: (clean(item.get("date")), clean(item.get("startTime")), clean(item.get("courseFamily")), clean(item.get("courseName")))),
         "sourcePages": source_pages,
         "authority": "block_start_time_selector.build_block_schedule_page",
+        "operationalLaneSources": {"enrollware": str(SCHEDULE_FUTURE), "brian": str(ADMIN_AVAILABILITY)},
         "note": "Internal diagnostic only. This feed mirrors selector decisions and does not change customer-facing schedule behavior.",
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
