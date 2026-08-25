@@ -18,9 +18,11 @@ class SchedulingLandscapeOperationalLanesTest(unittest.TestCase):
         self.assertIn('matrix.addEventListener("pointerout"', script)
         self.assertIn('document.documentElement.dataset.theme = "light"', script)
         self.assertIn("let m=0;while(m<24*60)", html)
-        self.assertIn("--slot-h:5px", html)
+        self.assertIn("--slot-h:4px", html)
         self.assertIn(".matrix-wrap{height:auto;overflow:visible", html)
         self.assertIn("table-layout:fixed", html)
+        self.assertIn('<div class="topbar">', html)
+        self.assertIn('max-height:118px', html)
         self.assertIn('event.key === "ArrowLeft"', script)
         self.assertIn('event.key === "ArrowRight"', script)
 

@@ -13,7 +13,7 @@
 <style>
 :root{--lane-w:58px}.lane-head,.lane-cell{width:var(--lane-w);min-width:var(--lane-w)}.lane-head{padding:0;background:#f0f4f7!important}.lane-head>div{height:160px;display:flex;align-items:flex-end;justify-content:center;writing-mode:vertical-rl;transform:rotate(180deg);padding:8px 6px;font-size:11px;font-weight:800}.lane-cell{cursor:pointer;position:relative;background:#fafbfc}.lane-cell.unavailable{background:#303b46}.lane-cell.enrollware-ical{background:#5b8def}.lane-cell.class-report{background:#b078d1}.lane-cell.enrollware-other{background:#d59848}.lane-divider{border-right:3px solid #8996a3!important}
 .site-theme-toggle{display:none!important}.drawer{position:static;inset:auto;width:calc(100vw - 20px);max-width:calc(100vw - 20px);max-height:34vh;margin:8px 10px 16px;border:1px solid #bbc4cc;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:12px 14px;overflow:auto;transform:none;transition:none}.drawer button{display:none}.drawer h2{margin:0 0 8px}.drawer:not(.open) #drawerBody:empty:after{content:'Pause over a heat-map cell or click it to inspect the scheduling decision.';color:#56616d}
-:root{--time-w:48px;--lane-w:42px;--header-h:104px;--slot-h:5px}.shell{max-width:100vw;padding:6px 10px 10px}.head{margin:3px 0 4px;gap:8px}.head h1{font-size:22px}.head p{margin:0;font-size:11px}.controls{gap:6px}.controls input,.controls select,.controls button{height:30px}.legend{margin:3px 0 5px;gap:8px}.matrix-wrap{height:auto;overflow:visible;width:100%}#matrix{width:100%;min-width:0;table-layout:fixed}.time-head,.time{width:var(--time-w);min-width:0}.course-head,.lane-head,.cell,.lane-cell{width:auto;min-width:0}thead th{position:static;height:var(--header-h)}.course-head>div,.lane-head>div{height:calc(var(--header-h) - 4px);padding:3px 1px;font-size:9px}.cell,.lane-cell{height:var(--slot-h);min-height:0;line-height:0}.time{position:static;height:var(--slot-h);padding:0 3px;font-size:0;line-height:0}.hour .time{font-size:9px;line-height:9px}.hour .time,.hour td{border-top:1px solid #8d99a4}.cell.has-reasons:after{width:2px;height:2px;right:1px;bottom:1px}
+:root{--time-w:48px;--lane-w:42px;--header-h:88px;--slot-h:4px}.shell{max-width:100vw;padding:4px 8px 8px}.topbar{display:grid;grid-template-columns:minmax(0,3fr) minmax(300px,2fr);gap:8px;margin-bottom:4px}.summary{min-width:0}.head{margin:0 0 2px;gap:6px}.head h1{font-size:18px;line-height:1.1}.head p{display:none}.controls{gap:5px}.controls label{gap:1px;font-size:10px}.controls input,.controls select,.controls button{height:26px;padding:0 7px}.date-nav button{width:28px;font-size:17px}.legend{margin:2px 0;gap:7px;font-size:10px}.legend .sw{width:13px;height:10px}.summary>p.status{margin:2px 0 0;font-size:10px}.drawer{position:static;inset:auto;width:auto;max-width:none;max-height:118px;margin:0;border:1px solid #bbc4cc;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:7px 10px;overflow:auto;transform:none;transition:none;font-size:11px}.drawer h2{margin:0 0 3px;font-size:15px}.drawer h3{display:inline;margin:0 8px 0 0;font-size:12px}.drawer p{margin:3px 0}.drawer .meta{grid-template-columns:72px 1fr;gap:1px 7px;margin:3px 0}.drawer .reasons{margin:2px 0;padding-left:16px}.matrix-wrap{height:auto;overflow:visible;width:100%}#matrix{width:100%;min-width:0;table-layout:fixed}.time-head,.time{width:var(--time-w);min-width:0}.course-head,.lane-head,.cell,.lane-cell{width:auto;min-width:0}thead th{position:static;height:var(--header-h)}.course-head>div,.lane-head>div{height:calc(var(--header-h) - 4px);padding:2px 1px;font-size:8px}.cell,.lane-cell{height:var(--slot-h);min-height:0;line-height:0}.time{position:static;height:var(--slot-h);padding:0 3px;font-size:0;line-height:0}.hour .time{font-size:8px;line-height:8px}.hour .time,.hour td{border-top:1px solid #8d99a4}.cell.has-reasons:after{width:2px;height:2px;right:1px;bottom:1px}@media(max-width:800px){.topbar{grid-template-columns:1fr}.drawer{max-height:90px}.head{align-items:start}.controls{width:100%}}
 </style>
 <script src="/assets/site-theme.js"></script>
 <!-- Google Tag Manager -->
@@ -36,22 +36,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <div id="adminNav"></div>
 <div class="shell">
-  <div class="head">
-    <div><h1>Scheduling Landscape</h1><p>15-minute all-course view of what the scheduler is offering, seating, joining, or suppressing.</p></div>
-    <div class="controls">
-      <label>Date<div class="date-nav"><button id="prevDay" type="button" aria-label="Previous day" title="Previous day">‹</button><input id="datePick" type="date"><button id="nextDay" type="button" aria-label="Next day" title="Next day">›</button></div></label>
-      <label>Family<select id="familyPick"><option value="">All course families</option></select></label>
-      <button id="todayBtn" type="button">Today</button>
-      <span class="status" id="status">Loading…</span>
+  <div class="topbar">
+    <div class="summary">
+      <div class="head">
+        <div><h1>Scheduling Landscape</h1><p>15-minute all-course view of what the scheduler is offering, seating, joining, or suppressing.</p></div>
+        <div class="controls">
+          <label>Date<div class="date-nav"><button id="prevDay" type="button" aria-label="Previous day" title="Previous day">‹</button><input id="datePick" type="date"><button id="nextDay" type="button" aria-label="Next day" title="Next day">›</button></div></label>
+          <label>Family<select id="familyPick"><option value="">All course families</option></select></label>
+          <button id="todayBtn" type="button">Today</button>
+          <span class="status" id="status">Loading…</span>
+        </div>
+      </div>
+      <div class="legend"><span><i class="sw offered"></i> Offered</span><span><i class="sw seated"></i> Seated / real class</span><span><i class="sw joinable"></i> Joinable</span><span><i class="sw suppressed"></i> Suppressed</span><span>Click any cell for the rule trace.</span></div>
+      <div class="legend"><span><i class="sw" style="background:#5b8def"></i> Enrollware iCal</span><span><i class="sw" style="background:#b078d1"></i> Class Report</span><span><i class="sw" style="background:#d59848"></i> Other Enrollware</span><span><i class="sw" style="background:#303b46"></i> Brian unavailable</span></div>
+      <p class="status">Pause over a cell to inspect it, or click for an immediate update.</p>
     </div>
+    <aside class="drawer" id="drawer" aria-hidden="true"><button id="closeDrawer" type="button">Close</button><h2 id="drawerTitle">Decision trace</h2><div id="drawerBody"></div></aside>
   </div>
-  <div class="legend"><span><i class="sw offered"></i> Offered</span><span><i class="sw seated"></i> Seated / real class</span><span><i class="sw joinable"></i> Joinable</span><span><i class="sw suppressed"></i> Suppressed</span><span>Click any cell for the rule trace.</span></div>
-  <div class="legend"><span><i class="sw" style="background:#5b8def"></i> Enrollware iCal</span><span><i class="sw" style="background:#b078d1"></i> Class Report</span><span><i class="sw" style="background:#d59848"></i> Other Enrollware</span><span><i class="sw" style="background:#303b46"></i> Brian unavailable</span></div>
-  <p class="status">Pause over a cell to inspect it, or click for an immediate update. The details remain below the chart.</p>
   <div id="error"></div>
   <div class="matrix-wrap" id="wrap"><table id="matrix"></table></div>
 </div>
-<aside class="drawer" id="drawer" aria-hidden="true"><button id="closeDrawer" type="button">Close</button><h2 id="drawerTitle">Decision trace</h2><div id="drawerBody"></div></aside>
 <script src="/admin/admin-nav.js?v=20260822-2"></script>
 <script>
 (()=>{const DATA='/data/admin/scheduling_landscape.json';const $=id=>document.getElementById(id);let model=null;const datePick=$('datePick'),familyPick=$('familyPick'),matrix=$('matrix'),status=$('status'),drawer=$('drawer');
@@ -65,5 +69,5 @@ function render(){if(!model)return;updateDayButtons();const d=datePick.value;con
 async function init(){try{const r=await fetch(DATA,{cache:'no-store'});if(!r.ok)throw new Error(`Feed returned ${r.status}`);model=await r.json();const families=[...new Set(model.courses.map(c=>c.courseFamily).filter(Boolean))].sort();familyPick.insertAdjacentHTML('beforeend',families.map(f=>`<option>${f}</option>`).join(''));const today=new Date().toLocaleDateString('en-CA');datePick.min=model.window?.startDate||'';datePick.max=model.window?.endDate||'';datePick.value=(today>=datePick.min&&today<=datePick.max)?today:(model.window?.startDate||today);datePick.addEventListener('change',render);familyPick.addEventListener('change',render);$('prevDay').addEventListener('click',()=>shiftDay(-1));$('nextDay').addEventListener('click',()=>shiftDay(1));$('todayBtn').addEventListener('click',()=>{datePick.value=today;render()});render()}catch(err){$('error').innerHTML=`<div class="error"><b>Scheduling Landscape feed is not available.</b><br>${err.message}</div>`;status.textContent='Load failed'}}
 $('closeDrawer').addEventListener('click',()=>{drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true')});init()})();
 </script>
-<script src="/admin/scheduling-landscape-lanes.js?v=20260825-3"></script>
+<script src="/admin/scheduling-landscape-lanes.js?v=20260825-4"></script>
 </body></html>
