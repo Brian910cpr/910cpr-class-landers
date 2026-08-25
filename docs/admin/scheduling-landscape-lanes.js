@@ -32,6 +32,18 @@
     matrix.addEventListener("click", () => clearTimeout(hoverTimer));
   }
 
+  function installDayKeyboardNavigation() {
+    document.addEventListener("keydown", (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const tag = document.activeElement?.tagName;
+      if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+      const buttonId = event.key === "ArrowLeft" ? "prevDay" : event.key === "ArrowRight" ? "nextDay" : "";
+      if (!buttonId) return;
+      event.preventDefault();
+      document.getElementById(buttonId)?.click();
+    });
+  }
+
   function showLane(cell, lane, time) {
     const drawer = document.getElementById("drawer");
     const items = Array.isArray(cell?.items) ? cell.items : [];
@@ -79,7 +91,8 @@
     new MutationObserver(addLanes).observe(matrix, {childList: true});
     new MutationObserver(removeThemeToggle).observe(document.body, {childList: true, subtree: true});
     new MutationObserver(removeThemeToggle).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
-    installDelayedInspection();
+  installDelayedInspection();
+  installDayKeyboardNavigation();
     removeThemeToggle();
     addLanes();
   }).catch((error) => console.error("Operational landscape lanes unavailable", error));

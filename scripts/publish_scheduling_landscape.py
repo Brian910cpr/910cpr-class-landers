@@ -208,7 +208,7 @@ def main() -> None:
         "schemaVersion": "scheduling-landscape.v1",
         "generatedAt": max(generated_at) if generated_at else None,
         "window": {"startDate": start.isoformat(), "endDate": end.isoformat()},
-        "timeGrid": {"startTime": "08:00", "endTime": "19:00", "stepMinutes": 15},
+        "timeGrid": {"startTime": "00:00", "endTime": "24:00", "stepMinutes": 15},
         "courses": sorted(courses.values(), key=lambda item: (clean(item.get("courseFamily")), clean(item.get("courseName")))),
         "lanes": [
             {"laneId": "enrollware", "label": "Enrollware Inputs", "description": "Classes entering the schedule, colored by authoritative source."},

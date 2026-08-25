@@ -17,6 +17,16 @@ class SchedulingLandscapeOperationalLanesTest(unittest.TestCase):
         self.assertIn("setTimeout(() => cell.click(), 650)", script)
         self.assertIn('matrix.addEventListener("pointerout"', script)
         self.assertIn('document.documentElement.dataset.theme = "light"', script)
+        self.assertIn("let m=0;while(m<24*60)", html)
+        self.assertIn("--slot-h:5px", html)
+        self.assertIn(".matrix-wrap{height:auto;overflow:visible", html)
+        self.assertIn("table-layout:fixed", html)
+        self.assertIn('event.key === "ArrowLeft"', script)
+        self.assertIn('event.key === "ArrowRight"', script)
+
+    def test_feed_declares_a_complete_midnight_to_midnight_grid(self):
+        publisher = (ROOT / "scripts" / "publish_scheduling_landscape.py").read_text(encoding="utf-8")
+        self.assertIn('{"startTime": "00:00", "endTime": "24:00", "stepMinutes": 15}', publisher)
 
     def test_partial_intervals_fill_each_overlapping_quarter_hour(self):
         self.assertEqual(
