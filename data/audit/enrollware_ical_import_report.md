@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-08-26T07:32:08.093060-04:00`
+- Generated at: `2026-08-26T08:55:57.953248-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `339`
-- Public sessions created: `339`
+- iCal events read: `338`
+- Public sessions created: `338`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `289`
+- Registration unavailable sessions marked not direct-bookable: `288`
 - Unmapped sessions: `18`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776384` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-05-28T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13568428` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-05-28T17:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776553` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-05-28T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13568382` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-05-28T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `12775779` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-06T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774577` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-06-06T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775301` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-06T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13614037` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-06-10T07:00:00-04:00 | GE Aerospace |
 
 ## Unmapped Examples
 
