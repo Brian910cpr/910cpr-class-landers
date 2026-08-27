@@ -7,16 +7,16 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 - Configured calendar sources found: 3
 - Local snapshot found: /home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots
 - Instructors mapped: 2
-- Blocks generated: 353
-- Blocks blocked/placeheld: 7
-- Inverse-generated availability blocks: 214
-- Inverse blocking event blocks: 139
+- Blocks generated: 355
+- Blocks blocked/placeheld: 5
+- Inverse-generated availability blocks: 217
+- Inverse blocking event blocks: 138
 - DNS markers found: 0
 
 ## Blocked Reason Counts
 
 - `non_standard_time_increment`: 1
-- `inverse_gap_shorter_than_minimum_consumption`: 6
+- `inverse_gap_shorter_than_minimum_consumption`: 4
 
 ## Missing Calendar Source Config / Snapshots
 
@@ -27,8 +27,6 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 | Source | Type | Reason | Message |
 | --- | --- | --- | --- |
 | brian_do_not_schedule | inverse_google_calendar | `non_standard_time_increment` | Calendar event was not usable as an inverse blocking interval. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
 | brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
 | brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
 | brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
