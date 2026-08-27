@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-27T10:59:27.450674+00:00",
+  "generated_at": "2026-08-27T20:58:54.992182+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-27T10:59:26.719240+00:00",
+      "generated_at": "2026-08-27T20:58:54.314248+00:00",
       "event_count": 0
     },
     {
@@ -16,74 +16,19 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-27T10:59:27.450674+00:00",
-      "event_count": 137
+      "generated_at": "2026-08-27T20:58:54.992182+00:00",
+      "event_count": 134
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-27T10:59:27.038332+00:00",
+      "generated_at": "2026-08-27T20:58:54.573757+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "TRAVEL GAP",
-      "start": "2026-08-27T12:00:00+00:00",
-      "end": "2026-08-27T13:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Interview With Brian Ennis ",
-      "start": "2026-08-27T13:00:00+00:00",
-      "end": "2026-08-27T14:00:00+00:00",
-      "location": "4512 Technology Dr\\, Wilmington\\, North Carolina 28405\\, United States",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "TRAVEL GAP",
-      "start": "2026-08-27T14:00:00+00:00",
-      "end": "2026-08-27T17:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-08-27T15:00:00-04:00",
-      "end": "2026-08-27T17:30:00-04:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Foundations Early Learning Center",
-      "start": "2026-08-27T17:00:00+00:00",
-      "end": "2026-08-27T19:30:00+00:00",
-      "location": "4320 Fairview Dr\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
@@ -1533,6 +1478,28 @@
       "title": "CFA Pickup",
       "start": "2026-11-24T15:00:00-05:00",
       "end": "2026-11-24T17:30:00-05:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Drop Off",
+      "start": "2026-11-25T06:30:00-05:00",
+      "end": "2026-11-25T07:45:00-05:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Pickup",
+      "start": "2026-11-25T15:00:00-05:00",
+      "end": "2026-11-25T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     }
