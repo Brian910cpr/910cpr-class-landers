@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-08-26T20:32:02.510552-04:00`
+- Generated at: `2026-08-27T06:58:57.638694-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `335`
-- Public sessions created: `335`
+- iCal events read: `334`
+- Public sessions created: `334`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `284`
+- Registration unavailable sessions marked not direct-bookable: `283`
 - Unmapped sessions: `18`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776335` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-05-29T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776138` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-05-29T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774321` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-05-29T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775522` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-05-29T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `12776866` | enrollware_registration_closed | HSI Adult First Aid | Adult CPR AED | 2026-06-10T09:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13614081` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-06-10T11:30:00-04:00 | GE Aerospace |
 | `12776145` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-10T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12774328` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-06-10T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
