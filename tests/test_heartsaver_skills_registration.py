@@ -49,4 +49,28 @@ class RegistrationProfileTests(unittest.TestCase):
         for marker in ("missing_file", "unsupported_file_type", "file_too_large", "invalid_or_expired_token"):
             self.assertIn(marker, EDGE)
 
+    def test_third_course_is_configuration_only(self):
+        self.assertIn("nhcso-foundations-instructor-led-v1", SQL)
+        self.assertIn("landerware-foundations", SQL)
+        self.assertNotIn("nhcso-foundations", EDGE.lower())
+        self.assertIn('"mode":"invoice_later"', SQL)
+
+    def test_generic_lifecycle_operations_preserve_linkage(self):
+        for operation in ("landerware_satisfy_registration_requirement", "landerware_record_completion", "landerware_issue_credential"):
+            self.assertIn(operation, SQL)
+        for field in ("registration_id", "person_id", "course_id", "session_id"):
+            self.assertIn(field, SQL)
+        for event in ("requirement_satisfied", "registration_completed", "credential_issued"):
+            self.assertIn(event, SQL)
+
+    def test_required_session_and_upload_are_forwarded_and_enforced(self):
+        for field in ("externalSessionId", "startsAt", "locationName"):
+            self.assertIn(field, EDGE)
+        self.assertIn("required_requirement_missing", EDGE)
+
+    def test_http_replay_does_not_recreate_side_effects(self):
+        self.assertIn("existingMessage", EDGE)
+        self.assertIn("existing.length", EDGE)
+        self.assertIn("registration-confirmation:${result.registrationId}", EDGE)
+
 if __name__ == "__main__": unittest.main()

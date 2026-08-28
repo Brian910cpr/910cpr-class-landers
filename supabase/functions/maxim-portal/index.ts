@@ -857,13 +857,25 @@ async function registerEmployee(req: Request, actorSource: ActorSource = "maxim_
       landerware_session_id: durableRegistration.sessionId,
     }),
   });
-  const confirmationSubject = `You’re Registered — ${courseName} on ${canonical.day.date}`;
-  const confirmationBody = `Hi ${String(body?.person?.firstName || "there")},\n\nYou’re registered for ${courseName}.\n\nDate: ${canonical.day.date}\nStart time: ${canonical.slot.startTime}\nLocation: ${locationLabelForRegistration(canonical.locationKey)}\nDelivery: ${deliveryMethod}\n\nPlease follow any preparation instructions provided for this course. To reschedule, use your secure scheduling link or contact 910CPR.\n\n910CPR\n910-395-5193`;
-  const confirmation = await rest("landerware_messages", { method: "POST", body: JSON.stringify({
+  const registrationProfiles = await rest(`landerware_registration_profiles?profile_key=eq.${encodeURIComponent(`maxim-course-${courseId}`)}&select=confirmation_template_key&limit=1`);
+  const templateKey = registrationProfiles[0]?.confirmation_template_key;
+  const confirmationTemplates = await rest(`landerware_confirmation_templates?template_key=eq.${encodeURIComponent(templateKey)}&active=eq.true&select=*&limit=1`);
+  const confirmationTemplate = confirmationTemplates[0];
+  if (!confirmationTemplate) throw new Error("confirmation_template_not_found");
+  const confirmationValues: Record<string, string> = {
+    first_name: String(body?.person?.firstName || "there"), display_name: courseName,
+    session_message: `${canonical.day.date} ${canonical.slot.startTime}; ${locationLabelForRegistration(canonical.locationKey)}; ${deliveryMethod}`,
+    requirement_message: "Please follow the preparation requirements assigned to this registration.",
+    payer_message: "Your registration uses the payer policy assigned by the registration profile.",
+  };
+  const renderConfirmation = (value: string) => value.replace(/\{\{([a-z_]+)\}\}/g, (_match: string, key: string) => confirmationValues[key] || "");
+  const confirmationKey = `registration-confirmation:${durableRegistration.registrationId}`;
+  const priorConfirmation = await rest(`landerware_messages?idempotency_key=eq.${encodeURIComponent(confirmationKey)}&select=id&limit=1`);
+  const confirmation = priorConfirmation.length ? priorConfirmation : await rest("landerware_messages", { method: "POST", body: JSON.stringify({
     person_id: durable.personId, registration_id: durableRegistration.registrationId,
-    template_key: "registration_confirmation_v1", recipient: body?.person?.email || null,
-    subject: confirmationSubject, body_text: confirmationBody, delivery_provider: "gmail",
-    delivery_status: "pending", idempotency_key: `registration-confirmation:${durableRegistration.registrationId}`,
+    template_key: confirmationTemplate.template_key, recipient: body?.person?.email || null,
+    subject: renderConfirmation(confirmationTemplate.subject_template), body_text: renderConfirmation(confirmationTemplate.body_template),
+    delivery_provider: confirmationTemplate.delivery_provider, delivery_status: "pending", idempotency_key: confirmationKey,
   }) });
   await activity("confirmation_queued", actorSource, { ...durable, registrationId: durableRegistration.registrationId, sessionId: durableRegistration.sessionId }, { messageId: confirmation[0]?.id, deliveryStatus: "pending" });
   return response({
