@@ -402,6 +402,8 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
             current["location"] = value
         elif name == "STATUS":
             current["status"] = value
+        elif name == "TRANSP":
+            current["transparency"] = value
         elif name in {"LAST-MODIFIED", "DTSTAMP"}:
             current["updated"] = ics_datetime_to_iso(value) or value
         elif name == "ORGANIZER":
@@ -445,6 +447,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         event.setdefault("description", "")
         event.setdefault("location", "")
         event.setdefault("status", UNKNOWN)
+        event.setdefault("transparency", "OPAQUE")
         event.setdefault("updated", UNKNOWN)
         event.setdefault("creator", UNKNOWN)
         event.setdefault("organizer", event.get("organizer", UNKNOWN))

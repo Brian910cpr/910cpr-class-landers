@@ -775,6 +775,35 @@ def seated_family_anchors(
     return anchors
 
 
+def confirmed_calendar_training_anchors(live_availability_payload: Any) -> list[dict[str, Any]]:
+    """Promote positively classified calendar training events into day anchors."""
+    if not isinstance(live_availability_payload, dict):
+        return []
+    raw_blocks = live_availability_payload.get("availability_blocks")
+    if not isinstance(raw_blocks, list):
+        return []
+    anchors = []
+    for block in raw_blocks:
+        if not isinstance(block, dict) or block.get("confirmed_training_class") is not True:
+            continue
+        start = parse_dt(block.get("start_datetime"))
+        if not start or block.get("availability_status") != "blocked":
+            continue
+        anchors.append({
+            "date": start.date().isoformat(),
+            "startTime": start.strftime("%H:%M"),
+            "sessionId": clean_text(block.get("source_event_id")),
+            "courseId": "",
+            "resolvedCourseId": clean_text(block.get("confirmed_training_course_id")),
+            "instructorKey": normalize_key(block.get("instructor_name")),
+            "locationKey": normalize_key(block.get("location_name")),
+            "matchAnyLocation": clean_text(block.get("availability_location_mode")) == "instructor_time_only",
+            "enrollmentCount": 0,
+            "anchorSource": "confirmed_google_calendar_training_class",
+        })
+    return anchors
+
+
 def matching_same_day_anchor(
     anchors: list[dict[str, Any]],
     *,
@@ -782,6 +811,8 @@ def matching_same_day_anchor(
     instructor: str,
     location: str,
     location_resource_map: Any,
+    offer_course_id: str = "",
+    consolidation_groups: dict[str, str] | None = None,
 ) -> dict[str, Any] | None:
     canonical_location, _resource, _normalized = generate_dynamic_offers.normalize_location_resource(
         location,
@@ -790,11 +821,20 @@ def matching_same_day_anchor(
     )
     instructor_key = normalize_key(instructor)
     location_key = normalize_key(canonical_location or location)
+    groups = consolidation_groups or {}
+    offer_group = groups.get(clean_text(offer_course_id), clean_text(offer_course_id))
     matches = [
         anchor for anchor in anchors
         if anchor["date"] == day.isoformat()
         and anchor["instructorKey"] == instructor_key
-        and anchor["locationKey"] == location_key
+        and (anchor.get("matchAnyLocation") is True or anchor["locationKey"] == location_key)
+        and (
+            not offer_group
+            or groups.get(
+                clean_text(anchor.get("resolvedCourseId") or anchor.get("courseId")),
+                clean_text(anchor.get("resolvedCourseId") or anchor.get("courseId")),
+            ) == offer_group
+        )
     ]
     return min(matches, key=lambda item: item["startTime"]) if matches else None
 
@@ -804,6 +844,7 @@ def scheduled_day_anchor_for_offer(
     offer: dict[str, Any],
     *,
     location_resource_map: Any,
+    consolidation_groups: dict[str, str] | None = None,
 ) -> dict[str, Any] | None:
     """Return the real class that suppresses a speculative offer on its day."""
     offer_day = date.fromisoformat(str(offer["date"]))
@@ -813,7 +854,23 @@ def scheduled_day_anchor_for_offer(
         instructor=clean_text(offer.get("instructor")),
         location=clean_text(offer.get("location")),
         location_resource_map=location_resource_map,
+        offer_course_id=clean_text(offer.get("courseId") or offer.get("course_id")),
+        consolidation_groups=consolidation_groups,
     )
+
+
+def course_consolidation_groups(page_configs: dict[str, dict[str, Any]]) -> dict[str, str]:
+    groups: dict[str, str] = {}
+    for page in page_configs.values():
+        page_key = normalize_key(page.get("page_key"))
+        for option in page.get("course_options", []):
+            if not isinstance(option, dict):
+                continue
+            course_id = clean_text(option.get("course_id"))
+            family_group = normalize_key(option.get("family_group")) or course_id
+            if course_id:
+                groups.setdefault(course_id, f"{page_key}:{family_group}")
+    return groups
 
 
 def matching_shared_cooldown_anchor(
@@ -966,6 +1023,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         raise BlockSelectorInputError(f"Block schedule page {page_key} has no allowed course IDs")
 
     live_availability_snapshot = require_current_live_availability_snapshot()
+    consolidation_groups = course_consolidation_groups(load_block_schedule_page_configs())
     loaded = {
         "live_availability_snapshot": live_availability_snapshot,
         "location_resource_map": read_required_json(LOCATION_RESOURCE_MAP_PATH),
@@ -1000,6 +1058,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         minimum_enrollment=0,
         location_resource_map=loaded["location_resource_map"],
     )
+    scheduled_day_anchors.extend(confirmed_calendar_training_anchors(live_availability_snapshot))
     shared_cooldown_days = int(page_config.get("shared_cooldown_days_after_booking") or 0)
     shared_cooldown_anchors = seated_family_anchors(
         schedule_future_payload=loaded.get("schedule_future"),
@@ -1102,6 +1161,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     instructor=instructor_name,
                     location=location,
                     location_resource_map=loaded["location_resource_map"],
+                    offer_course_id=course_id,
+                    consolidation_groups=consolidation_groups,
                 )
                 if same_day_anchor:
                     reasons.append("same_day_family_anchor_already_seated")
@@ -1109,6 +1170,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     scheduled_day_anchors,
                     context,
                     location_resource_map=loaded["location_resource_map"],
+                    consolidation_groups=consolidation_groups,
                 )
                 if scheduled_day_anchor:
                     reasons.append("scheduled_day_already_has_public_class")

@@ -190,7 +190,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIs(config["include_seated_classes"], True)
         self.assertEqual(0, config["seated_class_minimum_enrollment"])
 
-    def test_zero_enrollment_scheduled_class_locks_its_day(self):
+    def test_zero_enrollment_scheduled_class_creates_an_anchor(self):
         schedule = {"sessions": [{
             "session_id": "open-zero-seat-class",
             "course_id": "209809",
@@ -209,7 +209,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         )
         self.assertEqual(["open-zero-seat-class"], [anchor["sessionId"] for anchor in anchors])
 
-    def test_paid_heartsaver_seat_suppresses_same_day_dynamic_starts_but_keeps_class(self):
+    def test_paid_heartsaver_seat_suppresses_same_group_but_keeps_other_barnacles_and_class(self):
         schedule = {"sessions": [{
             "session_id": "heartsaver-pediatric-aug-29",
             "course_id": "351632",
@@ -233,19 +233,24 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         dynamic_offers = [{
             "date": day,
             "startTime": start,
+            "courseId": course_id,
             "instructor": "Brian Ennis",
             "location": ":: Wilmington; Shipyard Blvd - B",
             "offerType": "appointment",
-        } for day, start in (
-            ("2026-08-29", "14:30"),
-            ("2026-08-29", "15:00"),
-            ("2026-08-29", "17:00"),
-            ("2026-08-30", "14:30"),
+        } for day, start, course_id in (
+            ("2026-08-29", "14:30", "251545"),
+            ("2026-08-29", "17:00", "251545"),
+            ("2026-08-29", "17:00", "344085"),
+            ("2026-08-30", "14:30", "251545"),
         )]
+        groups = {
+            "351632": "heartsaver:pediatric", "251545": "heartsaver:pediatric",
+            "344085": "heartsaver:cpr-aed",
+        }
         remaining_dynamic = [
             offer for offer in dynamic_offers
             if not block_start_time_selector.scheduled_day_anchor_for_offer(
-                anchors, offer, location_resource_map={}
+                anchors, offer, location_resource_map={}, consolidation_groups=groups
             )
         ]
         seated = block_start_time_selector.seated_class_selector_offers(
@@ -256,14 +261,91 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         )
         public_offers = remaining_dynamic + seated
 
-        self.assertEqual([("2026-08-30", "14:30")], [
-            (offer["date"], offer["startTime"]) for offer in remaining_dynamic
+        self.assertEqual([("2026-08-29", "17:00", "344085"), ("2026-08-30", "14:30", "251545")], [
+            (offer["date"], offer["startTime"], offer["courseId"]) for offer in remaining_dynamic
         ])
-        self.assertEqual([("2026-08-29", "14:00", "seated_class")], [
+        self.assertEqual([("2026-08-29", "17:00", "appointment"), ("2026-08-29", "14:00", "seated_class")], [
             (offer["date"], offer["startTime"], offer["offerType"]) for offer in public_offers
             if offer["date"] == "2026-08-29"
         ])
         self.assertTrue(seated[0]["publicSelectable"])
+
+    def test_confirmed_calendar_training_is_anchor_but_personal_busy_event_is_not(self):
+        live_snapshot = {"availability_blocks": [
+            {
+                "source_event_id": "confirmed-training",
+                "start_datetime": "2026-09-19T11:00:00-04:00",
+                "availability_status": "blocked",
+                "confirmed_training_class": True,
+                "confirmed_training_course_id": "351632",
+                "instructor_name": "Brian Ennis",
+                "location_name": "Little Leaps",
+                "availability_location_mode": "instructor_time_only",
+            },
+            {
+                "source_event_id": "personal-busy",
+                "start_datetime": "2026-09-20T11:00:00-04:00",
+                "availability_status": "blocked",
+                "confirmed_training_class": False,
+                "instructor_name": "Brian Ennis",
+                "location_name": "Personal",
+                "availability_location_mode": "instructor_time_only",
+            },
+        ]}
+        anchors = block_start_time_selector.confirmed_calendar_training_anchors(live_snapshot)
+        self.assertEqual(["confirmed-training"], [anchor["sessionId"] for anchor in anchors])
+        same_day_offer = {
+            "date": "2026-09-19", "startTime": "15:00", "courseId": "251545", "instructor": "Brian Ennis",
+            "location": ":: Wilmington; Shipyard Blvd - B",
+        }
+        different_course_offer = {**same_day_offer, "courseId": "344085"}
+        personal_day_offer = {**same_day_offer, "date": "2026-09-20"}
+        groups = {
+            "351632": "heartsaver:pediatric", "251545": "heartsaver:pediatric",
+            "344085": "heartsaver:cpr-aed",
+        }
+        self.assertIsNotNone(block_start_time_selector.scheduled_day_anchor_for_offer(
+            anchors, same_day_offer, location_resource_map={}, consolidation_groups=groups
+        ))
+        self.assertIsNone(block_start_time_selector.scheduled_day_anchor_for_offer(
+            anchors, different_course_offer, location_resource_map={}, consolidation_groups=groups
+        ))
+        self.assertIsNone(block_start_time_selector.scheduled_day_anchor_for_offer(
+            anchors, personal_day_offer, location_resource_map={}, consolidation_groups=groups
+        ))
+
+        seated = block_start_time_selector.seated_family_anchors(
+            schedule_future_payload={"sessions": [{
+                "session_id": "seated", "course_id": "351632",
+                "start_at": "2026-09-21T14:00:00-04:00", "lead_instructor_name": "Brian Ennis",
+                "location_name": ":: Wilmington; Shipyard Blvd - B", "registered_count": 1,
+            }]},
+            selected_course_ids=set(), minimum_enrollment=0, location_resource_map={},
+        )
+        self.assertEqual(["seated"], [anchor["sessionId"] for anchor in seated])
+
+    def test_august_29_30_31_real_feeds_keep_only_fitting_cross_group_barnacles(self):
+        feed_dir = block_start_time_selector.ROOT / "docs" / "data" / "block-selector-availability"
+        schedule = json.loads((block_start_time_selector.SCHEDULE_FUTURE_PATH).read_text(encoding="utf-8"))
+        anchors = {
+            day: {(str(item.get("course_id")), str(item.get("start_at"))[11:16]) for item in schedule["sessions"] if str(item.get("start_at", "")).startswith(day)}
+            for day in ("2026-08-29", "2026-08-30", "2026-08-31")
+        }
+        self.assertEqual({("209806", "09:30"), ("351632", "11:30")}, anchors["2026-08-29"])
+        self.assertEqual({("209806", "14:00")}, anchors["2026-08-30"])
+        self.assertEqual({("209811", "13:00"), ("209818", "14:00")}, anchors["2026-08-31"])
+
+        def starts(feed_name, day, course_id):
+            payload = json.loads((feed_dir / f"{feed_name}.json").read_text(encoding="utf-8"))
+            date_row = next(item for item in payload["dates"] if item["date"] == day)
+            return [slot["startTime"] for slot in date_row["startTimes"] if any(course["courseId"] == course_id for course in slot["courses"])]
+
+        self.assertEqual(["11:30"], starts("heartsaver", "2026-08-29", "351632"))
+        self.assertEqual([], starts("heartsaver", "2026-08-29", "251545"))
+        self.assertEqual(["17:00", "17:30", "18:00", "18:30", "19:00"], starts("heartsaver", "2026-08-29", "344085"))
+        self.assertEqual(["14:00"], starts("bls", "2026-08-30", "209806"))
+        self.assertTrue(starts("bls", "2026-08-30", "210549"))
+        self.assertTrue(starts("heartsaver", "2026-08-31", "351632"))
 
     def test_shared_board_cooldown_suppresses_booking_day_and_following_six_days(self):
         anchors = [{"date": "2026-07-20", "startTime": "09:00", "sessionId": "arc-booking"}]

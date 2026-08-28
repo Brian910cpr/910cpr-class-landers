@@ -110,8 +110,10 @@ class AnchorStateTests(unittest.TestCase):
 
         policy_path = Path(__file__).resolve().parents[1] / "data/config/anchor_schedule_policy.json"
         policy = json.loads(policy_path.read_text(encoding="utf-8"))
-        self.assertEqual(policy["mode"], "daily_anchor_stack_v1")
-        self.assertTrue(policy["one_course_type_per_calendar_day"])
+        self.assertEqual(policy["mode"], "anchor_repeat_bubble_v2")
+        self.assertFalse(policy["one_course_type_per_calendar_day"])
+        self.assertEqual(0, policy["default_repeat_delay_minutes"])
+        self.assertTrue(policy["retain_barnacle_offers"])
         self.assertEqual(policy["open_day_excluded_families"], ["ACLS", "PALS"])
 
 
