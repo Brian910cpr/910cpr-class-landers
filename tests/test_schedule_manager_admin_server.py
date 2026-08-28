@@ -33,18 +33,18 @@ class ScheduleManagerTests(unittest.TestCase):
         self.assertFalse(reread["public_direct_booking"])
         json.loads(manager.STORE.read_text(encoding="utf-8"))
 
-    def test_heartcode_skills_session_occupies_45_minutes_and_allows_immediate_follow_on(self):
+    def test_heartcode_skills_session_occupies_60_minutes_and_allows_immediate_follow_on(self):
         first_body = {
             **self.body(),
             "course_key": "aha_heartcode_bls",
             "start_time": "15:00",
         }
-        second_body = {**self.body(), "start_time": "15:45"}
+        second_body = {**self.body(), "start_time": "16:00"}
 
         first = manager.new_record(first_body)
         second = manager.new_record(second_body)
 
-        self.assertEqual("2026-08-10T15:45:00-04:00", first["end_at"])
+        self.assertEqual("2026-08-10T16:00:00-04:00", first["end_at"])
         self.assertEqual(first["end_at"], second["start_at"])
         self.assertFalse(
             generate_dynamic_offers.intervals_overlap(
@@ -55,7 +55,7 @@ class ScheduleManagerTests(unittest.TestCase):
             )
         )
 
-    def test_all_mapped_skills_only_rules_use_45_minute_default(self):
+    def test_all_mapped_skills_only_rules_use_60_minute_default(self):
         skills_only_ids = {
             "209811",  # AHA ACLS HeartCode
             "209812",  # AHA PALS HeartCode
@@ -71,8 +71,8 @@ class ScheduleManagerTests(unittest.TestCase):
         rules = manager.course_rules()
         for course_id in skills_only_ids:
             with self.subTest(course_id=course_id):
-                self.assertEqual(45, rules[course_id]["duration_minutes"])
-                self.assertEqual(45, rules[course_id]["minimum_reservation_block_minutes"])
+                self.assertEqual(60, rules[course_id]["duration_minutes"])
+                self.assertEqual(60, rules[course_id]["minimum_reservation_block_minutes"])
 
     def test_participants_edit_and_cancel_survive_restart(self):
         record = manager.new_record(self.body())
