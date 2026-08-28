@@ -255,6 +255,60 @@ END:VCALENDAR
     def test_visible_travel_event_is_a_blocking_event(self) -> None:
         self.assertTrue(snapshot.is_blocking_event({"summary": "TRAVEL — Shipyard to Cape Fear Academy"}))
 
+    def test_only_confirmed_opaque_training_marker_becomes_class_anchor_block(self) -> None:
+        source = {
+            "calendar_source_key": "brian_primary",
+            "owner_instructor_key": "brian",
+            "mode": "occupancy",
+            "default_location_key": "shipyard",
+            "availability_location_mode": "instructor_time_only",
+            "confirmed_training_class_title_prefixes": ["CONFIRMED CLASS -"],
+        }
+        calendar_payload = {"calendar_sources": [source]}
+        people_payload = {"people": [{"person_id": "brian", "display_name": "Brian Ennis"}]}
+        local_snapshot = {"events_by_source": {"brian_primary": [
+            {
+                "id": "confirmed-training",
+                "summary": "CONFIRMED CLASS - Customer - AHA Pediatric First Aid CPR AED",
+                "start": "2026-09-19T11:00:00",
+                "end": "2026-09-19T14:00:00",
+                "status": "CONFIRMED",
+                "transparency": "OPAQUE",
+            },
+            {
+                "id": "personal-busy",
+                "summary": "Dentist",
+                "start": "2026-09-20T11:00:00",
+                "end": "2026-09-20T12:00:00",
+                "status": "CONFIRMED",
+                "transparency": "OPAQUE",
+            },
+        ]}}
+
+        course_payload = {"courses": [
+            {
+                "course_id": "351632",
+                "official_title": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+                "duration_minutes": 180,
+            },
+            {
+                "course_id": "251545",
+                "official_title": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+                "duration_minutes": 45,
+            },
+        ]}
+        blocks, blocked, stats = snapshot.build_snapshot(calendar_payload, people_payload, course_payload, local_snapshot)
+
+        self.assertEqual([], blocked)
+        confirmed = next(block for block in blocks if block["source_event_id"] == "confirmed-training")
+        personal = next(block for block in blocks if block["source_event_id"] == "personal-busy")
+        self.assertTrue(confirmed["confirmed_training_class"])
+        self.assertEqual("351632", confirmed["confirmed_training_course_id"])
+        self.assertEqual("blocked", confirmed["availability_status"])
+        self.assertFalse(personal["confirmed_training_class"])
+        self.assertEqual("blocked", personal["availability_status"])
+        self.assertEqual(1, stats["confirmed_training_class_blocks"])
+
     def test_blocking_event_keeps_exact_nonstandard_times(self) -> None:
         source = {"allow_non_standard_time_increment": False}
         travel = {

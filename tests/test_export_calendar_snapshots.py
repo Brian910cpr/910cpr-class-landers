@@ -61,6 +61,7 @@ DTSTART:20260622T083000
 DTEND:20260622T120000
 LOCATION:Shipyard
 STATUS:CONFIRMED
+TRANSP:OPAQUE
 LAST-MODIFIED:20260601T120000Z
 END:VEVENT
 BEGIN:VEVENT
@@ -79,6 +80,7 @@ END:VCALENDAR
         self.assertEqual("amy_availability", events[0]["calendar_source_id"])
         self.assertEqual("google_calendar", events[0]["source_type"])
         self.assertEqual("2026-06-22T08:30:00", events[0]["start"])
+        self.assertEqual("OPAQUE", events[0]["transparency"])
         self.assertEqual(1, skipped["outside_export_window"])
 
     def test_parse_ics_events_expands_weekly_rrule_inside_export_window(self) -> None:

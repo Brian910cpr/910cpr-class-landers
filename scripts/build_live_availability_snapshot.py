@@ -550,6 +550,48 @@ def is_blocking_event(event: dict[str, Any]) -> bool:
     return any(marker in text for marker in ("dns", "do not schedule", "adr", "employment", "personal", "unavailable", "travel"))
 
 
+def is_confirmed_training_class(source: dict[str, Any], event: dict[str, Any]) -> bool:
+    """Identify intentionally labeled, busy training events without guessing from course words."""
+    prefixes = [
+        clean_text(value).lower()
+        for value in source.get("confirmed_training_class_title_prefixes", [])
+        if clean_text(value)
+    ]
+    title = clean_text(event.get("summary") or event.get("title")).lower()
+    status = clean_text(event.get("status") or "CONFIRMED").upper()
+    transparency = clean_text(event.get("transparency") or event.get("transp") or "OPAQUE").upper()
+    return bool(
+        prefixes
+        and any(title.startswith(prefix) for prefix in prefixes)
+        and status == "CONFIRMED"
+        and transparency != "TRANSPARENT"
+    )
+
+
+def confirmed_training_course(event: dict[str, Any], course_catalog: Any) -> dict[str, Any] | None:
+    """Resolve a labeled class to the unique catalog course whose title fits the event."""
+    if not isinstance(course_catalog, dict):
+        return None
+    event_tokens = set(normalize_key(event.get("summary") or event.get("title")).split("_"))
+    ignored = {"confirmed", "class", "heartsaver", "course", "training", "in", "person"}
+    start = parse_dt(event.get("start"))
+    end = parse_dt(event.get("end"))
+    event_minutes = int((end - start).total_seconds() // 60) if start and end else 0
+    candidates: list[tuple[int, int, dict[str, Any]]] = []
+    for course in course_catalog.get("courses", []):
+        if not isinstance(course, dict):
+            continue
+        title_tokens = set(normalize_key(course.get("official_title") or course.get("short_title")).split("_")) - ignored
+        if not title_tokens or not title_tokens.issubset(event_tokens):
+            continue
+        duration = int_or_default(course.get("duration_minutes"), 0)
+        candidates.append((abs(duration - event_minutes) if duration and event_minutes else 99999, -len(title_tokens), course))
+    candidates.sort(key=lambda item: (item[0], item[1], clean_text(item[2].get("course_id"))))
+    if not candidates or (len(candidates) > 1 and candidates[0][:2] == candidates[1][:2]):
+        return None
+    return candidates[0][2]
+
+
 def events_for_source(snapshot_payload: Any, source_key: str) -> list[dict[str, Any]]:
     if not isinstance(snapshot_payload, dict):
         return []
@@ -566,7 +608,9 @@ def normalize_event_block(source: dict[str, Any], event: dict[str, Any], person:
     if invalid_reason or not start or not end:
         return None
     stype = source_type(source)
-    blocking = is_blocking_event(event) or stype in {"blocking_calendar", "occupancy_calendar"}
+    confirmed_training_class = is_confirmed_training_class(source, event)
+    matched_course = confirmed_training_course(event, course_catalog) if confirmed_training_class else None
+    blocking = confirmed_training_class or is_blocking_event(event) or stype in {"blocking_calendar", "occupancy_calendar"}
     status = "blocked" if blocking else "available"
     location_key = source.get("default_location_key")
     source_location = clean_text(event.get("location"))
@@ -590,10 +634,13 @@ def normalize_event_block(source: dict[str, Any], event: dict[str, Any], person:
         "source_event_id": event.get("id") or event.get("event_id") or UNKNOWN,
         "summary": clean_text(event.get("summary") or event.get("title") or UNKNOWN),
         "source_type": stype,
+        "confirmed_training_class": confirmed_training_class,
+        "confirmed_training_course_id": clean_text(matched_course.get("course_id")) if matched_course else "",
+        "confirmed_training_course_name": clean_text(matched_course.get("official_title")) if matched_course else "",
         "reasons": [
             "read_only_preview",
             "local_calendar_snapshot",
-            "blocking_marker_detected" if blocking else "offerable_calendar_window",
+            "confirmed_training_class" if confirmed_training_class else ("blocking_marker_detected" if blocking else "offerable_calendar_window"),
         ],
     }
 
@@ -678,6 +725,7 @@ def build_snapshot(
         "availability_status_counts": dict(Counter(block["availability_status"] for block in blocks)),
         "inverse_generated_availability_blocks": sum(1 for block in blocks if block.get("inverse_generated") is True),
         "inverse_blocking_event_blocks": sum(1 for block in blocks if "inverse_calendar_blocking_event" in block.get("reasons", [])),
+        "confirmed_training_class_blocks": sum(1 for block in blocks if block.get("confirmed_training_class") is True),
     }
     return blocks, blocked, stats
 

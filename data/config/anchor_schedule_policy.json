@@ -1,13 +1,28 @@
 {
   "schema_version": "910cpr-anchor-schedule-policy.v1",
-  "mode": "daily_anchor_stack_v1",
-  "one_course_type_per_calendar_day": true,
+  "mode": "anchor_repeat_bubble_v2",
+  "one_course_type_per_calendar_day": false,
   "open_day_excluded_families": ["ACLS", "PALS"],
-  "default_repeat_delay_minutes": 1440,
-  "retain_barnacle_offers": false,
+  "default_repeat_delay_minutes": 0,
+  "retain_barnacle_offers": true,
   "families": {
     "aha-bls-in-person": {
       "course_ids": ["209806", "359474"],
+      "repeat_delay_minutes": 1440,
+      "retain_barnacle_offers": false
+    },
+    "heartsaver-cpr-aed": {
+      "course_ids": ["344085", "209808"],
+      "repeat_delay_minutes": 1440,
+      "retain_barnacle_offers": false
+    },
+    "heartsaver-first-aid-cpr-aed": {
+      "course_ids": ["209809", "329495"],
+      "repeat_delay_minutes": 1440,
+      "retain_barnacle_offers": false
+    },
+    "heartsaver-pediatric-first-aid-cpr-aed": {
+      "course_ids": ["351632", "251545"],
       "repeat_delay_minutes": 1440,
       "retain_barnacle_offers": false
     }

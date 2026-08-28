@@ -1,11 +1,12 @@
 {
   "schema_version": "0.1",
-  "description": "Report-only calendar source declarations for the configuration-driven scheduler shell. These records do not seed public classes by themselves.",
-  "safe_rollout_mode": "config_and_validation_only",
-  "public_behavior_changed": false,
+  "description": "Canonical calendar source declarations for availability, occupancy, and positively identified confirmed training-class anchors.",
+  "safe_rollout_mode": "validated_calendar_ingestion",
+  "public_behavior_changed": true,
   "supported_calendar_modes": [
     "explicit_availability",
-    "inverse_blocking"
+    "inverse_blocking",
+    "occupancy"
   ],
   "supported_explicit_availability_titles": [
     "HARD",
@@ -57,6 +58,26 @@
       "all_day_means_available": false,
       "allow_non_standard_time_increment": false,
       "missing_access_policy": "warn_and_produce_no_offerable_windows",
+      "active": true
+    },
+    {
+      "calendar_source_key": "brian_primary_calendar",
+      "instructor_key": "brian",
+      "owner_instructor_key": "brian",
+      "display_name": "Brian Primary Google Calendar",
+      "calendar_mode": "occupancy",
+      "mode": "occupancy",
+      "url_env_var": "BRIAN_PRIMARY_CALENDAR_ICS_URL",
+      "local_secret_key": "brian_primary_calendar.ics_url",
+      "event_title_vocabulary": [],
+      "confirmed_training_class_title_prefixes": [
+        "CONFIRMED CLASS -"
+      ],
+      "default_location_key": "shipyard",
+      "availability_location_mode": "instructor_time_only",
+      "all_day_means_available": false,
+      "allow_non_standard_time_increment": true,
+      "missing_access_policy": "warn_and_do_not_invent_training_anchors",
       "active": true
     },
     {
