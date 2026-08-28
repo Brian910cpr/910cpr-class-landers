@@ -44,9 +44,6 @@ BLS_PILOT_COURSE_IDS = ("209806", "359474", "210549")
 START_STEP_MINUTES = 30
 AS_OF_DATE = date(2026, 7, 2)
 UNKNOWN = "UNKNOWN"
-# The Dockmaster measures a clear berth by the hull itself, not by old chalk
-# marks left on the pier for yesterday's preferred spacing.
-PUBLIC_OFFER_FIT_ONLY_DEBUG = True
 APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS = {"brian_do_not_schedule"}
 ENROLLWARE_APPOINTMENT_TIMES_ENDPOINT = (
     "https://coastalcprtraining.enrollware.com/reg/appointment.aspx/GetAvailableAppointmentTimes"
@@ -518,7 +515,7 @@ def public_policy_reasons(
         current = start.time().replace(second=0, microsecond=0)
         if current < earliest or current > latest:
             reasons.append("outside_public_dynamic_hours")
-    minimum_lead_hours = 0 if PUBLIC_OFFER_FIT_ONLY_DEBUG else int(policy.get("minimum_lead_hours") or 0)
+    minimum_lead_hours = int(policy.get("minimum_lead_hours") or 0)
     if start < reference:
         reasons.append("starts_before_current_time")
     elif minimum_lead_hours and start < reference + timedelta(hours=minimum_lead_hours):
@@ -802,6 +799,23 @@ def matching_same_day_anchor(
     return min(matches, key=lambda item: item["startTime"]) if matches else None
 
 
+def scheduled_day_anchor_for_offer(
+    anchors: list[dict[str, Any]],
+    offer: dict[str, Any],
+    *,
+    location_resource_map: Any,
+) -> dict[str, Any] | None:
+    """Return the real class that suppresses a speculative offer on its day."""
+    offer_day = date.fromisoformat(str(offer["date"]))
+    return matching_same_day_anchor(
+        anchors,
+        day=offer_day,
+        instructor=clean_text(offer.get("instructor")),
+        location=clean_text(offer.get("location")),
+        location_resource_map=location_resource_map,
+    )
+
+
 def matching_shared_cooldown_anchor(
     anchors: list[dict[str, Any]],
     *,
@@ -1031,11 +1045,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 course_id = str(course["course_id"])
                 course_family = str(course.get("course_family") or course.get("family") or "")
                 required_duration_minutes = int(course["duration_minutes"])
-                consumption_minutes = (
-                    required_duration_minutes
-                    if PUBLIC_OFFER_FIT_ONLY_DEBUG
-                    else int(course["scheduler_consumption_minutes"])
-                )
+                consumption_minutes = int(course["scheduler_consumption_minutes"])
                 consumption_end = start + timedelta(minutes=consumption_minutes)
                 context = {
                     "date": start.date().isoformat(),
@@ -1093,23 +1103,21 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     location=location,
                     location_resource_map=loaded["location_resource_map"],
                 )
-                if same_day_anchor and not PUBLIC_OFFER_FIT_ONLY_DEBUG:
+                if same_day_anchor:
                     reasons.append("same_day_family_anchor_already_seated")
-                scheduled_day_anchor = matching_same_day_anchor(
+                scheduled_day_anchor = scheduled_day_anchor_for_offer(
                     scheduled_day_anchors,
-                    day=start.date(),
-                    instructor=instructor_name,
-                    location=location,
+                    context,
                     location_resource_map=loaded["location_resource_map"],
                 )
-                if scheduled_day_anchor and not PUBLIC_OFFER_FIT_ONLY_DEBUG:
+                if scheduled_day_anchor:
                     reasons.append("scheduled_day_already_has_public_class")
                 shared_cooldown_anchor = matching_shared_cooldown_anchor(
                     shared_cooldown_anchors,
                     day=start.date(),
                     cooldown_days=shared_cooldown_days,
                 )
-                if shared_cooldown_anchor and not PUBLIC_OFFER_FIT_ONLY_DEBUG:
+                if shared_cooldown_anchor:
                     reasons.append("shared_board_course_booked_within_cooldown")
                 appointment_day_id, container_id, url, url_blocker = find_url(
                     window,
@@ -1149,8 +1157,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "certifyingBody": clean_text(course.get("brand") or course.get("provider") or page_config.get("certifying_body") or UNKNOWN),
                     "deliveryMode": clean_text(course.get("blended_classroom_skills") or course.get("delivery_type") or UNKNOWN),
                     "durationMinutes": course["duration_minutes"],
-                    "setupBufferMinutes": 0 if PUBLIC_OFFER_FIT_ONLY_DEBUG else course["setup_buffer_minutes"],
-                    "cleanupBufferMinutes": 0 if PUBLIC_OFFER_FIT_ONLY_DEBUG else course["cleanup_buffer_minutes"],
+                    "setupBufferMinutes": course["setup_buffer_minutes"],
+                    "cleanupBufferMinutes": course["cleanup_buffer_minutes"],
                     "schedulerConsumptionMinutes": consumption_minutes,
                     "schedulerConsumptionEnd": consumption_end.strftime("%H:%M"),
                     "appointmentDayId": appointment_day_id,
@@ -1159,8 +1167,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "publicSelectable": True,
                 })
 
-    if PUBLIC_OFFER_FIT_ONLY_DEBUG:
-        offers.sort(key=lambda item: (str(item["date"]), str(item["startTime"]), str(item["courseId"])))
+    offers.sort(key=lambda item: (str(item["date"]), str(item["startTime"]), str(item["courseId"])))
 
     # Dynamic availability has already passed its optimization gates above.
     # Existing inventory enters afterward and is subject only to hard public
@@ -1214,9 +1221,9 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "availabilitySource": availability_stats,
         "whole_block_presented_as_class": False,
         "horizonDays": int(public_offer_policy.get("maximum_days_out") or 0),
-        "minimumLeadHours": 0 if PUBLIC_OFFER_FIT_ONLY_DEBUG else int(public_offer_policy.get("minimum_lead_hours") or 0),
+        "minimumLeadHours": int(public_offer_policy.get("minimum_lead_hours") or 0),
         "configuredMinimumLeadHours": int(public_offer_policy.get("minimum_lead_hours") or 0),
-        "publicOfferEligibilityMode": "FIT_ONLY_DEBUG" if PUBLIC_OFFER_FIT_ONLY_DEBUG else "STANDARD",
+        "publicOfferEligibilityMode": "STANDARD",
         "inputFiles": {
             "liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
             "courseConsumptionRules": str(COURSE_RULES_PATH),

@@ -71,14 +71,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertFalse(block_start_time_selector.public_direct_bookable_session({**base, "session_status": "cancelled"}))
         self.assertFalse(block_start_time_selector.public_direct_bookable_session({**base, "public_direct_booking": False}))
 
-    def test_fit_only_debug_uses_actual_duration_and_disables_offer_caps(self):
-        self.assertTrue(block_start_time_selector.PUBLIC_OFFER_FIT_ONLY_DEBUG)
-        offers = [
-            {"date": "2026-08-13", "startTime": time_value, "courseId": "210549"}
-            for time_value in ("08:00", "08:30", "09:00", "09:30")
-        ]
-        kept = sorted(offers, key=lambda item: (item["date"], item["startTime"], item["courseId"]))
-        self.assertEqual(4, len(kept))
+    def test_production_selector_has_no_fit_only_debug_bypass(self):
+        self.assertFalse(hasattr(block_start_time_selector, "PUBLIC_OFFER_FIT_ONLY_DEBUG"))
         self.assertEqual(
             "INSUFFICIENT_CONTIGUOUS_TIME",
             block_start_time_selector.diagnostic_rejection_reason(["INSUFFICIENT_CONTIGUOUS_TIME"]),
@@ -190,10 +184,9 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIsNotNone(match)
         self.assertEqual("08:00", match["startTime"])
 
-    def test_bls_config_hides_open_times_after_anchor_and_shows_only_enrolled_classes(self):
+    def test_bls_uses_global_scheduled_day_consolidation_and_keeps_seated_classes(self):
         config = block_start_time_selector.load_block_schedule_page_configs()["bls"]
-        self.assertIs(config["consolidate_after_seated_family_anchor"], True)
-        self.assertEqual(0, config["same_day_anchor_minimum_enrollment"])
+        self.assertIs(config["consolidate_after_seated_family_anchor"], False)
         self.assertIs(config["include_seated_classes"], True)
         self.assertEqual(0, config["seated_class_minimum_enrollment"])
 
@@ -215,6 +208,62 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             location_resource_map={},
         )
         self.assertEqual(["open-zero-seat-class"], [anchor["sessionId"] for anchor in anchors])
+
+    def test_paid_heartsaver_seat_suppresses_same_day_dynamic_starts_but_keeps_class(self):
+        schedule = {"sessions": [{
+            "session_id": "heartsaver-pediatric-aug-29",
+            "course_id": "351632",
+            "course_name": "AHA Heartsaver Pediatric First Aid CPR AED",
+            "start_at": "2026-08-29T14:00:00-04:00",
+            "end_at": "2026-08-29T16:30:00-04:00",
+            "lead_instructor_name": "Brian Ennis",
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "registered_count": 1,
+            "registration_status": "open",
+            "public_direct_booking": True,
+            "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=heartsaver-pediatric-aug-29",
+            "mapped_family": "Heartsaver",
+        }]}
+        anchors = block_start_time_selector.seated_family_anchors(
+            schedule_future_payload=schedule,
+            selected_course_ids=set(),
+            minimum_enrollment=0,
+            location_resource_map={},
+        )
+        dynamic_offers = [{
+            "date": day,
+            "startTime": start,
+            "instructor": "Brian Ennis",
+            "location": ":: Wilmington; Shipyard Blvd - B",
+            "offerType": "appointment",
+        } for day, start in (
+            ("2026-08-29", "14:30"),
+            ("2026-08-29", "15:00"),
+            ("2026-08-29", "17:00"),
+            ("2026-08-30", "14:30"),
+        )]
+        remaining_dynamic = [
+            offer for offer in dynamic_offers
+            if not block_start_time_selector.scheduled_day_anchor_for_offer(
+                anchors, offer, location_resource_map={}
+            )
+        ]
+        seated = block_start_time_selector.seated_class_selector_offers(
+            schedule_future_payload=schedule,
+            selected_courses=[{"course_id": "351632", "course_family": "Heartsaver"}],
+            selected_course_ids={"351632"},
+            course_rules={"351632": {"duration_minutes": 150, "scheduler_consumption_minutes": 150}},
+        )
+        public_offers = remaining_dynamic + seated
+
+        self.assertEqual([("2026-08-30", "14:30")], [
+            (offer["date"], offer["startTime"]) for offer in remaining_dynamic
+        ])
+        self.assertEqual([("2026-08-29", "14:00", "seated_class")], [
+            (offer["date"], offer["startTime"], offer["offerType"]) for offer in public_offers
+            if offer["date"] == "2026-08-29"
+        ])
+        self.assertTrue(seated[0]["publicSelectable"])
 
     def test_shared_board_cooldown_suppresses_booking_day_and_following_six_days(self):
         anchors = [{"date": "2026-07-20", "startTime": "09:00", "sessionId": "arc-booking"}]
@@ -355,7 +404,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn('"210549"', html)
         self.assertIn("Object.values(optionGroups).find", html)
         self.assertIn("optionGroups[selected.family]?.courseIds", html)
-    def test_fit_only_debug_does_not_apply_lead_time_across_course_families(self):
+    def test_standard_production_policy_applies_lead_time_across_course_families(self):
         reference = datetime(2026, 7, 20, 10, 0)
         policy = {
             "minimum_lead_hours": 24,
@@ -375,7 +424,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                 self.assertEqual([], block_start_time_selector.public_policy_reasons(
                     reference + timedelta(hours=24), course_id, family, policy, {course_id}, reference_now=reference
                 ))
-                self.assertNotIn("inside_minimum_lead_time", block_start_time_selector.public_policy_reasons(
+                self.assertIn("inside_minimum_lead_time", block_start_time_selector.public_policy_reasons(
                     reference + timedelta(hours=23, minutes=30), course_id, family, policy, {course_id}, reference_now=reference
                 ))
 
