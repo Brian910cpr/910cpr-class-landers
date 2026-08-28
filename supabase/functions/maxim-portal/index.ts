@@ -75,11 +75,14 @@ async function ensureDurablePerson(profileId: string) {
   }
   let personId = profile.landerware_person_id;
   if (!personId) {
-    personId = (await rest("landerware_people", { method: "POST", body: JSON.stringify({
-      current_first_name: profile.customers.first_name, current_last_name: profile.customers.last_name,
-      current_email: profile.customers.email, current_phone: profile.customers.phone,
-      searchable_text: `${profile.customers.first_name || ""} ${profile.customers.last_name || ""} ${profile.customers.email || ""} ${profile.customers.phone || ""}`.trim().toLowerCase(),
-    }) }))[0].id;
+    const personResult = await rest("rpc/landerware_create_or_find_person", {
+      method: "POST", body: JSON.stringify({
+        p_first_name: profile.customers.first_name, p_last_name: profile.customers.last_name,
+        p_email: profile.customers.email, p_phone: profile.customers.phone,
+      }),
+    });
+    const durablePerson = Array.isArray(personResult) ? personResult[0] : personResult;
+    personId = durablePerson.personId;
     await rest("landerware_person_organizations", { method: "POST", body: JSON.stringify({
       person_id: personId, organization_id: organizationId, employer_identifier: profile.source_ref,
     }) });
@@ -815,14 +818,15 @@ async function registerEmployee(req: Request, actorSource: ActorSource = "maxim_
   const durable = await ensureDurablePerson(profiles[0].id);
   const courseName = courseNameForRegistration(canonical.course, courseId);
   const deliveryMethod = String(canonical.course.deliveryMethod || canonical.course.delivery_method || "classroom");
-  const durableResult = await rest("rpc/landerware_record_corporate_registration", { method: "POST", body: JSON.stringify({
-    p_person_id: durable.personId, p_requirement_id: durable.requirementId,
+  const durableResult = await rest("rpc/landerware_register", { method: "POST", body: JSON.stringify({
+    p_first_name: body?.person?.firstName, p_last_name: body?.person?.lastName,
+    p_email: body?.person?.email, p_phone: body?.person?.phone || null,
+    p_existing_person_id: durable.personId, p_existing_requirement_id: durable.requirementId,
     p_organization_id: durable.organizationId, p_external_session_id: externalSessionId,
     p_course_id: courseId, p_course_name: courseName, p_starts_at: startsAt,
     p_location_name: locationLabelForRegistration(canonical.locationKey),
     p_provenance: "maxim_portal_hot_sync", p_requirements_manifest: sessionRequirementsManifest(courseId, courseName, deliveryMethod),
-    p_display_name: [body?.person?.firstName, body?.person?.lastName].filter(Boolean).join(" "),
-    p_email: body?.person?.email || null, p_actor_source: actorSource,
+    p_source: actorSource, p_idempotency_key: `maxim:${registration.id}`,
     p_fee_disclosure_version: "aha-course-fees-2026-pam-v1",
     p_fee_disclosure_channel: actorSource === "employee_self_service" ? "employee_self_service" : "maxim_portal_manual",
   }) });
