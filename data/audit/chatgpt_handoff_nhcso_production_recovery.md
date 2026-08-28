@@ -75,6 +75,16 @@ The dispatcher was implemented and exercised. Delivery failed because `TRANSACTI
 2. Publish the updated `/corp/nhcso/` static page so persistent cadre selection and durable card state are visible on the public site.
 3. Issue 11 AHA BLS eCards through the authorized card workflow; then record eCard identifiers and move card processing from `ready_for_issue` to `issued`.
 
+## Cross-silo operations queue follow-up (2026-08-28)
+
+Brian clarified that the operational goal is one casual view of where he is needed, not another NHCSO-only status view. The main `/admin/dashboard.html` now leads with an authenticated **Where I’m Needed** queue. Its data is derived at request time by `supabase/functions/production-board/index.ts`; no manual production-board card is required.
+
+The queue detects cards not complete, pending or failed notifications, instructor qualifications that are expired/within 90 days/missing an expiration, past classes awaiting closeout, unfulfilled materials, undelivered inquiries, Maxim requests still pending after seven days, and certification imports needing review.
+
+Live aggregate verification found 9 obligation records: 1 card-processing item, 2 failed notifications, 2 instructor-expiration records with unknown dates, 1 past-class closeout, 1 materials item, 1 inquiry delivery/configuration item, and 1 aged Maxim request. The deployed `production-board` Edge Function is version 3, SHA `f1bb8191918864d3f1937e12b5ff5ffa5cb7e653c1c49b3c5df8c613e62c10b9`. An unauthenticated production request returned `401 Unauthorized`, confirming the queue is not public.
+
+Additional files: `supabase/functions/production-board/index.ts`, `docs/admin/attention-summary.js`, `docs/admin/dashboard.html`, and `tests/test_operations_attention.py`. Combined validation passed 12 tests.
+
 ## Separate security advisory
 
 Supabase reported that `public.maxim_billing_code_rules` has RLS disabled. This is unrelated to the NHCSO recovery and was not changed. Review before enabling RLS because enabling it without appropriate policies could break existing access.
