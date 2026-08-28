@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-19T10:36:51.812866-04:00",
+  "generated_at": "2026-08-28T06:44:34.355027-04:00",
   "recommendation": {
     "course_catalog_should_be_promoted_or_renamed": false,
     "course_master_should_be_generated_from_course_catalog_plus_enrollware_export": true,
@@ -43,20 +43,7 @@
       "source_trace",
       "subtype"
     ],
-    "course_export_fields": [
-      "Add-ons",
-      "Allows Unscheduled Students?",
-      "Card Type",
-      "Class Price",
-      "Description",
-      "Discipline",
-      "Keycode Bank",
-      "Name",
-      "Online Only?",
-      "Secondary Card Type",
-      "Shipping Price",
-      "eCard Code"
-    ],
+    "course_export_fields": [],
     "fields_present_in_course_catalog_missing_from_course_export": [
       "appointment_allowed",
       "appointment_container_required",
@@ -86,20 +73,7 @@
       "source_trace",
       "subtype"
     ],
-    "fields_present_in_course_export_missing_from_course_catalog": [
-      "Add-ons",
-      "Allows Unscheduled Students?",
-      "Card Type",
-      "Class Price",
-      "Description",
-      "Discipline",
-      "Keycode Bank",
-      "Name",
-      "Online Only?",
-      "Secondary Card Type",
-      "Shipping Price",
-      "eCard Code"
-    ],
+    "fields_present_in_course_export_missing_from_course_catalog": [],
     "scheduling_fields_neither_file_provides_fully": [
       "setup_buffer_minutes",
       "cleanup_buffer_minutes",
@@ -112,11 +86,11 @@
   },
   "audit_answers": {
     "most_common_missing_fields": {
+      "base_price": 32,
+      "card_type": 32,
       "setup_buffer_minutes": 30,
       "cleanup_buffer_minutes": 30,
       "scheduler_consumption_minutes": 30,
-      "base_price": 30,
-      "card_type": 30,
       "slug_page": 16,
       "hub_tab": 16
     },

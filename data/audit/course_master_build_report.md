@@ -20,7 +20,7 @@ Generated inventory/schema report. Course Master is not authoritative for produc
 ## Field Comparison
 
 - Fields present in `course_catalog.json` but missing from `course-export.xlsx`: `appointment_allowed, appointment_container_required, blended_classroom_skills, classroom_only, cleanup_buffer_minutes, course_id, course_key, default_capacity, delivery_type, deterministic_url_supported, duration_minutes, family, known_appointmentDayId_range, manual_only, maximum_capacity, minimum_capacity, official_title, online_only, provider, relationships, renewal_or_initial, required_instructor_certifications, required_resources, setup_buffer_minutes, short_title, source_trace, subtype`
-- Fields present in `course-export.xlsx` but missing from `course_catalog.json`: `Add-ons, Allows Unscheduled Students?, Card Type, Class Price, Description, Discipline, Keycode Bank, Name, Online Only?, Secondary Card Type, Shipping Price, eCard Code`
+- Fields present in `course-export.xlsx` but missing from `course_catalog.json`: ``
 - Scheduling fields neither file provides fully: `setup_buffer_minutes, cleanup_buffer_minutes, scheduler_consumption_minutes`
 - Public rendering fields neither file provides fully: `slug_page, hub_tab`
 
@@ -36,10 +36,10 @@ Generated inventory/schema report. Course Master is not authoritative for produc
 
 ## Most Common Missing Fields
 
+- `base_price`: `32`
+- `card_type`: `32`
 - `setup_buffer_minutes`: `30`
 - `cleanup_buffer_minutes`: `30`
 - `scheduler_consumption_minutes`: `30`
-- `base_price`: `30`
-- `card_type`: `30`
 - `slug_page`: `16`
 - `hub_tab`: `16`
