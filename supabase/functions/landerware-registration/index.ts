@@ -1,162 +1,20 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-const COURSE_ID = "aha-heartsaver-skills-session";
-const COURSE_NAME = "AHA Heartsaver Skills Session";
-const REQUIREMENT_TYPE = "AHA_ONLINE_COMPLETION_CERTIFICATE";
-const BUCKET = "landerware-requirement-documents";
-const MAX_BYTES = 10 * 1024 * 1024;
-const ALLOWED = new Map([
-  ["application/pdf", "pdf"], ["image/jpeg", "jpg"], ["image/png", "png"], ["image/webp", "webp"],
-]);
-const cors = {
-  "access-control-allow-origin": "https://www.910cpr.com",
-  "access-control-allow-headers": "content-type, idempotency-key",
-  "access-control-allow-methods": "GET,POST,OPTIONS",
-  "cache-control": "no-store",
-};
-const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), {
-  status, headers: { ...cors, "content-type": "application/json; charset=utf-8" },
-});
-const sha256 = async (value: string) => Array.from(new Uint8Array(await crypto.subtle.digest(
-  "SHA-256", new TextEncoder().encode(value),
-))).map((byte) => byte.toString(16).padStart(2, "0")).join("");
-const randomToken = () => Array.from(crypto.getRandomValues(new Uint8Array(32)))
-  .map((byte) => byte.toString(16).padStart(2, "0")).join("");
+const BUCKET="landerware-requirement-documents",ORIGIN="https://www.910cpr.com";
+const cors={"access-control-allow-origin":ORIGIN,"access-control-allow-headers":"content-type, idempotency-key","access-control-allow-methods":"GET,POST,OPTIONS","cache-control":"no-store"};
+const json=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:{...cors,"content-type":"application/json; charset=utf-8"}});
+const sha256=async(value:string)=>Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value)))).map(b=>b.toString(16).padStart(2,"0")).join("");
+const randomToken=()=>Array.from(crypto.getRandomValues(new Uint8Array(32))).map(b=>b.toString(16).padStart(2,"0")).join("");
+function cfg(){const url=Deno.env.get("SUPABASE_URL")!,raw=Deno.env.get("SUPABASE_SECRET_KEYS"),secret=raw?JSON.parse(raw).default:Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;return{url,headers:{apikey:secret,authorization:`Bearer ${secret}`}}}
+async function rest(path:string,init:RequestInit={}){const c=cfg(),res=await fetch(`${c.url}/rest/v1/${path}`,{...init,headers:{...c.headers,"content-type":"application/json",prefer:"return=representation",...(init.headers||{})}}),text=await res.text(),data=text?JSON.parse(text):null;if(!res.ok)throw new Error(data?.message||`database_${res.status}`);return data}
+const clean=(v:FormDataEntryValue|null,max=320)=>String(v||"").trim().slice(0,max);
+const render=(template:string,values:Record<string,string>)=>template.replace(/\{\{([a-z_]+)\}\}/g,(_,key)=>values[key]||"");
+function route(req:Request){const p=new URL(req.url).pathname.split("/").filter(Boolean);return p.slice(p.indexOf("landerware-registration")+1)}
+async function profile(key:string){const rows=await rest(`landerware_registration_profiles?profile_key=eq.${encodeURIComponent(key)}&active=eq.true&select=*&limit=1`);if(!rows[0])throw new Error("registration_profile_not_found");return rows[0]}
+async function requirement(id:string){const rows=await rest(`landerware_registration_requirements?id=eq.${id}&select=*&limit=1`);return rows[0]||null}
+async function tokenRecord(raw:string){if(!/^[a-f0-9]{64}$/.test(raw))return null;const rows=await rest(`landerware_document_submission_tokens?token_sha256=eq.${await sha256(raw)}&revoked_at=is.null&select=*&limit=1`),row=rows[0];return row&&new Date(row.expires_at)>new Date()?row:null}
+async function attach(file:File,token:any,reqRow:any){const upload=reqRow.upload_config||{},max=Number(upload.max_bytes||10485760),allowed=Array.isArray(upload.mime_types)?upload.mime_types:[];if(!file.name||!file.size)throw new Error("missing_file");if(file.size>max)throw new Error("file_too_large");if(!allowed.includes(file.type))throw new Error("unsupported_file_type");const bytes=new Uint8Array(await file.arrayBuffer()),checksum=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",bytes))).map(b=>b.toString(16).padStart(2,"0")).join(""),duplicate=await rest(`landerware_documents?checksum_sha256=eq.${checksum}&related_record_ids->>registrationId=eq.${token.registration_id}&select=id&limit=1`);if(duplicate.length)return{documentId:duplicate[0].id,duplicate:true};const ext=({"application/pdf":"pdf","image/jpeg":"jpg","image/png":"png","image/webp":"webp"} as Record<string,string>)[file.type]||"bin",key=`${token.person_id}/${token.registration_id}/${crypto.randomUUID()}.${ext}`,c=cfg(),uploaded=await fetch(`${c.url}/storage/v1/object/${BUCKET}/${key}`,{method:"POST",headers:{...c.headers,"content-type":file.type,"x-upsert":"false"},body:bytes});if(!uploaded.ok)throw new Error(`storage_upload_failed_${uploaded.status}`);const docs=await rest("landerware_documents",{method:"POST",body:JSON.stringify({document_type:reqRow.requirement_type,source:"customer_upload",received_at:new Date().toISOString(),related_record_ids:{personId:token.person_id,registrationId:token.registration_id,registrationRequirementId:reqRow.id},original_filename:file.name.slice(0,240),checksum_sha256:checksum,storage_provider:"supabase_storage",storage_reference:`${BUCKET}/${key}`})}),documentId=docs[0].id;await rest(`landerware_registration_requirements?id=eq.${reqRow.id}`,{method:"PATCH",body:JSON.stringify({document_ids:[...new Set([...(reqRow.document_ids||[]),documentId])],satisfied_at:new Date().toISOString(),satisfied_by:"customer_upload",status:"satisfied",updated_at:new Date().toISOString()})});await rest(`landerware_document_submission_tokens?id=eq.${token.id}`,{method:"PATCH",body:JSON.stringify({submission_count:token.submission_count+1,last_opened_at:new Date().toISOString()})});return{documentId,duplicate:false}}
+async function register(req:Request,profileKey:string){const p=await profile(profileKey),form=await req.formData(),fields:{[key:string]:string}={first_name:clean(form.get("firstName"),100),last_name:clean(form.get("lastName"),100),email:clean(form.get("email")).toLowerCase(),phone:clean(form.get("phone"),50),online_completed_acknowledgement:clean(form.get("onlineCompleted"))},entry=clean(form.get("entryContext"))||"public_anonymous",key=req.headers.get("idempotency-key")||clean(form.get("idempotencyKey"),160);if(!key)return json({error:"idempotency_key_required"},400);const resultRaw=await rest("rpc/landerware_register",{method:"POST",body:JSON.stringify({p_profile_key:p.profile_key,p_entry_context:entry,p_fields:fields,p_idempotency_key:`${p.profile_key}:${key}`,p_selected_options:{}})}),result=Array.isArray(resultRaw)?resultRaw[0]:resultRaw,requirements=await rest(`landerware_registration_requirements?registration_id=eq.${result.registrationId}&select=*`),links:Record<string,string>={},received:string[]=[];for(const item of requirements){const upload=item.upload_config||{},file=form.get(upload.field||"");if(file instanceof File&&file.size){await attach(file,{person_id:result.personId,registration_id:result.registrationId,id:"immediate",submission_count:0},item);received.push(item.requirement_key);continue}if(item.submit_later){const raw=randomToken(),days=Number(upload.token_days||30);await rest("landerware_document_submission_tokens",{method:"POST",body:JSON.stringify({token_sha256:await sha256(raw),person_id:result.personId,registration_id:result.registrationId,registration_requirement_id:item.id,expires_at:new Date(Date.now()+days*86400000).toISOString()})});links[item.requirement_key]=`${ORIGIN}/certificate-submit/?token=${raw}`}}
+ const templates=await rest(`landerware_confirmation_templates?template_key=eq.${encodeURIComponent(p.confirmation_template_key)}&active=eq.true&select=*&limit=1`),template=templates[0];if(!template)throw new Error("confirmation_template_not_found");const pending=requirements.filter((x:any)=>!received.includes(x.requirement_key)),requirementMessage=pending.length?`Submit required documents: ${Object.values(links).join("\n")}`:"All documents submitted with registration.",values={first_name:fields.first_name,display_name:p.display_name,requirement_message:requirementMessage,session_message:result.sessionId?"Your session is selected.":"A session has not yet been selected.",payer_message:`Payer mode: ${p.payer_policy.mode}.`};await rest("landerware_messages",{method:"POST",body:JSON.stringify({person_id:result.personId,registration_id:result.registrationId,template_key:template.template_key,recipient:fields.email||null,subject:render(template.subject_template,values),body_text:render(template.body_template,values),delivery_provider:template.delivery_provider,delivery_status:"pending",idempotency_key:`registration-confirmation:${result.registrationId}`})});return json({ok:true,...result,displayName:p.display_name,requirements:requirements.map((x:any)=>({id:x.id,key:x.requirement_key,status:received.includes(x.requirement_key)?"satisfied":x.status,submitUrl:links[x.requirement_key]||null}))})}
 
-function config() {
-  const url = Deno.env.get("SUPABASE_URL")!;
-  const secretJson = Deno.env.get("SUPABASE_SECRET_KEYS");
-  const secret = secretJson ? JSON.parse(secretJson).default : Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  return { url, headers: { apikey: secret, authorization: `Bearer ${secret}` } };
-}
-async function rest(path: string, init: RequestInit = {}) {
-  const c = config();
-  const res = await fetch(`${c.url}/rest/v1/${path}`, { ...init, headers: {
-    ...c.headers, "content-type": "application/json", prefer: "return=representation", ...(init.headers || {}),
-  } });
-  const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
-  if (!res.ok) throw new Error(data?.message || `Database request failed (${res.status})`);
-  return data;
-}
-function route(req: Request) {
-  const parts = new URL(req.url).pathname.split("/").filter(Boolean);
-  return parts.slice(parts.indexOf("landerware-registration") + 1);
-}
-function clean(value: FormDataEntryValue | null, max = 320) {
-  return String(value || "").trim().slice(0, max);
-}
-async function tokenRecord(raw: string) {
-  if (!/^[a-f0-9]{64}$/.test(raw)) return null;
-  const rows = await rest(`landerware_document_submission_tokens?token_sha256=eq.${await sha256(raw)}&revoked_at=is.null&select=id,person_id,registration_id,requirement_id,expires_at,submission_count&limit=1`);
-  const row = rows[0];
-  if (!row || new Date(row.expires_at).getTime() <= Date.now()) return null;
-  return row;
-}
-async function attachDocument(file: File, token: any) {
-  if (!file.name || file.size === 0) throw new Error("missing_file");
-  if (file.size > MAX_BYTES) throw new Error("file_too_large");
-  const extension = ALLOWED.get(file.type);
-  if (!extension) throw new Error("unsupported_file_type");
-  const bytes = new Uint8Array(await file.arrayBuffer());
-  const checksum = await crypto.subtle.digest("SHA-256", bytes);
-  const checksumHex = Array.from(new Uint8Array(checksum)).map((b) => b.toString(16).padStart(2, "0")).join("");
-  const duplicate = await rest(`landerware_documents?checksum_sha256=eq.${checksumHex}&related_record_ids->>registrationId=eq.${token.registration_id}&select=id&limit=1`);
-  if (duplicate.length) return { documentId: duplicate[0].id, duplicate: true };
-  const storageKey = `${token.person_id}/${token.registration_id}/${crypto.randomUUID()}.${extension}`;
-  const c = config();
-  const upload = await fetch(`${c.url}/storage/v1/object/${BUCKET}/${storageKey}`, {
-    method: "POST", headers: { ...c.headers, "content-type": file.type, "x-upsert": "false" }, body: bytes,
-  });
-  if (!upload.ok) throw new Error(`storage_upload_failed_${upload.status}`);
-  const inserted = await rest("landerware_documents", { method: "POST", body: JSON.stringify({
-    document_type: REQUIREMENT_TYPE, source: "customer_upload", received_at: new Date().toISOString(),
-    related_record_ids: { personId: token.person_id, registrationId: token.registration_id, requirementId: token.requirement_id },
-    original_filename: file.name.slice(0, 240), checksum_sha256: checksumHex,
-    storage_provider: "supabase_storage", storage_reference: `${BUCKET}/${storageKey}`,
-  }) });
-  const documentId = inserted[0].id;
-  const requirements = await rest(`landerware_certification_requirements?id=eq.${token.requirement_id}&select=document_ids`);
-  await rest(`landerware_certification_requirements?id=eq.${token.requirement_id}`, { method: "PATCH", body: JSON.stringify({
-    document_ids: [...new Set([...(requirements[0]?.document_ids || []), documentId])], satisfied_at: new Date().toISOString(), status: "satisfied", updated_at: new Date().toISOString(),
-  }) });
-  const registrations = await rest(`landerware_registrations?id=eq.${token.registration_id}&select=document_ids`);
-  await rest(`landerware_registrations?id=eq.${token.registration_id}`, { method: "PATCH", body: JSON.stringify({
-    document_ids: [...new Set([...(registrations[0]?.document_ids || []), documentId])], updated_at: new Date().toISOString(),
-  }) });
-  await rest(`landerware_document_submission_tokens?id=eq.${token.id}`, { method: "PATCH", body: JSON.stringify({ submission_count: token.submission_count + 1, last_opened_at: new Date().toISOString() }) });
-  await rest("landerware_activity_events", { method: "POST", body: JSON.stringify({
-    event_type: "requirement_document_received", actor_source: "system", person_id: token.person_id,
-    registration_id: token.registration_id, requirement_id: token.requirement_id, details: { documentId, requirementType: REQUIREMENT_TYPE },
-  }) });
-  return { documentId, duplicate: false };
-}
-async function register(req: Request) {
-  const form = await req.formData();
-  const firstName = clean(form.get("firstName"), 100), lastName = clean(form.get("lastName"), 100);
-  const email = clean(form.get("email")).toLowerCase(), phone = clean(form.get("phone"), 50);
-  const completed = clean(form.get("onlineCompleted")) === "true";
-  if (!firstName || !lastName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !completed) {
-    return json({ error: "valid_name_email_and_online_completion_required" }, 400);
-  }
-  const idempotency = req.headers.get("idempotency-key") || clean(form.get("idempotencyKey"), 160);
-  if (!idempotency) return json({ error: "idempotency_key_required" }, 400);
-  const resultRows = await rest("rpc/landerware_register", { method: "POST", body: JSON.stringify({
-    p_first_name: firstName, p_last_name: lastName, p_email: email, p_phone: phone || null,
-    p_course_id: COURSE_ID, p_course_name: COURSE_NAME, p_source: "public_heartsaver_skills",
-    p_idempotency_key: `heartsaver:${idempotency}`, p_requirement_type: REQUIREMENT_TYPE,
-  }) });
-  const result = Array.isArray(resultRows) ? resultRows[0] : resultRows;
-  let tokenRows = await rest(`landerware_document_submission_tokens?registration_id=eq.${result.registrationId}&select=id&limit=1`);
-  let rawToken = "";
-  if (!tokenRows.length) {
-    rawToken = randomToken();
-    tokenRows = await rest("landerware_document_submission_tokens", { method: "POST", body: JSON.stringify({
-      token_sha256: await sha256(rawToken), person_id: result.personId, registration_id: result.registrationId,
-      requirement_id: result.requirementId, expires_at: new Date(Date.now() + 180 * 86400000).toISOString(),
-    }) });
-  }
-  const file = form.get("certificate");
-  let upload = null;
-  if (file instanceof File && file.size) upload = await attachDocument(file, { ...tokenRows[0], person_id: result.personId, registration_id: result.registrationId, requirement_id: result.requirementId, submission_count: 0 });
-  const submitUrl = rawToken ? `https://www.910cpr.com/certificate-submit/?token=${rawToken}` : null;
-  const hasCertificate = Boolean(upload);
-  const bodyText = hasCertificate
-    ? `Hi ${firstName},\n\nYour Heartsaver Skills Session registration is confirmed. We received your AHA online-course completion certificate.\n\n910CPR\n910-395-5193`
-    : `Hi ${firstName},\n\nYour Heartsaver Skills Session registration is confirmed.\n\nIf you have not already uploaded your AHA online-course completion certificate, please submit it before your skills session:\n\nSubmit Completion Certificate: ${submitUrl}\n\nYou may also bring the certificate with you to class.\n\n910CPR\n910-395-5193`;
-  await rest("landerware_messages", { method: "POST", body: JSON.stringify({
-    person_id: result.personId, registration_id: result.registrationId, template_key: "heartsaver_skills_confirmation_v1",
-    recipient: email, subject: "Heartsaver Skills Session registration confirmed", body_text: bodyText,
-    delivery_provider: "gmail", delivery_status: "pending", idempotency_key: `heartsaver-confirmation:${result.registrationId}`,
-  }) });
-  return json({ ok: true, personId: result.personId, registrationId: result.registrationId,
-    requirementId: result.requirementId, certificateReceived: hasCertificate, certificateSubmitUrl: submitUrl,
-    idempotentReplay: result.idempotentReplay });
-}
-
-Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
-  const parts = route(req);
-  try {
-    if (req.method === "POST" && parts[0] === "register") return await register(req);
-    if (parts[0] === "certificate" && parts[1]) {
-      const record = await tokenRecord(parts[1]);
-      if (!record) return json({ error: "invalid_or_expired_token" }, 410);
-      if (req.method === "GET") {
-        await rest(`landerware_document_submission_tokens?id=eq.${record.id}`, { method: "PATCH", body: JSON.stringify({ last_opened_at: new Date().toISOString() }) });
-        return json({ ok: true, registrationId: record.registration_id, requirementType: REQUIREMENT_TYPE, submissionCount: record.submission_count });
-      }
-      if (req.method === "POST") {
-        const form = await req.formData();
-        const file = form.get("certificate");
-        if (!(file instanceof File)) return json({ error: "missing_file" }, 400);
-        return json({ ok: true, ...(await attachDocument(file, record)) });
-      }
-    }
-    return json({ error: "not_found" }, 404);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "unexpected_error";
-    const status = message === "missing_file" || message === "unsupported_file_type" || message === "file_too_large" ? 400 : 500;
-    return json({ error: message }, status);
-  }
-});
+Deno.serve(async req=>{if(req.method==="OPTIONS")return new Response("ok",{headers:cors});const parts=route(req);try{if(req.method==="POST"&&parts[0]==="register"&&parts[1])return await register(req,parts[1]);if(parts[0]==="requirement-submit"&&parts[1]){const token=await tokenRecord(parts[1]);if(!token)return json({error:"invalid_or_expired_token"},410);const reqRow=await requirement(token.registration_requirement_id);if(!reqRow)return json({error:"requirement_not_found"},404);if(req.method==="GET")return json({ok:true,displayName:reqRow.display_name,status:reqRow.status,submissionCount:token.submission_count});if(req.method==="POST"){const form=await req.formData(),file=form.get("document");if(!(file instanceof File))return json({error:"missing_file"},400);return json({ok:true,...await attach(file,token,reqRow)})}}return json({error:"not_found"},404)}catch(error){const message=error instanceof Error?error.message:"unexpected_error",bad=message.startsWith("required_field_missing")||["missing_file","unsupported_file_type","file_too_large","entry_context_not_allowed","session_required"].includes(message);return json({error:message},bad?400:500)}});

@@ -819,16 +819,15 @@ async function registerEmployee(req: Request, actorSource: ActorSource = "maxim_
   const courseName = courseNameForRegistration(canonical.course, courseId);
   const deliveryMethod = String(canonical.course.deliveryMethod || canonical.course.delivery_method || "classroom");
   const durableResult = await rest("rpc/landerware_register", { method: "POST", body: JSON.stringify({
-    p_first_name: body?.person?.firstName, p_last_name: body?.person?.lastName,
-    p_email: body?.person?.email, p_phone: body?.person?.phone || null,
-    p_existing_person_id: durable.personId, p_existing_requirement_id: durable.requirementId,
+    p_profile_key: `maxim-course-${courseId}`, p_entry_context: actorSource,
+    p_fields: { first_name: body?.person?.firstName, last_name: body?.person?.lastName,
+      email: body?.person?.email, phone: body?.person?.phone || null },
+    p_existing_person_id: durable.personId,
     p_organization_id: durable.organizationId, p_external_session_id: externalSessionId,
-    p_course_id: courseId, p_course_name: courseName, p_starts_at: startsAt,
+    p_starts_at: startsAt,
     p_location_name: locationLabelForRegistration(canonical.locationKey),
     p_provenance: "maxim_portal_hot_sync", p_requirements_manifest: sessionRequirementsManifest(courseId, courseName, deliveryMethod),
-    p_source: actorSource, p_idempotency_key: `maxim:${registration.id}`,
-    p_fee_disclosure_version: "aha-course-fees-2026-pam-v1",
-    p_fee_disclosure_channel: actorSource === "employee_self_service" ? "employee_self_service" : "maxim_portal_manual",
+    p_idempotency_key: `maxim:${registration.id}`,
   }) });
   const durableRegistration = Array.isArray(durableResult) ? durableResult[0] : durableResult;
   const displayDateTime = easternDateTimeDisplay(startsAt) ||

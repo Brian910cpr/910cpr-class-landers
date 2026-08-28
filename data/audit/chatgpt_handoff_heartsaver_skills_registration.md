@@ -17,6 +17,14 @@
 
 ## Authoritative implementation
 
+### Registration-profile generalization (2026-08-27, production still paused)
+
+The core is now configuration-driven. `landerware_registration_profiles` stores course identity, visibility, registration/session mode, allowed entry contexts, required fields, generic requirement definitions, addons, payer/pricing policy, corporate context, confirmation template, and completion prerequisites. `landerware_registration_requirements` creates durable per-registration requirement instances with three timing gates, upload-now/submit-later behavior, and staff satisfaction permission. `landerware_confirmation_templates` removes confirmation copy from the shared handler.
+
+The single Edge route is now `POST /landerware-registration/register/<profile-key>`. It loads the profile, invokes `landerware_register`, processes configured upload fields, creates generic requirement-submission tokens, and renders the configured confirmation template. It contains no Heartsaver course or requirement constants. Heartsaver and MAXIM differ only by profile data and their specialized UI/input preparation.
+
+Adding another LanderWare-only course now requires course/profile/template configuration rows. It does not require a new Edge Function or backend registration handler.
+
 - `supabase/migrations/20260827220000_landerware_unified_registration.sql`
   - creates course `aha-heartsaver-skills-session` with no Enrollware ID and `listed=false`;
   - creates `landerware_create_or_find_person` using normalized case-insensitive email, with name+phone fallback;

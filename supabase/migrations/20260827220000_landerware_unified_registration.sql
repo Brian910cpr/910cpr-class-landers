@@ -1,214 +1,84 @@
 begin;
 
-create table if not exists public.landerware_courses (
-  id text primary key,
-  display_name text not null,
-  provider text not null,
-  delivery_mode text not null,
-  public_slug text unique,
-  listed boolean not null default false,
-  enrollware_course_id text,
-  active boolean not null default true,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+create table public.landerware_courses(id text primary key,display_name text not null,provider text not null,delivery_mode text not null,public_slug text unique,listed boolean not null default false,enrollware_course_id text,active boolean not null default true,created_at timestamptz not null default now(),updated_at timestamptz not null default now());
+create table public.landerware_confirmation_templates(template_key text primary key,subject_template text not null,body_template text not null,delivery_provider text not null default 'gmail',active boolean not null default true,created_at timestamptz not null default now(),updated_at timestamptz not null default now());
+create table public.landerware_registration_profiles(
+  profile_key text primary key,version integer not null default 1,course_id text not null,display_name text not null,
+  listed boolean not null default false,registration_mode text not null,
+  session_policy text not null check(session_policy in('required','optional','not_applicable')),
+  allowed_entry_contexts text[] not null,required_fields jsonb not null default '[]',requirements jsonb not null default '[]',
+  addons jsonb not null default '[]',payer_policy jsonb not null,pricing_behavior jsonb not null default '{}',
+  corporate_context jsonb not null default '{}',confirmation_template_key text not null references public.landerware_confirmation_templates(template_key),
+  completion_prerequisites jsonb not null default '[]',active boolean not null default true,
+  created_at timestamptz not null default now(),updated_at timestamptz not null default now());
+create table public.landerware_person_identities(identity_source text not null,identity_key text not null,person_id uuid not null references public.landerware_people(id),created_at timestamptz not null default now(),primary key(identity_source,identity_key));
 
-insert into public.landerware_courses
-  (id, display_name, provider, delivery_mode, public_slug, listed, enrollware_course_id)
-values
-  ('aha-heartsaver-skills-session', 'AHA Heartsaver Skills Session',
-   'American Heart Association', 'skills_session', 'heartsaver-skills', false, null)
-on conflict (id) do update set
-  display_name = excluded.display_name,
-  public_slug = excluded.public_slug,
-  listed = excluded.listed,
-  enrollware_course_id = excluded.enrollware_course_id,
-  updated_at = now();
+alter table public.landerware_registrations alter column requirement_id drop not null,alter column session_id drop not null,alter column roster_id drop not null,
+  add column idempotency_key text,add column course_id text,add column registration_profile_key text references public.landerware_registration_profiles(profile_key),
+  add column registration_profile_snapshot jsonb not null default '{}',add column entry_context text,
+  add column session_selection_status text not null default 'selected',add column selected_options jsonb not null default '{}',
+  add column payer_mode text,add column pricing_state jsonb not null default '{}',add column payment_state text not null default 'not_required',
+  add column billing_state text not null default 'not_required';
+create unique index landerware_registration_idempotency on public.landerware_registrations(idempotency_key) where idempotency_key is not null;
 
-alter table public.landerware_certification_requirements
-  add column if not exists requirement_type text,
-  add column if not exists satisfied_at timestamptz;
+create table public.landerware_registration_requirements(
+  id uuid primary key default gen_random_uuid(),registration_id uuid not null references public.landerware_registrations(id),person_id uuid not null references public.landerware_people(id),
+  requirement_key text not null,requirement_type text not null,display_name text not null,
+  required_before_registration boolean not null default false,required_before_attendance boolean not null default false,required_before_completion boolean not null default false,
+  upload_now boolean not null default false,submit_later boolean not null default false,staff_may_satisfy boolean not null default false,
+  upload_config jsonb not null default '{}',status text not null default 'pending',satisfied_at timestamptz,satisfied_by text,
+  document_ids jsonb not null default '[]',created_at timestamptz not null default now(),updated_at timestamptz not null default now(),unique(registration_id,requirement_key));
+create table public.landerware_document_submission_tokens(id uuid primary key default gen_random_uuid(),token_sha256 text not null unique,person_id uuid not null references public.landerware_people(id),registration_id uuid not null references public.landerware_registrations(id),registration_requirement_id uuid not null references public.landerware_registration_requirements(id),expires_at timestamptz not null,revoked_at timestamptz,last_opened_at timestamptz,submission_count integer not null default 0,created_at timestamptz not null default now());
 
-alter table public.landerware_registrations
-  alter column requirement_id drop not null,
-  alter column session_id drop not null,
-  alter column roster_id drop not null,
-  add column if not exists idempotency_key text,
-  add column if not exists course_id text,
-  add column if not exists session_selection_status text not null default 'selected';
+insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types) values('landerware-requirement-documents','landerware-requirement-documents',false,10485760,array['application/pdf','image/jpeg','image/png','image/webp']) on conflict(id) do update set public=false,file_size_limit=excluded.file_size_limit,allowed_mime_types=excluded.allowed_mime_types;
+insert into public.landerware_courses values('aha-heartsaver-skills-session','AHA Heartsaver Skills Session','American Heart Association','skills_session','heartsaver-skills',false,null,true,now(),now());
+insert into public.landerware_confirmation_templates(template_key,subject_template,body_template) values
+('heartsaver-skills-confirmation-v1','{{display_name}} registration confirmed','Hi {{first_name}},\n\nYour {{display_name}} registration is confirmed.\n\n{{requirement_message}}\n\n910CPR\n910-395-5193'),
+('standard-registration-confirmation-v1','You’re registered — {{display_name}}','Hi {{first_name}},\n\nYou’re registered for {{display_name}}.\n\n{{session_message}}\n{{payer_message}}\n\n910CPR\n910-395-5193');
+insert into public.landerware_registration_profiles(profile_key,course_id,display_name,listed,registration_mode,session_policy,allowed_entry_contexts,required_fields,requirements,addons,payer_policy,pricing_behavior,corporate_context,confirmation_template_key,completion_prerequisites) values
+('aha-heartsaver-skills-public','aha-heartsaver-skills-session','AHA Heartsaver Skills Session',false,'public_direct','optional',array['public_anonymous','secure_known_person','staff_admin'],
+ '["first_name","last_name","email","online_completed_acknowledgement"]',
+ '[{"key":"aha_online_completion","type":"AHA_ONLINE_COMPLETION_CERTIFICATE","display_name":"AHA online-course completion certificate","required_before_registration":false,"required_before_attendance":true,"required_before_completion":true,"upload_now":true,"submit_later":true,"staff_may_satisfy":true,"upload":{"field":"certificate","max_bytes":10485760,"mime_types":["application/pdf","image/jpeg","image/png","image/webp"],"token_days":180}}]',
+ '[]','{"mode":"customer_pays"}','{"mode":"profile_price","amount_cents":0}','{}','heartsaver-skills-confirmation-v1','["aha_online_completion"]');
+insert into public.landerware_registration_profiles(profile_key,course_id,display_name,listed,registration_mode,session_policy,allowed_entry_contexts,required_fields,requirements,addons,payer_policy,pricing_behavior,corporate_context,confirmation_template_key,completion_prerequisites)
+select 'maxim-course-'||course_id,course_id,display_name,false,'corporate_scheduling','required',array['maxim_staff','employee_self_service'],
+  '["first_name","last_name"]'::jsonb,'[]'::jsonb,'[]'::jsonb,'{"mode":"corporate_client_pays"}'::jsonb,
+  '{"mode":"corporate_contract"}'::jsonb,'{"organization":"MAXIM","billing_account_required":true}'::jsonb,
+  'standard-registration-confirmation-v1','[]'::jsonb
+from(values('209806','AHA BLS Provider'),('359474','AHA BLS Renewal'),('210549','AHA HeartCode BLS Skills'),
+  ('209809','AHA Heartsaver First Aid CPR AED'),('329495','AHA Heartsaver Online + Skills')) as courses(course_id,display_name);
 
-create unique index if not exists landerware_registration_idempotency
-  on public.landerware_registrations(idempotency_key)
-  where idempotency_key is not null;
-
-create table if not exists public.landerware_document_submission_tokens (
-  id uuid primary key default gen_random_uuid(),
-  token_sha256 text not null unique,
-  person_id uuid not null references public.landerware_people(id),
-  registration_id uuid not null references public.landerware_registrations(id),
-  requirement_id uuid not null references public.landerware_certification_requirements(id),
-  expires_at timestamptz not null,
-  revoked_at timestamptz,
-  last_opened_at timestamptz,
-  submission_count integer not null default 0,
-  created_at timestamptz not null default now()
-);
-
-insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('landerware-requirement-documents', 'landerware-requirement-documents', false,
-  10485760, array['application/pdf','image/jpeg','image/png','image/webp'])
-on conflict (id) do update set public = false, file_size_limit = 10485760,
-  allowed_mime_types = excluded.allowed_mime_types;
-
-create or replace function public.landerware_create_or_find_person(
-  p_first_name text, p_last_name text, p_email text, p_phone text default null,
-  p_existing_person_id uuid default null
-) returns jsonb language plpgsql security definer set search_path = public, pg_temp as $$
-declare
-  v_person public.landerware_people;
-  v_email text := lower(trim(coalesce(p_email, '')));
-  v_phone text := regexp_replace(coalesce(p_phone, ''), '[^0-9]', '', 'g');
-  v_created boolean := false;
+create or replace function public.landerware_create_or_find_person(p_first_name text,p_last_name text,p_email text default null,p_phone text default null,p_existing_person_id uuid default null,p_identity_source text default null,p_identity_key text default null)
+returns jsonb language plpgsql security definer set search_path='' as $$
+declare v_person public.landerware_people;v_email text:=lower(trim(coalesce(p_email,'')));v_phone text:=regexp_replace(coalesce(p_phone,''),'[^0-9]','','g');v_created boolean:=false;
 begin
-  if trim(coalesce(p_first_name,'')) = '' or trim(coalesce(p_last_name,'')) = '' or v_email = '' then
-    raise exception 'first name, last name, and email are required';
-  end if;
-  perform pg_advisory_xact_lock(hashtextextended('landerware-person|' || v_email, 0));
-  if p_existing_person_id is not null then
-    select * into v_person from public.landerware_people where id=p_existing_person_id for update;
-  else
-    select * into v_person from public.landerware_people
-      where archived_at is null and lower(trim(coalesce(current_email,'')))=v_email
-      order by created_at asc limit 1 for update;
-    if v_person.id is null and v_phone <> '' then
-      select * into v_person from public.landerware_people
-        where archived_at is null
-          and regexp_replace(coalesce(current_phone,''), '[^0-9]', '', 'g')=v_phone
-          and lower(trim(current_first_name))=lower(trim(p_first_name))
-          and lower(trim(current_last_name))=lower(trim(p_last_name))
-        order by created_at asc limit 1 for update;
-    end if;
-  end if;
-  if v_person.id is null then
-    insert into public.landerware_people
-      (current_first_name,current_last_name,current_email,current_phone,searchable_text)
-    values(trim(p_first_name),trim(p_last_name),v_email,nullif(trim(coalesce(p_phone,'')),''),
-      lower(trim(p_first_name)||' '||trim(p_last_name)||' '||v_email||' '||coalesce(p_phone,'')))
-    returning * into v_person;
-    v_created := true;
-  else
-    update public.landerware_people set current_first_name=trim(p_first_name),
-      current_last_name=trim(p_last_name),current_email=v_email,
-      current_phone=coalesce(nullif(trim(coalesce(p_phone,'')),''),current_phone),
-      searchable_text=lower(trim(p_first_name)||' '||trim(p_last_name)||' '||v_email||' '||coalesce(p_phone,'')),
-      updated_at=now() where id=v_person.id returning * into v_person;
-  end if;
-  return jsonb_build_object('personId',v_person.id,'created',v_created);
-end $$;
+ if p_existing_person_id is not null then select * into v_person from public.landerware_people where id=p_existing_person_id for update;
+ elsif p_identity_source is not null and p_identity_key is not null then perform pg_advisory_xact_lock(hashtextextended('identity|'||p_identity_source||'|'||p_identity_key,0));select p.* into v_person from public.landerware_person_identities i join public.landerware_people p on p.id=i.person_id where i.identity_source=p_identity_source and i.identity_key=p_identity_key for update of p;
+ elsif v_email<>'' then perform pg_advisory_xact_lock(hashtextextended('email|'||v_email,0));select * into v_person from public.landerware_people where archived_at is null and lower(trim(coalesce(current_email,'')))=v_email order by created_at limit 1 for update;
+ elsif v_phone<>'' then perform pg_advisory_xact_lock(hashtextextended('phone|'||v_phone||lower(trim(p_first_name))||lower(trim(p_last_name)),0));select * into v_person from public.landerware_people where archived_at is null and regexp_replace(coalesce(current_phone,''),'[^0-9]','','g')=v_phone and lower(trim(current_first_name))=lower(trim(p_first_name)) and lower(trim(current_last_name))=lower(trim(p_last_name)) order by created_at limit 1 for update;end if;
+ if v_person.id is null then if trim(coalesce(p_first_name,''))='' or trim(coalesce(p_last_name,''))='' then raise exception 'first_and_last_name_required';end if;insert into public.landerware_people(current_first_name,current_last_name,current_email,current_phone,searchable_text) values(trim(p_first_name),trim(p_last_name),nullif(v_email,''),nullif(trim(coalesce(p_phone,'')),''),lower(trim(p_first_name)||' '||trim(p_last_name)||' '||v_email||' '||coalesce(p_phone,''))) returning * into v_person;v_created:=true;
+ else update public.landerware_people set current_first_name=coalesce(nullif(trim(p_first_name),''),current_first_name),current_last_name=coalesce(nullif(trim(p_last_name),''),current_last_name),current_email=coalesce(nullif(v_email,''),current_email),current_phone=coalesce(nullif(trim(coalesce(p_phone,'')),''),current_phone),updated_at=now() where id=v_person.id returning * into v_person;end if;
+ if p_identity_source is not null and p_identity_key is not null then insert into public.landerware_person_identities values(p_identity_source,p_identity_key,v_person.id,now()) on conflict(identity_source,identity_key) do nothing;end if;
+ return jsonb_build_object('personId',v_person.id,'created',v_created);end $$;
 
-create or replace function public.landerware_register(
-  p_first_name text,
-  p_last_name text,
-  p_email text,
-  p_phone text,
-  p_course_id text,
-  p_course_name text,
-  p_source text,
-  p_idempotency_key text,
-  p_requirement_type text default null,
-  p_organization_id uuid default null,
-  p_existing_person_id uuid default null,
-  p_existing_requirement_id uuid default null,
-  p_external_session_id text default null,
-  p_starts_at timestamptz default null,
-  p_location_name text default null,
-  p_provenance text default null,
-  p_requirements_manifest jsonb default '{}'::jsonb,
-  p_fee_disclosure_version text default null,
-  p_fee_disclosure_channel text default null
-) returns jsonb language plpgsql security definer set search_path = public, pg_temp as $$
-declare
-  v_person public.landerware_people;
-  v_person_result jsonb;
-  v_requirement public.landerware_certification_requirements;
-  v_session public.landerware_sessions;
-  v_roster public.landerware_rosters;
-  v_registration public.landerware_registrations;
-  v_email text := lower(trim(coalesce(p_email, '')));
+create or replace function public.landerware_register(p_profile_key text,p_entry_context text,p_fields jsonb,p_idempotency_key text,p_selected_options jsonb default '{}',p_organization_id uuid default null,p_existing_person_id uuid default null,p_identity_source text default null,p_identity_key text default null,p_external_session_id text default null,p_starts_at timestamptz default null,p_location_name text default null,p_provenance text default null,p_requirements_manifest jsonb default '{}')
+returns jsonb language plpgsql security definer set search_path='' as $$
+declare v_profile public.landerware_registration_profiles;v_person jsonb;v_person_id uuid;v_session public.landerware_sessions;v_roster public.landerware_rosters;v_reg public.landerware_registrations;v_req jsonb;v_required text;v_req_ids jsonb:='[]';v_req_id uuid;v_payer text;
 begin
-  if trim(coalesce(p_first_name,'')) = '' or trim(coalesce(p_last_name,'')) = '' or v_email = '' then
-    raise exception 'first name, last name, and email are required';
-  end if;
-  if p_idempotency_key is not null then
-    select * into v_registration from public.landerware_registrations
-      where idempotency_key = p_idempotency_key limit 1;
-    if v_registration.id is not null then
-      return jsonb_build_object('personId',v_registration.person_id,
-        'registrationId',v_registration.id,'requirementId',v_registration.requirement_id,
-        'sessionId',v_registration.session_id,'created',false,'idempotentReplay',true);
-    end if;
-  end if;
+ select * into v_profile from public.landerware_registration_profiles where profile_key=p_profile_key and active=true;if v_profile.profile_key is null then raise exception 'registration_profile_not_found';end if;
+ if not(p_entry_context=any(v_profile.allowed_entry_contexts)) then raise exception 'entry_context_not_allowed';end if;if v_profile.session_policy='required' and(p_external_session_id is null or p_starts_at is null) then raise exception 'session_required';end if;
+ for v_required in select jsonb_array_elements_text(v_profile.required_fields) loop if nullif(trim(coalesce(p_fields->>v_required,'')),'') is null then raise exception 'required_field_missing:%',v_required;end if;end loop;
+ select * into v_reg from public.landerware_registrations where idempotency_key=p_idempotency_key limit 1;if v_reg.id is not null then select coalesce(jsonb_agg(id),'[]') into v_req_ids from public.landerware_registration_requirements where registration_id=v_reg.id;return jsonb_build_object('personId',v_reg.person_id,'registrationId',v_reg.id,'sessionId',v_reg.session_id,'requirementIds',v_req_ids,'idempotentReplay',true);end if;
+ v_person:=public.landerware_create_or_find_person(p_fields->>'first_name',p_fields->>'last_name',p_fields->>'email',p_fields->>'phone',p_existing_person_id,p_identity_source,p_identity_key);v_person_id:=(v_person->>'personId')::uuid;
+ if p_external_session_id is not null and p_starts_at is not null then insert into public.landerware_sessions(external_session_id,course_id,course_name,starts_at,location_name,organization_id,provenance,requirements_manifest) values(p_external_session_id,v_profile.course_id,v_profile.display_name,p_starts_at,p_location_name,p_organization_id,coalesce(p_provenance,p_entry_context),p_requirements_manifest) on conflict(external_session_id,course_id,starts_at) do update set updated_at=now() returning * into v_session;insert into public.landerware_rosters(session_id) values(v_session.id) on conflict(session_id) do update set updated_at=now() returning * into v_roster;end if;
+ v_payer:=v_profile.payer_policy->>'mode';if v_payer not in('customer_pays','corporate_client_pays','invoice_later','prepaid','free','special_price') then raise exception 'unsupported_payer_mode';end if;insert into public.landerware_registrations(person_id,session_id,roster_id,organization_id,status,source,idempotency_key,course_id,registration_profile_key,registration_profile_snapshot,entry_context,session_selection_status,selected_options,payer_mode,pricing_state,payment_state,billing_state) values(v_person_id,v_session.id,v_roster.id,p_organization_id,'active',p_entry_context,p_idempotency_key,v_profile.course_id,v_profile.profile_key,to_jsonb(v_profile),p_entry_context,case when v_session.id is null then 'pending' else 'selected' end,p_selected_options,v_payer,v_profile.pricing_behavior,case when v_payer in('customer_pays','special_price') then 'pending' else 'not_required' end,case when v_payer in('corporate_client_pays','invoice_later') then 'pending' else 'not_required' end) returning * into v_reg;
+ for v_req in select * from jsonb_array_elements(v_profile.requirements) loop insert into public.landerware_registration_requirements(registration_id,person_id,requirement_key,requirement_type,display_name,required_before_registration,required_before_attendance,required_before_completion,upload_now,submit_later,staff_may_satisfy,upload_config,status) values(v_reg.id,v_person_id,v_req->>'key',v_req->>'type',v_req->>'display_name',coalesce((v_req->>'required_before_registration')::boolean,false),coalesce((v_req->>'required_before_attendance')::boolean,false),coalesce((v_req->>'required_before_completion')::boolean,false),coalesce((v_req->>'upload_now')::boolean,false),coalesce((v_req->>'submit_later')::boolean,false),coalesce((v_req->>'staff_may_satisfy')::boolean,false),coalesce(v_req->'upload','{}'),case when coalesce((v_req->>'required_before_registration')::boolean,false) then 'required_now' else 'pending' end) returning id into v_req_id;v_req_ids:=v_req_ids||to_jsonb(v_req_id);end loop;
+ if v_roster.id is not null then insert into public.landerware_roster_memberships(roster_id,session_id,person_id,registration_id,display_name,email,source) values(v_roster.id,v_session.id,v_person_id,v_reg.id,trim(coalesce(p_fields->>'first_name',''))||' '||trim(coalesce(p_fields->>'last_name','')),p_fields->>'email',p_entry_context);end if;
+ insert into public.landerware_activity_events(event_type,actor_source,person_id,organization_id,registration_id,session_id,details) values('registration_created',case when p_entry_context in('maxim_staff','employee_self_service','brian_admin','instructor','system','enrollware_import') then p_entry_context else 'system' end,v_person_id,p_organization_id,v_reg.id,v_session.id,jsonb_build_object('profileKey',p_profile_key,'entryContext',p_entry_context));
+ return jsonb_build_object('personId',v_person_id,'registrationId',v_reg.id,'sessionId',v_session.id,'requirementIds',v_req_ids,'idempotentReplay',false,'profileKey',v_profile.profile_key);end $$;
 
-  v_person_result := public.landerware_create_or_find_person(
-    p_first_name,p_last_name,p_email,p_phone,p_existing_person_id);
-  select * into v_person from public.landerware_people
-    where id=(v_person_result->>'personId')::uuid;
-
-  if p_existing_requirement_id is not null then
-    select * into v_requirement from public.landerware_certification_requirements
-      where id=p_existing_requirement_id and person_id=v_person.id for update;
-  else
-    insert into public.landerware_certification_requirements
-      (person_id,organization_id,course_id,course_name,requirement_type,employer_controlled,status)
-    values (v_person.id,p_organization_id,p_course_id,p_course_name,p_requirement_type,
-      p_organization_id is not null,'active') returning * into v_requirement;
-  end if;
-
-  if p_external_session_id is not null and p_starts_at is not null then
-    insert into public.landerware_sessions(external_session_id,course_id,course_name,starts_at,
-      location_name,organization_id,provenance,requirements_manifest)
-    values(p_external_session_id,p_course_id,p_course_name,p_starts_at,p_location_name,
-      p_organization_id,coalesce(p_provenance,p_source),p_requirements_manifest)
-    on conflict(external_session_id,course_id,starts_at) do update set updated_at=now()
-    returning * into v_session;
-    insert into public.landerware_rosters(session_id) values(v_session.id)
-      on conflict(session_id) do update set updated_at=now() returning * into v_roster;
-  end if;
-
-  insert into public.landerware_registrations
-    (person_id,requirement_id,session_id,roster_id,organization_id,status,source,
-     idempotency_key,course_id,session_selection_status,fee_disclosure_version,
-     fee_disclosure_presented_at,fee_disclosure_channel,fee_disclosure_accepted_at)
-  values(v_person.id,v_requirement.id,v_session.id,v_roster.id,p_organization_id,'active',p_source,
-    p_idempotency_key,p_course_id,case when v_session.id is null then 'pending' else 'selected' end,
-    p_fee_disclosure_version,case when p_fee_disclosure_version is null then null else now() end,
-    p_fee_disclosure_channel,case when p_fee_disclosure_version is null then null else now() end)
-  returning * into v_registration;
-
-  if v_roster.id is not null then
-    insert into public.landerware_roster_memberships
-      (roster_id,session_id,person_id,registration_id,display_name,email,source)
-    values(v_roster.id,v_session.id,v_person.id,v_registration.id,
-      trim(p_first_name)||' '||trim(p_last_name),v_email,p_source);
-  end if;
-
-  insert into public.landerware_activity_events
-    (event_type,actor_source,person_id,organization_id,requirement_id,registration_id,session_id,details)
-  values('registration_created',case when p_source in ('maxim_staff','employee_self_service','brian_admin','instructor','system','enrollware_import') then p_source else 'system' end,
-    v_person.id,p_organization_id,v_requirement.id,v_registration.id,v_session.id,
-    jsonb_build_object('source',p_source,'courseId',p_course_id,'sessionSelectionStatus',case when v_session.id is null then 'pending' else 'selected' end));
-
-  return jsonb_build_object('personId',v_person.id,'registrationId',v_registration.id,
-    'requirementId',v_requirement.id,'sessionId',v_session.id,'created',true,'idempotentReplay',false);
-end $$;
-
-revoke all on function public.landerware_register(text,text,text,text,text,text,text,text,text,uuid,uuid,uuid,text,timestamptz,text,text,jsonb,text,text) from public,anon,authenticated;
-grant execute on function public.landerware_register(text,text,text,text,text,text,text,text,text,uuid,uuid,uuid,text,timestamptz,text,text,jsonb,text,text) to service_role;
-revoke all on function public.landerware_create_or_find_person(text,text,text,text,uuid) from public,anon,authenticated;
-grant execute on function public.landerware_create_or_find_person(text,text,text,text,uuid) to service_role;
-
-alter table public.landerware_courses enable row level security;
-alter table public.landerware_document_submission_tokens enable row level security;
-revoke all on public.landerware_courses, public.landerware_document_submission_tokens from anon, authenticated;
-
+revoke execute on function public.landerware_create_or_find_person(text,text,text,text,uuid,text,text) from public,anon,authenticated;revoke execute on function public.landerware_register(text,text,jsonb,text,jsonb,uuid,uuid,text,text,text,timestamptz,text,text,jsonb) from public,anon,authenticated;
+grant execute on function public.landerware_create_or_find_person(text,text,text,text,uuid,text,text) to service_role;grant execute on function public.landerware_register(text,text,jsonb,text,jsonb,uuid,uuid,text,text,text,timestamptz,text,text,jsonb) to service_role;
+alter table public.landerware_courses enable row level security;alter table public.landerware_confirmation_templates enable row level security;alter table public.landerware_registration_profiles enable row level security;alter table public.landerware_person_identities enable row level security;alter table public.landerware_registration_requirements enable row level security;alter table public.landerware_document_submission_tokens enable row level security;
+revoke all on public.landerware_courses,public.landerware_confirmation_templates,public.landerware_registration_profiles,public.landerware_person_identities,public.landerware_registration_requirements,public.landerware_document_submission_tokens from anon,authenticated;
 commit;
