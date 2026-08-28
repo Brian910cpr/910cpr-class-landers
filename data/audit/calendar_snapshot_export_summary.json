@@ -1,21 +1,22 @@
 {
-  "generated_at": "2026-08-28T20:14:04.581227+00:00",
+  "generated_at": "2026-08-28T20:46:37.431215+00:00",
   "read_only_snapshot_export": true,
   "calendar_sources_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/config/calendar_sources.json",
   "people_catalog_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/config/people_catalog.json",
   "private_calendar_secrets_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/private/calendar_secrets.local.json",
   "private_calendar_secrets_loaded": false,
-  "calendar_sources_found": 3,
-  "snapshots_written": 3,
+  "calendar_sources_found": 4,
+  "snapshots_written": 4,
   "total_events_exported": 137,
   "events_exported_per_source": {
     "amy_availability": 0,
     "nick_availability": 0,
+    "brian_primary_calendar": 0,
     "brian_do_not_schedule": 137
   },
   "date_range": {
-    "start": "2026-08-28T20:14:03.783039+00:00",
-    "end": "2026-11-26T20:14:03.783039+00:00",
+    "start": "2026-08-28T20:46:36.619177+00:00",
+    "end": "2026-11-26T20:46:36.619177+00:00",
     "days": 90
   },
   "sources": [
@@ -47,6 +48,22 @@
       "events_exported": 0,
       "snapshot_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots/nick_availability.json",
       "warnings": [],
+      "skipped": {}
+    },
+    {
+      "calendar_source_id": "brian_primary_calendar",
+      "calendar_id": "",
+      "calendar_id_present": false,
+      "source_type": "occupancy_calendar",
+      "export_status": "failed",
+      "failure_reason": "no usable Google Calendar ICS URL (missing_source_url)",
+      "url_source": "missing_source_url",
+      "attempted_ics_url_redacted": "UNKNOWN",
+      "events_exported": 0,
+      "snapshot_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots/brian_primary_calendar.json",
+      "warnings": [
+        "brian_primary_calendar: no usable Google Calendar ICS URL (missing_source_url); likely needs a Secret iCal URL or Google API auth"
+      ],
       "skipped": {}
     },
     {
