@@ -8,7 +8,7 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 - Local snapshot found: /home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots
 - Instructors mapped: 2
 - Blocks generated: 353
-- Blocks blocked/placeheld: 4
+- Blocks blocked/placeheld: 3
 - Inverse-generated availability blocks: 217
 - Inverse blocking event blocks: 136
 - DNS markers found: 0
@@ -16,7 +16,7 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 ## Blocked Reason Counts
 
 - `non_standard_time_increment`: 1
-- `inverse_gap_shorter_than_minimum_consumption`: 3
+- `inverse_gap_shorter_than_minimum_consumption`: 2
 
 ## Missing Calendar Source Config / Snapshots
 
@@ -27,7 +27,6 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 | Source | Type | Reason | Message |
 | --- | --- | --- | --- |
 | brian_do_not_schedule | inverse_google_calendar | `non_standard_time_increment` | Calendar event was not usable as an inverse blocking interval. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
 | brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
 | brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
 
