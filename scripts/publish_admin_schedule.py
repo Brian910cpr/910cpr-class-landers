@@ -62,6 +62,7 @@ def normalize_session(session: dict[str, Any]) -> dict[str, Any] | None:
         ("course", "course_name_primary_clean"),
     )
     session_id = value(session, ("session_id",), ("class_id",), ("id",))
+    raw_count = value(session, ("registered_count",), ("capacity", "registered_count"), ("capacity", "students_count_raw"))
     return {
         "session_id": session_id,
         "course_name": course or "Class",
@@ -69,7 +70,12 @@ def normalize_session(session: dict[str, Any]) -> dict[str, Any] | None:
         "end_at": end,
         "lead_instructor_name": instructor,
         "location_name": location,
-        "registered_count": value(session, ("registered_count",), ("capacity", "registered_count"), ("capacity", "students_count_raw")) or 0,
+        # None means unavailable. Zero is only emitted when a source positively
+        # establishes that the roster is empty; consumers must not conflate them.
+        "registered_count": int(raw_count) if raw_count is not None else None,
+        "participant_count_available": raw_count is not None,
+        "roster_available": bool(value(session, ("roster_available",))),
+        "participant_count_source": "schedule_source" if raw_count is not None else "unavailable",
         "registration_url": value(session, ("registration_url",), ("commerce", "registration_url"), ("source_keys", "enrollware_ical_url")),
         "source": value(session, ("source",)) or "enrollware_ical",
         "blocking_resources": blocking_resources(instructor, location),
@@ -96,7 +102,10 @@ def normalize_hot_sync(record: dict[str, Any]) -> dict[str, Any] | None:
         "end_at": end,
         "lead_instructor_name": instructor,
         "location_name": location,
-        "registered_count": 0,
+        "registered_count": None,
+        "participant_count_available": False,
+        "roster_available": False,
+        "participant_count_source": "unavailable",
         "registration_url": value(record, ("enrollware_enroll_url",), ("registration_url",)),
         "source": value(record, ("source",)) or "hot_sync_manual",
         "blocking_resources": blocking_resources(instructor, location),
@@ -144,6 +153,17 @@ def apply_student_snapshot(rows: list[dict[str, Any]], snapshot: Any) -> dict[st
     from scripts.import_enrollware_student_report import apply_snapshot_to_sessions
     enrollware_rows = [row for row in rows if not row.get("hot_sync")]
     counts = apply_snapshot_to_sessions(enrollware_rows, snapshot)
+    for row in enrollware_rows:
+        evidence = row.get("enrollment_evidence") if isinstance(row.get("enrollment_evidence"), dict) else {}
+        status = evidence.get("status")
+        if status in {"student_rows_present", "no_student_row_in_snapshot"}:
+            row["participant_count_available"] = True
+            row["participant_count_source"] = "enrollware_student_report"
+            row["roster_available"] = False
+        elif not row.get("participant_count_available"):
+            row["registered_count"] = None
+            row["participant_count_source"] = "unavailable"
+            row["roster_available"] = False
     return counts
 
 
@@ -168,7 +188,7 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
         if str(row.get("lead_instructor_name") or "").strip().lower() in {"brian", "brian ennis", "b. ennis"}
     ]
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "generated_at": reference.isoformat(),
         "purpose": "Sanitized complete LanderWare occupancy for the admin planner; combines Enrollware iCal with committed HOT_SYNC classes.",
         "counts": {

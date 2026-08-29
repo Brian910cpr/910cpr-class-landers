@@ -7,6 +7,12 @@ from scripts.publish_admin_schedule import build_admin_schedule
 
 
 class PublishAdminScheduleTest(unittest.TestCase):
+    def test_missing_enrollware_count_remains_unavailable_not_zero(self) -> None:
+        payload = {"sessions": [{"session_id": "ew-unknown", "start_at": "2026-08-03T10:00:00-04:00"}]}
+        row = build_admin_schedule(payload, now=datetime.fromisoformat("2026-07-18T08:00:00-04:00"))["sessions"][0]
+        self.assertIsNone(row["registered_count"])
+        self.assertFalse(row["participant_count_available"])
+
     def test_includes_shipyard_and_offsite_brian_classes_as_resource_blocks(self) -> None:
         payload = {
             "sessions": [

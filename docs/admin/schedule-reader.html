@@ -18,6 +18,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
+<script src="/assets/session-workspace.js?v=20260829-1"></script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -70,7 +71,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       lastDay = key;
       const end = item.end_at ? `–${timeText(item.end_at)}` : '';
       const link = item.registration_url ? `<a class="register" href="${esc(item.registration_url)}" target="_blank" rel="noopener">Registration ↗</a>` : '—';
-      return `${heading}<article class="card"><div><span class="label">Time</span><div class="time">${esc(timeText(item.start_at))}${esc(end)}</div></div><div class="course"><span class="label">Course</span>${esc(item.course_name || 'Unnamed class')}</div><div class="where"><span class="label">Location / instructor</span>${esc(item.location_name || 'Unknown')}<br><span class="meta">${esc(item.lead_instructor_name || 'Instructor unassigned')}</span></div><div><span class="label">Registered</span>${esc(item.registered_count ?? '—')}<br>${link}</div></article>`;
+      const participants = `<a class="register" href="${esc(LanderWareSession.workspaceUrl(item))}">${esc(LanderWareSession.participantLabel(item))}</a>`;
+      return `${heading}<article class="card"><div><span class="label">Time</span><div class="time">${esc(timeText(item.start_at))}${esc(end)}</div></div><div class="course"><span class="label">Course</span>${esc(item.course_name || 'Unnamed class')}</div><div class="where"><span class="label">Location / instructor</span>${esc(item.location_name || 'Unknown')}<br><span class="meta">${esc(item.lead_instructor_name || 'Instructor unassigned')}</span></div><div><span class="label">Roster</span>${participants}<br>${link}</div></article>`;
     }).join('');
   }
 
@@ -79,7 +81,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     try {
       const response = await fetch(`${LIVE_URL}?v=${Date.now()}`, {cache:'no-store'});
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      render(await response.json(), 'live admin_schedule.json');
+      const data=await response.json();try{await LanderWareSession.hydrate(data.sessions||[])}catch{}render(data, 'live admin_schedule.json');
     } catch (error) {
       status.className = 'status error';
       status.textContent = `Live schedule could not be loaded: ${error.message}. Open a downloaded JSON file above.`;
