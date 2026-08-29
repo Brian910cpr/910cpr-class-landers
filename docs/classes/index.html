@@ -1288,81 +1288,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </article>
 </section>
 
-<script>
-(function () {
-  const controls = {
-    course: document.getElementById("class-filter-course"),
-    date: document.getElementById("class-filter-date"),
-    location: document.getElementById("class-filter-location")
-  };
-  const cards = Array.from(document.querySelectorAll(".js-class-result"));
-  const count = document.getElementById("class-filter-count");
-  const empty = document.getElementById("class-filter-empty");
-  const reset = document.getElementById("class-filter-reset");
-
-  function currentState() {
-    return {
-      course: controls.course.value,
-      date: controls.date.value,
-      location: controls.location.value
-    };
-  }
-
-  function matches(card, state, ignoreKey) {
-    return Object.keys(controls).every(function (key) {
-      if (key === ignoreKey || !state[key]) return true;
-      return card.dataset[key] === state[key];
-    });
-  }
-
-  function updateOptions(state) {
-    Object.keys(controls).forEach(function (key) {
-      const select = controls[key];
-      Array.from(select.options).forEach(function (option) {
-        if (!option.value) {
-          option.disabled = false;
-          option.hidden = false;
-          return;
-        }
-        const available = cards.some(function (card) {
-          return card.dataset[key] === option.value && matches(card, state, key);
-        });
-        option.disabled = !available;
-        option.hidden = !available && select.value !== option.value;
-      });
-      if (select.value && select.selectedOptions[0] && select.selectedOptions[0].disabled) {
-        select.value = "";
-      }
-    });
-  }
-
-  function applyFilters() {
-    let state = currentState();
-    updateOptions(state);
-    state = currentState();
-    let visible = 0;
-    cards.forEach(function (card) {
-      const show = matches(card, state);
-      card.hidden = !show;
-      card.style.display = show ? "" : "none";
-      if (show) visible += 1;
-    });
-    count.textContent = visible + " class" + (visible === 1 ? "" : "es") + " found";
-    empty.hidden = visible !== 0;
-  }
-
-  Object.keys(controls).forEach(function (key) {
-    controls[key].addEventListener("change", applyFilters);
-  });
-  reset.addEventListener("click", function () {
-    Object.keys(controls).forEach(function (key) {
-      controls[key].value = "";
-    });
-    applyFilters();
-  });
-  applyFilters();
-})();
-</script>
+<script src="/assets/class-finder-filter.js?v=20260829-1"></script>
+<script>ClassFinderFilter.init();</script>
 </div>
 
 <footer>
