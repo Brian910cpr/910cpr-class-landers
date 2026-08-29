@@ -1,0 +1,519 @@
+{
+  "source_manifest": "data/landerware/media/location-image-manifest.json",
+  "downloaded": 39,
+  "failed": 25,
+  "results": [
+    {
+      "source_url": "https://images.shulcloud.com/1318/logo/1644337932.img",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/1644337932.img",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 38952,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/ADR.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/ADR.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 139760,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/AGC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/AGC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 63539,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/AnS.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/AnS.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 7646,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/ATI.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/ATI.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 8030,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BA.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/BA.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 47951,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BalfourBe.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/BalfourBe.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 65493,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/baye.jpg",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/baye.jpg",
+      "status": "downloaded",
+      "content_type": "image/jpeg",
+      "bytes": 80214,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BEA.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/BEA.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 31104,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BES.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/BES.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 45113,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BFD.jpg",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/BFD.jpg",
+      "status": "downloaded",
+      "content_type": "image/jpeg",
+      "bytes": 45113,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/BM.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/BM.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 36706,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/CCCare.jpg",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/CCCare.jpg",
+      "status": "downloaded",
+      "content_type": "image/jpeg",
+      "bytes": 786181,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/ChCC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/ChCC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 58518,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/ccl.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/ccl.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 55114,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/cd.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/cd.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 33964,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/CMC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/CMC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 55486,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/core.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/core.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 14270,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/CPRC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/CPRC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 25664,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/crci.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/crci.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 17027,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/CSC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/CSC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 11407,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/CVS.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/CVS.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 73526,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/cyc.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/cyc.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 16677,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/DDS.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/DDS.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 68299,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/DTHAB.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/DTHAB.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 43161,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/eld.jpg",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/eld.jpg",
+      "status": "downloaded",
+      "content_type": "image/jpeg",
+      "bytes": 12672,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/EPGC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/EPGC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 38610,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/F8IYC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/F8IYC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 9495,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/FFTC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/FFTC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 136268,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/FSoW.jpg",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/FSoW.jpg",
+      "status": "downloaded",
+      "content_type": "image/jpeg",
+      "bytes": 97702,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/FUF.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/FUF.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 7081,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/GbC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/GbC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 56354,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/GDS.jpg",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/GDS.jpg",
+      "status": "downloaded",
+      "content_type": "image/jpeg",
+      "bytes": 22209,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/GEO.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/GEO.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 2335,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/GRC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/GRC.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 84640,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HFHS.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/HFHS.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HIS.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/HIS.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HP.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/HP.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/HS.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/HS.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/JMC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/JMC.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/KCM.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/KCM.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/LCP.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/LCP.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/LL.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/LL.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/MWS.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/MWS.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/NHCSO.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/NHCSO.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/OCI.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/OCI.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/PFD.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/PFD.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/PIS.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/PIS.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/PRC.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/PRC.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/RFD.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/RFD.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 105563,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/SB.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/SB.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/SBES.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/SBES.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/SCPD.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/SCPD.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/SFD.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/SFD.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/TDA.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/TDA.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/Walgreens.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/Walgreens.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 59373,
+      "error": null
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/WBFD.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/WBFD.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/WFD.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/WFD.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/WilmingtonHealth.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/WilmingtonHealth.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/WPS.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/WPS.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/WWAY.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/WWAY.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/YWCA.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/YWCA.png",
+      "status": "failed",
+      "content_type": null,
+      "bytes": 0,
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "source_url": "https://static.showit.co/400/jaV2D8ODTNy4SzyT2TVzFA/167657/mobile_face_4.png",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/mobile_face_4.png",
+      "status": "downloaded",
+      "content_type": "image/png",
+      "bytes": 14220,
+      "error": null
+    },
+    {
+      "source_url": "https://www.ajg.com/us/-/media/images/gallagher/us/logos/gallagher_horizontalsmall-3d.svg",
+      "repo_path": "docs/assets/landerware/media/legacy/location-images/gallagher_horizontalsmall-3d.svg",
+      "status": "downloaded",
+      "content_type": "image/svg+xml",
+      "bytes": 236769,
+      "error": null
+    }
+  ]
+}
