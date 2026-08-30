@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS financial_accounts (
   UNIQUE(qbo_account_id),
   CHECK (account_last_four IS NULL OR length(account_last_four) = 4)
 );
-
 CREATE TABLE IF NOT EXISTS financial_source_records (
   id TEXT PRIMARY KEY,
   source_system TEXT NOT NULL,
@@ -144,4 +143,3 @@ CREATE TABLE IF NOT EXISTS financial_bookkeeping_actions (
   executed_at TEXT,
   FOREIGN KEY(correction_id) REFERENCES financial_user_corrections(id)
 );
-

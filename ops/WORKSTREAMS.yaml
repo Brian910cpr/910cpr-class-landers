@@ -1,0 +1,11 @@
+# Created 2026-08-30 for new coordination going forward.
+# No prior persistent workstream registry existed in this repository.
+version: 1
+workstreams:
+  qbo-reconciliation:
+    path: workstreams/qbo-reconciliation
+    status: phase_1_locally_validated
+    branch: codex/qbo-reconciliation-foundation
+    authority: read_only_audit_only
+    production_deployed: false
+

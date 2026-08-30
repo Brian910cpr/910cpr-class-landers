@@ -1,0 +1,28 @@
+# Initial state created 2026-08-30; no historical state was inferred.
+workstream: qbo-reconciliation
+stage: phase_1_read_only_foundation
+status: locally_validated
+branch: codex/qbo-reconciliation-foundation
+base_commit: dc2a2d1b59ed0aa65b17176a117ddfdb8b2d9787
+qbo_mutations_enabled: false
+d1_migration_deployed: false
+production_changed: false
+validation:
+  syntax: passed
+  focused_tests: 6
+  cli_smoke: passed_with_synthetic_data
+evidence:
+  real_qbo_export_ingested: false
+  real_bank_export_ingested: false
+  statements_ingested: false
+needs_brian:
+  - Provide a bounded QBO chart-of-accounts export for read-only ingestion.
+  - Provide a bounded QBO transaction export for read-only ingestion.
+  - Confirm which Novo/bank export format should be the next adapter.
+blockers:
+  - No real financial source export was supplied, so no actual cleanup queue exists yet.
+next_actions:
+  - Review schema and detector rules.
+  - Run the audit against bounded real exports without committing sensitive files.
+  - Add bank and statement adapters, then reconcile conflicts.
+
