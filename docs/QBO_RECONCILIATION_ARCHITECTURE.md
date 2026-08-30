@@ -98,4 +98,3 @@ python scripts/qbo_reconciliation.py --database data/private/qbo_audit.sqlite re
 3. Add statement/document metadata ingestion and conflict detection.
 4. Review the cleanup queue with Brian and persist corrections.
 5. Only then design narrowly scoped QBO write actions with approval and reversal plans.
-

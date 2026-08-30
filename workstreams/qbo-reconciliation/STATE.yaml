@@ -25,4 +25,3 @@ next_actions:
   - Review schema and detector rules.
   - Run the audit against bounded real exports without committing sensitive files.
   - Add bank and statement adapters, then reconcile conflicts.
-

@@ -1,3 +1,2 @@
 -- Local SQLite schema is intentionally sourced from the D1-compatible migration.
 -- scripts/qbo_reconciliation.py loads worker/migrations/0004_financial_reconciliation.sql.
-

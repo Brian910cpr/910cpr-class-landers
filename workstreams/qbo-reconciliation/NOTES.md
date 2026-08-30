@@ -33,4 +33,3 @@
 - Add paired transfer detection after both bank-account legs are available.
 - Add statement metadata and conflict detection without storing sensitive documents in Git.
 - Feed only confidence-qualified facts and explicit coverage gaps into a future Daily CFO report.
-

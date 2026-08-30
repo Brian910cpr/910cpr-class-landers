@@ -87,4 +87,3 @@ All data in that smoke run was synthetic and remained outside the repository.
 - No Novo, statement, Drive, or email adapter exists yet.
 - Stale A/P, duplicate vendor bills, loan principal/interest splits, orphan documents, and source conflicts require richer evidence.
 - The newly created coordination state begins on 2026-08-30 and contains no invented history.
-
