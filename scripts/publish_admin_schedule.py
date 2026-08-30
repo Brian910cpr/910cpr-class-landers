@@ -11,6 +11,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SESSIONS_CURRENT = ROOT / "data" / "sessions_current.json"
 HOT_SYNC_SNAPSHOT = ROOT / "data" / "private" / "runtime" / "hot_sync_snapshot.json"
+DURABLE_SNAPSHOT = ROOT / "data" / "private" / "runtime" / "durable_session_snapshot.json"
 OUTPUT = ROOT / "docs" / "data" / "admin_schedule.json"
 STUDENT_SNAPSHOT = ROOT / "data" / "enrollware_student_snapshot.json"
 
@@ -115,6 +116,31 @@ def normalize_hot_sync(record: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
+def normalize_durable_session(session: dict[str, Any]) -> dict[str, Any] | None:
+    row = normalize_session(session)
+    if not row:
+        return None
+    row.update({
+        "session_id": value(session, ("id",), ("session_id",)),
+        "external_session_id": value(session, ("external_session_id",)),
+        "source": value(session, ("provenance",), ("source",)) or "landerware",
+        "durable_session": True,
+        "participant_count_available": True,
+        "roster_available": True,
+        "participant_count_source": "landerware_durable_registrations",
+    })
+    return row
+
+
+def durable_records(snapshot: Any) -> tuple[list[dict[str, Any]], bool, str]:
+    if not isinstance(snapshot, dict):
+        return [], False, "snapshot_missing_or_invalid"
+    available = bool(snapshot.get("available"))
+    error = str(snapshot.get("error") or "")
+    records = snapshot.get("sessions", [])
+    return ([row for row in records if isinstance(row, dict)] if isinstance(records, list) else []), available, error
+
+
 def hot_sync_records(snapshot: Any) -> tuple[list[dict[str, Any]], bool, str]:
     if not isinstance(snapshot, dict):
         return [], False, "snapshot_missing_or_invalid"
@@ -129,6 +155,32 @@ def event_identity(row: dict[str, Any]) -> tuple[str, str, str]:
     course = re.sub(r"\W+", "", str(row.get("course_name") or "").lower())
     location = re.sub(r"\W+", "", str(row.get("location_name") or "").lower())
     return start, course, location
+
+
+def merge_durable_sessions(external_rows: list[dict[str, Any]], durable_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int, int]:
+    """Make durable sessions authoritative while using external rows only for enrichment."""
+    merged = list(durable_rows)
+    durable_external_ids = {str(row.get("external_session_id")) for row in durable_rows if row.get("external_session_id")}
+    durable_identities = {event_identity(row): row for row in durable_rows}
+    matched = 0
+    added_external = 0
+    for external in external_rows:
+        external_id = str(external.get("session_id") or "").strip()
+        durable = next((row for row in durable_rows if external_id and external_id == str(row.get("external_session_id") or "")), None)
+        if durable is None:
+            durable = durable_identities.get(event_identity(external))
+        if durable is not None:
+            matched += 1
+            for key in ("registration_url", "blocking_resources"):
+                if not durable.get(key) and external.get(key):
+                    durable[key] = external[key]
+            continue
+        if external_id and external_id in durable_external_ids:
+            matched += 1
+            continue
+        merged.append(external)
+        added_external += 1
+    return merged, matched, added_external
 
 
 def merge_hot_sync(enrollware_rows: list[dict[str, Any]], hot_sync_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
@@ -151,7 +203,7 @@ def merge_hot_sync(enrollware_rows: list[dict[str, Any]], hot_sync_rows: list[di
 
 def apply_student_snapshot(rows: list[dict[str, Any]], snapshot: Any) -> dict[str, int]:
     from scripts.import_enrollware_student_report import apply_snapshot_to_sessions
-    enrollware_rows = [row for row in rows if not row.get("hot_sync")]
+    enrollware_rows = [row for row in rows if not row.get("hot_sync") and not row.get("durable_session")]
     counts = apply_snapshot_to_sessions(enrollware_rows, snapshot)
     for row in enrollware_rows:
         evidence = row.get("enrollment_evidence") if isinstance(row.get("enrollment_evidence"), dict) else {}
@@ -167,9 +219,13 @@ def apply_student_snapshot(rows: list[dict[str, Any]], snapshot: Any) -> dict[st
     return counts
 
 
-def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_snapshot: Any = None, hot_sync_snapshot: Any = None) -> dict[str, Any]:
+def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_snapshot: Any = None, hot_sync_snapshot: Any = None, durable_snapshot: Any = None) -> dict[str, Any]:
     rows = payload.get("sessions", []) if isinstance(payload, dict) else []
     normalized = [row for session in rows if isinstance(session, dict) for row in [normalize_session(session)] if row]
+
+    raw_durable, durable_available, durable_error = durable_records(durable_snapshot)
+    normalized_durable = [row for record in raw_durable for row in [normalize_durable_session(record)] if row]
+    normalized, durable_matches, external_only = merge_durable_sessions(normalized, normalized_durable)
 
     raw_hot_sync, hot_sync_available, hot_sync_error = hot_sync_records(hot_sync_snapshot)
     normalized_hot_sync = [row for record in raw_hot_sync for row in [normalize_hot_sync(record)] if row]
@@ -188,12 +244,16 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
         if str(row.get("lead_instructor_name") or "").strip().lower() in {"brian", "brian ennis", "b. ennis"}
     ]
     return {
-        "schema_version": "1.2",
+        "schema_version": "1.3",
         "generated_at": reference.isoformat(),
         "purpose": "Sanitized complete LanderWare occupancy for the admin planner; combines Enrollware iCal with committed HOT_SYNC classes.",
         "counts": {
             "sessions": len(normalized),
-            "enrollware_sessions": len([row for row in normalized if not row.get("hot_sync")]),
+            "durable_sessions_expected": len(normalized_durable),
+            "durable_sessions_projected": len([row for row in normalized if row.get("durable_session")]),
+            "durable_external_matches": durable_matches,
+            "external_only_sessions": external_only,
+            "enrollware_sessions": len([row for row in normalized if not row.get("hot_sync") and not row.get("durable_session")]),
             "hot_sync_records_fetched": len(raw_hot_sync),
             "hot_sync_committed_normalized": len(normalized_hot_sync),
             "hot_sync_sessions_added": hot_sync_added,
@@ -201,6 +261,7 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
             **enrollment_counts,
         },
         "sources": {
+            "landerware_durable": {"available": durable_available, "error": durable_error, "records": len(raw_durable)},
             "enrollware_ical": {"available": True},
             "hot_sync": {"available": hot_sync_available, "error": hot_sync_error},
         },
@@ -211,7 +272,13 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
 def main() -> int:
     snapshot = read_json(STUDENT_SNAPSHOT) if STUDENT_SNAPSHOT.exists() else None
     hot_sync_snapshot = read_json(HOT_SYNC_SNAPSHOT) if HOT_SYNC_SNAPSHOT.exists() else None
-    payload = build_admin_schedule(read_json(SESSIONS_CURRENT), student_snapshot=snapshot, hot_sync_snapshot=hot_sync_snapshot)
+    durable_snapshot = read_json(DURABLE_SNAPSHOT) if DURABLE_SNAPSHOT.exists() else None
+    payload = build_admin_schedule(read_json(SESSIONS_CURRENT), student_snapshot=snapshot, hot_sync_snapshot=hot_sync_snapshot, durable_snapshot=durable_snapshot)
+    durable = payload["sources"]["landerware_durable"]
+    if not durable["available"]:
+        raise RuntimeError(f"Refusing to publish without durable LanderWare sessions: {durable['error'] or 'unknown error'}")
+    if payload["counts"]["durable_sessions_expected"] != payload["counts"]["durable_sessions_projected"]:
+        raise RuntimeError("Refusing partial projection: not every durable session was projected")
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Published {payload['counts']['sessions']} admin schedule sessions to {OUTPUT}")

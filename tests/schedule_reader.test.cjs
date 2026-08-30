@@ -16,7 +16,8 @@ test('emergency reader is standalone and reads the authoritative schedule file',
 
 test('reader covers the fields in the current schedule schema', () => {
   assert.ok(data.sessions.length > 0);
-  for (const field of ['start_at','end_at','course_name','location_name','lead_instructor_name','registered_count','registration_url']) {
+  for (const field of ['start_at','end_at','course_name','location_name','lead_instructor_name','registration_url']) {
     assert.match(html, new RegExp(field));
   }
+  assert.match(html, /LanderWareSession\.participantLabel/);
 });
