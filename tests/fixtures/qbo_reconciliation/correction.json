@@ -1,0 +1,26 @@
+{
+  "id": "00000000-0000-4000-8000-000000000001",
+  "correction_type": "transaction_is_transfer",
+  "statement": "That was actually a transfer.",
+  "accounting_treatment": {
+    "classification": "internal_transfer"
+  },
+  "supplied_by": "Brian",
+  "targets": [
+    {
+      "type": "transaction",
+      "id": "txn-transfer"
+    }
+  ],
+  "current_treatment": {
+    "category": "Sales Revenue"
+  },
+  "proposed_treatment": {
+    "category": "Transfer",
+    "counterparty_account": "needs_confirmation"
+  },
+  "reason": "User confirmed the deposit was not customer revenue.",
+  "reversal_or_reclassification": "Reclassify both legs after confirming the controlled counterparty account.",
+  "incorrect_action_risk": "Could suppress real revenue if the counterparty account is not 910CPR-controlled."
+}
+

@@ -1,0 +1,33 @@
+{
+  "transactions": [
+    {
+      "Id": "txn-card-payment",
+      "AccountId": "qbo-bank-1",
+      "TxnDate": "2026-08-25",
+      "Amount": "500.00",
+      "TxnType": "Expense",
+      "payee": "Capital One Card Payment",
+      "category_name": "Office Expenses",
+      "category_type": "Expense"
+    },
+    {
+      "Id": "txn-transfer",
+      "AccountId": "qbo-bank-1",
+      "TxnDate": "2026-08-26",
+      "Amount": "1000.00",
+      "TxnType": "Deposit",
+      "memo": "Online transfer from savings",
+      "category_name": "Sales Revenue",
+      "category_type": "Income"
+    },
+    {
+      "Id": "txn-orphan",
+      "AccountId": "missing-account",
+      "TxnDate": "2026-08-27",
+      "Amount": "75.00",
+      "TxnType": "Expense",
+      "payee": "Unknown lender"
+    }
+  ]
+}
+

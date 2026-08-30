@@ -1,0 +1,28 @@
+{
+  "accounts": [
+    {
+      "Id": "qbo-bank-1",
+      "Name": "Novo Checking",
+      "AccountType": "Bank",
+      "current_balance": "2500.00",
+      "confidence": "HIGH",
+      "last_verified_at": "2026-08-29"
+    },
+    {
+      "Id": "qbo-card-1",
+      "Name": "Capital One Card",
+      "AccountType": "Credit Card",
+      "account_last_four": "1234",
+      "statement_balance": "750.00",
+      "statement_balance_confidence": "VERIFIED",
+      "last_verified_at": "2026-08-28"
+    },
+    {
+      "Id": "qbo-card-duplicate",
+      "Name": "Capital One Card",
+      "AccountType": "Credit Card",
+      "account_last_four": "1234"
+    }
+  ]
+}
+
