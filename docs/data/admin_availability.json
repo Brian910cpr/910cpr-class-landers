@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-30T20:44:32.285331+00:00",
+  "generated_at": "2026-08-30T23:17:16.451417+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-30T20:44:31.876721+00:00",
+      "generated_at": "2026-08-30T23:17:16.013598+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-30T20:44:32.285331+00:00",
-      "event_count": 148
+      "generated_at": "2026-08-30T23:17:16.451417+00:00",
+      "event_count": 147
     },
     {
       "source_key": "brian_primary_calendar",
       "display_name": "Brian Primary Google Calendar",
       "source_type": "occupancy_calendar",
       "export_status": "failed",
-      "generated_at": "2026-08-30T20:44:32.037906+00:00",
+      "generated_at": "2026-08-30T23:17:16.188410+00:00",
       "event_count": 0
     },
     {
@@ -32,22 +32,11 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-08-30T20:44:32.037528+00:00",
+      "generated_at": "2026-08-30T23:17:16.187913+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Unavailable",
-      "start": "2026-08-30T22:00:00+00:00",
-      "end": "2026-08-31T10:00:00+00:00",
-      "location": "Acme-Delco-Riegelwood Fire\\, 100 John Riegel Rd\\, Riegelwood\\, NC 28456\\, USA",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
@@ -99,7 +88,7 @@
       "instructor_key": "brian",
       "title": "ADR B-Shift — Brian Unavailable",
       "start": "2026-09-01T22:00:00+00:00",
-      "end": "2026-09-02T10:00:00+00:00",
+      "end": "2026-09-02T12:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -253,7 +242,7 @@
       "instructor_key": "brian",
       "title": "ADR Shift — Brian Unavailable",
       "start": "2026-09-07T22:00:00+00:00",
-      "end": "2026-09-08T10:00:00+00:00",
+      "end": "2026-09-08T12:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -396,7 +385,7 @@
       "instructor_key": "brian",
       "title": "ADR Shift — Brian Unavailable",
       "start": "2026-09-14T22:00:00+00:00",
-      "end": "2026-09-15T10:00:00+00:00",
+      "end": "2026-09-15T12:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -528,7 +517,7 @@
       "instructor_key": "brian",
       "title": "ADR Shift — Brian Unavailable",
       "start": "2026-09-21T22:00:00+00:00",
-      "end": "2026-09-22T10:00:00+00:00",
+      "end": "2026-09-22T12:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -682,7 +671,7 @@
       "instructor_key": "brian",
       "title": "ADR Shift — Brian Unavailable",
       "start": "2026-09-28T22:00:00+00:00",
-      "end": "2026-09-29T10:00:00+00:00",
+      "end": "2026-09-29T12:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
