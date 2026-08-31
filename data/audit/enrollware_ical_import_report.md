@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-08-31T11:56:52.375730-04:00`
+- Generated at: `2026-08-31T17:23:56.054020-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `320`
-- Public sessions created: `320`
+- iCal events read: `317`
+- Public sessions created: `317`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `279`
+- Registration unavailable sessions marked not direct-bookable: `277`
 - Unmapped sessions: `13`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,9 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776554` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-06-02T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
-| `12776770` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-06-02T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
-| `13572071` | enrollware_registration_closed | AHA Heartsaver® CPR AED | 2026-06-02T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774034` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-06-03T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776144` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-03T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775529` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-03T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +70,9 @@ They remain separate registration-signal/audit inputs only.
 | `12775781` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-12T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774579` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-06-12T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775302` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-12T18:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13652966` | enrollware_registration_closed | BLS Provider (NHCSO) | 2026-06-17T13:00:00-04:00 | New Hanover County Sheriff’s Office |
+| `13472474` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-06-17T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12774325` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-06-22T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
