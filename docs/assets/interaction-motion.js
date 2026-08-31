@@ -1,11 +1,20 @@
 (function () {
   const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMaximPortal = /\/corp\/maxim(?:\.html)?\/?$/i.test(window.location.pathname);
+
+  // TEMPORARY DIAGNOSTIC: expose the Maxim portal shell without the access gate.
+  // Authenticated employee/workflow API calls remain protected server-side.
+  if (isMaximPortal) {
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('accessGate')?.classList.add('hidden');
+    });
+  }
 
   // The Maxim corporate portal performs authenticated Supabase Edge Function
   // requests from its inline application script. A network request that never
   // settles used to leave the access gate displaying "Checking..." forever.
   // Keep this guard scoped to /corp/maxim so shared site behavior is unchanged.
-  if (/\/corp\/maxim(?:\.html)?\/?$/i.test(window.location.pathname)) {
+  if (isMaximPortal) {
     const nativeFetch = window.fetch.bind(window);
     window.fetch = function maximFetchWithTimeout(input, init) {
       const url = typeof input === 'string' ? input : input && input.url;
