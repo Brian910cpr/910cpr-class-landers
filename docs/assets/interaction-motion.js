@@ -1,5 +1,35 @@
 (function () {
   const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // The Maxim corporate portal performs authenticated Supabase Edge Function
+  // requests from its inline application script. A network request that never
+  // settles used to leave the access gate displaying "Checking..." forever.
+  // Keep this guard scoped to /corp/maxim so shared site behavior is unchanged.
+  if (/\/corp\/maxim(?:\.html)?\/?$/i.test(window.location.pathname)) {
+    const nativeFetch = window.fetch.bind(window);
+    window.fetch = function maximFetchWithTimeout(input, init) {
+      const url = typeof input === 'string' ? input : input && input.url;
+      if (!String(url || '').includes('/functions/v1/maxim-portal')) {
+        return nativeFetch(input, init);
+      }
+      const controller = new AbortController();
+      const upstreamSignal = init && init.signal;
+      const timeout = window.setTimeout(() => controller.abort(), 15000);
+      if (upstreamSignal) {
+        if (upstreamSignal.aborted) controller.abort();
+        else upstreamSignal.addEventListener('abort', () => controller.abort(), { once: true });
+      }
+      return nativeFetch(input, { ...(init || {}), signal: controller.signal })
+        .catch(error => {
+          if (controller.signal.aborted && !(upstreamSignal && upstreamSignal.aborted)) {
+            throw new Error('Maxim portal request timed out. Please try again.');
+          }
+          throw error;
+        })
+        .finally(() => window.clearTimeout(timeout));
+    };
+  }
+
   function connect(source, destination) {
     if (!source || !destination) return;
     destination.classList.remove('lw-motion-settle');
