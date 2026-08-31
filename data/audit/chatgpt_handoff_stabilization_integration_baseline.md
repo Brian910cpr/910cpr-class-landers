@@ -1,8 +1,8 @@
 # 910CPR stabilization and integration baseline
 
-Date: 2026-08-31  
-Production project: `wktwgcnwdvbebcobgyey`  
-Baseline: `origin/main@6575c4e7f30fd811786340a5a113ed3769c77db3`  
+Date: 2026-08-31
+Production project: `wktwgcnwdvbebcobgyey`
+Baseline: `origin/main@6575c4e7f30fd811786340a5a113ed3769c77db3`
 Integration branch/worktree: `codex/stabilization-integration` at `E:\GitHub\910cpr-class-landers-stabilization`
 
 ## Status labels
@@ -216,4 +216,3 @@ Exact next implementation instruction:
 - No source-provenance/ambiguity/import-batch contract, so historical identity matches could silently corrupt current records.
 
 **HISTORY IMPORT NOT READY**
-
