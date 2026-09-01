@@ -1,0 +1,47 @@
+{
+  "applied_migrations": [
+    "20260901112526_historical_location_authority_and_session_unknowns",
+    "20260901112632_enforce_location_status_audit_append_only"
+  ],
+  "authority_counts_after": {
+    "class_sessions": 365,
+    "locations": 36,
+    "registrations": 33
+  },
+  "authority_counts_unchanged": true,
+  "authority_legacy_content_hashes_unchanged": true,
+  "candidate_locations_inserted": 0,
+  "dry_run": {
+    "deterministic_hash": "db2599897fc7de26021d0a7cffc1bf6a1e3906fe3121c5aa55de6f5df9e05527",
+    "fully_canonicalized_sessions": 3439,
+    "historical_contract_sessions": 3570,
+    "independent_runs_equal": true,
+    "remaining_course_ambiguity": 17,
+    "remaining_identity_conflicts": 27,
+    "remaining_unresolved_locations": 421,
+    "replay_additional_assertions": 0,
+    "replay_additional_operations": 0,
+    "source_records_examined": 8199,
+    "unexplained_mismatches": 0
+  },
+  "historical_sessions_inserted": 0,
+  "location_status_audit": {
+    "append_only_probes_passed": ["update", "delete", "truncate"],
+    "browser_grants": 0,
+    "events": 28,
+    "rls_enabled": true,
+    "service_role_mutation_grants": 0
+  },
+  "locations_by_status": {
+    "active": 8,
+    "historical_only": 28
+  },
+  "migration_applied": true,
+  "operational_contract_probes_passed": true,
+  "registrations_hash": "34777eefd09fe1c3d30df33662d40f1b313b8047ad103f4dca727453736bea7f",
+  "sessions_by_scope": {
+    "historical": 352,
+    "operational": 13
+  },
+  "status": "HISTORICAL AUTHORITY MIGRATION APPLIED AND VERIFIED"
+}

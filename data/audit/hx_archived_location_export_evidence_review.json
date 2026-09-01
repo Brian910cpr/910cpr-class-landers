@@ -1,0 +1,48 @@
+{
+  "archive_semantics": {
+    "admin_archive_action": "set scheduling_status to inactive with an audit reason",
+    "future_selection": "exclude inactive and historical_only locations",
+    "historical_sessions": "always retain and display their location relationship regardless of current location status",
+    "reactivation": "explicit audited transition to active"
+  },
+  "source": {
+    "columns": ["ID", "Name", "Abbreviation", "Directions"],
+    "distinct_abbreviations": 297,
+    "distinct_names": 338,
+    "rows": 343,
+    "status_column_present": false,
+    "workbook": "location-list (20).xlsx"
+  },
+  "safe_new_resolutions": [
+    {
+      "action": "canonical historical location candidate",
+      "enrollware_location_id": 100332,
+      "historical_rows": 40,
+      "source_label": "19 Oak Ridge Dr, Colchester, CT"
+    },
+    {
+      "action": "canonical historical location candidate",
+      "enrollware_location_id": 93866,
+      "historical_rows": 29,
+      "source_label": "Balfour Beatty US - Office"
+    },
+    {
+      "action": "safe alias to existing Geosyntec canonical location by exact address",
+      "enrollware_location_id": 128163,
+      "historical_rows": 15,
+      "source_label": "Geosyntec Consultants of NC P.C."
+    }
+  ],
+  "simulation_after_safe_resolutions": {
+    "fully_canonicalized_sessions": 3458,
+    "historical_contract_sessions": 3589,
+    "remaining_unresolved_location_rows": 337
+  },
+  "support_for_existing_review": {
+    "candidate_labels_exactly_found": 124,
+    "candidate_rows_supported": 3778,
+    "previous_candidate_labels": 126
+  },
+  "production_changed": false,
+  "review_boundary": "The workbook does not identify which rows are archived; it supports identity/source mappings but not active/inactive status assignment."
+}

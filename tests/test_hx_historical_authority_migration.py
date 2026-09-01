@@ -6,6 +6,9 @@ ROOT = Path(__file__).resolve().parents[1]
 MIGRATION = (
     ROOT / "supabase/migrations/20260901054718_historical_location_authority_and_session_unknowns.sql"
 ).read_text(encoding="utf-8")
+APPEND_ONLY_MIGRATION = (
+    ROOT / "supabase/migrations/20260901112632_enforce_location_status_audit_append_only.sql"
+).read_text(encoding="utf-8")
 REPORT = json.loads(
     (ROOT / "data/audit/hx_historical_authority_migration_review_redacted.json")
     .read_text(encoding="utf-8")
@@ -19,6 +22,9 @@ def test_location_authority_fails_safe_and_is_audited():
     assert "location_scheduling_status_events" in MIGRATION
     assert "a location referenced by an operational session cannot become" in MIGRATION
     assert "revoke all on table public.location_scheduling_status_events from anon, authenticated" in MIGRATION
+    assert "before update or delete on public.location_scheduling_status_events" in APPEND_ONLY_MIGRATION
+    assert "before truncate on public.location_scheduling_status_events" in APPEND_ONLY_MIGRATION
+    assert "from service_role, anon, authenticated" in APPEND_ONLY_MIGRATION
 
 
 def test_unknown_fields_are_historical_only_not_sentinels():
