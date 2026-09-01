@@ -1,0 +1,986 @@
+{
+  "alias_proposals": {
+    "courses": 15,
+    "instructors": 55,
+    "locations": 2,
+    "timing": 0
+  },
+  "application_deployed": false,
+  "frequency_ranked_unresolved_before": {
+    "session_course": [
+      {
+        "frequency": 114,
+        "source_value": "American Heart Association's Online Heartsaver\u00ae Programs"
+      },
+      {
+        "frequency": 40,
+        "source_value": "Take your AHA CPR programs online!"
+      },
+      {
+        "frequency": 17,
+        "source_value": "HSI Adult First Aid | CPR AED<br><i>Traditional Classroom</i>"
+      },
+      {
+        "frequency": 17,
+        "source_value": "Heartsaver\u00ae K-12 - In-person [AHA]"
+      },
+      {
+        "frequency": 13,
+        "source_value": "AHA Heartsaver (On-site; Group)"
+      },
+      {
+        "frequency": 7,
+        "source_value": "Elementary First Aid<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/stripes.png\" style=\"float:right;width:75px;vertical-align:top;\"></img><br><style> p { text-indent: 50px; } </style> <i>to meet \"U.S. Coast Guard Maritime Elementary First Aid and CPR\" Requirement </i>"
+      },
+      {
+        "frequency": 6,
+        "source_value": "ARC - BLS - In-Person Classroom"
+      },
+      {
+        "frequency": 3,
+        "source_value": "RCP para Familiares y Amigos [American Heart Association]"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Phlebotomy Technician Program (80 Hr - 9 Weeks - M,T,W)"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Heartsaver\u00ae"
+      },
+      {
+        "frequency": 3,
+        "source_value": "ARC - Adult and Pediatric First Aid/CPR/AED [American Red Cross] \u271a"
+      },
+      {
+        "frequency": 2,
+        "source_value": "AHA - PALS Provider - In Person - Initial"
+      },
+      {
+        "frequency": 2,
+        "source_value": "Elementary First Aid <b>ONLINE</b><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/stripes.png\" style=\"float:right;width:75px;vertical-align:top;\"></img><br><i>to meet \"U.S. Coast Guard Maritime Elementary First Aid and CPR\" Requirement </i>"
+      },
+      {
+        "frequency": 1,
+        "source_value": "ARC - PALS Blended Learning"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Phlebotomy - National Cert Test Prep"
+      },
+      {
+        "frequency": 1,
+        "source_value": "ARC - ALS In-person [American Red Cross] \u271a"
+      },
+      {
+        "frequency": 1,
+        "source_value": "ARC - Adult CPR/AED Online [American Red Cross] \u271a"
+      },
+      {
+        "frequency": 1,
+        "source_value": "AHA - Heartsaver\u00ae - Become an American Heart Association Instructor"
+      }
+    ],
+    "session_end_at": [
+      {
+        "frequency": 81,
+        "source_value": "[missing]"
+      },
+      {
+        "frequency": 2,
+        "source_value": "3 to 4"
+      },
+      {
+        "frequency": 1,
+        "source_value": "90"
+      },
+      {
+        "frequency": 1,
+        "source_value": "0"
+      }
+    ],
+    "session_instructor": [
+      {
+        "frequency": 220,
+        "source_value": "Audrie Babineau"
+      },
+      {
+        "frequency": 209,
+        "source_value": "Beth Williamson"
+      },
+      {
+        "frequency": 184,
+        "source_value": "William Perry"
+      },
+      {
+        "frequency": 142,
+        "source_value": "Benjamin Woodard"
+      },
+      {
+        "frequency": 136,
+        "source_value": "Jennifer Ezzell"
+      },
+      {
+        "frequency": 126,
+        "source_value": "[missing]"
+      },
+      {
+        "frequency": 115,
+        "source_value": "Eric Brown"
+      },
+      {
+        "frequency": 110,
+        "source_value": "Timothy VanPelt"
+      },
+      {
+        "frequency": 104,
+        "source_value": "Taylor Balog"
+      },
+      {
+        "frequency": 89,
+        "source_value": "Ashlie Glantz"
+      },
+      {
+        "frequency": 88,
+        "source_value": "Crystal Lind"
+      },
+      {
+        "frequency": 79,
+        "source_value": "Justin Bratton"
+      },
+      {
+        "frequency": 73,
+        "source_value": "Kaitlyn Wasner"
+      },
+      {
+        "frequency": 65,
+        "source_value": "Amy Williams"
+      },
+      {
+        "frequency": 56,
+        "source_value": "Burke Bailey"
+      },
+      {
+        "frequency": 56,
+        "source_value": "joseph tassi"
+      },
+      {
+        "frequency": 56,
+        "source_value": "Virginia Carey"
+      },
+      {
+        "frequency": 49,
+        "source_value": "Robert Meyer"
+      },
+      {
+        "frequency": 48,
+        "source_value": "Mathew Cox"
+      },
+      {
+        "frequency": 46,
+        "source_value": "Lea Fowler"
+      },
+      {
+        "frequency": 46,
+        "source_value": "Justin Brown"
+      },
+      {
+        "frequency": 43,
+        "source_value": "Michelle Kabay"
+      },
+      {
+        "frequency": 39,
+        "source_value": "Luke Raynor"
+      },
+      {
+        "frequency": 37,
+        "source_value": "Cori Kiefner"
+      },
+      {
+        "frequency": 35,
+        "source_value": "Jennifer Russ"
+      },
+      {
+        "frequency": 29,
+        "source_value": "Ashia Tabb"
+      },
+      {
+        "frequency": 28,
+        "source_value": "Brian McKendree"
+      },
+      {
+        "frequency": 21,
+        "source_value": "Amber White"
+      },
+      {
+        "frequency": 21,
+        "source_value": "Kweilin Belitsos"
+      },
+      {
+        "frequency": 20,
+        "source_value": "Jana Gordon"
+      },
+      {
+        "frequency": 19,
+        "source_value": "Alexa Schoettle"
+      },
+      {
+        "frequency": 19,
+        "source_value": "Frank Richardson III"
+      },
+      {
+        "frequency": 15,
+        "source_value": "Rynee Robinson"
+      },
+      {
+        "frequency": 14,
+        "source_value": "Tara Tims"
+      },
+      {
+        "frequency": 14,
+        "source_value": "Heather Williams"
+      },
+      {
+        "frequency": 11,
+        "source_value": "Holly Hendrick"
+      },
+      {
+        "frequency": 11,
+        "source_value": "Robert Henderson"
+      },
+      {
+        "frequency": 10,
+        "source_value": "Donna McIntire"
+      },
+      {
+        "frequency": 9,
+        "source_value": "Joan Logan Jones"
+      },
+      {
+        "frequency": 9,
+        "source_value": "Suzanne Relyea"
+      },
+      {
+        "frequency": 7,
+        "source_value": "Katherine Raynor"
+      },
+      {
+        "frequency": 6,
+        "source_value": "Tiffaney Gatewood"
+      },
+      {
+        "frequency": 5,
+        "source_value": "Luke Trynovich"
+      },
+      {
+        "frequency": 5,
+        "source_value": "Taylor Jones"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Corey Maywald"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Kandy Ashley"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Owen Feest"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Angela Carafas"
+      },
+      {
+        "frequency": 2,
+        "source_value": "Laurie Penca"
+      },
+      {
+        "frequency": 2,
+        "source_value": "Ebony Johnson"
+      },
+      {
+        "frequency": 2,
+        "source_value": "Jasmine Bryant"
+      },
+      {
+        "frequency": 2,
+        "source_value": "Damiano Whittington"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Sheila Garcia"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Jasmine Henry"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Lydia Colon"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Tracey Johnson"
+      }
+    ],
+    "session_location": [
+      {
+        "frequency": 749,
+        "source_value": "NC - Holly Ridge: 325 Sound Rd, Unit 204; 910CPR's Office @ Parkhill Village (across the street from Holly Ridge Community Center)"
+      },
+      {
+        "frequency": 360,
+        "source_value": "CFCC: North Campus / Blue Clay Rd"
+      },
+      {
+        "frequency": 318,
+        "source_value": "910CPR Office @ Hinton Ave, Wlmington"
+      },
+      {
+        "frequency": 192,
+        "source_value": "Surf City Fire Station #25"
+      },
+      {
+        "frequency": 181,
+        "source_value": "Thompson Child and Family Focus"
+      },
+      {
+        "frequency": 170,
+        "source_value": "[missing]"
+      },
+      {
+        "frequency": 121,
+        "source_value": "Balfour Beatty US: Havelock / James City / Thurman"
+      },
+      {
+        "frequency": 112,
+        "source_value": "Holly Ridge: 809 Lenox Dr"
+      },
+      {
+        "frequency": 75,
+        "source_value": "Colchester Hayward Volunteer Fire Company"
+      },
+      {
+        "frequency": 71,
+        "source_value": "Northchase Nursing & Rehab"
+      },
+      {
+        "frequency": 71,
+        "source_value": "CT - Colchester"
+      },
+      {
+        "frequency": 68,
+        "source_value": "Miller-Motte College: Jacksonville"
+      },
+      {
+        "frequency": 61,
+        "source_value": "Balfour Beatty US: Fayetteville Outerloop"
+      },
+      {
+        "frequency": 55,
+        "source_value": "Surf City Police Department"
+      },
+      {
+        "frequency": 54,
+        "source_value": "Karen Beasley Sea Turtle Rescue and Rehabilitation Center"
+      },
+      {
+        "frequency": 48,
+        "source_value": "MedNorth @ 305 Harnett"
+      },
+      {
+        "frequency": 47,
+        "source_value": "MedNorth @ Warner Temple AME Zion Church"
+      },
+      {
+        "frequency": 40,
+        "source_value": "19 Oak Ridge Dr, Colchester, CT"
+      },
+      {
+        "frequency": 40,
+        "source_value": "Riccobene Associates Family Dentistry: Gallery Park"
+      },
+      {
+        "frequency": 40,
+        "source_value": "NC - Jacksonville: Catalyst Church"
+      },
+      {
+        "frequency": 37,
+        "source_value": "Emereau: Bladen Charter School"
+      },
+      {
+        "frequency": 33,
+        "source_value": "Broadway at the Beach"
+      },
+      {
+        "frequency": 32,
+        "source_value": "May Center for ABA Services in Jacksonville"
+      },
+      {
+        "frequency": 30,
+        "source_value": "Liberty Commons Rehabilitation Center"
+      },
+      {
+        "frequency": 29,
+        "source_value": "Balfour Beatty US - Office"
+      },
+      {
+        "frequency": 29,
+        "source_value": "Filmwerks - Dell Breakroom"
+      },
+      {
+        "frequency": 29,
+        "source_value": "Fort Fisher National Guard Training Center"
+      },
+      {
+        "frequency": 28,
+        "source_value": "Balfour Beatty US: Harkers Island"
+      },
+      {
+        "frequency": 28,
+        "source_value": "Onslow Water and Sewer Authority"
+      },
+      {
+        "frequency": 27,
+        "source_value": "New Beginnings Community Church - Preschool Program"
+      },
+      {
+        "frequency": 26,
+        "source_value": "Residence"
+      },
+      {
+        "frequency": 26,
+        "source_value": "J&J Snack"
+      },
+      {
+        "frequency": 24,
+        "source_value": "Breakthrough Autism: New Centre"
+      },
+      {
+        "frequency": 24,
+        "source_value": "Antylia Scientific"
+      },
+      {
+        "frequency": 23,
+        "source_value": "Carolina Stone Setting Co."
+      },
+      {
+        "frequency": 21,
+        "source_value": "Pruitt - Fayetteville"
+      },
+      {
+        "frequency": 21,
+        "source_value": "Raleigh Medical Group"
+      },
+      {
+        "frequency": 20,
+        "source_value": "Brunswick Oral & Maxillofacial Surgery"
+      },
+      {
+        "frequency": 19,
+        "source_value": "4902 Merlot Court; Wilmington, NC"
+      },
+      {
+        "frequency": 19,
+        "source_value": "National Peening, Inc."
+      },
+      {
+        "frequency": 19,
+        "source_value": "Little Pirates Daycare"
+      },
+      {
+        "frequency": 18,
+        "source_value": "Mainscape Inc."
+      },
+      {
+        "frequency": 17,
+        "source_value": "SC - Myrtle Beach: Country Inn & Suites"
+      },
+      {
+        "frequency": 17,
+        "source_value": "Camp Lejeune"
+      },
+      {
+        "frequency": 17,
+        "source_value": "Southport Health & Rehabilitation Center"
+      },
+      {
+        "frequency": 16,
+        "source_value": "Breakthrough Autism: Mayfair"
+      },
+      {
+        "frequency": 16,
+        "source_value": "Riccobene Associates Family Dentistry: Leland"
+      },
+      {
+        "frequency": 16,
+        "source_value": "Porters Neck Village"
+      },
+      {
+        "frequency": 16,
+        "source_value": "Summit Plastic Surg & Derm: Supply"
+      },
+      {
+        "frequency": 16,
+        "source_value": "Church of the Servant"
+      },
+      {
+        "frequency": 15,
+        "source_value": "Project Transition"
+      },
+      {
+        "frequency": 15,
+        "source_value": "Pender EMS & Fire, Inc"
+      },
+      {
+        "frequency": 15,
+        "source_value": "Geosyntec Consultants of NC P.C."
+      },
+      {
+        "frequency": 15,
+        "source_value": "CarolinasDentist: The Pointe"
+      },
+      {
+        "frequency": 15,
+        "source_value": "B'nai Israel Congregation"
+      },
+      {
+        "frequency": 14,
+        "source_value": "Thrive Family Dental"
+      },
+      {
+        "frequency": 14,
+        "source_value": "Trial Management Associates, LLC @ Floral Pkwy"
+      },
+      {
+        "frequency": 14,
+        "source_value": "Hendersonville Family Dental"
+      },
+      {
+        "frequency": 13,
+        "source_value": "Tassi Classes"
+      },
+      {
+        "frequency": 13,
+        "source_value": "Morningside of Wilmington"
+      },
+      {
+        "frequency": 12,
+        "source_value": "Kayak Carolina"
+      },
+      {
+        "frequency": 12,
+        "source_value": "Balfour Beatty US: Military Cutoff Project"
+      },
+      {
+        "frequency": 12,
+        "source_value": "Dental Care at Leland Town Center"
+      },
+      {
+        "frequency": 12,
+        "source_value": "Northchase Family Dentistry"
+      },
+      {
+        "frequency": 12,
+        "source_value": "Coastal Carolina Care"
+      },
+      {
+        "frequency": 12,
+        "source_value": "Bradford Products, LLC"
+      },
+      {
+        "frequency": 12,
+        "source_value": "Heraeus Group"
+      },
+      {
+        "frequency": 12,
+        "source_value": "Associated Materials Inc."
+      },
+      {
+        "frequency": 12,
+        "source_value": "Chambliss & Rabil Contractors"
+      },
+      {
+        "frequency": 12,
+        "source_value": "GLOW Acadamy"
+      },
+      {
+        "frequency": 11,
+        "source_value": "Star Medical Clinic"
+      },
+      {
+        "frequency": 11,
+        "source_value": "Croatan Free Will Baptist Church"
+      },
+      {
+        "frequency": 11,
+        "source_value": "Topsail Beach Fire Department"
+      },
+      {
+        "frequency": 11,
+        "source_value": "Peak Performance Clinics Physical Therapy"
+      },
+      {
+        "frequency": 11,
+        "source_value": "Hoggard Family Dentistry"
+      },
+      {
+        "frequency": 11,
+        "source_value": "Sheltering Arms, 165 McKinley Avenue Norwich, CT 06360"
+      },
+      {
+        "frequency": 11,
+        "source_value": "NC - Wilmington: Freya's Haus (55 Scotts Hill Loop Rd)<br>Visit our hosts' social:<div style=\"text-align: center;\"><br><a href=\"https://www.instagram.com/freyashaus\" target=\"_blank\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/freya.jpg\" style=\"width: 100px; height: auto;\"></a><a href=\"https://www.facebook.com/1tallmermaid/\" target=\"_blank\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/MMaid.jpg\" style=\"width: 100px; height: auto;\"></a> </div>"
+      },
+      {
+        "frequency": 10,
+        "source_value": "Seaside Dental Center"
+      },
+      {
+        "frequency": 10,
+        "source_value": "Seaside Safety LLC, 1002 S. Front St"
+      },
+      {
+        "frequency": 10,
+        "source_value": "Brothers Steel Erectors & Welding LLC"
+      },
+      {
+        "frequency": 10,
+        "source_value": "Carolina Yacht Club"
+      },
+      {
+        "frequency": 10,
+        "source_value": "Scarless Vein Care: Wilmington"
+      },
+      {
+        "frequency": 10,
+        "source_value": "Acme-Delco-Riegelwood Fire-Rescue, Inc"
+      },
+      {
+        "frequency": 9,
+        "source_value": "Simply Physicals of Jacksonville"
+      },
+      {
+        "frequency": 9,
+        "source_value": "Wilmington Christian Academy"
+      },
+      {
+        "frequency": 9,
+        "source_value": "Turkey Creek Fire & Rescue, Station 1"
+      },
+      {
+        "frequency": 9,
+        "source_value": "Figure Eight Island Yacht Club"
+      },
+      {
+        "frequency": 9,
+        "source_value": "Dunes Dental Services Inc"
+      },
+      {
+        "frequency": 9,
+        "source_value": "Clinic for Special Children"
+      },
+      {
+        "frequency": 9,
+        "source_value": "CT - Colchester Town Hall, 127 Norwich Ave"
+      },
+      {
+        "frequency": 9,
+        "source_value": "Balfour Beatty US: Effingham Parkway"
+      },
+      {
+        "frequency": 8,
+        "source_value": "CSE - Raleigh - 4700 Trademark Dr. Raleigh NC 27610"
+      },
+      {
+        "frequency": 8,
+        "source_value": "Holiday Inn Express: Raleigh / Thistledown"
+      },
+      {
+        "frequency": 8,
+        "source_value": "Huff Family - Wilmington"
+      },
+      {
+        "frequency": 8,
+        "source_value": "Summit Plastic Surg & Derm: Wilmington"
+      },
+      {
+        "frequency": 8,
+        "source_value": "Pneuma Behavioral Health"
+      },
+      {
+        "frequency": 7,
+        "source_value": "CSE - Bolivia - Holiday Inn Oak island"
+      },
+      {
+        "frequency": 7,
+        "source_value": "FedUp Foods"
+      },
+      {
+        "frequency": 7,
+        "source_value": "Bladenboro Family Dentistry"
+      },
+      {
+        "frequency": 7,
+        "source_value": "Colchester Town Hall"
+      },
+      {
+        "frequency": 7,
+        "source_value": "Holiday Inn Express: Southport / Southport-Supply Rd"
+      },
+      {
+        "frequency": 7,
+        "source_value": "Christ Community Church"
+      },
+      {
+        "frequency": 6,
+        "source_value": "Smokey Tony's - Holly Ridge"
+      },
+      {
+        "frequency": 6,
+        "source_value": "New Hanover County Public Library - Pine Valley Branch"
+      },
+      {
+        "frequency": 6,
+        "source_value": "Azalea Health & Rehab Center"
+      },
+      {
+        "frequency": 6,
+        "source_value": "Topsail Island Association of Realtors"
+      },
+      {
+        "frequency": 6,
+        "source_value": "Grace Community Church of Topsail: Office"
+      },
+      {
+        "frequency": 6,
+        "source_value": "Community Home Care & Hospice: Belville"
+      },
+      {
+        "frequency": 6,
+        "source_value": "Quality Care Day Care & Cooperative Nursery School"
+      },
+      {
+        "frequency": 6,
+        "source_value": "Summit Plastic Surg & Derm: Hampstead"
+      },
+      {
+        "frequency": 6,
+        "source_value": "Cragin Library, 8 Linwood Ave, Colchester, CT 06415"
+      },
+      {
+        "frequency": 5,
+        "source_value": "Summerhouse on Everett Bay"
+      },
+      {
+        "frequency": 5,
+        "source_value": "Filmwerks - Main Shop Warehouse"
+      },
+      {
+        "frequency": 5,
+        "source_value": "Logan Marine"
+      },
+      {
+        "frequency": 5,
+        "source_value": "Elderhaus: Wilmington / N.College Rd"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Walmart: Jacksonville, Marine Blvd"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Victory Health Consultants"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Long Leaf Park, Wilmington, NC"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Treehouse Kids Preschool"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Courtyard by Marriott in Jacksonville, NC"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Spectrum Learning Solutions, LLC"
+      },
+      {
+        "frequency": 4,
+        "source_value": "910CPR's Office"
+      },
+      {
+        "frequency": 4,
+        "source_value": "Grace Community Church of Topsail: S. Topsail Elem"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Move, Learn, Play, PC"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Wallace Woman\u2019s Club"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Coastal Carolina CPR Office - Long Leaf Office Park - Phlebotomy Programs"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Scarless Vein Care: Leland"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Surf City Dental"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Providence Baptist Church"
+      },
+      {
+        "frequency": 3,
+        "source_value": "Residence - 6239 Mirage Way, Wilm"
+      },
+      {
+        "frequency": 2,
+        "source_value": "Freedom Village Dental"
+      },
+      {
+        "frequency": 2,
+        "source_value": "Contail Road"
+      },
+      {
+        "frequency": 2,
+        "source_value": "Action Therapy, Jacksonville, NC"
+      },
+      {
+        "frequency": 2,
+        "source_value": "___TBD___"
+      },
+      {
+        "frequency": 2,
+        "source_value": "Enchanted Jungle Daycare, 67 Hayward Ave, Colchester, CT 06415"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Roos Residence"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Walmart: Whiteville, NC"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Wilmington Health @ Medical Centre Dr"
+      },
+      {
+        "frequency": 1,
+        "source_value": "443 Holly View Lane Loris, SC 29569"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Onslow Pines Park"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Walmart: Jacksonville, Yopp Rd"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Airlie Oral Surgery"
+      },
+      {
+        "frequency": 1,
+        "source_value": "River Run Plantation Clubhouse"
+      },
+      {
+        "frequency": 1,
+        "source_value": "Williams Love Grove Baptist Church - Herbert Estelle <[redacted-email]>"
+      }
+    ]
+  },
+  "historical_import_performed": false,
+  "instructor_classification": {
+    "absent_from_authority": 0,
+    "ambiguous_or_missing_representations": 1,
+    "uniquely_resolvable_aliases": 55
+  },
+  "mode": "dry_run_only",
+  "nhcso": "The supplied Enrollware export lacks the 2026 period; no history or balancing events were manufactured.",
+  "persistence_design": {
+    "collision_behavior": "plain inserts fail on scoped-label collision",
+    "provenance": "JSON evidence plus review commit",
+    "reuse": [
+      "historical_location_aliases",
+      "historical_instructor_aliases",
+      "historical_course_aliases"
+    ],
+    "reversal": "active=false; alias evidence retained",
+    "review": "review_status and reviewed_at",
+    "source_scope": "(source_system, source_label) primary key",
+    "target": "one canonical foreign key per alias"
+  },
+  "production_mutated": false,
+  "recommendation": "READY FOR SESSION-ALIAS MIGRATION REVIEW",
+  "remaining_blockers_for_historical_import": [
+    "4,258 location references remain unresolved because canonical location authority is absent or the source value is missing/ambiguous.",
+    "126 rows have no instructor value and remain review-required.",
+    "17 course rows remain intentionally unresolved across three ambiguous/generic course labels.",
+    "85 rows retain unknown, ranged, zero, or implausible duration evidence; no end time was synthesized.",
+    "27 participant identity conflicts remain outside this session-alias review."
+  ],
+  "report": "Hx-Builder historical session alias review",
+  "timing_review": {
+    "implausible_90_hours": 1,
+    "missing": 81,
+    "range_value_3_to_4": 2,
+    "safe_corrections": 0,
+    "zero_duration": 1
+  },
+  "validation": {
+    "after_review_queue": {
+      "completion_status_only": 6957,
+      "identity": 26,
+      "reschedule": 1,
+      "session_course": 17,
+      "session_end_at": 85,
+      "session_instructor": 126,
+      "session_location": 4258
+    },
+    "before_after": {
+      "courses": [
+        235,
+        17
+      ],
+      "instructors": [
+        2551,
+        126
+      ],
+      "locations": [
+        4266,
+        4258
+      ],
+      "sessions_ready": [
+        1765,
+        2063
+      ],
+      "timing": [
+        85,
+        85
+      ]
+    },
+    "duplicate_candidates": 97,
+    "first_hash": "bf2e98b67868ac910283471c0947ca59065778e5893782390e301c5af61cde26",
+    "identity_conflicts": 27,
+    "independent_equal": true,
+    "independent_hash": "bf2e98b67868ac910283471c0947ca59065778e5893782390e301c5af61cde26",
+    "replay_assertions": 0,
+    "replay_operations": 0,
+    "unexplained_mismatches": 0
+  }
+}
