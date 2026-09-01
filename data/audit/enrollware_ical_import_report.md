@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-09-01T16:06:59.072720-04:00`
+- Generated at: `2026-09-01T17:57:44.488874-04:00`
 - Source: `enrollware_ical`
 - iCal events read: `308`
 - Public sessions created: `308`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `270`
+- Registration unavailable sessions marked not direct-bookable: `271`
 - Unmapped sessions: `13`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -83,7 +83,7 @@ They remain separate registration-signal/audit inputs only.
 - `13669835`: BLS Provider (NHCSO) (2026-06-24T13:00:00-04:00)
 - `11341058`: AHA - BLS Instructor Renewal (2026-12-01T00:00:00-05:00)
 - `12775788`: AHA - Family & Friends® CPR (2026-07-20T18:00:00-04:00)
-- `13415738`: HSI Adult/Child/Infant CPR AED | Blended Learning Blended Learning with In-Person, Instructor-Led Skills Session (2026-09-01T17:30:00-04:00)
+- `13415738`: HSI Adult/Child/Infant CPR AED | Blended Learning Blended Learning with In-Person, Instructor-Led Skills Session (2026-09-01T05:30:00-04:00)
 - `13859298`: AHA - Family & Friends® CPR (2026-08-04T19:00:00-04:00)
 - `13880764`: ARC Adult CPR AED - Blended (2026-08-10T09:30:00-04:00)
 - `13901730`: BLS Provider (NHCSO) (2026-08-12T13:00:00-04:00)
