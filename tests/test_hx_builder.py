@@ -30,15 +30,15 @@ def test_dry_run_only_and_required_totals():
         "source_records_examined": 9,
         "people_matched": 1,
         "people_created": 1,
-        "sessions_matched": 2,
+        "sessions_matched": 1,
         "sessions_created": 1,
-        "registrations_matched": 2,
+        "registrations_matched": 1,
         "registrations_created": 1,
         "reschedules_reconstructed": 1,
         "completions_reconstructed": 1,
         "credentials_cards_reconstructed": 1,
         "unresolved_identities": 1,
-        "ambiguous_conflicting_facts": 1,
+        "ambiguous_conflicting_facts": 2,
         "duplicate_candidates": 1,
         "records_intentionally_excluded": 1,
     }
@@ -50,10 +50,12 @@ def test_identity_and_source_record_replay_are_idempotent():
     duplicate = report["duplicate_candidates"][0]
     assert duplicate["kind"] == "source_record_replay"
     enrollware = next(x for x in report["decisions"] if x["source_record_id"] == "ew-r1")
-    assert enrollware["source_record_resolution"] == "matched"
-    assert enrollware["person_resolution"] == "matched_alias"
-    assert enrollware["session_resolution"] == "matched"
-    assert enrollware["registration_resolution"] == "matched"
+    assert enrollware["source_record_resolution"] == "conflicting_version"
+    assert enrollware["action"] == "review"
+    conflict_version = next(op for op in report["proposed_operations"]
+                            if op.get("source_record_id") == "ew-r1" and op["command"] == "propose_import_record")
+    assert conflict_version["reconciliation_status"] == "ambiguous"
+    assert conflict_version["conflicts_with_import_record_ids"]
 
 
 def test_exact_second_dry_run_proposes_zero_additional_records_or_events():
@@ -187,6 +189,10 @@ def test_schema_contract_is_append_only_service_only_and_canonical():
     assert "before update or delete" in MIGRATION
     assert "supersedes_assertion_id" in MIGRATION
     assert "original_source_value jsonb not null" in MIGRATION
+    assert "source_fingerprint text" in MIGRATION
+    assert "lifecycle_import_records_global_fingerprint_unique" in MIGRATION
+    assert "source_system,source_record_id,entity_type,source_fingerprint_algorithm,source_fingerprint" in MIGRATION
+    assert "sha256-canonical-json-v1" in json.dumps(build()["proposed_operations"])
     assert "create table public.landerware_" not in MIGRATION
 
 
@@ -206,3 +212,18 @@ def test_enrollware_adapter_does_not_infer_completion_from_status():
     assert "completion" not in record["facts"]
     assert record["registration"]["status"] == "Completed"
     assert record["source_record_id"] == "r1"
+
+
+def test_unresolved_inventory_product_routes_to_review_without_pool_or_event():
+    payload = json.loads(json.dumps(SAMPLE))
+    record = next(r for r in payload["records"] if r.get("facts", {}).get("inventory_entitlement"))
+    inventory = record["facts"]["inventory_entitlement"]
+    inventory.pop("pool_key", None)
+    inventory.update({"owner_kind": "organization", "owner_reference": {"organization_key": "known-org"},
+                      "product_reference": {"product_key": "missing-product"}})
+    payload["records"] = [record]
+    reference = {"organizations": [{"id": "org-1", "organization_key": "known-org"}], "products": []}
+    report = HxBuilder(payload, reference).process()
+    assert any(x["kind"] == "inventory_product" and x["action"] == "manual_review"
+               for x in report["unresolved_or_ambiguous"])
+    assert not any(op["command"].startswith("propose_inventory_entitlement") for op in report["proposed_operations"])

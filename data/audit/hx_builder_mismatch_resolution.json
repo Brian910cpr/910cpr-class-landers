@@ -1,0 +1,145 @@
+{
+  "blockers": [
+    "No canonical AHA BLS eCard product/product alias exists, so prepaid pool/event resolution must stop.",
+    "Historical session proposals still require canonical course, location, instructor, and complete timing normalization before apply mode.",
+    "The durable fingerprint migration has not been reviewed or applied; production cannot yet enforce cross-batch replay safety."
+  ],
+  "deployed": false,
+  "exact_sample": {
+    "deterministic_hash": "9a7f25762864fb639cb54bbc1f860d489bc428d2962053e3242b985848ed2cc9",
+    "replay": {
+      "actions": {
+        "idempotent_replay": 15
+      },
+      "additional_assertions": 0,
+      "additional_operations": 0
+    },
+    "review_queue": {
+      "completion_status_only": 6,
+      "inventory_product": 3
+    },
+    "summary": {
+      "ambiguous_conflicting_facts": 9,
+      "completions_reconstructed": 5,
+      "credentials_cards_reconstructed": 5,
+      "duplicate_candidates": 0,
+      "people_created": 13,
+      "people_matched": 0,
+      "records_intentionally_excluded": 0,
+      "registrations_created": 15,
+      "registrations_matched": 0,
+      "reschedules_reconstructed": 1,
+      "sessions_created": 11,
+      "sessions_matched": 0,
+      "source_records_examined": 15,
+      "unresolved_identities": 0
+    }
+  },
+  "migration_applied": false,
+  "mismatches": [
+    {
+      "area": "people",
+      "classification": "importer deficiency",
+      "current_interpretation": "Propose canonical customers and reuse identity within the batch.",
+      "expected_interpretation": "Match a unique canonical customer by durable alias or normalized email/phone; otherwise propose one customer per identity.",
+      "id": "M01",
+      "original_evidence": "13 unique historical identities; zero exact-sample production customer matches.",
+      "proposed_correction": "Batch identity reuse is fixed; production aliases remain the durable future match path.",
+      "required": "code + future migration apply",
+      "status": "resolved in dry-run contract"
+    },
+    {
+      "area": "sessions",
+      "classification": "importer deficiency",
+      "current_interpretation": "Propose one source session per unique external class ID.",
+      "expected_interpretation": "Reuse external_class_id when present; otherwise reconstruct only after canonical course/location/instructor and timing are resolved.",
+      "id": "M02",
+      "original_evidence": "11 exact-sample and 655 large-sample Enrollware class IDs matched no production class_session.",
+      "proposed_correction": "Session proposals are deduplicated; insert/apply remains gated on required canonical FK normalization.",
+      "required": "source normalization + manual review",
+      "status": "review gate"
+    },
+    {
+      "area": "registrations",
+      "classification": "importer deficiency",
+      "current_interpretation": "Propose participant/session membership after person and session resolution.",
+      "expected_interpretation": "One canonical registration per person/session with external/composite source identity retained.",
+      "id": "M03",
+      "original_evidence": "Production has zero historical registrations and none matched either sample.",
+      "proposed_correction": "Registration proposals now reuse batch identities/sessions and exact replays are suppressed durably by source fingerprint.",
+      "required": "code + future migration apply",
+      "status": "resolved in dry-run contract"
+    },
+    {
+      "area": "source identifiers",
+      "classification": "importer deficiency",
+      "current_interpretation": "Use SHA-256(identity|class|course date|registration date) as composite record/registration identity and retain course display evidence.",
+      "expected_interpretation": "Prefer native IDs; where absent, use a documented deterministic composite and treat collisions as duplicate candidates.",
+      "id": "M04",
+      "original_evidence": "Student report has no Enrollware registration ID or course ID.",
+      "proposed_correction": "Composite strategy is explicit; 28 large-sample collisions are routed as duplicate candidates, not double attendance.",
+      "required": "source normalization + manual review",
+      "status": "resolved with review routing"
+    },
+    {
+      "area": "completion",
+      "classification": "source-data ambiguity",
+      "current_interpretation": "Status-only values are review items; eCard-backed rows alone create completion/credential assertions.",
+      "expected_interpretation": "Never infer passed/failed completion merely from registration status.",
+      "id": "M05",
+      "original_evidence": "Complete/Incomplete status appears without independent completion or card evidence.",
+      "proposed_correction": "Removed status-only completion reconstruction and route all such rows to manual review.",
+      "required": "code + manual review",
+      "status": "resolved"
+    },
+    {
+      "area": "lifecycle facts",
+      "classification": "importer deficiency",
+      "current_interpretation": "Create separate proposed facts only when explicit evidence exists.",
+      "expected_interpretation": "Registration, attendance, completion, credential, reschedule, and fulfillment remain distinct.",
+      "id": "M06",
+      "original_evidence": "Production contains zero canonical completions, credentials, and reschedule events.",
+      "proposed_correction": "Exact sample reconstructs 5 eCard-backed completions/credentials and one explicit reschedule without fake origin attendance.",
+      "required": "code + future migration apply",
+      "status": "resolved in dry-run contract"
+    },
+    {
+      "area": "prepaid inventory",
+      "classification": "schema/model gap",
+      "current_interpretation": "Resolve owner/product/pool only by unique canonical keys or curated aliases; unresolved product stops the event.",
+      "expected_interpretation": "Reuse canonical organization, product, and equivalent owner/product/unit pool; never invent or fuzzy-match them.",
+      "id": "M07",
+      "original_evidence": "NHCSO is canonical organization_key=nhcso; production has no canonical AHA BLS eCard product.",
+      "proposed_correction": "Owner resolves uniquely; 3 exact/85 large product facts route to review. A product-master decision is required before pool creation.",
+      "required": "manual review + canonical product data; schema only after approval",
+      "status": "blocking"
+    },
+    {
+      "area": "durable idempotency",
+      "classification": "schema/model gap",
+      "current_interpretation": "Proposed migration adds source_system and SHA-256 source_fingerprint plus global exact-fingerprint uniqueness and source-identity lookup.",
+      "expected_interpretation": "Exact source version is durable across runs/machines/batches; changed fingerprint for the same identity routes to review and preserves both versions.",
+      "id": "M08",
+      "original_evidence": "lifecycle_import_records uniqueness was batch-local and stored no fingerprint.",
+      "proposed_correction": "Unapplied migration and worker now implement exact-version replay/conflict semantics.",
+      "required": "schema + code",
+      "status": "ready for schema review, not applied"
+    },
+    {
+      "area": "identity",
+      "classification": "identity-resolution deficiency",
+      "current_interpretation": "Reuse batch email/phone identity; conflicting or multiple canonical candidates stop for review.",
+      "expected_interpretation": "Never select arbitrarily; create at most one proposed person per unique identity and preserve aliases/candidates.",
+      "id": "M09",
+      "original_evidence": "Initial exact run proposed 15 people for 13 identities; large production match includes ambiguous duplicate canonical identities.",
+      "proposed_correction": "Batch reuse fixed; large sample matched 29 people and routed 3 ambiguous identities to review.",
+      "required": "code + manual review",
+      "status": "resolved with review routing"
+    }
+  ],
+  "mode": "dry_run_only",
+  "production_mutated": false,
+  "recommendation": "NOT READY",
+  "report": "Hx-Builder nine-mismatch resolution",
+  "unexplained_mismatches": 0
+}

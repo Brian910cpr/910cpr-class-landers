@@ -35,6 +35,8 @@ REPORT_FIELDS = (
     "records_intentionally_excluded",
 )
 
+SOURCE_FINGERPRINT_ALGORITHM = "sha256-canonical-json-v1"
+
 
 def text(value: Any) -> str:
     return str(value or "").strip()
@@ -183,13 +185,20 @@ class HxBuilder:
         self.sessions = reference.get("sessions", [])
         self.source_sessions = reference.get("source_sessions", [])
         self.registrations = reference.get("registrations", [])
-        self.import_records = {
-            (text(r.get("source")), text(r.get("source_record_id")), text(r.get("entity_type") or "registration")): r
-            for r in reference.get("import_records", [])
-        }
+        self.import_records: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+        for import_record in reference.get("import_records", []):
+            key = (
+                text(import_record.get("source_system") or import_record.get("source")),
+                text(import_record.get("source_record_id")),
+                text(import_record.get("entity_type") or "registration"),
+            )
+            self.import_records[key].append(import_record)
         self.inventory_pools = {
             text(pool.get("pool_key")): pool for pool in reference.get("inventory_entitlement_pools", [])
         }
+        self.organizations = reference.get("organizations", [])
+        self.products = reference.get("products", [])
+        self.product_aliases = reference.get("product_aliases", [])
 
     def assertion(self, record: dict[str, Any], fact_type: str, value: Any, **links: Any) -> dict[str, Any]:
         key = f"{record['source']}:{record['source_record_id']}:{fact_type}:{stable_key(value)}"
@@ -221,6 +230,8 @@ class HxBuilder:
             return None, "ambiguous_alias"
 
         email_value, phone_value = email(person.get("email")), phone(person.get("phone"))
+        email_hash = text(person.get("email_hash")) or (hashlib.sha256(email_value.encode()).hexdigest() if email_value else "")
+        phone_hash = text(person.get("phone_hash")) or (hashlib.sha256(phone_value.encode()).hexdigest() if phone_value else "")
         batch_keys = [key for key in (("email", email_value), ("phone", phone_value)) if key[1]]
         proposed = {self.proposed_identity_ids[key] for key in batch_keys if key in self.proposed_identity_ids}
         if len(proposed) == 1:
@@ -233,11 +244,11 @@ class HxBuilder:
             return None, "ambiguous"
         email_ids = {
             text(c["id"]) for c in self.customers
-            if email_value and email(c.get("email")) == email_value
+            if email_value and (email(c.get("email")) == email_value or text(c.get("email_hash")) == email_hash)
         }
         phone_ids = {
             text(c["id"]) for c in self.customers
-            if phone_value and phone(c.get("phone")) == phone_value
+            if phone_value and (phone(c.get("phone")) == phone_value or text(c.get("phone_hash")) == phone_hash)
         }
         candidates = email_ids | phone_ids
         if (email_ids and phone_ids and email_ids != phone_ids) or len(candidates) > 1:
@@ -364,14 +375,69 @@ class HxBuilder:
                 added[fact_type] += 1
         inventory = facts.get("inventory_entitlement")
         if known(inventory):
-            pool_key = text(inventory.get("pool_key")) if isinstance(inventory, dict) else ""
+            if not isinstance(inventory, dict):
+                self.ambiguities.append({"kind": "inventory_entitlement", "source_record_id": record["source_record_id"],
+                                         "reason": "inventory evidence is not an object", "action": "manual_review"})
+                return dict(added)
+            owner_kind = text(inventory.get("owner_kind"))
+            owner_reference = inventory.get("owner_reference") or {}
+            requested_pool_key = text(inventory.get("pool_key"))
+            existing_pool = self.inventory_pools.get(requested_pool_key) if requested_pool_key else None
+            if existing_pool:
+                pool_key = requested_pool_key
+                pool_id = text(existing_pool.get("id"))
+                quantity = inventory.get("quantity_delta")
+                event = {
+                    "command": "propose_inventory_entitlement_event", "pool_key": pool_key, "pool_id": pool_id,
+                    "quantity_delta": quantity, "event_type": inventory.get("event_type", "consumed"),
+                    "customer_id": customer_id, "registration_id": registration_id, "class_session_id": session_id,
+                    "source": record["source"], "source_record_id": record["source_record_id"],
+                    "import_batch_id": self.batch.get("batch_key"),
+                }
+                if isinstance(quantity, int) and quantity != 0:
+                    self.operations.append(event)
+                    self.assertion(record, "inventory_entitlement", inventory, customer_id=customer_id,
+                                   registration_id=registration_id, class_session_id=session_id)
+                    added["inventory_entitlement"] += 1
+                else:
+                    self.ambiguities.append({"kind": "inventory_entitlement", "source_record_id": record["source_record_id"],
+                                             "reason": "non-zero integer quantity_delta is required", "action": "manual_review"})
+                return dict(added)
+            organization_id = text(inventory.get("owner_organization_id"))
+            if owner_kind == "organization" and not organization_id:
+                organization_key = text(owner_reference.get("organization_key"))
+                owner_matches = [o for o in self.organizations if text(o.get("organization_key")) == organization_key]
+                if len(owner_matches) != 1:
+                    self.ambiguities.append({"kind": "inventory_owner", "source_record_id": record["source_record_id"],
+                                             "reference": owner_reference, "candidate_ids": [text(o.get("id")) for o in owner_matches],
+                                             "reason": "canonical organization match must be unique", "action": "manual_review"})
+                    return dict(added)
+                organization_id = text(owner_matches[0].get("id"))
+            product_id = text(inventory.get("product_id"))
+            product_reference = inventory.get("product_reference") or {}
+            if not product_id:
+                product_key = text(product_reference.get("product_key"))
+                source_option = text(product_reference.get("source_option"))
+                alias_keys = {
+                    text(a.get("product_key")) for a in self.product_aliases
+                    if text(a.get("source")) == record["source"] and text(a.get("source_value")) == source_option
+                }
+                product_matches = [p for p in self.products if
+                                   (product_key and text(p.get("product_key")) == product_key)
+                                   or text(p.get("product_key")) in alias_keys]
+                if len(product_matches) != 1:
+                    self.ambiguities.append({"kind": "inventory_product", "source_record_id": record["source_record_id"],
+                                             "reference": product_reference, "candidate_ids": [text(p.get("id")) for p in product_matches],
+                                             "reason": "canonical product match must be unique", "action": "manual_review"})
+                    return dict(added)
+                product_id = text(product_matches[0].get("id"))
+            unit_kind = text(inventory.get("unit_kind"))
+            pool_key = requested_pool_key or stable_key(owner_kind, organization_id, product_id, unit_kind)
             quantity = inventory.get("quantity_delta") if isinstance(inventory, dict) else None
             if pool_key and isinstance(quantity, int) and quantity != 0:
                 pool = self.inventory_pools.get(pool_key)
                 pool_id = text(pool.get("id")) if pool else ""
                 if not pool:
-                    owner_kind = text(inventory.get("owner_kind"))
-                    product_id = text(inventory.get("product_id"))
                     if owner_kind and product_id:
                         pool_id = f"proposed-pool:{stable_key(pool_key)}"
                         self.operations.append({
@@ -380,7 +446,7 @@ class HxBuilder:
                             "pool_key": pool_key,
                             "owner_kind": owner_kind,
                             "owner_customer_id": customer_id if owner_kind == "customer" else None,
-                            "owner_organization_id": inventory.get("owner_organization_id"),
+                            "owner_organization_id": organization_id or None,
                             "product_id": product_id,
                             "unit_kind": inventory.get("unit_kind"),
                             "source": record["source"],
@@ -432,6 +498,9 @@ class HxBuilder:
             self.totals[bucket]["examined"] += 1
             decision = {"source": record["source"], "source_record_id": record["source_record_id"]}
 
+            for item in record.get("review_items") or []:
+                self.ambiguities.append({**decision, **item, "action": "manual_review"})
+
             if not record["source_record_id"] or record.get("exclude_reason"):
                 reason = text(record.get("exclude_reason") or "missing source_record_id")
                 self.exclusions.append({**decision, "reason": reason})
@@ -445,36 +514,52 @@ class HxBuilder:
                 continue
             self.seen_source_records.add(source_key)
 
-            prior = self.import_records.get((record["source"], record["source_record_id"], "registration"))
-            if prior:
+            fingerprint = source_fingerprint(record)
+            priors = self.import_records.get((record["source"], record["source_record_id"], "registration"), [])
+            exact_prior = next((r for r in priors if
+                                text(r.get("source_fingerprint_algorithm")) == SOURCE_FINGERPRINT_ALGORITHM
+                                and text(r.get("source_fingerprint")) == fingerprint), None)
+            if exact_prior:
                 decision["source_record_resolution"] = "matched"
-                decision["import_record_id"] = prior.get("id")
-                fingerprint = source_fingerprint(record)
-                prior_fingerprint = text(prior.get("source_fingerprint"))
-                if prior_fingerprint == fingerprint:
-                    decision["action"] = "idempotent_replay"
-                    self.decisions.append(decision)
-                    self.totals[bucket]["idempotent_replay"] += 1
-                    continue
-                if prior_fingerprint:
-                    self.ambiguities.append({
-                        **decision,
-                        "kind": "source_record_conflict",
-                        "reason": "source_record_id was previously seen with a different fingerprint",
-                    })
-                    decision["action"] = "review"
-                    self.decisions.append(decision)
-                    self.totals[bucket]["conflicting"] += 1
-                    continue
+                decision["import_record_id"] = exact_prior.get("id")
+                decision["action"] = "idempotent_replay"
+                self.decisions.append(decision)
+                self.totals[bucket]["idempotent_replay"] += 1
+                continue
+            if priors:
+                self.operations.append({
+                    "command": "propose_import_record",
+                    "source": record["source"], "source_system": record["source"],
+                    "source_record_id": record["source_record_id"], "entity_type": "registration",
+                    "import_batch_id": self.batch.get("batch_key"), "original_values": record["raw"],
+                    "source_fingerprint": fingerprint,
+                    "source_fingerprint_algorithm": SOURCE_FINGERPRINT_ALGORITHM,
+                    "reconciliation_status": "ambiguous",
+                    "conflicts_with_import_record_ids": [r.get("id") for r in priors],
+                })
+                self.ambiguities.append({
+                    **decision,
+                    "kind": "source_record_conflict",
+                    "prior_import_record_ids": [r.get("id") for r in priors],
+                    "reason": "source_record_id was previously seen with a different fingerprint",
+                    "action": "manual_review",
+                })
+                decision["source_record_resolution"] = "conflicting_version"
+                decision["action"] = "review"
+                self.decisions.append(decision)
+                self.totals[bucket]["conflicting"] += 1
+                continue
             else:
                 decision["source_record_resolution"] = "created"
                 self.operations.append({
                     "command": "propose_import_record",
                     "source": record["source"],
+                    "source_system": record["source"],
                     "source_record_id": record["source_record_id"],
                     "import_batch_id": self.batch.get("batch_key"),
                     "original_values": record["raw"],
                     "source_fingerprint": source_fingerprint(record),
+                    "source_fingerprint_algorithm": SOURCE_FINGERPRINT_ALGORITHM,
                 })
 
             customer_id, person_state = self.resolve_person(record)
@@ -598,21 +683,26 @@ def replay_reference(reference: dict[str, Any], report: dict[str, Any]) -> dict[
     overlay = json.loads(json.dumps(reference))
     rows = overlay.setdefault("import_records", [])
     known_keys = {
-        (text(r.get("source")), text(r.get("source_record_id")), text(r.get("entity_type") or "registration"))
+        (text(r.get("source_system") or r.get("source")), text(r.get("source_record_id")),
+         text(r.get("entity_type") or "registration"), text(r.get("source_fingerprint_algorithm")),
+         text(r.get("source_fingerprint")))
         for r in rows
     }
     for operation in report.get("proposed_operations", []):
         if operation.get("command") != "propose_import_record":
             continue
-        key = (text(operation.get("source")), text(operation.get("source_record_id")), "registration")
+        key = (text(operation.get("source_system") or operation.get("source")),
+               text(operation.get("source_record_id")), "registration",
+               text(operation.get("source_fingerprint_algorithm")), text(operation.get("source_fingerprint")))
         if key in known_keys:
             continue
         rows.append({
             "id": f"dry-run-import:{stable_key(*key)}",
             "source": key[0],
-            "source_record_id": key[1],
-            "entity_type": key[2],
+            "source_system": key[0],
+            "source_record_id": key[1], "entity_type": key[2],
             "source_fingerprint": operation.get("source_fingerprint"),
+            "source_fingerprint_algorithm": operation.get("source_fingerprint_algorithm"),
             "reconciliation_status": "dry_run_overlay",
         })
         known_keys.add(key)

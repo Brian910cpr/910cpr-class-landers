@@ -1,5 +1,41 @@
 -- Dockmaster: history is reconstructed from evidence; the original logbook page is never erased.
 
+-- Durable, cross-batch source identity. Exact replays are suppressed by the
+-- global fingerprint key; changed content for the same source identity remains
+-- a separate version that must reconcile as conflicting/review-required.
+alter table public.lifecycle_import_records add column if not exists source_system text;
+alter table public.lifecycle_import_records add column if not exists source_fingerprint text;
+alter table public.lifecycle_import_records add column if not exists source_fingerprint_algorithm text;
+
+update public.lifecycle_import_records r
+set source_system=b.source_system
+from public.lifecycle_import_batches b
+where b.id=r.batch_id and r.source_system is null;
+
+update public.lifecycle_import_records
+set source_fingerprint=encode(extensions.digest(convert_to(original_values::text,'utf8'),'sha256'),'hex'),
+    source_fingerprint_algorithm='sha256-jsonb-text-legacy-v1'
+where source_fingerprint is null;
+
+update public.lifecycle_import_records
+set source_fingerprint_algorithm='sha256-jsonb-text-legacy-v1'
+where source_fingerprint_algorithm is null;
+
+alter table public.lifecycle_import_records alter column source_system set not null;
+alter table public.lifecycle_import_records alter column source_fingerprint set not null;
+alter table public.lifecycle_import_records alter column source_fingerprint_algorithm set not null;
+
+alter table public.lifecycle_import_records
+  drop constraint if exists lifecycle_import_records_source_fingerprint_format;
+alter table public.lifecycle_import_records
+  add constraint lifecycle_import_records_source_fingerprint_format
+  check (source_fingerprint ~ '^[0-9a-f]{64}$');
+
+create unique index if not exists lifecycle_import_records_global_fingerprint_unique
+  on public.lifecycle_import_records(source_system,source_record_id,entity_type,source_fingerprint_algorithm,source_fingerprint);
+create index if not exists lifecycle_import_records_source_identity_idx
+  on public.lifecycle_import_records(source_system,source_record_id,entity_type);
+
 create table if not exists public.inventory_entitlement_pools (
   id uuid primary key default gen_random_uuid(),
   pool_key text not null unique,
