@@ -1,0 +1,55 @@
+{
+  "sample": {
+    "batch_key": "historical-pilot-fixture-v1",
+    "source_system": "enrollware",
+    "parser_version": "fixture-1",
+    "records": [
+      {
+        "source_record_id": "ew-reg-1",
+        "external_registration_id": "ew-reg-1",
+        "status": "registered",
+        "customer_source_identity": "ew-person-1",
+        "source_session_id": "session-a",
+        "first_name": "Alex",
+        "last_name": "Rivera",
+        "email": "alex@example.test",
+        "completion": {"status": "passed"},
+        "credential": {"number": "CARD-1"},
+        "payment": {"status": "paid"},
+        "materials": [{"product": "manual"}],
+        "document_identity": "doc-1"
+      },
+      {
+        "source_record_id": "ew-reg-2",
+        "external_registration_id": "ew-reg-2",
+        "customer_source_identity": "ew-person-2",
+        "source_session_id": "session-b",
+        "first_name": "Jordan",
+        "last_name": "Lee",
+        "email": "shared@example.test",
+        "phone": "9105550002"
+      },
+      {
+        "source_record_id": "ew-reg-3",
+        "external_registration_id": "ew-reg-3",
+        "customer_source_identity": "ew-person-3",
+        "source_session_id": "session-b",
+        "first_name": "New",
+        "last_name": "Participant"
+      }
+    ]
+  },
+  "reference": {
+    "customers": [
+      {"id": "customer-1", "first_name": "Alex", "last_name": "Rivera", "email": "alex@example.test", "phone": "9105550001"},
+      {"id": "customer-2", "first_name": "Jordan", "last_name": "Lee", "email": "shared@example.test", "phone": "9105550009"},
+      {"id": "customer-3", "first_name": "Jordan", "last_name": "Li", "email": "other@example.test", "phone": "9105550002"}
+    ],
+    "aliases": [
+      {"source_system": "enrollware", "source_identity": "ew-person-1", "resolution_status": "matched", "customer_id": "customer-1"}
+    ],
+    "registrations": [
+      {"id": "registration-1", "customer_id": "customer-1", "class_session_id": "session-a", "registration_source": "enrollware", "external_registration_id": "ew-reg-1", "status": "completed", "payment_status": "paid", "material_choice": "manual"}
+    ]
+  }
+}

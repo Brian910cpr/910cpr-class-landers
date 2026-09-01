@@ -1,0 +1,18 @@
+-- Dockmaster: every lifecycle foreign-key lookup gets a charted route before import volume arrives.
+create index if not exists lifecycle_import_records_session_idx on public.lifecycle_import_records(class_session_id);
+create index if not exists customer_identity_aliases_import_record_idx on public.customer_identity_aliases(import_record_id);
+create index if not exists registration_supersessions_source_session_idx on public.registration_supersessions(source_session_id);
+create index if not exists registration_supersessions_target_session_idx on public.registration_supersessions(target_session_id);
+create index if not exists registration_supersessions_order_idx on public.registration_supersessions(transferred_order_id);
+create index if not exists registration_requirements_superseded_idx on public.registration_requirements(superseded_from_requirement_id);
+create index if not exists registration_requirement_evidence_requirement_idx on public.registration_requirement_evidence(registration_requirement_id);
+create index if not exists participant_completions_session_idx on public.participant_completions(class_session_id);
+create index if not exists participant_completions_course_idx on public.participant_completions(course_id);
+create index if not exists participant_credentials_registration_idx on public.participant_credentials(registration_id);
+create index if not exists participant_credentials_session_idx on public.participant_credentials(class_session_id);
+create index if not exists participant_credentials_course_idx on public.participant_credentials(course_id);
+create index if not exists participant_credentials_completion_idx on public.participant_credentials(completion_id);
+create index if not exists participant_lifecycle_events_session_idx on public.participant_lifecycle_events(class_session_id);
+create index if not exists participant_lifecycle_events_related_registration_idx on public.participant_lifecycle_events(related_registration_id);
+create index if not exists participant_lifecycle_events_import_record_idx on public.participant_lifecycle_events(import_record_id);
+create index if not exists participant_lifecycle_events_correction_idx on public.participant_lifecycle_events(correction_of_event_id);
