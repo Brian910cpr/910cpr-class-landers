@@ -324,6 +324,22 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         )
         self.assertEqual(["seated"], [anchor["sessionId"] for anchor in seated])
 
+    def test_scheduled_anchor_is_deferred_to_barnacle_policy_not_hard_rejected(self):
+        scheduled = {"sessionId": "paid-class", "date": "2026-09-07"}
+        self.assertEqual([], block_start_time_selector.anchor_rejection_reasons(
+            same_day_anchor=None,
+            scheduled_day_anchor=scheduled,
+            shared_cooldown_anchor=None,
+        ))
+        self.assertEqual(
+            ["same_day_family_anchor_already_seated", "shared_board_course_booked_within_cooldown"],
+            block_start_time_selector.anchor_rejection_reasons(
+                same_day_anchor=scheduled,
+                scheduled_day_anchor=scheduled,
+                shared_cooldown_anchor=scheduled,
+            ),
+        )
+
     def test_august_29_30_31_real_feeds_keep_only_fitting_cross_group_barnacles(self):
         feed_dir = block_start_time_selector.ROOT / "docs" / "data" / "block-selector-availability"
         schedule = json.loads((block_start_time_selector.SCHEDULE_FUTURE_PATH).read_text(encoding="utf-8"))

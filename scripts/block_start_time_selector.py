@@ -859,6 +859,26 @@ def scheduled_day_anchor_for_offer(
     )
 
 
+def anchor_rejection_reasons(
+    *,
+    same_day_anchor: dict[str, Any] | None,
+    scheduled_day_anchor: dict[str, Any] | None,
+    shared_cooldown_anchor: dict[str, Any] | None,
+) -> list[str]:
+    """Return only anchor rules that must remove a candidate before role resolution.
+
+    A scheduled same-family class is diagnostic input, not an irreversible
+    rejection. Legal candidates must reach ``apply_anchor_policy`` so it can
+    select the nearest pre/post barnacles around that seated class.
+    """
+    reasons: list[str] = []
+    if same_day_anchor:
+        reasons.append("same_day_family_anchor_already_seated")
+    if shared_cooldown_anchor:
+        reasons.append("shared_board_course_booked_within_cooldown")
+    return reasons
+
+
 def course_consolidation_groups(page_configs: dict[str, dict[str, Any]]) -> dict[str, str]:
     groups: dict[str, str] = {}
     for page in page_configs.values():
@@ -1164,23 +1184,22 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     offer_course_id=course_id,
                     consolidation_groups=consolidation_groups,
                 )
-                if same_day_anchor:
-                    reasons.append("same_day_family_anchor_already_seated")
                 scheduled_day_anchor = scheduled_day_anchor_for_offer(
                     scheduled_day_anchors,
                     context,
                     location_resource_map=loaded["location_resource_map"],
                     consolidation_groups=consolidation_groups,
                 )
-                if scheduled_day_anchor:
-                    reasons.append("scheduled_day_already_has_public_class")
                 shared_cooldown_anchor = matching_shared_cooldown_anchor(
                     shared_cooldown_anchors,
                     day=start.date(),
                     cooldown_days=shared_cooldown_days,
                 )
-                if shared_cooldown_anchor:
-                    reasons.append("shared_board_course_booked_within_cooldown")
+                reasons.extend(anchor_rejection_reasons(
+                    same_day_anchor=same_day_anchor,
+                    scheduled_day_anchor=scheduled_day_anchor,
+                    shared_cooldown_anchor=shared_cooldown_anchor,
+                ))
                 appointment_day_id, container_id, url, url_blocker = find_url(
                     window,
                     start,
