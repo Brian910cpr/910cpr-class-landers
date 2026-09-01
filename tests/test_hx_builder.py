@@ -87,6 +87,26 @@ def test_session_can_be_proposed_from_real_report_name_when_external_course_id_i
     assert any(op["command"] == "propose_session" for op in report["proposed_operations"])
 
 
+def test_session_aliases_require_reviewed_active_state():
+    payload = json.loads(json.dumps(SAMPLE))
+    record = payload["records"][0]
+    record["session"].update({"course_name":"Legacy label", "location_id":"location-1",
+                              "lead_instructor_id":"person-1", "end_at":"2024-02-01T11:00:00-05:00"})
+    record["session"].pop("course_id", None)
+    payload["records"] = [record]
+    reference = {"courses":[{"id":"course-1","name":"Canonical"}],
+                 "course_aliases":[{"source":"enrollware","source_label":"Legacy label",
+                                    "course_id":"course-1","active":False,"review_status":"reviewed"}]}
+    blocked = HxBuilder(payload, reference).process()
+    assert not any(op["command"] == "propose_session" for op in blocked["proposed_operations"])
+    reference["course_aliases"][0].update({"active":True,"review_status":"unreviewed"})
+    unreviewed = HxBuilder(payload, reference).process()
+    assert not any(op["command"] == "propose_session" for op in unreviewed["proposed_operations"])
+    reference["course_aliases"][0]["review_status"] = "reviewed"
+    approved = HxBuilder(payload, reference).process()
+    assert any(op["command"] == "propose_session" for op in approved["proposed_operations"])
+
+
 def test_repeated_identity_in_one_batch_reuses_the_same_proposed_person():
     payload = json.loads(json.dumps(SAMPLE))
     first = payload["records"][0]

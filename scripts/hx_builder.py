@@ -233,7 +233,9 @@ class HxBuilder:
                 self.ambiguities.append({"kind": f"session_{kind}", "source_record_id": record["source_record_id"],
                                          "source_value": value, "reason": f"missing {kind}", "action": "manual_review"})
                 return None
-            alias_matches = [a for a in aliases if text(a.get("source")) in ("", record["source"])
+            alias_matches = [a for a in aliases if a.get("active") is not False
+                             and text(a.get("review_status") or "approved_legacy") in ("reviewed", "approved_legacy")
+                             and text(a.get("source")) in ("", record["source"])
                              and (text(a.get("source_label")) == value or text(a.get("source_value")) == value
                                   or (hash_field and text(a.get(hash_field)) == hashlib.sha256(value.encode()).hexdigest()))]
             ids = {text(a.get(id_field)) for a in alias_matches if text(a.get(id_field))}

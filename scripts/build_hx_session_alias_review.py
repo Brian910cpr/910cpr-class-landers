@@ -123,19 +123,52 @@ def main() -> int:
                "nhcso":"source export lacks the 2026 period; no history manufactured"}
     a.inventory_output.write_text(json.dumps(inventory,indent=2,sort_keys=True)+"\n", encoding="utf-8")
     tables=(("historical_location_aliases","location_id",LOCATIONS),("historical_instructor_aliases","person_id",{k:(INSTRUCTOR_IDS[v],v) for k,v in INSTRUCTOR_LABELS.items()}),("historical_course_aliases","course_id",COURSES))
-    lines=["-- REVIEW ONLY: do not apply before approval.","begin;"]
-    for table,_,_ in tables:
-        lines += [f"alter table public.{table} add column if not exists source_system text not null default 'legacy_unscoped';",
-                  f"alter table public.{table} add column if not exists provenance jsonb not null default '{{}}'::jsonb;",
-                  f"alter table public.{table} add column if not exists review_status text not null default 'approved_legacy';",
-                  f"alter table public.{table} add column if not exists active boolean not null default true;",
+    lines=["-- REVIEW ONLY: do not apply before approval.","begin;",
+           "create or replace function public.protect_historical_alias_identity() returns trigger language plpgsql as $$",
+           "begin",
+           "  if new.source_system is distinct from old.source_system or new.source_label is distinct from old.source_label",
+           "     or to_jsonb(new)->>tg_argv[0] is distinct from to_jsonb(old)->>tg_argv[0]",
+           "     or new.provenance is distinct from old.provenance then",
+           "    raise exception 'historical alias identity, target, and provenance are immutable';",
+           "  end if;",
+           "  if old.active and not new.active then new.deactivated_at := coalesce(new.deactivated_at,now()); end if;",
+           "  if not old.active and new.active then new.deactivated_at := null; end if;",
+           "  return new;",
+           "end $$;",
+           "revoke all on function public.protect_historical_alias_identity() from public, anon, authenticated;"]
+    for table,target,_ in tables:
+        lines += [f"alter table public.{table} add column if not exists source_system text;",
+                  f"alter table public.{table} add column if not exists provenance jsonb;",
+                  f"alter table public.{table} add column if not exists review_status text;",
+                  f"alter table public.{table} add column if not exists active boolean;",
                   f"alter table public.{table} add column if not exists reviewed_at timestamptz;",
+                  f"alter table public.{table} add column if not exists reviewed_by text;",
+                  f"alter table public.{table} add column if not exists deactivated_at timestamptz;",
+                  f"update public.{table} set source_system=coalesce(source_system,'legacy_unscoped'), provenance=coalesce(provenance,jsonb_build_object('migration','legacy alias backfill')), review_status=coalesce(review_status,'approved_legacy'), active=coalesce(active,true), reviewed_at=coalesce(reviewed_at,updated_at,created_at,now()), reviewed_by=coalesce(reviewed_by,'legacy_migration');",
+                  f"alter table public.{table} alter column source_system set not null;",
+                  f"alter table public.{table} alter column source_system set default 'legacy_unscoped';",
+                  f"alter table public.{table} alter column provenance set not null;",
+                  f"alter table public.{table} alter column provenance set default '{{}}'::jsonb;",
+                  f"alter table public.{table} alter column review_status set not null;",
+                  f"alter table public.{table} alter column review_status set default 'unreviewed';",
+                  f"alter table public.{table} alter column active set not null;",
+                  f"alter table public.{table} alter column active set default false;",
+                  f"alter table public.{table} drop constraint if exists {table}_review_status_check;",
+                  f"alter table public.{table} add constraint {table}_review_status_check check (review_status in ('unreviewed','reviewed','approved_legacy','rejected'));",
+                  f"alter table public.{table} drop constraint if exists {table}_activation_check;",
+                  f"alter table public.{table} add constraint {table}_activation_check check (not active or (review_status in ('reviewed','approved_legacy') and reviewed_at is not null and reviewed_by is not null));",
+                  f"alter table public.{table} drop constraint if exists {table}_source_check;",
+                  f"alter table public.{table} add constraint {table}_source_check check (btrim(source_system)<>'' and btrim(source_label)<>'');",
                   f"alter table public.{table} drop constraint if exists {table}_pkey;",
-                  f"alter table public.{table} add constraint {table}_pkey primary key (source_system, source_label);" ]
+                  f"alter table public.{table} add constraint {table}_pkey primary key (source_system, source_label);",
+                  f"create index if not exists {table}_{target}_idx on public.{table}({target});",
+                  f"drop trigger if exists protect_historical_alias_identity on public.{table};",
+                  f"create trigger protect_historical_alias_identity before update on public.{table} for each row execute function public.protect_historical_alias_identity('{target}');",
+                  f"revoke all privileges on table public.{table} from anon, authenticated;" ]
     for table,target,items in tables:
         for source,(entity_id,canonical) in items.items():
             prov=json.dumps({"evidence":"exact/curated Enrollware historical label","canonical_label":canonical,"review_commit":"8de12539406b2fdfcf56c67a5e97fa4a9239cc18"},separators=(",",":"))
-            lines.append(f"insert into public.{table} (source_system,source_label,{target},provenance,review_status,active) values ('enrollware_student_report',{sql_quote(source)},'{entity_id}',{sql_quote(prov)}::jsonb,'reviewed',true);")
+            lines.append(f"insert into public.{table} (source_system,source_label,{target},provenance,review_status,active,reviewed_at,reviewed_by) values ('enrollware_student_report',{sql_quote(source)},'{entity_id}',{sql_quote(prov)}::jsonb,'reviewed',true,now(),'migration_review:8e3d48d2ae8');")
     lines += ["-- Plain INSERT plus the scoped primary key deliberately fails closed on collisions.","commit;"]
     a.sql_output.write_text("\n".join(lines)+"\n", encoding="utf-8")
     return 0
