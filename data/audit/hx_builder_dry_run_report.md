@@ -117,4 +117,3 @@ The report contains 13 proposed canonical operations and 7 append-only evidence 
 ## Approval boundary
 
 Do not deploy the evidence/inventory migration and do not execute proposed operations until a dry run against an approved real historical sample is reviewed. The current report proves the contracts and worker behavior using synthetic representative evidence; it is not approval to import production history.
-
