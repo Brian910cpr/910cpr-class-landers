@@ -56,6 +56,7 @@ def test_identity_and_source_record_replay_are_idempotent():
                             if op.get("source_record_id") == "ew-r1" and op["command"] == "propose_import_record")
     assert conflict_version["reconciliation_status"] == "ambiguous"
     assert conflict_version["conflicts_with_import_record_ids"]
+    assert conflict_version["predecessor_import_record_id"] == "import-record-ew-r1"
 
 
 def test_exact_second_dry_run_proposes_zero_additional_records_or_events():
@@ -79,7 +80,10 @@ def test_session_can_be_proposed_from_real_report_name_when_external_course_id_i
     record["session"].pop("course_source_id", None)
     record["session"]["course_name"] = "Historical named course"
     record["session"]["source_id"] = "old-class-1"
-    report = HxBuilder(payload, {"customers": [], "sessions": [], "registrations": []}).process()
+    record["session"].update({"location_id":"location-1","lead_instructor_id":"person-1",
+                               "end_at":"2024-02-01T11:00:00-05:00"})
+    report = HxBuilder(payload, {"customers": [], "sessions": [], "registrations": [],
+                                "courses":[{"id":"course-1","name":"Historical named course"}]}).process()
     assert any(op["command"] == "propose_session" for op in report["proposed_operations"])
 
 
@@ -90,12 +94,43 @@ def test_repeated_identity_in_one_batch_reuses_the_same_proposed_person():
     replay["source_record_id"] = "same-person-different-registration"
     replay["session"]["source_id"] = "different-session"
     replay["session"]["start_at"] = "2024-02-01T09:00:00-05:00"
+    replay["session"].update({"course_id":"course-1","location_id":"location-1",
+                              "lead_instructor_id":"person-1","end_at":"2024-02-01T11:00:00-05:00"})
     payload["records"] = [first, replay]
     report = HxBuilder(payload, {"customers": [], "sessions": [], "registrations": []}).process()
     assert report["summary"]["people_created"] == 1
     assert len([op for op in report["proposed_operations"] if op["command"] == "register_participant_identity"]) == 1
     assert report["decisions"][1]["person_resolution"] == "matched_batch_identity"
     assert report["decisions"][1]["session_resolution"] == "created"
+
+
+def test_session_canonicalization_is_exact_and_preserves_source_values():
+    payload = json.loads(json.dumps(SAMPLE))
+    record = payload["records"][7]
+    record["session"] = {"source_id":"legacy-s-new","course_name":"Legacy Heartsaver",
+                         "location_name":"Old Office","instructor_name":"B. Ennis",
+                         "duration_hours":"2","start_at":"2023-05-10T10:00:00-04:00"}
+    payload["records"] = [record]
+    reference = {"courses":[{"id":"course-1","name":"Heartsaver"}],
+                 "course_aliases":[{"source":"legacy_csv","source_label":"Legacy Heartsaver","course_id":"course-1"}],
+                 "locations":[{"id":"location-1","name":"Office"}],
+                 "location_aliases":[{"source":"legacy_csv","source_label":"Old Office","location_id":"location-1"}],
+                 "people":[{"id":"person-1","display_name":"Brian Ennis"}],
+                 "instructor_aliases":[{"source":"legacy_csv","source_label":"B. Ennis","person_id":"person-1"}]}
+    report = HxBuilder(payload, reference).process()
+    operation = next(x for x in report["proposed_operations"] if x["command"] == "propose_session")
+    assert operation["session"]["course_id"] == "course-1"
+    assert operation["session"]["end_at"] == "2023-05-10T12:00:00-04:00"
+    assert operation["session"]["source_values"]["course"] == "Legacy Heartsaver"
+
+
+def test_unmapped_session_reference_is_review_only():
+    payload = json.loads(json.dumps(SAMPLE)); payload["records"] = [payload["records"][7]]
+    payload["records"][0]["session"] = {"source_id":"s","course_name":"Unknown","start_at":"bad"}
+    report = HxBuilder(payload, {}).process()
+    assert not any(x["command"] == "propose_session" for x in report["proposed_operations"])
+    assert {x["kind"] for x in report["unresolved_or_ambiguous"]} >= {
+        "session_course","session_location","session_instructor","session_start_at","session_end_at"}
 
 
 def test_repeated_session_and_inventory_pool_are_proposed_once_per_batch():
@@ -105,6 +140,8 @@ def test_repeated_session_and_inventory_pool_are_proposed_once_per_batch():
         "owner_kind": "organization", "owner_organization_id": "organization-1",
         "product_id": "product-1", "unit_kind": "ecard",
     })
+    inventory["session"].update({"course_id":"course-1","location_id":"location-1",
+                                  "lead_instructor_id":"person-1","end_at":"2024-02-01T11:00:00-05:00"})
     replay = json.loads(json.dumps(inventory))
     replay["source_record_id"] = "second-pool-consumption"
     replay["person"]["email"] = "second@example.test"
@@ -191,6 +228,8 @@ def test_schema_contract_is_append_only_service_only_and_canonical():
     assert "original_source_value jsonb not null" in MIGRATION
     assert "source_fingerprint text" in MIGRATION
     assert "lifecycle_import_records_global_fingerprint_unique" in MIGRATION
+    assert "predecessor_import_record_id" in MIGRATION
+    assert "public.historical_product_aliases" in MIGRATION
     assert "source_system,source_record_id,entity_type,source_fingerprint_algorithm,source_fingerprint" in MIGRATION
     assert "sha256-canonical-json-v1" in json.dumps(build()["proposed_operations"])
     assert "create table public.landerware_" not in MIGRATION
@@ -221,6 +260,8 @@ def test_unresolved_inventory_product_routes_to_review_without_pool_or_event():
     inventory.pop("pool_key", None)
     inventory.update({"owner_kind": "organization", "owner_reference": {"organization_key": "known-org"},
                       "product_reference": {"product_key": "missing-product"}})
+    record["session"].update({"course_id":"course-1","location_id":"location-1",
+                               "lead_instructor_id":"person-1","end_at":"2024-02-01T11:00:00-05:00"})
     payload["records"] = [record]
     reference = {"organizations": [{"id": "org-1", "organization_key": "known-org"}], "products": []}
     report = HxBuilder(payload, reference).process()

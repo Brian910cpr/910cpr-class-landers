@@ -6,6 +6,8 @@
 alter table public.lifecycle_import_records add column if not exists source_system text;
 alter table public.lifecycle_import_records add column if not exists source_fingerprint text;
 alter table public.lifecycle_import_records add column if not exists source_fingerprint_algorithm text;
+alter table public.lifecycle_import_records add column if not exists predecessor_import_record_id uuid
+  references public.lifecycle_import_records(id) on delete restrict;
 
 update public.lifecycle_import_records r
 set source_system=b.source_system
@@ -35,6 +37,57 @@ create unique index if not exists lifecycle_import_records_global_fingerprint_un
   on public.lifecycle_import_records(source_system,source_record_id,entity_type,source_fingerprint_algorithm,source_fingerprint);
 create index if not exists lifecycle_import_records_source_identity_idx
   on public.lifecycle_import_records(source_system,source_record_id,entity_type);
+create index if not exists lifecycle_import_records_predecessor_idx
+  on public.lifecycle_import_records(predecessor_import_record_id);
+
+-- Canonical credential inventory concepts observed in the reviewed Enrollware
+-- evidence. The source aliases point at product master; they do not create a
+-- second inventory catalog. Prices are the historical 910CPR sale prices in
+-- the source sample and remain reviewable product-master data.
+insert into public.products
+  (product_key,name,product_type,certifying_body,customer_price,unit_cost,fulfillment_mode,reorder_threshold,active)
+select 'aha-25-3001-bls-provider-ecard','AHA BLS Provider eCard (25-3001)',
+       'credential_ecard','AHA',8.00,null,'digital_code',0,true
+where not exists (
+  select 1 from public.products where product_key='aha-25-3001-bls-provider-ecard'
+     or lower(name) in ('aha bls provider ecard (25-3001)','aha bls provider ecard')
+);
+
+insert into public.products
+  (product_key,name,product_type,certifying_body,customer_price,unit_cost,fulfillment_mode,reorder_threshold,active)
+select 'aha-25-3002-heartsaver-first-aid-cpr-aed-ecard',
+       'AHA Heartsaver First Aid CPR AED eCard (25-3002)',
+       'credential_ecard','AHA',30.00,null,'digital_code',0,true
+where not exists (
+  select 1 from public.products
+  where product_key='aha-25-3002-heartsaver-first-aid-cpr-aed-ecard'
+     or lower(name) in ('aha heartsaver first aid cpr aed ecard (25-3002)',
+                       'aha heartsaver first aid cpr aed ecard')
+);
+
+create table if not exists public.historical_product_aliases (
+  source_system text not null,
+  source_value text not null,
+  product_id uuid not null references public.products(id) on delete restrict,
+  provenance jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  primary key (source_system,source_value)
+);
+
+insert into public.historical_product_aliases(source_system,source_value,product_id,provenance)
+select 'enrollware_student_report','AHA-BLS-ECARD',p.id,
+       '{"authority":"curated","aha_product_number":"25-3001","legacy_product_number":"20-3001"}'::jsonb
+from public.products p where p.product_key='aha-25-3001-bls-provider-ecard'
+   or lower(p.name) in ('aha bls provider ecard (25-3001)','aha bls provider ecard')
+on conflict (source_system,source_value) do nothing;
+
+insert into public.historical_product_aliases(source_system,source_value,product_id,provenance)
+select 'enrollware_student_report','AHA-HS-FACPRAED-ECARD',p.id,
+       '{"authority":"curated","aha_product_number":"25-3002","legacy_product_number":"20-3002"}'::jsonb
+from public.products p where p.product_key='aha-25-3002-heartsaver-first-aid-cpr-aed-ecard'
+   or lower(p.name) in ('aha heartsaver first aid cpr aed ecard (25-3002)',
+                       'aha heartsaver first aid cpr aed ecard')
+on conflict (source_system,source_value) do nothing;
 
 create table if not exists public.inventory_entitlement_pools (
   id uuid primary key default gen_random_uuid(),
@@ -175,7 +228,7 @@ do $$
 declare t text;
 begin
   foreach t in array array[
-    'inventory_entitlement_pools','inventory_entitlement_events','lifecycle_evidence_assertions'
+    'historical_product_aliases','inventory_entitlement_pools','inventory_entitlement_events','lifecycle_evidence_assertions'
   ] loop
     execute format('alter table public.%I enable row level security',t);
     execute format('revoke all on table public.%I from anon, authenticated',t);

@@ -1,0 +1,78 @@
+{
+  "canonicalization": {
+    "course_resolved": 915,
+    "end_at_resolved": 921,
+    "instructor_resolved": 612,
+    "location_resolved": 300,
+    "sessions_ready": 186,
+    "sessions_review_required": 741,
+    "start_at_resolved": 927
+  },
+  "deployed": false,
+  "deterministic_hash": "dbd53d21d13de745164b4021b5dd33a15586d6ad5961dccab9350aaaedd0b0d5",
+  "duplicate_candidates": 28,
+  "fingerprint_migration_review": {
+    "batch_relationship": "every import record remains attached to one lifecycle_import_batch",
+    "changed_record_behavior": "new fingerprint is a new record, linked to predecessor and review-required",
+    "existing_records": "legacy rows are backfilled with sha256-jsonb-text-legacy-v1 and remain distinguishable from canonical-json-v1",
+    "indexes": [
+      "global exact-version unique index",
+      "source identity lookup index",
+      "predecessor lookup index"
+    ],
+    "rollback": "batch/derived facts are reversed with append-only correction/reversal records; fingerprints are retained",
+    "rolled_back_production_schema_test": "passed; all proposed objects/columns/products were absent after ROLLBACK",
+    "source_version_behavior": "algorithm is part of identity; algorithm changes do not silently collide",
+    "supersession": "predecessor_import_record_id preserves the version chain; accepted evidence uses supersedes_assertion_id",
+    "uniqueness": "(source_system, source_record_id, entity_type, source_fingerprint_algorithm, source_fingerprint)"
+  },
+  "identity_ambiguities": 3,
+  "independent_hash": "dbd53d21d13de745164b4021b5dd33a15586d6ad5961dccab9350aaaedd0b0d5",
+  "independent_output_identical": true,
+  "inventory": {
+    "events_reaching_proposal": 14,
+    "products_still_blocked_in_sample": [],
+    "resolved_aliases": {
+      "AHA-BLS-ECARD": "proposed canonical product aha-25-3001-bls-provider-ecard",
+      "AHA-HS-FACPRAED-ECARD": "proposed canonical product aha-25-3002-heartsaver-first-aid-cpr-aed-ecard"
+    },
+    "source_evidence_by_option": {
+      "AHA-BLS-ECARD": 85
+    }
+  },
+  "migration_applied": false,
+  "mode": "dry_run_only",
+  "production_mutated": false,
+  "recommendation": "READY FOR MIGRATION REVIEW",
+  "replay": {
+    "additional_assertions": 0,
+    "additional_operations": 0
+  },
+  "report": "Hx-Builder migration review",
+  "review_required": {
+    "completion_status_only": 581,
+    "identity": 3,
+    "session_course": 12,
+    "session_end_at": 6,
+    "session_instructor": 315,
+    "session_location": 627
+  },
+  "sample_records": 1000,
+  "summary": {
+    "ambiguous_conflicting_facts": 1544,
+    "completions_reconstructed": 15,
+    "credentials_cards_reconstructed": 15,
+    "duplicate_candidates": 28,
+    "people_created": 750,
+    "people_matched": 29,
+    "records_intentionally_excluded": 0,
+    "registrations_created": 228,
+    "registrations_matched": 0,
+    "reschedules_reconstructed": 1,
+    "sessions_created": 186,
+    "sessions_matched": 0,
+    "source_records_examined": 1000,
+    "unresolved_identities": 3
+  },
+  "unexplained_mismatches": 0
+}

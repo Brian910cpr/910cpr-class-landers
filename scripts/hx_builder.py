@@ -11,7 +11,7 @@ import argparse
 import hashlib
 import json
 from collections import Counter, defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -67,6 +67,14 @@ def known(value: Any) -> bool:
 def date_part(value: Any) -> str:
     raw = text(value)
     return raw[:10] if len(raw) >= 10 else "unknown"
+
+
+def parse_timestamp(value: Any) -> datetime | None:
+    try:
+        parsed = datetime.fromisoformat(text(value).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed.tzinfo is not None else None
 
 
 def canonical_record(record: dict[str, Any], source: str) -> dict[str, Any]:
@@ -199,6 +207,84 @@ class HxBuilder:
         self.organizations = reference.get("organizations", [])
         self.products = reference.get("products", [])
         self.product_aliases = reference.get("product_aliases", [])
+        self.courses = reference.get("courses", [])
+        self.course_aliases = reference.get("course_aliases", [])
+        self.locations = reference.get("locations", [])
+        self.location_aliases = reference.get("location_aliases", [])
+        self.people = reference.get("people", [])
+        self.instructor_aliases = reference.get("instructor_aliases", [])
+        self.canonicalization = Counter()
+
+    def canonicalize_session(self, record: dict[str, Any]) -> bool:
+        """Resolve session facts by durable IDs or exact curated aliases only."""
+        session, raw = record["session"], record.get("raw") or {}
+        source_course = text(session.get("course_name"))
+        source_location = text(session.get("location_name"))
+        source_instructor = text(session.get("instructor_name") or raw.get("Instructor"))
+        source_duration = text(session.get("duration_hours") or raw.get("Hours"))
+        provenance = session.setdefault("source_values", {})
+        provenance.update({"course": source_course, "location": source_location,
+                           "lead_instructor": source_instructor, "duration_hours": source_duration,
+                           "start_at": session.get("start_at")})
+
+        def resolve(kind: str, value: str, rows: list[dict[str, Any]], aliases: list[dict[str, Any]],
+                    id_field: str, name_field: str, hash_field: str | None = None) -> str | None:
+            if not value:
+                self.ambiguities.append({"kind": f"session_{kind}", "source_record_id": record["source_record_id"],
+                                         "source_value": value, "reason": f"missing {kind}", "action": "manual_review"})
+                return None
+            alias_matches = [a for a in aliases if text(a.get("source")) in ("", record["source"])
+                             and (text(a.get("source_label")) == value or text(a.get("source_value")) == value
+                                  or (hash_field and text(a.get(hash_field)) == hashlib.sha256(value.encode()).hexdigest()))]
+            ids = {text(a.get(id_field)) for a in alias_matches if text(a.get(id_field))}
+            direct = [r for r in rows if text(r.get(name_field)) == value]
+            ids.update(text(r.get("id")) for r in direct)
+            if len(ids) == 1:
+                self.canonicalization[f"{kind}_resolved"] += 1
+                return next(iter(ids))
+            self.ambiguities.append({"kind": f"session_{kind}", "source_record_id": record["source_record_id"],
+                                     "source_value": value, "candidate_ids": sorted(ids),
+                                     "reason": "canonical match must be a unique exact name/source alias",
+                                     "action": "manual_review"})
+            return None
+
+        session["course_id"] = session.get("course_id") or resolve(
+            "course", source_course, self.courses, self.course_aliases, "course_id", "name", "source_label_sha256")
+        session["location_id"] = session.get("location_id") or resolve(
+            "location", source_location, self.locations, self.location_aliases, "location_id", "name")
+        session["lead_instructor_id"] = session.get("lead_instructor_id") or resolve(
+            "instructor", source_instructor, self.people, self.instructor_aliases, "person_id", "display_name")
+
+        start = parse_timestamp(session.get("start_at"))
+        if start:
+            self.canonicalization["start_at_resolved"] += 1
+        else:
+            self.ambiguities.append({"kind": "session_start_at", "source_record_id": record["source_record_id"],
+                                     "source_value": session.get("start_at"), "reason": "missing or malformed timezone-aware start",
+                                     "action": "manual_review"})
+        end = parse_timestamp(session.get("end_at"))
+        duration_hours = None
+        if source_duration:
+            try:
+                duration_hours = float(source_duration)
+            except ValueError:
+                pass
+        if end and start and end > start:
+            self.canonicalization["end_at_resolved"] += 1
+        elif start and duration_hours and 0 < duration_hours <= 24:
+            session["end_at"] = (start + timedelta(hours=duration_hours)).isoformat()
+            session["duration_minutes"] = round(duration_hours * 60)
+            session["end_at_resolution"] = "source_duration"
+            self.canonicalization["end_at_resolved"] += 1
+        else:
+            self.ambiguities.append({"kind": "session_end_at", "source_record_id": record["source_record_id"],
+                                     "source_value": source_duration, "reason": "missing, malformed, or implausible end/duration",
+                                     "action": "manual_review"})
+        ready = all(known(session.get(k)) for k in
+                    ("course_id", "location_id", "lead_instructor_id", "start_at", "end_at")) and bool(start)
+        session["canonical_ready"] = ready
+        self.canonicalization["sessions_ready" if ready else "sessions_review_required"] += 1
+        return ready
 
     def assertion(self, record: dict[str, Any], fact_type: str, value: Any, **links: Any) -> dict[str, Any]:
         key = f"{record['source']}:{record['source_record_id']}:{fact_type}:{stable_key(value)}"
@@ -291,6 +377,8 @@ class HxBuilder:
             return None, "duplicate_candidate"
         if len(matches) == 1:
             return text(matches[0]["id"]), "matched"
+        if not self.canonicalize_session(record):
+            return None, "review_required"
         required = (
             source_id,
             session.get("course_source_id") or session.get("course_id") or session.get("course_name"),
@@ -536,6 +624,7 @@ class HxBuilder:
                     "source_fingerprint_algorithm": SOURCE_FINGERPRINT_ALGORITHM,
                     "reconciliation_status": "ambiguous",
                     "conflicts_with_import_record_ids": [r.get("id") for r in priors],
+                    "predecessor_import_record_id": priors[0].get("id") if len(priors) == 1 else None,
                 })
                 self.ambiguities.append({
                     **decision,
@@ -675,6 +764,7 @@ class HxBuilder:
             "unresolved_or_ambiguous": self.ambiguities,
             "duplicate_candidates": self.duplicates,
             "records_intentionally_excluded": self.exclusions,
+            "canonicalization_summary": dict(sorted(self.canonicalization.items())),
         }
 
 

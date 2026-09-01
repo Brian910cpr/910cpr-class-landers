@@ -157,6 +157,7 @@ def canonical_record(row: dict[str, str]) -> dict[str, Any]:
         "session": {
             "source_id": clean(row.get("Class ID")), "course_name": clean(row.get("Course")),
             "start_at": parse_date(row.get("Course Date", "")), "location_name": clean(row.get("Course Location")),
+            "instructor_name": clean(row.get("Instructor")), "duration_hours": clean(row.get("Hours")),
         },
         "registration": {"source_id": f"composite:{record_key(row)}", "status": status},
         "facts": facts,

@@ -1,0 +1,94 @@
+{
+  "review_state": "unapplied_migration_proposal",
+  "courses": [
+    {"id":"6f7d3e22-7e03-476e-b280-e0eefa719030","course_key":"aha-bls-provider","name":"AHA BLS Provider","duration_minutes":120},
+    {"id":"30a198e6-e6e9-4a1a-85ec-875f0b4a2b7b","course_key":"aha-bls-provider-renewal","name":"AHA BLS Provider Renewal","duration_minutes":120},
+    {"id":"f3c121d1-aea5-45ad-a627-41d754e25546","course_key":"historical-aha-bls-heartcode","name":"AHA BLS HeartCode®"},
+    {"id":"23dfcfa7-4224-46ed-8d45-64d43d5425db","course_key":"aha-heartsaver-fa-cpr-aed","name":"AHA Heartsaver First Aid CPR AED","duration_minutes":120},
+    {"id":"0689a2c5-c507-4e8a-b94c-15e5c5689e28","course_key":"aha-heartsaver-pediatric-fa-cpr-aed","name":"AHA Heartsaver Pediatric First Aid CPR AED","duration_minutes":180},
+    {"id":"306bc81a-0e09-49e1-8910-e05501222eb4","name":"AHA Heartsaver® CPR AED"},
+    {"id":"0ec3a585-b9e9-4f49-b40c-71f8e7453e39","name":"AHA ACLS Provider (Initial)"},
+    {"id":"63f09edd-d711-481e-bfe2-e0ad98319ec2","name":"AHA ACLS Provider Renewal","duration_minutes":180},
+    {"id":"daae1055-c46c-4e75-8432-084261559fc1","name":"AHA ACLS HeartCode"},
+    {"id":"cc977571-db34-4508-b82c-24061f5919e8","name":"AHA PALS Provider","duration_minutes":240},
+    {"id":"bfde8aff-d276-4a6a-977e-93ca79977548","name":"AHA PALS Renewal"},
+    {"id":"53f66f39-aa5d-48d4-9d64-baae0bb285e2","name":"AHA PALS HeartCode®"},
+    {"id":"edfab5ad-4f17-4d80-98e0-ad0533e0d649","name":"AHA - BLS - Become an American Heart Association Instructor"},
+    {"id":"a76b83dd-a257-4b4a-a5d4-bbe5d901bbe5","name":"AHA - BLS Instructor Renewal"},
+    {"id":"d15a79ca-1114-4af9-bb4b-d997c03222fe","name":"AHA - PALS - Become an American Heart Association Instructor"},
+    {"id":"4637348f-b0ca-4e27-9a2d-237823b06c45","name":"AHA - PALS Instructor Renewal"},
+    {"id":"5fdc3505-8cf2-43fc-89ee-f8e53baf9b19","name":"AHA - ACLS - Become an American Heart Association Instructor"},
+    {"id":"e6fe130f-72b3-4e1e-b4df-c19b9eb8efd6","name":"AHA - ACLS Instructor Renewal"},
+    {"id":"0c2ee5aa-1eb3-41ce-bc8c-6474e589eb19","name":"AHA - Family & Friends® CPR"},
+    {"id":"bd7d2142-bb45-47e1-a6be-391d8394ee51","name":"Heartsaver First Aid CPR AED for K-12 Schools [AHA]"},
+    {"id":"cfe92af6-ab10-4fc3-8b93-e0c4e9de15f8","name":"Heartsaver® First Aid"},
+    {"id":"8b68b384-0c2e-4aee-9fc8-cbeb2fc3c57d","name":"Heartsaver® First Aid Online"},
+    {"id":"ca19227b-aaea-44af-9a93-7110a1fb6972","name":"ARC BLS Blended Learning"},
+    {"id":"dab9d70d-ec06-4e79-934d-0880336ca058","name":"Cardiac and Pulmonary Dissection with 12-Lead ECG"}
+  ],
+  "course_aliases": [
+    {"source":"enrollware_student_report","source_label_sha256":"507d7a31df9b8575c10302f433efb4f882bf0642efe7daf998948bee05d204c5","course_id":"6f7d3e22-7e03-476e-b280-e0eefa719030"},
+    {"source":"enrollware_student_report","source_label_sha256":"a60f29202d19f70a67b07eb8eec75f6ae149f31df85b80d73551cb0d74950988","course_id":"6f7d3e22-7e03-476e-b280-e0eefa719030"},
+    {"source":"enrollware_student_report","source_label_sha256":"d3fdcf1bcf7e6a1cd1a53b864d0220ec1ec733a704a816203553dae153d937a8","course_id":"23dfcfa7-4224-46ed-8d45-64d43d5425db"},
+    {"source":"enrollware_student_report","source_label_sha256":"79d9812941b2224be6d233f5ae6461e1c2d75d06fa640de506d4f17dd18b570d","course_id":"f3c121d1-aea5-45ad-a627-41d754e25546"},
+    {"source":"enrollware_student_report","source_label_sha256":"c896e9c33959055f081ac2ef9cc3e77765b987864421a66e5e699d1226a4dc37","course_id":"daae1055-c46c-4e75-8432-084261559fc1"},
+    {"source":"enrollware_student_report","source_label_sha256":"7193ed1656dd5584ae791c8c9e0a83cfec5fe0007f3b4a2fa60baffef8a74493","course_id":"30a198e6-e6e9-4a1a-85ec-875f0b4a2b7b"},
+    {"source":"enrollware_student_report","source_label_sha256":"7a493a9c72b50a692d53cd31271d0374c18ab91f2c492cfae379d8bbefa01b03","course_id":"23dfcfa7-4224-46ed-8d45-64d43d5425db"},
+    {"source":"enrollware_student_report","source_label_sha256":"ab95d5100c9ff24522374436b983679945b1f270ce2a2b69e50d93be89d199a8","course_id":"edfab5ad-4f17-4d80-98e0-ad0533e0d649"},
+    {"source":"enrollware_student_report","source_label_sha256":"a3de3386058e46c29a020423f01838221e396731703381c1318b4c46972f1e6a","course_id":"63f09edd-d711-481e-bfe2-e0ad98319ec2"},
+    {"source":"enrollware_student_report","source_label_sha256":"f851d2dd0e2758c90f05129013e28c881c01487f833bacddcc89e4a98ed118ee","course_id":"53f66f39-aa5d-48d4-9d64-baae0bb285e2"},
+    {"source":"enrollware_student_report","source_label_sha256":"0e5438f42f28750a8feeea17827fd268947a09cbc2a1d7b45fe6ac396a5e5022","course_id":"0689a2c5-c507-4e8a-b94c-15e5c5689e28"},
+    {"source":"enrollware_student_report","source_label_sha256":"d43972be731c57a7aee64d15708cafc0d5ecf120da1d7646b350bc3986053918","course_id":"0689a2c5-c507-4e8a-b94c-15e5c5689e28"},
+    {"source":"enrollware_student_report","source_label_sha256":"a6a105eef056f233072004c40a2858c7a8acf850b6088a59938661ceb56fd506","course_id":"0ec3a585-b9e9-4f49-b40c-71f8e7453e39"},
+    {"source":"enrollware_student_report","source_label_sha256":"d241b24f1db820a58eea6f8735c29c5bb4437e45069665f445c8539933d418bd","course_id":"bd7d2142-bb45-47e1-a6be-391d8394ee51"},
+    {"source":"enrollware_student_report","source_label_sha256":"a64ac4d3ba7ce31c88725fe67319b75fbaba306e89383cc60100e94da3e74da7","course_id":"bfde8aff-d276-4a6a-977e-93ca79977548"},
+    {"source":"enrollware_student_report","source_label_sha256":"822a15db37b352ed1e406e3006654ce49050a7f48d67901745895c7ee6de259b","course_id":"f3c121d1-aea5-45ad-a627-41d754e25546"},
+    {"source":"enrollware_student_report","source_label_sha256":"baf4a732ad504115a809d5aa0fd7b1ab4fec8a8d4a128d72f635c35fc012f152","course_id":"a76b83dd-a257-4b4a-a5d4-bbe5d901bbe5"},
+    {"source":"enrollware_student_report","source_label_sha256":"f236e417c1fd3b50961c40e8080a070d51a4ca440139845c2e2a9837194f2b2a","course_id":"4637348f-b0ca-4e27-9a2d-237823b06c45"},
+    {"source":"enrollware_student_report","source_label_sha256":"f1ce364f4dc53bdf9665b58172c85c59f698d4ce6797f61e85da3e6515e2ce73","course_id":"ca19227b-aaea-44af-9a93-7110a1fb6972"},
+    {"source":"enrollware_student_report","source_label_sha256":"74aab8844e6aad14e3e6c8eba753d82f68b9029e61d756b38b0e48dcd1721c13","course_id":"0c2ee5aa-1eb3-41ce-bc8c-6474e589eb19"},
+    {"source":"enrollware_student_report","source_label_sha256":"0a1ab678e88787d7df70df922b88b3285e6dcc15c4d1869fa75a215fc9e28872","course_id":"306bc81a-0e09-49e1-8910-e05501222eb4"},
+    {"source":"enrollware_student_report","source_label_sha256":"320d4ef9c23bc512c1ec17e3c4e744bf58d8b131127c6b72641a214420a6dde9","course_id":"6f7d3e22-7e03-476e-b280-e0eefa719030"},
+    {"source":"enrollware_student_report","source_label_sha256":"859df77309388c7dfcec664ca534e27f34061923888478539400b5f6ed88e9f7","course_id":"cfe92af6-ab10-4fc3-8b93-e0c4e9de15f8"},
+    {"source":"enrollware_student_report","source_label_sha256":"f4dde67454181454e9900c3a6086d75b09fb98ae3d8e7bb768dfc6f76c5ac480","course_id":"8b68b384-0c2e-4aee-9fc8-cbeb2fc3c57d"},
+    {"source":"enrollware_student_report","source_label_sha256":"4e3e4efaa73fd8c16ba20a17a310420a3d9ff53ca2e243c9f62ed3ad5d5a6f05","course_id":"306bc81a-0e09-49e1-8910-e05501222eb4"},
+    {"source":"enrollware_student_report","source_label_sha256":"be9504ec821d3203809796e1ab516eb953f1eac1f988dfcf50ff413d5ca48de8","course_id":"e6fe130f-72b3-4e1e-b4df-c19b9eb8efd6"},
+    {"source":"enrollware_student_report","source_label_sha256":"f1ef367c5644c6c3f827d2777e139066f108937aa6ddc2079ec73493f3cfcdea","course_id":"d15a79ca-1114-4af9-bb4b-d997c03222fe"},
+    {"source":"enrollware_student_report","source_label_sha256":"e244c0dc741ba1ec330bc6309b4755dacbb410913df8b091bca93b313bc1ca1b","course_id":"dab9d70d-ec06-4e79-934d-0880336ca058"},
+    {"source":"enrollware_student_report","source_label_sha256":"31a9c35a83d34013d1c91803f347dedb9826019cda2f0fd43fdc63f29d506085","course_id":"5fdc3505-8cf2-43fc-89ee-f8e53baf9b19"}
+  ],
+  "locations": [
+    {"id":"fd44e20f-af86-4198-ab7c-fa13dad6a7fd","name":"910CPR Office - Shipyard Blvd"},
+    {"id":"abd29f08-92f7-4752-9e75-16ee7860ad4c","name":"New Hanover County Sheriff's Office"}
+  ],
+  "location_aliases": [
+    {"source":"enrollware_student_report","source_label":"NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office","location_id":"fd44e20f-af86-4198-ab7c-fa13dad6a7fd"},
+    {"source":"enrollware_student_report","source_label":"New Hanover County Sheriff’s Office","location_id":"abd29f08-92f7-4752-9e75-16ee7860ad4c"}
+  ],
+  "people": [
+    {"id":"fe70a45e-63ce-4790-937b-d9f8a775ac9e","display_name":"Amy Arnold"},
+    {"id":"1257e7b5-635b-4a0a-8bca-42ea4470a34f","display_name":"Brian Ennis"},
+    {"id":"b6422685-d942-40ba-a6e4-09212f5fe20b","display_name":"Crystal Jasper"},
+    {"id":"573d625a-3eb8-4d07-a3f0-ac76e39f6598","display_name":"Lauren Brothers"},
+    {"id":"e003543a-f47d-4c8f-ba6c-fb9c754f3d8d","display_name":"Nicholas Tripp"}
+  ],
+  "instructor_aliases": [
+    {"source":"enrollware_student_report","source_label":"N Tripp*","person_id":"e003543a-f47d-4c8f-ba6c-fb9c754f3d8d"}
+  ],
+  "products": [
+    {"id":"proposed-product:aha-25-3001","product_key":"aha-25-3001-bls-provider-ecard","name":"AHA BLS Provider eCard (25-3001)","resolution_state":"migration_proposal"},
+    {"id":"proposed-product:aha-25-3002","product_key":"aha-25-3002-heartsaver-first-aid-cpr-aed-ecard","name":"AHA Heartsaver First Aid CPR AED eCard (25-3002)","resolution_state":"migration_proposal"}
+  ],
+  "product_aliases": [
+    {"source":"enrollware_student_report","source_value":"AHA-BLS-ECARD","product_key":"aha-25-3001-bls-provider-ecard"},
+    {"source":"enrollware_student_report","source_value":"AHA-HS-FACPRAED-ECARD","product_key":"aha-25-3002-heartsaver-first-aid-cpr-aed-ecard"}
+  ],
+  "aha_reference_only_products": [
+    {"product_number":"25-3000","name":"AHA ACLS Provider eCard","state":"requires product-master pricing approval"},
+    {"product_number":"25-3003","name":"AHA Heartsaver Pediatric First Aid CPR AED eCard","state":"requires product-master pricing approval"},
+    {"product_number":"25-3004","name":"AHA Heartsaver CPR AED eCard","state":"requires product-master pricing approval"},
+    {"product_number":"25-3005","name":"AHA Heartsaver First Aid eCard","state":"requires product-master pricing approval"},
+    {"product_number":"25-3006","name":"AHA PALS Provider eCard","state":"requires product-master pricing approval"},
+    {"product_number":"25-3011","name":"AHA Heartsaver K-12 eCard","state":"requires product-master pricing approval"}
+  ]
+}
