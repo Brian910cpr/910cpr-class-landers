@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-01T16:16:49.049318+00:00",
+  "generated_at": "2026-09-01T19:17:00.207790+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-01T16:16:48.410865+00:00",
+      "generated_at": "2026-09-01T19:16:59.791975+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-01T16:16:49.049318+00:00",
-      "event_count": 145
+      "generated_at": "2026-09-01T19:17:00.207790+00:00",
+      "event_count": 144
     },
     {
       "source_key": "brian_primary_calendar",
       "display_name": "Brian Primary Google Calendar",
       "source_type": "occupancy_calendar",
       "export_status": "failed",
-      "generated_at": "2026-09-01T16:16:48.675984+00:00",
+      "generated_at": "2026-09-01T19:16:59.966602+00:00",
       "event_count": 0
     },
     {
@@ -32,22 +32,11 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-01T16:16:48.675693+00:00",
+      "generated_at": "2026-09-01T19:16:59.966172+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-09-01T15:00:00-04:00",
-      "end": "2026-09-01T17:30:00-04:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
