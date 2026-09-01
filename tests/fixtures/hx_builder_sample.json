@@ -1,0 +1,109 @@
+{
+  "batch": {
+    "batch_key": "hx-contract-fixture-v1",
+    "source": "multi_source_fixture",
+    "source_file_id": "tests/fixtures/hx_builder_sample.json",
+    "parser_version": "hx-fixture-1",
+    "created_at": "2026-09-01T00:00:00-04:00"
+  },
+  "records": [
+    {
+      "source": "enrollware",
+      "source_record_id": "ew-r1",
+      "confidence_state": "confirmed",
+      "person": {"source_id": "ew-p1", "first_name": "Alex", "last_name": "Rivera", "email": "alex@example.test"},
+      "session": {"source_id": "ew-s-old", "course_source_id": "bls", "course_name": "BLS", "start_at": "2024-01-01T09:00:00-05:00"},
+      "registration": {"source_id": "ew-r1", "status": "registered"},
+      "facts": {}
+    },
+    {
+      "source": "enrollware",
+      "source_record_id": "ew-r1",
+      "confidence_state": "confirmed",
+      "person": {"source_id": "ew-p1", "first_name": "Alex", "last_name": "Rivera", "email": "alex@example.test"},
+      "session": {"source_id": "ew-s-old", "course_source_id": "bls", "course_name": "BLS", "start_at": "2024-01-01T09:00:00-05:00"},
+      "registration": {"source_id": "ew-r1"},
+      "facts": {}
+    },
+    {
+      "source": "atlas",
+      "source_record_id": "atlas-card-1",
+      "source_created_at": "2024-01-03T10:00:00-05:00",
+      "confidence_state": "confirmed",
+      "confidence": 1.0,
+      "person": {"source_id": "atlas-p1", "first_name": "Alex", "last_name": "Rivera", "email": "alex@example.test"},
+      "session": {"source_id": "atlas-s-new", "course_source_id": "bls", "course_name": "BLS", "start_at": "2024-02-01T09:00:00-05:00"},
+      "registration": {"source_id": "atlas-r1"},
+      "facts": {
+        "attendance": {"state": "attended", "evidence": "roster"},
+        "completion": {"status": "passed", "completed_at": "2024-02-01T12:00:00-05:00"},
+        "credential": {"credential_number": "CARD-100", "issued_at": "2024-02-02T10:00:00-05:00"}
+      }
+    },
+    {
+      "source": "gmail",
+      "source_record_id": "gmail-conflict-1",
+      "confidence_state": "possible",
+      "person": {"source_id": "gmail-p-conflict", "first_name": "Jordan", "last_name": "Conflict", "email": "shared@example.test", "phone": "9105550002"},
+      "session": {"source_id": "gmail-s1", "course_source_id": "bls", "course_name": "BLS", "start_at": "2024-03-01T09:00:00-05:00"},
+      "registration": {"source_id": "gmail-r1"},
+      "facts": {"completion": {"status": "unknown"}}
+    },
+    {
+      "source": "class_document",
+      "source_record_id": "doc-move-1",
+      "confidence_state": "confirmed",
+      "person": {"source_id": "doc-p1", "first_name": "Alex", "last_name": "Rivera", "email": "alex@example.test"},
+      "session": {"source_id": "doc-s-new", "course_source_id": "bls", "course_name": "BLS", "start_at": "2024-02-01T09:00:00-05:00"},
+      "registration": {"source_id": "doc-r1"},
+      "reschedule": {"from_session_source_id": "doc-s-old", "reason": "customer rescheduled", "occurred_at": "2024-01-15T12:00:00-05:00"},
+      "facts": {}
+    },
+    {
+      "source": "stripe",
+      "source_record_id": "pi_100",
+      "confidence_state": "confirmed",
+      "person": {"source_id": "stripe-c1", "first_name": "Alex", "last_name": "Rivera", "email": "alex@example.test"},
+      "session": {"source_id": "stripe-s-new", "course_source_id": "bls", "course_name": "BLS", "start_at": "2024-02-01T09:00:00-05:00"},
+      "registration": {"source_id": "stripe-r1"},
+      "facts": {"payment": {"status": "paid", "amount": 100, "currency": "usd"}}
+    },
+    {
+      "source": "class_document",
+      "source_record_id": "prepaid-card-use-1",
+      "confidence_state": "confirmed",
+      "person": {"source_id": "doc-p1", "first_name": "Alex", "last_name": "Rivera", "email": "alex@example.test"},
+      "session": {"source_id": "doc-s-new", "course_source_id": "bls", "course_name": "BLS", "start_at": "2024-02-01T09:00:00-05:00"},
+      "registration": {"source_id": "doc-r1"},
+      "facts": {
+        "inventory_entitlement": {
+          "pool_key": "customer-prepaid-ecards-1",
+          "event_type": "consumed",
+          "quantity_delta": -1,
+          "unit_kind": "ecard"
+        }
+      }
+    },
+    {
+      "source": "legacy_csv",
+      "source_record_id": "legacy-new-1",
+      "confidence_state": "probable",
+      "confidence": 0.8,
+      "person": {"source_id": "legacy-p-new", "first_name": "New", "last_name": "Participant", "email": "new@example.test"},
+      "session": {"source_id": "legacy-s-new", "course_source_id": "heartsaver", "course_name": "Heartsaver", "start_at": "2023-05-10T10:00:00-04:00"},
+      "registration": {"source_id": "legacy-r-new"},
+      "facts": {"products": [{"description": "manual", "fulfillment_state": "unknown"}]}
+    },
+    {
+      "source": "legacy_csv",
+      "source_record_id": "excluded-1",
+      "exclude_reason": "test or staff record",
+      "confidence_state": "confirmed",
+      "person": {},
+      "session": {},
+      "registration": {},
+      "facts": {}
+    }
+  ]
+}
+

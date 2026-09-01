@@ -1,0 +1,832 @@
+{
+  "authority": "customers -> registrations -> class_sessions",
+  "batch": {
+    "batch_key": "hx-contract-fixture-v1",
+    "created_at": "2026-09-01T00:00:00-04:00",
+    "parser_version": "hx-fixture-1",
+    "source": "multi_source_fixture",
+    "source_file_id": "tests/fixtures/hx_builder_sample.json"
+  },
+  "decisions": [
+    {
+      "action": "dry_run_only",
+      "facts": {},
+      "import_record_id": "import-record-ew-r1",
+      "person_resolution": "matched_alias",
+      "registration_resolution": "matched",
+      "session_resolution": "matched",
+      "source": "enrollware",
+      "source_record_id": "ew-r1",
+      "source_record_resolution": "matched"
+    },
+    {
+      "action": "dry_run_only",
+      "facts": {
+        "attendance": 1,
+        "completion": 1,
+        "credential": 1
+      },
+      "person_resolution": "matched_alias",
+      "registration_resolution": "matched",
+      "session_resolution": "matched",
+      "source": "atlas",
+      "source_record_id": "atlas-card-1",
+      "source_record_resolution": "created"
+    },
+    {
+      "action": "review",
+      "person_resolution": "ambiguous",
+      "source": "gmail",
+      "source_record_id": "gmail-conflict-1",
+      "source_record_resolution": "created"
+    },
+    {
+      "action": "dry_run_only",
+      "facts": {},
+      "person_resolution": "matched_alias",
+      "registration_resolution": "matched",
+      "session_resolution": "matched",
+      "source": "class_document",
+      "source_record_id": "doc-move-1",
+      "source_record_resolution": "created"
+    },
+    {
+      "action": "dry_run_only",
+      "facts": {
+        "payment": 1
+      },
+      "person_resolution": "matched_alias",
+      "registration_resolution": "matched",
+      "session_resolution": "matched",
+      "source": "stripe",
+      "source_record_id": "pi_100",
+      "source_record_resolution": "created"
+    },
+    {
+      "action": "dry_run_only",
+      "facts": {
+        "inventory_entitlement": 1
+      },
+      "person_resolution": "matched_alias",
+      "registration_resolution": "matched",
+      "session_resolution": "matched",
+      "source": "class_document",
+      "source_record_id": "prepaid-card-use-1",
+      "source_record_resolution": "created"
+    },
+    {
+      "action": "dry_run_only",
+      "facts": {
+        "product_fulfillment": 1
+      },
+      "person_resolution": "created",
+      "registration_resolution": "created",
+      "session_resolution": "created",
+      "source": "legacy_csv",
+      "source_record_id": "legacy-new-1",
+      "source_record_resolution": "created"
+    }
+  ],
+  "duplicate_candidates": [
+    {
+      "kind": "source_record_replay",
+      "source": "enrollware",
+      "source_record_id": "ew-r1"
+    }
+  ],
+  "evidence_assertions": [
+    {
+      "asserted_value": {
+        "evidence": "roster",
+        "state": "attended"
+      },
+      "assertion_key": "atlas:atlas-card-1:attendance:242f52d638143ed6e217603b",
+      "class_session_id": "session-new",
+      "confidence": 1.0,
+      "confidence_state": "confirmed",
+      "customer_id": "customer-1",
+      "fact_type": "attendance",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "observed_at": null,
+      "original_source_value": {
+        "confidence": 1.0,
+        "confidence_state": "confirmed",
+        "facts": {
+          "attendance": {
+            "evidence": "roster",
+            "state": "attended"
+          },
+          "completion": {
+            "completed_at": "2024-02-01T12:00:00-05:00",
+            "status": "passed"
+          },
+          "credential": {
+            "credential_number": "CARD-100",
+            "issued_at": "2024-02-02T10:00:00-05:00"
+          }
+        },
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "atlas-p1"
+        },
+        "registration": {
+          "source_id": "atlas-r1"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "atlas-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "atlas",
+        "source_created_at": "2024-01-03T10:00:00-05:00",
+        "source_record_id": "atlas-card-1"
+      },
+      "reconciliation_status": "unreviewed",
+      "registration_id": "registration-new",
+      "source": "atlas",
+      "source_created_at": "2024-01-03T10:00:00-05:00",
+      "source_record_id": "atlas-card-1"
+    },
+    {
+      "asserted_value": {
+        "completed_at": "2024-02-01T12:00:00-05:00",
+        "status": "passed"
+      },
+      "assertion_key": "atlas:atlas-card-1:completion:8beb81ad09e5180c50d1b81b",
+      "class_session_id": "session-new",
+      "confidence": 1.0,
+      "confidence_state": "confirmed",
+      "customer_id": "customer-1",
+      "fact_type": "completion",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "observed_at": null,
+      "original_source_value": {
+        "confidence": 1.0,
+        "confidence_state": "confirmed",
+        "facts": {
+          "attendance": {
+            "evidence": "roster",
+            "state": "attended"
+          },
+          "completion": {
+            "completed_at": "2024-02-01T12:00:00-05:00",
+            "status": "passed"
+          },
+          "credential": {
+            "credential_number": "CARD-100",
+            "issued_at": "2024-02-02T10:00:00-05:00"
+          }
+        },
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "atlas-p1"
+        },
+        "registration": {
+          "source_id": "atlas-r1"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "atlas-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "atlas",
+        "source_created_at": "2024-01-03T10:00:00-05:00",
+        "source_record_id": "atlas-card-1"
+      },
+      "reconciliation_status": "unreviewed",
+      "registration_id": "registration-new",
+      "source": "atlas",
+      "source_created_at": "2024-01-03T10:00:00-05:00",
+      "source_record_id": "atlas-card-1"
+    },
+    {
+      "asserted_value": {
+        "credential_number": "CARD-100",
+        "issued_at": "2024-02-02T10:00:00-05:00"
+      },
+      "assertion_key": "atlas:atlas-card-1:credential:805c8eed89ba12f4dd5547dc",
+      "class_session_id": "session-new",
+      "confidence": 1.0,
+      "confidence_state": "confirmed",
+      "customer_id": "customer-1",
+      "fact_type": "credential",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "observed_at": null,
+      "original_source_value": {
+        "confidence": 1.0,
+        "confidence_state": "confirmed",
+        "facts": {
+          "attendance": {
+            "evidence": "roster",
+            "state": "attended"
+          },
+          "completion": {
+            "completed_at": "2024-02-01T12:00:00-05:00",
+            "status": "passed"
+          },
+          "credential": {
+            "credential_number": "CARD-100",
+            "issued_at": "2024-02-02T10:00:00-05:00"
+          }
+        },
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "atlas-p1"
+        },
+        "registration": {
+          "source_id": "atlas-r1"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "atlas-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "atlas",
+        "source_created_at": "2024-01-03T10:00:00-05:00",
+        "source_record_id": "atlas-card-1"
+      },
+      "reconciliation_status": "unreviewed",
+      "registration_id": "registration-new",
+      "source": "atlas",
+      "source_created_at": "2024-01-03T10:00:00-05:00",
+      "source_record_id": "atlas-card-1"
+    },
+    {
+      "asserted_value": {
+        "from_session_source_id": "doc-s-old",
+        "occurred_at": "2024-01-15T12:00:00-05:00",
+        "reason": "customer rescheduled"
+      },
+      "assertion_key": "class_document:doc-move-1:reschedule:12c3a7d20d1bf102f48d3cc2",
+      "class_session_id": "session-new",
+      "confidence": null,
+      "confidence_state": "confirmed",
+      "customer_id": "customer-1",
+      "fact_type": "reschedule",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "observed_at": null,
+      "original_source_value": {
+        "confidence_state": "confirmed",
+        "facts": {},
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "doc-p1"
+        },
+        "registration": {
+          "source_id": "doc-r1"
+        },
+        "reschedule": {
+          "from_session_source_id": "doc-s-old",
+          "occurred_at": "2024-01-15T12:00:00-05:00",
+          "reason": "customer rescheduled"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "doc-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "class_document",
+        "source_record_id": "doc-move-1"
+      },
+      "reconciliation_status": "unreviewed",
+      "registration_id": "registration-new",
+      "source": "class_document",
+      "source_created_at": null,
+      "source_record_id": "doc-move-1"
+    },
+    {
+      "asserted_value": {
+        "amount": 100,
+        "currency": "usd",
+        "status": "paid"
+      },
+      "assertion_key": "stripe:pi_100:payment:0f16f43f3f1a6a9c2b94053a",
+      "class_session_id": "session-new",
+      "confidence": null,
+      "confidence_state": "confirmed",
+      "customer_id": "customer-1",
+      "fact_type": "payment",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "observed_at": null,
+      "original_source_value": {
+        "confidence_state": "confirmed",
+        "facts": {
+          "payment": {
+            "amount": 100,
+            "currency": "usd",
+            "status": "paid"
+          }
+        },
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "stripe-c1"
+        },
+        "registration": {
+          "source_id": "stripe-r1"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "stripe-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "stripe",
+        "source_record_id": "pi_100"
+      },
+      "reconciliation_status": "unreviewed",
+      "registration_id": "registration-new",
+      "source": "stripe",
+      "source_created_at": null,
+      "source_record_id": "pi_100"
+    },
+    {
+      "asserted_value": {
+        "event_type": "consumed",
+        "pool_key": "customer-prepaid-ecards-1",
+        "quantity_delta": -1,
+        "unit_kind": "ecard"
+      },
+      "assertion_key": "class_document:prepaid-card-use-1:inventory_entitlement:070d8d119bed426cbcd16304",
+      "class_session_id": "session-new",
+      "confidence": null,
+      "confidence_state": "confirmed",
+      "customer_id": "customer-1",
+      "fact_type": "inventory_entitlement",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "observed_at": null,
+      "original_source_value": {
+        "confidence_state": "confirmed",
+        "facts": {
+          "inventory_entitlement": {
+            "event_type": "consumed",
+            "pool_key": "customer-prepaid-ecards-1",
+            "quantity_delta": -1,
+            "unit_kind": "ecard"
+          }
+        },
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "doc-p1"
+        },
+        "registration": {
+          "source_id": "doc-r1"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "doc-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "class_document",
+        "source_record_id": "prepaid-card-use-1"
+      },
+      "reconciliation_status": "unreviewed",
+      "registration_id": "registration-new",
+      "source": "class_document",
+      "source_created_at": null,
+      "source_record_id": "prepaid-card-use-1"
+    },
+    {
+      "asserted_value": [
+        {
+          "description": "manual",
+          "fulfillment_state": "unknown"
+        }
+      ],
+      "assertion_key": "legacy_csv:legacy-new-1:product_fulfillment:7b4034928d5311c2069cfe3f",
+      "class_session_id": "proposed-session:75a00c57d17f6622f4bced8e",
+      "confidence": 0.8,
+      "confidence_state": "probable",
+      "customer_id": "proposed-customer:344c550c918ba0c347339edb",
+      "fact_type": "product_fulfillment",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "observed_at": null,
+      "original_source_value": {
+        "confidence": 0.8,
+        "confidence_state": "probable",
+        "facts": {
+          "products": [
+            {
+              "description": "manual",
+              "fulfillment_state": "unknown"
+            }
+          ]
+        },
+        "person": {
+          "email": "new@example.test",
+          "first_name": "New",
+          "last_name": "Participant",
+          "source_id": "legacy-p-new"
+        },
+        "registration": {
+          "source_id": "legacy-r-new"
+        },
+        "session": {
+          "course_name": "Heartsaver",
+          "course_source_id": "heartsaver",
+          "source_id": "legacy-s-new",
+          "start_at": "2023-05-10T10:00:00-04:00"
+        },
+        "source": "legacy_csv",
+        "source_record_id": "legacy-new-1"
+      },
+      "reconciliation_status": "unreviewed",
+      "registration_id": "proposed-registration:94474f980b3fd797605ef85e",
+      "source": "legacy_csv",
+      "source_created_at": null,
+      "source_record_id": "legacy-new-1"
+    }
+  ],
+  "mode": "dry_run",
+  "mutation_performed": false,
+  "proposed_operations": [
+    {
+      "command": "propose_import_record",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "original_values": {
+        "confidence": 1.0,
+        "confidence_state": "confirmed",
+        "facts": {
+          "attendance": {
+            "evidence": "roster",
+            "state": "attended"
+          },
+          "completion": {
+            "completed_at": "2024-02-01T12:00:00-05:00",
+            "status": "passed"
+          },
+          "credential": {
+            "credential_number": "CARD-100",
+            "issued_at": "2024-02-02T10:00:00-05:00"
+          }
+        },
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "atlas-p1"
+        },
+        "registration": {
+          "source_id": "atlas-r1"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "atlas-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "atlas",
+        "source_created_at": "2024-01-03T10:00:00-05:00",
+        "source_record_id": "atlas-card-1"
+      },
+      "source": "atlas",
+      "source_record_id": "atlas-card-1"
+    },
+    {
+      "command": "propose_completion",
+      "registration_id": "registration-new",
+      "source": "atlas",
+      "source_record_id": "atlas-card-1",
+      "value": {
+        "completed_at": "2024-02-01T12:00:00-05:00",
+        "status": "passed"
+      }
+    },
+    {
+      "command": "propose_credential",
+      "registration_id": "registration-new",
+      "source": "atlas",
+      "source_record_id": "atlas-card-1",
+      "value": {
+        "credential_number": "CARD-100",
+        "issued_at": "2024-02-02T10:00:00-05:00"
+      }
+    },
+    {
+      "command": "propose_import_record",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "original_values": {
+        "confidence_state": "possible",
+        "facts": {
+          "completion": {
+            "status": "unknown"
+          }
+        },
+        "person": {
+          "email": "shared@example.test",
+          "first_name": "Jordan",
+          "last_name": "Conflict",
+          "phone": "9105550002",
+          "source_id": "gmail-p-conflict"
+        },
+        "registration": {
+          "source_id": "gmail-r1"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "gmail-s1",
+          "start_at": "2024-03-01T09:00:00-05:00"
+        },
+        "source": "gmail",
+        "source_record_id": "gmail-conflict-1"
+      },
+      "source": "gmail",
+      "source_record_id": "gmail-conflict-1"
+    },
+    {
+      "command": "propose_import_record",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "original_values": {
+        "confidence_state": "confirmed",
+        "facts": {},
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "doc-p1"
+        },
+        "registration": {
+          "source_id": "doc-r1"
+        },
+        "reschedule": {
+          "from_session_source_id": "doc-s-old",
+          "occurred_at": "2024-01-15T12:00:00-05:00",
+          "reason": "customer rescheduled"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "doc-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "class_document",
+        "source_record_id": "doc-move-1"
+      },
+      "source": "class_document",
+      "source_record_id": "doc-move-1"
+    },
+    {
+      "command": "move_registration",
+      "customer_id": "customer-1",
+      "idempotency_key": "hx-move:class_document:doc-move-1",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "occurred_at": "2024-01-15T12:00:00-05:00",
+      "reason": "customer rescheduled",
+      "source": "class_document",
+      "source_session_id": "session-old",
+      "target_session_id": "session-new"
+    },
+    {
+      "command": "propose_import_record",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "original_values": {
+        "confidence_state": "confirmed",
+        "facts": {
+          "payment": {
+            "amount": 100,
+            "currency": "usd",
+            "status": "paid"
+          }
+        },
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "stripe-c1"
+        },
+        "registration": {
+          "source_id": "stripe-r1"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "stripe-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "stripe",
+        "source_record_id": "pi_100"
+      },
+      "source": "stripe",
+      "source_record_id": "pi_100"
+    },
+    {
+      "command": "propose_import_record",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "original_values": {
+        "confidence_state": "confirmed",
+        "facts": {
+          "inventory_entitlement": {
+            "event_type": "consumed",
+            "pool_key": "customer-prepaid-ecards-1",
+            "quantity_delta": -1,
+            "unit_kind": "ecard"
+          }
+        },
+        "person": {
+          "email": "alex@example.test",
+          "first_name": "Alex",
+          "last_name": "Rivera",
+          "source_id": "doc-p1"
+        },
+        "registration": {
+          "source_id": "doc-r1"
+        },
+        "session": {
+          "course_name": "BLS",
+          "course_source_id": "bls",
+          "source_id": "doc-s-new",
+          "start_at": "2024-02-01T09:00:00-05:00"
+        },
+        "source": "class_document",
+        "source_record_id": "prepaid-card-use-1"
+      },
+      "source": "class_document",
+      "source_record_id": "prepaid-card-use-1"
+    },
+    {
+      "class_session_id": "session-new",
+      "command": "propose_inventory_entitlement_event",
+      "customer_id": "customer-1",
+      "event_type": "consumed",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "pool_id": "pool-1",
+      "pool_key": "customer-prepaid-ecards-1",
+      "quantity_delta": -1,
+      "registration_id": "registration-new",
+      "source": "class_document",
+      "source_record_id": "prepaid-card-use-1"
+    },
+    {
+      "command": "propose_import_record",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "original_values": {
+        "confidence": 0.8,
+        "confidence_state": "probable",
+        "facts": {
+          "products": [
+            {
+              "description": "manual",
+              "fulfillment_state": "unknown"
+            }
+          ]
+        },
+        "person": {
+          "email": "new@example.test",
+          "first_name": "New",
+          "last_name": "Participant",
+          "source_id": "legacy-p-new"
+        },
+        "registration": {
+          "source_id": "legacy-r-new"
+        },
+        "session": {
+          "course_name": "Heartsaver",
+          "course_source_id": "heartsaver",
+          "source_id": "legacy-s-new",
+          "start_at": "2023-05-10T10:00:00-04:00"
+        },
+        "source": "legacy_csv",
+        "source_record_id": "legacy-new-1"
+      },
+      "source": "legacy_csv",
+      "source_record_id": "legacy-new-1"
+    },
+    {
+      "command": "register_participant_identity",
+      "person": {
+        "email": "new@example.test",
+        "first_name": "New",
+        "last_name": "Participant",
+        "source_id": "legacy-p-new"
+      },
+      "proposed_customer_id": "proposed-customer:344c550c918ba0c347339edb",
+      "source": "legacy_csv",
+      "source_record_id": "legacy-new-1"
+    },
+    {
+      "command": "propose_session",
+      "proposed_session_id": "proposed-session:75a00c57d17f6622f4bced8e",
+      "session": {
+        "course_name": "Heartsaver",
+        "course_source_id": "heartsaver",
+        "source_id": "legacy-s-new",
+        "start_at": "2023-05-10T10:00:00-04:00"
+      },
+      "source": "legacy_csv",
+      "source_record_id": "legacy-new-1"
+    },
+    {
+      "class_session_id": "proposed-session:75a00c57d17f6622f4bced8e",
+      "command": "register_participant",
+      "customer_id": "proposed-customer:344c550c918ba0c347339edb",
+      "external_registration_id": "legacy-r-new",
+      "idempotency_key": "hx:legacy_csv:legacy-new-1",
+      "import_batch_id": "hx-contract-fixture-v1",
+      "source": "legacy_csv"
+    }
+  ],
+  "reconciliation_totals_by_course_date_source": [
+    {
+      "course": "BLS",
+      "date": "2024-01-01",
+      "duplicates": 1,
+      "examined": 2,
+      "reconciled": 1,
+      "source": "enrollware"
+    },
+    {
+      "course": "BLS",
+      "date": "2024-02-01",
+      "examined": 1,
+      "reconciled": 1,
+      "source": "atlas"
+    },
+    {
+      "course": "BLS",
+      "date": "2024-02-01",
+      "examined": 2,
+      "reconciled": 2,
+      "source": "class_document"
+    },
+    {
+      "course": "BLS",
+      "date": "2024-02-01",
+      "examined": 1,
+      "reconciled": 1,
+      "source": "stripe"
+    },
+    {
+      "course": "BLS",
+      "date": "2024-03-01",
+      "examined": 1,
+      "source": "gmail",
+      "unresolved": 1
+    },
+    {
+      "course": "Heartsaver",
+      "date": "2023-05-10",
+      "examined": 1,
+      "reconciled": 1,
+      "source": "legacy_csv"
+    },
+    {
+      "course": "unknown",
+      "date": "unknown",
+      "examined": 1,
+      "excluded": 1,
+      "source": "legacy_csv"
+    }
+  ],
+  "records_intentionally_excluded": [
+    {
+      "reason": "test or staff record",
+      "source": "legacy_csv",
+      "source_record_id": "excluded-1"
+    }
+  ],
+  "summary": {
+    "ambiguous_conflicting_facts": 1,
+    "completions_reconstructed": 1,
+    "credentials_cards_reconstructed": 1,
+    "duplicate_candidates": 1,
+    "people_created": 1,
+    "people_matched": 1,
+    "records_intentionally_excluded": 1,
+    "registrations_created": 1,
+    "registrations_matched": 2,
+    "reschedules_reconstructed": 1,
+    "sessions_created": 1,
+    "sessions_matched": 2,
+    "source_records_examined": 9,
+    "unresolved_identities": 1
+  },
+  "unresolved_or_ambiguous": [
+    {
+      "candidate_customer_ids": [
+        "customer-2",
+        "customer-3"
+      ],
+      "kind": "identity",
+      "source": "gmail",
+      "source_record_id": "gmail-conflict-1"
+    }
+  ],
+  "worker": "Hx-Builder"
+}

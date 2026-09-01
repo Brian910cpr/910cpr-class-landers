@@ -1,0 +1,37 @@
+{
+  "customers": [
+    {"id": "customer-1", "first_name": "Alex", "last_name": "Rivera", "email": "alex@example.test", "phone": "9105550001"},
+    {"id": "customer-2", "first_name": "Jordan", "last_name": "Lee", "email": "shared@example.test", "phone": "9105550009"},
+    {"id": "customer-3", "first_name": "Jordan", "last_name": "Li", "email": "other@example.test", "phone": "9105550002"}
+  ],
+  "identity_aliases": [
+    {"source": "enrollware", "source_record_id": "ew-p1", "resolution_status": "matched", "customer_id": "customer-1"},
+    {"source": "atlas", "source_record_id": "atlas-p1", "resolution_status": "matched", "customer_id": "customer-1"},
+    {"source": "class_document", "source_record_id": "doc-p1", "resolution_status": "matched", "customer_id": "customer-1"},
+    {"source": "stripe", "source_record_id": "stripe-c1", "resolution_status": "matched", "customer_id": "customer-1"}
+  ],
+  "sessions": [
+    {"id": "session-old", "source": "enrollware", "source_record_id": "ew-s-old", "course_id": "course-bls", "start_at": "2024-01-01T09:00:00-05:00"},
+    {"id": "session-new", "source": "atlas", "source_record_id": "atlas-s-new", "course_id": "course-bls", "start_at": "2024-02-01T09:00:00-05:00"},
+    {"id": "session-old", "source": "class_document", "source_record_id": "doc-s-old", "course_id": "course-bls", "start_at": "2024-01-01T09:00:00-05:00"},
+    {"id": "session-new", "source": "class_document", "source_record_id": "doc-s-new", "course_id": "course-bls", "start_at": "2024-02-01T09:00:00-05:00"},
+    {"id": "session-new", "source": "stripe", "source_record_id": "stripe-s-new", "course_id": "course-bls", "start_at": "2024-02-01T09:00:00-05:00"}
+  ],
+  "registrations": [
+    {"id": "registration-old", "customer_id": "customer-1", "class_session_id": "session-old", "registration_source": "enrollware", "external_registration_id": "ew-r1", "status": "registered"},
+    {"id": "registration-new", "customer_id": "customer-1", "class_session_id": "session-new", "registration_source": "atlas", "external_registration_id": "atlas-r1", "status": "completed"}
+  ],
+  "import_records": [
+    {"id": "import-record-ew-r1", "source": "enrollware", "source_record_id": "ew-r1", "entity_type": "registration"}
+  ],
+  "inventory_entitlement_pools": [
+    {
+      "id": "pool-1",
+      "pool_key": "customer-prepaid-ecards-1",
+      "owner_kind": "customer",
+      "owner_customer_id": "customer-1",
+      "product_id": "product-ecard",
+      "unit_kind": "ecard"
+    }
+  ]
+}
