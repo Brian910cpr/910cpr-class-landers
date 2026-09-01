@@ -230,6 +230,13 @@ def test_schema_contract_is_append_only_service_only_and_canonical():
     assert "lifecycle_import_records_global_fingerprint_unique" in MIGRATION
     assert "predecessor_import_record_id" in MIGRATION
     assert "public.historical_product_aliases" in MIGRATION
+    assert "validate_import_record_predecessor" in MIGRATION
+    assert "source_fingerprint is distinct from old.source_fingerprint" in MIGRATION
+    assert "reconciliation_status text not null default 'unreviewed'" in MIGRATION
+    assert "inventory_entitlement_events_one_reversal_unique" in MIGRATION
+    assert "lifecycle_evidence_assertions_one_superseder_unique" in MIGRATION
+    assert "AHA-BLS-ECARD alias collision" in MIGRATION
+    assert "'digital_code',0,false" in MIGRATION
     assert "source_system,source_record_id,entity_type,source_fingerprint_algorithm,source_fingerprint" in MIGRATION
     assert "sha256-canonical-json-v1" in json.dumps(build()["proposed_operations"])
     assert "create table public.landerware_" not in MIGRATION

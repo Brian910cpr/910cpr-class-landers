@@ -32,6 +32,11 @@ alter table public.lifecycle_import_records
 alter table public.lifecycle_import_records
   add constraint lifecycle_import_records_source_fingerprint_format
   check (source_fingerprint ~ '^[0-9a-f]{64}$');
+alter table public.lifecycle_import_records
+  drop constraint if exists lifecycle_import_records_predecessor_not_self;
+alter table public.lifecycle_import_records
+  add constraint lifecycle_import_records_predecessor_not_self
+  check (predecessor_import_record_id is null or predecessor_import_record_id <> id);
 
 create unique index if not exists lifecycle_import_records_global_fingerprint_unique
   on public.lifecycle_import_records(source_system,source_record_id,entity_type,source_fingerprint_algorithm,source_fingerprint);
@@ -40,6 +45,65 @@ create index if not exists lifecycle_import_records_source_identity_idx
 create index if not exists lifecycle_import_records_predecessor_idx
   on public.lifecycle_import_records(predecessor_import_record_id);
 
+-- Extend the existing production immutability guard to cover the durable
+-- source-version identity introduced above. Reconciliation/link columns may
+-- still change, but the forensic source page and its version cannot.
+create or replace function public.protect_import_source_identity()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public, pg_temp
+as $$
+begin
+  if new.batch_id is distinct from old.batch_id
+     or new.source_record_id is distinct from old.source_record_id
+     or new.entity_type is distinct from old.entity_type
+     or new.original_values is distinct from old.original_values
+     or new.source_system is distinct from old.source_system
+     or new.source_fingerprint is distinct from old.source_fingerprint
+     or new.source_fingerprint_algorithm is distinct from old.source_fingerprint_algorithm
+     or new.predecessor_import_record_id is distinct from old.predecessor_import_record_id then
+    raise exception 'import source identity, version, predecessor, and original values are immutable';
+  end if;
+  return new;
+end;
+$$;
+revoke all on function public.protect_import_source_identity() from public, anon, authenticated;
+grant execute on function public.protect_import_source_identity() to service_role;
+
+create or replace function public.validate_import_record_predecessor()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public, pg_temp
+as $$
+declare
+  v_prior public.lifecycle_import_records%rowtype;
+begin
+  if new.predecessor_import_record_id is null then
+    return new;
+  end if;
+  select * into v_prior from public.lifecycle_import_records
+  where id=new.predecessor_import_record_id;
+  if not found then
+    return new; -- the foreign key reports the missing row
+  end if;
+  if v_prior.source_system is distinct from new.source_system
+     or v_prior.source_record_id is distinct from new.source_record_id
+     or v_prior.entity_type is distinct from new.entity_type then
+    raise exception 'import predecessor must have the same source_system, source_record_id, and entity_type';
+  end if;
+  return new;
+end;
+$$;
+revoke all on function public.validate_import_record_predecessor() from public, anon, authenticated;
+grant execute on function public.validate_import_record_predecessor() to service_role;
+
+drop trigger if exists lifecycle_import_records_predecessor_guard on public.lifecycle_import_records;
+create trigger lifecycle_import_records_predecessor_guard
+before insert on public.lifecycle_import_records
+for each row execute function public.validate_import_record_predecessor();
+
 -- Canonical credential inventory concepts observed in the reviewed Enrollware
 -- evidence. The source aliases point at product master; they do not create a
 -- second inventory catalog. Prices are the historical 910CPR sale prices in
@@ -47,7 +111,7 @@ create index if not exists lifecycle_import_records_predecessor_idx
 insert into public.products
   (product_key,name,product_type,certifying_body,customer_price,unit_cost,fulfillment_mode,reorder_threshold,active)
 select 'aha-25-3001-bls-provider-ecard','AHA BLS Provider eCard (25-3001)',
-       'credential_ecard','AHA',8.00,null,'digital_code',0,true
+       'credential_ecard','AHA',8.00,null,'digital_code',0,false
 where not exists (
   select 1 from public.products where product_key='aha-25-3001-bls-provider-ecard'
      or lower(name) in ('aha bls provider ecard (25-3001)','aha bls provider ecard')
@@ -57,7 +121,7 @@ insert into public.products
   (product_key,name,product_type,certifying_body,customer_price,unit_cost,fulfillment_mode,reorder_threshold,active)
 select 'aha-25-3002-heartsaver-first-aid-cpr-aed-ecard',
        'AHA Heartsaver First Aid CPR AED eCard (25-3002)',
-       'credential_ecard','AHA',30.00,null,'digital_code',0,true
+       'credential_ecard','AHA',30.00,null,'digital_code',0,false
 where not exists (
   select 1 from public.products
   where product_key='aha-25-3002-heartsaver-first-aid-cpr-aed-ecard'
@@ -74,20 +138,50 @@ create table if not exists public.historical_product_aliases (
   primary key (source_system,source_value)
 );
 
-insert into public.historical_product_aliases(source_system,source_value,product_id,provenance)
-select 'enrollware_student_report','AHA-BLS-ECARD',p.id,
-       '{"authority":"curated","aha_product_number":"25-3001","legacy_product_number":"20-3001"}'::jsonb
-from public.products p where p.product_key='aha-25-3001-bls-provider-ecard'
-   or lower(p.name) in ('aha bls provider ecard (25-3001)','aha bls provider ecard')
-on conflict (source_system,source_value) do nothing;
+do $$
+declare
+  v_bls_ids uuid[];
+  v_heartsaver_ids uuid[];
+  v_existing uuid;
+begin
+  select array_agg(id order by id) into v_bls_ids from public.products
+  where product_key='aha-25-3001-bls-provider-ecard'
+     or lower(name) in ('aha bls provider ecard (25-3001)','aha bls provider ecard');
+  if coalesce(cardinality(v_bls_ids),0) <> 1 then
+    raise exception 'AHA BLS Provider eCard canonical product resolution returned % candidates',
+      coalesce(cardinality(v_bls_ids),0);
+  end if;
+  select product_id into v_existing from public.historical_product_aliases
+  where source_system='enrollware_student_report' and source_value='AHA-BLS-ECARD';
+  if v_existing is not null and v_existing <> v_bls_ids[1] then
+    raise exception 'AHA-BLS-ECARD alias collision: existing product % differs from canonical %',
+      v_existing,v_bls_ids[1];
+  end if;
+  insert into public.historical_product_aliases(source_system,source_value,product_id,provenance)
+  values ('enrollware_student_report','AHA-BLS-ECARD',v_bls_ids[1],
+          '{"authority":"curated","aha_product_number":"25-3001","legacy_product_number":"20-3001"}'::jsonb)
+  on conflict (source_system,source_value) do nothing;
 
-insert into public.historical_product_aliases(source_system,source_value,product_id,provenance)
-select 'enrollware_student_report','AHA-HS-FACPRAED-ECARD',p.id,
-       '{"authority":"curated","aha_product_number":"25-3002","legacy_product_number":"20-3002"}'::jsonb
-from public.products p where p.product_key='aha-25-3002-heartsaver-first-aid-cpr-aed-ecard'
-   or lower(p.name) in ('aha heartsaver first aid cpr aed ecard (25-3002)',
-                       'aha heartsaver first aid cpr aed ecard')
-on conflict (source_system,source_value) do nothing;
+  select array_agg(id order by id) into v_heartsaver_ids from public.products
+  where product_key='aha-25-3002-heartsaver-first-aid-cpr-aed-ecard'
+     or lower(name) in ('aha heartsaver first aid cpr aed ecard (25-3002)',
+                       'aha heartsaver first aid cpr aed ecard');
+  if coalesce(cardinality(v_heartsaver_ids),0) <> 1 then
+    raise exception 'AHA Heartsaver First Aid CPR AED eCard canonical product resolution returned % candidates',
+      coalesce(cardinality(v_heartsaver_ids),0);
+  end if;
+  select product_id into v_existing from public.historical_product_aliases
+  where source_system='enrollware_student_report' and source_value='AHA-HS-FACPRAED-ECARD';
+  if v_existing is not null and v_existing <> v_heartsaver_ids[1] then
+    raise exception 'AHA-HS-FACPRAED-ECARD alias collision: existing product % differs from canonical %',
+      v_existing,v_heartsaver_ids[1];
+  end if;
+  insert into public.historical_product_aliases(source_system,source_value,product_id,provenance)
+  values ('enrollware_student_report','AHA-HS-FACPRAED-ECARD',v_heartsaver_ids[1],
+          '{"authority":"curated","aha_product_number":"25-3002","legacy_product_number":"20-3002"}'::jsonb)
+  on conflict (source_system,source_value) do nothing;
+end
+$$;
 
 create table if not exists public.inventory_entitlement_pools (
   id uuid primary key default gen_random_uuid(),
@@ -98,7 +192,10 @@ create table if not exists public.inventory_entitlement_pools (
   owner_organization_id uuid references public.organizations(id) on delete restrict,
   external_owner_reference text,
   unit_kind text not null,
-  status text not null default 'active' check (status in ('active','exhausted','closed','unknown')),
+  status text not null default 'unknown' check (status in ('active','exhausted','closed','unknown')),
+  reconciliation_status text not null default 'unreviewed' check (
+    reconciliation_status in ('unreviewed','accepted','superseded','conflicting','rejected','unknown')
+  ),
   source text not null,
   source_record_id text not null,
   import_batch_id uuid not null references public.lifecycle_import_batches(id) on delete restrict,
@@ -132,13 +229,17 @@ create table if not exists public.inventory_entitlement_events (
   recorded_at timestamptz not null default now(),
   confidence_state text not null check (confidence_state in ('confirmed','probable','possible','unknown','conflicting','rejected')),
   confidence numeric(5,4) check (confidence is null or confidence between 0 and 1),
+  reconciliation_status text not null default 'unreviewed' check (
+    reconciliation_status in ('unreviewed','accepted','superseded','conflicting','rejected','unknown')
+  ),
   provenance jsonb not null,
   reverses_event_id uuid references public.inventory_entitlement_events(id) on delete restrict,
   unique (source, source_record_id, event_type, pool_id),
   check (
     (event_type in ('acquired','released','corrected','reconciled') and quantity_delta <> 0)
     or (event_type in ('allocated','consumed','expired') and quantity_delta < 0)
-  )
+  ),
+  check (reverses_event_id is null or reverses_event_id <> id)
 );
 
 create table if not exists public.lifecycle_evidence_assertions (
@@ -151,7 +252,7 @@ create table if not exists public.lifecycle_evidence_assertions (
   source text not null,
   source_record_id text not null,
   import_batch_id uuid not null references public.lifecycle_import_batches(id) on delete restrict,
-  import_record_id uuid references public.lifecycle_import_records(id) on delete set null,
+  import_record_id uuid references public.lifecycle_import_records(id) on delete restrict,
   customer_id uuid references public.customers(id) on delete restrict,
   registration_id uuid references public.registrations(id) on delete restrict,
   class_session_id uuid references public.class_sessions(id) on delete restrict,
@@ -174,7 +275,8 @@ create table if not exists public.lifecycle_evidence_assertions (
   recorded_at timestamptz not null default now(),
   supersedes_assertion_id uuid references public.lifecycle_evidence_assertions(id) on delete restrict,
   reconciliation_notes text,
-  unique (source, source_record_id, fact_type, assertion_key)
+  unique (source, source_record_id, fact_type, assertion_key),
+  check (supersedes_assertion_id is null or supersedes_assertion_id <> id)
 );
 
 create index if not exists inventory_entitlement_pools_product_idx
@@ -185,6 +287,8 @@ create index if not exists inventory_entitlement_pools_organization_idx
   on public.inventory_entitlement_pools(owner_organization_id);
 create index if not exists inventory_entitlement_pools_batch_idx
   on public.inventory_entitlement_pools(import_batch_id);
+create index if not exists inventory_entitlement_pools_review_idx
+  on public.inventory_entitlement_pools(reconciliation_status,status);
 create index if not exists inventory_entitlement_events_pool_time_idx
   on public.inventory_entitlement_events(pool_id, occurred_at);
 create index if not exists inventory_entitlement_events_customer_idx
@@ -199,6 +303,10 @@ create index if not exists inventory_entitlement_events_batch_idx
   on public.inventory_entitlement_events(import_batch_id);
 create index if not exists inventory_entitlement_events_reversal_idx
   on public.inventory_entitlement_events(reverses_event_id);
+create unique index if not exists inventory_entitlement_events_one_reversal_unique
+  on public.inventory_entitlement_events(reverses_event_id) where reverses_event_id is not null;
+create index if not exists inventory_entitlement_events_review_idx
+  on public.inventory_entitlement_events(reconciliation_status,recorded_at);
 create index if not exists lifecycle_evidence_assertions_batch_idx
   on public.lifecycle_evidence_assertions(import_batch_id);
 create index if not exists lifecycle_evidence_assertions_import_record_idx
@@ -223,6 +331,12 @@ create index if not exists lifecycle_evidence_assertions_inventory_event_idx
   on public.lifecycle_evidence_assertions(inventory_event_id);
 create index if not exists lifecycle_evidence_assertions_supersedes_idx
   on public.lifecycle_evidence_assertions(supersedes_assertion_id);
+create unique index if not exists lifecycle_evidence_assertions_one_superseder_unique
+  on public.lifecycle_evidence_assertions(supersedes_assertion_id) where supersedes_assertion_id is not null;
+create index if not exists lifecycle_evidence_assertions_source_idx
+  on public.lifecycle_evidence_assertions(source,source_record_id,fact_type);
+create index if not exists lifecycle_evidence_assertions_review_idx
+  on public.lifecycle_evidence_assertions(reconciliation_status,recorded_at);
 
 do $$
 declare t text;
