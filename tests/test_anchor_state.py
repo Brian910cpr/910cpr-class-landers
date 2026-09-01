@@ -110,14 +110,22 @@ class AnchorStateTests(unittest.TestCase):
 
         policy_path = Path(__file__).resolve().parents[1] / "data/config/anchor_schedule_policy.json"
         policy = json.loads(policy_path.read_text(encoding="utf-8"))
-        self.assertEqual(policy["mode"], "anchor_repeat_bubble_v2")
+        self.assertEqual(policy["mode"], "daily_anchor_stack_v1")
         self.assertFalse(policy["one_course_type_per_calendar_day"])
         self.assertEqual(0, policy["default_repeat_delay_minutes"])
         self.assertTrue(policy["retain_barnacle_offers"])
         self.assertEqual(policy["open_day_excluded_families"], ["ACLS", "PALS"])
+        self.assertFalse(
+            policy["families"]["aha-bls-in-person"]["retain_barnacle_offers"],
+            "BLS Initial and Renewal are explicit alternatives, not mutual barnacles",
+        )
         self.assertTrue(
-            all(family["retain_barnacle_offers"] for family in policy["families"].values()),
-            "Every customer-facing course family must retain barnacle offers",
+            all(
+                family["retain_barnacle_offers"]
+                for name, family in policy["families"].items()
+                if name != "aha-bls-in-person"
+            ),
+            "Other customer-facing course families must retain barnacle offers",
         )
         self.assertTrue(
             all(course["retain_barnacle_offers"] for course in policy["exact_courses"].values()),
