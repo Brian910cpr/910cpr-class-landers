@@ -53,6 +53,11 @@ def stable_key(*parts: Any) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:24]
 
 
+def source_fingerprint(record: dict[str, Any]) -> str:
+    raw = json.dumps(record.get("raw", record), sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
 def known(value: Any) -> bool:
     return value not in (None, "", [], {}, UNKNOWN, "unknown", "UNKNOWN")
 
@@ -167,6 +172,8 @@ class HxBuilder:
         self.seen_people: set[str] = set()
         self.seen_sessions: set[str] = set()
         self.seen_registrations: set[str] = set()
+        self.proposed_identity_ids: dict[tuple[str, str], str] = {}
+        self.proposed_session_ids: dict[tuple[str, str], str] = {}
 
         self.customers = reference.get("customers", [])
         self.aliases = {
@@ -174,6 +181,7 @@ class HxBuilder:
             for a in reference.get("identity_aliases", reference.get("aliases", []))
         }
         self.sessions = reference.get("sessions", [])
+        self.source_sessions = reference.get("source_sessions", [])
         self.registrations = reference.get("registrations", [])
         self.import_records = {
             (text(r.get("source")), text(r.get("source_record_id")), text(r.get("entity_type") or "registration")): r
@@ -213,6 +221,16 @@ class HxBuilder:
             return None, "ambiguous_alias"
 
         email_value, phone_value = email(person.get("email")), phone(person.get("phone"))
+        batch_keys = [key for key in (("email", email_value), ("phone", phone_value)) if key[1]]
+        proposed = {self.proposed_identity_ids[key] for key in batch_keys if key in self.proposed_identity_ids}
+        if len(proposed) == 1:
+            return next(iter(proposed)), "matched_batch_identity"
+        if len(proposed) > 1:
+            self.ambiguities.append({
+                "source": record["source"], "source_record_id": record["source_record_id"],
+                "kind": "identity", "candidate_customer_ids": sorted(proposed),
+            })
+            return None, "ambiguous"
         email_ids = {
             text(c["id"]) for c in self.customers
             if email_value and email(c.get("email")) == email_value
@@ -234,11 +252,17 @@ class HxBuilder:
             return next(iter(candidates)), "matched_exact"
         if not known(person.get("first_name")) or not known(person.get("last_name")):
             return None, "unresolved"
-        return f"proposed-customer:{stable_key(record['source'], source_id or record['source_record_id'])}", "created"
+        proposed_id = f"proposed-customer:{stable_key(record['source'], source_id or email_value or phone_value or record['source_record_id'])}"
+        for key in batch_keys:
+            self.proposed_identity_ids[key] = proposed_id
+        return proposed_id, "created"
 
     def resolve_session(self, record: dict[str, Any]) -> tuple[str | None, str]:
         session = record["session"]
         source_id = text(session.get("source_id"))
+        batch_key = (record["source"], source_id)
+        if source_id and batch_key in self.proposed_session_ids:
+            return self.proposed_session_ids[batch_key], "matched_batch_session"
         matches = [
             s for s in self.sessions
             if (
@@ -256,10 +280,16 @@ class HxBuilder:
             return None, "duplicate_candidate"
         if len(matches) == 1:
             return text(matches[0]["id"]), "matched"
-        required = (source_id, session.get("course_source_id") or session.get("course_id"), session.get("start_at"))
+        required = (
+            source_id,
+            session.get("course_source_id") or session.get("course_id") or session.get("course_name"),
+            session.get("start_at"),
+        )
         if not all(known(v) for v in required):
             return None, "unresolved"
-        return f"proposed-session:{stable_key(record['source'], source_id)}", "created"
+        proposed_id = f"proposed-session:{stable_key(record['source'], source_id)}"
+        self.proposed_session_ids[batch_key] = proposed_id
+        return proposed_id, "created"
 
     def resolve_registration(
         self, record: dict[str, Any], customer_id: str, session_id: str
@@ -357,6 +387,7 @@ class HxBuilder:
                             "source_record_id": record["source_record_id"],
                             "import_batch_id": self.batch.get("batch_key"),
                         })
+                        self.inventory_pools[pool_key] = {"id": pool_id, "pool_key": pool_key}
                     else:
                         self.ambiguities.append({
                             "kind": "inventory_entitlement",
@@ -418,6 +449,23 @@ class HxBuilder:
             if prior:
                 decision["source_record_resolution"] = "matched"
                 decision["import_record_id"] = prior.get("id")
+                fingerprint = source_fingerprint(record)
+                prior_fingerprint = text(prior.get("source_fingerprint"))
+                if prior_fingerprint == fingerprint:
+                    decision["action"] = "idempotent_replay"
+                    self.decisions.append(decision)
+                    self.totals[bucket]["idempotent_replay"] += 1
+                    continue
+                if prior_fingerprint:
+                    self.ambiguities.append({
+                        **decision,
+                        "kind": "source_record_conflict",
+                        "reason": "source_record_id was previously seen with a different fingerprint",
+                    })
+                    decision["action"] = "review"
+                    self.decisions.append(decision)
+                    self.totals[bucket]["conflicting"] += 1
+                    continue
             else:
                 decision["source_record_resolution"] = "created"
                 self.operations.append({
@@ -426,6 +474,7 @@ class HxBuilder:
                     "source_record_id": record["source_record_id"],
                     "import_batch_id": self.batch.get("batch_key"),
                     "original_values": record["raw"],
+                    "source_fingerprint": source_fingerprint(record),
                 })
 
             customer_id, person_state = self.resolve_person(record)
@@ -450,7 +499,7 @@ class HxBuilder:
 
             session_id, session_state = self.resolve_session(record)
             decision["session_resolution"] = session_state
-            if session_state == "matched":
+            if session_state.startswith("matched"):
                 if session_id not in self.seen_sessions:
                     self.counts["sessions_matched"] += 1
                     self.seen_sessions.add(session_id or "")
@@ -492,7 +541,7 @@ class HxBuilder:
             reschedule = record.get("reschedule")
             if isinstance(reschedule, dict) and known(reschedule.get("from_session_source_id")):
                 origin = [
-                    s for s in self.sessions
+                    s for s in self.sessions + self.source_sessions
                     if text(s.get("source")) == record["source"]
                     and text(s.get("source_record_id") or s.get("external_class_id"))
                     == text(reschedule["from_session_source_id"])
@@ -542,6 +591,32 @@ class HxBuilder:
             "duplicate_candidates": self.duplicates,
             "records_intentionally_excluded": self.exclusions,
         }
+
+
+def replay_reference(reference: dict[str, Any], report: dict[str, Any]) -> dict[str, Any]:
+    """Return an in-memory reference overlay for deterministic dry-run replay tests."""
+    overlay = json.loads(json.dumps(reference))
+    rows = overlay.setdefault("import_records", [])
+    known_keys = {
+        (text(r.get("source")), text(r.get("source_record_id")), text(r.get("entity_type") or "registration"))
+        for r in rows
+    }
+    for operation in report.get("proposed_operations", []):
+        if operation.get("command") != "propose_import_record":
+            continue
+        key = (text(operation.get("source")), text(operation.get("source_record_id")), "registration")
+        if key in known_keys:
+            continue
+        rows.append({
+            "id": f"dry-run-import:{stable_key(*key)}",
+            "source": key[0],
+            "source_record_id": key[1],
+            "entity_type": key[2],
+            "source_fingerprint": operation.get("source_fingerprint"),
+            "reconciliation_status": "dry_run_overlay",
+        })
+        known_keys.add(key)
+    return overlay
 
 
 def load_payload(path: Path, adapter: str, seeds: Path) -> dict[str, Any]:

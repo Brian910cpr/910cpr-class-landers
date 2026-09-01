@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from hx_builder import HxBuilder, adapt_enrollware_csv
+from hx_builder import HxBuilder, adapt_enrollware_csv, replay_reference
 
 
 SAMPLE = json.loads((ROOT / "tests/fixtures/hx_builder_sample.json").read_text(encoding="utf-8"))
@@ -54,6 +54,63 @@ def test_identity_and_source_record_replay_are_idempotent():
     assert enrollware["person_resolution"] == "matched_alias"
     assert enrollware["session_resolution"] == "matched"
     assert enrollware["registration_resolution"] == "matched"
+
+
+def test_exact_second_dry_run_proposes_zero_additional_records_or_events():
+    first = build()
+    second = HxBuilder(SAMPLE, replay_reference(REFERENCE, first)).process()
+    assert second["proposed_operations"] == []
+    assert second["evidence_assertions"] == []
+    newly_planned = {
+        op["source_record_id"] for op in first["proposed_operations"]
+        if op["command"] == "propose_import_record"
+    }
+    assert all(
+        item["action"] == "idempotent_replay"
+        for item in second["decisions"] if item["source_record_id"] in newly_planned
+    )
+
+
+def test_session_can_be_proposed_from_real_report_name_when_external_course_id_is_absent():
+    payload = json.loads(json.dumps(SAMPLE))
+    record = payload["records"][0]
+    record["session"].pop("course_source_id", None)
+    record["session"]["course_name"] = "Historical named course"
+    record["session"]["source_id"] = "old-class-1"
+    report = HxBuilder(payload, {"customers": [], "sessions": [], "registrations": []}).process()
+    assert any(op["command"] == "propose_session" for op in report["proposed_operations"])
+
+
+def test_repeated_identity_in_one_batch_reuses_the_same_proposed_person():
+    payload = json.loads(json.dumps(SAMPLE))
+    first = payload["records"][0]
+    replay = json.loads(json.dumps(first))
+    replay["source_record_id"] = "same-person-different-registration"
+    replay["session"]["source_id"] = "different-session"
+    replay["session"]["start_at"] = "2024-02-01T09:00:00-05:00"
+    payload["records"] = [first, replay]
+    report = HxBuilder(payload, {"customers": [], "sessions": [], "registrations": []}).process()
+    assert report["summary"]["people_created"] == 1
+    assert len([op for op in report["proposed_operations"] if op["command"] == "register_participant_identity"]) == 1
+    assert report["decisions"][1]["person_resolution"] == "matched_batch_identity"
+    assert report["decisions"][1]["session_resolution"] == "created"
+
+
+def test_repeated_session_and_inventory_pool_are_proposed_once_per_batch():
+    payload = json.loads(json.dumps(SAMPLE))
+    inventory = next(r for r in payload["records"] if r.get("facts", {}).get("inventory_entitlement"))
+    inventory["facts"]["inventory_entitlement"].update({
+        "owner_kind": "organization", "owner_organization_id": "organization-1",
+        "product_id": "product-1", "unit_kind": "ecard",
+    })
+    replay = json.loads(json.dumps(inventory))
+    replay["source_record_id"] = "second-pool-consumption"
+    replay["person"]["email"] = "second@example.test"
+    payload["records"] = [inventory, replay]
+    report = HxBuilder(payload, {"customers": [], "sessions": [], "registrations": []}).process()
+    assert len([op for op in report["proposed_operations"] if op["command"] == "propose_session"]) == 1
+    assert len([op for op in report["proposed_operations"] if op["command"] == "propose_inventory_entitlement_pool"]) == 1
+    assert len([op for op in report["proposed_operations"] if op["command"] == "propose_inventory_entitlement_event"]) == 2
 
 
 def test_conflicting_identity_is_review_only():

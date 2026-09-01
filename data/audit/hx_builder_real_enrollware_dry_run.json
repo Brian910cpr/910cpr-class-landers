@@ -1,0 +1,2579 @@
+{
+  "approval_gate": "BLOCKED until every mismatch is reviewed and fingerprint persistence plus canonical course/owner/product resolution are approved.",
+  "first_run": {
+    "evidence_assertion_counts": {
+      "attendance": 15,
+      "completion": 7,
+      "credential": 5,
+      "inventory_entitlement": 3,
+      "payment": 15,
+      "product_fulfillment": 3,
+      "reschedule": 1
+    },
+    "proposed_operation_counts": {
+      "move_registration": 1,
+      "propose_completion": 7,
+      "propose_credential": 5,
+      "propose_import_record": 15,
+      "propose_inventory_entitlement_event": 3,
+      "propose_inventory_entitlement_pool": 1,
+      "propose_session": 11,
+      "register_participant": 15,
+      "register_participant_identity": 13
+    },
+    "reconciliation_totals_by_course_date_source": [
+      {
+        "course": "AHA - BLS Provider - In-person Initial<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/nvt.png\" style=\"float:right;width:125px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+        "date": "2019-12-13",
+        "examined": 4,
+        "reconciled": 4,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "AHA - BLS Provider - In-person Initial<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/nvt.png\" style=\"float:right;width:125px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+        "date": "2020-03-18",
+        "examined": 1,
+        "reconciled": 1,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "AHA - BLS Provider - In-person Initial<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/nvt.png\" style=\"float:right;width:125px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+        "date": "2021-12-14",
+        "examined": 1,
+        "reconciled": 1,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "AHA - BLS Provider - Online Class with in-Person Skill Session - Initial or Renewal <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+        "date": "2020-09-16",
+        "examined": 1,
+        "reconciled": 1,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "AHA - Heartsaver\u00ae First Aid CPR AED - <b>In-person</b> \u2764\ufe0f",
+        "date": "2019-11-12",
+        "examined": 1,
+        "reconciled": 1,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "AHA - Heartsaver\u00ae First Aid CPR AED - <b>In-person</b> \u2764\ufe0f",
+        "date": "2021-11-09",
+        "examined": 1,
+        "reconciled": 1,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "AHA - Heartsaver\u00ae First Aid CPR AED - <b>In-person</b> \u2764\ufe0f",
+        "date": "2022-07-20",
+        "examined": 1,
+        "reconciled": 1,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "AHA - Heartsaver\u00ae First Aid CPR AED - <b>In-person</b> \u2764\ufe0f",
+        "date": "2024-08-03",
+        "examined": 1,
+        "reconciled": 1,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "BLS Provider (NHCSO)",
+        "date": "2022-04-14",
+        "examined": 2,
+        "reconciled": 2,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "BLS Provider (NHCSO)",
+        "date": "2022-04-21",
+        "examined": 1,
+        "reconciled": 1,
+        "source": "enrollware_student_report"
+      },
+      {
+        "course": "HeartCode\u00ae BLS",
+        "date": "2019-12-16",
+        "examined": 1,
+        "reconciled": 1,
+        "source": "enrollware_student_report"
+      }
+    ],
+    "redacted_details": {
+      "ambiguities": [
+        {
+          "kind": "completion",
+          "reason": "completion lacks explicit passed/failed/incomplete evidence",
+          "source_record_id": "student-report:34f8674caa726fa92965523b"
+        },
+        {
+          "kind": "completion",
+          "reason": "completion lacks explicit passed/failed/incomplete evidence",
+          "source_record_id": "student-report:8d2a30d9de0996ed59882c22"
+        },
+        {
+          "kind": "completion",
+          "reason": "completion lacks explicit passed/failed/incomplete evidence",
+          "source_record_id": "student-report:f8a82c4d5a20acad671fdae5"
+        },
+        {
+          "kind": "completion",
+          "reason": "completion lacks explicit passed/failed/incomplete evidence",
+          "source_record_id": "student-report:26c3e93e3b5d17ad00a9785f"
+        }
+      ],
+      "decisions": [
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "completion": 1,
+            "credential": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "completion": 1,
+            "credential": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "matched_batch_session",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:2579b104944b76fb99a0d70e",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "completion": 1,
+            "credential": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "matched_batch_session",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:97b49d480dc1f87b2ca4c5b4",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "completion": 1,
+            "credential": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "matched_batch_session",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:fe5f8f480b029fb9f03e2129",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "completion": 1,
+            "credential": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:2c52ec872256d5020b7b7291",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e5b7a5790d413d8c3013c9ba",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:9159fe5efe03d39044eeced7",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "completion": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:20e77b8d36bce4b2d5df9285",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "payment": 1
+          },
+          "person_resolution": "matched_batch_identity",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:cf02c5c774deef6c1b8ade43",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "inventory_entitlement": 1,
+            "payment": 1,
+            "product_fulfillment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:34f8674caa726fa92965523b",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "inventory_entitlement": 1,
+            "payment": 1,
+            "product_fulfillment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "matched_batch_session",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:8d2a30d9de0996ed59882c22",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "completion": 1,
+            "inventory_entitlement": 1,
+            "payment": 1,
+            "product_fulfillment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e1706c4c206722f846dace85",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "payment": 1
+          },
+          "person_resolution": "created",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:f8a82c4d5a20acad671fdae5",
+          "source_record_resolution": "created"
+        },
+        {
+          "action": "dry_run_only",
+          "facts": {
+            "attendance": 1,
+            "payment": 1
+          },
+          "person_resolution": "matched_batch_identity",
+          "registration_resolution": "created",
+          "session_resolution": "created",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:26c3e93e3b5d17ad00a9785f",
+          "source_record_resolution": "created"
+        }
+      ],
+      "evidence_assertions": [
+        {
+          "asserted_value": {
+            "source_value": "N",
+            "status": "not_attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e401ce2b47711c124947c6e7:attendance:4fff7d9aaefa472e9a633195",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:4f8faee0b86da486f9d4891e",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:5fa2978637f96ae3",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b7113a79f25ec3527f00cb7e",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:32:00-05:00",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7"
+        },
+        {
+          "asserted_value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e401ce2b47711c124947c6e7:completion:21d47861eb65aa96c194f5a5",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:4f8faee0b86da486f9d4891e",
+          "fact_type": "completion",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:5fa2978637f96ae3",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b7113a79f25ec3527f00cb7e",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:32:00-05:00",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7"
+        },
+        {
+          "asserted_value": {
+            "credential_number": {
+              "fingerprint": "sha256:1c4c3540e5f1cec9",
+              "redacted": true
+            },
+            "status": "issued"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e401ce2b47711c124947c6e7:credential:541e7f31db0c4fc6b75a74e1",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:4f8faee0b86da486f9d4891e",
+          "fact_type": "credential",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:5fa2978637f96ae3",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b7113a79f25ec3527f00cb7e",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:32:00-05:00",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "0.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e401ce2b47711c124947c6e7:payment:db6c5c46cb5d87dd2d52612a",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:4f8faee0b86da486f9d4891e",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:5fa2978637f96ae3",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b7113a79f25ec3527f00cb7e",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:32:00-05:00",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7"
+        },
+        {
+          "asserted_value": {
+            "source_value": "N",
+            "status": "not_attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:2579b104944b76fb99a0d70e:attendance:4fff7d9aaefa472e9a633195",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:c26e35bc8893207336926c80",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:c33297d09cb514f6",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:13e6fea1c1120d5e37348cce",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:33:00-05:00",
+          "source_record_id": "student-report:2579b104944b76fb99a0d70e"
+        },
+        {
+          "asserted_value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          },
+          "assertion_key": "enrollware_student_report:student-report:2579b104944b76fb99a0d70e:completion:21d47861eb65aa96c194f5a5",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:c26e35bc8893207336926c80",
+          "fact_type": "completion",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:c33297d09cb514f6",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:13e6fea1c1120d5e37348cce",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:33:00-05:00",
+          "source_record_id": "student-report:2579b104944b76fb99a0d70e"
+        },
+        {
+          "asserted_value": {
+            "credential_number": {
+              "fingerprint": "sha256:ae399b3ceea9b657",
+              "redacted": true
+            },
+            "status": "issued"
+          },
+          "assertion_key": "enrollware_student_report:student-report:2579b104944b76fb99a0d70e:credential:f375682a51602b94c6cffc19",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:c26e35bc8893207336926c80",
+          "fact_type": "credential",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:c33297d09cb514f6",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:13e6fea1c1120d5e37348cce",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:33:00-05:00",
+          "source_record_id": "student-report:2579b104944b76fb99a0d70e"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "0.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:2579b104944b76fb99a0d70e:payment:db6c5c46cb5d87dd2d52612a",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:c26e35bc8893207336926c80",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:c33297d09cb514f6",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:13e6fea1c1120d5e37348cce",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:33:00-05:00",
+          "source_record_id": "student-report:2579b104944b76fb99a0d70e"
+        },
+        {
+          "asserted_value": {
+            "source_value": "N",
+            "status": "not_attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:97b49d480dc1f87b2ca4c5b4:attendance:4fff7d9aaefa472e9a633195",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:7c7141ebc108db3935d34ff7",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:b1bede06dd97392e",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:0df7f4d7471fd55d6f9c6ca8",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:35:00-05:00",
+          "source_record_id": "student-report:97b49d480dc1f87b2ca4c5b4"
+        },
+        {
+          "asserted_value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          },
+          "assertion_key": "enrollware_student_report:student-report:97b49d480dc1f87b2ca4c5b4:completion:21d47861eb65aa96c194f5a5",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:7c7141ebc108db3935d34ff7",
+          "fact_type": "completion",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:b1bede06dd97392e",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:0df7f4d7471fd55d6f9c6ca8",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:35:00-05:00",
+          "source_record_id": "student-report:97b49d480dc1f87b2ca4c5b4"
+        },
+        {
+          "asserted_value": {
+            "credential_number": {
+              "fingerprint": "sha256:395dba933388245f",
+              "redacted": true
+            },
+            "status": "issued"
+          },
+          "assertion_key": "enrollware_student_report:student-report:97b49d480dc1f87b2ca4c5b4:credential:307dedeeaa278795d7069a26",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:7c7141ebc108db3935d34ff7",
+          "fact_type": "credential",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:b1bede06dd97392e",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:0df7f4d7471fd55d6f9c6ca8",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:35:00-05:00",
+          "source_record_id": "student-report:97b49d480dc1f87b2ca4c5b4"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "0.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:97b49d480dc1f87b2ca4c5b4:payment:db6c5c46cb5d87dd2d52612a",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:7c7141ebc108db3935d34ff7",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:b1bede06dd97392e",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:0df7f4d7471fd55d6f9c6ca8",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:35:00-05:00",
+          "source_record_id": "student-report:97b49d480dc1f87b2ca4c5b4"
+        },
+        {
+          "asserted_value": {
+            "source_value": "N",
+            "status": "not_attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:fe5f8f480b029fb9f03e2129:attendance:4fff7d9aaefa472e9a633195",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:312772365ca2b1ba8ddff679",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:2f4905ace1685387",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:a7949ab7040deb7101579015",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:36:00-05:00",
+          "source_record_id": "student-report:fe5f8f480b029fb9f03e2129"
+        },
+        {
+          "asserted_value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          },
+          "assertion_key": "enrollware_student_report:student-report:fe5f8f480b029fb9f03e2129:completion:21d47861eb65aa96c194f5a5",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:312772365ca2b1ba8ddff679",
+          "fact_type": "completion",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:2f4905ace1685387",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:a7949ab7040deb7101579015",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:36:00-05:00",
+          "source_record_id": "student-report:fe5f8f480b029fb9f03e2129"
+        },
+        {
+          "asserted_value": {
+            "credential_number": {
+              "fingerprint": "sha256:9ff3149242cb0808",
+              "redacted": true
+            },
+            "status": "issued"
+          },
+          "assertion_key": "enrollware_student_report:student-report:fe5f8f480b029fb9f03e2129:credential:29ffebab9387135ac4084bd5",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:312772365ca2b1ba8ddff679",
+          "fact_type": "credential",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:2f4905ace1685387",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:a7949ab7040deb7101579015",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:36:00-05:00",
+          "source_record_id": "student-report:fe5f8f480b029fb9f03e2129"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "0.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:fe5f8f480b029fb9f03e2129:payment:db6c5c46cb5d87dd2d52612a",
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:312772365ca2b1ba8ddff679",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:2f4905ace1685387",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:a7949ab7040deb7101579015",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-13T11:36:00-05:00",
+          "source_record_id": "student-report:fe5f8f480b029fb9f03e2129"
+        },
+        {
+          "asserted_value": {
+            "source_value": "N",
+            "status": "not_attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:861280c4a9f6351343cbaa36:attendance:4fff7d9aaefa472e9a633195",
+          "class_session_id": "proposed-session:3015b9eea4d0aa2cf9a2062c",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:e7318da46f55eae730579ae8",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:7c1a0db50a21a8a5",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:f2a4577d50f99b58afbd3fc3",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-16T11:06:00-05:00",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36"
+        },
+        {
+          "asserted_value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          },
+          "assertion_key": "enrollware_student_report:student-report:861280c4a9f6351343cbaa36:completion:21d47861eb65aa96c194f5a5",
+          "class_session_id": "proposed-session:3015b9eea4d0aa2cf9a2062c",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:e7318da46f55eae730579ae8",
+          "fact_type": "completion",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:7c1a0db50a21a8a5",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:f2a4577d50f99b58afbd3fc3",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-16T11:06:00-05:00",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36"
+        },
+        {
+          "asserted_value": {
+            "credential_number": {
+              "fingerprint": "sha256:477780fd7a21e20b",
+              "redacted": true
+            },
+            "status": "issued"
+          },
+          "assertion_key": "enrollware_student_report:student-report:861280c4a9f6351343cbaa36:credential:03cf97607c9ef51cf2cf7f7a",
+          "class_session_id": "proposed-session:3015b9eea4d0aa2cf9a2062c",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:e7318da46f55eae730579ae8",
+          "fact_type": "credential",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:7c1a0db50a21a8a5",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:f2a4577d50f99b58afbd3fc3",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-16T11:06:00-05:00",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "0.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:861280c4a9f6351343cbaa36:payment:db6c5c46cb5d87dd2d52612a",
+          "class_session_id": "proposed-session:3015b9eea4d0aa2cf9a2062c",
+          "confidence": null,
+          "confidence_state": "confirmed",
+          "customer_id": "proposed-customer:e7318da46f55eae730579ae8",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:7c1a0db50a21a8a5",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:f2a4577d50f99b58afbd3fc3",
+          "source": "enrollware_student_report",
+          "source_created_at": "2019-12-16T11:06:00-05:00",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36"
+        },
+        {
+          "asserted_value": {
+            "source_value": "N",
+            "status": "not_attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:2c52ec872256d5020b7b7291:attendance:4fff7d9aaefa472e9a633195",
+          "class_session_id": "proposed-session:46bab45858cbe3a14028ea98",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:0cc02b8dd64128fe7930e945",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:ce2747cec98cc2e1",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:d4c4f8a2055022579c25cf5a",
+          "source": "enrollware_student_report",
+          "source_created_at": "2020-03-17T11:48:00-04:00",
+          "source_record_id": "student-report:2c52ec872256d5020b7b7291"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "80.00",
+            "order_total": "80.00",
+            "state": "unknown"
+          },
+          "assertion_key": "enrollware_student_report:student-report:2c52ec872256d5020b7b7291:payment:f1ce522d3adb4ab9898c6a52",
+          "class_session_id": "proposed-session:46bab45858cbe3a14028ea98",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:0cc02b8dd64128fe7930e945",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:ce2747cec98cc2e1",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:d4c4f8a2055022579c25cf5a",
+          "source": "enrollware_student_report",
+          "source_created_at": "2020-03-17T11:48:00-04:00",
+          "source_record_id": "student-report:2c52ec872256d5020b7b7291"
+        },
+        {
+          "asserted_value": {
+            "source_value": "N",
+            "status": "not_attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e5b7a5790d413d8c3013c9ba:attendance:4fff7d9aaefa472e9a633195",
+          "class_session_id": "proposed-session:d4f2e5a6fa27391c8455f9fc",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:72cbd58343f2db4b3ab885a0",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:6a1432b5097cf74f",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:5842197de75f690cd904981d",
+          "source": "enrollware_student_report",
+          "source_created_at": "2020-06-13T20:59:00-04:00",
+          "source_record_id": "student-report:e5b7a5790d413d8c3013c9ba"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "25.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e5b7a5790d413d8c3013c9ba:payment:0d8de59ca35e1427aff2724f",
+          "class_session_id": "proposed-session:d4f2e5a6fa27391c8455f9fc",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:72cbd58343f2db4b3ab885a0",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:6a1432b5097cf74f",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:5842197de75f690cd904981d",
+          "source": "enrollware_student_report",
+          "source_created_at": "2020-06-13T20:59:00-04:00",
+          "source_record_id": "student-report:e5b7a5790d413d8c3013c9ba"
+        },
+        {
+          "asserted_value": {
+            "source_value": "N",
+            "status": "not_attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:9159fe5efe03d39044eeced7:attendance:4fff7d9aaefa472e9a633195",
+          "class_session_id": "proposed-session:c936ac40d3ed2b4dda7f1619",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:edf9d74d9c480f6b95ff3166",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:2a4298f76339b931",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:8b74cf22a9fd63afe0385efd",
+          "source": "enrollware_student_report",
+          "source_created_at": "2020-09-10T12:59:00-04:00",
+          "source_record_id": "student-report:9159fe5efe03d39044eeced7"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "50.00",
+            "order_total": "50.00",
+            "state": "unknown"
+          },
+          "assertion_key": "enrollware_student_report:student-report:9159fe5efe03d39044eeced7:payment:19ea2451cd9227c90e267abc",
+          "class_session_id": "proposed-session:c936ac40d3ed2b4dda7f1619",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:edf9d74d9c480f6b95ff3166",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:2a4298f76339b931",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:8b74cf22a9fd63afe0385efd",
+          "source": "enrollware_student_report",
+          "source_created_at": "2020-09-10T12:59:00-04:00",
+          "source_record_id": "student-report:9159fe5efe03d39044eeced7"
+        },
+        {
+          "asserted_value": {
+            "source_value": "Y",
+            "status": "attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:20e77b8d36bce4b2d5df9285:attendance:97dd803e9f80940b8a528a46",
+          "class_session_id": "proposed-session:3d9ac77663e64f32274e1e04",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:ce097e0b03abc003040c5b6c",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:f3ecb765e922809a",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:a45e886989c2e80402804590",
+          "source": "enrollware_student_report",
+          "source_created_at": "2021-10-25T16:34:00-04:00",
+          "source_record_id": "student-report:20e77b8d36bce4b2d5df9285"
+        },
+        {
+          "asserted_value": {
+            "evidence": "Enrollware Status only",
+            "status": "incomplete"
+          },
+          "assertion_key": "enrollware_student_report:student-report:20e77b8d36bce4b2d5df9285:completion:02a95b3bce8330050c3c532d",
+          "class_session_id": "proposed-session:3d9ac77663e64f32274e1e04",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:ce097e0b03abc003040c5b6c",
+          "fact_type": "completion",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:f3ecb765e922809a",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:a45e886989c2e80402804590",
+          "source": "enrollware_student_report",
+          "source_created_at": "2021-10-25T16:34:00-04:00",
+          "source_record_id": "student-report:20e77b8d36bce4b2d5df9285"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "0.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:20e77b8d36bce4b2d5df9285:payment:db6c5c46cb5d87dd2d52612a",
+          "class_session_id": "proposed-session:3d9ac77663e64f32274e1e04",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:ce097e0b03abc003040c5b6c",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:f3ecb765e922809a",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:a45e886989c2e80402804590",
+          "source": "enrollware_student_report",
+          "source_created_at": "2021-10-25T16:34:00-04:00",
+          "source_record_id": "student-report:20e77b8d36bce4b2d5df9285"
+        },
+        {
+          "asserted_value": {
+            "source_value": "N",
+            "status": "not_attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:cf02c5c774deef6c1b8ade43:attendance:4fff7d9aaefa472e9a633195",
+          "class_session_id": "proposed-session:c61ffaf0058c8a833485d1a5",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:e7318da46f55eae730579ae8",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:a66e7a15ddbf8102",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:5a416cb44bd0e79596a15af7",
+          "source": "enrollware_student_report",
+          "source_created_at": "2021-12-06T11:30:00-05:00",
+          "source_record_id": "student-report:cf02c5c774deef6c1b8ade43"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "85.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:cf02c5c774deef6c1b8ade43:payment:a4a898fbab2d26b88eddb809",
+          "class_session_id": "proposed-session:c61ffaf0058c8a833485d1a5",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:e7318da46f55eae730579ae8",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:a66e7a15ddbf8102",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:5a416cb44bd0e79596a15af7",
+          "source": "enrollware_student_report",
+          "source_created_at": "2021-12-06T11:30:00-05:00",
+          "source_record_id": "student-report:cf02c5c774deef6c1b8ade43"
+        },
+        {
+          "asserted_value": {
+            "source_value": "Y",
+            "status": "attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:34f8674caa726fa92965523b:attendance:97dd803e9f80940b8a528a46",
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:ac52359d67a01f5e4d784a9e",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:24b37821a356a5a1",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:cdc1ea83445ff18ee5dc2d37",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-10T22:25:00-04:00",
+          "source_record_id": "student-report:34f8674caa726fa92965523b"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "8.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:34f8674caa726fa92965523b:payment:d281a70f7aea7607a534f4e7",
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:ac52359d67a01f5e4d784a9e",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:24b37821a356a5a1",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:cdc1ea83445ff18ee5dc2d37",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-10T22:25:00-04:00",
+          "source_record_id": "student-report:34f8674caa726fa92965523b"
+        },
+        {
+          "asserted_value": [
+            {
+              "fulfillment_state": "unknown",
+              "source_option": "AHA-BLS-ECARD"
+            }
+          ],
+          "assertion_key": "enrollware_student_report:student-report:34f8674caa726fa92965523b:product_fulfillment:c6b8292f6221db6201cac2d1",
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:ac52359d67a01f5e4d784a9e",
+          "fact_type": "product_fulfillment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:24b37821a356a5a1",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:cdc1ea83445ff18ee5dc2d37",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-10T22:25:00-04:00",
+          "source_record_id": "student-report:34f8674caa726fa92965523b"
+        },
+        {
+          "asserted_value": {
+            "event_type": "consumed",
+            "evidence": "known prepaid checkpoint plus Enrollware AHA-BLS-ECARD option",
+            "owner_kind": "organization",
+            "owner_organization_id": "unresolved:nhcso",
+            "pool_key": "organization-prepaid-ecards:nhcso",
+            "product_id": "unresolved:aha-bls-ecard",
+            "quantity_delta": -1,
+            "unit_kind": "ecard"
+          },
+          "assertion_key": "enrollware_student_report:student-report:34f8674caa726fa92965523b:inventory_entitlement:e75f451f988a36a3a9911656",
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:ac52359d67a01f5e4d784a9e",
+          "fact_type": "inventory_entitlement",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:24b37821a356a5a1",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:cdc1ea83445ff18ee5dc2d37",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-10T22:25:00-04:00",
+          "source_record_id": "student-report:34f8674caa726fa92965523b"
+        },
+        {
+          "asserted_value": {
+            "source_value": "Y",
+            "status": "attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:8d2a30d9de0996ed59882c22:attendance:97dd803e9f80940b8a528a46",
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:a538fb1d2c21f83e76052539",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:acb881592544d657",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b1c296110edb20359652aeb4",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-13T20:45:00-04:00",
+          "source_record_id": "student-report:8d2a30d9de0996ed59882c22"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "8.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:8d2a30d9de0996ed59882c22:payment:d281a70f7aea7607a534f4e7",
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:a538fb1d2c21f83e76052539",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:acb881592544d657",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b1c296110edb20359652aeb4",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-13T20:45:00-04:00",
+          "source_record_id": "student-report:8d2a30d9de0996ed59882c22"
+        },
+        {
+          "asserted_value": [
+            {
+              "fulfillment_state": "unknown",
+              "source_option": "AHA-BLS-ECARD"
+            }
+          ],
+          "assertion_key": "enrollware_student_report:student-report:8d2a30d9de0996ed59882c22:product_fulfillment:c6b8292f6221db6201cac2d1",
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:a538fb1d2c21f83e76052539",
+          "fact_type": "product_fulfillment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:acb881592544d657",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b1c296110edb20359652aeb4",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-13T20:45:00-04:00",
+          "source_record_id": "student-report:8d2a30d9de0996ed59882c22"
+        },
+        {
+          "asserted_value": {
+            "event_type": "consumed",
+            "evidence": "known prepaid checkpoint plus Enrollware AHA-BLS-ECARD option",
+            "owner_kind": "organization",
+            "owner_organization_id": "unresolved:nhcso",
+            "pool_key": "organization-prepaid-ecards:nhcso",
+            "product_id": "unresolved:aha-bls-ecard",
+            "quantity_delta": -1,
+            "unit_kind": "ecard"
+          },
+          "assertion_key": "enrollware_student_report:student-report:8d2a30d9de0996ed59882c22:inventory_entitlement:e75f451f988a36a3a9911656",
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:a538fb1d2c21f83e76052539",
+          "fact_type": "inventory_entitlement",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:acb881592544d657",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b1c296110edb20359652aeb4",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-13T20:45:00-04:00",
+          "source_record_id": "student-report:8d2a30d9de0996ed59882c22"
+        },
+        {
+          "asserted_value": {
+            "source_value": "Y",
+            "status": "attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e1706c4c206722f846dace85:attendance:97dd803e9f80940b8a528a46",
+          "class_session_id": "proposed-session:a27d68dd6b96e2b5a376ce28",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:41dc521b89d6718585ed7855",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:38b7fce19eb646d2",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b1ebb10f81b5ae579a392a74",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-21T10:46:00-04:00",
+          "source_record_id": "student-report:e1706c4c206722f846dace85"
+        },
+        {
+          "asserted_value": {
+            "evidence": "Enrollware Status only",
+            "status": "incomplete"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e1706c4c206722f846dace85:completion:02a95b3bce8330050c3c532d",
+          "class_session_id": "proposed-session:a27d68dd6b96e2b5a376ce28",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:41dc521b89d6718585ed7855",
+          "fact_type": "completion",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:38b7fce19eb646d2",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b1ebb10f81b5ae579a392a74",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-21T10:46:00-04:00",
+          "source_record_id": "student-report:e1706c4c206722f846dace85"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "8.00",
+            "order_total": "8.00",
+            "state": "unknown"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e1706c4c206722f846dace85:payment:6f7bdc258a6666b3b3253791",
+          "class_session_id": "proposed-session:a27d68dd6b96e2b5a376ce28",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:41dc521b89d6718585ed7855",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:38b7fce19eb646d2",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b1ebb10f81b5ae579a392a74",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-21T10:46:00-04:00",
+          "source_record_id": "student-report:e1706c4c206722f846dace85"
+        },
+        {
+          "asserted_value": [
+            {
+              "fulfillment_state": "unknown",
+              "source_option": "AHA-BLS-ECARD"
+            }
+          ],
+          "assertion_key": "enrollware_student_report:student-report:e1706c4c206722f846dace85:product_fulfillment:c6b8292f6221db6201cac2d1",
+          "class_session_id": "proposed-session:a27d68dd6b96e2b5a376ce28",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:41dc521b89d6718585ed7855",
+          "fact_type": "product_fulfillment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:38b7fce19eb646d2",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b1ebb10f81b5ae579a392a74",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-21T10:46:00-04:00",
+          "source_record_id": "student-report:e1706c4c206722f846dace85"
+        },
+        {
+          "asserted_value": {
+            "event_type": "consumed",
+            "evidence": "known prepaid checkpoint plus Enrollware AHA-BLS-ECARD option",
+            "owner_kind": "organization",
+            "owner_organization_id": "unresolved:nhcso",
+            "pool_key": "organization-prepaid-ecards:nhcso",
+            "product_id": "unresolved:aha-bls-ecard",
+            "quantity_delta": -1,
+            "unit_kind": "ecard"
+          },
+          "assertion_key": "enrollware_student_report:student-report:e1706c4c206722f846dace85:inventory_entitlement:e75f451f988a36a3a9911656",
+          "class_session_id": "proposed-session:a27d68dd6b96e2b5a376ce28",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:41dc521b89d6718585ed7855",
+          "fact_type": "inventory_entitlement",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:38b7fce19eb646d2",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:b1ebb10f81b5ae579a392a74",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-04-21T10:46:00-04:00",
+          "source_record_id": "student-report:e1706c4c206722f846dace85"
+        },
+        {
+          "asserted_value": {
+            "source_value": "Y",
+            "status": "attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:f8a82c4d5a20acad671fdae5:attendance:97dd803e9f80940b8a528a46",
+          "class_session_id": "proposed-session:37045b725dec1a8d4c27ecff",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:5d2a02dab83c6486215af70d",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:ccb74d2ba3010a95",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:7fede5c642d68db5948e5183",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-07-21T00:49:00-04:00",
+          "source_record_id": "student-report:f8a82c4d5a20acad671fdae5"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "0.00",
+            "order_total": "95.00",
+            "state": "paid"
+          },
+          "assertion_key": "enrollware_student_report:student-report:f8a82c4d5a20acad671fdae5:payment:5315a2b1f1451db25f0ddc3e",
+          "class_session_id": "proposed-session:37045b725dec1a8d4c27ecff",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:5d2a02dab83c6486215af70d",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:ccb74d2ba3010a95",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:7fede5c642d68db5948e5183",
+          "source": "enrollware_student_report",
+          "source_created_at": "2022-07-21T00:49:00-04:00",
+          "source_record_id": "student-report:f8a82c4d5a20acad671fdae5"
+        },
+        {
+          "asserted_value": {
+            "from_session_source_id": "30103",
+            "occurred_at": "2024-07-15T12:02:00-04:00",
+            "reason": "Enrollware comment explicitly identifies a reschedule origin date; origin class uniquely reconciled to schedule export"
+          },
+          "assertion_key": "enrollware_student_report:student-report:26c3e93e3b5d17ad00a9785f:reschedule:1145e511b1c924af095b08d2",
+          "class_session_id": "proposed-session:eab37c719cdd91e2fc535f95",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:5d2a02dab83c6486215af70d",
+          "fact_type": "reschedule",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:13c580800aac4e40",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:201fdc6c09d715df1392ce72",
+          "source": "enrollware_student_report",
+          "source_created_at": "2024-07-15T12:02:00-04:00",
+          "source_record_id": "student-report:26c3e93e3b5d17ad00a9785f"
+        },
+        {
+          "asserted_value": {
+            "source_value": "Y",
+            "status": "attended"
+          },
+          "assertion_key": "enrollware_student_report:student-report:26c3e93e3b5d17ad00a9785f:attendance:97dd803e9f80940b8a528a46",
+          "class_session_id": "proposed-session:eab37c719cdd91e2fc535f95",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:5d2a02dab83c6486215af70d",
+          "fact_type": "attendance",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:13c580800aac4e40",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:201fdc6c09d715df1392ce72",
+          "source": "enrollware_student_report",
+          "source_created_at": "2024-07-15T12:02:00-04:00",
+          "source_record_id": "student-report:26c3e93e3b5d17ad00a9785f"
+        },
+        {
+          "asserted_value": {
+            "balance_due": "20.00",
+            "order_total": "95.00",
+            "state": "unknown"
+          },
+          "assertion_key": "enrollware_student_report:student-report:26c3e93e3b5d17ad00a9785f:payment:042910459cdc7c4bf4581e96",
+          "class_session_id": "proposed-session:eab37c719cdd91e2fc535f95",
+          "confidence": null,
+          "confidence_state": "possible",
+          "customer_id": "proposed-customer:5d2a02dab83c6486215af70d",
+          "fact_type": "payment",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "observed_at": null,
+          "original_source_value": {
+            "fingerprint": "sha256:13c580800aac4e40",
+            "redacted": true
+          },
+          "reconciliation_status": "unreviewed",
+          "registration_id": "proposed-registration:201fdc6c09d715df1392ce72",
+          "source": "enrollware_student_report",
+          "source_created_at": "2024-07-15T12:02:00-04:00",
+          "source_record_id": "student-report:26c3e93e3b5d17ad00a9785f"
+        }
+      ],
+      "proposed_operations": [
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:5fa2978637f96ae3",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "5fa2978637f96ae3921802f0f16b7f58b7f4e5bb2480fd51d1187d0fc09e175c",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:537a01f98071664d",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:152f3ca566617488",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:a7ae651839823e44",
+              "redacted": true
+            },
+            "phone": ""
+          },
+          "proposed_customer_id": "proposed-customer:4f8faee0b86da486f9d4891e",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "session": {
+            "course_name": "AHA - BLS Provider - In-person Initial<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/nvt.png\" style=\"float:right;width:125px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+            "location_name": "4902 Merlot Court; Wilmington, NC",
+            "source_id": "1",
+            "start_at": "2019-12-13T09:00:00-05:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7"
+        },
+        {
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:4f8faee0b86da486f9d4891e",
+          "external_registration_id": "composite:e401ce2b47711c124947c6e7",
+          "idempotency_key": "hx:enrollware_student_report:student-report:e401ce2b47711c124947c6e7",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_completion",
+          "registration_id": "proposed-registration:b7113a79f25ec3527f00cb7e",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7",
+          "value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          }
+        },
+        {
+          "command": "propose_credential",
+          "registration_id": "proposed-registration:b7113a79f25ec3527f00cb7e",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e401ce2b47711c124947c6e7",
+          "value": {
+            "credential_number": {
+              "fingerprint": "sha256:1c4c3540e5f1cec9",
+              "redacted": true
+            },
+            "status": "issued"
+          }
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:c33297d09cb514f6",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "c33297d09cb514f63f1ebc53b07681218be2b9ec3cd4ae6d184c834e0db67dec",
+          "source_record_id": "student-report:2579b104944b76fb99a0d70e"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:e67f5aee510f7665",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:5c4b344b46956256",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:b9f90a8623e6c855",
+              "redacted": true
+            },
+            "phone": ""
+          },
+          "proposed_customer_id": "proposed-customer:c26e35bc8893207336926c80",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:2579b104944b76fb99a0d70e"
+        },
+        {
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:c26e35bc8893207336926c80",
+          "external_registration_id": "composite:2579b104944b76fb99a0d70e",
+          "idempotency_key": "hx:enrollware_student_report:student-report:2579b104944b76fb99a0d70e",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_completion",
+          "registration_id": "proposed-registration:13e6fea1c1120d5e37348cce",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:2579b104944b76fb99a0d70e",
+          "value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          }
+        },
+        {
+          "command": "propose_credential",
+          "registration_id": "proposed-registration:13e6fea1c1120d5e37348cce",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:2579b104944b76fb99a0d70e",
+          "value": {
+            "credential_number": {
+              "fingerprint": "sha256:ae399b3ceea9b657",
+              "redacted": true
+            },
+            "status": "issued"
+          }
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:b1bede06dd97392e",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "b1bede06dd97392ea66d8c38cd68291bd01401599d4774a8a21fa592210a3f36",
+          "source_record_id": "student-report:97b49d480dc1f87b2ca4c5b4"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:c53198983e47d72e",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:44a2c45876f6bb0c",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:2c7e3c26ac54e09c",
+              "redacted": true
+            },
+            "phone": ""
+          },
+          "proposed_customer_id": "proposed-customer:7c7141ebc108db3935d34ff7",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:97b49d480dc1f87b2ca4c5b4"
+        },
+        {
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:7c7141ebc108db3935d34ff7",
+          "external_registration_id": "composite:97b49d480dc1f87b2ca4c5b4",
+          "idempotency_key": "hx:enrollware_student_report:student-report:97b49d480dc1f87b2ca4c5b4",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_completion",
+          "registration_id": "proposed-registration:0df7f4d7471fd55d6f9c6ca8",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:97b49d480dc1f87b2ca4c5b4",
+          "value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          }
+        },
+        {
+          "command": "propose_credential",
+          "registration_id": "proposed-registration:0df7f4d7471fd55d6f9c6ca8",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:97b49d480dc1f87b2ca4c5b4",
+          "value": {
+            "credential_number": {
+              "fingerprint": "sha256:395dba933388245f",
+              "redacted": true
+            },
+            "status": "issued"
+          }
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:2f4905ace1685387",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "2f4905ace16853876f7e27c38cb8d6d511eab938e891df6933f7b9c884e53dbc",
+          "source_record_id": "student-report:fe5f8f480b029fb9f03e2129"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:1207c30b3894922d",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:edc14e3da629a5c5",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:1b3b49ae229b82a4",
+              "redacted": true
+            },
+            "phone": ""
+          },
+          "proposed_customer_id": "proposed-customer:312772365ca2b1ba8ddff679",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:fe5f8f480b029fb9f03e2129"
+        },
+        {
+          "class_session_id": "proposed-session:47b731c2a0d242f21327da84",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:312772365ca2b1ba8ddff679",
+          "external_registration_id": "composite:fe5f8f480b029fb9f03e2129",
+          "idempotency_key": "hx:enrollware_student_report:student-report:fe5f8f480b029fb9f03e2129",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_completion",
+          "registration_id": "proposed-registration:a7949ab7040deb7101579015",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:fe5f8f480b029fb9f03e2129",
+          "value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          }
+        },
+        {
+          "command": "propose_credential",
+          "registration_id": "proposed-registration:a7949ab7040deb7101579015",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:fe5f8f480b029fb9f03e2129",
+          "value": {
+            "credential_number": {
+              "fingerprint": "sha256:9ff3149242cb0808",
+              "redacted": true
+            },
+            "status": "issued"
+          }
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:7c1a0db50a21a8a5",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "7c1a0db50a21a8a5bb5bbd67289fb100867a1573c62971d090804f6af0bba2d4",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:8f4ad436001da311",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:88eb04458b9066cb",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:6e0a855adeb0878b",
+              "redacted": true
+            },
+            "phone": {
+              "fingerprint": "sha256:ed559a4ac5a58290",
+              "redacted": true
+            }
+          },
+          "proposed_customer_id": "proposed-customer:e7318da46f55eae730579ae8",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:3015b9eea4d0aa2cf9a2062c",
+          "session": {
+            "course_name": "HeartCode\u00ae BLS",
+            "location_name": "4902 Merlot Court; Wilmington, NC",
+            "source_id": "3",
+            "start_at": "2019-12-16T10:00:00-05:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36"
+        },
+        {
+          "class_session_id": "proposed-session:3015b9eea4d0aa2cf9a2062c",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:e7318da46f55eae730579ae8",
+          "external_registration_id": "composite:861280c4a9f6351343cbaa36",
+          "idempotency_key": "hx:enrollware_student_report:student-report:861280c4a9f6351343cbaa36",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_completion",
+          "registration_id": "proposed-registration:f2a4577d50f99b58afbd3fc3",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36",
+          "value": {
+            "evidence": "Enrollware eCard Code present",
+            "status": "passed"
+          }
+        },
+        {
+          "command": "propose_credential",
+          "registration_id": "proposed-registration:f2a4577d50f99b58afbd3fc3",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:861280c4a9f6351343cbaa36",
+          "value": {
+            "credential_number": {
+              "fingerprint": "sha256:477780fd7a21e20b",
+              "redacted": true
+            },
+            "status": "issued"
+          }
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:ce2747cec98cc2e1",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "ce2747cec98cc2e11996e328d055d0a954a3a43d5c2747f977c70f4d2d5c60d3",
+          "source_record_id": "student-report:2c52ec872256d5020b7b7291"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:2d61527fa53fb3a5",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:53c5c434097e3329",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:10996b6121af1fb5",
+              "redacted": true
+            },
+            "phone": ""
+          },
+          "proposed_customer_id": "proposed-customer:0cc02b8dd64128fe7930e945",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:2c52ec872256d5020b7b7291"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:46bab45858cbe3a14028ea98",
+          "session": {
+            "course_name": "AHA - BLS Provider - In-person Initial<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/nvt.png\" style=\"float:right;width:125px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+            "location_name": "",
+            "source_id": "351",
+            "start_at": "2020-03-18T09:00:00-04:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:2c52ec872256d5020b7b7291"
+        },
+        {
+          "class_session_id": "proposed-session:46bab45858cbe3a14028ea98",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:0cc02b8dd64128fe7930e945",
+          "external_registration_id": "composite:2c52ec872256d5020b7b7291",
+          "idempotency_key": "hx:enrollware_student_report:student-report:2c52ec872256d5020b7b7291",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:6a1432b5097cf74f",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "6a1432b5097cf74ff1c62ed5ca1dfbe80579c2f5f698be09ab9cd8998f1e81f1",
+          "source_record_id": "student-report:e5b7a5790d413d8c3013c9ba"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:3a000005d0c7603f",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:37f9a9c308864856",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:b3c5a2808a4ddc08",
+              "redacted": true
+            },
+            "phone": {
+              "fingerprint": "sha256:cab9f184ff2b6616",
+              "redacted": true
+            }
+          },
+          "proposed_customer_id": "proposed-customer:72cbd58343f2db4b3ab885a0",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e5b7a5790d413d8c3013c9ba"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:d4f2e5a6fa27391c8455f9fc",
+          "session": {
+            "course_name": "AHA - Heartsaver\u00ae First Aid CPR AED - <b>In-person</b> \u2764\ufe0f",
+            "location_name": "New Hanover County Public Library - Pine Valley Branch",
+            "source_id": "908",
+            "start_at": "2019-11-12T17:00:00-05:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e5b7a5790d413d8c3013c9ba"
+        },
+        {
+          "class_session_id": "proposed-session:d4f2e5a6fa27391c8455f9fc",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:72cbd58343f2db4b3ab885a0",
+          "external_registration_id": "composite:e5b7a5790d413d8c3013c9ba",
+          "idempotency_key": "hx:enrollware_student_report:student-report:e5b7a5790d413d8c3013c9ba",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:2a4298f76339b931",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "2a4298f76339b93122684d77875d53a7cbd19f6e8d2d71d7aebddc77379caac1",
+          "source_record_id": "student-report:9159fe5efe03d39044eeced7"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:94659fb637bcd002",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:79b26ce6f54afc3b",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:da6ea8217328aa7d",
+              "redacted": true
+            },
+            "phone": {
+              "fingerprint": "sha256:8916d26ea5fda596",
+              "redacted": true
+            }
+          },
+          "proposed_customer_id": "proposed-customer:edf9d74d9c480f6b95ff3166",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:9159fe5efe03d39044eeced7"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:c936ac40d3ed2b4dda7f1619",
+          "session": {
+            "course_name": "AHA - BLS Provider - Online Class with in-Person Skill Session - Initial or Renewal <img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+            "location_name": "Broadway at the Beach",
+            "source_id": "1514",
+            "start_at": "2020-09-16T09:00:00-04:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:9159fe5efe03d39044eeced7"
+        },
+        {
+          "class_session_id": "proposed-session:c936ac40d3ed2b4dda7f1619",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:edf9d74d9c480f6b95ff3166",
+          "external_registration_id": "composite:9159fe5efe03d39044eeced7",
+          "idempotency_key": "hx:enrollware_student_report:student-report:9159fe5efe03d39044eeced7",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:f3ecb765e922809a",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "f3ecb765e922809a7142d5c38cb90ba612f6551a375d811730a9029dc3a48d7d",
+          "source_record_id": "student-report:20e77b8d36bce4b2d5df9285"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:150135c541010f80",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:bc24051de0d2e61a",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:eed4f3b97a3f0f2a",
+              "redacted": true
+            },
+            "phone": {
+              "fingerprint": "sha256:63d02aae01553c72",
+              "redacted": true
+            }
+          },
+          "proposed_customer_id": "proposed-customer:ce097e0b03abc003040c5b6c",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:20e77b8d36bce4b2d5df9285"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:3d9ac77663e64f32274e1e04",
+          "session": {
+            "course_name": "AHA - Heartsaver\u00ae First Aid CPR AED - <b>In-person</b> \u2764\ufe0f",
+            "location_name": "Karen Beasley Sea Turtle Rescue and Rehabilitation Center",
+            "source_id": "9366",
+            "start_at": "2021-11-09T09:00:00-05:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:20e77b8d36bce4b2d5df9285"
+        },
+        {
+          "class_session_id": "proposed-session:3d9ac77663e64f32274e1e04",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:ce097e0b03abc003040c5b6c",
+          "external_registration_id": "composite:20e77b8d36bce4b2d5df9285",
+          "idempotency_key": "hx:enrollware_student_report:student-report:20e77b8d36bce4b2d5df9285",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_completion",
+          "registration_id": "proposed-registration:a45e886989c2e80402804590",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:20e77b8d36bce4b2d5df9285",
+          "value": {
+            "evidence": "Enrollware Status only",
+            "status": "incomplete"
+          }
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:a66e7a15ddbf8102",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "a66e7a15ddbf8102d02e59322f822fdfaeefe8515c27ff8098827a181bfba87c",
+          "source_record_id": "student-report:cf02c5c774deef6c1b8ade43"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:c61ffaf0058c8a833485d1a5",
+          "session": {
+            "course_name": "AHA - BLS Provider - In-person Initial<img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/a-l.png\" style=\"width:75px;vertical-align:top;\"></img><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/Logo/nvt.png\" style=\"float:right;width:125px;vertical-align:top;\"></img><div style=\"font-weight: normal; font-size: 85%; color: gray;\"><img src=\"https://www.enrollware.com/sitefiles/coastalcprtraining/_AHA.png\" style=\"width:25px;horizonal-align:left;\"></img><i>Healthcare professionals, first responders, medical students, workplace safety personnel, lifeguards...</i></div>",
+            "location_name": "NC - Holly Ridge: 325 Sound Rd, Unit 204; 910CPR's Office @ Parkhill Village (across the street from Holly Ridge Community Center)",
+            "source_id": "10393",
+            "start_at": "2021-12-14T09:00:00-05:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:cf02c5c774deef6c1b8ade43"
+        },
+        {
+          "class_session_id": "proposed-session:c61ffaf0058c8a833485d1a5",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:e7318da46f55eae730579ae8",
+          "external_registration_id": "composite:cf02c5c774deef6c1b8ade43",
+          "idempotency_key": "hx:enrollware_student_report:student-report:cf02c5c774deef6c1b8ade43",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:24b37821a356a5a1",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "24b37821a356a5a14f6bb3a17fac40da183138ab4b1e9da6423dbf0dba52e315",
+          "source_record_id": "student-report:34f8674caa726fa92965523b"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:becdd063b812cab6",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:20091a2a20d6eac5",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:e57ac8afe584a8b0",
+              "redacted": true
+            },
+            "phone": {
+              "fingerprint": "sha256:0273d7884a9d00c8",
+              "redacted": true
+            }
+          },
+          "proposed_customer_id": "proposed-customer:ac52359d67a01f5e4d784a9e",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:34f8674caa726fa92965523b"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "session": {
+            "course_name": "BLS Provider (NHCSO)",
+            "location_name": "CFCC: North Campus / Blue Clay Rd",
+            "source_id": "11707",
+            "start_at": "2022-04-14T13:00:00-04:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:34f8674caa726fa92965523b"
+        },
+        {
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:ac52359d67a01f5e4d784a9e",
+          "external_registration_id": "composite:34f8674caa726fa92965523b",
+          "idempotency_key": "hx:enrollware_student_report:student-report:34f8674caa726fa92965523b",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_inventory_entitlement_pool",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "owner_customer_id": null,
+          "owner_kind": "organization",
+          "owner_organization_id": "unresolved:nhcso",
+          "pool_key": "organization-prepaid-ecards:nhcso",
+          "product_id": "unresolved:aha-bls-ecard",
+          "proposed_pool_id": "proposed-pool:ee79c1ad204dea83f45aea39",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:34f8674caa726fa92965523b",
+          "unit_kind": "ecard"
+        },
+        {
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "command": "propose_inventory_entitlement_event",
+          "customer_id": "proposed-customer:ac52359d67a01f5e4d784a9e",
+          "event_type": "consumed",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "pool_id": "proposed-pool:ee79c1ad204dea83f45aea39",
+          "pool_key": "organization-prepaid-ecards:nhcso",
+          "quantity_delta": -1,
+          "registration_id": "proposed-registration:cdc1ea83445ff18ee5dc2d37",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:34f8674caa726fa92965523b"
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:acb881592544d657",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "acb881592544d657308243696737cdee6d96beeb10dca564256caddd8c3b9b9a",
+          "source_record_id": "student-report:8d2a30d9de0996ed59882c22"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:207d3c15feb433c4",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:152f3ca566617488",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:bb7e2875d70db240",
+              "redacted": true
+            },
+            "phone": {
+              "fingerprint": "sha256:5b0ed7d383275495",
+              "redacted": true
+            }
+          },
+          "proposed_customer_id": "proposed-customer:a538fb1d2c21f83e76052539",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:8d2a30d9de0996ed59882c22"
+        },
+        {
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:a538fb1d2c21f83e76052539",
+          "external_registration_id": "composite:8d2a30d9de0996ed59882c22",
+          "idempotency_key": "hx:enrollware_student_report:student-report:8d2a30d9de0996ed59882c22",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "class_session_id": "proposed-session:f11be3348066cb80365dfd90",
+          "command": "propose_inventory_entitlement_event",
+          "customer_id": "proposed-customer:a538fb1d2c21f83e76052539",
+          "event_type": "consumed",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "pool_id": "proposed-pool:ee79c1ad204dea83f45aea39",
+          "pool_key": "organization-prepaid-ecards:nhcso",
+          "quantity_delta": -1,
+          "registration_id": "proposed-registration:b1c296110edb20359652aeb4",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:8d2a30d9de0996ed59882c22"
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:38b7fce19eb646d2",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "38b7fce19eb646d2fdce52547104c3b017b49f8ce8a59e3c8b8f1f53f053cbc8",
+          "source_record_id": "student-report:e1706c4c206722f846dace85"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:2cc8551dd0be70e1",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:adb015b69f4b5bd7",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:f8975ae205883450",
+              "redacted": true
+            },
+            "phone": {
+              "fingerprint": "sha256:95e67112c78239b0",
+              "redacted": true
+            }
+          },
+          "proposed_customer_id": "proposed-customer:41dc521b89d6718585ed7855",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e1706c4c206722f846dace85"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:a27d68dd6b96e2b5a376ce28",
+          "session": {
+            "course_name": "BLS Provider (NHCSO)",
+            "location_name": "CFCC: North Campus / Blue Clay Rd",
+            "source_id": "11708",
+            "start_at": "2022-04-21T13:00:00-04:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e1706c4c206722f846dace85"
+        },
+        {
+          "class_session_id": "proposed-session:a27d68dd6b96e2b5a376ce28",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:41dc521b89d6718585ed7855",
+          "external_registration_id": "composite:e1706c4c206722f846dace85",
+          "idempotency_key": "hx:enrollware_student_report:student-report:e1706c4c206722f846dace85",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_completion",
+          "registration_id": "proposed-registration:b1ebb10f81b5ae579a392a74",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e1706c4c206722f846dace85",
+          "value": {
+            "evidence": "Enrollware Status only",
+            "status": "incomplete"
+          }
+        },
+        {
+          "class_session_id": "proposed-session:a27d68dd6b96e2b5a376ce28",
+          "command": "propose_inventory_entitlement_event",
+          "customer_id": "proposed-customer:41dc521b89d6718585ed7855",
+          "event_type": "consumed",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "pool_id": "proposed-pool:ee79c1ad204dea83f45aea39",
+          "pool_key": "organization-prepaid-ecards:nhcso",
+          "quantity_delta": -1,
+          "registration_id": "proposed-registration:b1ebb10f81b5ae579a392a74",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:e1706c4c206722f846dace85"
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:ccb74d2ba3010a95",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "ccb74d2ba3010a9542932bb5bc9307ba4ffb94237d9803c6a4f11782f0a9d363",
+          "source_record_id": "student-report:f8a82c4d5a20acad671fdae5"
+        },
+        {
+          "command": "register_participant_identity",
+          "person": {
+            "email": {
+              "fingerprint": "sha256:11727147497d2add",
+              "redacted": true
+            },
+            "first_name": {
+              "fingerprint": "sha256:a74bfe9f30fc612b",
+              "redacted": true
+            },
+            "last_name": {
+              "fingerprint": "sha256:c6486bb5478a5261",
+              "redacted": true
+            },
+            "phone": {
+              "fingerprint": "sha256:bece9497a360b89b",
+              "redacted": true
+            }
+          },
+          "proposed_customer_id": "proposed-customer:5d2a02dab83c6486215af70d",
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:f8a82c4d5a20acad671fdae5"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:37045b725dec1a8d4c27ecff",
+          "session": {
+            "course_name": "AHA - Heartsaver\u00ae First Aid CPR AED - <b>In-person</b> \u2764\ufe0f",
+            "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+            "source_id": "11573",
+            "start_at": "2022-07-20T18:00:00-04:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:f8a82c4d5a20acad671fdae5"
+        },
+        {
+          "class_session_id": "proposed-session:37045b725dec1a8d4c27ecff",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:5d2a02dab83c6486215af70d",
+          "external_registration_id": "composite:f8a82c4d5a20acad671fdae5",
+          "idempotency_key": "hx:enrollware_student_report:student-report:f8a82c4d5a20acad671fdae5",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "propose_import_record",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "original_values": {
+            "fingerprint": "sha256:13c580800aac4e40",
+            "redacted": true
+          },
+          "source": "enrollware_student_report",
+          "source_fingerprint": "13c580800aac4e4071220309c35d4d7bd972b5922a82303ff3559bf3b853db7c",
+          "source_record_id": "student-report:26c3e93e3b5d17ad00a9785f"
+        },
+        {
+          "command": "propose_session",
+          "proposed_session_id": "proposed-session:eab37c719cdd91e2fc535f95",
+          "session": {
+            "course_name": "AHA - Heartsaver\u00ae First Aid CPR AED - <b>In-person</b> \u2764\ufe0f",
+            "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+            "source_id": "33145",
+            "start_at": "2024-08-03T12:30:00-04:00"
+          },
+          "source": "enrollware_student_report",
+          "source_record_id": "student-report:26c3e93e3b5d17ad00a9785f"
+        },
+        {
+          "class_session_id": "proposed-session:eab37c719cdd91e2fc535f95",
+          "command": "register_participant",
+          "customer_id": "proposed-customer:5d2a02dab83c6486215af70d",
+          "external_registration_id": "composite:26c3e93e3b5d17ad00a9785f",
+          "idempotency_key": "hx:enrollware_student_report:student-report:26c3e93e3b5d17ad00a9785f",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "source": "enrollware_student_report"
+        },
+        {
+          "command": "move_registration",
+          "customer_id": "proposed-customer:5d2a02dab83c6486215af70d",
+          "idempotency_key": "hx-move:enrollware_student_report:student-report:26c3e93e3b5d17ad00a9785f",
+          "import_batch_id": "enrollware-student-sample:b9cacf0555f240ee",
+          "occurred_at": "2024-07-15T12:02:00-04:00",
+          "reason": "Enrollware comment explicitly identifies a reschedule origin date; origin class uniquely reconciled to schedule export",
+          "source": "enrollware_student_report",
+          "source_session_id": "source-only:enrollware:30103",
+          "target_session_id": "proposed-session:eab37c719cdd91e2fc535f95"
+        }
+      ]
+    },
+    "summary": {
+      "ambiguous_conflicting_facts": 4,
+      "completions_reconstructed": 7,
+      "credentials_cards_reconstructed": 5,
+      "duplicate_candidates": 0,
+      "people_created": 13,
+      "people_matched": 0,
+      "records_intentionally_excluded": 0,
+      "registrations_created": 15,
+      "registrations_matched": 0,
+      "reschedules_reconstructed": 1,
+      "sessions_created": 11,
+      "sessions_matched": 0,
+      "source_records_examined": 15,
+      "unresolved_identities": 0
+    }
+  },
+  "migration_applied": false,
+  "mismatches": [
+    {
+      "area": "people",
+      "classification": "importer deficiency",
+      "finding": "13 unique historical identities in the sample matched zero production customers; batch-local duplicate identity reuse is now correct.",
+      "id": "M01"
+    },
+    {
+      "area": "sessions",
+      "classification": "importer deficiency",
+      "finding": "11 Enrollware class IDs in the sample matched zero production class_sessions; production has 352 historical sessions, but none cover these sampled IDs.",
+      "id": "M02"
+    },
+    {
+      "area": "registrations",
+      "classification": "importer deficiency",
+      "finding": "15 sampled participant/session memberships matched zero production registrations; production has zero registrations with historical_import_key.",
+      "id": "M03"
+    },
+    {
+      "area": "source identity",
+      "classification": "importer deficiency",
+      "finding": "The student export contains no Enrollware registration ID or course ID, so the adapter uses a documented composite registration key and course-name evidence.",
+      "id": "M04"
+    },
+    {
+      "area": "completion",
+      "classification": "source-data ambiguity",
+      "finding": "Four rows have Complete/Incomplete status without an eCard; Hx refuses to translate those status-only values into passed/failed completion facts.",
+      "id": "M05"
+    },
+    {
+      "area": "lifecycle",
+      "classification": "importer deficiency",
+      "finding": "The sample supports 7 explicit completions, 5 credentials, and 1 reschedule, while production currently contains zero canonical completions, credentials, or reschedule lifecycle events.",
+      "id": "M06"
+    },
+    {
+      "area": "prepaid inventory",
+      "classification": "schema/model gap",
+      "finding": "Three NHCSO rows carry the AHA-BLS-ECARD option and the trusted checkpoint says the cards use a customer-owned prepaid pool, but production lacks the proposed entitlement pool/event tables and canonical owner/product IDs remain unresolved.",
+      "id": "M07"
+    },
+    {
+      "area": "idempotency provenance",
+      "classification": "schema/model gap",
+      "finding": "Exact replay is deterministic with a source fingerprint in the dry-run overlay, but lifecycle_import_records has no dedicated source_fingerprint column; persistence must store and query an equivalent immutable fingerprint before apply mode is approved.",
+      "id": "M08"
+    },
+    {
+      "area": "batch identity",
+      "classification": "identity-resolution deficiency",
+      "finding": "The initial real run proposed one person per row (15 instead of 13); Hx was corrected to reuse email/phone identity within the batch and regression-tested.",
+      "id": "M09"
+    }
+  ],
+  "mode": "dry_run_only",
+  "production_checkpoint": {
+    "customers_total": 390,
+    "historical_registrations_total": 0,
+    "historical_sessions_total": 352,
+    "identity_aliases_total": 0,
+    "lifecycle_import_records_total": 0,
+    "participant_completions_total": 0,
+    "participant_credentials_total": 0,
+    "project_id": "wktwgcnwdvbebcobgyey",
+    "query_mode": "read_only SELECT",
+    "reschedule_events_total": 0,
+    "sample_customers_matched": 0,
+    "sample_registrations_matched": 0,
+    "sample_sessions_matched": 0
+  },
+  "production_mutated": false,
+  "replay": {
+    "actions": {
+      "idempotent_replay": 15
+    },
+    "additional_evidence_assertions": 0,
+    "additional_proposed_operations": 0,
+    "overlay_only": true,
+    "same_sample": true,
+    "summary": {
+      "ambiguous_conflicting_facts": 0,
+      "completions_reconstructed": 0,
+      "credentials_cards_reconstructed": 0,
+      "duplicate_candidates": 0,
+      "people_created": 0,
+      "people_matched": 0,
+      "records_intentionally_excluded": 0,
+      "registrations_created": 0,
+      "registrations_matched": 0,
+      "reschedules_reconstructed": 0,
+      "sessions_created": 0,
+      "sessions_matched": 0,
+      "source_records_examined": 15,
+      "unresolved_identities": 0
+    }
+  },
+  "report": "Hx-Builder real Enrollware historical sample dry run",
+  "source": {
+    "kind": "real Enrollware student export",
+    "rows_examined_in_source": 8199,
+    "rows_selected": 15,
+    "selection": "deterministic lifecycle coverage",
+    "sha256": "b9cacf0555f240ee27de20f4c56eddb8521d226ccc4ead61e6007184c8060941"
+  }
+}
