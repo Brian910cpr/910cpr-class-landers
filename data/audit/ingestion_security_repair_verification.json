@@ -1,0 +1,45 @@
+{
+  "application_deployed": false,
+  "authority": {
+    "class_sessions": 365,
+    "class_sessions_sha256": "8fecc7847e3775887759d1e7f20224b5bc01da2c93395df547bc22e25579bd49",
+    "locations": 36,
+    "locations_sha256": "f586218dc954f7a07d76245a76851814215ff7ce418d51aaeac3ef1c9cafb44e",
+    "registrations": 33,
+    "registrations_sha256": "93dd889acefd6a1f756968c828b3c310a99206b566fd6a8ea66faaf288ca69c9"
+  },
+  "browser_grants_after": 0,
+  "browser_policies_added": 0,
+  "dry_run": {
+    "deterministic_hash": "db2599897fc7de26021d0a7cffc1bf6a1e3906fe3121c5aa55de6f5df9e05527",
+    "independent_runs_equal": true,
+    "replay_additional_assertions": 0,
+    "replay_additional_operations": 0,
+    "source_records_examined": 8199,
+    "unexplained_mismatches": 0
+  },
+  "historical_import_performed": false,
+  "import_function": {
+    "anon_execute": false,
+    "authenticated_execute": false,
+    "owner": "postgres",
+    "search_path": "pg_catalog",
+    "security_definer": true,
+    "service_role_execute": true
+  },
+  "migrations": [
+    "20260901113852 secure_ingestion_compliance_surfaces",
+    "20260901114113 secure_compliance_trigger_helpers"
+  ],
+  "rls_enabled_tables": [
+    "compliance_requirement_sources",
+    "compliance_requirements",
+    "historical_registration_import_rows",
+    "ingest_facts",
+    "ingest_jobs",
+    "ingest_review_queue",
+    "session_compliance_requirements"
+  ],
+  "rollback_validation_runs_per_change_set": 2,
+  "status": "INGESTION SECURITY REPAIRED AND VERIFIED"
+}
