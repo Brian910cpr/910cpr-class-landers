@@ -1,0 +1,58 @@
+{
+  "candidate_collision_review": {
+    "ambiguous_not_created": 6,
+    "duplicate_candidate_keys": 0,
+    "duplicate_candidate_names": 0,
+    "exact_collisions_with_existing_canonical_locations": 0,
+    "production_drift_note": "27 pre-existing hist_location_* rows are source-distinct legacy placeholders; none exactly matches the 126 reviewed source labels",
+    "source_only_not_created": 10
+  },
+  "course_policy": "17 generic/ambiguous course rows remain review-required; no guessed merge",
+  "deterministic_hash": "db2599897fc7de26021d0a7cffc1bf6a1e3906fe3121c5aa55de6f5df9e05527",
+  "fully_canonicalized_sessions_after_locations": 3439,
+  "fully_canonicalized_sessions_before": 2063,
+  "historical_import_performed": false,
+  "historical_location_candidates": 126,
+  "historical_location_rows_resolvable": 3837,
+  "independent_hash": "db2599897fc7de26021d0a7cffc1bf6a1e3906fe3121c5aa55de6f5df9e05527",
+  "independent_run_equality": true,
+  "mode": "review_only_dry_run",
+  "preexisting_production_state": {
+    "changed_by_this_review": false,
+    "enrollware_history_sessions": 352,
+    "historical_key_locations": 27,
+    "unknown_historical_instructor_sentinels": 1
+  },
+  "preexisting_security_advisory": {
+    "review_url": "https://supabase.com/docs/guides/database/postgres/row-level-security",
+    "rls_disabled_tables": [
+      "compliance_requirement_sources",
+      "compliance_requirements",
+      "historical_registration_import_rows",
+      "ingest_facts",
+      "ingest_jobs",
+      "ingest_review_queue",
+      "session_compliance_requirements"
+    ],
+    "scope": "not introduced or changed by this proposal"
+  },
+  "production_mutated": false,
+  "production_schema_rollback_validation": {
+    "class_sessions_after_rollback": 365,
+    "independent_transactions_passed": 2,
+    "locations_after_rollback": 36,
+    "residual_schema_changes": 0
+  },
+  "recommendation": "SAFE TO APPLY HISTORICAL AUTHORITY MIGRATION",
+  "remaining_course_ambiguity": 17,
+  "remaining_identity_conflicts": 27,
+  "remaining_unresolved_locations": 421,
+  "replay_additional_assertions": 0,
+  "replay_additional_operations": 0,
+  "sessions_accepted_under_historical_contract": 3570,
+  "sessions_accepted_with_both_unknown": 1,
+  "sessions_accepted_with_unknown_duration": 27,
+  "sessions_accepted_with_unknown_instructor": 105,
+  "source_records_examined": 8199,
+  "unexplained_mismatches": 0
+}
