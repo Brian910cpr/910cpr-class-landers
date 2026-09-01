@@ -9,7 +9,7 @@
     "aha-bls-in-person": {
       "course_ids": ["209806", "359474"],
       "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": true
+      "retain_barnacle_offers": false
     },
     "heartsaver-cpr-aed": {
       "course_ids": ["344085", "209808"],
