@@ -282,7 +282,14 @@ def apply_daily_anchor_stack(payload: dict[str, Any], anchors: list[dict[str, An
         for cid in sorted({course_id(offer) for offer in day_offers} - anchored_courses):
             candidates = [offer for offer in day_offers if course_id(offer) == cid and not _anchor_for_offer(offer, day_anchors)]
             chosen: dict[tuple[str, str], tuple[float, str, dict[str, Any]]] = {}
+            candidate_scope, _candidate_delay = repeat_scope_key(cid, policy)
             for anchor in day_anchors:
+                anchor_scope, _anchor_delay = repeat_scope_key(text(anchor.get("course_id")), policy)
+                if candidate_scope == anchor_scope:
+                    # Initial/Renewal variants in the same classroom family are
+                    # alternatives the customer chooses explicitly, not barnacles
+                    # to place before or after one another.
+                    continue
                 astart = dt(anchor.get("start_at"))
                 aend = dt(anchor.get("end_at"))
                 if not astart or not aend:

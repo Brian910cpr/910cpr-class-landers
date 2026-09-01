@@ -1,6 +1,6 @@
 {
   "schema_version": "910cpr-anchor-schedule-policy.v1",
-  "mode": "anchor_repeat_bubble_v2",
+  "mode": "daily_anchor_stack_v1",
   "one_course_type_per_calendar_day": false,
   "open_day_excluded_families": ["ACLS", "PALS"],
   "default_repeat_delay_minutes": 0,
@@ -9,7 +9,7 @@
     "aha-bls-in-person": {
       "course_ids": ["209806", "359474"],
       "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": true
+      "retain_barnacle_offers": false
     },
     "heartsaver-cpr-aed": {
       "course_ids": ["344085", "209808"],
