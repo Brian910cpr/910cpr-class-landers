@@ -200,7 +200,17 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
             }
             slots.append({"startTime": clock, "displayStartTime": clock, "courses": [offer]})
         payload = {"dates": [{"date": "2026-08-05", "displayDate": "Wednesday", "startTimes": slots}], "counts": {}}
-        policy = {"mode": "daily_anchor_stack_v1", "one_course_type_per_calendar_day": True}
+        policy = {
+            "mode": "daily_anchor_stack_v1",
+            "one_course_type_per_calendar_day": False,
+            "families": {
+                "aha-bls-in-person": {
+                    "course_ids": ["209806", "359474"],
+                    "repeat_delay_minutes": 1440,
+                    "retain_barnacle_offers": False,
+                }
+            },
+        }
 
         result = apply_selector_policy(payload, anchors, policy)
         rendered = [course for day in result["dates"] for slot in day["startTimes"] for course in slot["courses"]]
@@ -208,9 +218,9 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         for item in rendered:
             by_course.setdefault(item["courseId"], []).append(item)
         self.assertEqual(len(by_course["359474"]), 1)
-        self.assertEqual({item["startTime"] for item in by_course["209806"]}, {"08:30", "11:30"})
+        self.assertNotIn("209806", by_course)
         self.assertEqual({item["startTime"] for item in by_course["210549"]}, {"08:45", "11:30"})
-        self.assertTrue(all(item.get("schedule_role") == "barnacle" for cid in ("209806", "210549") for item in by_course[cid]))
+        self.assertTrue(all(item.get("schedule_role") == "barnacle" for item in by_course["210549"]))
 
 
 if __name__ == "__main__":
