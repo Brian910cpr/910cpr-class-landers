@@ -9,29 +9,29 @@
     "aha-bls-in-person": {
       "course_ids": ["209806", "359474"],
       "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": false
+      "retain_barnacle_offers": true
     },
     "heartsaver-cpr-aed": {
       "course_ids": ["344085", "209808"],
       "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": false
+      "retain_barnacle_offers": true
     },
     "heartsaver-first-aid-cpr-aed": {
       "course_ids": ["209809", "329495"],
       "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": false
+      "retain_barnacle_offers": true
     },
     "heartsaver-pediatric-first-aid-cpr-aed": {
       "course_ids": ["351632", "251545"],
       "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": false
+      "retain_barnacle_offers": true
     }
   },
   "exact_courses": {
     "463743": {
       "label": "HSI Adult-only CPR",
       "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": false
+      "retain_barnacle_offers": true
     }
   }
 }
