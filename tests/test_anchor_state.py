@@ -115,6 +115,14 @@ class AnchorStateTests(unittest.TestCase):
         self.assertEqual(0, policy["default_repeat_delay_minutes"])
         self.assertTrue(policy["retain_barnacle_offers"])
         self.assertEqual(policy["open_day_excluded_families"], ["ACLS", "PALS"])
+        self.assertTrue(
+            all(family["retain_barnacle_offers"] for family in policy["families"].values()),
+            "Every customer-facing course family must retain barnacle offers",
+        )
+        self.assertTrue(
+            all(course["retain_barnacle_offers"] for course in policy["exact_courses"].values()),
+            "Every exact-course repeat rule must retain barnacle offers",
+        )
 
 
 if __name__ == "__main__":
