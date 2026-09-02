@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-09-02T09:31:25.742034-04:00`
+- Generated at: `2026-09-02T13:42:02.069543-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `305`
-- Public sessions created: `305`
+- iCal events read: `304`
+- Public sessions created: `304`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `268`
+- Registration unavailable sessions marked not direct-bookable: `267`
 - Unmapped sessions: `13`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776559` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-06-04T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776775` | enrollware_registration_closed | AHA - Family & Friends® CPR | 2026-06-04T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776336` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-06-05T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775533` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-05T11:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `13653161` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-23T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776557` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-06-23T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776773` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-06-23T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13669835` | enrollware_registration_closed | BLS Provider (NHCSO) | 2026-06-24T13:00:00-04:00 | New Hanover County Sheriff’s Office |
 
 ## Unmapped Examples
 
