@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Instructor Workbench | LanderWare</title>
+<link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
+<script src="/assets/site-theme.js"></script>
+<style>
+:root{--ink:#172133;--muted:#687386;--line:#d9e0e8;--soft:#f4f7fa;--blue:#0a66a5;--green:#167654;--amber:#a96700;--red:#b33a3a;--navy:#13263a}*{box-sizing:border-box}body{margin:0;background:#edf2f6;color:var(--ink);font:14px/1.45 Arial,Helvetica,sans-serif}header{padding:15px 22px;background:var(--navy);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:14px}header h1{margin:0;font-size:24px}header small{opacity:.82}.wrap{max-width:1500px;margin:auto;padding:14px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 4px 16px rgba(20,32,51,.05);margin-bottom:12px}.toolbar{display:grid;grid-template-columns:2fr repeat(2,minmax(170px,1fr)) auto;gap:8px;align-items:end}.field{display:grid;gap:4px}.field label{font-size:11px;font-weight:800;color:#435267}.field input,.field select{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:#fff}.check{display:flex;align-items:center;gap:7px;min-height:38px}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.metric{padding:12px;border:1px solid var(--line);border-radius:11px;background:#fafbfc}.metric strong{display:block;font-size:24px}.metric span,.muted{color:var(--muted)}.session-list{display:grid;gap:9px}.session-card{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(240px,.9fr) auto;gap:14px;align-items:center;border:1px solid var(--line);border-left:6px solid var(--amber);border-radius:12px;padding:12px;background:#fff}.session-card.good{border-left-color:var(--green)}.session-card.bad{border-left-color:var(--red)}.session-card h2{font-size:16px;margin:0 0 3px}.meta{color:var(--muted);font-size:12px}.progress-wrap{display:grid;gap:5px}.progress-head{display:flex;justify-content:space-between;gap:8px;font-weight:700}.progress{height:10px;background:#e7edf2;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:var(--amber)}.session-card.good .progress span{background:var(--green)}.session-card.bad .progress span{background:var(--red)}.missing{margin:0;padding-left:18px;color:#7c4c00;font-size:12px}.missing li{margin:2px 0}.btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer;color:var(--ink)}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}.empty{padding:28px;text-align:center;color:var(--muted)}dialog{border:0;border-radius:15px;padding:0;width:min(920px,calc(100vw - 24px));max-height:90vh;box-shadow:0 24px 80px rgba(0,0,0,.3)}dialog::backdrop{background:rgba(11,24,37,.55)}.drawer-head{display:flex;justify-content:space-between;gap:12px;padding:16px 18px;background:var(--navy);color:#fff}.drawer-head h2{margin:0;font-size:20px}.drawer-body{padding:16px;overflow:auto;max-height:calc(90vh - 70px)}.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.detail-box{padding:10px;border:1px solid var(--line);border-radius:10px}.detail-box b{display:block}.upload{margin-top:14px;padding:14px;border:2px dashed #9cb3c4;border-radius:12px;background:#f8fbfd}.upload-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}.table{width:100%;border-collapse:collapse;margin-top:12px}.table th,.table td{text-align:left;padding:8px;border-bottom:1px solid #e8edf1}.table th{font-size:11px;text-transform:uppercase;color:var(--muted)}.notice{padding:11px;border-left:4px solid var(--blue);background:#eef6fb;border-radius:8px}.notice.bad{border-left-color:var(--red);background:#fff0f0;color:#7b1f1f}@media(max-width:850px){.toolbar,.summary,.detail-grid,.upload-grid{grid-template-columns:1fr 1fr}.session-card{grid-template-columns:1fr}.session-card .open{justify-self:start}}@media(max-width:560px){.toolbar,.summary,.detail-grid,.upload-grid{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header><div><h1>Instructor Workbench</h1><small>Past classes, paperwork, cards, and record health.</small></div><strong>910CPR · LanderWare</strong></header>
+<main class="wrap">
+  <section id="notice" class="panel notice">Loading past session records…</section>
+  <section class="panel">
+    <div class="toolbar">
+      <div class="field"><label for="search">Find a class</label><input id="search" type="search" placeholder="Course, client, location, or class number"></div>
+      <div class="field"><label for="instructor">Instructor</label><select id="instructor"><option value="">All instructors</option></select></div>
+      <div class="field"><label for="health">Record health</label><select id="health"><option value="">All health levels</option><option value="attention">Needs attention</option><option value="incomplete">Under 100%</option><option value="complete">Complete</option></select></div>
+      <label class="check"><input id="hide-empty" type="checkbox" checked> Hide empty sessions</label>
+    </div>
+  </section>
+  <section class="summary" aria-label="Past class summary">
+    <div class="metric"><strong id="metric-visible">—</strong><span>classes shown</span></div>
+    <div class="metric"><strong id="metric-attention">—</strong><span>need attention</span></div>
+    <div class="metric"><strong id="metric-paperwork">—</strong><span>without paperwork</span></div>
+    <div class="metric"><strong id="metric-cards">—</strong><span>cards unresolved</span></div>
+  </section>
+  <section class="panel"><div id="session-list" class="session-list"><div class="empty">Loading classes…</div></div></section>
+</main>
+<dialog id="session-dialog"><div class="drawer-head"><div><h2 id="detail-title">Session</h2><div id="detail-subtitle"></div></div><button class="btn" id="close-dialog">Close</button></div><div class="drawer-body" id="detail-body"></div></dialog>
+<script src="/assets/instructor-workbench.js?v=20260902-1"></script>
+</body>
+</html>
