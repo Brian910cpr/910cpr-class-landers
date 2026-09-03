@@ -2125,8 +2125,14 @@ def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_m
     output_paths = [report_json_path, report_md_path, availability_path]
     if page_config.get("render_html") is not False:
         html_path.parent.mkdir(parents=True, exist_ok=True)
-        html_path.write_text(render_html(payload), encoding="utf-8")
+        rendered_html = render_html(payload)
+        html_path.write_text(rendered_html, encoding="utf-8")
         output_paths.append(html_path)
+        for alias_output_path in page_config.get("alias_output_paths", []):
+            alias_path = ROOT / str(alias_output_path)
+            alias_path.parent.mkdir(parents=True, exist_ok=True)
+            alias_path.write_text(rendered_html, encoding="utf-8")
+            output_paths.append(alias_path)
     legacy_schedule_path = page_config.get("legacy_schedule_path")
     if legacy_schedule_path and page_config.get("render_html") is not False:
         legacy_path = ROOT / str(legacy_schedule_path)
