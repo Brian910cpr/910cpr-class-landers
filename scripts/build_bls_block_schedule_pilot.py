@@ -1012,6 +1012,7 @@ def render_html(payload: dict[str, Any]) -> str:
         else (course_options[0]["courseId"] if course_options else "")
     )
     title = html.escape(str(page_config.get("title") or "Block Schedule"))
+    meta_description = html.escape(str(page_config.get("meta_description") or page_config.get("intro") or ""), quote=True)
     output_path = str(page_config.get("output_path") or "").removeprefix("docs/")
     canonical_url = html.escape(f"https://www.910cpr.com/{output_path}", quote=True)
     subtitle = html.escape(str(page_config.get("subtitle") or ""))
@@ -1157,6 +1158,7 @@ def render_html(payload: dict[str, Any]) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title} | 910CPR</title>
+  <meta name="description" content="{meta_description}">
   <link rel="canonical" href="{canonical_url}">
   <link rel="stylesheet" href="/assets/interaction-motion.css">
   <style>{css()}</style>

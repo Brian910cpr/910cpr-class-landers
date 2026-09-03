@@ -6,9 +6,20 @@
       "page_key": "bls",
       "family": "BLS",
       "certifying_body": "AHA",
-      "title": "BLS Certification Classes",
-      "meta_description": "AHA BLS courses for healthcare professionals and students who need Basic Life Support certification.",
-      "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
+      "title": "AHA BLS Certification & Renewal in Wilmington, NC",
+      "meta_description": "Choose AHA BLS Provider, BLS Renewal, or HeartCode BLS skills in Wilmington, NC. View current 910CPR dates at 4018 Shipyard Boulevard and register online.",
+      "subtitle": "Initial, renewal, and HeartCode BLS at 4018 Shipyard Boulevard",
+      "intro": "Choose BLS Provider, BLS Renewal, or HeartCode BLS, then select a current Wilmington class date and start time.",
+      "explanation": "910CPR provides American Heart Association Basic Life Support training for nurses, EMTs, dental professionals, healthcare students, clinical staff, and others whose employer or school requires AHA BLS.",
+      "documentation_note": {
+        "title": "Choose the BLS path that matches your requirement",
+        "body": "This page shows current availability and registration for all three public AHA BLS paths in Wilmington.",
+        "bullets": [
+          "BLS Provider is the instructor-led option for new students or anyone returning after expiration.",
+          "BLS Renewal is for currently certified providers who qualify for the focused renewal format.",
+          "HeartCode BLS starts with AHA online coursework and finishes with an in-person skills session."
+        ]
+      },
       "output_path": "docs/bls.html",
       "legacy_schedule_path": "docs/bls-schedule.html",
       "header_credential": {
@@ -117,9 +128,20 @@
       "page_key": "acls",
       "family": "ACLS",
       "certifying_body": "AHA",
-      "title": "ACLS Certification Classes",
-      "meta_description": "AHA ACLS courses for clinicians who manage adult cardiovascular emergencies.",
-      "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
+      "title": "AHA ACLS Certification & Renewal in Wilmington, NC",
+      "meta_description": "Choose AHA ACLS initial, renewal, or HeartCode skills training in Wilmington, NC. Compare formats, view current 910CPR dates, and register online.",
+      "subtitle": "Initial, renewal, and HeartCode ACLS at 4018 Shipyard Boulevard",
+      "intro": "Choose ACLS Provider, ACLS Renewal, or HeartCode ACLS, then select a current Wilmington class date and start time.",
+      "explanation": "910CPR provides American Heart Association Advanced Cardiovascular Life Support training for clinicians who manage adult cardiovascular emergencies.",
+      "documentation_note": {
+        "title": "Choose the ACLS path that matches your requirement",
+        "body": "This page shows current availability and registration for all three public AHA ACLS paths in Wilmington.",
+        "bullets": [
+          "ACLS Provider is the complete instructor-led path for initial certification or an expired card.",
+          "ACLS Renewal is the focused classroom path for currently certified providers.",
+          "HeartCode ACLS begins with AHA online coursework and finishes with an in-person skills session."
+        ]
+      },
       "output_path": "docs/acls.html",
       "legacy_schedule_path": "docs/acls-schedule.html",
       "header_credential": {
@@ -225,9 +247,20 @@
       "page_key": "pals",
       "family": "PALS",
       "certifying_body": "AHA",
-      "title": "PALS Certification Classes",
-      "meta_description": "AHA PALS courses for clinicians who respond to pediatric emergencies.",
-      "intro": "Choose Initial, Renewal, or HeartCode, then select a date and time.",
+      "title": "AHA PALS Certification & Renewal in Wilmington, NC",
+      "meta_description": "Choose AHA PALS initial, renewal, or HeartCode skills training in Wilmington, NC. Compare formats, view current 910CPR dates, and register online.",
+      "subtitle": "Initial, renewal, and HeartCode PALS at 4018 Shipyard Boulevard",
+      "intro": "Choose PALS Provider, PALS Renewal, or HeartCode PALS, then select a current Wilmington class date and start time.",
+      "explanation": "910CPR provides American Heart Association Pediatric Advanced Life Support training for clinicians who respond to pediatric respiratory, shock, and cardiac emergencies.",
+      "documentation_note": {
+        "title": "Choose the PALS path that matches your requirement",
+        "body": "This page shows current availability and registration for all three public AHA PALS paths in Wilmington.",
+        "bullets": [
+          "PALS Provider is the complete instructor-led path for initial certification or an expired card.",
+          "PALS Renewal is the focused classroom path for currently certified providers.",
+          "HeartCode PALS begins with AHA online coursework and finishes with an in-person skills session."
+        ]
+      },
       "output_path": "docs/pals.html",
       "legacy_schedule_path": "docs/pals-schedule.html",
       "header_credential": {
@@ -333,9 +366,20 @@
       "page_key": "heartsaver",
       "family": "Heartsaver",
       "certifying_body": "AHA",
-      "title": "Heartsaver CPR, AED & First Aid Classes",
-      "meta_description": "AHA Heartsaver options for workplace, school, childcare, and general CPR/First Aid requirements.",
-      "intro": "Choose the class that fits your needs, then select a date and time.",
+      "title": "AHA CPR, AED & First Aid Classes in Wilmington, NC",
+      "meta_description": "Choose AHA Heartsaver CPR, AED, First Aid, or Pediatric First Aid training in Wilmington, NC. Compare formats, view current dates, and register with 910CPR.",
+      "subtitle": "Workplace, school, childcare, and public training at 4018 Shipyard Boulevard",
+      "intro": "Choose the Heartsaver course named by your workplace, school, childcare program, or professional requirement, then select a current Wilmington date and time.",
+      "explanation": "910CPR provides American Heart Association Heartsaver CPR, AED, First Aid, and Pediatric First Aid training in Wilmington and on-site for groups throughout Coastal North Carolina.",
+      "documentation_note": {
+        "title": "Choose the Heartsaver course your requirement actually names",
+        "body": "This page separates the common Heartsaver combinations and shows current availability for both classroom and online-plus-skills formats.",
+        "bullets": [
+          "First Aid plus CPR and AED is the broadest option for many workplace requirements.",
+          "CPR and AED Only is for requirements that do not include a First Aid module.",
+          "Pediatric First Aid CPR AED is designed for childcare, school, camp, and caregiver requirements."
+        ]
+      },
       "output_path": "docs/heartsaver.html",
       "legacy_schedule_path": "docs/heartsaver-schedule.html",
       "header_credential": {
