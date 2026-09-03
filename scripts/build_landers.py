@@ -405,8 +405,7 @@ def session_lander_url(session_id: str, *, forward: bool = False) -> str:
     sid = str(session_id or "").strip()
     if not sid:
         return "/schedule.html"
-    suffix = "#ForwardToEnrollware" if forward else ""
-    return f"/classes/{sid}.html{suffix}"
+    return f"/register/?session={sid}" if forward else f"/classes/{sid}.html"
 
 
 def enrollware_url_for_session(session: dict) -> str:
@@ -2372,7 +2371,7 @@ window.dataLayer.push({{
   var shell = document.querySelector(".page-shell");
   if (shell) shell.insertBefore(notice, shell.firstElementChild ? shell.firstElementChild.nextSibling : null);
   window.setTimeout(function () {{
-    window.location.href = pageContext.register_url;
+    window.location.href = "/register/?session=" + encodeURIComponent(pageContext.session_id);
   }}, 1700);
 }})();
 </script>
