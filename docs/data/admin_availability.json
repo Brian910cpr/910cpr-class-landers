@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-03T10:33:39.275103+00:00",
+  "generated_at": "2026-09-03T11:33:55.948900+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-03T10:33:38.304261+00:00",
+      "generated_at": "2026-09-03T11:33:55.212295+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-03T10:33:39.275103+00:00",
-      "event_count": 165
+      "generated_at": "2026-09-03T11:33:55.948900+00:00",
+      "event_count": 166
     },
     {
       "source_key": "brian_primary_calendar",
       "display_name": "Brian Primary Google Calendar",
       "source_type": "occupancy_calendar",
       "export_status": "failed",
-      "generated_at": "2026-09-03T10:33:38.995678+00:00",
+      "generated_at": "2026-09-03T11:33:55.549568+00:00",
       "event_count": 0
     },
     {
@@ -32,7 +32,7 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-03T10:33:38.995319+00:00",
+      "generated_at": "2026-09-03T11:33:55.549178+00:00",
       "event_count": 0
     }
   ],
@@ -1849,6 +1849,17 @@
       "title": "CFA Pickup",
       "start": "2026-12-01T15:00:00-05:00",
       "end": "2026-12-01T17:30:00-05:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Drop Off",
+      "start": "2026-12-02T06:30:00-05:00",
+      "end": "2026-12-02T07:45:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     }
