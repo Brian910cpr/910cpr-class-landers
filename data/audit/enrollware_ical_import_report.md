@@ -1,9 +1,9 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-09-03T07:33:27.352470-04:00`
+- Generated at: `2026-09-03T11:59:49.253321-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `303`
-- Public sessions created: `303`
+- iCal events read: `302`
+- Public sessions created: `302`
 - Skipped events: `0`
 - Registration unavailable sessions marked not direct-bookable: `264`
 - Unmapped sessions: `12`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776148` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-05T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775300` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-05T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774037` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-06-06T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13628610` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-06-06T09:00:00-04:00 | Salem Baptist Church |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `12774575` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-06-24T18:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775298` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-24T18:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776699` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-25T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12783390` | enrollware_registration_closed | AHA Heartsaver® Pediatric First Aid CPR AED Online | 2026-06-25T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
