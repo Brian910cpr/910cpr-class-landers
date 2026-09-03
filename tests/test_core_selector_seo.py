@@ -34,6 +34,10 @@ class CoreSelectorSeoTests(unittest.TestCase):
                 self.assertIn("4018 Shipyard Boulevard", rendered)
                 self.assertIn('<meta name="description" content="', rendered)
                 self.assertIn(guide_title, rendered)
+                self.assertEqual(
+                    self.configs[page_key]["alias_output_paths"],
+                    [f"docs/{page_key.upper()}.html"],
+                )
 
 
 if __name__ == "__main__":
