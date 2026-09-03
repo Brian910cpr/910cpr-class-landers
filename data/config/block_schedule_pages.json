@@ -21,6 +21,7 @@
         ]
       },
       "output_path": "docs/bls.html",
+      "alias_output_paths": ["docs/BLS.html"],
       "legacy_schedule_path": "docs/bls-schedule.html",
       "header_credential": {
         "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
@@ -143,6 +144,7 @@
         ]
       },
       "output_path": "docs/acls.html",
+      "alias_output_paths": ["docs/ACLS.html"],
       "legacy_schedule_path": "docs/acls-schedule.html",
       "header_credential": {
         "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
@@ -262,6 +264,7 @@
         ]
       },
       "output_path": "docs/pals.html",
+      "alias_output_paths": ["docs/PALS.html"],
       "legacy_schedule_path": "docs/pals-schedule.html",
       "header_credential": {
         "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
@@ -381,6 +384,7 @@
         ]
       },
       "output_path": "docs/heartsaver.html",
+      "alias_output_paths": ["docs/HEARTSAVER.html"],
       "legacy_schedule_path": "docs/heartsaver-schedule.html",
       "header_credential": {
         "image_url": "/images/Logo_circle_AHA-Training-Site.webp",
