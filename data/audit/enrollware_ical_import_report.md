@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-09-03T02:16:18.555135-04:00`
+- Generated at: `2026-09-03T06:26:42.664011-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `305`
-- Public sessions created: `305`
+- iCal events read: `304`
+- Public sessions created: `304`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `266`
+- Registration unavailable sessions marked not direct-bookable: `265`
 - Unmapped sessions: `12`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776336` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-06-05T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775533` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-05T11:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776148` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-05T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775300` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-05T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `12776773` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-06-23T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13669835` | enrollware_registration_closed | BLS Provider (NHCSO) | 2026-06-24T13:00:00-04:00 | New Hanover County Sheriff’s Office |
 | `12774575` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-06-24T18:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12775298` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-24T18:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
