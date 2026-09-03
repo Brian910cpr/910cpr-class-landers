@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-03T21:50:38.362213+00:00",
+  "generated_at": "2026-09-03T23:51:06.994905+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-03T21:50:37.884404+00:00",
+      "generated_at": "2026-09-03T23:51:06.581085+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-03T21:50:38.362213+00:00",
-      "event_count": 165
+      "generated_at": "2026-09-03T23:51:06.994905+00:00",
+      "event_count": 163
     },
     {
       "source_key": "brian_primary_calendar",
       "display_name": "Brian Primary Google Calendar",
       "source_type": "occupancy_calendar",
       "export_status": "failed",
-      "generated_at": "2026-09-03T21:50:38.098254+00:00",
+      "generated_at": "2026-09-03T23:51:06.731385+00:00",
       "event_count": 0
     },
     {
@@ -32,33 +32,11 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-03T21:50:38.097846+00:00",
+      "generated_at": "2026-09-03T23:51:06.730963+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Drone Task Force Meeting",
-      "start": "2026-09-03T22:30:00+00:00",
-      "end": "2026-09-03T23:30:00+00:00",
-      "location": "Columbus County EOC\\, 131 West Webster Street\\, Whiteville\\, NC 28472",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "TRAVEL",
-      "start": "2026-09-03T23:30:00+00:00",
-      "end": "2026-09-04T03:30:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
