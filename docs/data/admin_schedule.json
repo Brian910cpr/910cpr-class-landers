@@ -1,6 +1,6 @@
 {
   "schema_version": "1.1",
-  "generated_at": "2026-09-04T17:30:23.177339+00:00",
+  "generated_at": "2026-09-04T19:51:20.914946+00:00",
   "purpose": "Sanitized complete LanderWare occupancy for the admin planner; combines Enrollware iCal with committed HOT_SYNC classes.",
   "counts": {
     "sessions": 39,
