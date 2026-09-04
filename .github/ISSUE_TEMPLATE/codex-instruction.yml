@@ -1,0 +1,42 @@
+name: Instruction for Codex
+description: Give Codex a durable instruction for the 910CPR system
+title: "[CODEX] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Say what you need in ordinary language. Screenshots and examples are welcome. You do not need to translate the request into computer terminology.
+  - type: textarea
+    id: instruction
+    attributes:
+      label: What needs to happen?
+      description: Describe the outcome you want.
+      placeholder: The product record screen needs to...
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter?
+      description: Optional business or operational context that should guide tradeoffs.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Examples, screenshots, or exact wording
+      description: Add links, screenshots, customer wording, or an example of the current problem.
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency
+      options:
+        - Put it in the queue
+        - This should be the next workstream
+        - Production is currently broken
+    validations:
+      required: true
+  - type: checkboxes
+    id: completion
+    attributes:
+      label: Completion expectation
+      options:
+        - label: If this changes the public site, verify the live customer-facing result before calling it complete.
