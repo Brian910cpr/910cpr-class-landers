@@ -28,8 +28,9 @@ def main() -> int:
             "error": "HOT_SYNC_ADMIN_KEY is not configured in this runtime.",
         }
         OUTPUT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-        print("HOT_SYNC snapshot unavailable: HOT_SYNC_ADMIN_KEY is not configured.")
-        return 0
+        print("ERROR: HOT_SYNC snapshot unavailable: HOT_SYNC_ADMIN_KEY is not configured.")
+        print("Refusing to publish customer availability without durable session occupancy.")
+        return 1
 
     request = urllib.request.Request(
         url,
@@ -65,8 +66,9 @@ def main() -> int:
             "error": f"{exc.__class__.__name__}: {exc}",
         }
         OUTPUT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-        print(f"HOT_SYNC snapshot unavailable: {payload['error']}")
-        return 0
+        print(f"ERROR: HOT_SYNC snapshot unavailable: {payload['error']}")
+        print("Refusing to publish customer availability without durable session occupancy.")
+        return 1
 
 
 if __name__ == "__main__":
