@@ -304,3 +304,19 @@ Preserve the hidden Dockmaster/Harbor Master story in code comments. See `lore/d
 
 
 
+
+## Owner Instruction Intake
+
+GitHub Issues with titles beginning `[CODEX]` are the durable inbound instruction channel for this repository.
+
+- Treat the issue body and Brian's subsequent issue comments as owner instructions.
+- Preserve the original request. Do not replace it with a narrower interpretation merely because implementation is easier.
+- Check for an existing `[CODEX]` issue before creating a duplicate.
+- Only one implementation workstream may be active at a time. Additional instructions remain queued unless Brian explicitly reprioritizes them.
+- Record material assumptions, blockers, validation results, deployment state, and the pull request link on the originating issue.
+- Ask for clarification on the originating issue when a missing decision would materially change behavior.
+- Do not claim an instruction is implemented until the change is merged, deployed when applicable, and verified at the customer-facing surface.
+- Repository markdown reports are outbound records. They do not replace the originating issue or its conversation.
+- When an instruction arrives in ChatGPT and GitHub access is available, create or update the corresponding `[CODEX]` issue so the request survives the chat session.
+
+See `docs/CODEX_INSTRUCTIONS.md` for the owner-facing workflow.
