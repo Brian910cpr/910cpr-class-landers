@@ -77,9 +77,12 @@ def normalize_session(session: dict[str, Any]) -> dict[str, Any] | None:
 
 
 def normalize_hot_sync(record: dict[str, Any]) -> dict[str, Any] | None:
-    if str(record.get("status") or "").strip().lower() != "committed":
+    status = str(record.get("status") or "").strip().lower()
+    if status not in {"committed", "scheduled", "active"}:
         return None
-    if record.get("needs_class_report_absorption") in (False, 0, "0"):
+    # Legacy manual HOT_SYNC records can be absorbed by Enrollware. Durable
+    # class_sessions are already canonical and may not expose this field.
+    if status == "committed" and record.get("needs_class_report_absorption") in (False, 0, "0"):
         return None
     start = value(record, ("start",), ("start_time",), ("start_at",))
     if not start:
