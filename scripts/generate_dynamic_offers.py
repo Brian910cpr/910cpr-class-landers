@@ -382,6 +382,9 @@ def normalize_occupancy(payload: Any, source_file: str) -> list[dict[str, Any]]:
             "end": end,
             "location": clean_text(location),
             "instructor": clean_text(instructor),
+            # A real session with no instructor assignment is not evidence that
+            # every instructor is free. Fail closed until staffing is known.
+            "instructor_unassigned": not bool(clean_text(instructor)),
             "course_title": clean_text(course_title or UNKNOWN),
             "source_file": source_file,
         })
@@ -425,7 +428,10 @@ def has_conflict(start: datetime, end: datetime, occupancy: list[dict[str, Any]]
         if not block_start or not block_end:
             continue
         same_location = location and normalize_key(block.get("location")) == normalize_key(location)
-        same_instructor = normalize_key(block.get("instructor")) in person_names
+        same_instructor = (
+            bool(block.get("instructor_unassigned"))
+            or normalize_key(block.get("instructor")) in person_names
+        )
         location_overlap = same_location and intervals_overlap(start, end, block_start, block_end)
         instructor_start = block.get("instructor_conflict_start") or block_start
         instructor_end = block.get("instructor_conflict_end") or block_end
@@ -435,6 +441,11 @@ def has_conflict(start: datetime, end: datetime, occupancy: list[dict[str, Any]]
                 return True, (
                     f"conflicts with Brian travel buffer ({block.get('travel_rule_key')}) around "
                     f"{block.get('course_title')} from {block.get('source_file')}"
+                )
+            if block.get("instructor_unassigned"):
+                return True, (
+                    f"conflicts with unassigned real session {block.get('course_title')} "
+                    f"from {block.get('source_file')}"
                 )
             return True, f"conflicts with {block.get('course_title')} from {block.get('source_file')}"
     return False, None

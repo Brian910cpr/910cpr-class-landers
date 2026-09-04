@@ -654,10 +654,16 @@ def load_existing_enrollware_blocks(config: dict[str, Any]) -> dict[str, Any]:
 
     brian_blocks: list[CalendarEvent] = []
     ignored_non_brian = 0
+    unassigned_assumed_brian = 0
 
     for session in merged_sessions:
         instructor = str(first_present(session, ["lead_instructor_name", "instructor", "instructor_name"]) or "").strip()
-        if not instructor_matches_primary(instructor, config):
+        instructor_unassigned = not instructor
+        if instructor_unassigned:
+            # A real Enrollware session with unknown staffing must reserve the
+            # owner's time. Blank instructor data is not proof of availability.
+            unassigned_assumed_brian += 1
+        elif not instructor_matches_primary(instructor, config):
             ignored_non_brian += 1
             continue
 
@@ -684,6 +690,7 @@ def load_existing_enrollware_blocks(config: dict[str, Any]) -> dict[str, Any]:
             "session_id": first_present(session, ["session_id"]),
             "enrollware_class_id": first_present(session, ["class_id", "session_id"]),
             "instructor": instructor,
+            "instructor_unassigned": instructor_unassigned,
             "start_time": start.isoformat(),
             "end_time": end.isoformat(),
             "location_name": location_name or resolved.name,
@@ -697,7 +704,11 @@ def load_existing_enrollware_blocks(config: dict[str, Any]) -> dict[str, Any]:
             CalendarEvent(
                 calendar="enrollware_existing_session",
                 summary=title,
-                description="Existing Enrollware session assigned to Brian.",
+                description=(
+                    "Existing Enrollware session with unassigned staffing; conservatively reserves Brian."
+                    if instructor_unassigned
+                    else "Existing Enrollware session assigned to Brian."
+                ),
                 location=location_name or resolved.name,
                 start=start,
                 end=end,
@@ -723,6 +734,7 @@ def load_existing_enrollware_blocks(config: dict[str, Any]) -> dict[str, Any]:
         "schedule_future_fallback_used": not class_report_authoritative,
         "brian_blocks": brian_blocks,
         "non_brian_ignored": ignored_non_brian,
+        "unassigned_assumed_brian": unassigned_assumed_brian,
     }
 
 
