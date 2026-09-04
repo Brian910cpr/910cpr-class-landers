@@ -206,6 +206,19 @@ Deno.serve(async (req) => {
       if (signedError) throw signedError;
       return json({ ok: true, document_id: document.id, file_name: document.file_name, signed_url: signed.signedUrl, expires_in: 300 });
     }
+    if (action === "delete_document") {
+      const documentId = clean(body.document_id);
+      const classNumber = clean(body.class_number);
+      if (!documentId || !classNumber) return json({ error: "document_id and class_number are required" }, 400);
+      const { data: document, error: lookupError } = await admin.from("nhcso_documents")
+        .select("id,class_number,file_name,storage_path").eq("id", documentId).eq("class_number", classNumber).single();
+      if (lookupError || !document) return json({ error: "Document not found" }, 404);
+      const { error: storageError } = await admin.storage.from("nhcso-class-docs").remove([document.storage_path]);
+      if (storageError) throw storageError;
+      const { error: deleteError } = await admin.from("nhcso_documents").delete().eq("id", document.id).eq("class_number", classNumber);
+      if (deleteError) throw deleteError;
+      return json({ ok: true, document_id: document.id, file_name: document.file_name });
+    }
     if (action === "list_classes") {
       const { data, error } = await admin.from("nhcso_classes").select("class_number,course,class_date,start_time,location,lead_instructor,status,updated_at").order("class_date", { ascending: false }).order("start_time", { ascending: false }).limit(250);
       if (error) throw error;

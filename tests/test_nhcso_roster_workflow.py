@@ -46,6 +46,47 @@ process.stdout.write(JSON.stringify({roster:workingRoster,status:fields.saveStat
         self.assertIn("Click Submit / Save Class to make the change permanent.", html)
         self.assertIn('title="Mark as Removed"', html)
 
+    def test_ecard_lookup_copies_only_the_first_twenty_numbers_one_per_line(self) -> None:
+        html = PAGE.read_text(encoding="utf-8")
+        self.assertIn(".filter(Boolean).slice(0,20)", html)
+        self.assertIn("numbers.join('\\n')", html)
+        self.assertIn("https://www.910cpr.com/go/myecards", html)
+        self.assertIn("navigator.clipboard.writeText", html)
+        script = r"""
+const fs=require('fs');
+const html=fs.readFileSync(process.argv[1],'utf8');
+const start=html.indexOf('function ecardNumbersForLookup');
+const end=html.indexOf('function renderRoster',start);
+if(start<0||end<0)throw new Error('eCard lookup function not found');
+const workingRoster=[];
+eval(html.slice(start,end));
+const roster=Array.from({length:23},(_,i)=>({ecard_number:i===1?'':`  CARD-${i+1}  `}));
+process.stdout.write(ecardNumbersForLookup(roster).join('\n'));
+"""
+        completed = subprocess.run(
+            ["node", "-e", script, str(PAGE)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        lines = completed.stdout.splitlines()
+        self.assertEqual(len(lines), 20)
+        self.assertEqual(lines[0], "CARD-1")
+        self.assertEqual(lines[1], "CARD-3")
+        self.assertEqual(lines[-1], "CARD-21")
+        self.assertFalse(completed.stdout.endswith("\n"))
+
+    def test_uploaded_documents_have_download_and_confirmed_delete_controls(self) -> None:
+        html = PAGE.read_text(encoding="utf-8")
+        source = EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("data-document-download", html)
+        self.assertIn("data-document-delete", html)
+        self.assertIn("Permanently delete", html)
+        self.assertIn("action:'get_document_link'", html)
+        self.assertIn("action:'delete_document'", html)
+        self.assertIn('if (action === "delete_document")', source)
+        self.assertIn('.storage.from("nhcso-class-docs").remove', source)
+
     def test_server_canonicalizes_existing_identity_and_deduplicates_each_batch(self) -> None:
         source = EDGE_FUNCTION.read_text(encoding="utf-8")
         self.assertIn('existingByIdentity.get(identity)', source)
