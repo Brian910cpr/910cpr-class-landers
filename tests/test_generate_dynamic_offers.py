@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+from datetime import datetime
 from pathlib import Path
 
 from scripts import generate_dynamic_offers
@@ -81,6 +82,33 @@ class DynamicOffersTest(unittest.TestCase):
         self.assertEqual("AHA Heartsaver CPR AED Online", rows[0]["course_title"])
         self.assertEqual("Brian Ennis", rows[0]["instructor"])
         self.assertEqual("NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office", rows[0]["location"])
+
+    def test_unassigned_real_session_blocks_instructor_availability(self) -> None:
+        payload = {
+            "sessions": [{
+                "session_id": "13963981",
+                "course_name": "AHA ACLS Provider (Initial)",
+                "start_at": "2026-09-19T09:00:00-04:00",
+                "end_at": "2026-09-19T11:00:00-04:00",
+                "location_name": "Wilmington; Shipyard Blvd - B",
+                "lead_instructor_name": "",
+            }]
+        }
+        rows = generate_dynamic_offers.normalize_occupancy(
+            payload, "docs/data/schedule_future.json"
+        )
+
+        self.assertTrue(rows[0]["instructor_unassigned"])
+        conflict, reason = generate_dynamic_offers.has_conflict(
+            datetime.fromisoformat("2026-09-19T10:00:00"),
+            datetime.fromisoformat("2026-09-19T10:30:00"),
+            rows,
+            "Another location",
+            {"display_name": "Brian Ennis"},
+        )
+
+        self.assertTrue(conflict)
+        self.assertIn("unassigned real session", reason)
 
     def test_generates_offer_for_scheduler_enabled_qualified_person(self) -> None:
         loaded = {
