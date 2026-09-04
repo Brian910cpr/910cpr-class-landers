@@ -70,6 +70,58 @@ class CanonicalScheduleHotSyncTests(unittest.TestCase):
         self.assertEqual(1, result["counts"]["sessions"])
         self.assertEqual(0, result["counts"]["hot_sync_sessions_added"])
 
+    def test_scheduled_durable_sessions_reserve_september_19(self) -> None:
+        hot_sync = {
+            "available": True,
+            "records": [
+                {
+                    "id": "6d685cdf-a5b3-4034-9ecd-e459305d30ba",
+                    "source": "gmail_confirmed",
+                    "status": "scheduled",
+                    "course_name": "AHA BLS Provider",
+                    "start_at": "2026-09-19T09:00:00-04:00",
+                    "end_at": "2026-09-19T11:00:00-04:00",
+                    "location_name": "Hendersonville Family Dental",
+                    "lead_instructor_name": "Brian Ennis",
+                },
+                {
+                    "id": "094cbbfa-fe0d-44e6-9ead-e7b2f636e332",
+                    "source": "gmail_confirmed",
+                    "status": "scheduled",
+                    "course_name": "AHA Heartsaver Pediatric First Aid CPR AED",
+                    "start_at": "2026-09-19T11:00:00-04:00",
+                    "end_at": "2026-09-19T14:00:00-04:00",
+                    "location_name": "Little Leaps",
+                    "lead_instructor_name": "Brian Ennis",
+                },
+                {
+                    "id": "cb6b0f5d-2397-4ffa-87ff-429d2a6da4e9",
+                    "source": "gmail_confirmed",
+                    "status": "cancelled",
+                    "course_name": "AHA BLS Provider",
+                    "start_at": "2026-09-19T14:00:00-04:00",
+                    "end_at": "2026-09-19T16:00:00-04:00",
+                    "location_name": "Hendersonville Family Dental",
+                    "lead_instructor_name": "Brian Ennis",
+                },
+            ],
+        }
+
+        result = build_admin_schedule(self.enrollware, now=self.now, hot_sync_snapshot=hot_sync)
+
+        durable = [row for row in result["sessions"] if row.get("hot_sync")]
+        self.assertEqual(2, len(durable))
+        self.assertEqual(
+            {
+                "6d685cdf-a5b3-4034-9ecd-e459305d30ba",
+                "094cbbfa-fe0d-44e6-9ead-e7b2f636e332",
+            },
+            {row["session_id"] for row in durable},
+        )
+        self.assertTrue(
+            all("instructor:brian_ennis" in row["blocking_resources"] for row in durable)
+        )
+
     def test_ical_contains_both_sources_with_stable_uids(self) -> None:
         payload = {
             "generated_at": "2026-08-23T12:00:00-04:00",
