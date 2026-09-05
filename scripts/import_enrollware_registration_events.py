@@ -296,6 +296,26 @@ def normalize_registration_row(row: dict[str, Any], source: str) -> dict[str, An
         "missing_identifiers": missing_identifiers,
         "warnings": warnings,
         "source": source,
+        "landerware_reconciliation": {
+            "rpc": "landerware_reconcile_external_registration",
+            "payload": {
+                "p_external_system": "enrollware",
+                "p_external_registration_id": reg_id or UNKNOWN,
+                "p_external_session_id": course_sched_id or UNKNOWN,
+                "p_first_name": first_name or UNKNOWN,
+                "p_last_name": last_name or UNKNOWN,
+                "p_email": email,
+                "p_phone": phone if phone != UNKNOWN else None,
+                "p_registered_at": clean_text(row.get("receivedAt")) or clean_text(row.get("importedAt")) or None,
+                "p_source_record": {
+                    "source_file": source,
+                    "row_number": row.get("_row_number", UNKNOWN),
+                    "regId": reg_id or UNKNOWN,
+                    "courseSchedId": course_sched_id or UNKNOWN,
+                },
+            },
+            "action": "reconcile_pending_intent_not_insert_duplicate",
+        },
         "raw": row.get("_raw", {}),
         "raw_unmapped_fields": raw_unmapped_fields(row),
     }

@@ -626,7 +626,7 @@ def render_course_session_rows(sessions: list[dict]) -> str:
         location = clean_location_name(session.get("location_display") or session.get("location_name") or "")
         register_url = str(session.get("registration_url", "")).strip()
         session_id = str(session.get("session_id", "")).strip()
-        session_url = f"/classes/{session_id}.html#ForwardToEnrollware" if session_id else register_url
+        session_url = f"/register/?session={session_id}" if session_id else register_url
         register_html = (
             f'<a class="course-session-register" href="{html_escape(session_url)}" data-original-href="{html_escape(register_url)}">Book This Class</a>'
             if session_url
@@ -2106,7 +2106,7 @@ def build():
 
             line = " | ".join(html_escape(x) for x in bits if x)
             detail_link = f'<a href="{s["local_path"]}">Details</a>'
-            session_forward = f'{s["local_path"]}#ForwardToEnrollware'
+            session_forward = f'/register/?session={s.get("session_id", "")}'
             register_link = f' | <a href="{session_forward}" data-original-href="{s["register_url"]}">Book This Class</a>' if s["register_url"] else ""
 
             lines.append(
