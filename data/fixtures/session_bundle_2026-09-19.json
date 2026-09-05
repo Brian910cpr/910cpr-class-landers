@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0.0",
+  "bundle_id": "bnd_92e00d28f29d445c1bfd",
+  "generated_at": "2026-09-04T00:00:00Z",
+  "purpose": "Vendor-neutral backup and inspection export; not a source of truth.",
+  "scope": {
+    "date": "2026-09-19",
+    "timezone": "America/New_York"
+  },
+  "organizations": [
+    {
+      "organization_id": "org_hendersonville_family_dental",
+      "name": "Hendersonville Family Dental"
+    },
+    {
+      "organization_id": "org_little_leaps",
+      "name": "Little Leaps"
+    },
+    {
+      "organization_id": "org_accelerated_academy",
+      "name": "Accelerated Academy"
+    }
+  ],
+  "people": [
+    {
+      "person_id": "per_brian_ennis",
+      "display_name": "Brian Ennis",
+      "source_refs": [
+        {
+          "source_system": "people_catalog",
+          "source_id": "brian"
+        }
+      ]
+    }
+  ],
+  "instructors": [
+    {
+      "instructor_id": "ins_brian_ennis",
+      "person_id": "per_brian_ennis",
+      "source_refs": [
+        {
+          "source_system": "people_catalog",
+          "source_id": "brian"
+        }
+      ]
+    }
+  ],
+  "instructor_assignments": [
+    {
+      "instructor_assignment_id": "isa_hfd_0900_brian",
+      "instructor_id": "ins_brian_ennis",
+      "role": "lead",
+      "certainty": "asserted"
+    },
+    {
+      "instructor_assignment_id": "isa_ll_1100_brian",
+      "instructor_id": "ins_brian_ennis",
+      "role": "lead",
+      "certainty": "asserted"
+    },
+    {
+      "instructor_assignment_id": "isa_aa_1400_brian",
+      "instructor_id": "ins_brian_ennis",
+      "role": "lead",
+      "certainty": "asserted"
+    }
+  ],
+  "sessions": [
+    {
+      "session_id": "ses_adb4026b968fdb3e55fe",
+      "source_refs": [
+        {
+          "source_system": "landerware_class_sessions",
+          "source_id": "6d685cdf-a5b3-4034-9ecd-e459305d30ba"
+        }
+      ],
+      "course": {
+        "display_name": "AHA BLS Provider",
+        "course_id": null
+      },
+      "organization_id": "org_hendersonville_family_dental",
+      "location": {
+        "display_name": "Hendersonville Family Dental",
+        "address": null
+      },
+      "start_at": "2026-09-19T09:00:00-04:00",
+      "end_at": "2026-09-19T11:00:00-04:00",
+      "timezone": "America/New_York",
+      "status": "scheduled",
+      "occupancy": {
+        "reserves_customer_availability": true,
+        "blocking_resource_ids": [
+          "ins_brian_ennis",
+          "loc_hendersonville_family_dental"
+        ],
+        "reason": "A durable operational session reserves its assigned resources."
+      },
+      "instructor_assignment_ids": [
+        "isa_hfd_0900_brian"
+      ],
+      "registration_ids": []
+    },
+    {
+      "session_id": "ses_b3419b7dfd82efba4cb1",
+      "source_refs": [
+        {
+          "source_system": "landerware_class_sessions",
+          "source_id": "094cbbfa-fe0d-44e6-9ead-e7b2f636e332"
+        }
+      ],
+      "course": {
+        "display_name": "AHA Heartsaver Pediatric First Aid CPR AED",
+        "course_id": null
+      },
+      "organization_id": "org_little_leaps",
+      "location": {
+        "display_name": "Little Leaps",
+        "address": null
+      },
+      "start_at": "2026-09-19T11:00:00-04:00",
+      "end_at": "2026-09-19T14:00:00-04:00",
+      "timezone": "America/New_York",
+      "status": "scheduled",
+      "occupancy": {
+        "reserves_customer_availability": true,
+        "blocking_resource_ids": [
+          "ins_brian_ennis",
+          "loc_little_leaps"
+        ],
+        "reason": "A durable operational session reserves its assigned resources."
+      },
+      "instructor_assignment_ids": [
+        "isa_ll_1100_brian"
+      ],
+      "registration_ids": []
+    },
+    {
+      "session_id": "ses_dbc3f8d1d785e3aa397c",
+      "source_refs": [
+        {
+          "source_system": "landerware_class_sessions",
+          "source_id": "cb6b0f5d-2397-4ffa-87ff-429d2a6da4e9"
+        }
+      ],
+      "course": {
+        "display_name": "AHA BLS Provider",
+        "course_id": null
+      },
+      "organization_id": "org_accelerated_academy",
+      "location": {
+        "display_name": "Hendersonville Family Dental",
+        "address": null
+      },
+      "start_at": "2026-09-19T14:00:00-04:00",
+      "end_at": "2026-09-19T16:00:00-04:00",
+      "timezone": "America/New_York",
+      "status": "cancelled",
+      "occupancy": {
+        "reserves_customer_availability": false,
+        "blocking_resource_ids": [],
+        "reason": "Cancelled sessions are retained for history and provenance but do not reserve availability."
+      },
+      "instructor_assignment_ids": [
+        "isa_aa_1400_brian"
+      ],
+      "registration_ids": []
+    }
+  ],
+  "registrations": [],
+  "requirements": [],
+  "documents": [],
+  "communications": [],
+  "billing": [],
+  "inventory": [],
+  "provenance": [
+    {
+      "provenance_id": "prv_issue_136_fixture",
+      "source_system": "github_regression_evidence",
+      "source_id": "tests/test_canonical_schedule_hot_sync.py:test_scheduled_durable_sessions_reserve_september_19",
+      "observed_at": null,
+      "facts": [
+        "session identity",
+        "time",
+        "status",
+        "location",
+        "lead instructor"
+      ]
+    }
+  ],
+  "conflicts": [],
+  "missing_dependencies": [
+    {
+      "code": "registrations_not_present",
+      "affects": [
+        "all sessions"
+      ],
+      "detail": "The regression evidence contains no participant/registration rows; do not infer zero registrations."
+    },
+    {
+      "code": "course_ids_not_present",
+      "affects": [
+        "all sessions"
+      ],
+      "detail": "Regression records name courses but do not provide canonical Course Master keys."
+    },
+    {
+      "code": "source_observation_time_not_present",
+      "affects": [
+        "provenance"
+      ],
+      "detail": "The fixture proves repository behavior, not the timestamp of the original Gmail/durable-record observation."
+    }
+  ]
+}
