@@ -14,7 +14,7 @@ The complete inventory wording is in `data/audit/data_inventory_issue_136.md`; t
 - Generated export: `data/fixtures/session_bundle_2026-09-19.json`
 - Tests: `tests/test_session_bundle.py`
 
-Stable IDs are deterministic SHA-256-derived, type-prefixed IDs based on object kind, source system and immutable source ID. Cross-silo relationships use IDs; every imported session/registration retains source references.
+Source-observation IDs are deterministic SHA-256-derived, type-prefixed IDs based on object kind, source system and immutable source ID. Canonical person/organization IDs are owner-assigned and use explicit `identity_aliases` to reconcile multiple exact source refs; export performs no fuzzy matching. Cross-silo relationships use IDs, and every imported session/registration retains source references. Registration-to-session lookup is keyed by normalized `(session source system, session source ID)`, preventing reused IDs from crossing systems.
 
 ## September 19 exact behavior
 
@@ -33,8 +33,8 @@ Wrote 3 sessions to .../data/fixtures/session_bundle_2026-09-19.json
 python -m py_compile scripts/build_session_bundle.py tests/test_session_bundle.py
 
 python -m unittest tests.test_session_bundle tests.test_canonical_schedule_hot_sync
-........
-Ran 8 tests in 0.612s
+.........
+Ran 9 tests in 0.609s
 OK
 
 python -m json.tool <each new JSON file>

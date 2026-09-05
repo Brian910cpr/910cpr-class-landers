@@ -7,18 +7,78 @@
     "date": "2026-09-19",
     "timezone": "America/New_York"
   },
+  "identity_aliases": [
+    {
+      "entity_kind": "person",
+      "canonical_entity_id": "per_brian_ennis",
+      "source_refs": [
+        {
+          "source_system": "people_catalog",
+          "source_id": "brian"
+        }
+      ]
+    },
+    {
+      "entity_kind": "organization",
+      "canonical_entity_id": "org_hendersonville_family_dental",
+      "source_refs": [
+        {
+          "source_system": "github_regression_evidence",
+          "source_id": "Hendersonville Family Dental"
+        }
+      ]
+    },
+    {
+      "entity_kind": "organization",
+      "canonical_entity_id": "org_little_leaps",
+      "source_refs": [
+        {
+          "source_system": "github_regression_evidence",
+          "source_id": "Little Leaps"
+        }
+      ]
+    },
+    {
+      "entity_kind": "organization",
+      "canonical_entity_id": "org_accelerated_academy",
+      "source_refs": [
+        {
+          "source_system": "github_regression_evidence",
+          "source_id": "Accelerated Academy"
+        }
+      ]
+    }
+  ],
   "organizations": [
     {
       "organization_id": "org_hendersonville_family_dental",
-      "name": "Hendersonville Family Dental"
+      "name": "Hendersonville Family Dental",
+      "source_refs": [
+        {
+          "source_system": "github_regression_evidence",
+          "source_id": "Hendersonville Family Dental"
+        }
+      ]
     },
     {
       "organization_id": "org_little_leaps",
-      "name": "Little Leaps"
+      "name": "Little Leaps",
+      "source_refs": [
+        {
+          "source_system": "github_regression_evidence",
+          "source_id": "Little Leaps"
+        }
+      ]
     },
     {
       "organization_id": "org_accelerated_academy",
-      "name": "Accelerated Academy"
+      "name": "Accelerated Academy",
+      "source_refs": [
+        {
+          "source_system": "github_regression_evidence",
+          "source_id": "Accelerated Academy"
+        }
+      ]
     }
   ],
   "people": [

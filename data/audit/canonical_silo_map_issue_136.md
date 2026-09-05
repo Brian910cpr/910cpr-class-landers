@@ -2,10 +2,12 @@
 
 ## Identifier rules
 
-- Canonical export IDs are opaque, type-prefixed and deterministic from `(object kind, source system, immutable source ID)`.
+- IDs derived from `(object kind, source system, immutable source ID)` identify a stable **source observation**, not a cross-system canonical Person/Organization by themselves.
+- Canonical Person, Organization, Location and Course IDs are durably assigned by their owning silo. `identity_aliases` maps one or more exact source references to that canonical ID.
 - Every imported object retains one or more `{source_system, source_id}` references. Source IDs are never repurposed as cross-system IDs.
 - Cross-silo links use IDs (`session_id`, `person_id`, `organization_id`, assignment IDs), not embedded copies of whole records.
 - If the source lacks an immutable ID, import must create and durably persist one before later exports; mutable names/times are not safe identities.
+- Export performs no fuzzy identity matching. New aliases must be reconciled and persisted upstream before the bundle is generated.
 
 ## Ownership and relationships
 

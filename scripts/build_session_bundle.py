@@ -17,9 +17,17 @@ DEFAULT_OUTPUT = ROOT / "data" / "fixtures" / "session_bundle_2026-09-19.json"
 
 
 def stable_id(kind: str, source_system: str, source_id: str) -> str:
-    """Return an opaque ID that remains stable while the source identity is stable."""
-    material = f"{kind}\0{source_system.strip().lower()}\0{source_id.strip()}".encode("utf-8")
+    """Return an opaque observation ID stable for one immutable source identity."""
+    material = f"{kind}\0{normalize_source_system(source_system)}\0{source_id.strip()}".encode("utf-8")
     return f"{kind}_{hashlib.sha256(material).hexdigest()[:20]}"
+
+
+def normalize_source_system(source_system: str) -> str:
+    return source_system.strip().lower()
+
+
+def source_key(source_system: str, source_id: str) -> tuple[str, str]:
+    return normalize_source_system(source_system), source_id.strip()
 
 
 def source_ref(source_system: str, source_id: str) -> dict[str, str]:
@@ -28,13 +36,13 @@ def source_ref(source_system: str, source_id: str) -> dict[str, str]:
 
 def build_bundle(payload: dict[str, Any], *, generated_at: str | None = None) -> dict[str, Any]:
     """Normalize fixture/extracted records without inventing missing facts."""
-    session_ids: dict[str, str] = {}
+    session_ids: dict[tuple[str, str], str] = {}
     sessions: list[dict[str, Any]] = []
     for row in payload.get("sessions", []):
         source = str(row["source_system"])
         source_id = str(row["source_id"])
         session_id = stable_id("ses", source, source_id)
-        session_ids[source_id] = session_id
+        session_ids[source_key(source, source_id)] = session_id
         status = str(row["status"]).lower()
         reserves = status in {"scheduled", "committed", "active"}
         sessions.append(
@@ -69,7 +77,7 @@ def build_bundle(payload: dict[str, Any], *, generated_at: str | None = None) ->
         registrations.append(
             {
                 "registration_id": stable_id("reg", source, source_id),
-                "session_id": session_ids[row["session_source_id"]],
+                "session_id": session_ids[source_key(row["session_source_system"], row["session_source_id"])],
                 "person_id": row.get("person_id"),
                 "status": row["status"],
                 "source_refs": [source_ref(source, source_id)],
@@ -89,6 +97,7 @@ def build_bundle(payload: dict[str, Any], *, generated_at: str | None = None) ->
         "generated_at": generated,
         "purpose": "Vendor-neutral backup and inspection export; not a source of truth.",
         "scope": payload["scope"],
+        "identity_aliases": payload.get("identity_aliases", []),
         "organizations": payload.get("organizations", []),
         "people": payload.get("people", []),
         "instructors": payload.get("instructors", []),

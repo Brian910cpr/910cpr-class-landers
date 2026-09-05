@@ -45,6 +45,25 @@ class SessionBundleTests(unittest.TestCase):
         self.assertEqual(set(schema["required"]), set(self.bundle))
         self.assertTrue(all(row["source_refs"] for row in self.bundle["sessions"]))
 
+    def test_same_source_id_in_two_systems_cannot_cross_link_registration(self) -> None:
+        source = {
+            "bundle_source_id": "collision-test",
+            "scope": {"date": "2026-09-19", "timezone": "America/New_York"},
+            "sessions": [
+                {"source_system": "system_a", "source_id": "shared-1", "start_at": "2026-09-19T09:00:00-04:00", "end_at": "2026-09-19T10:00:00-04:00", "status": "scheduled"},
+                {"source_system": "system_b", "source_id": "shared-1", "start_at": "2026-09-19T11:00:00-04:00", "end_at": "2026-09-19T12:00:00-04:00", "status": "scheduled"},
+            ],
+            "registrations": [
+                {"source_system": "registration_system", "source_id": "reg-a", "session_source_system": "system_a", "session_source_id": "shared-1", "person_id": "per_a", "status": "registered"},
+                {"source_system": "registration_system", "source_id": "reg-b", "session_source_system": "system_b", "session_source_id": "shared-1", "person_id": "per_b", "status": "registered"},
+            ],
+        }
+        bundle = build_bundle(source, generated_at="2026-09-04T00:00:00Z")
+        by_person = {row["person_id"]: row["session_id"] for row in bundle["registrations"]}
+        self.assertEqual(stable_id("ses", "system_a", "shared-1"), by_person["per_a"])
+        self.assertEqual(stable_id("ses", "system_b", "shared-1"), by_person["per_b"])
+        self.assertNotEqual(by_person["per_a"], by_person["per_b"])
+
 
 if __name__ == "__main__":
     unittest.main()

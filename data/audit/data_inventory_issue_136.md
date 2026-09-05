@@ -48,3 +48,5 @@ This is a repository inventory, not a production-data rewrite. It traces checked
 ## September 19 finding
 
 `tests/test_canonical_schedule_hot_sync.py` is the checked-in adversarial evidence added by PR #131. It records scheduled sessions at Hendersonville Family Dental (09:00–11:00) and Little Leaps (11:00–14:00), plus a cancelled 14:00–16:00 Hendersonville-related record. Scheduled records reserve Brian and their locations; the cancelled record remains historically relevant but does not reserve availability. The test has no participant rows, canonical course IDs, or original message timestamps, so the bundle flags those dependencies instead of inventing them.
+
+Canonical people/organization identity is a separate reconciliation concern from source-observation identity. The export's `identity_aliases` carries exact, previously persisted mappings from multiple source references to one canonical entity ID; the exporter performs no fuzzy matching.
