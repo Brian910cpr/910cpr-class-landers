@@ -48,7 +48,7 @@ process.stdout.write(JSON.stringify({roster:workingRoster,status:fields.saveStat
 
     def test_ecard_lookup_copies_only_the_first_twenty_numbers_one_per_line(self) -> None:
         html = PAGE.read_text(encoding="utf-8")
-        self.assertIn(".filter(Boolean).slice(0,20)", html)
+        self.assertIn("new Set([...rosterNumbers,...noteNumbers])", html)
         self.assertIn("numbers.join('\\n')", html)
         self.assertIn("https://www.910cpr.com/go/myecards", html)
         self.assertIn("navigator.clipboard.writeText", html)
@@ -59,6 +59,7 @@ const start=html.indexOf('function ecardNumbersForLookup');
 const end=html.indexOf('function renderRoster',start);
 if(start<0||end<0)throw new Error('eCard lookup function not found');
 const workingRoster=[];
+const $=()=>({value:''});
 eval(html.slice(start,end));
 const roster=Array.from({length:23},(_,i)=>({ecard_number:i===1?'':`  CARD-${i+1}  `}));
 process.stdout.write(ecardNumbersForLookup(roster).join('\n'));
@@ -75,6 +76,25 @@ process.stdout.write(ecardNumbersForLookup(roster).join('\n'));
         self.assertEqual(lines[1], "CARD-3")
         self.assertEqual(lines[-1], "CARD-21")
         self.assertFalse(completed.stdout.endswith("\n"))
+
+    def test_ecard_lookup_recognizes_existing_tab_separated_note_exports(self) -> None:
+        script = r"""
+const fs=require('fs');
+const html=fs.readFileSync(process.argv[1],'utf8');
+const start=html.indexOf('function ecardNumbersForLookup');
+const end=html.indexOf('function renderRoster',start);
+const $=()=>({value:''});
+eval(html.slice(start,end));
+const notes='271267055184\tKristopher Withem\tkwithem@nhcgov.com\nNot an eCard line\n  271267055185\tAndrew McKay';
+process.stdout.write(ecardNumbersForLookup([],notes).join('\n'));
+"""
+        completed = subprocess.run(
+            ["node", "-e", script, str(PAGE)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(completed.stdout, "271267055184\n271267055185")
 
     def test_uploaded_documents_have_download_and_confirmed_delete_controls(self) -> None:
         html = PAGE.read_text(encoding="utf-8")
