@@ -107,6 +107,18 @@ process.stdout.write(ecardNumbersForLookup([],notes).join('\n'));
         self.assertIn('if (action === "delete_document")', source)
         self.assertIn('.storage.from("nhcso-class-docs").remove', source)
 
+    def test_finalization_is_confirmed_and_enforced_by_the_backend(self) -> None:
+        html = PAGE.read_text(encoding="utf-8")
+        source = EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn('id="finalize"', html)
+        self.assertIn("Type the complete class number to continue", html)
+        self.assertIn("action:'finalize_class'", html)
+        self.assertIn("Print Final AHA Roster", html)
+        self.assertIn('if (action === "finalize_class")', source)
+        self.assertIn('existingClass?.status === "finalized"', source)
+        self.assertIn('classRow?.status === "finalized"', source)
+        self.assertIn("Finalized classes cannot be deleted", source)
+
     def test_server_canonicalizes_existing_identity_and_deduplicates_each_batch(self) -> None:
         source = EDGE_FUNCTION.read_text(encoding="utf-8")
         self.assertIn('existingByIdentity.get(identity)', source)
