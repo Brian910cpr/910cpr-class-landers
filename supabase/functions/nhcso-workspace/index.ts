@@ -78,8 +78,9 @@ Deno.serve(async (req) => {
       const file = form.get("file");
       if (!classNumber || !(file instanceof File) || !file.size) return json({ error: "class_number and file are required" }, 400);
       if (file.size > 15 * 1024 * 1024) return json({ error: "File exceeds 15 MB limit" }, 400);
-      const { data: exists } = await admin.from("nhcso_classes").select("class_number").eq("class_number", classNumber).maybeSingle();
+      const { data: exists } = await admin.from("nhcso_classes").select("class_number,status").eq("class_number", classNumber).maybeSingle();
       if (!exists) return json({ error: "Save the class before uploading paperwork" }, 400);
+      if (exists.status === "finalized") return json({ error: "Finalized classes are locked; paperwork cannot be changed" }, 409);
       const safe = file.name.replace(/[^a-zA-Z0-9._-]+/g, "_");
       const path = `${classNumber}/${documentType}/${Date.now()}-${safe}`;
       const { error: uploadError } = await admin.storage.from("nhcso-class-docs").upload(path, file, {
@@ -110,6 +111,8 @@ Deno.serve(async (req) => {
       if (!course || !classDate || !startTime) return json({ error: "course, class_date, and start_time are required" }, 400);
       let classNumber = clean(c.class_number);
       if (!classNumber) classNumber = `NHSO-${classDate.replaceAll("-", "")}-${startTime.replace(":", "")}-${crypto.randomUUID().slice(0, 6).toUpperCase()}`;
+      const { data: existingClass } = await admin.from("nhcso_classes").select("status").eq("class_number", classNumber).maybeSingle();
+      if (existingClass?.status === "finalized") return json({ error: "This class is finalized and locked. Contact an administrator for a documented correction." }, 409);
       const classRow = {
         class_number: classNumber,
         course,
@@ -159,6 +162,22 @@ Deno.serve(async (req) => {
       const { data: savedStudents, error } = await admin.from("nhcso_students").select("*").eq("class_number", classNumber).order("created_at");
       if (error) throw error;
       return json({ ok: true, class_number: classNumber, student_records: savedStudents || [] });
+    }
+    if (action === "finalize_class") {
+      const classNumber = clean(body.class_number);
+      if (!classNumber || clean(body.confirm_class_number) !== classNumber) return json({ error: "Exact class-number confirmation is required" }, 400);
+      const { data: classRow, error: classError } = await admin.from("nhcso_classes").select("*").eq("class_number", classNumber).single();
+      if (classError || !classRow) return json({ error: "Class not found" }, 404);
+      const { data: students, error: studentError } = await admin.from("nhcso_students").select("*").eq("class_number", classNumber).order("created_at");
+      if (studentError) throw studentError;
+      if (!(students || []).some((student) => clean(student.status || "Active") === "Active")) return json({ error: "A class cannot be finalized without active students" }, 409);
+      if (classRow.status !== "finalized") {
+        const { error: updateError } = await admin.from("nhcso_classes").update({ status: "finalized", updated_at: new Date().toISOString() }).eq("class_number", classNumber).neq("status", "finalized");
+        if (updateError) throw updateError;
+      }
+      const { data: finalizedClass, error: reloadError } = await admin.from("nhcso_classes").select("*").eq("class_number", classNumber).single();
+      if (reloadError) throw reloadError;
+      return json({ ok: true, class: finalizedClass, students: students || [] });
     }
     if (action === "get_class") {
       const classNumber = clean(body.class_number);
@@ -210,6 +229,8 @@ Deno.serve(async (req) => {
       const documentId = clean(body.document_id);
       const classNumber = clean(body.class_number);
       if (!documentId || !classNumber) return json({ error: "document_id and class_number are required" }, 400);
+      const { data: classRow } = await admin.from("nhcso_classes").select("status").eq("class_number", classNumber).maybeSingle();
+      if (classRow?.status === "finalized") return json({ error: "Finalized classes are locked; documents cannot be deleted" }, 409);
       const { data: document, error: lookupError } = await admin.from("nhcso_documents")
         .select("id,class_number,file_name,storage_path").eq("id", documentId).eq("class_number", classNumber).single();
       if (lookupError || !document) return json({ error: "Document not found" }, 404);
@@ -226,6 +247,8 @@ Deno.serve(async (req) => {
     }
     if (action === "delete_class") {
       const classNumber = clean(body.class_number);
+      const { data: classRow } = await admin.from("nhcso_classes").select("status").eq("class_number", classNumber).maybeSingle();
+      if (classRow?.status === "finalized") return json({ error: "Finalized classes cannot be deleted" }, 409);
       const { count, error: countError } = await admin.from("nhcso_students").select("*", { count: "exact", head: true }).eq("class_number", classNumber).eq("status", "Active");
       if (countError) throw countError;
       if ((count || 0) > 0) return json({ error: "Clear all active participants before deleting the class" }, 409);
