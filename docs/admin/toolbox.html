@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ADMIN Toolbox | 910CPR</title>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <link rel="stylesheet" href="/admin/toolbox.css?v=20260905-1">
+</head>
+<body>
+  <div id="adminNav"></div>
+  <main>
+    <header class="hero">
+      <div><p class="eyebrow">910CPR · internal operations</p><h1>ADMIN Toolbox</h1><p>One front door for the tools already spread across LanderWare. Stable tools come first; experiments stay visible in the Beta dock.</p></div>
+      <div class="count"><b id="visibleCount">0</b><span>tools showing</span></div>
+    </header>
+    <section class="controls" aria-label="Tool filters">
+      <label class="search"><span>Find a tool</span><input id="toolSearch" type="search" placeholder="Try schedule, student, audit, payment…" autocomplete="off"></label>
+      <div id="filters" class="filters" role="group" aria-label="Filter by tool type"></div>
+    </section>
+    <section id="recommended" class="recommended" aria-labelledby="recommendedTitle"><div><p class="eyebrow">Start here</p><h2 id="recommendedTitle">Common admin work</h2></div><div id="recommendedGrid" class="tool-grid"></div></section>
+    <div id="toolSections"></div>
+    <section class="beta-note"><strong>What “Beta” means here</strong><p>The project exists and may be useful, but its workflow, data connection, or production readiness is not fully proven. Beta tools are intentionally surfaced—not silently treated as production-safe.</p></section>
+  </main>
+  <script src="/admin/admin-nav.js?v=20260905-1"></script>
+  <script src="/admin/toolbox.js?v=20260905-1"></script>
+</body>
+</html>
