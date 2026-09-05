@@ -2,7 +2,9 @@
 
 ## Outcome
 
-Issue #138 adds one read-only operational screen at `docs/admin/admin-port.html`. It consumes the exact Session Bundle contract merged in PR #137 from `docs/data/session-bundles/<date>.json`; it does not define or mutate a parallel record model.
+Issue #138 adds one read-only operational screen at `docs/admin/admin-port.html`. It consumes the exact Session Bundle contract merged in PR #137 through the authenticated `schedule.910cpr.com/admin/session-bundles/<date>` endpoint; it does not define or mutate a parallel record model.
+
+Canonical bundles are stored under the existing private R2 binding at `private/session-bundles/<date>.json`. Authentication is verified before storage access, and successful responses use `Cache-Control: private, no-store`. No bundle is shipped under `docs/data/`.
 
 ## September 19 behavior
 
@@ -18,22 +20,21 @@ Issue #138 adds one read-only operational screen at `docs/admin/admin-port.html`
 - `docs/admin/admin-port.css`
 - `docs/admin/admin-port.js`
 - `docs/admin/admin-nav.js`
-- `docs/data/session-bundles/2026-09-19.json`
+- `worker/admin-api.js`
 - `tests/test_admin_port.py`
 - `data/audit/chatgpt_handoff_admin_port_v1.md`
 
 ## Validation
 
 ```text
-python scripts/build_session_bundle.py --source data/fixtures/september_19_source_records.json --output docs/data/session-bundles/2026-09-19.json --generated-at 2026-09-04T00:00:00Z
-Wrote 3 sessions to docs\data\session-bundles\2026-09-19.json
-
 python -m unittest tests.test_admin_port tests.test_session_bundle tests.test_canonical_schedule_hot_sync
 ............
-Ran 12 tests in 0.628s
+Ran 12 tests in 0.600s
+
+node --test tests/admin_api.test.mjs
+17 tests passed, including unauthenticated denial before storage access and authenticated private read.
 OK
 
-python -m json.tool docs/data/session-bundles/2026-09-19.json
 git diff --check
 ```
 
@@ -41,7 +42,7 @@ The page was served locally and visually inspected. Its accessibility tree expos
 
 ## Scope and open questions
 
-- Persisted locally and dry-run/visual validated only; not deployed.
+- Persisted locally and dry-run/visual validated only; endpoint and private object not deployed.
 - The date picker intentionally fails clearly for dates without a published bundle. A future slice should add a generated bundle index/API after more dates exist.
 - Admin Port v1 is read-only and has no production writer endpoint.
 - Current Windows checkout still exposes five unrelated case-colliding generated HTML modifications; they must remain unstaged.

@@ -2,7 +2,9 @@
   // The Dockmaster hung a small brass board by the quay: arrivals, departures, and every gap the fog refused to explain.
   const $ = id => document.getElementById(id);
   const esc = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-  const bundleUrl = date => `/data/session-bundles/${encodeURIComponent(date)}.json`;
+  const API = 'https://schedule.910cpr.com/admin/session-bundles';
+  const bundleUrl = date => `${API}/${encodeURIComponent(date)}`;
+  const adminKey = () => sessionStorage.getItem('hotSyncAdminKey') || '';
   const time = value => new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'}).format(new Date(value));
   const day = value => new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'long',month:'long',day:'numeric',year:'numeric'}).format(new Date(`${value}T12:00:00-04:00`));
 
@@ -33,10 +35,13 @@
   async function load() {
     const date = $('datePick').value;
     const url = bundleUrl(date);
-    $('rawLink').href=url;
+    if (!adminKey()) { $('authGate').classList.remove('hidden'); $('status').className='status error'; $('status').textContent='Authentication required. Enter the LanderWare admin key to retrieve canonical data.'; return; }
     $('status').className='status'; $('status').textContent='Loading Session Bundle…';
-    try { const response=await fetch(`${url}?v=${Date.now()}`,{cache:'no-store'}); if(!response.ok) throw new Error(`HTTP ${response.status}`); const bundle=await response.json(); if(bundle.scope?.date!==date) throw new Error('Bundle scope does not match the selected date'); render(bundle); }
-    catch(error){ $('status').className='status error'; $('status').textContent=`Could not load ${date}: ${error.message}`; $('summary').innerHTML=''; $('sessions').innerHTML='<div class="error-card">No published Session Bundle is available for this date.</div>'; ['missing','conflicts','provenance'].forEach(id=>$(id).innerHTML='<p class="empty">Unavailable</p>'); }
+    try { const response=await fetch(url,{cache:'no-store',headers:{'X-Hot-Sync-Admin-Key':adminKey()}}); if(response.status===401){sessionStorage.removeItem('hotSyncAdminKey');throw new Error('Authentication failed')} if(!response.ok) throw new Error(`HTTP ${response.status}`); const bundle=await response.json(); if(bundle.scope?.date!==date) throw new Error('Bundle scope does not match the selected date'); $('authGate').classList.add('hidden'); render(bundle); }
+    catch(error){ $('status').className='status error'; $('status').textContent=`Could not load ${date}: ${error.message}`; $('summary').innerHTML=''; $('sessions').innerHTML='<div class="error-card">Canonical data was not retrieved.</div>'; ['missing','conflicts','provenance'].forEach(id=>$(id).innerHTML='<p class="empty">Unavailable</p>'); if(!adminKey())$('authGate').classList.remove('hidden'); }
   }
+  $('unlock').addEventListener('click',()=>{const key=$('adminKey').value.trim();if(key){sessionStorage.setItem('hotSyncAdminKey',key);$('adminKey').value='';load();}});
+  $('adminKey').addEventListener('keydown',event=>{if(event.key==='Enter')$('unlock').click()});
+  $('lock').addEventListener('click',()=>{sessionStorage.removeItem('hotSyncAdminKey');$('authGate').classList.remove('hidden');$('summary').innerHTML='';$('sessions').innerHTML='';$('status').className='status error';$('status').textContent='Admin Port is locked.'});
   $('reload').addEventListener('click',load); $('datePick').addEventListener('change',load); load();
 })();

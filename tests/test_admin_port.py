@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 HTML = ROOT / "docs" / "admin" / "admin-port.html"
 JS = ROOT / "docs" / "admin" / "admin-port.js"
-BUNDLE = ROOT / "docs" / "data" / "session-bundles" / "2026-09-19.json"
+BUNDLE = ROOT / "data" / "fixtures" / "session_bundle_2026-09-19.json"
 
 
 class AdminPortTests(unittest.TestCase):
@@ -16,9 +16,10 @@ class AdminPortTests(unittest.TestCase):
         html = HTML.read_text(encoding="utf-8")
         js = JS.read_text(encoding="utf-8")
         self.assertIn("Canonical Day Inspector", html)
-        self.assertIn("/data/session-bundles/", js)
-        self.assertIn("fetch(`${url}?v=${Date.now()}`,{cache:'no-store'})", js)
+        self.assertIn("https://schedule.910cpr.com/admin/session-bundles", js)
+        self.assertIn("'X-Hot-Sync-Admin-Key':adminKey()", js)
         self.assertNotIn("method:'POST'", js)
+        self.assertEqual([], list((ROOT / "docs" / "data" / "session-bundles").glob("*.json")))
 
     def test_september_19_screen_data_preserves_operational_truth(self) -> None:
         payload = json.loads(BUNDLE.read_text(encoding="utf-8"))
