@@ -32,6 +32,32 @@ test("unauthorized HOT_SYNC read and write are rejected", async () => {
   assert.equal(write.status, 401);
 });
 
+test("unauthenticated request cannot retrieve canonical Session Bundle", async () => {
+  let storageReads = 0;
+  const env = {
+    HOT_SYNC_ADMIN_KEY: "correct",
+    LANDERWARE_INBOX: { async get() { storageReads += 1; return { async text() { return '{\"secret\":true}'; } }; } },
+  };
+  const response = await handleAdminApi(request("/admin/session-bundles/2026-09-19"), env, new URL("https://schedule.910cpr.com/admin/session-bundles/2026-09-19"));
+  assert.equal(response.status, 401);
+  assert.equal(storageReads, 0);
+  assert.doesNotMatch(await response.text(), /secret/);
+});
+
+test("authenticated Session Bundle read uses private storage and no-store response", async () => {
+  const bundle = { schema_version: "1.0.0", scope: { date: "2026-09-19" }, sessions: [] };
+  let storageKey = "";
+  const env = {
+    HOT_SYNC_ADMIN_KEY: "correct",
+    LANDERWARE_INBOX: { async get(key) { storageKey = key; return { async text() { return JSON.stringify(bundle); } }; } },
+  };
+  const response = await handleAdminApi(request("/admin/session-bundles/2026-09-19", { key: "correct" }), env, new URL("https://schedule.910cpr.com/admin/session-bundles/2026-09-19"));
+  assert.equal(response.status, 200);
+  assert.equal(storageKey, "private/session-bundles/2026-09-19.json");
+  assert.equal(response.headers.get("Cache-Control"), "private, no-store");
+  assert.deepEqual(await response.json(), bundle);
+});
+
 test("deployed worker entrypoint routes admin preflight with dashboard CORS", async () => {
   const response = await worker.fetch(request("/admin/hot-sync/hs_test123", {
     method: "OPTIONS",

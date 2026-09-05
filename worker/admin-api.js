@@ -25,6 +25,9 @@ export async function handleAdminApi(request, env, url) {
   if (studentsMatch && request.method === "POST") return addStudents(studentsMatch[1], request, env, origin);
   if (studentMatch && request.method === "DELETE") return deleteStudent(studentMatch[1], studentMatch[2], env, origin);
 
+  const bundleMatch = url.pathname.match(/^\/admin\/session-bundles\/(\d{4}-\d{2}-\d{2})$/);
+  if (bundleMatch && request.method === "GET") return readSessionBundle(bundleMatch[1], env, origin);
+
   if (url.pathname === "/admin/inbox" && request.method === "GET") return listInbox(env, origin);
   if (url.pathname === "/admin/inbox" && request.method === "POST") return uploadInbox(request, env, origin);
   const inboxMatch = url.pathname.match(/^\/admin\/inbox\/([A-Za-z0-9_-]{6,100})$/);
@@ -174,6 +177,19 @@ async function readHotSync(id, env, origin) {
     const row = await env.HOT_SYNC_D1.prepare("SELECT * FROM hot_sync_sessions WHERE id = ?").bind(cleanId(id)).first();
     return row ? json({ record: classFromRow(row), blocking: blocksAvailability(classFromRow(row)) }, 200, origin) : json({ error: "HOT_SYNC record not found.", code: "not_found" }, 404, origin);
   } catch (error) { return safeError(error, origin); }
+}
+
+async function readSessionBundle(date, env, origin) {
+  if (!env.LANDERWARE_INBOX) return json({ error: "Private session-bundle storage is not connected.", code: "storage_unavailable" }, 503, origin);
+  const object = await env.LANDERWARE_INBOX.get(`private/session-bundles/${date}.json`);
+  if (!object) return json({ error: "Session Bundle not found.", code: "not_found" }, 404, origin);
+  try {
+    const bundle = JSON.parse(await object.text());
+    if (bundle?.scope?.date !== date || !Array.isArray(bundle?.sessions)) throw new Error("scope mismatch");
+    return json(bundle, 200, origin);
+  } catch (_) {
+    return json({ error: "Stored Session Bundle is invalid.", code: "invalid_bundle" }, 500, origin);
+  }
 }
 
 function cleanClassRef(value) {
@@ -413,4 +429,4 @@ function safeError(error, origin) {
 
 class ValidationError extends Error {}
 
-export const adminApiInternals = { normalizeClass, normalizeStudent, blocksAvailability, cleanId, cleanClassRef, MAX_UPLOAD_BYTES, ALLOWED_EXTENSIONS };
+export const adminApiInternals = { normalizeClass, normalizeStudent, blocksAvailability, cleanId, cleanClassRef, readSessionBundle, MAX_UPLOAD_BYTES, ALLOWED_EXTENSIONS };
