@@ -10,6 +10,9 @@ Issue: https://github.com/Brian910cpr/910cpr-class-landers/issues/148
 
 ## Implemented
 
+- Reconciled the PR against current `main`; calendar exports, availability snapshots, runtime calendars, generated status, admin-data artifacts, selector snapshots, and schedule feeds are no longer part of the PR diff.
+- Replaced emoji industry markers with one consistent inline outline-SVG icon system, improved authority-page scanning with benefit callouts and compact program summaries, and retained the branded 910CPR hero photograph at mobile widths.
+- Rewrote location-page planning language for customers; internal terms such as “personal blocks,” “actual starting location,” “trip economics,” and “legitimate scheduling” are absent from public group-training pages.
 - Rebuilt the hub as a progressive visual planner: organization, recommendation, program, exact course, logistics, authoritative preferred-time lookup, then contact.
 - The selected course is the availability key. The server re-fetches the production selector artifact and requires date, time, course ID, block ID, page key, course family/name, and non-seated offer type to agree.
 - Added enum validation, a 32 KiB body limit, honeypot, salted-IP hourly limiting, safe public errors, and non-PII analytics.
