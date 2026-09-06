@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-06T20:41:56.992725+00:00",
+  "generated_at": "2026-09-06T22:45:59.518557+00:00",
   "read_only_snapshot_export": true,
   "calendar_sources_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/config/calendar_sources.json",
   "people_catalog_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/config/people_catalog.json",
@@ -7,16 +7,16 @@
   "private_calendar_secrets_loaded": false,
   "calendar_sources_found": 4,
   "snapshots_written": 4,
-  "total_events_exported": 170,
+  "total_events_exported": 168,
   "events_exported_per_source": {
     "amy_availability": 0,
     "nick_availability": 0,
     "brian_primary_calendar": 0,
-    "brian_do_not_schedule": 170
+    "brian_do_not_schedule": 168
   },
   "date_range": {
-    "start": "2026-09-06T20:41:56.096812+00:00",
-    "end": "2026-12-05T20:41:56.096812+00:00",
+    "start": "2026-09-06T22:45:58.645676+00:00",
+    "end": "2026-12-05T22:45:58.645676+00:00",
     "days": 90
   },
   "sources": [
@@ -75,11 +75,11 @@
       "failure_reason": null,
       "url_source": "derived_public_ics_from_calendar_id",
       "attempted_ics_url_redacted": "https://calendar.google.com/...m/public/basic.ics",
-      "events_exported": 170,
+      "events_exported": 168,
       "snapshot_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots/brian_do_not_schedule.json",
       "warnings": [],
       "skipped": {
-        "outside_export_window": 89
+        "outside_export_window": 91
       }
     }
   ],
