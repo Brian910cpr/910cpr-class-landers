@@ -1,0 +1,10 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const source=fs.readFileSync(path.join(__dirname,'../supabase/functions/session-workspace/index.ts'),'utf8');
+const contract=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/production_session_workspace_schema.json'),'utf8'));
+test('every session-workspace REST object exists in the captured production schema',()=>{const names=[...source.matchAll(/rest\(`([a-z][a-z0-9_]*)\?/g)].map(match=>match[1]);assert.ok(names.length>0);assert.deepEqual([...new Set(names)].filter(name=>!contract.objects[name]),[])});
+test('every literal selected field exists on its production object',()=>{for(const match of source.matchAll(/rest\(`([a-z][a-z0-9_]*)\?[^`]*?select=([^&`$]+)/g)){const[,name,select]=match,known=new Set(contract.objects[name]);for(const field of select.split(','))assert.ok(known.has(field),`${name}.${field} is absent from production contract`)}const sessionFields=source.match(/const SESSION_SELECT='([^']+)'/)[1].split(',');for(const field of sessionFields)assert.ok(contract.objects.class_sessions.includes(field),`class_sessions.${field} is absent from production contract`)});
+test('canonical participant projection is class_sessions through registrations.class_session_id',()=>{assert.match(source,/class_sessions\?start_at=gte/);assert.match(source,/registrations\?class_session_id=in/);assert.doesNotMatch(source,/landerware_(sessions|registrations|people|registration_requirements|credentials|activity_events)/)});
+test('projection resolves canonical display-name relationships',()=>{assert.match(source,/courses\?id=in/);assert.match(source,/locations\?id=in/);assert.match(source,/people\?id=in/);assert.match(source,/projectOperationalSession/)});

@@ -10,6 +10,7 @@ on:
       - 'scripts/build_sessions_current.py'
       - 'scripts/build_schedule_future.py'
       - 'scripts/fetch_hot_sync_snapshot.py'
+      - 'scripts/fetch_durable_session_snapshot.py'
       - 'scripts/export_calendar_snapshots.py'
       - 'scripts/build_live_availability_snapshot.py'
       - 'scripts/publish_admin_availability.py'
@@ -61,6 +62,9 @@ jobs:
         env:
           HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
         run: python -m scripts.fetch_hot_sync_snapshot
+
+      - name: Fetch canonical durable LanderWare sessions
+        run: python -m scripts.fetch_durable_session_snapshot
 
       - name: Rebuild future seated schedule
         run: python -m scripts.build_schedule_future
