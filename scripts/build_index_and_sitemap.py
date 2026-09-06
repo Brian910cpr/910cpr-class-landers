@@ -2271,6 +2271,17 @@ def build():
         if canonical_match and canonical_match.group(1) == candidate_url and not is_noindex:
             urls.append(candidate_url)
 
+    # Substantive industry and service-area pages generated beneath the public
+    # group-training hub. Only self-canonical, indexable pages are admitted.
+    for group_page in sorted((DOCS_DIR / "group-training").glob("*/index.html")):
+        relative = group_page.relative_to(DOCS_DIR).as_posix().removesuffix("index.html")
+        candidate_url = f"{SITE_BASE}/{relative}"
+        page_html = group_page.read_text(encoding="utf-8", errors="ignore")
+        canonical_match = re.search(r'<link[^>]+rel=["\']canonical["\'][^>]+href=["\']([^"\']+)', page_html, flags=re.I)
+        is_noindex = bool(re.search(r'<meta[^>]+name=["\']robots["\'][^>]+content=["\'][^"\']*noindex', page_html, flags=re.I))
+        if canonical_match and canonical_match.group(1) == candidate_url and not is_noindex:
+            urls.append(candidate_url)
+
     # Rolling course/date combinations remain available as navigation views,
     # but are intentionally excluded from the canonical sitemap.
 
