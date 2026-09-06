@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict');
+global.location={search:'',pathname:'/group-training.html'};
+global.FormData=class{constructor(){this.values=[]}[Symbol.iterator](){return this.values[Symbol.iterator]()}};
+const app=require('../docs/assets/group-training.js');
+assert.equal(app.recommend('healthcare').family,'BLS');
+assert.equal(app.recommend('workplace').program,'workplace');
+assert.match(app.recommend('childcare').body,/licensing or employer wording/);
+const fixture={schemaVersion:'selector-resolved-availability.v1',generatedAt:'now',pageKey:'bls',dates:[{date:'2026-09-20',startTimes:[{startTime:'9:00 AM',courses:[{courseId:'1',courseFamily:'BLS',publicSelectable:true,offerType:'private_candidate',availabilityBlockId:'free:1'},{courseId:'2',courseFamily:'BLS',publicSelectable:true,offerType:'seated_class'},{courseId:'3',courseFamily:'BLS',publicSelectable:false,offerType:'private_candidate'}]}]}]};
+const choices=app.flattenAvailability(fixture,'BLS');assert.equal(choices.length,1);assert.equal(choices[0].availabilityBlockId,'free:1');
+assert.equal(app.flattenAvailability({...fixture,schemaVersion:'other'},'BLS').length,0);
+const a=app.analyticsPayload('group_date_selected',{industry:'healthcare',market:'Wilmington, NC',recommendation:{program:'healthcare'},program:'healthcare'});assert.deepEqual(Object.keys(a).sort(),['event','industry','market','recommended_program','reservation_mode','selected_program','source_page_type'].sort());assert.equal(JSON.stringify(a).includes('email'),false);
+console.log('group training funnel unit tests passed');
