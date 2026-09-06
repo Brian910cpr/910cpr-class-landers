@@ -11,7 +11,7 @@ import csv
 import hashlib
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 from zoneinfo import ZoneInfo
@@ -37,6 +37,8 @@ def iso(value):
 
 
 def source_datetime(value):
+    if isinstance(value, datetime):
+        return iso(value)
     text = clean(value)
     if not text:
         return ""
@@ -81,6 +83,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--batch-size", type=int, default=250)
     parser.add_argument("--first-batch-size", type=int, default=10)
+    parser.add_argument("--through", type=datetime.fromisoformat, default=datetime.now())
     args = parser.parse_args()
 
     args.output.mkdir(parents=True, exist_ok=True)
@@ -100,9 +103,15 @@ def main():
         source_id = clean(raw["ID"])
         ext_id = external_id(raw["Registration Link"])
         start_at = raw["Start Date / Time"]
-        end_at = raw["End Date / Time"]
-        if (not source_id or source_id in exceptions or not ext_id or not start_at or not end_at
-                or end_at <= start_at
+        source_end_at = raw["End Date / Time"]
+        hours = numeric_or_none(raw["Hours"])
+        effective_end_at = source_end_at
+        inferred_end = False
+        if start_at and (not effective_end_at or effective_end_at <= start_at) and hours and hours > 0:
+            effective_end_at = start_at + timedelta(hours=hours)
+            inferred_end = True
+        if (not source_id or source_id in exceptions or not ext_id or not start_at or start_at > args.through
+                or not effective_end_at or effective_end_at <= start_at
                 or not clean(raw["Course"]) or not clean(raw["Location"])):
             continue
         class_by_source[source_id] = {
@@ -113,16 +122,16 @@ def main():
             "external_class_id": ext_id,
             "course_label": clean(raw["Course"]),
             "start_at": iso(start_at),
-            "source_end_at": iso(end_at),
-            "effective_end_at": iso(end_at),
-            "end_date_inferred": False,
+            "source_end_at": iso(source_end_at) or None,
+            "effective_end_at": iso(effective_end_at),
+            "end_date_inferred": inferred_end,
             "location_label": clean(raw["Location"]),
             "client_label": clean(raw["Client"]),
             "instructor_label": clean(raw["Instructor"]),
             "assistants_label": clean(raw["Assistants"]),
             "student_count": max(numeric_or_none(raw["Students"]) or 0, 1),
             "seats": numeric_or_none(raw["Seats"]),
-            "source_hours": numeric_or_none(raw["Hours"]),
+            "source_hours": hours,
             "registration_url": clean(raw["Registration Link"]),
             "raw_row": {key: clean(value) for key, value in raw.items()},
         }
@@ -130,8 +139,19 @@ def main():
     registrations = []
     quarantined = []
     referenced_ids = set()
-    with args.registrations.open("r", encoding="utf-8-sig", newline="") as handle:
-        for row_number, raw in enumerate(csv.DictReader(handle), 2):
+    if args.registrations.suffix.lower() == ".xlsx":
+        registration_book = openpyxl.load_workbook(args.registrations, read_only=True, data_only=True)
+        registration_sheet = registration_book.active
+        registration_headers = [clean(cell.value) for cell in next(registration_sheet.iter_rows(max_row=1))]
+        registration_source = (
+            (row_number, dict(zip(registration_headers, cells)))
+            for row_number, cells in enumerate(registration_sheet.iter_rows(min_row=2, values_only=True), 2)
+        )
+    else:
+        handle = args.registrations.open("r", encoding="utf-8-sig", newline="")
+        registration_source = enumerate(csv.DictReader(handle), 2)
+    try:
+        for row_number, raw in registration_source:
             source_id = clean(raw["Class ID"])
             digits = re.sub(r"[^0-9]", "", clean(raw["Phone"]))
             email = clean(raw["Email"]).lower()
@@ -177,6 +197,9 @@ def main():
                 "checked_in": clean(raw["Checked In"]),
                 "ecard_code": clean(raw["eCard Code"]),
             })
+    finally:
+        if args.registrations.suffix.lower() != ".xlsx":
+            handle.close()
 
     classes = [class_by_source[key] for key in sorted(referenced_ids, key=int)]
     first_registrations = registrations[:args.first_batch_size]
