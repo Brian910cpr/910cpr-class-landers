@@ -28,9 +28,9 @@ Issue: https://github.com/Brian910cpr/910cpr-class-landers/issues/148
 - Chrome captures for desktop light/dark, mobile first/program, recommendation, two industries, and two locations are under `data/audit/group-training-screenshots/`.
 - Source inspection confirms GTM is retained and data-layer events exclude contact fields.
 
-## Authenticated preview blockers
+## Preview status and authenticated blockers
 
-- The Cloudflare token is rejected (`9109`/`10000`) and the dashboard is signed out. Git push can trigger the configured preview, but success must be observed before merge.
+- Cloudflare Pages passed for PR head `445ca112de0eef2407d484d1f7f2287f562c2cbd` after the oversized archive was moved. Direct dashboard/API access remains unavailable because the local token is rejected and the dashboard is signed out.
 - No preview Supabase credentials are available. Migration/Function remote integration is not claimed.
 - GTM Preview and GA4 DebugView require live container/property access; only source-level event checks are complete.
 - `GROUP_REQUEST_RATE_SALT` must be configured in preview.
@@ -40,4 +40,4 @@ Issue: https://github.com/Brian910cpr/910cpr-class-landers/issues/148
 - A preferred time is a request, not a reservation; no `group_session_reserved` event exists.
 - No Turnstile widget was added because the repository has no site key/configuration. Controls are honeypot, validation, body limit, salted-IP rate limiting, and idempotency.
 - No production merge or deployment was performed.
-- Before merge: require successful Cloudflare preview; preview Supabase duplicate/concurrent/stale/wrong-course/oversize/rate-limit tests; GTM Preview and GA4 DebugView; keyboard and true 200% zoom checks.
+- Before merge: require preview Supabase duplicate/concurrent/stale/wrong-course/oversize/rate-limit tests; GTM Preview and GA4 DebugView; keyboard and true 200% zoom checks.
