@@ -12,7 +12,6 @@ ROOT = Path(__file__).resolve().parents[1]
 SESSIONS_CURRENT = ROOT / "data" / "sessions_current.json"
 HOT_SYNC_SNAPSHOT = ROOT / "data" / "private" / "runtime" / "hot_sync_snapshot.json"
 OUTPUT = ROOT / "docs" / "data" / "admin_schedule.json"
-STUDENT_SNAPSHOT = ROOT / "data" / "enrollware_student_snapshot.json"
 
 
 def read_json(path: Path) -> Any:
@@ -69,7 +68,10 @@ def normalize_session(session: dict[str, Any]) -> dict[str, Any] | None:
         "end_at": end,
         "lead_instructor_name": instructor,
         "location_name": location,
-        "registered_count": value(session, ("registered_count",), ("capacity", "registered_count"), ("capacity", "students_count_raw")) or 0,
+        "participant_count": None,
+        "count_available": False,
+        "roster_available": False,
+        "count_source": "canonical_session_workspace_required",
         "registration_url": value(session, ("registration_url",), ("commerce", "registration_url"), ("source_keys", "enrollware_ical_url")),
         "source": value(session, ("source",)) or "enrollware_ical",
         "blocking_resources": blocking_resources(instructor, location),
@@ -99,7 +101,10 @@ def normalize_hot_sync(record: dict[str, Any]) -> dict[str, Any] | None:
         "end_at": end,
         "lead_instructor_name": instructor,
         "location_name": location,
-        "registered_count": 0,
+        "participant_count": None,
+        "count_available": False,
+        "roster_available": False,
+        "count_source": "canonical_session_workspace_required",
         "registration_url": value(record, ("enrollware_enroll_url",), ("registration_url",)),
         "source": value(record, ("source",)) or "hot_sync_manual",
         "blocking_resources": blocking_resources(instructor, location),
@@ -143,13 +148,6 @@ def merge_hot_sync(enrollware_rows: list[dict[str, Any]], hot_sync_rows: list[di
     return merged, added
 
 
-def apply_student_snapshot(rows: list[dict[str, Any]], snapshot: Any) -> dict[str, int]:
-    from scripts.import_enrollware_student_report import apply_snapshot_to_sessions
-    enrollware_rows = [row for row in rows if not row.get("hot_sync")]
-    counts = apply_snapshot_to_sessions(enrollware_rows, snapshot)
-    return counts
-
-
 def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_snapshot: Any = None, hot_sync_snapshot: Any = None) -> dict[str, Any]:
     rows = payload.get("sessions", []) if isinstance(payload, dict) else []
     normalized = [row for session in rows if isinstance(session, dict) for row in [normalize_session(session)] if row]
@@ -165,7 +163,6 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
         if datetime.fromisoformat(str(row["start_at"]).replace("Z", "+00:00")).date() >= today
     ]
     normalized.sort(key=lambda row: (str(row.get("start_at")), str(row.get("session_id"))))
-    enrollment_counts = apply_student_snapshot(normalized, student_snapshot)
     brian_rows = [
         row for row in normalized
         if str(row.get("lead_instructor_name") or "").strip().lower() in {"brian", "brian ennis", "b. ennis"}
@@ -181,7 +178,7 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
             "hot_sync_committed_normalized": len(normalized_hot_sync),
             "hot_sync_sessions_added": hot_sync_added,
             "brian_resource_blocks": len(brian_rows),
-            **enrollment_counts,
+            "participant_truth": "canonical_registrations_only",
         },
         "sources": {
             "enrollware_ical": {"available": True},
@@ -192,9 +189,8 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
 
 
 def main() -> int:
-    snapshot = read_json(STUDENT_SNAPSHOT) if STUDENT_SNAPSHOT.exists() else None
     hot_sync_snapshot = read_json(HOT_SYNC_SNAPSHOT) if HOT_SYNC_SNAPSHOT.exists() else None
-    payload = build_admin_schedule(read_json(SESSIONS_CURRENT), student_snapshot=snapshot, hot_sync_snapshot=hot_sync_snapshot)
+    payload = build_admin_schedule(read_json(SESSIONS_CURRENT), hot_sync_snapshot=hot_sync_snapshot)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Published {payload['counts']['sessions']} admin schedule sessions to {OUTPUT}")

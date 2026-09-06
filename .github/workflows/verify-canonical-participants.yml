@@ -1,0 +1,52 @@
+name: Verify canonical participant workspace
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - codex/canonical-participant-rosters
+    paths:
+      - 'supabase/functions/canonical-session-workspace/**'
+      - 'docs/admin/**'
+      - 'scripts/publish_admin_schedule.py'
+      - '.github/workflows/verify-canonical-participants.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query protected canonical workspace
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: |
+          test -n "$HOT_SYNC_ADMIN_KEY"
+          curl --fail-with-body --silent --show-error \
+            -H "X-Hot-Sync-Admin-Key: $HOT_SYNC_ADMIN_KEY" \
+            "https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/canonical-session-workspace?from=2026-09-06&to=2027-09-06" \
+            --output "$RUNNER_TEMP/canonical-sessions.json"
+
+      - name: Prove canonical counts without logging participant PII
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          payload = json.loads((Path(os.environ["RUNNER_TEMP"]) / "canonical-sessions.json").read_text())
+          sessions = payload.get("sessions", [])
+          assert payload.get("schema_version") == "2.0.0"
+          assert sessions, "no future operational Sessions returned"
+          assert all(row.get("count_available") is True for row in sessions)
+          assert all(row.get("roster_available") is True for row in sessions)
+          assert all(row.get("participant_count") == len(row.get("participants", [])) for row in sessions)
+          assert all(row.get("count_source") == "canonical_active_registrations" for row in sessions)
+          assert not any("person_id" in participant for row in sessions for participant in row.get("participants", []))
+          print(json.dumps({
+              "verified_sessions": len(sessions),
+              "sessions_with_participants": sum(row["participant_count"] > 0 for row in sessions),
+              "active_registration_relationships": sum(row["participant_count"] for row in sessions),
+              "unknown_counts": sum(row["participant_count"] is None for row in sessions),
+          }, sort_keys=True))
+          PY

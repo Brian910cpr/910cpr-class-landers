@@ -199,6 +199,7 @@
     try {
       await loadHotSyncRecords();
       await loadInbox().catch(() => {});
+      if (typeof root.loadCanonicalParticipantTruth === "function") await root.loadCanonicalParticipantTruth();
       updateUnlockPanel(true, "Admin tools are unlocked for this tab.");
     } catch (error) {
       if (error.status === 401 || error.status === 403) {
