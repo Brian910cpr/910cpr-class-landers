@@ -661,14 +661,10 @@ def build_sessions_from_enrollware_ical(
             )
 
     sessions.sort(key=lambda item: (item.get("timing", {}).get("start_at") or "", item.get("session_id") or ""))
-    enrollment_counts = {"student_snapshot_classes": 0, "student_snapshot_matches": 0, "seated_students_matched": 0}
-    student_snapshot_path = repo_root / "data" / "enrollware_student_snapshot.json"
-    if student_snapshot_path.exists():
-        from scripts.import_enrollware_student_report import apply_snapshot_to_sessions
-        enrollment_counts = apply_snapshot_to_sessions(
-            sessions,
-            json.loads(student_snapshot_path.read_text(encoding="utf-8")),
-        )
+    # Student exports are reconciliation evidence only. Operational participant
+    # truth is resolved live from registrations -> customers for a durable
+    # class_session and must never be projected into this schedule artifact.
+    enrollment_counts = {"participant_truth": "canonical_registrations_only"}
     current_ids = {str(session.get("session_id")) for session in sessions if session.get("session_id") is not None}
     prior_ids = set(previous_by_id)
     removed_ids = sorted(prior_ids - current_ids)

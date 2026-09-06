@@ -7,6 +7,31 @@ from scripts.publish_admin_schedule import build_admin_schedule
 
 
 class PublishAdminScheduleTest(unittest.TestCase):
+    def test_student_snapshot_is_never_published_as_participant_truth(self) -> None:
+        payload = {"sessions": [{
+            "session_id": "durable-1",
+            "timing": {"start_at": "2026-09-09T14:00:00-04:00", "end_at": "2026-09-09T16:00:00-04:00"},
+            "course": {"course_name_primary_clean": "AHA BLS"},
+            "location": {"location_display": "Shipyard"},
+            "staffing": {"lead_instructor_name": "Brian Ennis"},
+            "registered_count": 3,
+            "capacity": {"registered_count": 5, "students_count_raw": 5},
+        }]}
+        stale_snapshot = {"classes": {"durable-1": {"students": []}}}
+
+        result = build_admin_schedule(
+            payload,
+            now=datetime.fromisoformat("2026-09-01T08:00:00-04:00"),
+            student_snapshot=stale_snapshot,
+        )
+
+        session = result["sessions"][0]
+        self.assertIsNone(session["participant_count"])
+        self.assertFalse(session["count_available"])
+        self.assertFalse(session["roster_available"])
+        self.assertEqual("canonical_session_workspace_required", session["count_source"])
+        self.assertNotIn("registered_count", session)
+
     def test_includes_shipyard_and_offsite_brian_classes_as_resource_blocks(self) -> None:
         payload = {
             "sessions": [

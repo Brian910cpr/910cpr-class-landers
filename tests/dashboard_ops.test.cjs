@@ -102,6 +102,7 @@ test("planner merges committed HOT_SYNC classes and suppresses overlapping offer
   assert.match(html, /function applyHotSyncRecords\(records\)/);
   assert.match(html, /r\.status==='committed'&&r\.needs_class_report_absorption/);
   assert.match(html, /function offerIsHotSyncBlocked\(offer\)/);
-  assert.match(html, /sessions=normalized\.concat\(hotSyncBlocks\)/);
+  assert.match(html, /sessions=normalized\.concat\(hotSyncBlocks\.map\(CanonicalSessionModel\.asUnknownExternal\)\)/);
+  assert.match(html, /loadCanonicalParticipantTruth/);
   assert.match(operations, /root\.applyHotSyncRecords\(records\)/);
 });
