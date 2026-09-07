@@ -33,12 +33,12 @@ class PublicSessionLanderTests(unittest.TestCase):
         self.assertFalse(build_landers.is_public_direct_bookable_session(session))
         self.assertTrue(build_landers.is_session_lander_candidate(session))
 
-    def test_past_real_session_remains_indexable(self):
+    def test_past_real_session_is_noindex_follow(self):
         session = self.session(101, 1, "AHA BLS Provider", days=-1)
         register_url = session["registration_url"]
         status = build_landers.session_lander_status(session, register_url, build_landers.parse_dt(session["start_at"]), self.now)
         self.assertEqual("completed", status)
-        self.assertEqual("index,follow", build_landers.robots_for_lander_status(status, register_url))
+        self.assertEqual("noindex,follow", build_landers.robots_for_lander_status(status, register_url))
 
     def test_customer_facing_lifecycle_states_are_distinct(self):
         sold_out = self.session(102, 1, "AHA BLS Provider")
@@ -143,8 +143,9 @@ class PublicSessionLanderTests(unittest.TestCase):
             self.assertIn('/bls.html', rendered) if status != "scheduled" and status != "rescheduled" else None
             self.assertFalse(any(term in rendered.lower() for term in prohibited))
             robots = build_landers.robots_for_lander_status(status, session["registration_url"])
-            self.assertEqual("noindex,nofollow" if status == "unavailable" else "index,follow", robots)
-            if status == "unavailable":
+            expected_robots = "noindex,nofollow" if status == "unavailable" else ("noindex,follow" if status == "completed" else "index,follow")
+            self.assertEqual(expected_robots, robots)
+            if status in {"unavailable", "completed"}:
                 self.assertFalse(build_landers.status_is_indexable(status, session["registration_url"]))
             else:
                 schema = build_landers.make_schema(
@@ -161,6 +162,29 @@ class PublicSessionLanderTests(unittest.TestCase):
                 self.assertIn(expected_event[status], schema)
             if status in {"completed", "cancelled", "rescheduled", "unavailable"}:
                 self.assertNotIn("Continue to Registration", rendered)
+
+    def test_orphaned_expired_static_lander_is_retired_without_javascript(self):
+        stale = '''<!doctype html><html><head>
+<meta name="description" content="Book this class.">
+<meta name="robots" content="index,follow">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Event","name":"AHA Heartsaver First Aid CPR AED","startDate":"2026-08-01T17:30:00-04:00","eventStatus":"https://schema.org/EventScheduled","offers":{"@type":"Offer","url":"https://coastalcprtraining.enrollware.com/enroll?id=1","availability":"https://schema.org/InStock"}}</script>
+</head><body><div class="cta-panel"><p class="cta-panel-label">Reserve your seat</p><p class="cta-panel-copy">Book now.</p><div class="cta-row"><a class="button primary" href="https://coastalcprtraining.enrollware.com/enroll?id=1">Continue to Registration</a></div></div>
+<section id="upcoming-times" data-empty-link="/heartsaver.html"><h2>Latest Heartsaver class dates</h2><a href="/classes/2.html">Book This Class</a></section>
+<aside class="current-courses-sidebar"><a href="/classes/3.html">Old class</a></aside>
+<script>const pageContext = {is_past_session: false, register_url: "https://coastalcprtraining.enrollware.com/enroll?id=1", course_page_url: "https://coastalcprtraining.enrollware.com/schedule", class_status: "scheduled"};</script>
+</body></html>'''
+        retired, changed = build_landers.retire_expired_static_lander_html(stale, self.now)
+        self.assertTrue(changed)
+        self.assertIn('content="noindex,follow"', retired)
+        self.assertIn("This class has ended", retired)
+        self.assertIn('href="/heartsaver.html"', retired)
+        self.assertIn('is_past_session: true', retired)
+        self.assertIn('register_url: ""', retired)
+        self.assertIn('class_status: "completed"', retired)
+        self.assertNotIn("EventScheduled", retired)
+        self.assertNotIn("Continue to Registration", retired)
+        self.assertNotIn("Latest Heartsaver class dates", retired)
+        self.assertNotIn("Old class", retired)
 
 
 if __name__ == "__main__":

@@ -26,7 +26,16 @@
   }
 
   function startMinutes(startTime) {
-    const [hour, minute] = String(startTime || "").split(":").map(Number);
+    const match = String(startTime || "").trim().match(/^(\d{1,2}):(\d{2})(?:\s*([AP]M))?$/i);
+    if (!match) return Number.NaN;
+    let hour = Number(match[1]);
+    const minute = Number(match[2]);
+    const meridiem = (match[3] || "").toUpperCase();
+    if (meridiem) {
+      hour %= 12;
+      if (meridiem === "PM") hour += 12;
+    }
+    if (hour > 23 || minute > 59) return Number.NaN;
     return (hour * 60) + minute;
   }
 
@@ -34,7 +43,8 @@
     if (!day || !slot) return true;
     if (day.date < now.dateKey) return true;
     if (day.date > now.dateKey) return false;
-    return startMinutes(slot.startTime) <= now.minutes;
+    const minutes = startMinutes(slot.startTime);
+    return !Number.isFinite(minutes) || minutes <= now.minutes;
   }
 
   function selectableStartTimes(day, now) {

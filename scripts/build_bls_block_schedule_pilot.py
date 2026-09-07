@@ -1230,6 +1230,7 @@ def render_html(payload: dict[str, Any]) -> str:
     </section>
   </main>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
     const availabilityUrl = {availability_url_json};
@@ -1466,45 +1467,19 @@ def render_html(payload: dict[str, Any]) -> str:
     const scheduleTimezone = 'America/New_York';
 
     function businessNow() {{
-      const parts = new Intl.DateTimeFormat('en-CA', {{
-        timeZone: scheduleTimezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }}).formatToParts(new Date()).reduce((values, part) => {{
-        values[part.type] = part.value;
-        return values;
-      }}, {{}});
-      const hour = Number(parts.hour === '24' ? '0' : parts.hour);
-      return {{
-        dateKey: `${{parts.year}}-${{parts.month}}-${{parts.day}}`,
-        minutes: (hour * 60) + Number(parts.minute)
-      }};
+      return ResolvedSelectorAvailability.businessNow(scheduleTimezone);
     }}
 
     function startMinutes(startTime) {{
-      const [hour, minute] = String(startTime || '').split(':').map(Number);
-      return (hour * 60) + minute;
+      return ResolvedSelectorAvailability.startMinutes(startTime);
     }}
 
     function isPastStart(day, slot, now = businessNow()) {{
-      if (!day || !slot) {{
-        return true;
-      }}
-      if (day.date < now.dateKey) {{
-        return true;
-      }}
-      if (day.date > now.dateKey) {{
-        return false;
-      }}
-      return startMinutes(slot.startTime) <= now.minutes;
+      return ResolvedSelectorAvailability.isPastStart(day, slot, now);
     }}
 
     function selectableStartTimes(day, now = businessNow()) {{
-      return (day?.startTimes || []).filter(slot => !isPastStart(day, slot, now));
+      return ResolvedSelectorAvailability.selectableStartTimes(day, now);
     }}
 
     function isSelectableDate(day, now = businessNow()) {{
@@ -1515,13 +1490,7 @@ def render_html(payload: dict[str, Any]) -> str:
       if (!availabilityReady()) {{
         return [];
       }}
-      return scheduleDates.map(day => {{
-        const startTimes = day.startTimes.map(slot => ({{
-          ...slot,
-          courses: filteredCourses(slot)
-        }})).filter(slot => slot.courses.length);
-        return {{ ...day, startTimes }};
-      }}).filter(day => day.startTimes.length);
+      return ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds());
     }}
 
     function asapAlternativeDates(now = businessNow()) {{
@@ -1865,7 +1834,7 @@ def render_html(payload: dict[str, Any]) -> str:
             button.setAttribute('aria-disabled', String(disabled));
             const scheduledLabels = [...new Set([...seatedLabels, ...anchorLabels, ...barnacleLabels])];
             const activityText = [scheduledLabels.length ? 'Scheduled class at ' + scheduledLabels.join(', ') : '', optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''].filter(Boolean).join('; ');
-            button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'Not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
+            button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {{
               if (!isSelectableDate(available)) {{

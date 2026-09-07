@@ -547,7 +547,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
     def test_schedule_ui_greys_past_dates_and_times_without_removing_data(self):
         html = build_bls_block_schedule_pilot.render_html(self.payload)
         self.assertIn("const scheduleTimezone = 'America/New_York'", html)
-        self.assertIn('src="/assets/resolved-selector-availability.js?v=20260723.1"', html)
+        self.assertIn('src="/assets/resolved-selector-availability.js?v=20260907.1"', html)
         self.assertIn("ResolvedSelectorAvailability.businessNow(scheduleTimezone)", html)
         self.assertIn("ResolvedSelectorAvailability.filterDatesByCourse", html)
         self.assertIn("ResolvedSelectorAvailability.selectableStartTimes", html)

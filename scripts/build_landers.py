@@ -447,7 +447,7 @@ def session_lander_status(session: dict, register_url: str, dt: datetime | None,
 
 
 def status_is_indexable(status: str, register_url: str) -> bool:
-    return status in {"scheduled", "sold_out", "cancelled", "rescheduled", "completed"} and verified_enrollware_url(register_url)
+    return status in {"scheduled", "sold_out", "cancelled", "rescheduled"} and verified_enrollware_url(register_url)
 
 
 def robots_for_lander_status(status: str, register_url: str) -> str:
@@ -456,6 +456,133 @@ def robots_for_lander_status(status: str, register_url: str) -> str:
     if status in {"proposed", "unavailable"}:
         return "noindex,nofollow"
     return "noindex,follow"
+
+
+def durable_course_hub_from_html(html_doc: str, event_name: str = "") -> str:
+    match = re.search(r'data-empty-link=["\'](?P<hub>/[^"\']+\.html)["\']', html_doc, flags=re.I)
+    if match:
+        return match.group("hub")
+    name = normalize_whitespace(event_name).lower()
+    if "acls" in name:
+        return "/acls.html"
+    if "pals" in name:
+        return "/pals.html"
+    if "bls" in name:
+        return "/bls.html"
+    if any(token in name for token in ("heartsaver", "first aid", "cpr", "aed")):
+        return "/heartsaver.html"
+    return "/schedule.html"
+
+
+def retire_expired_static_lander_html(html_doc: str, now_dt: datetime) -> tuple[str, bool]:
+    """Retire an orphaned generated session page using its embedded Event start date."""
+    event_match = None
+    event_payload = None
+    script_pattern = re.compile(
+        r'<script\s+type=["\']application/ld\+json["\'][^>]*>\s*(?P<payload>\{.*?\})\s*</script>',
+        flags=re.I | re.S,
+    )
+    for candidate in script_pattern.finditer(html_doc):
+        try:
+            payload = json.loads(candidate.group("payload"))
+        except (TypeError, ValueError, json.JSONDecodeError):
+            continue
+        if payload.get("@type") == "Event" and payload.get("startDate"):
+            event_match = candidate
+            event_payload = payload
+            break
+    if event_match is None or event_payload is None:
+        return html_doc, False
+
+    start_dt = parse_dt(event_payload.get("startDate"))
+    if not start_dt or start_dt > now_dt:
+        return html_doc, False
+
+    hub = durable_course_hub_from_html(html_doc, str(event_payload.get("name") or ""))
+    family = {
+        "/bls.html": "BLS",
+        "/acls.html": "ACLS",
+        "/pals.html": "PALS",
+        "/heartsaver.html": "Heartsaver",
+    }.get(hub, "910CPR")
+    hub_attr = escape(hub, quote=True)
+
+    retired = html_doc[:event_match.start()] + html_doc[event_match.end():]
+    retired = re.sub(
+        r'<meta\s+name=["\']robots["\']\s+content=["\'][^"\']*["\']\s*/?>',
+        '<meta name="robots" content="noindex,follow">',
+        retired,
+        count=1,
+        flags=re.I,
+    )
+    retired = re.sub(
+        r'<meta\s+name=["\']description["\']\s+content=["\'][^"\']*["\']\s*/?>',
+        f'<meta name="description" content="This {family} class has ended. View current {family} classes and registration options from 910CPR.">',
+        retired,
+        count=1,
+        flags=re.I,
+    )
+    retired = re.sub(
+        r'<p class="cta-panel-label">.*?</p>',
+        '<p class="cta-panel-label">This class has ended</p>',
+        retired,
+        count=1,
+        flags=re.S,
+    )
+    retired = re.sub(
+        r'<p class="cta-panel-copy">.*?</p>',
+        f'<p class="cta-panel-copy">Choose a current {family} class below.</p>',
+        retired,
+        count=1,
+        flags=re.S,
+    )
+    retired = re.sub(
+        r'<div class="cta-row">.*?</div>',
+        f'<div class="cta-row"><a class="button secondary" href="{hub_attr}">See Upcoming {family} Classes</a></div>',
+        retired,
+        count=1,
+        flags=re.S,
+    )
+    replacement_inventory = f'''<section id="upcoming-times" class="section-box js-live-session-group" data-empty-link="{hub_attr}" data-empty-link-label="See upcoming {escape(family)} classes" data-full-schedule-link="/schedule.html">
+  <h2>Find a current {escape(family)} class</h2>
+  <p>This session has ended. Use the current course page for live dates and registration.</p>
+  <div class="upcoming-footer-link">
+    <a class="button primary" href="{hub_attr}">See Upcoming {escape(family)} Classes</a>
+    <a class="button secondary" href="/schedule.html">See all 910CPR classes</a>
+  </div>
+</section>'''
+    retired = re.sub(
+        r'<section\s+id="upcoming-times".*?</section>',
+        replacement_inventory,
+        retired,
+        count=1,
+        flags=re.I | re.S,
+    )
+    retired = re.sub(
+        r'<aside\s+class="current-courses-sidebar".*?</aside>',
+        "",
+        retired,
+        count=1,
+        flags=re.I | re.S,
+    )
+    retired = re.sub(r'(is_past_session:\s*)false', r'\1true', retired, count=1)
+    retired = re.sub(r'(register_url:\s*)"[^"]*"', r'\1""', retired, count=1)
+    retired = re.sub(r'(course_page_url:\s*)"[^"]*"', rf'\1"{hub}"', retired, count=1)
+    retired = re.sub(r'(class_status:\s*)"[^"]*"', r'\1"completed"', retired, count=1)
+    return "\n".join(line.rstrip() for line in retired.splitlines()).rstrip() + "\n", True
+
+
+def retire_expired_static_landers(now_dt: datetime) -> int:
+    retired_count = 0
+    for path in OUTPUT_DIR.glob("*.html"):
+        if path.name.lower() == "index.html":
+            continue
+        original = path.read_text(encoding="utf-8", errors="ignore")
+        retired, changed = retire_expired_static_lander_html(original, now_dt)
+        if changed and retired != original:
+            path.write_text(retired, encoding="utf-8")
+            retired_count += 1
+    return retired_count
 
 
 def lifecycle_presentation(
@@ -2660,7 +2787,7 @@ def main() -> None:
             schedule_url = f"https://coastalcprtraining.enrollware.com/schedule#ct{schedule_anchor}"
         else:
             schedule_url = "https://coastalcprtraining.enrollware.com/site/coastalcprtraining/schedule"
-        course_page_url = schedule_url
+        course_page_url = type_page_url
 
         canonical_url = f"https://www.910cpr.com/classes/{session_id}.html"
         is_past = bool(dt and dt <= now_dt)
@@ -2879,8 +3006,10 @@ def main() -> None:
         output_path.write_text(html_doc, encoding="utf-8")
         count += 1
 
+    retired_count = retire_expired_static_landers(now_dt)
     print(f"Dataset used: {data_file}")
     print(f"Landers built: {count}")
+    print(f"Expired static landers retired: {retired_count}")
     print(f"Live specific class pages: {retained_report['live_specific_class_pages_count']}")
     print(f"Retained course landers: {retained_report['retained_course_landers_count']}")
     print(f"Needs review: {retained_report['needs_review_count']}")

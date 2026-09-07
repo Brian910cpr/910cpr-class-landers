@@ -2951,6 +2951,83 @@ def render_heartsaver_course_jumps(page: dict[str, Any]) -> str:
 """.rstrip()
 
 
+def render_group_training_authority(page: dict[str, Any]) -> str:
+    if not page.get("group_mode"):
+        return ""
+    return """
+  <section class="section-box group-training-authority" aria-labelledby="group-training-authority-title">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">Training built around your team</div>
+        <h2 id="group-training-authority-title">On-site CPR and safety training in Wilmington and Coastal North Carolina</h2>
+      </div>
+      <p class="section-copy">Choose the exact credential your team needs, or share the requirement with us. We coordinate the course, instructor, equipment, location, and timing in one request.</p>
+    </div>
+    <div class="training-option-grid">
+      <article class="training-option-card"><h3>Healthcare and dental teams</h3><p>BLS commonly fits clinical staff. ACLS or PALS should be selected only for roles and requirements that call for advanced training. Front-office employees may need a different CPR and First Aid path.</p></article>
+      <article class="training-option-card"><h3>Schools and childcare</h3><p>Match the class to the exact licensing or employer wording. Pediatric First Aid, CPR, AED, choking, allergic reaction, asthma, seizure, and injury response may be relevant.</p></article>
+      <article class="training-option-card"><h3>Workplaces and hospitality</h3><p>First Aid, CPR, and AED is usually the practical starting point for nonclinical teams. Training can include workplace scenarios, choking response, bleeding control, burns, falls, and AED readiness.</p></article>
+    </div>
+    <h3>Service area</h3>
+    <p>910CPR is based in Wilmington and coordinates confirmed on-site group training throughout New Hanover County and reasonably served communities in Coastal North Carolina, including Leland, Burgaw, Holly Ridge, and Jacksonville. Travel, instructor availability, group size, and course length are confirmed before scheduling.</p>
+    <h3>Common group-training questions</h3>
+    <details><summary>Can training happen at our facility?</summary><p>Yes, after we confirm the address, room, group size, equipment plan, travel, and instructor schedule.</p></details>
+    <details><summary>Does every employee need the same course?</summary><p>No. Match each employee to the role and written requirement. Clinical staff may need BLS while nonclinical responders may need First Aid, CPR, and AED.</p></details>
+    <details><summary>What should our coordinator provide?</summary><p>Share the exact requirement wording, employee roles, headcount, training address, workday constraints, and preferred dates. That is enough to begin.</p></details>
+  </section>
+""".rstrip()
+
+
+def render_group_training_schema(page: dict[str, Any]) -> str:
+    if not page.get("group_mode"):
+        return ""
+    page_url = f"https://www.910cpr.com/{page['slug']}.html"
+    schema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "LocalBusiness",
+                "@id": "https://www.910cpr.com/#organization",
+                "name": "910CPR",
+                "url": "https://www.910cpr.com/",
+                "telephone": "+1-910-395-5193",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "4018 Shipyard Boulevard",
+                    "addressLocality": "Wilmington",
+                    "addressRegion": "NC",
+                    "postalCode": "28403",
+                    "addressCountry": "US",
+                },
+            },
+            {
+                "@type": "Service",
+                "@id": f"{page_url}#service",
+                "name": "On-Site CPR and First Aid Group Training",
+                "serviceType": ["CPR training", "First Aid training", "AED training", "BLS training", "ACLS training", "PALS training"],
+                "provider": {"@id": "https://www.910cpr.com/#organization"},
+                "url": page_url,
+                "areaServed": ["Wilmington NC", "New Hanover County NC", "Leland NC", "Burgaw NC", "Holly Ridge NC", "Jacksonville NC", "Coastal North Carolina"],
+                "audience": [
+                    {"@type": "Audience", "audienceType": "Healthcare and dental teams"},
+                    {"@type": "Audience", "audienceType": "Schools and childcare facilities"},
+                    {"@type": "Audience", "audienceType": "Workplaces and community organizations"},
+                ],
+            },
+            {
+                "@type": "FAQPage",
+                "@id": f"{page_url}#faq",
+                "mainEntity": [
+                    {"@type": "Question", "name": "Can training happen at our facility?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, after 910CPR confirms the address, room, group size, equipment plan, travel, and instructor schedule."}},
+                    {"@type": "Question", "name": "Does every employee need the same course?", "acceptedAnswer": {"@type": "Answer", "text": "No. Match each employee to the role and written requirement. Clinical staff may need BLS while nonclinical responders may need First Aid, CPR, and AED."}},
+                    {"@type": "Question", "name": "What should our coordinator provide?", "acceptedAnswer": {"@type": "Answer", "text": "Share the exact requirement wording, employee roles, headcount, training address, workday constraints, and preferred dates."}},
+                ],
+            },
+        ],
+    }
+    return f'<script type="application/ld+json">\n{json.dumps(schema, indent=2)}\n</script>'
+
+
 def heartsaver_delivery_label(tab: dict[str, Any]) -> str:
     badge = normalize_space(tab.get("tab_badge"))
     if "online" in badge.lower() or "skills" in badge.lower() or "blended" in badge.lower():
@@ -3649,6 +3726,7 @@ def render_page(
   {render_guidance_banners(page, banner_library)}
   {render_heartsaver_course_jumps(page)}
   {tabs_html}
+  {render_group_training_authority(page)}
   {render_google_trust_block()}
   {render_group_training_push(page, first_tab, group_mode=group_mode)}
   {render_other_training_options(page)}
@@ -3668,6 +3746,7 @@ def render_page(
 <link rel="shortcut icon" href="images/logo.png">
 <link rel="apple-touch-icon" href="images/logo.png">
 <link rel="stylesheet" href="/css/lander.css">
+{render_group_training_schema(page)}
 </head>
 <body>
 <div class="wrap">
