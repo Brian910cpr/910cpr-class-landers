@@ -1740,8 +1740,15 @@ def render_homepage() -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Find the Right CPR Class | 910CPR</title>
-<meta name="description" content="Find the right CPR, First Aid, BLS, ACLS, PALS, Red Cross, HSI, or USCG training class for your job, school, employer, licensing board, or agency.">
+<title>CPR, BLS, ACLS &amp; First Aid Classes in Wilmington, NC | 910CPR</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="910CPR">
+<meta property="og:title" content="CPR, BLS, ACLS &amp; First Aid Classes in Wilmington, NC | 910CPR">
+<meta property="og:description" content="Find AHA, Red Cross, or HSI CPR, First Aid, BLS, ACLS, and PALS classes in Wilmington and Coastal North Carolina.">
+<meta property="og:url" content="{SITE_BASE}/">
+<meta property="og:image" content="{SITE_BASE}/images/logo.png">
+<meta property="og:image:alt" content="910CPR logo">
+<meta name="description" content="CPR, First Aid, BLS, ACLS, PALS, Red Cross, HSI, and USCG training classes in Wilmington, NC for work, school, licensing, and healthcare requirements.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="{SITE_BASE}/">
 <link rel="icon" type="image/png" href="/images/logo.png">
@@ -1752,12 +1759,34 @@ def render_homepage() -> str:
 <script type="application/ld+json">
 {json.dumps({
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "@id": f"{SITE_BASE}/#organization",
-  "name": "910CPR",
-  "url": f"{SITE_BASE}/",
-  "description": "910CPR provides American Heart Association, American Red Cross, and HSI training options for CPR, BLS, ACLS, PALS, and First Aid throughout Coastal North Carolina.",
-  "areaServed": ["Wilmington NC", "Holly Ridge NC", "Jacksonville NC", "Burgaw NC", "Leland NC", "Coastal North Carolina"],
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": f"{SITE_BASE}/#organization",
+      "name": "910CPR",
+      "url": f"{SITE_BASE}/",
+      "logo": f"{SITE_BASE}/images/logo.png",
+      "image": f"{SITE_BASE}/images/logo.png",
+      "telephone": "+1-910-395-5193",
+      "description": "910CPR provides American Heart Association, American Red Cross, and HSI training options for CPR, BLS, ACLS, PALS, and First Aid throughout Coastal North Carolina.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "4018 Shipyard Boulevard",
+        "addressLocality": "Wilmington",
+        "addressRegion": "NC",
+        "postalCode": "28403",
+        "addressCountry": "US",
+      },
+      "areaServed": ["Wilmington NC", "Holly Ridge NC", "Jacksonville NC", "Burgaw NC", "Leland NC", "Coastal North Carolina"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": f"{SITE_BASE}/#website",
+      "url": f"{SITE_BASE}/",
+      "name": "910CPR",
+      "publisher": {"@id": f"{SITE_BASE}/#organization"},
+    },
+  ],
 }, indent=2)}
 </script>
 </head>
@@ -1821,6 +1850,64 @@ def render_homepage() -> str:
         </div>
       </section>
 {render_google_trust_block()}
+      <section class="section-box home-faq" aria-labelledby="home-faq-title">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Common questions</div>
+            <h2 id="home-faq-title">Which CPR or certification class should I take?</h2>
+          </div>
+          <p class="section-copy">Start with the exact credential name given by your employer, school, licensing board, or agency. Then choose that matching course path above.</p>
+        </div>
+        <details>
+          <summary>Does my employer require AHA, or will another CPR provider work?</summary>
+          <p>Requirements vary. Use the provider and course name stated by your employer or licensing body. If the requirement only says CPR, First Aid, or BLS, ask which certifying organization is accepted before registering.</p>
+        </details>
+        <details>
+          <summary>Where are 910CPR classes held?</summary>
+          <p>910CPR is based at 4018 Shipyard Boulevard in Wilmington. Current public classes show their exact location before registration. On-site group training is also available throughout Coastal North Carolina.</p>
+        </details>
+        <details>
+          <summary>Can 910CPR train our workplace or organization on-site?</summary>
+          <p>Yes. We provide on-site CPR, First Aid, AED, and healthcare certification training for workplaces, schools, childcare facilities, healthcare teams, maritime crews, and community organizations.</p>
+        </details>
+        <details>
+          <summary>How do I find available class dates?</summary>
+          <p>Choose your credential in the class finder above. The matching course page shows current classroom, renewal, or online-plus-skills options and available dates.</p>
+        </details>
+      </section>
+      <script type="application/ld+json">
+{json.dumps({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Which CPR or certification class should I take?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Start with the exact credential name given by your employer, school, licensing board, or agency. Then choose that matching course path."},
+    },
+    {
+      "@type": "Question",
+      "name": "Does my employer require AHA, or will another CPR provider work?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Requirements vary. Use the provider and course name stated by your employer or licensing body. If the requirement only says CPR, First Aid, or BLS, ask which certifying organization is accepted before registering."},
+    },
+    {
+      "@type": "Question",
+      "name": "Where are 910CPR classes held?",
+      "acceptedAnswer": {"@type": "Answer", "text": "910CPR is based at 4018 Shipyard Boulevard in Wilmington. Current public classes show their exact location before registration. On-site group training is also available throughout Coastal North Carolina."},
+    },
+    {
+      "@type": "Question",
+      "name": "Can 910CPR train our workplace or organization on-site?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Yes. 910CPR provides on-site CPR, First Aid, AED, and healthcare certification training for workplaces, schools, childcare facilities, healthcare teams, maritime crews, and community organizations."},
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find available class dates?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Choose your credential in the homepage class finder. The matching course page shows current classroom, renewal, or online-plus-skills options and available dates."},
+    },
+  ],
+}, indent=2)}
+      </script>
       <footer class="home-locality" aria-labelledby="home-locality-title">
         <div>
           <div class="eyebrow">Local training, clearly routed</div>

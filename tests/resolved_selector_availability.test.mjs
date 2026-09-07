@@ -56,3 +56,28 @@ test("past-time suppression is shared and timezone-independent after business-no
     ["2026-07-23|10:00"],
   );
 });
+
+test("12-hour feed times are converted before the real-time cutoff", () => {
+  assert.equal(shared.startMinutes("8:45 AM"), 8 * 60 + 45);
+  assert.equal(shared.startMinutes("12:15 PM"), 12 * 60 + 15);
+  assert.equal(shared.startMinutes("12:15 AM"), 15);
+  assert.equal(
+    shared.isPastStart(
+      { date: "2026-09-07" },
+      { startTime: "8:45 AM" },
+      { dateKey: "2026-09-07", minutes: 9 * 60 + 55 },
+    ),
+    true,
+  );
+});
+
+test("unparseable feed times fail closed instead of remaining bookable", () => {
+  assert.equal(
+    shared.isPastStart(
+      { date: "2026-09-07" },
+      { startTime: "TBD" },
+      { dateKey: "2026-09-07", minutes: 0 },
+    ),
+    true,
+  );
+});
