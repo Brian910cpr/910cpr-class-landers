@@ -44,5 +44,7 @@
   $('unlock').addEventListener('click',()=>{const key=$('adminKey').value.trim();if(key){sessionStorage.setItem('hotSyncAdminKey',key);$('adminKey').value='';load();}});
   $('adminKey').addEventListener('keydown',event=>{if(event.key==='Enter')$('unlock').click()});
   $('lock').addEventListener('click',()=>{sessionStorage.removeItem('hotSyncAdminKey');$('authGate').classList.remove('hidden');$('summary').innerHTML='';$('sessions').innerHTML='';$('status').className='status error';$('status').textContent='Admin Port is locked.'});
+  const requestedDate = new URLSearchParams(location.search).get('date');
+  if (/^\d{4}-\d{2}-\d{2}$/.test(requestedDate || '')) $('datePick').value = requestedDate;
   $('reload').addEventListener('click',load); $('datePick').addEventListener('change',load); load();
 })();
