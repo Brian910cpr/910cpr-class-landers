@@ -15,8 +15,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: refresh-public-site
-  cancel-in-progress: true
+  group: schedule-publish-main
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -103,11 +103,6 @@ jobs:
           LANDER_SKIP_REPOSITORY_TESTS: "1"
         run: build\full_validated_public_build.bat
 
-      - name: Refresh admin occupancy snapshot
-        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
-        shell: pwsh
-        run: python -m scripts.publish_admin_schedule
-
       - name: Run link audit
         if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
@@ -151,4 +146,6 @@ jobs:
           $staged | ForEach-Object { Write-Host " - $_" }
 
           git commit -m "Refresh public schedule from Enrollware iCal"
-          git push origin main
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
