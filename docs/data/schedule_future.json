@@ -1,12 +1,12 @@
 {
   "build": {
-    "generated_at": "2026-09-08T04:17:57.363669-04:00",
+    "generated_at": "2026-09-08T09:01:42.345486-04:00",
     "source_file": "data\\sessions_current.json",
     "counts": {
-      "sessions_input": 286,
+      "sessions_input": 279,
       "sessions_output": 23,
       "skipped_missing_start": 0,
-      "skipped_past": 259,
+      "skipped_past": 252,
       "skipped_orphan": 0,
       "skipped_non_public_location": 4,
       "skipped_tbd_location": 0,
@@ -36,8 +36,8 @@
       "course_code": "AHA_HS_FA_CPR_IP",
       "certifying_body": "AHA",
       "delivery_mode": "IP",
-      "start_at": "2026-09-08T09:00:00-04:00",
-      "end_at": "2026-09-08T11:30:00-04:00",
+      "start_at": "2026-09-09T09:00:00-04:00",
+      "end_at": "2026-09-09T11:30:00-04:00",
       "timezone": "America/New_York",
       "location_name": ":: Wilmington; Shipyard Blvd - B",
       "location_display": ":: Wilmington; Shipyard Blvd - B",
