@@ -103,6 +103,15 @@ jobs:
           LANDER_SKIP_REPOSITORY_TESTS: "1"
         run: build\full_validated_public_build.bat
 
+      - name: Reconcile admin occupancy from current canonical sources
+        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        shell: pwsh
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: |
+          python -m scripts.fetch_hot_sync_snapshot
+          python -m scripts.publish_admin_schedule
+
       - name: Run link audit
         if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh

@@ -70,6 +70,41 @@ class CanonicalScheduleHotSyncTests(unittest.TestCase):
         self.assertEqual(1, result["counts"]["sessions"])
         self.assertEqual(0, result["counts"]["hot_sync_sessions_added"])
 
+    def test_stale_enrollware_rows_retire_while_durable_manual_survives_and_copy_deduplicates(self) -> None:
+        hot_sync = {
+            "available": True,
+            "records": [
+                {
+                    "id": "manual-copy-hs-mt3kl1t5-1eky7a3",
+                    "source_session_id": "hs-mt3kl1t5-1eky7a3",
+                    "source": "hot_sync_manual",
+                    "status": "active",
+                    "course_name": "Class",
+                    "start": "2026-09-08T13:30:00Z",
+                    "end": "2026-09-08T16:30:00Z",
+                    "location_name": "Polar Ice Wilmington",
+                    "instructor": "Brian",
+                },
+                {
+                    "id": "hs-mt3kl1t5-1eky7a3",
+                    "source": "hot_sync_manual",
+                    "status": "active",
+                    "course_name": "AHA Heartsaver First Aid CPR AED",
+                    "start": "2026-09-08T13:30:00Z",
+                    "end": "2026-09-08T16:30:00Z",
+                    "location_name": "Polar Ice Wilmington",
+                    "instructor": "Brian",
+                },
+            ],
+        }
+        result = build_admin_schedule(self.enrollware, now=self.now, hot_sync_snapshot=hot_sync)
+        ids = {row["session_id"] for row in result["sessions"]}
+
+        self.assertNotIn("13963996", ids)
+        self.assertNotIn("13964005", ids)
+        self.assertIn("hs-mt3kl1t5-1eky7a3", ids)
+        self.assertNotIn("manual-copy-hs-mt3kl1t5-1eky7a3", ids)
+
     def test_scheduled_durable_sessions_reserve_september_19(self) -> None:
         hot_sync = {
             "available": True,

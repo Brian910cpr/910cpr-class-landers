@@ -33,6 +33,46 @@ def session_rows(payload: Any) -> list[dict[str, Any]]:
     return []
 
 
+def is_durable_admin_session(row: dict[str, Any]) -> bool:
+    source = str(row.get("source") or "").strip().lower()
+    return bool(row.get("hot_sync")) and source.startswith("hot_sync")
+
+
+def validate_admin_reconciliation(current_payload: Any, admin_payload: Any) -> set[str]:
+    hot_sync_source = (admin_payload.get("sources") or {}).get("hot_sync", {}) if isinstance(admin_payload, dict) else {}
+    require(hot_sync_source.get("available") is True, "admin schedule was not reconciled with authoritative HOT_SYNC")
+    current_ids = {
+        str(row.get("session_id") or row.get("sessionId") or row.get("id") or "")
+        for row in session_rows(current_payload)
+        if row.get("session_id") or row.get("sessionId") or row.get("id")
+    }
+    admin_rows = session_rows(admin_payload)
+    invalid_stale_ids = {
+        str(row.get("session_id") or row.get("sessionId") or row.get("id") or "")
+        for row in admin_rows
+        if (row.get("session_id") or row.get("sessionId") or row.get("id"))
+        and str(row.get("session_id") or row.get("sessionId") or row.get("id")) not in current_ids
+        and not is_durable_admin_session(row)
+    }
+    require(not invalid_stale_ids, f"admin schedule contains stale sessions: {sorted(invalid_stale_ids)[:10]}")
+
+    durable_lineages: list[str] = []
+    for row in admin_rows:
+        if not is_durable_admin_session(row):
+            continue
+        session_id = str(row.get("copied_from_session_id") or row.get("session_id") or "").strip()
+        while session_id.startswith("manual-copy-"):
+            session_id = session_id.removeprefix("manual-copy-")
+        durable_lineages.append(session_id)
+    duplicate_lineages = {lineage for lineage in durable_lineages if durable_lineages.count(lineage) > 1}
+    require(not duplicate_lineages, f"admin schedule contains duplicate durable sessions: {sorted(duplicate_lineages)[:10]}")
+    return {
+        str(row.get("session_id") or row.get("sessionId") or row.get("id"))
+        for row in admin_rows
+        if row.get("session_id") or row.get("sessionId") or row.get("id")
+    }
+
+
 def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, int]:
     path = SELECTOR_DIR / f"{page_key}.json"
     payload = load_json(path)
@@ -82,18 +122,7 @@ def main() -> int:
         if row.get("session_id") or row.get("sessionId") or row.get("id")
     }
 
-    current_ids = {
-        str(row.get("session_id") or row.get("sessionId") or row.get("id") or "")
-        for row in session_rows(load_json(CURRENT_SESSIONS_PATH))
-        if row.get("session_id") or row.get("sessionId") or row.get("id")
-    }
-    admin_ids = {
-        str(row.get("session_id") or row.get("sessionId") or row.get("id") or "")
-        for row in session_rows(load_json(ADMIN_SCHEDULE_PATH))
-        if row.get("session_id") or row.get("sessionId") or row.get("id")
-    }
-    stale_admin_ids = admin_ids - current_ids
-    require(not stale_admin_ids, f"admin schedule contains stale sessions: {sorted(stale_admin_ids)[:10]}")
+    admin_ids = validate_admin_reconciliation(load_json(CURRENT_SESSIONS_PATH), load_json(ADMIN_SCHEDULE_PATH))
 
     results = {page_key: validate_selector(page_key, public_session_ids) for page_key in REQUIRED_SELECTORS}
     print(f"Validated public sessions: {len(public_session_ids)}")

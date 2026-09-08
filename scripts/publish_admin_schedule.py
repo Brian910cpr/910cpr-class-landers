@@ -111,6 +111,8 @@ def normalize_hot_sync(record: dict[str, Any]) -> dict[str, Any] | None:
         "hot_sync": True,
         "client_name": value(record, ("client_name",)),
         "visibility": value(record, ("visibility",)),
+        "external_session_id": value(record, ("enrollware_class_id",), ("external_class_id",), ("external_session_id",)),
+        "copied_from_session_id": value(record, ("copied_from_session_id",), ("copied_from_id",), ("source_session_id",)),
     }
 
 
@@ -130,19 +132,38 @@ def event_identity(row: dict[str, Any]) -> tuple[str, str, str]:
     return start, course, location
 
 
+def manual_lineage_id(row: dict[str, Any]) -> str:
+    """Return the stable HOT_SYNC identity shared by a record and its UI copy."""
+    explicit = str(row.get("copied_from_session_id") or "").strip()
+    session_id = explicit or str(row.get("session_id") or "").strip()
+    while session_id.startswith("manual-copy-"):
+        session_id = session_id.removeprefix("manual-copy-")
+    return session_id
+
+
 def merge_hot_sync(enrollware_rows: list[dict[str, Any]], hot_sync_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
     enrollware_ids = {str(row.get("session_id")) for row in enrollware_rows if row.get("session_id") is not None}
     identities = {event_identity(row) for row in enrollware_rows}
     merged = list(enrollware_rows)
     added = 0
+    seen_manual_lineages: set[str] = set()
+    hot_sync_rows = sorted(
+        hot_sync_rows,
+        key=lambda row: str(row.get("session_id") or "").startswith("manual-copy-"),
+    )
     for row in hot_sync_rows:
-        external_id = str(row.get("enrollware_class_id") or row.get("external_class_id") or "").strip()
+        lineage_id = manual_lineage_id(row)
+        if lineage_id and lineage_id in seen_manual_lineages:
+            continue
+        external_id = str(row.get("external_session_id") or "").strip()
         if external_id and external_id in enrollware_ids:
             continue
         identity = event_identity(row)
         if identity in identities:
             continue
         merged.append(row)
+        if lineage_id:
+            seen_manual_lineages.add(lineage_id)
         identities.add(identity)
         added += 1
     return merged, added
@@ -191,14 +212,17 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
 def main() -> int:
     hot_sync_snapshot = read_json(HOT_SYNC_SNAPSHOT) if HOT_SYNC_SNAPSHOT.exists() else None
     payload = build_admin_schedule(read_json(SESSIONS_CURRENT), hot_sync_snapshot=hot_sync_snapshot)
+    if not payload["sources"]["hot_sync"]["available"]:
+        raise RuntimeError(
+            "Refusing to publish an incomplete admin schedule without the authoritative "
+            f"HOT_SYNC snapshot: {payload['sources']['hot_sync']['error'] or 'unknown error'}"
+        )
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Published {payload['counts']['sessions']} admin schedule sessions to {OUTPUT}")
     print(f"Enrollware sessions: {payload['counts']['enrollware_sessions']}")
     print(f"HOT_SYNC sessions added: {payload['counts']['hot_sync_sessions_added']}")
     print(f"Brian resource blocks: {payload['counts']['brian_resource_blocks']}")
-    if not payload["sources"]["hot_sync"]["available"]:
-        print(f"WARNING: HOT_SYNC was not available to this build: {payload['sources']['hot_sync']['error'] or 'unknown error'}")
     return 0
 
 
