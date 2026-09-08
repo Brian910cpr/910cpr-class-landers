@@ -34,8 +34,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: refresh-admin-availability
-  cancel-in-progress: true
+  group: schedule-publish-main
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -43,6 +43,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -167,4 +169,10 @@ jobs:
             exit 0
           fi
           git commit -m "Refresh canonical LanderWare schedule and calendar feed"
-          git push
+          git fetch origin main
+          if ! git rebase origin/main; then
+            git rebase --abort || true
+            echo "Remote main changed in a conflicting way. Refusing to overwrite newer schedule data."
+            exit 1
+          fi
+          git push origin HEAD:main
