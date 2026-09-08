@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.anchor_state import ANCHOR_SYMBOL, in_repeat_bubble, promote_seated_sessions, repeat_scope_key, same_course_anchor
+from scripts.canonical_scheduling_demand import resolve_canonical_demand
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
@@ -14,6 +15,8 @@ ADMIN_SCHEDULE_PATH = ROOT / "docs" / "data" / "admin_schedule.json"
 SELECTOR_DIR = ROOT / "docs" / "data" / "block-selector-availability"
 ANCHOR_FEED_PATH = ROOT / "docs" / "data" / "anchor_state.json"
 POLICY_PATH = ROOT / "data" / "config" / "anchor_schedule_policy.json"
+CANONICAL_DEMAND_PATH = ROOT / "data" / "runtime" / "canonical_scheduling_demand.json"
+DEMAND_MATCH_AUDIT_PATH = ROOT / "data" / "audit" / "canonical_scheduling_demand_matches.json"
 
 
 def load(path: Path) -> Any:
@@ -23,6 +26,17 @@ def load(path: Path) -> Any:
 def write(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+
+
+def apply_demand_projection(sessions: list[dict[str, Any]], payload: Any) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    rows = payload.get("sessions", []) if isinstance(payload, dict) else []
+    return resolve_canonical_demand(sessions, rows if isinstance(rows, list) else [])
+
+
+def sessions_with_canonical_demand(sessions: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    if not CANONICAL_DEMAND_PATH.exists():
+        return sessions, []
+    return apply_demand_projection(sessions, load(CANONICAL_DEMAND_PATH))
 
 
 def text(value: Any) -> str:
@@ -430,13 +444,19 @@ def apply_selector_policy(payload: dict[str, Any], anchors: list[dict[str, Any]]
 def resolve_selector_payload(payload: dict[str, Any]) -> dict[str, Any]:
     """Apply the authoritative anchor policy to a freshly built selector payload."""
     schedule = load(SCHEDULE_PATH)
-    anchors = promote_seated_sessions(schedule.get("sessions", []) if isinstance(schedule, dict) else [])
+    sessions = schedule.get("sessions", []) if isinstance(schedule, dict) else []
+    sessions, _audit = sessions_with_canonical_demand(sessions)
+    anchors = promote_seated_sessions(sessions)
     return apply_selector_policy(deepcopy(payload), anchors, load(POLICY_PATH))
 
 
 def run() -> dict[str, int]:
     schedule = load(SCHEDULE_PATH)
     sessions = schedule.get("sessions", []) if isinstance(schedule, dict) else []
+    demand_audit: list[dict[str, Any]] = []
+    if CANONICAL_DEMAND_PATH.exists():
+        sessions, demand_audit = sessions_with_canonical_demand(sessions)
+        schedule["sessions"] = sessions
     anchors = promote_seated_sessions(sessions)
     stats = {
         "anchors_promoted": len(anchors),
@@ -446,6 +466,8 @@ def run() -> dict[str, int]:
         "anchor_offers_annotated": 0,
         "scattered_offers_consolidated": 0,
         "duplicate_anchor_offers_removed": 0,
+        "canonical_demand_rows_matched": sum(row.get("result") == "matched" for row in demand_audit),
+        "canonical_demand_rows_failed_closed": sum(row.get("result") != "matched" for row in demand_audit),
     }
     write(SCHEDULE_PATH, schedule)
 
@@ -471,6 +493,12 @@ def run() -> dict[str, int]:
         "anchors": anchors,
         "counts": stats,
     })
+    if demand_audit:
+        write(DEMAND_MATCH_AUDIT_PATH, {
+            "schema_version": "910cpr-canonical-demand-match-audit.v1",
+            "generated_at": datetime.now().astimezone().isoformat(),
+            "matches": demand_audit,
+        })
     return stats
 
 
