@@ -108,6 +108,13 @@ class EnrollwareRegistrationEventImportTests(unittest.TestCase):
         self.assertEqual(first_event["corporate_account_preview"]["possible_account_key"], "email_domain:example.test")
         self.assertEqual(first_event["raw"]["Unmapped Zapier Field"], "synthetic-extra-value")
         self.assertEqual(first_event["raw_unmapped_fields"]["Unmapped Zapier Field"], "synthetic-extra-value")
+        reconciliation = first_event["landerware_reconciliation"]
+        self.assertEqual(reconciliation["rpc"], "landerware_reconcile_external_registration")
+        self.assertEqual(reconciliation["action"], "reconcile_pending_intent_not_insert_duplicate")
+        self.assertEqual(reconciliation["payload"]["p_external_registration_id"], "90000001")
+        self.assertEqual(reconciliation["payload"]["p_external_session_id"], "99000001")
+        self.assertEqual(reconciliation["payload"]["p_email"], "student@example.test")
+        self.assertEqual(reconciliation["payload"]["p_phone"], "555-0100")
         self.assertIn("Example Company", summary["corporate_account_preview"]["employer_clues"])
 
     def test_duplicate_reg_id_is_not_double_counted(self):

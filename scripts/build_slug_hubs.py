@@ -1803,7 +1803,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
         )
 
     action_label = "See Public Class" if group_mode else "Book This Class"
-    action_url = escape(f"/classes/{str(session.get('session_id') or '').strip()}.html#ForwardToEnrollware", quote=True) if str(session.get("session_id") or "").strip() else register_url
+    action_url = escape(f"/register/?session={str(session.get('session_id') or '').strip()}", quote=True) if str(session.get("session_id") or "").strip() else register_url
     action_hint = ""
     badge_html = ""
     if format_badge:
@@ -1854,7 +1854,7 @@ def session_action(session: dict[str, Any], *, page_slug: str) -> tuple[str, str
     register_url = escape(session.get("registration_url") or "#", quote=True)
     action_label = "Book This Class"
     session_id = str(session.get("session_id") or "").strip()
-    action_url = escape(f"/classes/{session_id}.html#ForwardToEnrollware", quote=True) if session_id else register_url
+    action_url = escape(f"/register/?session={session_id}", quote=True) if session_id else register_url
     return action_label, action_url, register_url
 
 
