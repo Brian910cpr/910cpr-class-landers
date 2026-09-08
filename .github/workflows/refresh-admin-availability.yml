@@ -169,6 +169,14 @@ jobs:
             exit 0
           fi
           git commit -m "Refresh canonical LanderWare schedule and calendar feed"
+
+          # Generators also touch tracked diagnostics that are intentionally not
+          # part of this publication commit. Rebase requires a clean worktree,
+          # so discard only those uncommitted runner-local outputs after the
+          # desired files have been committed.
+          git status --short
+          git restore --worktree .
+
           git fetch origin main
           if ! git rebase origin/main; then
             git rebase --abort || true
