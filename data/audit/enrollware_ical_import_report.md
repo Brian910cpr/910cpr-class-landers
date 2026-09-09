@@ -1,12 +1,12 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-09-08T19:40:03.950497-04:00`
+- Generated at: `2026-09-09T19:32:46.332375-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `275`
-- Public sessions created: `275`
+- iCal events read: `277`
+- Public sessions created: `277`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `250`
-- Unmapped sessions: `11`
+- Registration unavailable sessions marked not direct-bookable: `248`
+- Unmapped sessions: `12`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
 - Stale manual/Class Report sessions excluded: `0`
@@ -23,10 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776697` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-11T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
-| `12783389` | enrollware_registration_closed | AHA Heartsaver® Pediatric First Aid CPR AED Online | 2026-06-11T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
-| `12776422` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-06-11T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
-| `12776776` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-06-11T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776149` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-06-12T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13610326` | enrollware_registration_closed | HSI BLS and Adult First Aid | Blended Learning | 2026-06-12T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776337` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-06-12T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +69,10 @@ They remain separate registration-signal/audit inputs only.
 | `13757487` | enrollware_registration_closed | AHA - Heartsaver® CPR AED - In-person ?? | 2026-06-28T13:00:00-04:00 | Surf City Fire Station #25 |
 | `12774032` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-06-29T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13652937` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-06-29T09:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12774326` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-06-29T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12776274` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-06-30T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12775992` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-06-30T09:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `12776420` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-06-30T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
@@ -80,10 +80,11 @@ They remain separate registration-signal/audit inputs only.
 - `13669835`: BLS Provider (NHCSO) (2026-06-24T13:00:00-04:00)
 - `10009277`: AHA - PALS Instructor Renewal (2026-07-01T00:00:00-04:00)
 - `12775788`: AHA - Family & Friends® CPR (2026-07-20T18:00:00-04:00)
+- `13859298`: AHA - Family & Friends® CPR (2026-08-04T19:00:00-04:00)
 - `11341058`: AHA - BLS Instructor Renewal (2026-12-01T00:00:00-05:00)
 - `13415738`: HSI Adult/Child/Infant CPR AED | Blended Learning Blended Learning with In-Person, Instructor-Led Skills Session (2026-09-01T05:30:00-04:00)
-- `13859298`: AHA - Family & Friends® CPR (2026-08-04T19:00:00-04:00)
 - `13880764`: ARC Adult CPR AED - Blended (2026-08-10T09:30:00-04:00)
 - `13901730`: BLS Provider (NHCSO) (2026-08-12T13:00:00-04:00)
 - `13929405`: AHA Heartsaver K-12 - In-person ?? Instructor-led CPR AED and First Aid training for schools and students (2026-08-14T08:00:00-04:00)
 - `13956873`: BLS Provider (NHCSO) (2026-08-19T13:00:00-04:00)
+- `14058407`: ARC Adult CPR AED - Blended (2026-09-12T09:00:00-04:00)
