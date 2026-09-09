@@ -5,6 +5,8 @@ on:
   schedule:
     - cron: "*/30 * * * *"
   push:
+    branches:
+      - main
     paths:
       - '.github/workflows/refresh-admin-availability.yml'
       - 'scripts/build_sessions_current.py'
@@ -39,6 +41,7 @@ concurrency:
 
 jobs:
   refresh:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
