@@ -1,0 +1,109 @@
+# Codex–ChatGPT Durable Handoff Protocol
+
+## Purpose and authority
+
+This repository-root protocol is the durable outbound mailbox convention between Codex and ChatGPT. It survives separate conversations and Codex sessions because messages are committed to the repository and pushed to GitHub.
+
+This protocol complements the inbound `[CODEX]` GitHub Issue workflow documented in `docs/CODEX_INSTRUCTIONS.md`. It does not replace application-specific material in `ops/handoff/`; those files may remain useful for task state, but they are not the durable unread/read mailbox.
+
+Unless an assigning prompt explicitly opts out, **every Codex assignment must produce and commit a repository reply file**, including research-only, diagnostic, blocked, and no-code assignments.
+
+## Mailbox filenames
+
+Codex writes unread replies at the repository root using:
+
+```text
+Codex_Reply_<ID>.md
+```
+
+Examples:
+
+- `Codex_Reply_PR155.md`
+- `Codex_Reply_Issue160.md`
+- `Codex_Reply_LocalStateTest.md`
+- `Codex_Reply_PR155_R2.md`
+
+Use the assignment or incident identifier when one exists. Otherwise choose a short, stable, filesystem-safe identifier that clearly distinguishes the assignment.
+
+ChatGPT/the supervising process acknowledges a processed reply by renaming it without changing the identifier:
+
+```text
+Codex_Reply_<ID>.md -> Codex_Read_<ID>.md
+```
+
+Only ChatGPT/the supervising process may create the `Codex_Read_*` state. **Codex must never create, rename, overwrite, or otherwise manufacture a `Codex_Read_*` file.**
+
+## Required reply contents
+
+Each `Codex_Reply_*` file must include the following when applicable:
+
+- Assignment or incident identifier
+- Timestamp, including timezone or UTC offset
+- Branch
+- Commit SHA
+- Root cause or findings
+- Work performed
+- Exact files changed
+- Tests and checks performed
+- Test results
+- Known unrelated failures
+- Deployment status, explicitly distinguishing local validation, push, merge, and deployment
+- Remaining risks or unresolved questions
+- Exact recommended next action for ChatGPT
+- Whether user-level or account-level action is required
+
+Facts, inferences, limitations, and blockers should be clearly distinguished. Research-only tasks still require a reply. If an assignment produces no application-code changes, Codex may commit only the reply and operational documentation needed for the handoff.
+
+## Codex send procedure
+
+1. Choose an unused reply identifier and check the repository root for both `Codex_Reply_<ID>.md` and `Codex_Read_<ID>.md`.
+2. Complete and validate the assignment to the extent possible.
+3. Write the reply with the required contents. Never overwrite a prior reply or processed handoff.
+4. Commit the reply with the assignment changes, or in a separate communication-only commit when that makes the record clearer.
+5. Push the branch. A local-only file is not a durable cross-session handoff.
+6. In the Codex UI response, identify the reply filename, branch, and commit SHA unless the assignment specifies a narrower response.
+
+When a reply needs to name a commit and including the reply in that same commit would create a self-referential SHA problem, use two commits: commit the substantive work first, then commit the reply referencing that substantive commit. The pushed branch tip remains discoverable from GitHub.
+
+## Round trips and immutable history
+
+After ChatGPT processes a reply, it may rename it from `Codex_Reply_<ID>.md` to `Codex_Read_<ID>.md` and commit/push that acknowledgement.
+
+If additional work is required, Codex creates a new round instead of overwriting history:
+
+```text
+Codex_Reply_PR155.md -> Codex_Read_PR155.md
+Codex_Reply_PR155_R2.md -> Codex_Read_PR155_R2.md
+```
+
+Continue with `_R3`, `_R4`, and so on. Never reuse or overwrite a prior unread or processed filename.
+
+## ChatGPT supervisor sweep
+
+Whenever ChatGPT is awakened for **any Codex-related task**, it should first sweep the repository root for all `Codex_Reply_*` files, not only the reply associated with the event that caused the wake-up. This global sweep allows one completed Codex task to accelerate discovery of replies from other concurrent tasks.
+
+ChatGPT may rename a reply to `Codex_Read_*` only after it has:
+
+1. Read the reply.
+2. Inspected the referenced work as appropriate.
+3. Determined the next action.
+
+ChatGPT/the supervising process should then commit and push the acknowledgement rename. If more work is required, it should dispatch the next round using a new round identifier.
+
+## Supervisory timing model
+
+This section documents intended ChatGPT behavior; it does not authorize repository code or workflow automation for timers.
+
+- Each Codex dispatch should normally cause ChatGPT to schedule a fast pickup check approximately 20 minutes later.
+- Every pickup checks all unread `Codex_Reply_*` files.
+- Independent pending pickup timers remain useful even if their originating reply was already processed, because each timer provides another global mailbox sweep.
+- A persistent hourly ChatGPT watcher acts as the recovery/fallback sweep.
+- A missing reply remains outstanding. It is not a failure merely because the first fast check occurred before Codex finished.
+
+## Safety and scope
+
+- Mailbox files live at the repository root and are ordinary version-controlled Markdown.
+- Do not store secrets, credentials, private participant data, or sensitive account information in replies.
+- Do not use this protocol as authority to merge, deploy, modify application behavior, or broaden an assignment.
+- Preserve existing reply/read history.
+- Resolve filename collisions by selecting the next round identifier, never by overwriting.

@@ -320,3 +320,7 @@ GitHub Issues with titles beginning `[CODEX]` are the durable inbound instructio
 - When an instruction arrives in ChatGPT and GitHub access is available, create or update the corresponding `[CODEX]` issue so the request survives the chat session.
 
 See `docs/CODEX_INSTRUCTIONS.md` for the owner-facing workflow.
+
+## Mandatory Codex Reply Mailbox
+
+Every Codex assignment must leave a repository reply file unless the assigning prompt explicitly opts out. Before finishing any assignment, follow `CODEX_HANDOFF_PROTOCOL.md` at the repository root. Codex creates only `Codex_Reply_<ID>.md` files; it must never create or rename a file to `Codex_Read_*`, because that acknowledgement is reserved for ChatGPT/the supervising process.
