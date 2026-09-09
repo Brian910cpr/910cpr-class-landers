@@ -155,6 +155,20 @@ jobs:
           $staged | ForEach-Object { Write-Host " - $_" }
 
           git commit -m "Refresh public schedule from Enrollware iCal"
+          if ($LASTEXITCODE -ne 0) { throw "git commit failed with exit code $LASTEXITCODE" }
+
+          # Build/validation intentionally changes non-publish audit/runtime files. The
+          # runner is ephemeral, so discard those artifacts before rebasing the
+          # approved docs/hash commit. This keeps the rebase deterministic without
+          # widening the set of files allowed to reach main.
+          git reset --hard HEAD
+          if ($LASTEXITCODE -ne 0) { throw "git reset failed with exit code $LASTEXITCODE" }
+          git clean -fd
+          if ($LASTEXITCODE -ne 0) { throw "git clean failed with exit code $LASTEXITCODE" }
+
           git fetch origin main
+          if ($LASTEXITCODE -ne 0) { throw "git fetch failed with exit code $LASTEXITCODE" }
           git rebase origin/main
+          if ($LASTEXITCODE -ne 0) { throw "git rebase failed with exit code $LASTEXITCODE" }
           git push origin HEAD:main
+          if ($LASTEXITCODE -ne 0) { throw "git push failed with exit code $LASTEXITCODE" }
