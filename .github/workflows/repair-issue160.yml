@@ -64,7 +64,7 @@ jobs:
           path.write_text(text, encoding='utf-8')
           PY
 
-      - name: Add source-integrity regression guard
+      - name: Add source-integrity regression guard script
         shell: bash
         run: |
           cat > scripts/check_source_integrity.py <<'PY'
@@ -72,6 +72,7 @@ jobs:
 
           ROOT = Path(__file__).resolve().parents[1]
           THIS = Path(__file__).resolve()
+          TEMP_REPAIR_WORKFLOW = (ROOT / '.github' / 'workflows' / 'repair-issue160.yml').resolve()
           SCAN_ROOTS = [ROOT / '.github', ROOT / 'scripts', ROOT / 'supabase', ROOT / 'tests']
           EXTENSIONS = {'.py', '.js', '.ts', '.tsx', '.json', '.yml', '.yaml', '.md', '.html', '.css', '.sql', '.bat', '.ps1', '.sh'}
           MARKERS = (
@@ -84,7 +85,8 @@ jobs:
               if not scan_root.exists():
                   continue
               for path in scan_root.rglob('*'):
-                  if not path.is_file() or path.resolve() == THIS:
+                  resolved = path.resolve()
+                  if not path.is_file() or resolved in {THIS, TEMP_REPAIR_WORKFLOW}:
                       continue
                   if path.suffix.lower() not in EXTENSIONS:
                       continue
@@ -107,32 +109,6 @@ jobs:
           print('Source integrity OK: no tool-truncation markers detected.')
           PY
 
-          cat > .github/workflows/source-integrity.yml <<'YML'
-          name: Source integrity
-
-          on:
-            push:
-            pull_request:
-
-          permissions:
-            contents: read
-
-          jobs:
-            truncation-guard:
-              runs-on: ubuntu-latest
-              steps:
-                - uses: actions/checkout@v4
-                - uses: actions/setup-python@v5
-                  with:
-                    python-version: '3.12'
-                - name: Reject tool-truncated source files
-                  run: python scripts/check_source_integrity.py
-          YML
-
-      - name: Remove temporary repair workflow before validation
-        shell: bash
-        run: git rm .github/workflows/repair-issue160.yml
-
       - name: Validate repaired backend
         shell: bash
         run: |
@@ -140,13 +116,13 @@ jobs:
           python scripts/check_source_integrity.py
           python -m unittest tests.test_public_registration
           python -m scripts.build_landers --anchors-only
-          git diff --check -- scripts/build_landers.py scripts/check_source_integrity.py .github/workflows/source-integrity.yml
+          git diff --check -- scripts/build_landers.py scripts/check_source_integrity.py
 
-      - name: Commit validated repair
+      - name: Commit validated source repair
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add scripts/build_landers.py scripts/check_source_integrity.py .github/workflows/source-integrity.yml
+          git add scripts/build_landers.py scripts/check_source_integrity.py
           git commit -m 'Repair corrupted build_landers generator (#160)'
           git push origin HEAD:fix/issue-160-build-landers
