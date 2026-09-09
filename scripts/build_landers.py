@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 32405)
-Total output lines: 3030
-
 import json
 import re
 import hashlib
@@ -1401,7 +1398,228 @@ def render_upcoming_sessions_html(upcoming_sessions: list[dict], course_url: str
   <div class="upcoming-location">{escape(location_label)}</div>
   {seats_label}
   <div class="upcoming-actions">
-    <a class="button small primary" href="{escape(register_url)}">B…2405 tokens truncated…pcoming-times" class="section-box past-current-inventory js-live-session-group" data-empty-link="{escape(course_url, quote=True)}" data-empty-link-label="{escape(full_label, quote=True)}" data-full-schedule-link="{escape(full_schedule_url, quote=True)}">
+    <a class="button small primary" href="{escape(register_url)}">Book This Class</a>
+  </div>
+</div>
+"""
+        )
+
+    heading = f"Latest {course_label} class dates" if upcoming_sessions else "Need a different time?"
+    return f"""
+<section id="upcoming-times" class="section-box js-live-session-group" data-empty-link="{escape(course_url)}" data-empty-link-label="{escape(primary_label)}" data-full-schedule-link="{escape(full_schedule_url)}">
+  <div class="upcoming-head">
+    <h2>{escape(heading)}</h2>
+    <p>Compare the newest currently bookable dates. Every listed session has its own class page and registration path.</p>
+  </div>
+  <div class="upcoming-grid">
+    {''.join(cards)}
+  </div>
+  <div class="upcoming-footer-link">
+    <a class="text-link strong-link" href="{escape(course_url)}">{escape(primary_label)}</a>
+    <a class="text-link" href="{escape(full_schedule_url)}">See all 910CPR classes</a>
+  </div>
+</section>
+"""
+
+
+def get_other_current_courses(current_session: dict, sessions: list[dict], now_dt: datetime) -> list[dict]:
+    """Return the next public session for every other currently offered course."""
+    current_course_id = str(current_session.get("course_id") or current_session.get("course_number") or "").strip()
+    current_name = display_course_name(current_session.get("course_name", "")).lower()
+    next_by_course: dict[str, dict] = {}
+
+    for session in sessions:
+        if not is_public_direct_bookable_session(session):
+            continue
+        dt = session.get("_parsed_dt") or parse_dt(session.get("start_at"))
+        if not is_future_session(dt, now_dt):
+            continue
+        course_id = str(session.get("course_id") or session.get("course_number") or "").strip()
+        course_name = display_course_name(session.get("course_name", ""))
+        if (current_course_id and course_id == current_course_id) or course_name.lower() == current_name:
+            continue
+        key = course_id or course_name.lower()
+        copy = dict(session)
+        copy["_parsed_dt"] = dt
+        existing = next_by_course.get(key)
+        if existing is None or dt < existing["_parsed_dt"]:
+            next_by_course[key] = copy
+
+    return sorted(next_by_course.values(), key=lambda item: (item["_parsed_dt"], display_course_name(item.get("course_name", "")).lower()))
+
+
+def render_current_courses_sidebar_html(current_courses: list[dict]) -> str:
+    if not current_courses:
+        return ""
+    links = []
+    for session in current_courses:
+        dt = session["_parsed_dt"]
+        sid = str(session.get("session_id") or "").strip()
+        course_name = display_course_name(session.get("course_name", ""))
+        links.append(
+            f'<li><a href="{escape(session_lander_url(sid), quote=True)}">'
+            f'<strong>{escape(course_name)}</strong>'
+            f'<span>Next: {escape(dt.strftime("%b %d at %I:%M %p").replace(" 0", " "))}</span>'
+            '</a></li>'
+        )
+    return f"""
+<aside class="current-courses-sidebar" aria-labelledby="current-courses-heading">
+  <h2 id="current-courses-heading">Other current courses</h2>
+  <p>Explore the next live session for every other course currently offered by 910CPR.</p>
+  <ul>{''.join(links)}</ul>
+  <a class="text-link strong-link" href="/schedule.html">View the complete class schedule</a>
+</aside>
+"""
+
+
+def session_enrolled_count(session: dict) -> int:
+    try:
+        return max(0, int(session.get("enrolled_count") or session.get("registered_count") or 0))
+    except Exception:
+        return 0
+
+
+def certifying_body_key(session: dict) -> str:
+    logo_key = str(session.get("mapped_logo_key") or "").strip().lower()
+    if logo_key in {"aha", "arc", "hsi"}:
+        return logo_key
+    body = structured_certifying_body(session).upper()
+    haystack = " ".join(
+        str(session.get(key) or "")
+        for key in ("course_name", "mapped_clean_title", "course_subtitle", "course_code")
+    ).upper()
+    text = f"{body} {haystack}"
+    if "AMERICAN RED CROSS" in text or re.search(r"\bARC\b", text):
+        return "arc"
+    if "HEALTH & SAFETY INSTITUTE" in text or "HEALTH AND SAFETY INSTITUTE" in text or re.search(r"\bHSI\b", text):
+        return "hsi"
+    if "AMERICAN HEART ASSOCIATION" in text or re.search(r"\bAHA\b", text):
+        return "aha"
+    return ""
+
+
+def certifying_logo_src(session: dict) -> str:
+    return {
+        "aha": "/images/0aha.png",
+        "arc": "/images/0arc.png",
+        "hsi": "/images/0hsi.png",
+    }.get(certifying_body_key(session), "")
+
+
+def format_slug_month(dt: datetime | None) -> str:
+    return dt.strftime("%b").upper() if dt else "TBD"
+
+
+def format_slug_day(dt: datetime | None) -> str:
+    return dt.strftime("%d").lstrip("0") if dt else "--"
+
+
+def format_slug_weekday(dt: datetime | None) -> str:
+    return dt.strftime("%a") if dt else ""
+
+
+def format_slug_date_line(dt: datetime | None) -> str:
+    return dt.strftime("%A, %B ") + str(dt.day) if dt else "Date TBA"
+
+
+def format_slug_time_line(dt: datetime | None) -> str:
+    return dt.strftime("%I:%M %p").lstrip("0") if dt else "Time TBA"
+
+
+def render_modern_day_groups(sessions: list[dict]) -> str:
+    groups: list[dict] = []
+    by_key: dict[str, dict] = {}
+    for session in sessions:
+        dt = session.get("_parsed_dt") or parse_dt(session.get("start_at"))
+        key = dt.date().isoformat() if dt else f"unknown-{len(groups)}"
+        if key not in by_key:
+            group = {"key": key, "dt": dt, "sessions": []}
+            by_key[key] = group
+            groups.append(group)
+        by_key[key]["sessions"].append(session)
+
+    cards = []
+    for group in groups:
+        dt = group["dt"]
+        cert_logos: dict[str, str] = {}
+        rows = []
+        for session in sorted(group["sessions"], key=lambda item: item.get("_parsed_dt") or parse_dt(item.get("start_at")) or datetime.max.replace(tzinfo=TZ)):
+            row_dt = session.get("_parsed_dt") or parse_dt(session.get("start_at"))
+            location = clean_location_display(session.get("location_display", "")) or "Location TBD"
+            title = display_course_name(session.get("course_name", "")) or "910CPR Class"
+            register_url = session.get("registration_url") or "#"
+            session_id = str(session.get("session_id") or "")
+            body_key = certifying_body_key(session)
+            logo = certifying_logo_src(session)
+            if body_key and logo and body_key not in cert_logos:
+                cert_logos[body_key] = logo
+            rows.append(
+                f"""
+          <div class="slug-time-row js-session-item" data-session-id="{escape(session_id, quote=True)}" data-session-start="{escape(row_dt.isoformat() if row_dt else '', quote=True)}" data-session-end="{escape(str(session.get('end_at') or ''), quote=True)}">
+            <div class="slug-time-copy">
+              <div class="slug-pill-meta-row slug-time-meta">
+                <span class="slug-pill-chip">{escape(format_slug_time_line(row_dt))}</span>
+                <span class="slug-pill-chip slug-pill-chip-location">{escape(location)}</span>
+              </div>
+              <div class="slug-time-subtitle">{escape(title)}</div>
+            </div>
+            <div class="slug-time-actions">
+              <a class="button small primary" href="{escape(register_url, quote=True)}" data-original-href="{escape(register_url, quote=True)}" data-session-id="{escape(session_id, quote=True)}">Book This Class</a>
+            </div>
+          </div>
+"""
+            )
+        cert_html = ""
+        if cert_logos:
+            cert_html = (
+                '<div class="slug-day-cert-logos" aria-label="Certifying body">'
+                + "".join(
+                    f'<img class="slug-day-cert-logo" src="{escape(src, quote=True)}" alt="" loading="lazy" data-certifying-body="{escape(body, quote=True)}">'
+                    for body, src in cert_logos.items()
+                )
+                + "</div>"
+            )
+        cert_attr = f' data-certifying-body="{escape(next(iter(cert_logos)), quote=True)}"' if len(cert_logos) == 1 else ""
+        cards.append(
+            f"""
+        <article class="slug-day-card"{f' data-session-date="{escape(group["key"], quote=True)}"' if dt else ''}{cert_attr}>
+          {cert_html}
+          <div class="slug-pill-date">
+            <div class="slug-pill-month">{escape(format_slug_month(dt))}</div>
+            <div class="slug-pill-day">{escape(format_slug_day(dt))}</div>
+            <div class="slug-pill-weekday">{escape(format_slug_weekday(dt))}</div>
+          </div>
+          <div class="slug-day-main">
+            <div class="slug-day-title">{escape(format_slug_date_line(dt))}</div>
+            <div class="slug-time-list">{''.join(rows)}</div>
+          </div>
+        </article>
+"""
+        )
+    return "".join(cards)
+
+
+def render_modern_inventory_section(title: str, body: str, sessions: list[dict], section_class: str) -> str:
+    if not sessions:
+        return ""
+    return f"""
+<section class="slug-inventory-section {escape(section_class, quote=True)}">
+  <div class="slug-inventory-head">
+    <h3>{escape(title)}</h3>
+    <p>{escape(body)}</p>
+  </div>
+  <div class="slug-pill-list">
+    {render_modern_day_groups(sessions)}
+  </div>
+</section>
+""".strip()
+
+
+def render_past_current_inventory_html(upcoming_sessions: list[dict], course_url: str, course_label: str, full_schedule_url: str = "/schedule.html") -> str:
+    full_label = f"See all {course_label} dates" if course_label and course_label != "Course" else "See all current dates"
+    if not upcoming_sessions:
+        return f"""
+<section id="upcoming-times" class="section-box past-current-inventory js-live-session-group" data-empty-link="{escape(course_url, quote=True)}" data-empty-link-label="{escape(full_label, quote=True)}" data-full-schedule-link="{escape(full_schedule_url, quote=True)}">
   <div class="slug-empty">
     <strong>Need this class?</strong>
     <p>This session has passed, but we can help you find the right current option.</p>
