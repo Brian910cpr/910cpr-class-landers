@@ -1,0 +1,29 @@
+{
+  "transport": "manual_fixture",
+  "call": {
+    "external_call_id": "fixture-test-reschedule-20260909T2118-0400",
+    "direction": "inbound",
+    "caller_phone": "+1 910-395-5193",
+    "caller_name": "Brian Ness",
+    "timestamp": "2026-09-09T21:18:00-04:00",
+    "duration_seconds": null,
+    "is_test": true,
+    "test_number": "+1 910-395-5193",
+    "summary": "Caller asked to reschedule a BLS class from Saturday, September 12 to Thursday, September 24 at 5:00 PM. The team will verify availability and follow up using the phone number on the registration.",
+    "transcript": null,
+    "recording_url": null,
+    "outcome": "human_follow_up_required",
+    "extracted_answers": {
+      "requested_credential": "BLS",
+      "deadline": null,
+      "location": null,
+      "flexibility": null,
+      "preferred_windows": ["2026-09-24 5:00 PM"],
+      "alternate_windows": [],
+      "group_size": 1,
+      "unresolved_questions": ["Verify registration identity", "Verify requested class availability"],
+      "escalation_flags": ["RESCHEDULE_REQUEST"]
+    }
+  },
+  "evidence_note": "Fixture is normalized from the visible Rachel chat summary. Marblism did not expose a platform call ID, duration, transcript, recording URL, or structured source payload for this test call; the fixture ID is synthetic and test-only."
+}
