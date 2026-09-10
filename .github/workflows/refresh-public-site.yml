@@ -136,6 +136,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          $baseCommit = (git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or -not $baseCommit) { throw "Could not capture checked-out base commit" }
+
           git add -- docs data/state_public/enrollware_ical_hash.txt
 
           $staged = @(git diff --cached --name-only)
@@ -154,37 +157,25 @@ jobs:
           Write-Host "Staged files:"
           $staged | ForEach-Object { Write-Host " - $_" }
 
-          # First capture the approved publication as a local commit. Then throw away
-          # every build/runtime artifact, move to the latest origin/main, and
-          # cherry-pick only that approved commit. Rebasing the build worktree is
-          # intentionally avoided because tracked runtime artifacts can remain dirty
-          # on Windows even after a normal reset.
+          # Publish only if main is still the exact source tree that was built.
+          # This avoids resetting/cherry-picking inside the Windows worktree, where
+          # tracked case-colliding aliases can appear dirty after an otherwise clean
+          # reset. If main advanced during the build, fail closed and let the next
+          # scheduled run rebuild from the new source tree.
           git commit -m "Refresh public schedule from Enrollware iCal"
           if ($LASTEXITCODE -ne 0) { throw "git commit failed with exit code $LASTEXITCODE" }
           $publishCommit = (git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or -not $publishCommit) { throw "Could not capture publication commit" }
 
-          git reset --hard HEAD
-          if ($LASTEXITCODE -ne 0) { throw "git reset failed with exit code $LASTEXITCODE" }
-          git clean -fdx
-          if ($LASTEXITCODE -ne 0) { throw "git clean failed with exit code $LASTEXITCODE" }
-
           git fetch origin main
           if ($LASTEXITCODE -ne 0) { throw "git fetch failed with exit code $LASTEXITCODE" }
-          git reset --hard origin/main
-          if ($LASTEXITCODE -ne 0) { throw "git reset to origin/main failed with exit code $LASTEXITCODE" }
-          git clean -fdx
-          if ($LASTEXITCODE -ne 0) { throw "second git clean failed with exit code $LASTEXITCODE" }
+          $remoteMain = (git rev-parse origin/main).Trim()
+          if ($LASTEXITCODE -ne 0 -or -not $remoteMain) { throw "Could not resolve origin/main after fetch" }
 
-          $dirty = @(git status --porcelain)
-          if ($LASTEXITCODE -ne 0) { throw "git status failed with exit code $LASTEXITCODE" }
-          if ($dirty.Count -gt 0) {
-            Write-Error "Worktree is still dirty before publication cherry-pick:`n$($dirty -join "`n")"
+          if ($remoteMain -ne $baseCommit) {
+            Write-Error "origin/main advanced during this build ($baseCommit -> $remoteMain). Refusing to replay generated output onto a different source tree; the next scheduled run will rebuild from current main."
             exit 1
           }
-
-          git cherry-pick $publishCommit
-          if ($LASTEXITCODE -ne 0) { throw "git cherry-pick failed with exit code $LASTEXITCODE" }
 
           git push origin HEAD:main
           if ($LASTEXITCODE -ne 0) { throw "git push failed with exit code $LASTEXITCODE" }
