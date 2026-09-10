@@ -320,3 +320,15 @@ GitHub Issues with titles beginning `[CODEX]` are the durable inbound instructio
 - When an instruction arrives in ChatGPT and GitHub access is available, create or update the corresponding `[CODEX]` issue so the request survives the chat session.
 
 See `docs/CODEX_INSTRUCTIONS.md` for the owner-facing workflow.
+
+## Mandatory Persistent-System Proof Standard
+
+For every persistent or operational system, read and follow `LANDERWARE_PROOF_AND_HEALTH_STANDARD.md`.
+
+- Do not call a persistent system `DONE`, `WORKING`, `LIVE`, or `HEALTHY` merely because code exists, a commit was pushed, a deployment completed, or one component ran once.
+- Classify the actual evidence level as `BUILT`, `CONNECTED`, `PROVEN`, `MONITORED`, or `HEALTHY`.
+- First prove the smallest useful end-to-end process. Observe it until trustworthy. As proven pieces are composed into a larger workflow, move the primary health check upward to the larger end-to-end outcome while retaining component diagnostics for failure investigation.
+- Every persistent process must identify success evidence, expected cadence/window, last successful proof, failure/staleness condition, observer, observer health, recovery path, and escalation boundary.
+- A monitor that nobody monitors is not sufficient.
+- Brian must not be the routine monitoring layer. If a system still depends on him remembering to check it, carry messages, or discover that it stopped, report that dependency explicitly and do not describe the system as fully healthy.
+- Answer operational health questions from current evidence when practical, not from recollection that the feature was previously built.
