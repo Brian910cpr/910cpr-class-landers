@@ -15,6 +15,8 @@ on:
       - main
     paths:
       - '.github/workflows/refresh-public-site.yml'
+      - 'scripts/audit_sitewide_links.py'
+      - 'scripts/validate_sitewide_links_strict.py'
 
 permissions:
   contents: write
@@ -90,26 +92,26 @@ jobs:
           $script | python -
 
       - name: Report forced rebuild
-        if: github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true
+        if: (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true) || github.event_name == 'push'
         shell: pwsh
         run: |
-          Write-Host "Force rebuild requested. Rebuilding from the live Enrollware feed even if its stable hash is unchanged."
+          Write-Host "Validated self-test/forced rebuild requested. Rebuilding from the live Enrollware feed even if its stable hash is unchanged."
 
       - name: Skip unchanged iCal feed
-        if: steps.ical.outputs.changed == 'false' && !(github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: steps.ical.outputs.changed == 'false' && github.event_name != 'push' && !(github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: |
           Write-Host "Enrollware iCal hash unchanged. Skipping public build and commit."
 
       - name: Run full validated public build
-        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: cmd
         env:
           LANDER_SKIP_REPOSITORY_TESTS: "1"
         run: build\full_validated_public_build.bat
 
       - name: Reconcile admin occupancy from current canonical sources
-        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         env:
           HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
@@ -117,25 +119,36 @@ jobs:
           python -m scripts.fetch_hot_sync_snapshot
           python -m scripts.publish_admin_schedule
 
-      - name: Run link audit
-        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+      - name: Run strict link audit
+        if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
-        run: python -m scripts.audit_sitewide_links
+        run: python -m scripts.validate_sitewide_links_strict
+
+      - name: Upload link audit artifacts
+        if: always() && (steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
+        uses: actions/upload-artifact@v4
+        with:
+          name: sitewide-link-audit-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            debug/sitewide_link_button_audit.csv
+            debug/sitewide_link_button_audit.md
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Validate refreshed public inventory
-        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: success() && (steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
         shell: pwsh
         run: python -m scripts.validate_public_refresh_output
 
       - name: Update stored iCal hash
-        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: success() && (steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force data/state_public | Out-Null
           Set-Content -Path data/state_public/enrollware_ical_hash.txt -Value "${{ steps.ical.outputs.current_hash }}" -NoNewline -Encoding utf8
 
       - name: Commit approved public output
-        if: steps.ical.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: success() && (steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
         shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
