@@ -27,6 +27,24 @@ The issue conversation is the authoritative task record. Codex should post:
 
 A markdown report elsewhere in the repository is supporting evidence, not a substitute for answering on the issue.
 
-## Workstream rule
+## Production-line workstream rule
 
-Only one implementation workstream is active at a time. A new issue preserves the request without silently interrupting active production work. Brian may explicitly promote an issue when priorities change.
+The queue is **not** a strict one-item-at-a-time conveyor. Codex should keep one primary/deep implementation workstream as the focus while opportunistically advancing independent quick wins in parallel.
+
+On every queue refresh or wake:
+
+1. Continue the active primary workstream unless it is blocked or unsafe to continue.
+2. Scan all open actionable `[CODEX]` issues, not merely the oldest or current issue.
+3. Identify independent quick wins that can be completed or materially advanced without destabilizing the primary workstream.
+4. Prefer quick wins that are low-risk, narrowly scoped, independently testable, and unlikely to create merge conflicts with the primary workstream.
+5. Complete as many safe quick wins as practical during the available work period while continuing the primary workstream.
+6. Record an independent receipt/status for every item touched. Do not make one task wait merely because another task has not finished.
+7. If an item is blocked, record the blocker and continue with other actionable work. A blocked item must not stall the queue.
+
+Do **not** start several competing deep refactors merely to create parallelism. Parallelism is primarily for independent quick fixes, diagnostics, tests, documentation, narrowly scoped repairs, and other work that can safely coexist with the primary job.
+
+The approximately 20-minute ChatGPT pickup cadence is a **heartbeat/checkpoint, not a job timebox**. Codex does not stop a valid longer-running workstream when a pickup occurs. ChatGPT may consume completed receipts and dispatch follow-up work while Codex continues other outstanding items.
+
+A useful checkpoint can therefore report several different states at once, for example: one issue deployed and verified, another with tests fixed and a PR open, another blocked with a documented reason, and the primary implementation still in progress.
+
+Brian may explicitly promote an issue when priorities change. Production failures and safety-critical conflicts outrank ordinary quick wins.
