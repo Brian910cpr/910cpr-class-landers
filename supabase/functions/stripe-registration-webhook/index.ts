@@ -13,8 +13,7 @@ function safeEqual(a: string, b: string) {
   return difference === 0;
 }
 
-async function verify(raw: string, header: string | null) {
-  const secret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+async function verify(raw: string, header: string | null, secret: string | null) {
   if (!secret || !header) return false;
   const pieces = Object.fromEntries(header.split(",").map((piece) => piece.split("=", 2) as [string, string]));
   if (!pieces.t || !pieces.v1) return false;
@@ -31,13 +30,15 @@ const reply = (body: unknown, status = 200) => new Response(JSON.stringify(body)
 Deno.serve(async (request) => {
   if (request.method !== "POST") return reply({ ok: false }, 405);
   const raw = await request.text();
-  if (!(await verify(raw, request.headers.get("stripe-signature")))) return reply({ ok: false, error: "Invalid signature" }, 400);
+  const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+  const { data: secretRow } = await db.from("landerware_integration_secrets").select("secret_value").eq("secret_key", "stripe_registration_webhook").maybeSingle();
+  const webhookSecret = secretRow?.secret_value || Deno.env.get("STRIPE_WEBHOOK_SECRET") || null;
+  if (!(await verify(raw, request.headers.get("stripe-signature"), webhookSecret))) return reply({ ok: false, error: "Invalid signature" }, 400);
 
   let event: any;
   try { event = JSON.parse(raw); } catch { return reply({ ok: false, error: "Invalid JSON" }, 400); }
 
   const session = event?.data?.object || {};
-  const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
   const retailOrderId = String(session?.metadata?.landerware_order_id || "").trim();
   const paid = event.type === "checkout.session.completed"
     ? session.payment_status === "paid"
