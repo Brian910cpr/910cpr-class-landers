@@ -38,9 +38,47 @@ Your FIRST task is to install/repair a durable CyberPC-side dispatcher so Codex 
 
 P0 is NOT complete merely because scripts exist in GitHub. It is complete only when CyberPC has an enabled recurring mechanism and a heartbeat proves it has checked the repo automatically.
 
-## P1: Columbus County 2025 EMS protocol ZIP
+## P1: Backend stabilization gate
 
-After P0 is verified working, execute GitHub Issue #171 completely:
+Do not begin customer-facing expansion or the Columbus County ZIP task while the backend failure queue below is unresolved. Work these incidents in order, deduplicating repeated deployment noise by root cause.
+
+### 1. Issue #172 - public refresh can publish with broken links
+
+Execute GitHub Issue #172 completely before moving on.
+
+Required outcome:
+- reproduce and capture all current BROKEN rows from `scripts.audit_sitewide_links`;
+- fix the underlying generator/static-source causes rather than suppressing findings;
+- make canonical public publication fail closed when BROKEN > 0;
+- preserve CSV and Markdown audit output as GitHub Actions artifacts even on a strict audit failure;
+- add a regression test proving an intentionally missing internal target blocks strict publication;
+- verify `Broken: 0`, public validation green, and GitHub Pages green before closing #172.
+
+### 2. Issue #164 - persistent Cloudflare Pages instant failure
+
+After #172, resume GitHub Issue #164. GitHub Pages is healthy on the same commits where Cloudflare Pages instant-fails, so do not treat duplicate Cloudflare check failures as separate incidents.
+
+Use CyberPC/browser access if available to open the failed Cloudflare production deployment and capture the first actual Cloudflare error line/error code. Continue repository-side diagnosis and repair from evidence, not guesses. If Cloudflare authentication, account permission, or an IP-restricted token genuinely blocks access, record the exact blocked action and required account-level setting for Brian rather than a generic "check Cloudflare" request.
+
+Required outcome: smallest reversible fix, then Cloudflare Pages and GitHub Pages green on the same commit, or a precise documented Brian-only account action if that is the true blocker.
+
+### 3. Issue #167 - Windows case-collision cleanup
+
+Then execute GitHub Issue #167 to eliminate tracked case-only path collisions without breaking legacy uppercase URLs, canonical routing, redirects, or SEO behavior. Verify Windows checkout/build cleanliness and public-route compatibility.
+
+### Backend gate acceptance
+
+Do not advance to customer-facing work until:
+- source-integrity checks are green;
+- real scheduled admin/public refreshes remain healthy;
+- canonical public refresh is fail-closed on broken internal navigation and currently reports `Broken: 0`;
+- GitHub Pages is green;
+- Cloudflare #164 is either repaired and green or is stopped on one precise Brian-only account action that has been written back to the handoff;
+- #167 no longer leaves Windows-hosted automation vulnerable to case-only path collisions.
+
+## P2: Columbus County 2025 EMS protocol ZIP
+
+Only after the backend stabilization gate above is satisfied, execute GitHub Issue #171 completely:
 
 Source:
 https://www.columbusco.org/2025-ems-protocols
@@ -55,9 +93,9 @@ https://www.columbusco.org/2025-ems-protocols
 - Verify HTTP 200, valid ZIP, and final PDF count.
 - Report the deployed commit/PR and verified public URL.
 
-## P2: Resume autonomous Production Board consumption
+## P3: Resume autonomous Production Board consumption
 
-Once P0 and P1 are complete, continue working eligible LanderWare Production Board items autonomously according to priority and dependencies. The Production Board is a work queue, not a passive backlog. Do not require Brian to manually restart Codex between ordinary items.
+Once P0, P1, and P2 are complete, continue working eligible LanderWare Production Board items autonomously according to priority and dependencies. The Production Board is a work queue, not a passive backlog. Do not require Brian to manually restart Codex between ordinary items.
 
 ## Required Codex write-back
 
