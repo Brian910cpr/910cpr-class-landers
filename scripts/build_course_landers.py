@@ -21,11 +21,14 @@ from zoneinfo import ZoneInfo
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE_PATH = REPO_ROOT / "raw" / "course_archive_v4.json"
 SCHEDULE_PATH = REPO_ROOT / "docs" / "data" / "schedule_future.json"
+REVIEWS_PATH = REPO_ROOT / "data" / "raw" / "reviews" / "reviews.json"
+PROPOSED_INVENTORY_PATH = REPO_ROOT / "data" / "audit" / "long_range_bls_inventory_preview.json"
 OUTPUT_DIR = REPO_ROOT / "docs" / "courses"
 INDEX_JSON_PATH = OUTPUT_DIR / "index.json"
 
 SITE_NAME = "910CPR"
 BASE_URL = "https://www.910cpr.com"
+GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=910CPR%204018%20Shipyard%20Blvd%20Wilmington%20NC%2028403"
 TZ = ZoneInfo("America/New_York")
 
 VISIBLE_SESSION_COUNT = 8
@@ -156,6 +159,37 @@ def ensure_dir(path: Path) -> None:
 def load_json(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def load_review_summary() -> dict[str, Any]:
+    if not REVIEWS_PATH.exists():
+        return {"total": 0, "five_star": 0}
+    summary = load_json(REVIEWS_PATH).get("summary", {})
+    breakdown = summary.get("rating_breakdown", {})
+    return {
+        "total": int(summary.get("total_reviews") or 0),
+        "five_star": int(breakdown.get("5") or breakdown.get(5) or 0),
+    }
+
+
+def proposed_occurrences(course_id: str, limit: int = 6) -> list[dict[str, Any]]:
+    if not course_id or not PROPOSED_INVENTORY_PATH.exists():
+        return []
+    payload = load_json(PROPOSED_INVENTORY_PATH)
+    if payload.get("safety_contract", {}).get("event_structured_data_allowed") is not False:
+        return []
+    rows = []
+    for row in payload.get("occurrences", []):
+        if str(row.get("course_id") or "") != course_id:
+            continue
+        if (
+            row.get("is_committed_session") is not False
+            or row.get("emit_event_structured_data") is not False
+            or row.get("registration_mode") != "capture_interest"
+        ):
+            continue
+        rows.append(row)
+    return rows[:limit]
 
 
 def strip_tags(value: str) -> str:
@@ -547,6 +581,41 @@ def build_body_html(course: dict[str, Any]) -> str:
     return "<p>Course details coming soon.</p>"
 
 
+def render_proposed_availability(course: dict[str, Any], appointment_url: str) -> str:
+    rows = proposed_occurrences(safe_text(course.get("course_id")).strip())
+    if not rows:
+        return ""
+    cards = []
+    for row in rows:
+        dt = parse_dt(f"{row.get('date')} {row.get('start_time')}")
+        cards.append(
+            f'<li><strong>{html.escape(format_date(dt))}</strong><span>{html.escape(format_time(dt))}</span></li>'
+        )
+    return f"""
+    <section class="proposal-panel" aria-labelledby="proposed-times-title">
+      <div>
+        <div class="section-label">Planning Ahead</div>
+        <h2 id="proposed-times-title">Request a future class time</h2>
+        <p>These are requestable planning times, not scheduled classes and not reserved seats. Tell us which one works for you and we will verify the instructor, location, and availability before confirming anything.</p>
+      </div>
+      <ul class="proposal-grid">{''.join(cards)}</ul>
+      <a class="button secondary" href="{html.escape(appointment_url or safe_text(course.get('schedule_url')))}">Check or request a time</a>
+    </section>
+    """
+
+
+def render_faq(title: str, cert_body: str) -> tuple[str, dict[str, Any]]:
+    questions = [
+        ("Is this class offered in Wilmington, North Carolina?", "Yes. 910CPR serves Wilmington and surrounding southeastern North Carolina communities, with additional locations and on-site group training available by request."),
+        ("When is my seat confirmed?", "Your seat is confirmed only after you complete the registration process and receive confirmation. Requestable planning times are not reservations."),
+        ("Will I receive a certification card?", f"Students who successfully complete all requirements receive the applicable {cert_body} course completion credential described on this page."),
+        ("Can 910CPR train our team on-site?", "Yes. We provide on-site CPR, first aid, BLS, ACLS, PALS, and workplace training when the requested program and instructor qualifications are available."),
+    ]
+    faq_html = "".join(f"<details><summary>{html.escape(q)}</summary><p>{html.escape(a)}</p></details>" for q, a in questions)
+    schema = {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in questions]}
+    return f'<section class="faq"><div class="section-label">Common Questions</div><h2>About {html.escape(title)}</h2>{faq_html}</section>', schema
+
+
 def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     raw_name = safe_text(course.get("original_course_name")).strip()
     title, subtitle, clarifier = display_title(course, raw_name)
@@ -559,8 +628,14 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     meta_desc = meta_description(course, title)
     pills_html = hierarchy_pills(course, raw_name)
     sessions_html = build_session_blocks(course, sessions)
+    course_id = safe_text(course.get("course_id")).strip()
+    schedule_url = safe_text(course.get("schedule_url")).strip()
+    appointment_url = build_appointment_page_url("101560", course_id) if course_id else schedule_url
+    proposed_html = render_proposed_availability(course, appointment_url)
+    review_summary = load_review_summary()
+    faq_html, faq_schema = render_faq(title, cert_body)
 
-    schema = {
+    course_schema = {
         "@context": "https://schema.org",
         "@type": "Course",
         "name": title,
@@ -573,15 +648,17 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
         "url": canonical,
     }
 
-    schedule_url = safe_text(course.get("schedule_url")).strip()
     if schedule_url:
-        schema["hasCourseInstance"] = {
+        course_schema["hasCourseInstance"] = {
             "@type": "CourseInstance",
             "url": schedule_url,
         }
 
     subtitle_html = f'<p class="subtitle">{html.escape(subtitle)}</p>' if subtitle else ""
     clarifier_html = f'<p class="clarifier">{html.escape(clarifier)}</p>' if clarifier else ""
+
+    schema = {"@context": "https://schema.org", "@graph": [course_schema, faq_schema]}
+    primary_cta = schedule_url or appointment_url
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -607,6 +684,10 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
       margin: 0 auto;
       padding: 20px;
     }}
+    .site-nav, .site-footer {{ background:#102338; color:#fff; }}
+    .site-nav .inner, .site-footer .inner {{ max-width:1180px; margin:auto; padding:14px 20px; display:flex; gap:18px; align-items:center; flex-wrap:wrap; }}
+    .site-nav a, .site-footer a {{ color:#fff; text-decoration:none; font-weight:700; }}
+    .brand {{ margin-right:auto; font-size:1.15rem; }}
     .hero {{
       background: #ffffff;
       border-radius: 16px;
@@ -668,18 +749,27 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
       font-weight: 700;
       margin: 10px 0 8px;
     }}
+    .button {{ display:inline-block; border-radius:10px; padding:12px 18px; text-decoration:none; font-weight:800; margin:8px 8px 0 0; }}
+    .button.primary {{ background:#0d62c7; color:#fff; }}
+    .button.secondary {{ background:#eef6ff; color:#0d62c7; border:1px solid #aac9ea; }}
+    .trust-line {{ margin-top:14px; padding:12px 14px; background:#fff9e8; border-radius:12px; color:#5a4510; font-weight:700; }}
     .clarifier {{
       margin: 0 0 12px;
       font-size: 0.95rem;
       color: #5d6c7c;
     }}
-    .sessions, .content, .credibility {{
+    .sessions, .content, .credibility, .proposal-panel, .faq {{
       background: #ffffff;
       border-radius: 16px;
       box-shadow: 0 8px 28px rgba(0,0,0,0.06);
       padding: 20px;
       margin-top: 20px;
     }}
+    .proposal-panel {{ border:2px solid #f0c36a; background:#fffaf0; }}
+    .proposal-grid {{ list-style:none; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; }}
+    .proposal-grid li {{ display:flex; justify-content:space-between; gap:8px; background:#fff; border:1px solid #ecd8aa; border-radius:10px; padding:10px; }}
+    .faq details {{ border-top:1px solid #d9e7f4; padding:12px 0; }}
+    .faq summary {{ cursor:pointer; font-weight:800; }}
     .section-label {{
       font-size: 1rem;
       font-weight: 800;
@@ -783,6 +873,7 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
   </script>
 </head>
 <body>
+  <nav class="site-nav" aria-label="Main navigation"><div class="inner"><a class="brand" href="/">910CPR</a><a href="/bls.html">BLS</a><a href="/acls.html">ACLS</a><a href="/pals.html">PALS</a><a href="/heartsaver.html">CPR &amp; First Aid</a><a href="/group-training.html">On-Site Training</a></div></nav>
   <div class="wrap">
     <section class="hero">
       <div>
@@ -792,6 +883,9 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
         {subtitle_html}
         <div class="price">{html.escape(price_label)}</div>
         {clarifier_html}
+        <a class="button primary" href="{html.escape(primary_cta)}">See dates and register</a>
+        <a class="button secondary" href="/group-training.html">Train a team on-site</a>
+        <div class="trust-line">★★★★★ {review_summary['five_star']} five-star Google reviews from {review_summary['total']} verified review records</div>
       </div>
       <div>
         <img src="{html.escape(image_src)}" alt="{html.escape(title)}">
@@ -799,22 +893,26 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     </section>
 
     {sessions_html}
+    {proposed_html}
 
     <section class="content">
       {body_html}
     </section>
 
     <section class="credibility">
-      <h2>Need Training for a Team?</h2>
+      <h2>Local training for Wilmington and southeastern North Carolina</h2>
       <p>
-        910CPR supports employers, schools, and facility leaders who need training that is defensible,
-        predictable, documented, and renewable.
+        910CPR supports healthcare workers, students, dental teams, schools, childcare programs,
+        maritime crews, employers, and facility leaders across the Wilmington area.
       </p>
       <p>
         We can help with recurring staff training, organized scheduling, and practical compliance-minded delivery.
       </p>
+      <p><a href="{GOOGLE_REVIEWS_URL}" target="_blank" rel="noopener noreferrer">Read our Google reviews</a> or <a href="/group-training.html">request on-site group training</a>.</p>
     </section>
+    {faq_html}
   </div>
+  <footer class="site-footer"><div class="inner"><strong>910CPR</strong><span>4018 Shipyard Blvd, Wilmington, NC 28403</span><a href="tel:+19103957524">910-395-7524</a><a href="/contact.html">Contact</a></div></footer>
 <script src="/assets/live-sessions.js"></script>
 <script src="/assets/session-expiry.js"></script>
 </body>
