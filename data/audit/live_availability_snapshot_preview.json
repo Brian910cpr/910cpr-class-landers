@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T17:52:12.643250+00:00",
+  "generated_at": "2026-09-10T20:50:05.412702+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -28,13 +28,13 @@
       }
     ],
     "blocks_generated": 365,
-    "blocks_blocked": 5,
+    "blocks_blocked": 4,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 5
+      "inverse_gap_shorter_than_minimum_consumption": 4
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 5
+      "inverse_gap_shorter_than_minimum_consumption": 4
     },
     "source_type_counts": {
       "google_calendar": 2,
@@ -50,30 +50,6 @@
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-09-10T15:00:00",
-      "end_datetime": "2026-09-10T17:30:00",
-      "date": "2026-09-10",
-      "end_date": "2026-09-10",
-      "start_time": "15:00",
-      "end_time": "17:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260910T1500000400",
-      "summary": "CFA Pickup",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -3907,6 +3883,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261209T0630000500",
       "summary": "CFA Drop Off",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-12-09T15:00:00",
+      "end_datetime": "2026-12-09T17:30:00",
+      "date": "2026-12-09",
+      "end_date": "2026-12-09",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261209T1500000500",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -10211,11 +10211,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-12-09T07:45:00",
-      "end_datetime": "2026-12-09T14:00:00",
+      "end_datetime": "2026-12-09T15:00:00",
       "date": "2026-12-09",
       "end_date": "2026-12-09",
       "start_time": "07:45",
-      "end_time": "14:00",
+      "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10245,15 +10245,7 @@
       "source_type": "inverse_google_calendar",
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-09-10T14:00:00",
-      "end_datetime": "2026-09-10T15:00:00"
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-09-10T17:30:00",
+      "start_datetime": "2026-09-10T17:00:00",
       "end_datetime": "2026-09-10T18:00:00"
     },
     {
