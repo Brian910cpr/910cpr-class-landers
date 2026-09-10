@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-10T05:27:09.292493+00:00",
+  "generated_at": "2026-09-10T10:02:38.525491+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-10T05:27:08.737565+00:00",
+      "generated_at": "2026-09-10T10:02:38.025051+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-10T05:27:09.292493+00:00",
-      "event_count": 163
+      "generated_at": "2026-09-10T10:02:38.525491+00:00",
+      "event_count": 161
     },
     {
       "source_key": "brian_primary_calendar",
       "display_name": "Brian Primary Google Calendar",
       "source_type": "occupancy_calendar",
       "export_status": "failed",
-      "generated_at": "2026-09-10T05:27:08.944295+00:00",
+      "generated_at": "2026-09-10T10:02:38.240090+00:00",
       "event_count": 0
     },
     {
@@ -32,7 +32,7 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-10T05:27:08.943925+00:00",
+      "generated_at": "2026-09-10T10:02:38.239700+00:00",
       "event_count": 0
     }
   ],
@@ -46,28 +46,6 @@
       "start": "2026-09-10T06:30:00-04:00",
       "end": "2026-09-10T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-09-10T09:00:00+00:00",
-      "end": "2026-09-10T10:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Brian Unavailable",
-      "start": "2026-09-10T10:00:00+00:00",
-      "end": "2026-09-10T22:00:00+00:00",
-      "location": "",
       "status": "CONFIRMED"
     },
     {
