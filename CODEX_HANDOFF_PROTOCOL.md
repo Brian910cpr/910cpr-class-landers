@@ -10,6 +10,18 @@ The former mutable `ops/handoff/` workflow is retired. Its retained files are hi
 
 Unless an assigning prompt explicitly opts out, **every Codex assignment must produce and commit a repository reply file**, including research-only, diagnostic, blocked, and no-code assignments.
 
+## Persistent-system doctrine
+
+For any assignment involving a persistent or operational process, Codex must also follow `LANDERWARE_PROOF_AND_HEALTH_STANDARD.md`.
+
+A persistent system must not be reported as `DONE`, `WORKING`, `LIVE`, or `HEALTHY` merely because code exists, a commit was pushed, a deployment succeeded, or one component ran once. Report the actual evidence level reached: `BUILT`, `CONNECTED`, `PROVEN`, `MONITORED`, or `HEALTHY`.
+
+The default engineering pattern is:
+
+> Prove the smallest useful end-to-end process. Observe it until trustworthy. When proven pieces are composed into a larger process, move the primary health check upward to the larger end-to-end outcome while retaining component diagnostics for failure investigation.
+
+The owner must not be the routine monitoring layer. Every persistent process must define what proves success, when success last occurred, what detects staleness/failure, what observes that detector, and what recovery or escalation path applies.
+
 ## Mailbox filenames
 
 Codex writes unread replies at the repository root using:
@@ -50,6 +62,9 @@ Each `Codex_Reply_*` file must include the following when applicable:
 - Test results
 - Known unrelated failures
 - Deployment status, explicitly distinguishing local validation, push, merge, and deployment
+- Persistent-system evidence state (`BUILT`, `CONNECTED`, `PROVEN`, `MONITORED`, `HEALTHY`) when applicable
+- Last successful end-to-end proof and its evidence when applicable
+- Failure/staleness condition and observer health when applicable
 - Remaining risks or unresolved questions
 - Exact recommended next action for ChatGPT
 - Whether user-level or account-level action is required
@@ -60,10 +75,11 @@ Facts, inferences, limitations, and blockers should be clearly distinguished. Re
 
 1. Choose an unused reply identifier and check the repository root for both `Codex_Reply_<ID>.md` and `Codex_Read_<ID>.md`.
 2. Complete and validate the assignment to the extent possible.
-3. Write the reply with the required contents. Never overwrite a prior reply or processed handoff.
-4. Commit the reply with the assignment changes, or in a separate communication-only commit when that makes the record clearer.
-5. Push the branch. A local-only file is not a durable cross-session handoff.
-6. In the Codex UI response, identify the reply filename, branch, and commit SHA unless the assignment specifies a narrower response.
+3. For persistent systems, classify the result under `LANDERWARE_PROOF_AND_HEALTH_STANDARD.md` and do not overstate completion.
+4. Write the reply with the required contents. Never overwrite a prior reply or processed handoff.
+5. Commit the reply with the assignment changes, or in a separate communication-only commit when that makes the record clearer.
+6. Push the branch. A local-only file is not a durable cross-session handoff.
+7. In the Codex UI response, identify the reply filename, branch, and commit SHA unless the assignment specifies a narrower response.
 
 When a reply needs to name a commit and including the reply in that same commit would create a self-referential SHA problem, use two commits: commit the substantive work first, then commit the reply referencing that substantive commit. The pushed branch tip remains discoverable from GitHub.
 
