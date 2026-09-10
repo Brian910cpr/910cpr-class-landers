@@ -26,6 +26,7 @@ class StrictLinkAuditTests(unittest.TestCase):
             md_path = debug / "sitewide_link_button_audit.md"
 
             with (
+                patch.object(audit_sitewide_links, "ROOT", root),
                 patch.object(audit_sitewide_links, "DOCS_DIR", docs),
                 patch.object(audit_sitewide_links, "DEBUG_DIR", debug),
                 patch.object(audit_sitewide_links, "CSV_PATH", csv_path),
