@@ -321,6 +321,10 @@ GitHub Issues with titles beginning `[CODEX]` are the durable inbound instructio
 
 See `docs/CODEX_INSTRUCTIONS.md` for the owner-facing workflow.
 
+## Mandatory Codex Reply Mailbox
+
+Every Codex assignment must leave a repository reply file unless the assigning prompt explicitly opts out. Before finishing any assignment, follow `CODEX_HANDOFF_PROTOCOL.md` at the repository root. Codex creates only `Codex_Reply_<ID>.md` files; it must never create or rename a file to `Codex_Read_*`, because that acknowledgement is reserved for ChatGPT/the supervising process.
+
 ## Mandatory Persistent-System Proof Standard
 
 For every persistent or operational system, read and follow `LANDERWARE_PROOF_AND_HEALTH_STANDARD.md`.
