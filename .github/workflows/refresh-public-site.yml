@@ -17,6 +17,7 @@ on:
       - '.github/workflows/refresh-public-site.yml'
       - 'scripts/audit_sitewide_links.py'
       - 'scripts/validate_sitewide_links_strict.py'
+      - 'docs/contact.html'
 
 permissions:
   contents: write
