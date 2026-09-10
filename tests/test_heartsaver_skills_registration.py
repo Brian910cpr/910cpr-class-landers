@@ -68,6 +68,17 @@ class RegistrationProfileTests(unittest.TestCase):
             self.assertIn(field, EDGE)
         self.assertIn("required_requirement_missing", EDGE)
 
+    def test_registration_rpc_payload_matches_database_signature(self):
+        self.assertNotIn("p_external_system", EDGE)
+        self.assertNotIn("p_external_id", EDGE)
+        for field in ("p_existing_person_id", "p_identity_source", "p_identity_key"):
+            self.assertIn(field, EDGE)
+
+    def test_selected_addons_are_forwarded_as_structured_data(self):
+        self.assertIn('form.get("selectedOptions")', EDGE)
+        self.assertIn("p_selected_options:selectedOptions(form)", EDGE)
+        self.assertIn("invalid_selected_options", EDGE)
+
     def test_http_replay_does_not_recreate_side_effects(self):
         self.assertIn("existingMessage", EDGE)
         self.assertIn("existing.length", EDGE)

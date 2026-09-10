@@ -1,68 +1,58 @@
+"""Build the durable, individual public course landers.
 
+This pipeline entry point used to delete every ``docs/courses/*.html`` page and
+replace the set with thin family hubs. That erased the richer individual BLS,
+HeartCode, ACLS, PALS, and Heartsaver sales pages. Keep the stable entry point,
+but delegate to the authoritative individual-course builder.
+
+Build order is deliberate: generate the safe, request-only long-range BLS
+inventory first, then render course landers from it. The generated preview is a
+build artifact and does not need to be committed.
+"""
+
+import subprocess
+import sys
 from pathlib import Path
-from collections import defaultdict
+
+from scripts import build_course_landers
 from scripts.build_status import BuildStatusReporter
-from scripts.hub_utils import guideline_topic_block, load_sessions, upcoming_public_sessions, render_page, session_rows, slugify
-try:
-    from tqdm import tqdm
-except ModuleNotFoundError:
-    def tqdm(iterable, **_kwargs):
-        return iterable
-
-OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "courses"
-OUTPUT.mkdir(parents=True, exist_ok=True)
-SESSIONS_INPUT = Path(__file__).resolve().parents[1] / "data" / "sessions_current.json"
 
 
-def purge_stale_outputs(output_dir: Path) -> int:
-    removed = 0
-    for path in output_dir.glob("*.html"):
-        path.unlink(missing_ok=True)
-        removed += 1
-    return removed
+REPO_ROOT = Path(__file__).resolve().parents[1]
+OUTPUT = REPO_ROOT / "docs" / "courses"
+ARCHIVE_INPUT = REPO_ROOT / "raw" / "course_archive_v4.json"
+SCHEDULE_INPUT = REPO_ROOT / "docs" / "data" / "schedule_future.json"
+PROPOSAL_POLICY_INPUT = REPO_ROOT / "data" / "config" / "long_range_bls_inventory_policy.json"
+PROPOSAL_OUTPUT = REPO_ROOT / "data" / "audit" / "long_range_bls_inventory_preview.json"
 
-def build():
+
+def build_proposed_inventory() -> None:
+    subprocess.run(
+        [sys.executable, "-m", "scripts.build_long_range_bls_inventory", "--output", str(PROPOSAL_OUTPUT)],
+        cwd=REPO_ROOT,
+        check=True,
+    )
+
+
+def build() -> None:
     reporter = BuildStatusReporter("build_courses")
-    reporter.set_context(inputs=[SESSIONS_INPUT], outputs=[OUTPUT])
-    last_output = None
+    reporter.set_context(inputs=[ARCHIVE_INPUT, SCHEDULE_INPUT, PROPOSAL_POLICY_INPUT], outputs=[PROPOSAL_OUTPUT, OUTPUT])
+    reporter.start()
     try:
-        sessions = load_sessions()
-        removed = purge_stale_outputs(OUTPUT)
-        if removed:
-            print(f"Removed {removed} stale course hub pages from {OUTPUT}")
-        families = sorted({s.course_family for s in sessions if s.course_family})
-        reporter.waiting(total=len(families))
-        reporter.start(total=len(families))
-        print(f"Loaded {len(sessions)} sessions")
-        print(f"Building {len(families)} course hub pages")
-        for index, family in enumerate(tqdm(families, desc="Building course hubs", unit="page", miniters=1), start=1):
-            rows = upcoming_public_sessions(sessions, family=family)
-            blocks = [
-                f"<h1>{family}</h1>",
-                "<p class='muted'>Live course hub built from Class Report.xlsx. Use this page to jump into actual upcoming sessions instead of a generic article.</p>",
-                session_rows(rows, limit=20),
-                guideline_topic_block(family),
-            ]
-            last_output = OUTPUT / f"{slugify(family)}.html"
-            html = render_page(
-                f"{family} Classes | 910CPR",
-                "".join(blocks),
-                f"Upcoming {family} classes and registration options from 910CPR.",
-                canonical_path=f"/courses/{last_output.name}",
-            )
-            last_output.write_text(html, encoding='utf-8')
-            reporter.update(current=index, total=len(families), last_output_file=last_output)
+        build_proposed_inventory()
+        build_course_landers.main()
+        generated = sorted(OUTPUT.glob("*.html"))
         reporter.done(
-            current=len(families),
-            total=len(families),
-            last_output_file=last_output,
-            pages_generated=len(families),
-            counts={"sessions_loaded": len(sessions), "course_hub_pages": len(families)},
+            current=len(generated),
+            total=len(generated),
+            last_output_file=generated[-1] if generated else None,
+            pages_generated=len(generated),
+            counts={"individual_course_landers": len(generated)},
         )
-        print(f"Wrote {len(families)} course hub pages to {OUTPUT}")
     except Exception:
-        reporter.error(last_output_file=last_output)
+        reporter.error()
         raise
+
 
 if __name__ == "__main__":
     build()

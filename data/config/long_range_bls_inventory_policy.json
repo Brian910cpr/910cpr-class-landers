@@ -1,0 +1,22 @@
+{
+  "schema_version": "910cpr-long-range-bls-inventory.v1",
+  "enabled": true,
+  "planning_horizon_days": 365,
+  "short_term_cutoff_days": 90,
+  "course_ids": [
+    "209806",
+    "359474",
+    "210549"
+  ],
+  "weekly_templates": [
+    {"weekday": 0, "start_time": "09:15", "course_id": "209806"},
+    {"weekday": 0, "start_time": "18:15", "course_id": "210549"},
+    {"weekday": 2, "start_time": "12:30", "course_id": "359474"},
+    {"weekday": 2, "start_time": "18:15", "course_id": "210549"},
+    {"weekday": 4, "start_time": "09:15", "course_id": "209806"},
+    {"weekday": 4, "start_time": "12:30", "course_id": "359474"},
+    {"weekday": 5, "start_time": "09:15", "course_id": "209806"},
+    {"weekday": 5, "start_time": "12:30", "course_id": "210549"}
+  ],
+  "notes": "Long-range discoverability inventory only. Every generated occurrence remains proposed and must never reserve an instructor, room, or seat until converted by demand. Times are drawn from the existing seed strategy's configured BLS preferred starts. Proposed occurrences without demand are removed when they enter the 90-day short-term operating window."
+}
