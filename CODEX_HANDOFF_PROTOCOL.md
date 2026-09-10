@@ -10,6 +10,25 @@ The former mutable `ops/handoff/` workflow is retired. Its retained files are hi
 
 Unless an assigning prompt explicitly opts out, **every Codex assignment must produce and commit a repository reply file**, including research-only, diagnostic, blocked, and no-code assignments.
 
+## Production-line concurrency doctrine
+
+The mailbox is multi-item. Neither Codex nor ChatGPT may treat one unfinished assignment as a reason to ignore unrelated actionable work.
+
+Codex should maintain **one primary/deep implementation workstream** while opportunistically completing or advancing independent quick wins. Quick wins are work that is low-risk, narrowly scoped, independently testable, and unlikely to conflict with the primary workstream. Do not create several simultaneous deep refactors merely for the appearance of parallelism.
+
+On every Codex wake or queue refresh, Codex should:
+
+1. Continue the primary workstream when safe and actionable.
+2. Sweep all actionable `[CODEX]` issues.
+3. Select safe independent quick wins that can be completed or materially advanced without disrupting the primary workstream.
+4. Work more than one independent item during the same work period when practical.
+5. Emit a separate durable receipt for every item touched.
+6. Record blockers per item and continue unrelated work instead of stalling the queue.
+
+The approximately 20-minute ChatGPT pickup is a **heartbeat/checkpoint, not a Codex job timebox**. A long-running valid assignment continues across heartbeats. ChatGPT may consume receipts and dispatch follow-up rounds while Codex continues other outstanding work.
+
+Every receipt must be independently attributable to its work item. A checkpoint may therefore show several states simultaneously: completed/verified, PR open, blocked, diagnostic complete, or still in progress.
+
 ## Persistent-system doctrine
 
 For any assignment involving a persistent or operational process, Codex must also follow `LANDERWARE_PROOF_AND_HEALTH_STANDARD.md`.
@@ -55,6 +74,7 @@ Each `Codex_Reply_*` file must include the following when applicable:
 - Timestamp, including timezone or UTC offset
 - Branch
 - Commit SHA
+- Work-item state: `IN_PROGRESS`, `BLOCKED`, `PR_OPEN`, `MERGED`, `DEPLOYED`, or `VERIFIED` as applicable
 - Root cause or findings
 - Work performed
 - Exact files changed
@@ -71,6 +91,8 @@ Each `Codex_Reply_*` file must include the following when applicable:
 
 Facts, inferences, limitations, and blockers should be clearly distinguished. Research-only tasks still require a reply. If an assignment produces no application-code changes, Codex may commit only the reply and operational documentation needed for the handoff.
 
+An `IN_PROGRESS` receipt is useful when a heartbeat occurs during substantial work, but it must describe concrete progress or evidence. Do not generate empty status churn merely to prove activity.
+
 ## Codex send procedure
 
 1. Choose an unused reply identifier and check the repository root for both `Codex_Reply_<ID>.md` and `Codex_Read_<ID>.md`.
@@ -79,7 +101,8 @@ Facts, inferences, limitations, and blockers should be clearly distinguished. Re
 4. Write the reply with the required contents. Never overwrite a prior reply or processed handoff.
 5. Commit the reply with the assignment changes, or in a separate communication-only commit when that makes the record clearer.
 6. Push the branch. A local-only file is not a durable cross-session handoff.
-7. In the Codex UI response, identify the reply filename, branch, and commit SHA unless the assignment specifies a narrower response.
+7. Continue scanning/working other actionable items rather than waiting for ChatGPT to consume this receipt.
+8. In the Codex UI response, identify the reply filename, branch, and commit SHA unless the assignment specifies a narrower response.
 
 When a reply needs to name a commit and including the reply in that same commit would create a self-referential SHA problem, use two commits: commit the substantive work first, then commit the reply referencing that substantive commit. The pushed branch tip remains discoverable from GitHub.
 
@@ -108,15 +131,19 @@ ChatGPT may rename a reply to `Codex_Read_*` only after it has:
 
 ChatGPT/the supervising process should then commit and push the acknowledgement rename. If more work is required, it should dispatch the next round using a new round identifier.
 
+A supervisor sweep should evaluate **all** returned work independently. One blocked or incomplete item must not prevent acknowledgement, verification, or follow-up of other items. Favor follow-up instructions that preserve the primary workstream while exposing safe quick wins to Codex.
+
 ## Supervisory timing model
 
 This section documents intended ChatGPT behavior; it does not authorize repository code or workflow automation for timers.
 
 - Each Codex dispatch should normally cause ChatGPT to schedule a fast pickup check approximately 20 minutes later.
 - Every pickup checks all unread `Codex_Reply_*` files.
+- Each pickup processes all available receipts independently, not merely the receipt associated with the timer that fired.
 - Independent pending pickup timers remain useful even if their originating reply was already processed, because each timer provides another global mailbox sweep.
 - A persistent hourly ChatGPT watcher acts as the recovery/fallback sweep.
 - A missing reply remains outstanding. It is not a failure merely because the first fast check occurred before Codex finished.
+- The heartbeat does not cancel, restart, or serialize Codex's other valid work.
 
 ## Safety and scope
 
