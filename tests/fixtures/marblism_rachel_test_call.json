@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "source": "marblism_rachel",
+  "external_call_id": "local-fixture-20260907-negative-001",
+  "external_call_id_kind": "local_fixture",
+  "test_call": true,
+  "received_at": "2026-09-07T19:33:00Z",
+  "caller": {
+    "name": "",
+    "phone": "+19105550193",
+    "email": "",
+    "organization": ""
+  },
+  "request": {
+    "credential_text": "AHA BLS",
+    "course": "Basic Life Support",
+    "certifying_body": "American Heart Association",
+    "initial_or_renewal": "initial",
+    "required_by": "Tuesday (date not confirmed)",
+    "service_type": "unknown",
+    "group_size": null,
+    "preferred_location": "Jacksonville, Holly Ridge, or Leland; no venue confirmed",
+    "preferred_windows": ["Tuesday (ambiguous)"],
+    "alternate_windows": [],
+    "flexibility": "Not collected",
+    "unresolved_questions": ["Exact Tuesday date", "Acceptable travel radius", "Callback name and follow-up method"]
+  },
+  "call": {
+    "started_at": "",
+    "ended_at": "",
+    "duration_seconds": 169,
+    "summary": "Caller requested an initial AHA BLS class, asked for exact addresses in several service areas, became frustrated, and ended the call.",
+    "transcript": "Agent and caller discussed an initial AHA BLS request for Tuesday. Exact date, venue, caller name, and follow-up method were not confirmed.",
+    "recording_url": "https://recordings.example.invalid/opaque-test-id/recording.wav",
+    "outcome": "negative_caller_hung_up",
+    "transfer_status": "not_transferred",
+    "booking_status": "not_booked"
+  },
+  "flags": {
+    "urgent": false,
+    "same_day_problem": false,
+    "contradiction_detected": true,
+    "human_review_required": true
+  }
+}
