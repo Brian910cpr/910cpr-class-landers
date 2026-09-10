@@ -105,6 +105,7 @@ Deno.serve(async (request) => {
         location: session.location_display || session.location_name || "",
         price: Number(profile.pricing_behavior?.amount_cents) / 100,
         addons: profile.addons || [],
+        fallbackRegistrationUrl: session.registration_url,
       }});
     }
     if (request.method === "POST" && route[0] === "start") {
