@@ -4,7 +4,9 @@
 
 This repository-root protocol is the durable outbound mailbox convention between Codex and ChatGPT. It survives separate conversations and Codex sessions because messages are committed to the repository and pushed to GitHub.
 
-This protocol complements the inbound `[CODEX]` GitHub Issue workflow documented in `docs/CODEX_INSTRUCTIONS.md`. It does not replace application-specific material in `ops/handoff/`; those files may remain useful for task state, but they are not the durable unread/read mailbox.
+This protocol complements the inbound `[CODEX]` GitHub Issue workflow documented in `docs/CODEX_INSTRUCTIONS.md`. That issue workflow remains the authoritative durable instruction channel.
+
+The former mutable `ops/handoff/` workflow is retired. Its retained files are historical reference material only and must not be used to dispatch, generate, poll, or consume Codex handoffs. See `ops/handoff/README.md`.
 
 Unless an assigning prompt explicitly opts out, **every Codex assignment must produce and commit a repository reply file**, including research-only, diagnostic, blocked, and no-code assignments.
 
@@ -107,3 +109,13 @@ This section documents intended ChatGPT behavior; it does not authorize reposito
 - Do not use this protocol as authority to merge, deploy, modify application behavior, or broaden an assignment.
 - Preserve existing reply/read history.
 - Resolve filename collisions by selecting the next round identifier, never by overwriting.
+
+## Authority and retired mechanisms
+
+This file defines the only authoritative Codex-to-ChatGPT reply and acknowledgement mechanism in this repository. The authoritative directions are therefore:
+
+- ChatGPT/owner to Codex: `[CODEX]` GitHub Issues, as documented in `docs/CODEX_INSTRUCTIONS.md`.
+- Codex to ChatGPT: root `Codex_Reply_*` files governed by this protocol.
+- ChatGPT acknowledgement: root `Codex_Read_*` files governed by this protocol.
+
+Do not reactivate `ops/handoff/next_task.md`, recreate `ops/scripts/show_handoff.ps1`, or write new `ops/handoff/latest_*` outputs. Historical files under `ops/handoff/` may be consulted for their task-specific facts, but they have no mailbox state and no operational authority.

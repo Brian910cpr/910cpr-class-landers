@@ -1,19 +1,10 @@
-# Next Codex Task
+# Retired Next-Task File
 
-Status: idle
+Status: retired
 
-## Task
+This file was part of the June 2026 mutable `ops/handoff/` workflow. It is retained only to make the retirement explicit and to prevent an older worktree or operator habit from silently treating it as an active inbox.
 
-Replace this section with the next Codex task.
+Do not place assignments here and do not generate `ops/handoff/latest_*` outputs.
 
-## Required Codex behavior
-
-- Read this file before starting.
-- Do the code work only.
-- Write summary to: ops/handoff/latest_codex_report.md
-- Write validation output to: ops/handoff/latest_validation_run.txt
-- Write git status/log to: ops/handoff/latest_git_status.txt
-- Write a short ChatGPT bundle to: ops/handoff/latest_chatgpt_bundle.md
-- Do not require Brian to paste giant logs.
-- Do not broaden scope.
-- Stop and report if the requested path is unclear.
+- The authoritative durable inbound instruction channel is the `[CODEX]` GitHub Issue workflow in `docs/CODEX_INSTRUCTIONS.md`.
+- The authoritative Codex-to-ChatGPT mailbox is the repository-root `Codex_Reply_*` / `Codex_Read_*` protocol in `CODEX_HANDOFF_PROTOCOL.md`.
