@@ -36,6 +36,10 @@ function Write-Heartbeat([hashtable]$Values) {
     $json | Set-Content -LiteralPath $heartbeatPath -Encoding utf8
 }
 
+function Get-IssueUpdateKey($Value) {
+    return ([datetimeoffset]$Value).ToUniversalTime().ToString('o')
+}
+
 $lockStream = $null
 try {
     $lockStream = [System.IO.File]::Open($lockPath, 'OpenOrCreate', 'ReadWrite', 'None')
@@ -71,7 +75,7 @@ try {
     $eligible = @($issues | Where-Object {
         if ($_.title -notmatch '^\[CODEX\]') { return $false }
         $completedAtUpdate = $completedIssueUpdates[[string]$_.number]
-        return (-not $completedAtUpdate) -or ($completedAtUpdate -ne [string]$_.updatedAt)
+        return (-not $completedAtUpdate) -or ($completedAtUpdate -ne (Get-IssueUpdateKey $_.updatedAt))
     } | Sort-Object @{ Expression = {
         if ($_.title -match '\bP0\b') { 0 } elseif ($_.title -match '\bP1\b') { 1 } else { 2 }
     } }, number)
@@ -107,7 +111,7 @@ For this dispatch, the required receipt is $requiredReceipt. Push it to GitHub b
     $exitCode = $LASTEXITCODE
     $ErrorActionPreference = $previousPreference
     if ($exitCode -ne 0) { throw "Codex exited with code $exitCode" }
-    $completedIssueUpdates[[string]$issueNumber] = [string]$selected.updatedAt
+    $completedIssueUpdates[[string]$issueNumber] = Get-IssueUpdateKey $selected.updatedAt
     Write-Heartbeat @{ last_check_at = (Get-Date).ToString('o'); last_launch_status = 'completed'; last_launch_completed_at = (Get-Date).ToString('o'); last_launch_exit_code = $exitCode; worker_state = 'idle'; current_task = $null; preferred_task = $null; last_completed_task = $issueNumber; completed_issue_updates = $completedIssueUpdates; last_commit = ((& git -C $RepoPath rev-parse HEAD).Trim()); next_check_due = (Get-Date).AddMinutes(15).ToString('o'); blocked_reason = $null }
 } catch {
     $_ | Out-String | Add-Content -LiteralPath $logPath
