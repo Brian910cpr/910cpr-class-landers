@@ -3,7 +3,7 @@
 - Assignment: GitHub issue `#140`, P0 HOT_SYNC admin credential parity
 - Timestamp: `2026-09-11T15:57:38-04:00` (`2026-09-11T19:57:38Z`)
 - Branch: `codex/issue-140-hot-sync-parity`
-- Commit SHA: recorded in the follow-up receipt commit after this file's foundation commit
+- Diagnostic receipt foundation commit: `d726b1e2268f9aa7ecdb32eccbb41944c1632294`
 - Work-item state: `BLOCKED`
 - Persistent-system evidence state: `CONNECTED` historically, currently failing authentication and therefore not `PROVEN`, `MONITORED`, or `HEALTHY`
 
