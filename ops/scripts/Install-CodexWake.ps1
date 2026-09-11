@@ -7,10 +7,13 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $source = Join-Path $PSScriptRoot 'Invoke-CodexWake.ps1'
+$loopSource = Join-Path $PSScriptRoot 'Start-CodexWakeLoop.ps1'
 $installDirectory = Join-Path $env:LOCALAPPDATA '910CPR\CodexWake'
 $installedScript = Join-Path $installDirectory 'Invoke-CodexWake.ps1'
+$installedLoop = Join-Path $installDirectory 'Start-CodexWakeLoop.ps1'
 New-Item -ItemType Directory -Force -Path $installDirectory | Out-Null
 Copy-Item -LiteralPath $source -Destination $installedScript -Force
+Copy-Item -LiteralPath $loopSource -Destination $installedLoop -Force
 
 if ($SeedCurrentTask -gt 0) {
     @{
@@ -21,13 +24,12 @@ if ($SeedCurrentTask -gt 0) {
     } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $installDirectory 'state.json') -Encoding utf8
 }
 
-$powerShell = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
-$arguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$installedScript`" -RepoPath `"$RepoPath`""
-$action = New-ScheduledTaskAction -Execute $powerShell -Argument $arguments
-$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(2) -RepetitionInterval (New-TimeSpan -Minutes 15)
-$settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Hours 8) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
-$principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Interactive -RunLevel Limited
-Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Description 'Checks the durable 910CPR [CODEX] GitHub queue and dispatches one guarded Codex worker.' -Force | Out-Null
+Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue | Unregister-ScheduledTask -Confirm:$false
+$startupDirectory = [Environment]::GetFolderPath('Startup')
+$startupLauncher = Join-Path $startupDirectory '910CPR Codex Wake.cmd'
+$launcherText = "@echo off`r`nstart `"`" /min `"$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe`" -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$installedLoop`" -RepoPath `"$RepoPath`" -StateDirectory `"$installDirectory`"`r`n"
+Set-Content -LiteralPath $startupLauncher -Value $launcherText -Encoding ascii
 
 & $installedScript -RepoPath $RepoPath -CheckOnly
-Get-ScheduledTask -TaskName $TaskName | Select-Object TaskName,State,@{Name='Script';Expression={$installedScript}}
+$process = Start-Process -FilePath "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" -ArgumentList @('-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-WindowStyle','Hidden','-File',$installedLoop,'-RepoPath',$RepoPath,'-StateDirectory',$installDirectory) -WindowStyle Hidden -PassThru
+[pscustomobject]@{ Name = $TaskName; Type = 'Windows Startup background loop'; State = 'Started'; ProcessId = $process.Id; StartupLauncher = $startupLauncher; Script = $installedLoop }
