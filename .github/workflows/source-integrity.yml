@@ -17,3 +17,5 @@ jobs:
           python-version: '3.12'
       - name: Reject tool-truncated source files
         run: python scripts/check_source_integrity.py
+      - name: Reject new case-insensitive tracked-path collisions
+        run: python scripts/check_case_insensitive_paths.py
