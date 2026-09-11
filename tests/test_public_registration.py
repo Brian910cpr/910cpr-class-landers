@@ -48,6 +48,7 @@ class PublicRegistrationTests(unittest.TestCase):
         self.assertIn('"idempotency-key":idempotencyKey', EDGE)
         self.assertIn('p.set("integration_identifier"', EDGE)
         self.assertNotIn("payment_method_types", EDGE)
+        self.assertLess(EDGE.index("stripeKey();const result"), EDGE.index('rpc("landerware_create_public_order"'))
 
     def test_gmail_queue_and_safe_enrollware_fallback_are_preserved(self):
         self.assertIn('delivery_provider:"gmail"', EDGE)
