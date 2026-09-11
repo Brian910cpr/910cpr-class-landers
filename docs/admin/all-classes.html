@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>All Classes | Owner Workspace</title>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
+  <link rel="stylesheet" href="/admin/admin-nav.css?v=20260905-1">
+  <link rel="stylesheet" href="/admin/all-classes.css?v=20260911-1">
+  <script src="/assets/site-theme.js"></script>
+</head>
+<body>
+  <div id="adminNav"></div>
+  <header class="topbar">
+    <div><h1>All Classes</h1><p>Your complete LanderWare schedule, class input, rosters, and class records.</p></div>
+    <div class="owner-badge">OWNER · 910CPR</div>
+  </header>
+
+  <main class="shell">
+    <section id="authGate" class="auth-gate">
+      <div><strong>Unlock the owner workspace</strong><p>The key stays in this browser tab.</p></div>
+      <input id="adminKey" type="password" autocomplete="off" placeholder="LanderWare admin key">
+      <button id="unlock" class="btn primary" type="button">Unlock</button>
+    </section>
+
+    <div class="toolbar">
+      <button id="prev" class="btn" type="button" aria-label="Previous month">←</button>
+      <button id="today" class="btn" type="button">Today</button>
+      <button id="next" class="btn" type="button" aria-label="Next month">→</button>
+      <strong id="monthTitle"></strong>
+      <span id="loadStatus" class="status">Waiting for authentication.</span>
+      <span class="spacer"></span>
+      <button id="newClass" class="btn primary" type="button">+ Add a Class</button>
+      <button id="lock" class="btn" type="button">Lock</button>
+    </div>
+
+    <section class="calendar" aria-label="Class calendar">
+      <div class="cal-head"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+      <div id="calendar" class="cal-grid"></div>
+    </section>
+
+    <div class="workspace">
+      <section class="panel editor-panel">
+        <div class="panel-head"><div><span class="eyebrow">ACTIVE CLASS</span><h2 id="detailTitle">Choose a class</h2></div><span id="detailState" class="state">No selection</span></div>
+        <div id="emptyDetail" class="empty">Select a class on the calendar or in the list. The selected class will be highlighted in bright blue.</div>
+        <div id="classDetail" hidden>
+          <div id="classFacts" class="facts"></div>
+          <div class="actionbar">
+            <button id="preRoster" class="btn" type="button">Print Pre-Class Roster</button>
+            <button id="ecardImport" class="btn" type="button">Download AHA eCard Import CSV</button>
+            <button id="officialRoster" class="btn" type="button">Print Official Roster</button>
+            <a id="dayRecord" class="btn primary" href="#">Open Day Record</a>
+          </div>
+          <h3>Roster</h3>
+          <div id="rosterNotice" class="notice"></div>
+          <div id="roster" class="roster"></div>
+          <div id="finalizedNotice" class="notice warning" hidden><strong>Finalized class.</strong> Do not add participants. Name or email corrections here do not change a credential already issued by AHA, ARC, or HSI. Customer-facing credential data must also be corrected with the certifying body.</div>
+        </div>
+      </section>
+
+      <aside class="panel class-browser">
+        <div class="panel-head"><div><span class="eyebrow">SCHEDULE</span><h2>Classes</h2></div><span id="classCount" class="state">0</span></div>
+        <input id="search" type="search" placeholder="Search course, person, email, client, location…">
+        <div class="filter-row"><button class="filter active" data-filter="upcoming">Upcoming</button><button class="filter" data-filter="past">Past</button><button class="filter" data-filter="all">All</button></div>
+        <div id="classList" class="class-list"></div>
+      </aside>
+    </div>
+
+    <section id="newClassPanel" class="panel new-class" hidden>
+      <div class="panel-head"><div><span class="eyebrow">OWNER INPUT</span><h2>Add a Class</h2></div><button id="closeNew" class="btn" type="button">Close</button></div>
+      <p class="notice">This writes a committed HOT_SYNC class so it becomes part of the operational schedule and blocks conflicting public availability.</p>
+      <div class="form-grid">
+        <label>Course<input id="course" required placeholder="AHA BLS Provider"></label>
+        <label>Course key<input id="courseKey" placeholder="bls-provider"></label>
+        <label>Date<input id="date" type="date" required></label>
+        <label>Start time<input id="start" type="time" required></label>
+        <label>End time<input id="end" type="time" required></label>
+        <label>Capacity<input id="capacity" type="number" min="1"></label>
+        <label>Client / Agency<input id="client" required placeholder="Individual, company, or agency"></label>
+        <label>Location<input id="location" required placeholder="910CPR or client site"></label>
+        <label>Instructor<input id="instructor" value="Brian"></label>
+        <label>Visibility<select id="visibility"><option value="hidden">Unlisted / roster only</option><option value="private">Private link</option><option value="public">Public</option></select></label>
+        <label class="wide">Notes<textarea id="notes" rows="3"></textarea></label>
+      </div>
+      <div class="actionbar"><button id="saveClass" class="btn primary" type="button">Save Class to Schedule</button><span id="saveStatus" class="status"></span></div>
+    </section>
+  </main>
+  <script src="/admin/admin-nav.js?v=20260911-1"></script>
+  <script src="/admin/canonical-session-model.js?v=20260906-1"></script>
+  <script src="/admin/all-classes.js?v=20260911-1"></script>
+</body>
+</html>
