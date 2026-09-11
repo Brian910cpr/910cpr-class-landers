@@ -4,7 +4,9 @@ Processed 2026-09-11 after review of PR #181, branch `codex/google-durable-recov
 
 Disposition: handoff accepted as reviewed, but PR remains draft and unmerged. The implementation is still correctly `CONNECTED`, not `PROVEN`, because no real Google Drive archive/receipt has completed. Source-integrity checks are green. The Cloudflare Pages check on the PR branch is failing, but that is deduplicated into existing incident #164 rather than treated as a new root cause. The known GitHub scheduled-event delivery incident #168 also means the daily GitHub cron must not itself be treated as proof of durable cadence; the first manual end-to-end run and later freshness evidence remain required.
 
-Next safe action requires account-level Google authority: configure the service-account credential and Drive folder access, then manually dispatch and verify the first real archive/receipt before any `PROVEN` claim or merge decision.
+Important proof-path correction discovered during review: GitHub documents that a `workflow_dispatch` event only triggers when the workflow file exists on the repository's default branch. Because `.github/workflows/google-durable-snapshot.yml` exists only on this draft branch, the handoff's instruction to configure credentials and then manually dispatch the *draft* workflow before merge cannot work as written. Do not claim this gate is executable yet.
+
+Next safe account-level action can still be performed independently: configure the Google service-account credential and share the intended Drive folders with that service-account identity. Repository-side follow-up must then provide a default-branch manual proof path before any `PROVEN` claim. A safe next Codex round should preserve this history and either (a) land a manual-only proof harness on `main` with schedule disabled until the first successful archive/receipt, or (b) otherwise provide an equivalent default-branch dispatch path. Only after a successful real archive/receipt and freshness evidence should automatic cadence be enabled or the durable path be called `PROVEN`.
 
 ---
 
