@@ -35,6 +35,7 @@ The rollback-only database test now covers payload-conflict rejection for both s
 - `python -m py_compile tests/test_issue_141_attendance_scheduling_migration.py` — passed.
 - `git diff --check` and staged diff check — passed.
 - PR #193 live state checked before work: open, mergeable/clean, with Cloudflare Pages preflight, source-integrity, and Cloudflare Pages checks passing.
+- PR #194 remote checks after push: both preflight runs passed, both source-integrity/truncation-guard runs passed, and Cloudflare Pages passed.
 - PostgreSQL runtime search: `psql`, Supabase CLI, Docker, Podman, and WSL are unavailable in this environment. Common Windows installation paths were also checked.
 
 ## Validation and deployment status
