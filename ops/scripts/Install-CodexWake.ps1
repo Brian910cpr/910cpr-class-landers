@@ -17,9 +17,10 @@ Copy-Item -LiteralPath $loopSource -Destination $installedLoop -Force
 
 if ($SeedCurrentTask -gt 0) {
     @{
-        current_task = $SeedCurrentTask
-        last_dispatch_at = (Get-Date).ToString('o')
-        worker_state = 'working'
+        current_task = $null
+        preferred_task = $SeedCurrentTask
+        last_dispatch_at = $null
+        worker_state = 'idle'
         blocked_reason = $null
     } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $installDirectory 'state.json') -Encoding utf8
 }
