@@ -4,6 +4,7 @@
 - Assignment: GitHub issue #141, historical LanderWare data silos reconciliation/backfill
 - Branch: `codex/issue-141-r10-dependency-gate`
 - Base: `origin/main` at `5392e74e2c7`
+- Receipt commit: `ed3a4ef4970005c5badf8afd390111d5a41d8892`
 - Work-item state: `BLOCKED`
 - Persistent-system evidence: isolated Issue #141 database safety gate remains `PROVEN`; production migration/backfill remains not authorized and not production-connected/proven
 
@@ -45,7 +46,7 @@ The isolated worktree showed `docs/Earl/index.html` modified immediately after c
 ## Deployment status
 
 - Local validation: dependency/status audit completed in an isolated worktree.
-- Push: this receipt branch will be pushed as required by the dispatch.
+- Push: receipt commit `ed3a4ef4970005c5badf8afd390111d5a41d8892` is included in the pushed branch.
 - Merge: not attempted.
 - Deployment: not attempted.
 - Production database: unchanged.
