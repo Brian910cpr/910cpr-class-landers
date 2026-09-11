@@ -4,6 +4,12 @@
 
 The worker uses an exclusive file lock to prevent overlap, fetches the real checkout at `E:\GitHub\910cpr-class-landers`, reads open `[CODEX]` GitHub issues, and maintains `ops/handoff/codex_heartbeat.json`. A 90-minute dispatch lease prevents repeated launches for the same active item. Logs and authoritative local state live under `%LOCALAPPDATA%\910CPR\CodexWake`.
 
+Heartbeat interpretation:
+
+- `last_check_at`, `queue_count`, and `next_check_due` prove queue-check activity.
+- `last_launch_status`, `last_launch_issue`, `last_dispatch_at`, and `last_launch_command` prove that the worker reached the Codex launch boundary.
+- `last_launch_completed_at`, `last_launch_exit_code`, and `last_completed_task` prove that the launched process returned successfully. A pushed root `Codex_Reply_*` file remains the end-to-end work receipt.
+
 Install or repair:
 
 ```powershell
