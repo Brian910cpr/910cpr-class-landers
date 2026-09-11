@@ -1,0 +1,45 @@
+name: Issue 141 PostgreSQL proof
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/issue-141-postgres-proof.yml"
+      - "scripts/test_issue_141_postgres.ps1"
+      - "supabase/migrations/20260810020058_maxim_durable_records.sql"
+      - "supabase/migrations/20260911190000_attendance_scheduling_state_gate.sql"
+      - "supabase/tests/issue_141_*.sql"
+      - "supabase/tests/issue_141_concurrency.py"
+      - "tests/test_issue_141_attendance_scheduling_migration.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  postgres-proof:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16.4
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: issue141
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d issue141"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/issue141
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "psycopg[binary]==3.2.10"
+      - name: Execute migration, rollback, and concurrency proof
+        shell: pwsh
+        run: ./scripts/test_issue_141_postgres.ps1
