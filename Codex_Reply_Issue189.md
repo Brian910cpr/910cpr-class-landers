@@ -1,9 +1,9 @@
 # Codex Reply: Issue 189
 
 - Timestamp: 2026-09-11 17:58 UTC
-- Branch: `main`
+- Branch: `codex/issue-189-all-classes`
 - Substantive commit: `5a44d47981b`
-- Work-item state: `IN_PROGRESS`
+- Work-item state: `PR_OPEN`
 - Persistent-system evidence state: `BUILT`
 
 ## Finding
@@ -47,6 +47,6 @@ The NHCSO workspace exposed a calendar, roster, and class-entry experience, whil
 
 ## Next action
 
-Push the two commits, wait for GitHub Pages deployment, verify the owner page loads and authenticates in production, then continue the generic per-class write/document/finalization workflow.
+Review and merge PR #190, wait for GitHub Pages deployment, verify the owner page loads and authenticates in production, then continue the generic per-class write/document/finalization workflow.
 
 No user-level or account-level action is required unless the production admin key or deployment connection fails.
