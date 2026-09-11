@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://910cpr.com/contracts/durable-record-envelope.v1.schema.json",
+  "title": "DurableRecordEnvelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "entity_type",
+    "canonical_id",
+    "source_system",
+    "source_id",
+    "schema_version",
+    "occurred_at",
+    "mirrored_at",
+    "content_hash",
+    "reconciliation_status",
+    "payload_strategy",
+    "payload",
+    "provenance"
+  ],
+  "properties": {
+    "entity_type": {
+      "type": "string",
+      "enum": ["session", "registration", "person", "organization", "credential", "financial_ref"]
+    },
+    "canonical_id": {"type": "string", "minLength": 1},
+    "source_system": {"const": "landerware_supabase"},
+    "source_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "durable-record-envelope.v1"},
+    "occurred_at": {"type": "string", "format": "date-time"},
+    "mirrored_at": {"type": "string", "format": "date-time"},
+    "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "reconciliation_status": {
+      "type": "string",
+      "enum": ["pending", "matched", "missing", "extra", "mismatched", "ambiguous", "stale"]
+    },
+    "payload_strategy": {"const": "inline_allowlisted_v1"},
+    "payload": {"type": "object"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_table", "source_updated_at"],
+      "properties": {
+        "source_table": {"type": "string", "minLength": 1},
+        "source_updated_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    }
+  }
+}
