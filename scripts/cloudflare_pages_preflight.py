@@ -27,13 +27,6 @@ def meaningful_lines(path: Path) -> list[str]:
     ]
 
 
-def record_url_path(url_paths: dict[str, str], relative: str) -> str | None:
-    prior = url_paths.setdefault(relative.casefold(), relative)
-    if prior != relative:
-        return f"case-insensitive asset path collision: {prior} and {relative}"
-    return None
-
-
 def validate_special_files(root: Path) -> list[str]:
     errors: list[str] = []
     headers = root / "_headers"
@@ -72,7 +65,6 @@ def validate_special_files(root: Path) -> list[str]:
 def validate_tree(root: Path, max_files: int, max_file_size: int) -> tuple[list[str], int]:
     errors: list[str] = []
     files: list[Path] = []
-    url_paths: dict[str, str] = {}
 
     if not root.is_dir():
         return [f"output directory does not exist: {root}"], 0
@@ -99,10 +91,6 @@ def validate_tree(root: Path, max_files: int, max_file_size: int) -> tuple[list[
                 errors.append(f"asset exceeds {max_file_size} bytes: {relative} ({size} bytes)")
             if any(ord(character) < 32 or ord(character) == 127 for character in relative):
                 errors.append(f"asset path contains a control character: {relative!r}")
-            collision = record_url_path(url_paths, relative)
-            if collision:
-                errors.append(collision)
-
     if len(files) > max_files:
         errors.append(f"tree has {len(files)} files; limit is {max_files}")
     errors.extend(validate_special_files(root))

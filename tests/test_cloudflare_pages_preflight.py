@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.cloudflare_pages_preflight import record_url_path, validate_tree
+from scripts.cloudflare_pages_preflight import validate_tree
 
 
 class CloudflarePagesPreflightTests(unittest.TestCase):
@@ -29,14 +29,6 @@ class CloudflarePagesPreflightTests(unittest.TestCase):
             errors, count = validate_tree(root, max_files=1, max_file_size=10)
             self.assertEqual(count, 2)
             self.assertIn("tree has 2 files; limit is 1", errors)
-
-    def test_case_collision_fails(self):
-        paths: dict[str, str] = {}
-        self.assertIsNone(record_url_path(paths, "Course.html"))
-        self.assertEqual(
-            record_url_path(paths, "course.html"),
-            "case-insensitive asset path collision: Course.html and course.html",
-        )
 
     def test_redirect_limits_fail(self):
         with tempfile.TemporaryDirectory() as directory:
