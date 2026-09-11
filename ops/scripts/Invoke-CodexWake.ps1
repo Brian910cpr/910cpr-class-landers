@@ -69,7 +69,7 @@ try {
     $completedIssueUpdates = @{}
     if ($state.completed_issue_updates) {
         foreach ($property in $state.completed_issue_updates.PSObject.Properties) {
-            $completedIssueUpdates[$property.Name] = [string]$property.Value
+            $completedIssueUpdates[$property.Name] = Get-IssueUpdateKey $property.Value
         }
     }
     $eligible = @($issues | Where-Object {
