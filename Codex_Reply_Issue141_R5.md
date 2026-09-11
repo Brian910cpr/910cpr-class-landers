@@ -4,7 +4,7 @@
 - Timestamp: 2026-09-11T14:12:57-04:00 (America/New_York)
 - Branch: `codex/issue-141-r5-backend-gate`
 - Audited base commit: `9b24eff359e31a14066fee5600aa11357d2d39e1` (`origin/main` after fetch)
-- Receipt commit: recorded in the follow-up receipt commit; the pushed branch tip is authoritative
+- Receipt content commit: `fbf8aba1ada` (this follow-up metadata commit is the pushed branch tip)
 - Work-item state: `BLOCKED`
 - Persistent-system evidence state: prior historical backfill is reported `PROVEN` by issue receipts; the proposed attendance/scheduling lifecycle slice remains unbuilt and unconnected in this round
 
