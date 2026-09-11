@@ -43,6 +43,9 @@ class AttendanceSchedulingMigrationTests(unittest.TestCase):
         self.assertIn("attendance replay duplicated assertion", DB_TEST)
         self.assertIn("request replay was not idempotent", DB_TEST)
         self.assertIn("pg_advisory_xact_lock", MIGRATION)
+        self.assertIn("landerware_scheduling_request_receipts", MIGRATION)
+        self.assertIn("historical request replay duplicated immutable receipt", DB_TEST)
+        self.assertIn("historical request replay duplicated audit event", DB_TEST)
         self.assertEqual(MIGRATION.count("raise exception 'idempotency_key_payload_conflict'"), 2)
         self.assertGreaterEqual(DB_TEST.count("expected idempotency_key_payload_conflict"), 2)
 

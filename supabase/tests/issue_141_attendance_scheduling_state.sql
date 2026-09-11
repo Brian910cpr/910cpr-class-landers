@@ -39,6 +39,16 @@ begin
   if (v_result->>'idempotentReplay')::boolean then raise exception 'first request incorrectly marked replay'; end if;
   v_result := public.landerware_request_scheduling(v_requirement,current_date+30,'explicit_sender_deadline','issue141-request-1');
   if not (v_result->>'idempotentReplay')::boolean then raise exception 'request replay was not idempotent'; end if;
+  v_result := public.landerware_request_scheduling(v_requirement,current_date+45,'explicit_sender_deadline','issue141-request-2');
+  if (v_result->>'idempotentReplay')::boolean then raise exception 'second distinct request incorrectly marked replay'; end if;
+  v_result := public.landerware_request_scheduling(v_requirement,current_date+30,'explicit_sender_deadline','issue141-request-1');
+  if not (v_result->>'idempotentReplay')::boolean then raise exception 'historical request replay was not idempotent'; end if;
+  if (select count(*) from public.landerware_scheduling_request_receipts where requirement_id=v_requirement) <> 2 then
+    raise exception 'historical request replay duplicated immutable receipt';
+  end if;
+  if (select count(*) from public.landerware_activity_events where requirement_id=v_requirement and event_type='scheduling_requested') <> 2 then
+    raise exception 'historical request replay duplicated audit event';
+  end if;
   begin
     perform public.landerware_request_scheduling(v_requirement,current_date+31,'explicit_sender_deadline','issue141-request-1');
     raise exception 'expected idempotency_key_payload_conflict';
