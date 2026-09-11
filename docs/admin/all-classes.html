@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
   <link rel="stylesheet" href="/admin/admin-nav.css?v=20260905-1">
-  <link rel="stylesheet" href="/admin/all-classes.css?v=20260911-1">
+  <link rel="stylesheet" href="/admin/all-classes.css?v=20260911-2">
   <script src="/assets/site-theme.js"></script>
 </head>
 <body>
@@ -47,11 +47,14 @@
         <div id="classDetail" hidden>
           <div id="classFacts" class="facts"></div>
           <div class="actionbar">
+            <button id="preclassPacket" class="btn primary" type="button">Preclass Packet</button>
+            <label class="packet-option"><input id="printSkillsDescriptors" type="checkbox"> Print Skills Descriptors</label>
             <button id="preRoster" class="btn" type="button">Print Pre-Class Roster</button>
             <button id="ecardImport" class="btn" type="button">Download AHA eCard Import CSV</button>
             <button id="officialRoster" class="btn" type="button">Print Official Roster</button>
             <a id="dayRecord" class="btn primary" href="#">Open Day Record</a>
           </div>
+          <div id="packetStatus" class="notice" hidden></div>
           <h3>Roster</h3>
           <div id="rosterNotice" class="notice"></div>
           <div id="roster" class="roster"></div>
@@ -88,6 +91,6 @@
   </main>
   <script src="/admin/admin-nav.js?v=20260911-1"></script>
   <script src="/admin/canonical-session-model.js?v=20260906-1"></script>
-  <script src="/admin/all-classes.js?v=20260911-2"></script>
+  <script src="/admin/all-classes.js?v=20260911-3"></script>
 </body>
 </html>
