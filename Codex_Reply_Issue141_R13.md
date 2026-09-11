@@ -4,6 +4,7 @@
 - Timestamp: 2026-09-11 17:26:30 -04:00 (America/New_York)
 - Branch: `codex/issue-141-r13-dependency-gate`
 - Base: `origin/main` at `a74edc0f710e1d0f24074af369f429eebce15df0`
+- Receipt commit: `38e4861d12c980d91cadcb40ae2f22ddeaa86d1d`
 - Work-item state: `BLOCKED`
 - Persistent-system evidence: Issue #141's isolated PostgreSQL safety gate remains `PROVEN`; the proposed migration remains not production-connected or production-proven.
 
