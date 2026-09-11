@@ -57,7 +57,7 @@ Known unrelated failure/state: isolated checkout retains a 2-line checkout-gener
 
 - Locally validated: yes.
 - Branch pushed: yes.
-- PR open: #198; mergeable when checked, CI initially in progress.
+- PR open: #198; mergeable when checked. Both Cloudflare preflight runs and both source-integrity truncation-guard runs passed.
 - Merged: no.
 - Deployed: no.
 - Supabase source connected: no.
