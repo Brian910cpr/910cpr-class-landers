@@ -30,7 +30,9 @@ concurrency:
 jobs:
   refresh:
     name: Refresh public static output
-    runs-on: windows-latest
+    # The tracked public tree intentionally preserves a small set of case-only
+    # legacy URL aliases. A Linux checkout is required to represent both blobs.
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out main
@@ -111,10 +113,10 @@ jobs:
 
       - name: Run full validated public build
         if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
-        shell: cmd
+        shell: bash
         env:
           LANDER_SKIP_REPOSITORY_TESTS: "1"
-        run: build\full_validated_public_build.bat
+        run: python -m scripts.run_validated_public_build
 
       - name: Reconcile admin occupancy from current canonical sources
         if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
