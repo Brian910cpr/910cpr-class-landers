@@ -19,6 +19,7 @@ Issue #142 was already implemented by PR #143 and merged to `main` on 2026-09-06
 - Confirmed GitHub Pages run `34004950959` completed successfully for that merge commit.
 - Re-ran the narrow JavaScript, Node, Python, and diff checks relevant to the toolbox.
 - Verified the production HTML and its versioned CSS and JavaScript assets.
+- Closed issue #142 with the verification evidence after all stated acceptance work was confirmed complete.
 
 ## Exact files changed in this verification pass
 
@@ -58,7 +59,7 @@ None identified for the issue's stated scope. This pass did not re-audit whether
 
 ## Recommended next action for ChatGPT
 
-Close issue #142 as completed and verified, then acknowledge this receipt under the repository handoff protocol.
+Acknowledge this receipt under the repository handoff protocol. Issue #142 is closed as completed and verified.
 
 ## User/account action required
 
