@@ -61,11 +61,21 @@ try {
     $parsedIssues = ConvertFrom-Json -InputObject ($issuesJson -join [Environment]::NewLine)
     $issues = @()
     foreach ($issue in $parsedIssues) { $issues += $issue }
-    $eligible = @($issues | Where-Object { $_.title -match '^\[CODEX\]' } | Sort-Object @{ Expression = {
+    $state = Read-State
+    $completedIssueUpdates = @{}
+    if ($state.completed_issue_updates) {
+        foreach ($property in $state.completed_issue_updates.PSObject.Properties) {
+            $completedIssueUpdates[$property.Name] = [string]$property.Value
+        }
+    }
+    $eligible = @($issues | Where-Object {
+        if ($_.title -notmatch '^\[CODEX\]') { return $false }
+        $completedAtUpdate = $completedIssueUpdates[[string]$_.number]
+        return (-not $completedAtUpdate) -or ($completedAtUpdate -ne [string]$_.updatedAt)
+    } | Sort-Object @{ Expression = {
         if ($_.title -match '\bP0\b') { 0 } elseif ($_.title -match '\bP1\b') { 1 } else { 2 }
     } }, number)
 
-    $state = Read-State
     $currentTask = $state.current_task
     $lastDispatch = if ($state.last_dispatch_at) { [datetimeoffset]::Parse($state.last_dispatch_at) } else { $null }
     $leaseActive = $currentTask -and $lastDispatch -and (([datetimeoffset]::Now - $lastDispatch).TotalMinutes -lt $LeaseMinutes)
@@ -97,7 +107,8 @@ For this dispatch, the required receipt is $requiredReceipt. Push it to GitHub b
     $exitCode = $LASTEXITCODE
     $ErrorActionPreference = $previousPreference
     if ($exitCode -ne 0) { throw "Codex exited with code $exitCode" }
-    Write-Heartbeat @{ last_check_at = (Get-Date).ToString('o'); last_launch_status = 'completed'; last_launch_completed_at = (Get-Date).ToString('o'); last_launch_exit_code = $exitCode; worker_state = 'idle'; current_task = $null; preferred_task = $null; last_completed_task = $issueNumber; last_commit = ((& git -C $RepoPath rev-parse HEAD).Trim()); next_check_due = (Get-Date).AddMinutes(15).ToString('o'); blocked_reason = $null }
+    $completedIssueUpdates[[string]$issueNumber] = [string]$selected.updatedAt
+    Write-Heartbeat @{ last_check_at = (Get-Date).ToString('o'); last_launch_status = 'completed'; last_launch_completed_at = (Get-Date).ToString('o'); last_launch_exit_code = $exitCode; worker_state = 'idle'; current_task = $null; preferred_task = $null; last_completed_task = $issueNumber; completed_issue_updates = $completedIssueUpdates; last_commit = ((& git -C $RepoPath rev-parse HEAD).Trim()); next_check_due = (Get-Date).AddMinutes(15).ToString('o'); blocked_reason = $null }
 } catch {
     $_ | Out-String | Add-Content -LiteralPath $logPath
     Write-Heartbeat @{ last_check_at = (Get-Date).ToString('o'); last_launch_status = 'failed'; last_launch_completed_at = (Get-Date).ToString('o'); last_launch_exit_code = $LASTEXITCODE; worker_state = 'error'; next_check_due = (Get-Date).AddMinutes(15).ToString('o'); blocked_reason = $_.Exception.Message }

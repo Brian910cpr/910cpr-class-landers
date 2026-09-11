@@ -4,6 +4,8 @@
 
 The worker uses an exclusive file lock to prevent overlap, fetches the real checkout at `E:\GitHub\910cpr-class-landers`, reads open `[CODEX]` GitHub issues, and maintains `ops/handoff/codex_heartbeat.json`. A 90-minute dispatch lease prevents repeated launches for the same active item. Logs and authoritative local state live under `%LOCALAPPDATA%\910CPR\CodexWake`.
 
+After a successful run, the worker records the issue's GitHub `updatedAt` value and suppresses that unchanged issue on later cycles. A new issue comment or edit changes `updatedAt`, making the item eligible for a follow-up round without repeatedly launching completed work.
+
 Heartbeat interpretation:
 
 - `last_check_at`, `queue_count`, and `next_check_due` prove queue-check activity.
