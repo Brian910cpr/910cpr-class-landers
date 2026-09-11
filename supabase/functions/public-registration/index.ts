@@ -1,165 +1,25 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-const ALLOWED_ORIGINS = new Set(["https://www.910cpr.com", "https://910cpr.com"]);
+const ORIGIN="https://www.910cpr.com",ALLOWED=new Set([ORIGIN,"https://910cpr.com"]),STRIPE_API="https://api.stripe.com/v1";
+const cors=(origin:string)=>({"access-control-allow-origin":ALLOWED.has(origin)?origin:ORIGIN,"access-control-allow-headers":"content-type,idempotency-key","access-control-allow-methods":"GET,POST,OPTIONS","cache-control":"no-store",vary:"Origin"});
+const json=(origin:string,data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:{...cors(origin),"content-type":"application/json; charset=utf-8"}});
+function cfg(){const url=Deno.env.get("SUPABASE_URL"),raw=Deno.env.get("SUPABASE_SECRET_KEYS"),key=raw?JSON.parse(raw).default:Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");if(!url||!key)throw Error("server_configuration");return{url,key}}
+async function db(path:string,init:RequestInit={}){const{url,key}=cfg(),r=await fetch(`${url}/rest/v1/${path}`,{...init,headers:{apikey:key,authorization:`Bearer ${key}`,"content-type":"application/json",prefer:"return=representation",...(init.headers||{})}}),p=await r.json().catch(()=>({}));if(!r.ok)throw Error(p?.message||`database_${r.status}`);return p}
+async function rpc(name:string,body:unknown){const p=await db(`rpc/${name}`,{method:"POST",body:JSON.stringify(body)});return Array.isArray(p)?p[0]:p}
+async function scheduleSession(id:string){if(!/^\d+$/.test(id))throw Error("invalid_session");const r=await fetch(`${ORIGIN}/data/schedule_future.json`,{headers:{accept:"application/json"}});if(!r.ok)throw Error("public_schedule_unavailable");const p=await r.json(),rows=Array.isArray(p)?p:p.sessions||[],s=rows.find((x:any)=>String(x.session_id)===id&&x.public_direct_booking===true&&x.registration_status==="open");if(!s)throw Error("session_not_open");return s}
+async function catalog(courseId:string){const rows=await db(`landerware_registration_catalog?course_id=eq.${encodeURIComponent(courseId)}&active=eq.true&select=course_id,course_name,unit_amount,currency,addons,billing_codes&limit=1`);if(!rows[0])throw Error("price_catalog_missing");return rows[0]}
+function stripeKey(){const k=Deno.env.get("STRIPE_SECRET_KEY");if(!k)throw Error("stripe_unavailable");return k}
+async function stripe(path:string,params:URLSearchParams,idempotencyKey:string){const r=await fetch(`${STRIPE_API}/${path}`,{method:"POST",headers:{authorization:`Bearer ${stripeKey()}`,"content-type":"application/x-www-form-urlencoded","Stripe-Version":Deno.env.get("STRIPE_API_VERSION")||"2026-07-29.dahlia","idempotency-key":idempotencyKey},body:params}),p=await r.json().catch(()=>({}));if(!r.ok)throw Error(p?.error?.message||`stripe_${r.status}`);return p}
+async function stripeGet(path:string){const r=await fetch(`${STRIPE_API}/${path}`,{headers:{authorization:`Bearer ${stripeKey()}`,"Stripe-Version":Deno.env.get("STRIPE_API_VERSION")||"2026-07-29.dahlia"}),p=await r.json().catch(()=>({}));if(!r.ok)throw Error(p?.error?.message||`stripe_${r.status}`);return p}
+async function order(id:string){const rows=await db(`landerware_public_orders?id=eq.${encodeURIComponent(id)}&select=*,landerware_public_order_students(*)&limit=1`);if(!rows[0])throw Error("order_not_found");return rows[0]}
+function checkoutParams(o:any,c:any){const p=new URLSearchParams();p.set("line_items[0][price_data][currency]",o.currency);p.set("line_items[0][price_data][product_data][name]",`${c.course_name} registration (${o.landerware_public_order_students.length} student${o.landerware_public_order_students.length===1?"":"s"})`);p.set("line_items[0][price_data][unit_amount]",String(o.total));p.set("line_items[0][quantity]","1");p.set("mode","payment");p.set("customer_email",o.payer_email);p.set("success_url",`${ORIGIN}/register/?order=${o.id}&paid=1`);p.set("cancel_url",`${ORIGIN}/register/?recover=${o.recovery_token}`);p.set("expires_at",String(Math.floor(Date.now()/1000)+1800));p.set("metadata[landerware_order_id]",o.id);p.set("integration_identifier",`910cpr_retail_${crypto.randomUUID().replace(/[^a-z]/g,"").slice(0,8).padEnd(8,"x")}`);if(o.billing_code)p.set("metadata[billing_code]",o.billing_code);return p}
+async function createCheckout(o:any,c:any){const checkout=await stripe("checkout/sessions",checkoutParams(o,c),`landerware-public-${o.id}`);await db(`landerware_public_orders?id=eq.${o.id}`,{method:"PATCH",body:JSON.stringify({status:"checkout_open",stripe_checkout_session_id:checkout.id,checkout_url:checkout.url,updated_at:new Date().toISOString()})});return checkout}
+async function queueEmail(recipient:string,subject:string,body:string,template:string,idempotencyKey:string){await db("landerware_messages",{method:"POST",headers:{prefer:"resolution=ignore-duplicates,return=minimal"},body:JSON.stringify({template_key:template,channel:"email",recipient,subject,body_text:body,delivery_provider:"gmail",delivery_status:"pending",idempotency_key:idempotencyKey})})}
+async function sendRecovery(o:any,s:any){const link=`${ORIGIN}/register/?recover=${o.recovery_token}`;await queueEmail(o.payer_email,`Complete your ${s.course_name||"910CPR"} registration`,`We saved your class selection for 30 minutes. Complete payment here:\n${link}\n\nIf the hold expires, the same link will recheck availability before payment.`,`retail-checkout-recovery-v2`,`public-order-recovery:${o.id}`)}
+async function paidEmails(o:any,s:any){const students=o.landerware_public_order_students||[],names=students.map((x:any)=>`${x.first_name} ${x.last_name}`).join(", "),selected=students.flatMap((x:any)=>(x.selected_addons||[]).map((a:any)=>`${x.first_name} ${x.last_name}: ${a.key} x${a.quantity||1}`));await Promise.all([...new Set(students.map((x:any)=>String(x.email)))].map(to=>queueEmail(to,`Registration confirmed — ${s.course_name}`,`Your registration is confirmed for ${s.course_name}.\n\n${new Date(s.start_at).toLocaleString("en-US",{timeZone:"America/New_York"})}\n${s.location_display||s.location_name||""}\n\nStudents: ${names}`,`retail-paid-confirmation-v2`,`public-order-paid:${o.id}:${to.toLowerCase()}`)));if(selected.length)await queueEmail(Deno.env.get("FULFILLMENT_EMAIL")||"brian@910cpr.com",`Paid add-ons require fulfillment — ${s.course_name}`,`Order ${o.id} is paid. Do not auto-release codes or materials.\n\n${selected.join("\n")}`,`retail-addon-fulfillment-v2`,`public-order-fulfillment:${o.id}`)}
+async function start(req:Request,origin:string){const b=await req.json(),id=String(b.sessionId||"").trim(),s=await scheduleSession(id),c=await catalog(String(s.course_id||s.course_number||"")),students=Array.isArray(b.students)?b.students:[],key=(req.headers.get("idempotency-key")||"").trim();if(!key)throw Error("invalid_order");const result=await rpc("landerware_create_public_order",{p_idempotency_key:`public-order:${key}`,p_external_class_id:id,p_course_id:c.course_id,p_payer_email:String(b.payerEmail||students[0]?.email||""),p_payer_phone:String(b.payerPhone||students[0]?.phone||""),p_students:students,p_billing_code:String(b.billingCode||"")||null}),o=await order(result.orderId);if(o.total===0){await rpc("landerware_finalize_public_order",{p_order_id:o.id,p_stripe_payment_intent_id:"no_payment_required"});await paidEmails(o,s);return json(origin,{ok:true,orderId:o.id,holdExpiresAt:o.hold_expires_at,checkoutUrl:`${ORIGIN}/register/?order=${o.id}&paid=1`,recoveryUrl:`${ORIGIN}/register/?recover=${o.recovery_token}`})}const checkout=o.checkout_url?{url:o.checkout_url}:await createCheckout(o,c);if(!result.idempotentReplay)await sendRecovery(o,s);return json(origin,{ok:true,orderId:o.id,holdExpiresAt:o.hold_expires_at,checkoutUrl:checkout.url,recoveryUrl:`${ORIGIN}/register/?recover=${o.recovery_token}`})}
+async function recover(token:string,origin:string){if(!/^[0-9a-f-]{36}$/i.test(token))throw Error("invalid_recovery_token");const rows=await db(`landerware_public_orders?recovery_token=eq.${encodeURIComponent(token)}&select=*&limit=1`),o=rows[0];if(!o)throw Error("order_not_found");if(o.status==="paid")return json(origin,{ok:true,status:"paid",orderId:o.id});if(new Date(o.hold_expires_at)<=new Date()){await db(`landerware_public_orders?id=eq.${o.id}`,{method:"PATCH",body:JSON.stringify({status:"expired",updated_at:new Date().toISOString()})});return json(origin,{ok:false,status:"expired",sessionId:o.external_class_id},409)}return json(origin,{ok:true,status:o.status,checkoutUrl:o.checkout_url,holdExpiresAt:o.hold_expires_at})}
+async function verifyPaid(id:string,origin:string){if(!/^[0-9a-f-]{36}$/i.test(id))throw Error("order_not_found");const o=await order(id);if(o.status==="paid")return json(origin,{ok:true,status:"paid"});const checkout=await stripeGet(`checkout/sessions/${encodeURIComponent(o.stripe_checkout_session_id||"")}`);if(checkout.payment_status!=="paid")return json(origin,{ok:false,status:"payment_pending"},409);await rpc("landerware_finalize_public_order",{p_order_id:o.id,p_stripe_payment_intent_id:String(checkout.payment_intent||"")});const s=await scheduleSession(o.external_class_id);await paidEmails(o,s);return json(origin,{ok:true,status:"paid"})}
 
-function headers(origin: string) {
-  const allowed = ALLOWED_ORIGINS.has(origin) ? origin : "https://www.910cpr.com";
-  return {
-    "access-control-allow-origin": allowed,
-    "access-control-allow-headers": "content-type,idempotency-key",
-    "access-control-allow-methods": "GET,POST,OPTIONS",
-    "cache-control": "no-store",
-    vary: "Origin",
-  };
-}
-
-function reply(origin: string, body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...headers(origin), "content-type": "application/json; charset=utf-8" },
-  });
-}
-
-function config() {
-  const url = Deno.env.get("SUPABASE_URL");
-  const raw = Deno.env.get("SUPABASE_SECRET_KEYS");
-  const key = raw ? JSON.parse(raw).default : Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!url || !key) throw new Error("server_configuration");
-  return { url, key };
-}
-
-async function rpc(name: string, body: Record<string, unknown>) {
-  const { url, key } = config();
-  const response = await fetch(`${url}/rest/v1/rpc/${name}`, {
-    method: "POST",
-    headers: { apikey: key, authorization: `Bearer ${key}`, "content-type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(payload?.message || `database_${response.status}`);
-  return Array.isArray(payload) ? payload[0] : payload;
-}
-
-async function rest(path: string, method = "GET", body?: unknown) {
-  const { url, key } = config();
-  const response = await fetch(`${url}/rest/v1/${path}`, { method, headers: { apikey: key, authorization: `Bearer ${key}`, "content-type": "application/json", prefer: "return=representation" }, body: body === undefined ? undefined : JSON.stringify(body) });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(payload?.message || `database_${response.status}`);
-  return payload;
-}
-
-async function stripe(path: string, body: URLSearchParams, idempotencyKey: string) {
-  const key = Deno.env.get("STRIPE_SECRET_KEY");
-  if (!key) throw new Error("stripe_unavailable");
-  const response = await fetch(`https://api.stripe.com/v1${path}`, { method: "POST", headers: { authorization: `Bearer ${key}`, "content-type": "application/x-www-form-urlencoded", "idempotency-key": idempotencyKey }, body });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(payload?.error?.message || `stripe_${response.status}`);
-  return payload;
-}
-
-async function validStripeSignature(payload: string, header: string) {
-  const secret = Deno.env.get("STRIPE_WEBHOOK_SECRET"); if (!secret) throw new Error("stripe_webhook_unavailable");
-  const parts = header.split(",").map(x => x.split("=", 2)); const timestamp = parts.find(x => x[0] === "t")?.[1], signatures = parts.filter(x => x[0] === "v1").map(x => x[1]);
-  if (!timestamp || !signatures.length || Math.abs(Date.now() / 1000 - Number(timestamp)) > 300) return false;
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const digest = Array.from(new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${timestamp}.${payload}`)))).map(b => b.toString(16).padStart(2, "0")).join("");
-  return signatures.some(signature => { if (digest.length !== signature.length) return false; let mismatch = 0; for (let i = 0; i < digest.length; i++) mismatch |= digest.charCodeAt(i) ^ signature.charCodeAt(i); return mismatch === 0; });
-}
-
-async function publicSession(externalClassId: string) {
-  if (!/^\d+$/.test(externalClassId)) throw new Error("invalid_session");
-  const response = await fetch("https://www.910cpr.com/data/schedule_future.json", {
-    headers: { accept: "application/json" },
-  });
-  if (!response.ok) throw new Error("public_schedule_unavailable");
-  const payload = await response.json();
-  const rows = Array.isArray(payload) ? payload : Array.isArray(payload.sessions) ? payload.sessions : [];
-  const session = rows.find((item: any) =>
-    String(item.session_id) === externalClassId &&
-    item.public_direct_booking === true &&
-    item.registration_status === "open"
-  );
-  if (!session) throw new Error("session_not_open");
-  const checkout = new URL(session.registration_url);
-  if (checkout.origin !== "https://coastalcprtraining.enrollware.com" ||
-      checkout.pathname !== "/enroll" || checkout.searchParams.get("id") !== externalClassId) {
-    throw new Error("invalid_checkout_url");
-  }
-  return session;
-}
-
-Deno.serve(async (request) => {
-  const origin = request.headers.get("origin") || "";
-  if (origin && !ALLOWED_ORIGINS.has(origin)) return reply(origin, { error: "origin_not_allowed" }, 403);
-  if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: headers(origin) });
-  const parts = new URL(request.url).pathname.split("/").filter(Boolean);
-  const route = parts.slice(parts.indexOf("public-registration") + 1);
-  try {
-    if (request.method === "GET" && route[0] === "session" && route[1]) {
-      const session = await publicSession(route[1]);
-      const profiles = await rest(`landerware_registration_profiles?profile_key=eq.retail-${encodeURIComponent(String(session.course_id))}&active=eq.true&listed=eq.true&select=pricing_behavior,addons&limit=1`);
-      const profile = profiles[0]; if (!profile) throw new Error("retail_profile_not_found");
-      return reply(origin, { ok: true, session: {
-        id: String(session.session_id), courseId: String(session.course_id), course: session.course_name,
-        startsAt: session.start_at, endsAt: session.end_at || null,
-        location: session.location_display || session.location_name || "",
-        price: Number(profile.pricing_behavior?.amount_cents) / 100,
-        addons: profile.addons || [],
-        fallbackRegistrationUrl: session.registration_url,
-      }});
-    }
-    if (request.method === "POST" && route[0] === "start") {
-      const body = await request.json();
-      const externalClassId = String(body.sessionId || "").trim();
-      const session = await publicSession(externalClassId);
-      const firstName = String(body.firstName || "").trim().slice(0, 100);
-      const lastName = String(body.lastName || "").trim().slice(0, 100);
-      const email = String(body.email || "").trim().toLowerCase().slice(0, 320);
-      const phone = String(body.phone || "").trim().slice(0, 50);
-      const idempotencyKey = (request.headers.get("idempotency-key") || "").trim().slice(0, 160);
-      if (!firstName || !lastName || !email || !phone || !idempotencyKey) throw new Error("required_registration_field_missing");
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("invalid_email");
-      if (phone.replace(/\D/g, "").length < 10) throw new Error("invalid_phone");
-      const selectedOptions = body.selectedOptions && typeof body.selectedOptions === "object" && !Array.isArray(body.selectedOptions) ? body.selectedOptions : {};
-      const result = await rpc("begin_retail_checkout", {
-        p_external_class_id: externalClassId,
-        p_course_id: String(session.course_id),
-        p_course_name: String(session.course_name || "CPR Class"),
-        p_starts_at: session.start_at,
-        p_ends_at: session.end_at || null,
-        p_location_name: session.location_display || session.location_name || null,
-        p_first_name: firstName,
-        p_last_name: lastName,
-        p_email: email,
-        p_phone: phone,
-        p_selected_options: selectedOptions,
-        p_idempotency_key: idempotencyKey,
-        p_capacity: session.max_students ?? null,
-      });
-      if (result.checkoutUrl) return reply(origin, { ok: true, firstName, ...result, handoff: { provider: "stripe", url: result.checkoutUrl } });
-      const checkout = await stripe("/checkout/sessions", new URLSearchParams({
-        mode: "payment", success_url: `https://www.910cpr.com/register/success/?order=${result.orderId}&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `https://www.910cpr.com/register/?session=${externalClassId}`,
-        customer_email: email, "line_items[0][price_data][currency]": "usd",
-        "line_items[0][price_data][product_data][name]": String(session.course_name || "CPR Class"),
-        "line_items[0][price_data][unit_amount]": String(result.totalAmountCents), "line_items[0][quantity]": "1",
-        "metadata[landerware_order_id]": String(result.orderId), "metadata[external_class_id]": externalClassId,
-        expires_at: String(Math.floor(new Date(result.holdExpiresAt).getTime() / 1000)),
-      }), `retail-checkout-${result.orderId}`);
-      await rest(`landerware_retail_orders?id=eq.${result.orderId}`, "PATCH", { status: "checkout_open", stripe_checkout_session_id: checkout.id, checkout_url: checkout.url, updated_at: new Date().toISOString() });
-      await rest("landerware_messages", "POST", { person_id: result.personId, registration_id: result.registrationId, template_key: "retail-checkout-recovery-v1", recipient: email, subject: `Finish registering for ${session.course_name}`, body_text: `Hi ${firstName},\n\nYour seat is held for about 30 minutes. Finish secure payment here:\n${checkout.url}\n\n910CPR\n910-395-5193`, delivery_provider: "gmail", delivery_status: "pending", idempotency_key: `retail-checkout-recovery:${result.orderId}` });
-      return reply(origin, { ok: true, firstName, ...result, checkoutUrl: checkout.url, handoff: { provider: "stripe", url: checkout.url } });
-    }
-    if (request.method === "POST" && route[0] === "stripe-webhook") {
-      const raw = await request.text(); if (!await validStripeSignature(raw, request.headers.get("stripe-signature") || "")) return reply(origin, { error: "invalid_signature" }, 400);
-      const event = JSON.parse(raw), checkout = event?.data?.object;
-      if (event.type === "checkout.session.completed" && checkout?.payment_status === "paid" && checkout?.metadata?.landerware_order_id) await rpc("confirm_retail_payment", { p_order_id: checkout.metadata.landerware_order_id, p_checkout_session_id: checkout.id, p_payment_intent_id: checkout.payment_intent || null, p_evidence: { stripeEventId: event.id, paymentStatus: checkout.payment_status } });
-      return reply(origin, { received: true });
-    }
-    return reply(origin, { error: "not_found" }, 404);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "unexpected_error";
-    const bad = ["invalid_session", "session_not_open", "invalid_checkout_url", "required_registration_field_missing", "invalid_email", "invalid_phone", "retail_profile_not_found", "retail_price_unavailable", "invalid_retail_option", "session_full", "invalid_signature"].includes(message);
-    return reply(origin, { error: message }, bad ? 400 : 500);
-  }
-});
+function fallbackUrl(s:any,id:string){try{const u=new URL(String(s.registration_url||""));return u.origin==="https://coastalcprtraining.enrollware.com"&&u.pathname==="/enroll"&&u.searchParams.get("id")===id?u.toString():null}catch{return null}}
+Deno.serve(async req=>{const origin=req.headers.get("origin")||"",parts=new URL(req.url).pathname.split("/").filter(Boolean),route=parts.slice(parts.indexOf("public-registration")+1);if(origin&&!ALLOWED.has(origin))return json(origin,{error:"origin_not_allowed"},403);if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors(origin)});try{if(req.method==="GET"&&route[0]==="session"&&route[1]){const s=await scheduleSession(route[1]),c=await catalog(String(s.course_id||s.course_number||""));return json(origin,{ok:true,session:{id:String(s.session_id),courseId:c.course_id,course:c.course_name,startsAt:s.start_at,endsAt:s.end_at||null,location:s.location_display||s.location_name||"",price:c.unit_amount/100,currency:c.currency,addons:c.addons,fallbackRegistrationUrl:fallbackUrl(s,route[1])}})}if(req.method==="GET"&&route[0]==="recover"&&route[1])return recover(route[1],origin);if(req.method==="GET"&&route[0]==="order"&&route[1])return verifyPaid(route[1],origin);if(req.method==="POST"&&route[0]==="start")return start(req,origin);return json(origin,{error:"not_found"},404)}catch(e){const m=e instanceof Error?e.message:"unexpected_error",bad=["invalid_session","session_not_open","price_catalog_missing","invalid_order","required_registration_field_missing","invalid_addon","invalid_billing_code","insufficient_seats","invalid_recovery_token","order_not_found"].includes(m);return json(origin,{error:m},bad?400:500)}});
