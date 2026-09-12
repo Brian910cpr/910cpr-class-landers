@@ -65,13 +65,26 @@ Run the command twice with the same export. The second receipt must report all r
 
 The future authenticated Sheets adapter should implement the same `upsert`, `read`, and `read_all` boundary. A successful API response alone is insufficient: read-after-write verification and reconciliation remain mandatory.
 
+## Portable recovery snapshot and local drill
+
+Package a validated dry-run export into a deterministic portable ZIP, then restore it into a new empty local structure:
+
+```powershell
+python -m scripts.durable_record_recovery create --export-dir data/runtime/google_durable_record/run-001 --archive data/runtime/google_durable_record/recovery.zip
+python -m scripts.durable_record_recovery restore --archive data/runtime/google_durable_record/recovery.zip --recovery-dir data/runtime/google_durable_record/recovery-drill
+```
+
+The archive carries a hash manifest for the exporter manifest and all six JSONL entity files. Restore rejects missing, extra, duplicate, unsafe, or hash-mismatched members; refuses to overwrite a nonempty destination; validates the original exporter contract; rebuilds a clean stable-key local store; and writes `recovery_receipt.json` only after zero-exception reconciliation.
+
+Real archives may contain PII. Keep them in ignored private runtime storage and upload them only to an authorized private Drive destination. The repository implementation and synthetic drill do not prove Drive upload, retention, access control, or restoration from Drive.
+
 ## Reconciliation and recovery gates still open
 
 - Build an authenticated, least-privilege source reader or produce an authorized canonical snapshot.
 - Obtain Google OAuth/service-account authorization and private destination identifiers.
 - Implement the authenticated stable-key Sheets adapter using the locally tested verification/reconciliation boundary.
 - Run twice against a non-production mirror and prove no duplicate rows.
-- Export CSV/JSON snapshot files to Drive and perform a clean local recovery drill.
+- Upload a validated portable snapshot to an authorized private Drive destination and repeat the clean recovery drill from the downloaded artifact.
 - Reconcile Calendar representation without projecting thousands of historical sessions.
 - Add CI around the local contract/exporter; authenticated integration validation must not expose PII or secrets.
 
