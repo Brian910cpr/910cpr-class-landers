@@ -53,11 +53,23 @@ python -m scripts.export_google_durable_record --input-json <private-canonical-s
 
 It writes sorted JSONL files plus `manifest.json`, never contacts Google, and never mutates Supabase. Repeating with identical input and `--mirrored-at` produces byte-identical output. Fields are allowlisted; unknown source fields are omitted.
 
+## Local stable-key mirror harness
+
+`scripts/apply_google_durable_mirror.py` applies an exported run to a local JSON destination. This is a non-production adapter harness, not a Google Sheets writer. It upserts by `(entity_type, canonical_id)`, reads every record back, compares content hashes, writes an append-only audit log and durable exception log, reconciles missing/extra/mismatched records, and marks a source snapshot stale when its age exceeds the configured window.
+
+```powershell
+python -m scripts.apply_google_durable_mirror --export-dir data/runtime/google_durable_record/run-001 --mirror-dir data/runtime/google_durable_record/local-mirror --run-at 2026-09-11T23:00:00Z
+```
+
+Run the command twice with the same export. The second receipt must report all records as `unchanged`, zero exceptions, and all source records `matched`. `control.json` is the latest health receipt; `audit_log.jsonl` preserves every run; `exceptions.jsonl` is created when verification or reconciliation fails. All of these files may contain identifiers or PII and must stay in the ignored runtime directory.
+
+The future authenticated Sheets adapter should implement the same `upsert`, `read`, and `read_all` boundary. A successful API response alone is insufficient: read-after-write verification and reconciliation remain mandatory.
+
 ## Reconciliation and recovery gates still open
 
 - Build an authenticated, least-privilege source reader or produce an authorized canonical snapshot.
 - Obtain Google OAuth/service-account authorization and private destination identifiers.
-- Implement stable-key Sheets upsert, read-after-write hash verification, exception logging, retry receipts, and stale-run monitoring.
+- Implement the authenticated stable-key Sheets adapter using the locally tested verification/reconciliation boundary.
 - Run twice against a non-production mirror and prove no duplicate rows.
 - Export CSV/JSON snapshot files to Drive and perform a clean local recovery drill.
 - Reconcile Calendar representation without projecting thousands of historical sessions.
