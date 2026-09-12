@@ -4,6 +4,7 @@
 - Timestamp: `2026-09-12T07:39:24-04:00`
 - Branch: `codex/issue-140-r3-verification`
 - Production commit inspected: `bfa152008163a93b6c49315f932fc0417790c8a6`
+- Receipt foundation commit: `88d391755f6bcbfd04c3dfe0bcac6f3374ea6f87`
 - Work-item state: `BLOCKED`
 - Persistent-system evidence state: historically `CONNECTED`; currently failing authentication and therefore not `PROVEN`, `MONITORED`, or `HEALTHY`
 
@@ -46,6 +47,7 @@ Issue #205 is downstream of the same credential mismatch, not an independent ver
 ## Files and deployment status
 
 - Intended file changed: `Codex_Reply_Issue140_R3.md` only.
+- Known unrelated worktree difference: `docs/Earl/index.html` is modified and was deliberately left unstaged and uncommitted.
 - Local validation: completed as listed above.
 - Application code/config: unchanged.
 - Merge: not performed.
