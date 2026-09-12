@@ -4,6 +4,7 @@
 - Timestamp: `2026-09-12T07:21:58-04:00`
 - Branch: `codex/issue-140-r2-verification`
 - Base/current production commit inspected: `bfa152008163a93b6c49315f932fc0417790c8a6`
+- Receipt foundation commit: `5865fd516d8e2596caef5724435807b3de474eda`
 - Work-item state: `BLOCKED`
 - Persistent-system evidence state: `CONNECTED` historically; currently failing authentication and therefore not `PROVEN`, `MONITORED`, or `HEALTHY`
 
@@ -86,7 +87,7 @@ Do not send, paste, log, or commit the value. Restoring the GitHub copy is safer
 - Intended file changed: `Codex_Reply_Issue140_R2.md` only.
 - Known unrelated worktree change: `docs/Earl/index.html` appears modified and is deliberately unstaged/uncommitted.
 - Local validation: completed as listed above.
-- Push: this receipt will be committed and pushed before exit.
+- Push: completed to `origin/codex/issue-140-r2-verification`.
 - Merge: not performed.
 - Deployment/config mutation: not performed.
 - Public state: blocked/fail-closed; no incomplete admin or public output was deployed.
