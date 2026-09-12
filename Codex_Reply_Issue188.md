@@ -39,6 +39,7 @@ The repository does not contain authoritative current AHA, ARC, or HSI roster fo
 - `python -m unittest tests.test_nhcso_roster_workflow` — passed, 11 tests.
 - Extracted final inline workspace script and ran `node --check` — passed.
 - `git diff --check` — passed for intended changes.
+- PR #204 checks — both `preflight` runs passed, both `truncation-guard` runs passed, and the Cloudflare Pages preview check passed.
 - Deno and Supabase CLIs were checked on `PATH` and common Deno install locations; neither was available, so TypeScript dependency resolution and migration execution were not run locally.
 
 ## Known unrelated worktree state
