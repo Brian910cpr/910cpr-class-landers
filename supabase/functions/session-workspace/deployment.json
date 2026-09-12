@@ -1,0 +1,9 @@
+{
+  "function": "session-workspace",
+  "project_ref": "wktwgcnwdvbebcobgyey",
+  "verify_jwt": false,
+  "authorization_boundary": "x-maxim-session",
+  "source_provenance": "origin/codex/schedule-integrity-stop-bleeding@7f9788de55a",
+  "live_source_hash": null,
+  "live_source_hash_status": "unknown; production export was not available during Issue #202 R1"
+}

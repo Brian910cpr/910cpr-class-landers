@@ -1,0 +1,32 @@
+name: Verify session-workspace repository parity
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/session-workspace/**'
+      - 'scripts/deploy_session_workspace.ps1'
+      - 'tests/session_workspace_contract.test.cjs'
+      - 'tests/fixtures/production_session_workspace_schema.json'
+      - '.github/workflows/verify-session-workspace-parity.yml'
+  push:
+    paths:
+      - 'supabase/functions/session-workspace/**'
+      - 'scripts/deploy_session_workspace.ps1'
+      - 'tests/session_workspace_contract.test.cjs'
+      - 'tests/fixtures/production_session_workspace_schema.json'
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify deployment and compatibility contracts
+        run: |
+          node --test tests/session_workspace_contract.test.cjs
+          deno test supabase/functions/session-workspace/projection.test.ts
