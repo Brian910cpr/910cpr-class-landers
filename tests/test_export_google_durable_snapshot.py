@@ -2,6 +2,7 @@ import datetime as dt
 import io
 import json
 import unittest
+from pathlib import Path
 
 from scripts.export_google_durable_snapshot import (
     EntityExport,
@@ -29,6 +30,14 @@ class FakeResponse:
 
 
 class GoogleDurableSnapshotTests(unittest.TestCase):
+    def test_workflow_remains_manual_only_until_first_proof(self):
+        workflow = (
+            Path(__file__).resolve().parents[1] / ".github" / "workflows" / "google-durable-snapshot.yml"
+        ).read_text(encoding="utf-8")
+        trigger_block = workflow.split("concurrency:", 1)[0]
+        self.assertIn("workflow_dispatch:", trigger_block)
+        self.assertNotIn("schedule:", trigger_block)
+
     def test_content_range_requires_exact_total(self):
         self.assertEqual(_content_range_total("0-4/5"), 5)
         with self.assertRaises(SnapshotError):

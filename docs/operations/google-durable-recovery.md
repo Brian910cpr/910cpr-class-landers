@@ -9,11 +9,12 @@ Private snapshot archives must never be committed to GitHub or uploaded as GitHu
 ## Proof contract
 
 - **Expected outcome:** one complete, verified production archive appears in `LanderWare Durable Record/01 Raw Snapshots`, with a corresponding JSON receipt in `02 Reconciliation Reports`.
-- **Cadence:** daily at 06:17 UTC, plus manual dispatch when required.
+- **Proof-stage cadence:** manual dispatch only after this workflow is merged to the default branch. GitHub does not dispatch a branch-only `workflow_dispatch` workflow.
+- **Target cadence after proof:** daily at 06:17 UTC, plus manual dispatch when required. Add the schedule only after the first production archive and reconciliation receipt have been verified.
 - **Success evidence:** Drive upload returns a matching byte count and MD5 checksum; the archive passes SHA-256, gzip, row-count, and internal round-trip verification; the reconciliation receipt records the Drive file ID and per-entity counts/hashes.
 - **Stale condition:** no successful reconciliation receipt within 26 hours.
-- **Observer:** the scheduled GitHub Actions workflow and its non-PII health artifact.
-- **Observer health:** a workflow run exists for the expected daily window, including explicit failure output when extraction or upload fails.
+- **Observer during first proof:** the manually dispatched GitHub Actions run and its non-PII health artifact.
+- **Observer after cadence is enabled:** a workflow run exists for the expected daily window, including explicit failure output when extraction or upload fails. GitHub scheduled-event reliability incident #168 remains a separate dependency; a second observer is required before claiming `MONITORED`.
 - **Recovery path:** rerun `Google durable snapshot`; if it fails, use its health artifact to distinguish Supabase extraction, partial-count, archive-integrity, Google authentication, and Drive upload failures.
 - **Escalation boundary:** Codex can repair repository code and retry runs. A Google administrator is required only to create/rotate the service-account credential, share the two target folders with that service account, or restore revoked Google access.
 
@@ -29,6 +30,14 @@ The service-account email must have Editor access to both target folders:
 
 - Raw snapshots: `1qdy514zfz53Ch-yQ1KIBHDhqD801ezNE`
 - Reconciliation reports: `1r11x64lvNiUDLsdM766Q4tlYrQtHsGRB`
+
+## Safe rollout order
+
+1. Configure `GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON` and share both target folders with that service-account email.
+2. Merge the manual-only workflow to the default branch. A workflow that exists only on a pull-request branch cannot be started with `workflow_dispatch`.
+3. Manually dispatch `Google durable snapshot` and verify the immutable archive and reconciliation receipt in Drive.
+4. Record the successful run and Drive evidence before promoting the process to `PROVEN`.
+5. Add the daily schedule in a separate reviewed change. Do not claim `MONITORED` until cadence and an independent stale-run observer are proven.
 
 ## Current entity scope
 
@@ -46,7 +55,7 @@ Each table is fetched in deterministic `id` order and paginated at 1,000 rows. T
 - `BUILT`: exporter and workflow exist and tests pass.
 - `CONNECTED`: a live Supabase read and a Google ledger write have both succeeded.
 - `PROVEN`: the first complete archive and reconciliation receipt are verified in Drive.
-- `MONITORED`: the scheduled run and stale-run observer have completed at least one expected cycle.
+- `MONITORED`: the scheduled run and an independent stale-run observer have completed at least one expected cycle.
 - `HEALTHY`: a successful end-to-end archive is newer than 26 hours and the observer's expected run is present.
 
 Do not advance the status based only on a merge or deployment.
