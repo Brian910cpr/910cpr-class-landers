@@ -2,8 +2,6 @@ name: Google durable snapshot
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "17 6 * * *"
 
 concurrency:
   group: google-durable-snapshot
