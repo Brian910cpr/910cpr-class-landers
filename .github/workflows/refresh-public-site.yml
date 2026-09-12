@@ -15,6 +15,8 @@ on:
       - main
     paths:
       - '.github/workflows/refresh-public-site.yml'
+      - 'scripts/fetch_canonical_scheduling_demand.py'
+      - 'tests/test_fetch_canonical_scheduling_demand.py'
       - 'scripts/audit_sitewide_links.py'
       - 'scripts/validate_sitewide_links_strict.py'
       - 'tests/test_validate_sitewide_links_strict.py'
@@ -105,21 +107,49 @@ jobs:
         run: |
           Write-Host "Validated self-test/forced rebuild requested. Rebuilding from the live Enrollware feed even if its stable hash is unchanged."
 
-      - name: Skip unchanged iCal feed
-        if: steps.ical.outputs.changed == 'false' && github.event_name != 'push' && !(github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+      - name: Fetch canonical scheduling demand
+        id: canonical
+        shell: pwsh
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: |
+          python -m scripts.fetch_canonical_scheduling_demand
+          $payload = Get-Content -Raw data/runtime/canonical_scheduling_demand.json | ConvertFrom-Json
+          $payload.PSObject.Properties.Remove('generated_at')
+          $stableJson = $payload | ConvertTo-Json -Depth 20 -Compress
+          $bytes = [Text.Encoding]::UTF8.GetBytes($stableJson)
+          $currentHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
+          $hashPath = 'data/state_public/canonical_scheduling_demand_hash.txt'
+          $previousHash = if (Test-Path $hashPath) { (Get-Content -Raw $hashPath).Trim() } else { '' }
+          "current_hash=$currentHash" >> $env:GITHUB_OUTPUT
+          "previous_hash=$previousHash" >> $env:GITHUB_OUTPUT
+          "changed=$(if ($currentHash -ne $previousHash) { 'true' } else { 'false' })" >> $env:GITHUB_OUTPUT
+          Write-Host "Canonical demand changed: $($currentHash -ne $previousHash)"
+
+      - name: Upload canonical demand fetch status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-demand-fetch-${{ github.run_id }}-${{ github.run_attempt }}
+          path: debug/status/canonical_scheduling_demand_fetch.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Report unchanged source inventory
+        if: steps.ical.outputs.changed == 'false' && steps.canonical.outputs.changed == 'false' && github.event_name != 'push' && !(github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: |
-          Write-Host "Enrollware iCal hash unchanged. Skipping public build and commit."
+          Write-Host "Enrollware iCal and canonical scheduling demand are unchanged. Skipping public build and commit."
 
       - name: Run full validated public build
-        if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: bash
         env:
           LANDER_SKIP_REPOSITORY_TESTS: "1"
         run: python -m scripts.run_validated_public_build
 
       - name: Reconcile admin occupancy from current canonical sources
-        if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         env:
           HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
@@ -128,35 +158,37 @@ jobs:
           python -m scripts.publish_admin_schedule
 
       - name: Run strict link audit
-        if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: python -m scripts.validate_sitewide_links_strict
 
       - name: Upload link audit artifacts
-        if: always() && (steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
+        if: always() && (steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
         uses: actions/upload-artifact@v4
         with:
           name: sitewide-link-audit-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             debug/sitewide_link_button_audit.csv
             debug/sitewide_link_button_audit.md
+            debug/status/canonical_scheduling_demand_fetch.json
           if-no-files-found: warn
           retention-days: 14
 
       - name: Validate refreshed public inventory
-        if: success() && (steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
+        if: success() && (steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
         shell: pwsh
         run: python -m scripts.validate_public_refresh_output
 
       - name: Update stored iCal hash
-        if: success() && (steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
+        if: success() && (steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force data/state_public | Out-Null
           Set-Content -Path data/state_public/enrollware_ical_hash.txt -Value "${{ steps.ical.outputs.current_hash }}" -NoNewline -Encoding utf8
+          Set-Content -Path data/state_public/canonical_scheduling_demand_hash.txt -Value "${{ steps.canonical.outputs.current_hash }}" -NoNewline -Encoding utf8
 
       - name: Commit approved public output
-        if: success() && (steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
+        if: success() && (steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true))
         shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
@@ -165,7 +197,7 @@ jobs:
           $baseCommit = (git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or -not $baseCommit) { throw "Could not capture checked-out base commit" }
 
-          git add -- docs data/state_public/enrollware_ical_hash.txt
+          git add -- docs data/state_public/enrollware_ical_hash.txt data/state_public/canonical_scheduling_demand_hash.txt
 
           $staged = @(git diff --cached --name-only)
           if ($staged.Count -eq 0) {
