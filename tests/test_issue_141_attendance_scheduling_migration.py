@@ -5,6 +5,8 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MIGRATION = (ROOT / "supabase/migrations/20260911190000_attendance_scheduling_state_gate.sql").read_text(encoding="utf-8")
 DB_TEST = (ROOT / "supabase/tests/issue_141_attendance_scheduling_state.sql").read_text(encoding="utf-8")
+WORKFLOW = (ROOT / ".github/workflows/issue-141-postgres-proof.yml").read_text(encoding="utf-8")
+CONCURRENCY = (ROOT / "supabase/tests/issue_141_concurrency.py").read_text(encoding="utf-8")
 
 
 class AttendanceSchedulingMigrationTests(unittest.TestCase):
@@ -54,6 +56,13 @@ class AttendanceSchedulingMigrationTests(unittest.TestCase):
         self.assertTrue(normalized.startswith("-- run after"))
         self.assertIn("begin;", normalized)
         self.assertTrue(normalized.endswith("rollback;"))
+
+    def test_disposable_postgres_executes_real_concurrency_proof(self):
+        self.assertIn("postgres:16.4", WORKFLOW)
+        self.assertIn("test_issue_141_postgres.ps1", WORKFLOW)
+        self.assertIn("ThreadPoolExecutor(max_workers=2)", CONCURRENCY)
+        self.assertIn("replay_flags == [False, True]", CONCURRENCY)
+        self.assertGreaterEqual(CONCURRENCY.count("assert cur.fetchone()[0] == 1"), 4)
 
 
 if __name__ == "__main__":
