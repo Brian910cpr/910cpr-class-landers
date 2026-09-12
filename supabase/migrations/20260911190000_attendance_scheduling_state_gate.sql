@@ -33,6 +33,16 @@ create unique index if not exists landerware_scheduling_request_idempotency
   on public.landerware_requirement_scheduling_state(request_idempotency_key)
   where request_idempotency_key is not null;
 
+-- Immutable request receipts preserve replay safety after the mutable current
+-- state advances to a later scheduling request.
+create table if not exists public.landerware_scheduling_request_receipts (
+  idempotency_key text primary key,
+  requirement_id uuid not null references public.landerware_certification_requirements(id) on delete cascade,
+  required_by date not null,
+  required_by_source text not null check (nullif(btrim(required_by_source), '') is not null),
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.landerware_participant_session_state (
   roster_membership_id uuid primary key references public.landerware_roster_memberships(id) on delete cascade,
   attendance_status text not null default 'unknown'
@@ -133,6 +143,7 @@ set search_path = public, pg_temp
 as $$
 declare
   v_state public.landerware_requirement_scheduling_state;
+  v_receipt public.landerware_scheduling_request_receipts;
 begin
   if p_required_by is null then raise exception 'required_by_required'; end if;
   if nullif(btrim(p_required_by_source), '') is null then raise exception 'required_by_source_required'; end if;
@@ -141,16 +152,16 @@ begin
   -- Serialize identical keys so concurrent retries cannot both emit audit events.
   perform pg_advisory_xact_lock(hashtextextended(p_idempotency_key, 0));
 
-  select * into v_state
-  from public.landerware_requirement_scheduling_state
-  where request_idempotency_key = p_idempotency_key;
-  if v_state.requirement_id is not null then
-    if v_state.requirement_id <> p_requirement_id
-      or v_state.required_by <> p_required_by
-      or v_state.required_by_source <> btrim(p_required_by_source) then
+  select * into v_receipt
+  from public.landerware_scheduling_request_receipts
+  where idempotency_key = p_idempotency_key;
+  if v_receipt.idempotency_key is not null then
+    if v_receipt.requirement_id <> p_requirement_id
+      or v_receipt.required_by <> p_required_by
+      or v_receipt.required_by_source <> btrim(p_required_by_source) then
       raise exception 'idempotency_key_payload_conflict';
     end if;
-    return jsonb_build_object('requirementId', v_state.requirement_id, 'status', v_state.scheduling_status, 'idempotentReplay', true, 'outboundEnabled', false);
+    return jsonb_build_object('requirementId', v_receipt.requirement_id, 'status', 'requested', 'idempotentReplay', true, 'outboundEnabled', false);
   end if;
 
   insert into public.landerware_requirement_scheduling_state(
@@ -163,6 +174,12 @@ begin
     required_by_source = excluded.required_by_source,
     request_idempotency_key = excluded.request_idempotency_key, updated_at = now()
   returning * into v_state;
+
+  insert into public.landerware_scheduling_request_receipts(
+    idempotency_key, requirement_id, required_by, required_by_source
+  ) values (
+    p_idempotency_key, p_requirement_id, p_required_by, btrim(p_required_by_source)
+  );
 
   insert into public.landerware_activity_events(
     event_type, actor_source, requirement_id, person_id, organization_id, details
@@ -289,11 +306,13 @@ end;
 $$;
 
 alter table public.landerware_requirement_scheduling_state enable row level security;
+alter table public.landerware_scheduling_request_receipts enable row level security;
 alter table public.landerware_participant_session_state enable row level security;
 alter table public.landerware_attendance_assertions enable row level security;
 alter table public.landerware_closeout_tasks enable row level security;
 
 revoke all on public.landerware_requirement_scheduling_state,
+  public.landerware_scheduling_request_receipts,
   public.landerware_participant_session_state,
   public.landerware_attendance_assertions,
   public.landerware_closeout_tasks from anon, authenticated;
