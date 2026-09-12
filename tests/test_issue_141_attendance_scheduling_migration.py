@@ -42,6 +42,9 @@ class AttendanceSchedulingMigrationTests(unittest.TestCase):
         self.assertIn("idempotency_key text not null unique", MIGRATION)
         self.assertIn("attendance replay duplicated assertion", DB_TEST)
         self.assertIn("request replay was not idempotent", DB_TEST)
+        self.assertIn("pg_advisory_xact_lock", MIGRATION)
+        self.assertEqual(MIGRATION.count("raise exception 'idempotency_key_payload_conflict'"), 2)
+        self.assertGreaterEqual(DB_TEST.count("expected idempotency_key_payload_conflict"), 2)
 
     def test_database_test_is_transactional_and_nonpersistent(self):
         normalized = DB_TEST.strip().lower()

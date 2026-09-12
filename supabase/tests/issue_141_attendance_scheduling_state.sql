@@ -12,6 +12,7 @@ declare
   v_registration uuid;
   v_membership uuid;
   v_result jsonb;
+  v_asserted_at timestamptz := now();
   v_before_messages bigint;
   v_after_messages bigint;
 begin
@@ -38,6 +39,12 @@ begin
   if (v_result->>'idempotentReplay')::boolean then raise exception 'first request incorrectly marked replay'; end if;
   v_result := public.landerware_request_scheduling(v_requirement,current_date+30,'explicit_sender_deadline','issue141-request-1');
   if not (v_result->>'idempotentReplay')::boolean then raise exception 'request replay was not idempotent'; end if;
+  begin
+    perform public.landerware_request_scheduling(v_requirement,current_date+31,'explicit_sender_deadline','issue141-request-1');
+    raise exception 'expected idempotency_key_payload_conflict';
+  exception when others then
+    if sqlerrm <> 'idempotency_key_payload_conflict' then raise; end if;
+  end;
 
   begin
     perform public.landerware_assert_attendance(v_membership,'absent','',now(),'authorized_human',null,null,'issue141-absence-no-actor');
@@ -70,10 +77,16 @@ begin
     where roster_membership_id=v_membership and attendance_status='unknown' and closeout_status='instructor_closeout_required'
   ) then raise exception 'passed session did not create internal closeout state'; end if;
 
-  v_result := public.landerware_assert_attendance(v_membership,'absent','authorized-test-user',now(),'authorized_human',null,null,'issue141-absence-1');
+  v_result := public.landerware_assert_attendance(v_membership,'absent','authorized-test-user',v_asserted_at,'authorized_human',null,null,'issue141-absence-1');
   if (v_result->>'idempotentReplay')::boolean then raise exception 'first attendance assertion incorrectly marked replay'; end if;
-  v_result := public.landerware_assert_attendance(v_membership,'absent','authorized-test-user',now(),'authorized_human',null,null,'issue141-absence-1');
+  v_result := public.landerware_assert_attendance(v_membership,'absent','authorized-test-user',v_asserted_at,'authorized_human',null,null,'issue141-absence-1');
   if not (v_result->>'idempotentReplay')::boolean then raise exception 'attendance replay was not idempotent'; end if;
+  begin
+    perform public.landerware_assert_attendance(v_membership,'present','authorized-test-user',v_asserted_at,'authorized_human',null,null,'issue141-absence-1');
+    raise exception 'expected idempotency_key_payload_conflict';
+  exception when others then
+    if sqlerrm <> 'idempotency_key_payload_conflict' then raise; end if;
+  end;
   if (select count(*) from public.landerware_attendance_assertions where idempotency_key='issue141-absence-1') <> 1 then
     raise exception 'attendance replay duplicated assertion';
   end if;

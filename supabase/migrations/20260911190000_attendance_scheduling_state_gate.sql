@@ -138,10 +138,18 @@ begin
   if nullif(btrim(p_required_by_source), '') is null then raise exception 'required_by_source_required'; end if;
   if nullif(btrim(p_idempotency_key), '') is null then raise exception 'idempotency_key_required'; end if;
 
+  -- Serialize identical keys so concurrent retries cannot both emit audit events.
+  perform pg_advisory_xact_lock(hashtextextended(p_idempotency_key, 0));
+
   select * into v_state
   from public.landerware_requirement_scheduling_state
   where request_idempotency_key = p_idempotency_key;
   if v_state.requirement_id is not null then
+    if v_state.requirement_id <> p_requirement_id
+      or v_state.required_by <> p_required_by
+      or v_state.required_by_source <> btrim(p_required_by_source) then
+      raise exception 'idempotency_key_payload_conflict';
+    end if;
     return jsonb_build_object('requirementId', v_state.requirement_id, 'status', v_state.scheduling_status, 'idempotentReplay', true, 'outboundEnabled', false);
   end if;
 
@@ -191,8 +199,20 @@ begin
   if p_source_type <> 'authorized_human' and nullif(btrim(p_source_record_id), '') is null and p_document_id is null then raise exception 'attendance_assertion_evidence_required'; end if;
   if nullif(btrim(p_idempotency_key), '') is null then raise exception 'idempotency_key_required'; end if;
 
+  -- Serialize identical keys so concurrent retries cannot duplicate state or audit work.
+  perform pg_advisory_xact_lock(hashtextextended(p_idempotency_key, 0));
+
   select * into v_assertion from public.landerware_attendance_assertions where idempotency_key = p_idempotency_key;
   if v_assertion.id is not null then
+    if v_assertion.roster_membership_id <> p_roster_membership_id
+      or v_assertion.asserted_status <> p_asserted_status
+      or v_assertion.asserted_by <> btrim(p_asserted_by)
+      or v_assertion.asserted_at <> p_asserted_at
+      or v_assertion.source_type <> p_source_type
+      or v_assertion.source_record_id is distinct from nullif(btrim(p_source_record_id), '')
+      or v_assertion.document_id is distinct from p_document_id then
+      raise exception 'idempotency_key_payload_conflict';
+    end if;
     return jsonb_build_object('assertionId', v_assertion.id, 'attendanceStatus', v_assertion.asserted_status, 'idempotentReplay', true, 'outboundEnabled', false);
   end if;
 
