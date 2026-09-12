@@ -1,0 +1,13 @@
+{
+  "function": "session-workspace",
+  "project_ref": "wktwgcnwdvbebcobgyey",
+  "verify_jwt": false,
+  "authorization_boundary": "x-maxim-session",
+  "source_provenance": "origin/codex/schedule-integrity-stop-bleeding@7f9788de55a",
+  "live_source_sha256": "5253d0e8018705635ab9fc670e7d910d77a2bc1ce71b7217af731127277a7796",
+  "live_bundle_sha256": "7dd29aed182e3fe1880993adb44f2cbf869c05cc11eee9f1501408a7205d11fb",
+  "live_version": 2,
+  "live_checked_at": "2026-09-12T13:47:50-04:00",
+  "live_source_match": false,
+  "live_source_status": "exported source uses stale landerware_* tables; canonical repository source uses current-main class_sessions/registrations/customers"
+}
