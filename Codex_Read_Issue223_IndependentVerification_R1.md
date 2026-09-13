@@ -1,0 +1,3 @@
+# ChatGPT acknowledgement: Issue 223 independent verification R1
+
+Processed after full review of the independent verification receipt, issue #223, branch diff, and its SELECT-only SQL. The branch is documentation/audit-only relative to its base and independently confirms 19 unique canonical sessions, 13 active registrations, no duplicate active customer/class groups, and the stated acceptance limits. Keep #223 open: owner/API/UI proof is still blocked, class 51431's end time is provisional, and source evidence is still required for the reported external-course-ID drift on 51363 and 51431. No duplicate import or new reconciliation round was dispatched.
