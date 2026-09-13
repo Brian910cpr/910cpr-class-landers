@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS_DIR = ROOT / "docs"
 GTM_ID = "GTM-PQS8DCBH"
+INTERNAL_PATH_PREFIXES = ("admin", "control-center", "internal", "drafts")
 
 GTM_HEAD_SNIPPET = f"""<!-- Google Tag Manager -->
 <script>
@@ -44,6 +45,8 @@ class AnalyticsAudit:
 
     @property
     def status(self) -> str:
+        if is_internal_path(self.path):
+            return "internal_clean" if self.head_count == 0 and self.noscript_count == 0 else "internal_tagged"
         if self.head_count == 1 and self.noscript_count == 1 and self.gtm_ids == {GTM_ID}:
             return "ok"
         if self.head_count == 0 and self.noscript_count == 0:
@@ -51,6 +54,20 @@ class AnalyticsAudit:
         if self.head_count > 1 or self.noscript_count > 1:
             return "duplicate"
         return "malformed_or_partial"
+
+
+def is_internal_path(path: Path, root: Path = DOCS_DIR) -> bool:
+    """Return whether a rendered page is an internal/control surface.
+
+    The fallback keeps unit-test fixtures useful when they model an ``admin``
+    subtree outside the repository's docs directory.
+    """
+    try:
+        parts = path.resolve().relative_to(root.resolve()).parts
+    except ValueError:
+        parts = path.parts
+        return any(part.lower() in INTERNAL_PATH_PREFIXES for part in parts[:-1])
+    return bool(parts) and parts[0].lower() in INTERNAL_PATH_PREFIXES
 
 
 def audit_html(path: Path) -> AnalyticsAudit:
@@ -82,12 +99,14 @@ def insert_noscript_snippet(text: str) -> str:
 
 
 def ensure_analytics_tag(path: Path) -> bool:
-    if audit_html(path).status == "ok":
+    audit = audit_html(path)
+    if audit.status in {"ok", "internal_clean"}:
         return False
     original = path.read_text(encoding="utf-8", errors="ignore")
     text = normalize_existing_tags(original)
-    text = insert_head_snippet(text)
-    text = insert_noscript_snippet(text)
+    if not is_internal_path(path):
+        text = insert_head_snippet(text)
+        text = insert_noscript_snippet(text)
     if text == original:
         return False
     path.write_text(text, encoding="utf-8", newline="")
@@ -120,12 +139,14 @@ def main() -> int:
 
     print(f"HTML pages scanned: {len(after)}")
     print(f"Pages updated: {changed}")
-    print(f"Pages with approved tag: {counts.get('ok', 0)}")
+    print(f"Public pages with approved tag: {counts.get('ok', 0)}")
+    print(f"Internal pages without tag: {counts.get('internal_clean', 0)}")
+    print(f"Internal pages still tagged: {counts.get('internal_tagged', 0)}")
     print(f"Pages missing tag: {counts.get('missing', 0)}")
     print(f"Pages with duplicate tag: {counts.get('duplicate', 0)}")
     print(f"Pages with malformed/partial tag: {counts.get('malformed_or_partial', 0)}")
 
-    bad = [item for item in after if item.status != "ok"]
+    bad = [item for item in after if item.status not in {"ok", "internal_clean"}]
     if bad:
         print("Pages needing review:")
         for item in bad[:100]:
