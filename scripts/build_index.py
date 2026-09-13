@@ -7,6 +7,11 @@ from collections import defaultdict
 from datetime import datetime
 from html import escape
 from pathlib import Path
+
+try:
+    from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
+except ModuleNotFoundError:
+    from ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -59,26 +64,11 @@ TOPIC_PRIMARY_DESTINATIONS = {
 
 
 def render_gtm_head() -> str:
-    if not GTM_ID:
-        return ""
-    return f"""<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':
-new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-}})(window,document,'script','dataLayer','{GTM_ID}');
-</script>
-<!-- End Google Tag Manager -->"""
+    return GTM_HEAD_SNIPPET + "\n" + ATTRIBUTION_SCRIPT_SNIPPET
 
 
 def render_gtm_body() -> str:
-    if not GTM_ID:
-        return ""
-    return f"""<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_ID}"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->"""
+    return GTM_NOSCRIPT_SNIPPET
 
 
 def strip_html(text: str) -> str:

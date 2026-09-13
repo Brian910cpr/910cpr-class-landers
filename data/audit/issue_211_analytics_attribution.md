@@ -51,3 +51,11 @@ These actions must be performed in the existing GTM/GA4 and Enrollware accounts.
 - Escalation boundary: repository tag removal is Codex-owned. Publishing GTM/GA4 settings and accessing Enrollware/GA DebugView requires Brian or an authenticated account operator.
 
 Current evidence state: **BUILT** for the device-local preference and **PROVEN** locally for repository internal-page exclusion. Cross-domain attribution remains **BLOCKED**, not CONNECTED or HEALTHY, until the account-side configuration and real transaction proof are completed.
+
+## Round 2: source-preserving Enrollware handoff
+
+Added a repository-owned attribution bridge that does not require a second Enrollware measurement ID. On each public 910CPR page it keeps the current tab's acquisition source/medium, decorates Enrollware enrollment links with `utm_source`, `utm_medium`, `utm_campaign=910cpr_registration`, and a page/session-safe `utm_content`, and emits `begin_registration` before the handoff. Apex and `www` 910CPR hosts are explicitly first party; genuine ChatGPT referrals remain `chatgpt.com / ai-assistant`.
+
+Rendered browser proof on 2026-09-13 UTC opened a current Enrollware class URL containing the bridge parameters. Enrollware returned the `Class Enrollment` page and retained the full UTM query string without redirect stripping. Automated tests prove Google organic, ChatGPT/AI, apex-to-www, registration-event, and opted-out-device cases.
+
+This raises the handoff mechanism to **CONNECTED** at the URL boundary. Purchase attribution is not yet **PROVEN** or **HEALTHY** because a settled GA4 purchase after deployment is still required. The next evidence gate is one real post-deployment registration/purchase whose Enrollware GA4 source/medium is not `910cpr.com / referral`, followed by a normal reporting window showing self-referral key events have materially declined.

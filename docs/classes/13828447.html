@@ -22,16 +22,21 @@
 <link rel="stylesheet" href="/css/lander.css?v=20260808-session-discovery">
 <!-- Google Tag Manager -->
 <script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+(function(w,d,s,l,i,m){
+var internal=/^\/(admin|control-center)(\/|$)/.test(w.location.pathname)||/^\/analytics-preferences(\/|$)/.test(w.location.pathname);
+var excluded=new RegExp('(?:^|;\\s*)lw_analytics_excluded=1(?:;|$)').test(d.cookie);
+if(internal||excluded){w['ga-disable-'+m]=true;return;}
+w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH');
+})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-SL0HBP3RV5');
 </script>
 <!-- End Google Tag Manager -->
 
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
+<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 </head>
 <body class="lander course-aha-acls-provider-cd7e5090">
 <!-- Google Tag Manager (noscript) -->

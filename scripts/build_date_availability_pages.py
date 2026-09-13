@@ -11,7 +11,7 @@ from urllib.parse import parse_qs, urlparse
 from xml.etree import ElementTree
 from zoneinfo import ZoneInfo
 
-from scripts.ensure_analytics_tags import GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
+from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
@@ -372,7 +372,7 @@ def render(page: dict, future_pages: list[dict], now: date, build_id: str) -> tu
 <meta property="og:description" content="{escape(description)}"><meta property="og:url" content="{escape(canonical)}"><meta property="og:image" content="{SITE}/images/910CPR_wave.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{escape(title)}"><meta name="twitter:description" content="{escape(description)}">
 <meta name="twitter:image" content="{SITE}/images/910CPR_wave.jpg"><link rel="icon" href="/images/910CPR round __ PNG.png">
-<link rel="stylesheet" href="/css/date-availability.css?v=20260724"><script type="application/ld+json">{schema}</script>{GTM_HEAD_SNIPPET}</head>
+<link rel="stylesheet" href="/css/date-availability.css?v=20260724"><script type="application/ld+json">{schema}</script>{GTM_HEAD_SNIPPET}{ATTRIBUTION_SCRIPT_SNIPPET}</head>
 <body data-page-id="{escape(key)}-{escape(slug(city))}-{page['date']}" data-page-state="{state}">
 {GTM_NOSCRIPT_SNIPPET}{data_layer_script(page, state)}
 <header class="site-header"><a href="/" class="brand"><img src="/images/910CPR_wave.jpg" alt="910CPR"><span>Professional certification training</span></a><a data-event="click_phone" href="tel:+19103955193">{PHONE}</a></header>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Analytics Preferences | 910CPR</title>
+  <style>
+    :root{font-family:Inter,system-ui,sans-serif;color:#18312d;background:#f4faf8}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box}.card{max-width:620px;background:#fff;border:1px solid #cfe2dc;border-radius:18px;padding:32px;box-shadow:0 18px 50px rgba(24,49,45,.12)}h1{margin-top:0}.status{padding:14px 16px;border-radius:10px;background:#edf6f3;font-weight:700}button,a.button{display:inline-block;border:0;border-radius:9px;padding:12px 18px;margin:12px 8px 0 0;font:inherit;font-weight:800;cursor:pointer;text-decoration:none}.exclude{background:#176b5a;color:#fff}.include{background:#e6efec;color:#18312d}.home{color:#176b5a}small{display:block;margin-top:18px;line-height:1.5;color:#516963}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Website analytics preference</h1>
+    <p>Use this on 910CPR work devices so internal visits do not inflate public traffic reports.</p>
+    <p class="status" id="status" aria-live="polite">Checking this device…</p>
+    <button class="exclude" id="exclude" type="button">Exclude this device</button>
+    <button class="include" id="include" type="button">Include this device again</button>
+    <p><a class="home" href="/">Return to 910CPR.com</a></p>
+    <small>This setting is stored only in this browser for one year. Repeat it in each browser or device you use for internal work. This page itself is never measured.</small>
+  </main>
+  <script>
+    (function(){
+      const names=['analytics_excluded','lw_analytics_excluded'];
+      const status=document.getElementById('status');
+      function excluded(){return names.some(name=>new RegExp('(?:^|;\\s*)'+name+'=1(?:;|$)').test(document.cookie))}
+      function render(){status.textContent=excluded()?'Status: this device is excluded from website analytics.':'Status: this device is included in website analytics.'}
+      function setExcluded(){names.forEach(name=>{document.cookie=name+'=1; Max-Age=31536000; Path=/; Domain=.910cpr.com; SameSite=Lax; Secure'});window['ga-disable-G-45PBWBK7KR']=true;window['ga-disable-G-SL0HBP3RV5']=true;render()}
+      function setIncluded(){names.forEach(name=>{document.cookie=name+'=; Max-Age=0; Path=/; Domain=.910cpr.com; SameSite=Lax; Secure'});window['ga-disable-G-45PBWBK7KR']=false;window['ga-disable-G-SL0HBP3RV5']=false;render()}
+      document.getElementById('exclude').addEventListener('click',setExcluded);
+      document.getElementById('include').addEventListener('click',setIncluded);
+      if(new URLSearchParams(location.search).get('exclude')==='1')setExcluded();else render();
+    })();
+  </script>
+</body>
+</html>
