@@ -162,17 +162,16 @@
   }
 
   function authHeaders(contentType) {
-    const key = sessionStorage.getItem("hotSyncAdminKey") || "";
+    const key = LanderWareAdminAuth.get() || "";
     const headers = { "X-Hot-Sync-Admin-Key": key };
     if (contentType) headers["Content-Type"] = contentType;
     return headers;
   }
 
   function requireKey() {
-    const key = sessionStorage.getItem("hotSyncAdminKey") || document.getElementById("adminKeyInput")?.value.trim() || "";
+    const key = LanderWareAdminAuth.get() || document.getElementById("adminKeyInput")?.value.trim() || "";
     if (key) {
-      sessionStorage.setItem("hotSyncAdminKey", key);
-      updateUnlockPanel(true);
+      LanderWareAdminAuth.set( key);
     } else {
       updateUnlockPanel(false, "Enter the admin key below, then click Unlock.");
       document.getElementById("adminKeyInput")?.focus();
@@ -201,9 +200,10 @@
       await loadInbox().catch(() => {});
       if (typeof root.loadCanonicalParticipantTruth === "function") await root.loadCanonicalParticipantTruth();
       updateUnlockPanel(true, "Admin tools are unlocked for this tab.");
+      window.dispatchEvent(new Event("admin-auth-unlocked"));
     } catch (error) {
       if (error.status === 401 || error.status === 403) {
-        sessionStorage.removeItem("hotSyncAdminKey");
+        LanderWareAdminAuth.clear();
         updateUnlockPanel(false, "That key was not accepted. Check it and try again.");
         document.getElementById("adminKeyInput")?.focus();
       }
@@ -212,9 +212,9 @@
   }
 
   async function jsonRequest(url, options = {}) {
-    const response = await fetch(url, { cache: "no-store", ...options });
+    const response = await LanderWareAdminAuth.fetch(url, { cache: "no-store", ...options });
     let payload = {};
-    try { payload = await response.json(); } catch (_) { /* safe empty response */ }
+    try { payload = await response.json(); } catch (error) { if (error.name === 'AbortError') throw error; }
     if (!response.ok) {
       const error = new Error(payload.error || payload.message || `${response.status} ${response.statusText}`);
       error.status = response.status;
@@ -257,7 +257,7 @@
   function classifyConnectionError(error, target) {
     if (error.status === 401 || error.status === 403) {
       setConnection(target, "Authentication required", "warn");
-      sessionStorage.removeItem("hotSyncAdminKey");
+      LanderWareAdminAuth.clear();
       updateUnlockPanel(false, "That key was not accepted. Check it and try again.");
       return;
     }
@@ -266,7 +266,7 @@
 
   async function loadHotSyncRecords(promptForKey = false) {
     if (promptForKey && !requireKey()) throw Object.assign(new Error("Authentication required."), { status: 401 });
-    if (!sessionStorage.getItem("hotSyncAdminKey")) {
+    if (!LanderWareAdminAuth.get()) {
       setConnection("hotSyncConnection", "Authentication required", "warn");
       throw Object.assign(new Error("Authentication required."), { status: 401 });
     }
@@ -355,30 +355,14 @@
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   }
 
-  function uploadOne(file) {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", `${API_BASE}/inbox`);
-      xhr.setRequestHeader("X-Hot-Sync-Admin-Key", sessionStorage.getItem("hotSyncAdminKey") || "");
-      xhr.upload.onprogress = (event) => {
-        if (!event.lengthComputable) return;
-        document.getElementById("uploadStatus").textContent = `Uploading ${file.name}: ${Math.round(event.loaded * 100 / event.total)}%`;
-        document.getElementById("uploadStatus").className = "saveMessage warn";
-      };
-      xhr.onload = () => {
-        let payload = {};
-        try { payload = JSON.parse(xhr.responseText); } catch (_) { /* handled below */ }
-        if (xhr.status >= 200 && xhr.status < 300) resolve(payload);
-        else reject(Object.assign(new Error(payload.error || `Upload failed (${xhr.status}).`), { status: xhr.status }));
-      };
-      xhr.onerror = () => reject(new Error("Upload failed because the server could not be reached."));
-      const form = new FormData();
-      form.append("file", file, file.name);
-      form.append("category", document.getElementById("inboxCategory").value);
-      form.append("association", document.getElementById("inboxAssociation").value);
-      form.append("notes", document.getElementById("inboxNotes").value);
-      xhr.send(form);
-    });
+  async function uploadOne(file) {
+    document.getElementById("uploadStatus").textContent = `Uploading ${file.name}…`;
+    const form = new FormData();
+    form.append("file", file, file.name);
+    form.append("category", document.getElementById("inboxCategory").value);
+    form.append("association", document.getElementById("inboxAssociation").value);
+    form.append("notes", document.getElementById("inboxNotes").value);
+    return jsonRequest(`${API_BASE}/inbox`, {method:"POST", body:form});
   }
 
   async function uploadFiles(files) {
@@ -405,7 +389,7 @@
 
   async function loadInbox(promptForKey = false) {
     if (promptForKey && !requireKey()) throw Object.assign(new Error("Authentication required."), { status: 401 });
-    if (!sessionStorage.getItem("hotSyncAdminKey")) {
+    if (!LanderWareAdminAuth.get()) {
       setConnection("inboxConnection", "Authentication required", "warn");
       return;
     }
@@ -430,7 +414,7 @@
     host.querySelectorAll("[data-download]").forEach((button) => {
       button.onclick = async () => {
         try {
-          const response = await fetch(`${API_BASE}/inbox/${encodeURIComponent(button.dataset.download)}/content`, { headers: authHeaders(), cache: "no-store" });
+          const response = await LanderWareAdminAuth.fetch(`${API_BASE}/inbox/${encodeURIComponent(button.dataset.download)}/content`, { headers: authHeaders(), cache: "no-store" });
           if (!response.ok) throw new Error(`Download failed (${response.status}).`);
           const blobUrl = URL.createObjectURL(await response.blob());
           const link = document.createElement("a");
@@ -535,11 +519,22 @@
       document.getElementById("uploadStatus").textContent = error.message;
       document.getElementById("uploadStatus").className = "saveMessage bad";
     });
+    LanderWareAdminAuth.onLock(() => {
+      if (root.isEditingPersistedRecord?.()) root.clearRecord?.();
+      selectedStudentClassId = "";
+      studentPreviewRows = [];
+      updateUnlockPanel(false, "Enter your LanderWare owner key.");
+      setConnection("hotSyncConnection", "Authentication required", "warn");
+      setConnection("inboxConnection", "Authentication required", "warn");
+      ["recordList", "recentUploads", "studentList", "studentPreview", "uploadStatus"].forEach(id => document.getElementById(id)?.replaceChildren());
+      document.getElementById("importStudentsBtn").disabled = true;
+    });
+    window.addEventListener('admin-auth-refresh', () => {if (LanderWareAdminAuth.get()) unlockAdmin().catch(() => {});});
     const input = document.getElementById("inboxFileInput");
     const adminKeyInput = document.getElementById("adminKeyInput");
     document.getElementById("adminUnlockBtn").onclick = () => unlockAdmin().catch((error) => root.showSaveMessage(`Unlock failed: ${error.message}`, "bad"));
     document.getElementById("adminForgetBtn").onclick = () => {
-      sessionStorage.removeItem("hotSyncAdminKey");
+      LanderWareAdminAuth.clear();
       updateUnlockPanel(false, "The key was forgotten. Enter it again to use admin tools.");
       setConnection("hotSyncConnection", "Authentication required", "warn");
       setConnection("inboxConnection", "Authentication required", "warn");
@@ -556,9 +551,8 @@
       if (drop.getAttribute("aria-disabled") === "true") return;
       uploadFiles(event.dataTransfer.files);
     };
-    if (sessionStorage.getItem("hotSyncAdminKey")) {
-      updateUnlockPanel(true);
-      loadHotSyncRecords().catch(() => {});
+    if (LanderWareAdminAuth.get()) {
+      loadHotSyncRecords().then(() => updateUnlockPanel(true)).catch(() => {});
       loadInbox().catch(() => {});
     } else {
       updateUnlockPanel(false);

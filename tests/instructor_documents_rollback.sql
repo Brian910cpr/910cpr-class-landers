@@ -2,14 +2,12 @@
 begin;
 do $test$
 declare
-  sid uuid; other_sid uuid; did uuid := gen_random_uuid(); actor text;
+  sid uuid; other_sid uuid; did uuid := gen_random_uuid(); actor text := 'Rollback test owner';
   rid uuid; source_id uuid; result jsonb; recovered public.class_session_documents%rowtype;
 begin
   select id into sid from public.class_sessions order by start_at desc limit 1;
   select id into other_sid from public.class_sessions where id <> sid limit 1;
-  select token_sha256 into actor from public.maxim_portal_sessions
-    where revoked_at is null and expires_at > now() order by expires_at desc limit 1;
-  if sid is null or other_sid is null or actor is null then raise exception 'Existing class/session test prerequisites unavailable'; end if;
+  if sid is null or other_sid is null then raise exception 'Existing class/session test prerequisites unavailable'; end if;
   if has_function_privilege('anon','public.remove_instructor_document(uuid,uuid,text)','execute')
     or has_function_privilege('authenticated','public.remove_instructor_document(uuid,uuid,text)','execute') then
     raise exception 'Removal RPC exposed to a client role';
@@ -17,8 +15,6 @@ begin
   if not has_function_privilege('service_role','public.remove_instructor_document(uuid,uuid,text)','execute') then raise exception 'Backend cannot call RPC'; end if;
   insert into public.class_session_documents(id,class_session_id,document_type,file_name,storage_bucket,storage_path,content_type,file_size,source)
   values(did,sid,'other','rollback-test-only.pdf','class-session-docs',sid::text||'/'||did::text||'.pdf','application/pdf',1,'instructor_workbench');
-  result := public.remove_instructor_document(sid,did,'invalid-session');
-  if result->>'error' <> 'unauthorized' then raise exception 'Invalid login accepted'; end if;
   result := public.remove_instructor_document(other_sid,did,actor);
   if result->>'error' <> 'document_not_found' then raise exception 'Wrong class accepted'; end if;
   if not exists(select 1 from public.class_session_documents where id=did) then raise exception 'Denied attempt removed document'; end if;
@@ -47,4 +43,4 @@ begin
 end
 $test$;
 rollback;
-select 'passed: login, client grants, class scope, evidence protection, atomic removal, audit snapshot, retry, recovery; all fixtures rolled back' as verification;
+select 'passed: backend-only client grants, class scope, evidence protection, atomic removal, audit snapshot, retry, recovery; all fixtures rolled back' as verification;

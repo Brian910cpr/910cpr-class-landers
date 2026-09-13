@@ -36,3 +36,4 @@ The existing workflow will run focused checks when these files change. This is n
 Recovery: restore class_session_documents from class_session_audit.details.removed_attachment; original private storage objects remain. Revert the frontend/API commit to roll back controls without changing prior removal evidence.
 Next action: merge the focused PR, verify production HTML/JS, and record deployment evidence on #219. Obtain a normal signed-in workbench session for full production click-through if available; do not create test credentials or bypass authentication.
 User/account action: none needed to ship; a signed-in browser is required only for remaining production UI proof.
+

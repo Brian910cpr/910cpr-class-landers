@@ -1,12 +1,12 @@
+import {authorizedOwner as authorized} from '../_shared/owner-auth.ts';
 import { validId, viewDocument, removeDocument } from './documents.ts';
 const ORIGINS=new Set(['https://www.910cpr.com','https://910cpr.com','https://es.910cpr.com']);
 const env=(name:string)=>Deno.env.get(name)||'';
 const clean=(value:unknown,max=300)=>String(value??'').trim().slice(0,max);
-function cors(req:Request){const origin=req.headers.get('origin')||'';return{'Access-Control-Allow-Origin':ORIGINS.has(origin)?origin:'https://www.910cpr.com','Access-Control-Allow-Headers':'content-type,x-maxim-session','Access-Control-Allow-Methods':'GET,POST,DELETE,OPTIONS','Vary':'Origin'}}
+function cors(req:Request){const origin=req.headers.get('origin')||'';return{'Access-Control-Allow-Origin':ORIGINS.has(origin)?origin:'https://www.910cpr.com','Access-Control-Allow-Headers':'content-type,x-hot-sync-admin-key','Access-Control-Allow-Methods':'GET,POST,DELETE,OPTIONS','Vary':'Origin'}}
 function json(req:Request,body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers:{...cors(req),'Content-Type':'application/json','Cache-Control':'no-store'}})}
 async function sha256Text(value:string){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return[...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 async function rest(path:string,init:RequestInit={}){const key=env('SUPABASE_SERVICE_ROLE_KEY'),url=env('SUPABASE_URL');if(!key||!url)throw Error('server_configuration');let r:Response;try{r=await fetch(`${url}/rest/v1/${path}`,{...init,headers:{apikey:key,Authorization:`Bearer ${key}`,'Content-Type':'application/json',...(init.headers||{})}})}catch{throw Error('database_unavailable')}if(!r.ok)throw Error(`database_${r.status}`);const t=await r.text();return t?JSON.parse(t):null}
-async function authorized(req:Request){const token=clean(req.headers.get('x-maxim-session'),500);if(!token)return null;const hash=await sha256Text(token),now=encodeURIComponent(new Date().toISOString());const rows=await rest(`maxim_portal_sessions?token_sha256=eq.${hash}&revoked_at=is.null&expires_at=gt.${now}&select=token_sha256&limit=1`);return Array.isArray(rows)&&rows.length===1?hash:null}
 const inList=(values:string[])=>values.map(encodeURIComponent).join(',');
 async function restIn(table:string,column:string,values:string[],select:string){const unique=[...new Set(values.filter(Boolean))],rows:any[]=[];for(let i=0;i<unique.length;i+=40){const batch=unique.slice(i,i+40),data=await rest(`${table}?${column}=in.(${inList(batch)})&select=${select}`);rows.push(...(Array.isArray(data)?data:[]))}return rows}
 const fulfilled=(value:unknown)=>['complete','completed','satisfied','met','verified','waived','issued','active'].includes(clean(value).toLowerCase());
@@ -17,8 +17,8 @@ async function uploadDocument(req:Request,sessionId:string){const exists=await r
 Deno.serve(async req => {
   if (req.method === 'OPTIONS') return new Response(null, {status: 204, headers: cors(req)});
   try {
-    const actorSessionHash = await authorized(req);
-    if (!actorSessionHash) return json(req, {error: 'unauthorized'}, 401);
+    const isOwner = await authorized(req);
+    if (!isOwner) return json(req, {error: 'unauthorized'}, 401);
     const url = new URL(req.url), parts = url.pathname.split('/').filter(Boolean);
     const tail = parts.slice(parts.indexOf('instructor-workbench') + 1);
     if (tail[0] !== 'sessions') return json(req, {error: 'not_found'}, 404);
@@ -26,7 +26,7 @@ Deno.serve(async req => {
     // Match document routes before the class-detail route.
     if (tail.length === 4 && tail[2] === 'documents') {
       if (req.method === 'GET') return json(req, {ok: true, document: await viewDocument(tail[1], tail[3], rest, env)});
-      if (req.method === 'DELETE') return json(req, await removeDocument(req, tail[1], tail[3], actorSessionHash, rest));
+      if (req.method === 'DELETE') return json(req, await removeDocument(req, tail[1], tail[3], 'Authenticated LanderWare owner', rest));
     }
     if (req.method === 'GET' && tail.length === 1) return json(req, {ok: true, sessions: await loadSessions(Number(url.searchParams.get('limit') || 400))});
     if (req.method === 'GET' && tail.length === 2) return json(req, {ok: true, ...await sessionDetail(tail[1])});
@@ -36,6 +36,7 @@ Deno.serve(async req => {
     const code = error instanceof Error ? error.message : 'server_error';
     console.error('instructor-workbench', code);
     const statuses: Record<string, number> = {unauthorized: 401, not_found: 404, session_not_found: 404, document_not_found: 404, document_in_use: 409, confirmation_required: 400, file_required: 400, unsupported_file_type: 400, file_size_limit: 400, document_unavailable: 503};
-    return json(req, {error: code in statuses ? code : 'history_temporarily_unavailable'}, statuses[code] || 500);
+    const authStatus = Number((error as {status?:number})?.status);
+    return json(req, {error: code in statuses ? code : 'history_temporarily_unavailable'}, statuses[code] || authStatus || 500);
   }
 });

@@ -29,13 +29,13 @@ export async function viewDocument(sessionId: string, documentId: string, rest: 
   return { id: doc.id, file_name: doc.file_name, content_type: doc.content_type, url: signedUrl.href, expires_in: 300 };
 }
 
-export async function removeDocument(req: Request, sessionId: string, documentId: string, actorSessionHash: string, rest: Function) {
+export async function removeDocument(req: Request, sessionId: string, documentId: string, actorLabel: string, rest: Function) {
   validId(sessionId); validId(documentId);
   const body = await req.json().catch(() => null);
   if (body?.confirm !== true) throw Error('confirmation_required');
   const result = await rest('rpc/remove_instructor_document', {
     method: 'POST',
-    body: JSON.stringify({ p_class_session_id: sessionId, p_document_id: documentId, p_actor_session_hash: actorSessionHash }),
+    body: JSON.stringify({ p_class_session_id: sessionId, p_document_id: documentId, p_actor_label: actorLabel }),
   });
   if (result?.error) throw Error(result.error);
   if (!result?.ok) throw Error('document_removal_failed');

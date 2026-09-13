@@ -9,7 +9,7 @@ const tick=()=>new Promise(resolve=>setImmediate(resolve));
 async function setup({deleteError=false,viewError=false}={}){
  const dom=new JSDOM(html,{url:'https://www.910cpr.com/admin/instructor-workbench.html',runScripts:'outside-only'});
  const w=dom.window,el=id=>w.document.getElementById(id);let docs=[{id:docId,file_name:'Roster <img src=x>.pdf',document_type:'roster',created_at:'2026-09-13T17:28:00Z'}],calls=[];
- w.Headers=Headers;w.sessionStorage.setItem('maximPortalSession','fixture');
+ w.Headers=Headers;
  w.HTMLDialogElement.prototype.showModal=function(){this.open=true};
  w.HTMLDialogElement.prototype.close=function(){this.open=false;this.dispatchEvent(new w.Event('close'))};
  const session=()=>({id:sessionId,course_name:'AHA BLS Provider (Renewal)',start_at:'2026-08-28T22:00:00Z',instructor_name:'B. Bailey',participant_count:1,credential_count:0,score_count:0,requirements_total:0,requirements_satisfied:0,health:{percent:docs.length?50:25,missing:[],keys:docs.length?[]:['paperwork']}});
@@ -23,6 +23,7 @@ async function setup({deleteError=false,viewError=false}={}){
   if(url.endsWith('/sessions?limit=400'))return Response.json({sessions:[session()]});
   return Response.json({session:session(),documents:docs,registrations:[],customers:[]});
  };
+ w.LanderWareAdminAuth={get:()=> 'fixture-owner-key',fetch:(...args)=>w.fetch(...args),onLock:fn=>w.fixtureLock=fn,set(){}};
  w.eval(source);await tick();el('session-list').querySelector('button.open').click();await tick();
  return {dom,w,el,calls,docs:()=>docs};
 }
@@ -48,4 +49,8 @@ test('a rejected removal keeps the file and explains what needs replacing',async
 });
 test('failed document view leaves the class open with a retry message',async()=>{
  const r=await setup({viewError:true});r.el('detail-body').querySelector('.document-view').click();await tick();assert.match(r.el('document-preview-status').textContent,/could not be opened/);assert.equal(r.el('document-open-tab').hidden,true);assert.equal(r.el('session-dialog').open,true);r.dom.window.close();
+});
+
+test('locking owner access closes previews and clears document details',async()=>{
+ const r=await setup();r.el('detail-body').querySelector('.document-view').click();await tick();r.w.fixtureLock();assert.equal(r.el('document-dialog').open,false);assert.equal(r.el('session-dialog').open,false);assert.equal(r.el('detail-body').textContent,'');assert.equal(r.el('document-preview').children.length,0);r.dom.window.close();
 });
