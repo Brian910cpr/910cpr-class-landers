@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="color-scheme" content="dark">
+  <title>NOW · Brian | LanderWare</title>
+  <link rel="stylesheet" href="/admin/now.css?v=20260913-1">
+  <script defer src="/admin/admin-nav.js?v=20260913-now1"></script>
+  <script defer src="/admin/now.js?v=20260913-1"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/admin/dashboard.html"><span class="brand-mark">LW</span><span>LANDERWARE <b>NOW</b></span></a>
+    <div class="today"><span id="date"></span><strong id="clock"></strong><span class="tz">ET</span></div>
+    <div class="controls"><button id="refresh" title="Refresh dashboard">↻ <span>Refresh</span></button><button id="fullscreen">Full screen</button><button id="lock">Lock</button></div>
+  </header>
+  <div class="statusbar"><span id="connection">Unlock to connect</span><span id="updated">Refreshes every minute</span></div>
+  <main id="dashboard" class="dashboard" inert>
+    <aside class="exchange panel">
+      <div class="section-head"><h2>The exchange</h2><span class="eyebrow">HANDOFFS</span></div>
+      <div class="relay"><span class="codex">Codex</span><span>→</span><span class="chatgpt">ChatGPT</span><span>→</span><span class="codex">Codex</span></div>
+      <div class="feed-status" id="feed-status">Waiting for handoff records</div>
+      <div class="feed scroll" id="feed"></div>
+      <a class="panel-foot" href="https://github.com/Brian910cpr/910cpr-class-landers/issues?q=is%3Aissue+is%3Aopen" target="_blank" rel="noopener">Open the work queue ↗</a>
+    </aside>
+    <section class="action-column">
+      <div class="action-heading"><div class="eyebrow accent">YOUR NEXT MOVES</div><h1>DO THIS, <span>Brian:</span></h1><div class="action-meta"><span id="action-count">Waiting for records</span><button id="show-snoozed" class="text-button">Snoozed <span id="snooze-count">0</span></button></div></div>
+      <div class="filters" role="group" aria-label="Filter prompts"><button data-filter="all" class="selected">All</button><button data-filter="money">Money</button><button data-filter="business">LanderWare</button><button data-filter="decision">Decisions</button></div>
+      <div class="scroll prompts" id="prompts"></div>
+      <div class="on-it panel"><span class="eyebrow">WITH CODEX / CHATGPT</span><div id="agent-work">Waiting for current work</div></div>
+    </section>
+    <aside class="operations scroll">
+      <section class="panel queues"><div class="section-head"><h2>Close the loop</h2><span class="eyebrow">CLICK A COUNT</span></div><div class="queue-grid">
+        <button class="queue amber" data-queue="ecards"><strong id="ecard-count">—</strong><span>classes need<br>eCard reconciliation</span><i>↗</i></button>
+        <button class="queue mint" data-queue="products"><strong id="product-count">—</strong><span>people awaiting<br>eProducts</span><i>↗</i></button>
+      </div><p class="micro" id="queue-scope">Recorded completion and fulfillment evidence</p></section>
+      <section class="panel cash"><div class="section-head"><h2>Money window</h2><span id="cash-state" class="pill">NOT CONNECTED</span></div><div id="cash"><div class="cash-amount">—</div><p>Available cash + upcoming bills</p><div class="empty-note">Waiting for a verified cash-and-bills snapshot.</div></div></section>
+      <section class="panel schedule"><div class="section-head"><h2>Up next</h2><a href="/admin/class-registry.html">Classes ↗</a></div><div id="next-classes"></div><div class="micro" id="schedule-scope">Permanent class records · next 7 days</div></section>
+      <section class="panel source-panel"><div class="section-head"><h2>Connections</h2><span class="eyebrow">LAST CHECK</span></div><div id="sources"></div></section>
+    </aside>
+  </main>
+  <footer><a href="/admin/dashboard.html">Operations ↗</a><a href="/admin/production.html">Production board ↗</a><a href="/admin/financial.html">Financial ↗</a><span id="heartbeat">Monitor waiting</span></footer>
+  <dialog id="access" class="access"><form id="access-form"><div class="brand-mark">LW</div><div class="eyebrow">YOUR MONITOR</div><h2>Let's see what needs you.</h2><label for="admin-key">LanderWare admin key</label><input type="password" id="admin-key" autocomplete="off" required><p id="access-error" role="status">Use your existing Operations admin key.</p><button class="primary" id="unlock">Open dashboard →</button></form></dialog>
+  <dialog id="detail"><div class="detail-head"><h2 id="detail-title"></h2><button id="close-detail" aria-label="Close details">✕</button></div><div id="detail-body"></div></dialog>
+  <div id="toast" role="status" hidden></div>
+</body>
+</html>
