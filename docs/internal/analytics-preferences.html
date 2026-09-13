@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Analytics preference | 910CPR</title>
+  <style>
+    body{font-family:system-ui,sans-serif;max-width:42rem;margin:3rem auto;padding:0 1rem;color:#102438}
+    .panel{border:1px solid #cadbe4;border-radius:14px;padding:1.25rem;background:#f8fcfe}
+    button{padding:.75rem 1rem;margin:.35rem .35rem .35rem 0;border-radius:8px;border:1px solid #126d91;background:#087fa8;color:#fff;font-weight:700;cursor:pointer}
+    button.secondary{background:#fff;color:#0b5f80}.status{font-weight:700;margin-top:1rem}.note{color:#526b78;font-size:.92rem}
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <h1>Analytics preference for this browser</h1>
+    <p>Use this page on each browser or device that should be excluded from 910CPR public-site analytics. No login is required.</p>
+    <button id="exclude" type="button">Exclude this browser</button>
+    <button id="include" class="secondary" type="button">Include this browser</button>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <p class="note">This setting is device-local. Clearing site data or using another browser requires setting it again. It does not alter genuine referral attribution for other visitors.</p>
+  </main>
+  <script>
+  (() => {
+    const COOKIE = 'lw_analytics_excluded';
+    const MEASUREMENT_ID = 'G-45PBWBK7KR';
+    const status = document.getElementById('status');
+
+    function cookieValue() {
+      return document.cookie.split(';').map(value => value.trim()).find(value => value.startsWith(COOKIE + '='))?.split('=')[1] || '';
+    }
+    function clearGaCookies() {
+      document.cookie.split(';').map(value => value.split('=')[0].trim()).filter(name => name === '_ga' || name.startsWith('_ga_')).forEach(name => {
+        document.cookie = `${name}=; Max-Age=0; Path=/; Domain=.910cpr.com; SameSite=Lax; Secure`;
+        document.cookie = `${name}=; Max-Age=0; Path=/; SameSite=Lax; Secure`;
+      });
+    }
+    function render() {
+      const excluded = cookieValue() === '1';
+      window['ga-disable-' + MEASUREMENT_ID] = excluded;
+      status.textContent = excluded ? 'Excluded: this browser should not send 910CPR analytics.' : 'Included: this browser may send normal public-site analytics.';
+    }
+    document.getElementById('exclude').addEventListener('click', () => {
+      document.cookie = `${COOKIE}=1; Max-Age=31536000; Path=/; Domain=.910cpr.com; SameSite=Lax; Secure`;
+      try { localStorage.setItem(COOKIE, '1'); } catch (_) {}
+      clearGaCookies();
+      render();
+    });
+    document.getElementById('include').addEventListener('click', () => {
+      document.cookie = `${COOKIE}=; Max-Age=0; Path=/; Domain=.910cpr.com; SameSite=Lax; Secure`;
+      try { localStorage.removeItem(COOKIE); } catch (_) {}
+      window['ga-disable-' + MEASUREMENT_ID] = false;
+      render();
+    });
+    render();
+  })();
+  </script>
+</body>
+</html>
