@@ -1,3 +1,4 @@
+import {authorizedOwner as authorized} from '../_shared/owner-auth.ts';
 import { financeWindow, boardPrompts } from './core.mjs';
 const ORIGINS = new Set(['https://www.910cpr.com','https://910cpr.com']);
 const REPO = 'Brian910cpr/910cpr-class-landers';
@@ -14,17 +15,7 @@ async function get(url:string, init:RequestInit={}) {
   if(!r.ok) throw new Error(`upstream_${r.status}`);
   return r;
 }
-async function authorized(req:Request) {
-  const key=req.headers.get('x-hot-sync-admin-key');
-  if(!key) return false;
-  // One authority, shared with Operations. Corporate portal sessions are not owner access.
-  const r=await fetch('https://schedule.910cpr.com/admin/hot-sync',{
-    headers:{'x-hot-sync-admin-key':key},signal:AbortSignal.timeout(10000)
-  });
-  if(r.status===401||r.status===403) return false;
-  if(!r.ok) throw new Error('admin_authority_unavailable');
-  return true;
-}
+
 async function snapshot() {
   const url=Deno.env.get('SUPABASE_URL');
   const configured=Deno.env.get('SUPABASE_SECRET_KEYS');

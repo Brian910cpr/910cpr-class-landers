@@ -39,6 +39,6 @@ export function financeWindow(snapshot, now = Date.now()) {
 export function boardPrompts(cards) {
   return cards.filter(c=>!/(?:^|\b)(done|verified|closed|completed)(?:\b|$)/i.test(c.implementation_status||'') &&
     (c.lane==='decision' || String(c.context_manifest?.next_actor||'').toLowerCase()==='brian'))
-    .map(c=>({id:`board:${c.id}`,category:'decision',title:c.title,tag:c.lane==='decision'?'YOUR DECISION':'BRIAN NEEDED',
-      summary:c.summary||'Open the work item for the requested decision.',href:`/admin/production.html?card=${encodeURIComponent(c.id)}`,label:'Open decision',observed_at:c.updated_at}));
+    .map(c=>({id:`board:${c.id}`,category:'decision',title:c.title,tag:c.project==='910CPR Group Training'?'GROUP REQUEST':c.lane==='decision'?'YOUR DECISION':'BRIAN NEEDED',
+      summary:c.summary||'Open the work item for the requested decision.',href:`/admin/production.html?card=${encodeURIComponent(c.id)}`,label:c.project==='910CPR Group Training'?'Open request':'Open decision',observed_at:c.updated_at}));
 }

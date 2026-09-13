@@ -1,3 +1,4 @@
+import {authorizedOwner as authorized} from '../_shared/owner-auth.ts';
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const ALLOWED_ORIGINS = new Set(["https://www.910cpr.com", "https://910cpr.com"]);
@@ -28,14 +29,7 @@ function config() {
   return { url, key };
 }
 
-async function authorized(req: Request) {
-  const key = req.headers.get("x-hot-sync-admin-key") || "";
-  if (!key) return false;
-  const response = await fetch("https://schedule.910cpr.com/admin/hot-sync", {
-    headers: { "x-hot-sync-admin-key": key },
-  });
-  return response.ok;
-}
+
 
 function dateParam(value: string | null, fallback: string) {
   const date = value || fallback;
@@ -136,6 +130,6 @@ Deno.serve(async (req) => {
     });
   } catch (error) {
     console.error(JSON.stringify({ event: "canonical_session_workspace_error", message: String(error) }));
-    return reply(origin, { error: "Canonical Session Workspace is temporarily unavailable" }, 500);
+    return reply(origin, { error: "Canonical Session Workspace is temporarily unavailable" }, Number(error?.status) || 500);
   }
 });
