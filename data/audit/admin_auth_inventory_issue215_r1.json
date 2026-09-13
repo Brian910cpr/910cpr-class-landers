@@ -1,0 +1,1289 @@
+{
+  "schema_version": 1,
+  "source_commit": "8808884a23e4da2ce055b4da6a9002a6ea17c39c",
+  "contract": {
+    "secret_name": "HOT_SYNC_ADMIN_KEY",
+    "storage_key": "sessionStorage.hotSyncAdminKey",
+    "header": "X-Hot-Sync-Admin-Key"
+  },
+  "counts": {
+    "admin_files": 34,
+    "admin_html_pages": 19,
+    "referenced_assets": 5,
+    "missing_referenced_assets": 1,
+    "endpoint_boundaries": 7
+  },
+  "limitations": [
+    "Literal matches and constant candidates require manual semantic review.",
+    "Does not execute JavaScript, resolve imports/dynamic assets or prove server authorization.",
+    "Only source storage key identifiers and known contract tokens are recorded; no stored values.",
+    "Reference matching by asset basename is conservative, not a complete runtime dependency graph.",
+    "No remote APIs, browser storage, credentials or operational records were read."
+  ],
+  "files": [
+    {
+      "path": "docs/admin/admin-nav.css",
+      "line_count": 1,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/admin-nav.js",
+      "line_count": 2,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/admin-port.css",
+      "line_count": 1,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/admin-port.html",
+      "line_count": 34,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/admin/admin-port.css",
+        "docs/admin/admin-port.js",
+        "docs/admin/canonical-session-model.js",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/admin-port.js",
+      "line_count": 50,
+      "storage": [
+        {
+          "line": 7,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 41,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 44,
+          "store": "sessionStorage",
+          "operation": "setItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 46,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        }
+      ],
+      "token_lines": {
+        "hotSyncAdminKey": [
+          7,
+          41,
+          44,
+          46
+        ],
+        "X-Hot-Sync-Admin-Key": [
+          41
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          41
+        ],
+        "status_401_mentions": [
+          41
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/all-classes.css",
+      "line_count": 2,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/all-classes.html",
+      "line_count": 93,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/admin/admin-nav.css",
+        "docs/admin/admin-nav.js",
+        "docs/admin/all-classes.css",
+        "docs/admin/all-classes.js",
+        "docs/admin/canonical-session-model.js",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/all-classes.js",
+      "line_count": 64,
+      "storage": [
+        {
+          "line": 40,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 60,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 63,
+          "store": "sessionStorage",
+          "operation": "setItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 63,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        }
+      ],
+      "token_lines": {
+        "hotSyncAdminKey": [
+          40,
+          60,
+          63
+        ],
+        "X-Hot-Sync-Admin-Key": [
+          60,
+          61
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          60,
+          61
+        ],
+        "status_401_mentions": [
+          60
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/canonical-session-model.js",
+      "line_count": 67,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/class-registry.html",
+      "line_count": 38,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/assets/class-registry.js",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/dashboard-ops.js",
+      "line_count": 574,
+      "storage": [
+        {
+          "line": 165,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 172,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 174,
+          "store": "sessionStorage",
+          "operation": "setItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 206,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 260,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 269,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 362,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 408,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 542,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 559,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        }
+      ],
+      "token_lines": {
+        "hotSyncAdminKey": [
+          165,
+          172,
+          174,
+          206,
+          260,
+          269,
+          362,
+          408,
+          542,
+          559
+        ],
+        "X-Hot-Sync-Admin-Key": [
+          166,
+          362
+        ]
+      },
+      "markers": {
+        "prompt_calls": [
+          463,
+          465
+        ],
+        "fetch_calls": [
+          215,
+          236,
+          433
+        ],
+        "xhr_header_calls": [
+          362
+        ],
+        "status_401_mentions": [
+          205,
+          258,
+          268,
+          271,
+          407
+        ],
+        "status_403_mentions": [
+          205,
+          258
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/dashboard.html",
+      "line_count": 130,
+      "storage": [
+        {
+          "line": 96,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 97,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 109,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "maximPortalSession",
+          "resolution": "literal"
+        },
+        {
+          "line": 121,
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "hotSyncDrafts",
+          "resolution": "literal"
+        },
+        {
+          "line": 121,
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "hotSyncDrafts",
+          "resolution": "literal"
+        },
+        {
+          "line": 121,
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "hotSyncDrafts",
+          "resolution": "literal"
+        },
+        {
+          "line": 123,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        }
+      ],
+      "token_lines": {
+        "hotSyncAdminKey": [
+          96,
+          97,
+          123
+        ],
+        "X-Hot-Sync-Admin-Key": [
+          96,
+          123
+        ],
+        "maximPortalSession": [
+          109
+        ],
+        "x-maxim-session": [
+          109
+        ]
+      },
+      "markers": {
+        "prompt_calls": [
+          105
+        ],
+        "fetch_calls": [
+          96,
+          97,
+          97,
+          97,
+          109,
+          123
+        ]
+      },
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/admin/canonical-session-model.js",
+        "docs/admin/dashboard-ops.js",
+        "docs/admin/production-summary.js",
+        "docs/admin/schedule-model.js",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/financial.html",
+      "line_count": 42,
+      "storage": [
+        {
+          "line": 31,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 31,
+          "store": "sessionStorage",
+          "operation": "setItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 32,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 36,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        }
+      ],
+      "token_lines": {
+        "hotSyncAdminKey": [
+          31,
+          32,
+          36
+        ],
+        "X-Hot-Sync-Admin-Key": [
+          32
+        ]
+      },
+      "markers": {
+        "prompt_calls": [
+          31
+        ],
+        "fetch_calls": [
+          33
+        ],
+        "status_401_mentions": [
+          36
+        ],
+        "status_403_mentions": [
+          36
+        ]
+      },
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/instructor-class-intake-prototype.html",
+      "line_count": 134,
+      "storage": [
+        {
+          "line": 108,
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "lw-instructor-intake-prototype-v1",
+          "resolution": "constant_candidate"
+        },
+        {
+          "line": 109,
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "lw-instructor-intake-prototype-v1",
+          "resolution": "constant_candidate"
+        }
+      ],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/instructor-session.html",
+      "line_count": 96,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/instructor-workbench.html",
+      "line_count": 42,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/assets/instructor-workbench.js",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/nhcso-training-history-v5.html",
+      "line_count": 42,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/nhcso-training-workspace-prototype.html",
+      "line_count": 83,
+      "storage": [
+        {
+          "line": 58,
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "lw-nhcso-workspace-prototype-v2",
+          "resolution": "constant_candidate"
+        },
+        {
+          "line": 58,
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "lw-nhcso-workspace-prototype-v2",
+          "resolution": "constant_candidate"
+        }
+      ],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/nhcso-training-workspace-v3-prototype.html",
+      "line_count": 6,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/nhcso-training-workspace-v4-prototype.html",
+      "line_count": 6,
+      "storage": [
+        {
+          "line": 6,
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "lw-nhcso-v4-prototype",
+          "resolution": "constant_candidate"
+        },
+        {
+          "line": 6,
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "lw-nhcso-v4-prototype",
+          "resolution": "constant_candidate"
+        }
+      ],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/nhcso-training-workspace-v6.html",
+      "line_count": 13,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/payments.html",
+      "line_count": 34,
+      "storage": [],
+      "token_lines": {},
+      "markers": {
+        "fetch_calls": [
+          28
+        ]
+      },
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/production-summary.js",
+      "line_count": 1,
+      "storage": [
+        {
+          "line": 1,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "maximPortalSession",
+          "resolution": "literal"
+        }
+      ],
+      "token_lines": {
+        "maximPortalSession": [
+          1
+        ],
+        "x-maxim-session": [
+          1
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          1
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/production.css",
+      "line_count": 1,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/production.html",
+      "line_count": 29,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/admin/production.css",
+        "docs/admin/production.js",
+        "docs/assets/css/global.css",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/production.js",
+      "line_count": 15,
+      "storage": [
+        {
+          "line": 1,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "maximPortalSession",
+          "resolution": "literal"
+        },
+        {
+          "line": 13,
+          "store": "sessionStorage",
+          "operation": "setItem",
+          "key": "maximPortalSession",
+          "resolution": "literal"
+        },
+        {
+          "line": 15,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "maximPortalSession",
+          "resolution": "literal"
+        },
+        {
+          "line": 15,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "maximPortalSession",
+          "resolution": "literal"
+        }
+      ],
+      "token_lines": {
+        "maximPortalSession": [
+          1,
+          13,
+          15
+        ],
+        "x-maxim-session": [
+          2
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          2,
+          13
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/refresh-availability.html",
+      "line_count": 48,
+      "storage": [],
+      "token_lines": {},
+      "markers": {
+        "fetch_calls": [
+          34
+        ]
+      },
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/schedule-model.js",
+      "line_count": 60,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/schedule-reader.html",
+      "line_count": 94,
+      "storage": [],
+      "token_lines": {},
+      "markers": {
+        "fetch_calls": [
+          69
+        ]
+      },
+      "direct_assets": [
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/scheduling-landscape-lanes.js",
+      "line_count": 126,
+      "storage": [],
+      "token_lines": {},
+      "markers": {
+        "fetch_calls": [
+          113
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/scheduling-landscape.html",
+      "line_count": 62,
+      "storage": [],
+      "token_lines": {},
+      "markers": {
+        "fetch_calls": [
+          58
+        ]
+      },
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/admin/scheduling-landscape-lanes.js",
+        "docs/assets/css/global.css",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/toolbox.css",
+      "line_count": 1,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/toolbox.html",
+      "line_count": 33,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [
+        "docs/admin/admin-nav.js",
+        "docs/admin/toolbox.css",
+        "docs/admin/toolbox.js",
+        "docs/assets/site-theme.css",
+        "docs/assets/site-theme.js"
+      ],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/admin/toolbox.js",
+      "line_count": 77,
+      "storage": [],
+      "token_lines": {},
+      "markers": {
+        "prompt_calls": [
+          68
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "admin_file"
+    },
+    {
+      "path": "docs/assets/class-registry.js",
+      "line_count": 22,
+      "storage": [
+        {
+          "line": 16,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 16,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "maximPortalSession",
+          "resolution": "literal"
+        },
+        {
+          "line": 19,
+          "store": "sessionStorage",
+          "operation": "removeItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        },
+        {
+          "line": 20,
+          "store": "sessionStorage",
+          "operation": "setItem",
+          "key": "hotSyncAdminKey",
+          "resolution": "literal"
+        }
+      ],
+      "token_lines": {
+        "hotSyncAdminKey": [
+          16,
+          19,
+          20
+        ],
+        "X-Hot-Sync-Admin-Key": [
+          16
+        ],
+        "maximPortalSession": [
+          16
+        ],
+        "x-maxim-session": [
+          16
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          19,
+          19
+        ],
+        "status_401_mentions": [
+          19
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "referenced_asset",
+      "reference_matches": {
+        "total": 1,
+        "outside_admin": 0,
+        "outside_admin_examples": []
+      }
+    },
+    {
+      "path": "docs/assets/css/global.css",
+      "line_count": 0,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": false,
+      "scope": "referenced_asset",
+      "reference_matches": {
+        "total": 2,
+        "outside_admin": 0,
+        "outside_admin_examples": []
+      }
+    },
+    {
+      "path": "docs/assets/instructor-workbench.js",
+      "line_count": 16,
+      "storage": [
+        {
+          "line": 6,
+          "store": "sessionStorage",
+          "operation": "getItem",
+          "key": "maximPortalSession",
+          "resolution": "literal"
+        }
+      ],
+      "token_lines": {
+        "maximPortalSession": [
+          6
+        ],
+        "x-maxim-session": [
+          8
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          8
+        ],
+        "status_401_mentions": [
+          7
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "referenced_asset",
+      "reference_matches": {
+        "total": 1,
+        "outside_admin": 0,
+        "outside_admin_examples": []
+      }
+    },
+    {
+      "path": "docs/assets/site-theme.css",
+      "line_count": 427,
+      "storage": [],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "referenced_asset",
+      "reference_matches": {
+        "total": 998,
+        "outside_admin": 979,
+        "outside_admin_examples": [
+          "docs/404.html",
+          "docs/910cpr_lander_scheduler_punchlist.md",
+          "docs/ACLS.html",
+          "docs/BLS.html",
+          "docs/Earl/index.html"
+        ]
+      }
+    },
+    {
+      "path": "docs/assets/site-theme.js",
+      "line_count": 194,
+      "storage": [
+        {
+          "line": 10,
+          "store": "localStorage",
+          "operation": "getItem",
+          "key": "910cpr-color-theme",
+          "resolution": "constant_candidate"
+        },
+        {
+          "line": 156,
+          "store": "localStorage",
+          "operation": "setItem",
+          "key": "910cpr-color-theme",
+          "resolution": "constant_candidate"
+        }
+      ],
+      "token_lines": {},
+      "markers": {},
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "referenced_asset",
+      "reference_matches": {
+        "total": 998,
+        "outside_admin": 979,
+        "outside_admin_examples": [
+          "docs/404.html",
+          "docs/ACLS.html",
+          "docs/BLS.html",
+          "docs/Earl/index.html",
+          "docs/HEARTSAVER.html"
+        ]
+      }
+    },
+    {
+      "path": "supabase/functions/canonical-session-workspace/index.ts",
+      "line_count": 141,
+      "storage": [],
+      "token_lines": {
+        "X-Hot-Sync-Admin-Key": [
+          9,
+          32,
+          35
+        ],
+        "authorization": [
+          102
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          34,
+          101
+        ],
+        "status_401_mentions": [
+          115
+        ],
+        "status_403_mentions": [
+          111
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "endpoint_boundary"
+    },
+    {
+      "path": "supabase/functions/class-registry/index.ts",
+      "line_count": 18,
+      "storage": [],
+      "token_lines": {
+        "X-Hot-Sync-Admin-Key": [
+          6,
+          10
+        ],
+        "x-maxim-session": [
+          6,
+          10
+        ],
+        "authorization": [
+          9
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          9,
+          10,
+          11
+        ],
+        "status_401_mentions": [
+          18
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "endpoint_boundary"
+    },
+    {
+      "path": "supabase/functions/instructor-workbench/index.ts",
+      "line_count": 17,
+      "storage": [],
+      "token_lines": {
+        "x-maxim-session": [
+          4,
+          8
+        ],
+        "authorization": [
+          7,
+          15
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          7,
+          15,
+          15
+        ],
+        "status_401_mentions": [
+          16
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "endpoint_boundary"
+    },
+    {
+      "path": "supabase/functions/production-board/index.ts",
+      "line_count": 14,
+      "storage": [],
+      "token_lines": {
+        "x-maxim-session": [
+          3,
+          8
+        ],
+        "authorization": [
+          3,
+          7,
+          8
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          7
+        ],
+        "status_401_mentions": [
+          14
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "endpoint_boundary"
+    },
+    {
+      "path": "supabase/functions/session-workspace/index.ts",
+      "line_count": 15,
+      "storage": [],
+      "token_lines": {
+        "x-maxim-session": [
+          4,
+          10
+        ],
+        "authorization": [
+          8
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          8
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "endpoint_boundary"
+    },
+    {
+      "path": "worker/admin-api.js",
+      "line_count": 432,
+      "storage": [],
+      "token_lines": {
+        "HOT_SYNC_ADMIN_KEY": [
+          12,
+          13
+        ],
+        "X-Hot-Sync-Admin-Key": [
+          42,
+          411
+        ]
+      },
+      "markers": {
+        "status_401_mentions": [
+          13
+        ],
+        "status_403_mentions": [
+          10,
+          404
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "endpoint_boundary"
+    },
+    {
+      "path": "worker/finance-worker.js",
+      "line_count": 50,
+      "storage": [],
+      "token_lines": {
+        "HOT_SYNC_ADMIN_KEY": [
+          12,
+          13
+        ],
+        "X-Hot-Sync-Admin-Key": [
+          23,
+          47
+        ]
+      },
+      "markers": {
+        "fetch_calls": [
+          6
+        ],
+        "status_401_mentions": [
+          13
+        ],
+        "status_403_mentions": [
+          10,
+          46
+        ]
+      },
+      "direct_assets": [],
+      "exists_in_source_commit": true,
+      "scope": "endpoint_boundary"
+    }
+  ]
+}
