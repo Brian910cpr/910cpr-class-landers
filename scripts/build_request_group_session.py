@@ -72,7 +72,7 @@ def build():
                 f"<span class='request-tab-label'>{label}</span>"
                 "</button>"
             )
-            tab_panels.append(f"<section class='tab-panel{active}' id='{slug}'><div class='request-program-card'>{html}</div></section>")
+            tab_panels.append(f"<section data-keep-empty-tab='true' class='tab-panel{active}' id='{slug}'><div class='request-program-card'>{html}</div></section>")
 
         body = f"""
 <div class='card request-shell'>
@@ -120,7 +120,8 @@ def build():
         </div>
         <p class='muted'>Share the basics below and we’ll follow up with the best scheduling path for your team.</p>
       </div>
-      <form method='post' action='#'>
+      <form data-group-request>
+        <label hidden aria-hidden='true'>Website<input name='companyWebsite' tabindex='-1' autocomplete='off'></label>
         <input id='request_type' type='hidden' name='request_type' value='group'>
         <div class='grid-2'>
           <label class='field'><span>Name</span><input type='text' name='name' autocomplete='name' required></label>
@@ -137,9 +138,12 @@ def build():
           <textarea name='comments' placeholder='We have 12 for BLS, and 4 who need ACLS too.&#10;Any Thursday in May could work.&#10;Morning is better than afternoon.&#10;We may need training at our office in Morehead City.&#10;Some staff need Heartsaver, others need BLS.&#10;We already have AHA online completed, just need skills testing.'></textarea>
         </label>
         <div class='request-submit-row'>
-          <button class='button primary' type='submit'>Send Request</button>
+          <button class='button primary' type='submit' disabled>Send Request</button>
           <a class='button secondary' href='/index.html'>Compare individual seat options</a>
         </div>
+        <p id='group-request-status' role='status' aria-live='polite'></p>
+        <p>Need help? <a href='tel:9103955193'>Call 910-395-5193</a> or <a href='mailto:info@910cpr.com'>email info@910cpr.com</a>.</p>
+        <noscript>Online requests need JavaScript. Please call or email us.</noscript>
       </form>
     </section>
 
@@ -158,6 +162,7 @@ def build():
     </aside>
   </section>
 </div>
+<script defer src='/assets/group-request.js?v=20260913-1'></script>
 <script>
 (function () {{
   var params = new URLSearchParams(window.location.search);

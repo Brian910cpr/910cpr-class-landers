@@ -95,7 +95,7 @@ class MaximCorporatePortalTests(unittest.TestCase):
         self.assertIn("row?.registered_count", html)
         self.assertIn("slot-anchor", html)
         self.assertIn("day-timeline", html)
-        self.assertIn("interaction-motion.js?v=20260808.2", html)
+        self.assertIn("interaction-motion.js?v=20260913-auth2", html)
         self.assertIn("window.LanderWareMotion?.connect(el,timeChips)", html)
         self.assertNotRegex(html, r"\$\d+(?:\.\d{2})?")
         self.assertIn("slot-barnacle", html)
