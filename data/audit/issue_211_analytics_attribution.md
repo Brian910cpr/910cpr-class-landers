@@ -59,3 +59,13 @@ Added a repository-owned attribution bridge that does not require a second Enrol
 Rendered browser proof on 2026-09-13 UTC opened a current Enrollware class URL containing the bridge parameters. Enrollware returned the `Class Enrollment` page and retained the full UTM query string without redirect stripping. Automated tests prove Google organic, ChatGPT/AI, apex-to-www, registration-event, and opted-out-device cases.
 
 This raises the handoff mechanism to **CONNECTED** at the URL boundary. Purchase attribution is not yet **PROVEN** or **HEALTHY** because a settled GA4 purchase after deployment is still required. The next evidence gate is one real post-deployment registration/purchase whose Enrollware GA4 source/medium is not `910cpr.com / referral`, followed by a normal reporting window showing self-referral key events have materially declined.
+
+## Production verification
+
+PR #212 merged as `a751acbcb75bd90b02207636ad8078ef9c79a012` and deployed successfully on 2026-09-13 UTC. Rendered production checks proved:
+
+- `/admin/dashboard.html`, `/control-center/`, `/internal/inventory.html`, and `/drafts/nhcso-lite/` each contained zero GTM bootstrap blocks, zero loaded Google Tag Manager scripts, and zero attribution-bridge scripts.
+- `/analytics-preferences/?exclude=1` set the device-local exclusion state without a login. A fresh public BLS page load with that state contained the guarded bootstrap but loaded zero Google Tag Manager scripts and produced no data-layer events.
+- After re-including the verification browser, the public BLS page loaded the normal GTM container and transformed a real Enrollware link to retain `utm_source=google`, `utm_medium=organic`, the supplied campaign, and page/session-safe content.
+
+Internal exclusion and the deployed URL-level attribution bridge are now **PROVEN**. Settled Enrollware purchase attribution remains the only unproven outcome.
