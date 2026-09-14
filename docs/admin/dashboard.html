@@ -25,7 +25,8 @@ html[data-theme="dark"] .schedule-integrity{background:#351b22;color:#ffd5d8;bor
 <script src="/assets/site-theme.js"></script>
 <script src="/admin/schedule-model.js?v=20260820-1"></script>
 <script src="/admin/canonical-session-model.js?v=20260906-1"></script>
-<script src="/admin/admin-auth.js?v=20260913-1"></script>
+<script src="/admin/admin-auth.js?v=20260914-session1"></script>
+<style id="owner-access-gates">#ownerAccess,#auth-gate,#authGate,#accessGate,#adminUnlockPanel,dialog#access{display:none!important}</style>
 </head>
 <body>
 
@@ -45,7 +46,7 @@ html[data-theme="dark"] .schedule-integrity{background:#351b22;color:#ffd5d8;bor
   <div class="toolbar"><div><h2>HOT_SYNC Class Admin</h2><div class="muted">Friendly fields on top. The full JSON record stays visible underneath.</div></div><div class="actions"><span id="hotSyncConnection" class="status warn" role="status">Checking HOT_SYNC…</span><button class="btn" id="newRecordBtn">New Class</button><button class="btn" id="viewRecordsBtn">View / Edit Classes</button></div></div>
   <div id="adminUnlockPanel" class="recordbar" role="region" aria-labelledby="adminUnlockTitle">
     <div style="flex:1 1 320px"><b id="adminUnlockTitle">Unlock admin tools</b><div class="muted" id="adminUnlockHelp">Enter the LanderWare admin key once. It stays only in this browser tab and is cleared when the tab closes.</div></div>
-    <label class="field" style="min-width:280px"><span class="searchhint">LanderWare admin key</span><input id="adminKeyInput" type="password" autocomplete="off" spellcheck="false" placeholder="Paste admin key"></label>
+    <label class="field" style="min-width:280px"><span class="searchhint">LanderWare admin key</span><input id="adminKeyInput" type="hidden" autocomplete="off" spellcheck="false" placeholder="Paste admin key"></label>
     <button class="btn primary" id="adminUnlockBtn" type="button">Unlock</button><button class="btn" id="adminForgetBtn" type="button" hidden>Forget key</button>
   </div>
   <div class="recordbar"><b id="recordMode">New manual class</b><span class="muted" id="recordIdLabel">A record ID will be created automatically.</span></div>
@@ -128,6 +129,6 @@ async function saveHotSync(){let record;try{record=JSON.parse(document.getElemen
 document.getElementById('applyJsonBtn').onclick=()=>{try{setFields(JSON.parse(document.getElementById('hsJson').value));showSaveMessage('JSON applied to the friendly fields.','good')}catch(e){showSaveMessage(`Invalid JSON: ${e.message}`,'bad')}};document.getElementById('copyJsonBtn').onclick=e=>copyText(document.getElementById('hsJson').value,e.currentTarget);document.getElementById('saveDraftBtn').onclick=()=>{try{const r=JSON.parse(document.getElementById('hsJson').value);putDraft(r);showSaveMessage('Saved as a browser draft. This does NOT block public availability until the server write succeeds.','warn')}catch(e){showSaveMessage(`Invalid JSON: ${e.message}`,'bad')}};document.getElementById('deleteDraftBtn').onclick=()=>{if(editingRecordId)removeDraft(editingRecordId);clearRecord()};document.getElementById('saveHotSyncBtn').onclick=saveHotSync;document.getElementById('newRecordBtn').onclick=clearRecord;document.getElementById('viewRecordsBtn').onclick=()=>{const box=document.getElementById('recordBrowser');box.style.display=box.style.display==='none'?'block':'none';renderDrafts()};document.getElementById('closeRecordsBtn').onclick=()=>document.getElementById('recordBrowser').style.display='none';
 document.getElementById('todayBtn').onclick=()=>{monthCursor=new Date();monthCursor.setDate(1);selectDay(keyOf(new Date()))};document.getElementById('reloadAvailability').onclick=()=>load();document.getElementById('brianExceptionsToggle').onchange=e=>{showBrianExceptions=e.currentTarget.checked;renderMonth();if(selectedKey)selectDay(selectedKey)};clearRecord();load();setInterval(()=>load(),60000);
 </script>
-<script src="/admin/admin-nav.js?v=20260812-1"></script><script src="/admin/production-summary.js?v=20260913-auth2"></script><script src="/admin/dashboard-ops.js?v=20260913-auth2"></script>
+<script src="/admin/admin-nav.js?v=20260914-session1"></script><script src="/admin/production-summary.js?v=20260913-auth2"></script><script src="/admin/dashboard-ops.js?v=20260914-session1"></script>
 </body>
 </html>

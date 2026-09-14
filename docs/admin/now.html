@@ -7,9 +7,10 @@
   <meta name="color-scheme" content="dark">
   <title>NOW · Brian | LanderWare</title>
   <link rel="stylesheet" href="/admin/now.css?v=20260913-1">
-  <script defer src="/admin/admin-nav.js?v=20260913-now1"></script>
-  <script defer src="/admin/now.js?v=20260913-auth2"></script>
-<script src="/admin/admin-auth.js?v=20260913-1"></script>
+  <script defer src="/admin/admin-nav.js?v=20260914-session1"></script>
+  <script defer src="/admin/now.js?v=20260914-session1"></script>
+<script src="/admin/admin-auth.js?v=20260914-session1"></script>
+<style id="owner-access-gates">#ownerAccess,#auth-gate,#authGate,#accessGate,#adminUnlockPanel,dialog#access{display:none!important}</style>
 </head>
 <body>
   <header class="topbar">
@@ -43,7 +44,7 @@
     </aside>
   </main>
   <footer><a href="/admin/dashboard.html">Operations ↗</a><a href="/admin/production.html">Production board ↗</a><a href="/admin/financial.html">Financial ↗</a><span id="heartbeat">Monitor waiting</span></footer>
-  <dialog id="access" class="access"><form id="access-form"><div class="brand-mark">LW</div><div class="eyebrow">YOUR MONITOR</div><h2>Let's see what needs you.</h2><label for="admin-key">LanderWare admin key</label><input type="password" id="admin-key" autocomplete="off" required><p id="access-error" role="status">Use your existing Operations admin key.</p><button class="primary" id="unlock">Open dashboard →</button></form></dialog>
+  <dialog id="access" class="access"><form id="access-form"><div class="brand-mark">LW</div><div class="eyebrow">YOUR MONITOR</div><h2>Let's see what needs you.</h2><label for="admin-key">LanderWare admin key</label><input type="hidden" id="admin-key" autocomplete="off" required><p id="access-error" role="status">Use your existing Operations admin key.</p><button class="primary" id="unlock">Open dashboard →</button></form></dialog>
   <dialog id="detail"><div class="detail-head"><h2 id="detail-title"></h2><button id="close-detail" aria-label="Close details">✕</button></div><div id="detail-body"></div></dialog>
   <div id="toast" role="status" hidden></div>
 </body>

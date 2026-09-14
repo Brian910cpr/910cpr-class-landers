@@ -3,7 +3,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 // Dockmaster: one watch floor should surface every operational exception before it drifts into another silo.
 
-const headers={"access-control-allow-origin":"*","access-control-allow-headers":"authorization, content-type, x-hot-sync-admin-key","access-control-allow-methods":"GET,POST,PATCH,OPTIONS","content-type":"application/json; charset=utf-8","cache-control":"no-store"};
+const headers={"access-control-allow-origin":"*","access-control-allow-headers":"authorization, content-type, x-hot-sync-admin-key, x-landerware-owner-session","access-control-allow-methods":"GET,POST,PATCH,OPTIONS","content-type":"application/json; charset=utf-8","cache-control":"no-store"};
 const reply=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers});
 const sha256=async(value:string)=>Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value)))).map(b=>b.toString(16).padStart(2,"0")).join("");
 function config(){const url=Deno.env.get("SUPABASE_URL")!;const keys=Deno.env.get("SUPABASE_SECRET_KEYS");const key=keys?JSON.parse(keys).default:Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;return{url,key};}
