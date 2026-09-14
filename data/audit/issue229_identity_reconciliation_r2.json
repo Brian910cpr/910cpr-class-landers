@@ -1,0 +1,112 @@
+{
+  "as_of": "2026-09-14T00:00:00-04:00",
+  "current_only_registration_identities": 53,
+  "current_rows": 19708,
+  "current_source_status_labels": {
+    "active": 19708
+  },
+  "exclusive_historical_dispositions": {
+    "registration_identity_absent_from_current": 6510,
+    "shared_identity_facts_changed": 19438,
+    "shared_identity_invalid_timing": 217
+  },
+  "historical_rows": 26165,
+  "limits": [
+    "Identity and fact equality are not canonical registry, completion, cancellation or public-safety approval.",
+    "Current source status labels may be generated from time; they are not independent completion evidence.",
+    "Course differences compare exact source label strings, not semantic Course Master equivalence.",
+    "Historical Client provenance and all R1 privacy/timing/mapping gates remain required.",
+    "No source record, raw label, location, participant, client or registration URL is emitted.",
+    "Orphan link matches require historical fact and alias/content review; no alias is authorized.",
+    "No public generator, live canonical query, current inventory, deployment or GSC action is performed."
+  ],
+  "mode": "identity_reconciliation",
+  "orphan_dispositions": {
+    "registration_identity_absent_from_both_sources": 7
+  },
+  "orphan_html_count": 7,
+  "orphans_by_path_sha256": {
+    "5d36a9a47d492c31b38be3af78af4c361cd9abd12109b23e9fe3b4d911ac64c4": {
+      "current_source_matches": 0,
+      "disposition": "registration_identity_absent_from_both_sources",
+      "distinct_registration_links": 1,
+      "historical_source_matches": 0,
+      "html_sha256": "e7668a8a10d0dc20fa08652ca62c80e46e1e6abac5721d0e08b012d0501d0af9"
+    },
+    "6c80405ea96c1780de4044bd1bde61d6bec068ddbccb1ebdc4015f35056ef6e7": {
+      "current_source_matches": 0,
+      "disposition": "registration_identity_absent_from_both_sources",
+      "distinct_registration_links": 1,
+      "historical_source_matches": 0,
+      "html_sha256": "090e1ca45c5bcbaa1267c7d690427f9df9c31660ec521a07b7c624302a00d3ee"
+    },
+    "76bf7db68755768162a5ea6fbedda15084013f8dc73a06a05656b982dd6007e0": {
+      "current_source_matches": 0,
+      "disposition": "registration_identity_absent_from_both_sources",
+      "distinct_registration_links": 1,
+      "historical_source_matches": 0,
+      "html_sha256": "a09e8e50a68646c77e892fbf41f3e096fc42aceccb745cf42b3bd850679dcd1f"
+    },
+    "77ef06564deeadb1ddba37cb55462a7ddd1e90dd9c0c0cdd5b3a80845d67e35d": {
+      "current_source_matches": 0,
+      "disposition": "registration_identity_absent_from_both_sources",
+      "distinct_registration_links": 1,
+      "historical_source_matches": 0,
+      "html_sha256": "3c3da4b35f4e46c6f1814067cf1cfaed38cf65370861894960f18a1f9f3eeeaf"
+    },
+    "7e87dfaefc69ba3038c42e56abc818466edb9e7a8610e213baff4847242c9199": {
+      "current_source_matches": 0,
+      "disposition": "registration_identity_absent_from_both_sources",
+      "distinct_registration_links": 1,
+      "historical_source_matches": 0,
+      "html_sha256": "31fde3fa67eb21b4a2877002e47e9c58e6f314e88480fcc6a956ff280fd53b93"
+    },
+    "8cef1171a57fb07c48586499aab1ff5597c03ca960de49c43624f33820677fb4": {
+      "current_source_matches": 0,
+      "disposition": "registration_identity_absent_from_both_sources",
+      "distinct_registration_links": 1,
+      "historical_source_matches": 0,
+      "html_sha256": "e8840b48ab2ceaf77adc2949cc5d6a9c8b858168b0a8355e0f37e1e6dabc5b41"
+    },
+    "985941cb408440affbe119e29ae319886fc243be10202b9f81fcdcae5e2cb31f": {
+      "current_source_matches": 0,
+      "disposition": "registration_identity_absent_from_both_sources",
+      "distinct_registration_links": 1,
+      "historical_source_matches": 0,
+      "html_sha256": "87bc9eafca1e8f6f82165256ed0e9d97137c330f4345ccff6165ca693b552d40"
+    }
+  },
+  "overlapping_changed_fields_in_unique_pairs": {
+    "course": 19655,
+    "end": 14,
+    "location": 382,
+    "start": 21
+  },
+  "overlapping_unique_pair_flags": {
+    "invalid_current_timing": 217,
+    "invalid_historical_timing": 217,
+    "start_or_end_differs": 22,
+    "unique_registration_pairs": 19655
+  },
+  "publication_authorized_count": null,
+  "schema_version": 1,
+  "sources": [
+    {
+      "blob": "c5465df12ffcdad43b7930e12fb5b99a608f9fed",
+      "commit": "a7ff508d070ee7c23db0c955c04f05d03c4ef576",
+      "path": "data/schedule.json"
+    },
+    {
+      "blob": "ef77fd21e1db6becdb19b7f28abcdaf44eb08aaf",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "data/schedule_all.json"
+    }
+  ],
+  "unique_pair_difference_sets": {
+    "course": 19251,
+    "course+end": 1,
+    "course+location": 382,
+    "course+start": 8,
+    "course+start+end": 13
+  }
+}
